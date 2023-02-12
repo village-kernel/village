@@ -25,7 +25,7 @@ C_SOURCES += $(wildcard ./VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Src/
 	$(wildcard ./VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Source/*.c)
 
 # Cpp sources
-CPP_SOURCES += VK.Hardware/HAL/ST/stm32f4xx/src/System.cpp
+CPP_SOURCES += $(wildcard ./VK.Hardware/HAL/ST/stm32f4xx/src/*.cpp)
 
 
 #######################################
