@@ -1,0 +1,28 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type":"shell",
+			"label": "Build",
+			"command": "make",
+			"args": [
+				"-j"
+			],
+			"detail": "Build project"
+		},
+		{
+			"type": "shell",
+			"label": "Program",
+			"command": "openocd",
+			"args": [
+				"-f",
+				"interface/stlink-v2.cfg",
+				"-f",
+				"target/stm32f4x.cfg",
+				"-c",
+				"program VK.Build/village-target.bin verify reset exit 0x08000000"
+			],
+			"detail": "Program with OpenOCD"
+		}
+	]
+}

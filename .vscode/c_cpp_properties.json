@@ -1,0 +1,31 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Include",
+                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Include",
+                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc",
+                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc/Legacy",
+                "${workspaceRoot}/VK.Hardware/HAL/ST/stm32f4xx/inc",
+                "${workspaceRoot}/VK.Kernel/kernel/inc",
+                "${workspaceRoot}/VK.Kernel/libary/fatfs/inc",
+                "${workspaceRoot}/VK.Kernel/utilities/inc",
+                "${workspaceRoot}/VK.Application/application/inc"
+            ],
+            "defines": [],
+            "browse": {
+                "path": [
+                    "${workspaceRoot}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "gcc-arm",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        }
+    ],
+    "version": 4
+}
