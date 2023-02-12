@@ -2,7 +2,7 @@
 // pinParser.h
 // Parse pins configuration
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include <stdlib.h>
 #include <string>

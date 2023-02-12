@@ -2,7 +2,7 @@
 # Makefile
 # The Top Makefile of village-target project
 #
-# $Copyright: Copyright (C) jingwei
+# $Copyright: Copyright (C) village
 ############################################################################
 ######################################
 # includes

@@ -2,7 +2,7 @@
 // IniParser.cpp
 // Manages system configurations and parameters
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include "iniParser.h"
 #include "stdlib.h"

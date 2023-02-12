@@ -2,7 +2,7 @@
 // Console.cpp
 // Definitions of the functions that manage console
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include "Console.h"
 

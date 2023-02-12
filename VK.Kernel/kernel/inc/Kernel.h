@@ -2,7 +2,7 @@
 // Kernel.h
 // Declarations of the functions that manage module object
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __KERNEL_H__
 #define __KERNEL_H__

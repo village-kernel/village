@@ -2,7 +2,7 @@
 // FileStream.cpp
 // Manages system configurations and parameters
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include "FileStream.h"
 #include "stdlib.h"

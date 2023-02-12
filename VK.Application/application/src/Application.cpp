@@ -2,7 +2,7 @@
 // Application.cpp
 // The overall framework of the application
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
 #include "Application.h"

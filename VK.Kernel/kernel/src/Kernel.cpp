@@ -2,7 +2,7 @@
 // kernel.cpp
 // Definitions of the functions that manage module object
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include "kernel.h"
 

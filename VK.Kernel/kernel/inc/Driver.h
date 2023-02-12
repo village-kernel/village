@@ -2,7 +2,7 @@
 // Driver.h
 // Specifies the interface for all classes that contain driver logic
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __DRIVER_INTERFACE_H__
 #define __DRIVER_INTERFACE_H__

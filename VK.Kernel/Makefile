@@ -2,7 +2,7 @@
 # Makefile
 # The Makefile of VK.Kernel
 #
-# $Copyright: Copyright (C) jingwei
+# $Copyright: Copyright (C) village
 ############################################################################
 
 ######################################
