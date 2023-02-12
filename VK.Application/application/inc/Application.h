@@ -8,12 +8,13 @@
 #define __APPLICATION_H__
 
 #include "Module.h"
+#include "Gpo.h"
 
 ///Application
 class Application : public Module
 {
 private:
-
+    Gpo led;
 public:
     //Methods
     Application();
