@@ -2,7 +2,7 @@
 // Application.h
 // The overall framework of the program
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __APPLICATION_H__
 #define __APPLICATION_H__

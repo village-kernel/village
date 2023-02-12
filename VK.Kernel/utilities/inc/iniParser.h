@@ -2,7 +2,7 @@
 // IniParser.h
 // Manages system configurations and parameters
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __INI_PARSER_H__
 #define __INI_PARSER_H__

@@ -2,7 +2,7 @@
 // Console.h
 // Declarations of the functions that manage console
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __CONSOLE_H__
 #define __CONSOLE_H__

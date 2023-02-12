@@ -2,7 +2,7 @@
 // System.h
 // A mostly static class containing system wide functions.
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __SYSTEM_H__
 #define __SYSTEM_H__

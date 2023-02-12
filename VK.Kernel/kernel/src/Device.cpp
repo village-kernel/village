@@ -2,7 +2,7 @@
 // Device.cpp
 // Definitions of the functions that manage driver
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include "Device.h"
 

@@ -2,7 +2,7 @@
 // Module.h
 // Specifies the interface for all classes that contain module logic
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __MODULE_INTERFACE_H__
 #define __MODULE_INTERFACE_H__

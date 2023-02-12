@@ -3,7 +3,7 @@
 //
 // Top level singleton class that manages entire application
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #include "System.h"
 #include "Kernel.h"

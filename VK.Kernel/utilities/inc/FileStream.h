@@ -2,7 +2,7 @@
 // FileStream.h
 // Manages binary file in storage
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __FILE_STREAM_H__
 #define __FILE_STREAM_H__
