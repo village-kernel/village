@@ -6,7 +6,7 @@
 			"label": "Build",
 			"command": "make",
 			"args": [
-				"-j"
+				"-j8"
 			],
 			"detail": "Build project"
 		},
