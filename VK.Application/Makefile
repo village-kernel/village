@@ -8,7 +8,7 @@
 ######################################
 # includes
 ######################################
-INCLUDES += 
+INCLUDES += -I./VK.Application/application/inc
 
 
 ######################################
@@ -21,5 +21,6 @@ ASM_SOURCES +=
 C_SOURCES += 
 
 # Cpp sources
-CPP_SOURCES += VK.Application/Start.cpp
+CPP_SOURCES += VK.Application/Start.cpp \
+	VK.Application/application/src/Application.cpp
 
