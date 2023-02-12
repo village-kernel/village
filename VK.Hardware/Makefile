@@ -29,29 +29,6 @@ CPP_SOURCES += $(wildcard ./VK.Hardware/HAL/ST/stm32f4xx/src/*.cpp)
 
 
 #######################################
-# binaries
-#######################################
-PREFIX = arm-none-eabi-
-# The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
-# either it can be added to the PATH environment variable.
-ifdef GCC_PATH
-CPP = $(GCC_PATH)/$(PREFIX)g++
-CC = $(GCC_PATH)/$(PREFIX)gcc
-AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
-CP = $(GCC_PATH)/$(PREFIX)objcopy
-SZ = $(GCC_PATH)/$(PREFIX)size
-else
-CPP = $(PREFIX)g++
-CC = $(PREFIX)gcc
-AS = $(PREFIX)gcc -x assembler-with-cpp
-CP = $(PREFIX)objcopy
-SZ = $(PREFIX)size
-endif
-HEX = $(CP) -O ihex
-BIN = $(CP) -O binary -S
-
-
-#######################################
 # CFLAGS
 #######################################
 # MUC

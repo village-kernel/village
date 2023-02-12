@@ -4,13 +4,6 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-######################################
-# includes
-######################################
--include VK.Application/Makefile
--include VK.Hardware/Makefile
--include VK.Kernel/Makefile
-
 
 ######################################
 # target
@@ -38,29 +31,43 @@ BUILD_DIR := VK.Build
 ######################################
 # includes
 ######################################
-INCLUDES += 
+-include VK.Application/Makefile
+-include VK.Hardware/Makefile
+-include VK.Kernel/Makefile
 
 
-######################################
-# sources
-######################################
-# ASM sources
-ASM_SOURCES +=
-
-# C sources
-C_SOURCES +=
-
-# Cpp sources
-CPP_SOURCES +=
+#######################################
+# binaries
+#######################################
+PREFIX = arm-none-eabi-
+# The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
+# either it can be added to the PATH environment variable.
+ifdef GCC_PATH
+CPP = $(GCC_PATH)/$(PREFIX)g++
+CC = $(GCC_PATH)/$(PREFIX)gcc
+AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
+CP = $(GCC_PATH)/$(PREFIX)objcopy
+SZ = $(GCC_PATH)/$(PREFIX)size
+else
+CPP = $(PREFIX)g++
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp
+CP = $(PREFIX)objcopy
+SZ = $(PREFIX)size
+endif
+HEX = $(CP) -O ihex
+BIN = $(CP) -O binary -S
 
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
 
+
 # flash firmware
 flash:
 	openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg \
 		-c "program $(BUILD_DIR)/$(TARGET).bin verify reset exit 0x08000000"
+
 
 #######################################
 # build the application
