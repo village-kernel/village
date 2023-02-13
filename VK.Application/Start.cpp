@@ -13,7 +13,7 @@
 int main(void)
 {
 	System::Initialize();
-	System::ConfigureMPU;
+	System::ConfigureMPU();
 	System::ConfigurePower();
 	System::ConfigureForXtal();
 
