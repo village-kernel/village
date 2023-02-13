@@ -1,29 +1,28 @@
 //###########################################################################
-// Application.cpp
+// Application1.cpp
 // The overall framework of the application
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
-#include "Application.h"
-#include "HalHeaders.h"
+#include "Application1.h"
 
 
 /// Constructor
-Application::Application()
+Application1::Application1()
 {
 }
 
 
 /// Initialize
-void Application::Initialize()
+void Application1::Initialize()
 {
     led.Initialize(Gpio::_ChA, 3, Gpio::_Low);
 }
 
 
 /// Execute
-void Application::Execute()
+void Application1::Execute()
 {
     led.Set();
     System::DelayMs(100);
@@ -33,4 +32,4 @@ void Application::Execute()
 
 
 ///Register module
-REGISTER_MODULE(new Application(), FUNCTION_ID(0));
+REGISTER_MODULE(new Application1(), FUNCTION_ID(0));

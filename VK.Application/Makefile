@@ -22,5 +22,6 @@ C_SOURCES +=
 
 # Cpp sources
 CPP_SOURCES += VK.Application/Start.cpp \
-	VK.Application/application/src/Application.cpp
+	VK.Application/application/src/Application1.cpp \
+	VK.Application/application/src/Application2.cpp
 

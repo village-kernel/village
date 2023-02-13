@@ -1,25 +1,26 @@
 //###########################################################################
-// Application.h
+// Application2.h
 // The overall framework of the program
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __APPLICATION_H__
-#define __APPLICATION_H__
+#ifndef __APPLICATION2_H__
+#define __APPLICATION2_H__
 
 #include "Module.h"
 #include "Gpo.h"
 
+
 ///Application
-class Application : public Module
+class Application2 : public Module
 {
 private:
     Gpo led;
 public:
     //Methods
-    Application();
+    Application2();
     void Initialize();
     void Execute();
 };
 
-#endif //!__APPLICATION_H__
+#endif //!__APPLICATION2_H__

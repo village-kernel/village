@@ -10,11 +10,11 @@
 #include "System.h"
 
 ///Module layer id definition
-constexpr auto HARDWARE_ID_START = 0;
-constexpr auto MISC_DEV_ID_START = 256;
-constexpr auto FUNCTION_ID_START = 512;
-constexpr auto COMM_APP_ID_START = 768;
-constexpr auto EXTENDED_ID_START = 1024;
+constexpr auto HARDWARE_ID_START = 0U;
+constexpr auto MISC_DEV_ID_START = 256U;
+constexpr auto FUNCTION_ID_START = 512U;
+constexpr auto COMM_APP_ID_START = 768U;
+constexpr auto EXTENDED_ID_START = 1024U;
 
 ///Module layer id macro
 template<typename T>

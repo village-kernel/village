@@ -18,7 +18,7 @@ SILENCE = 1
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Og
+OPT = -O2
 
 
 #######################################
