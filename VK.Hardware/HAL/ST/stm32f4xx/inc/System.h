@@ -9,9 +9,7 @@
 
 #include "HalHeaders.h"
 
-//---------------------------------------------------------------------------
-// Class Definition
-//
+///System
 class System
 {
 private:
@@ -21,6 +19,8 @@ private:
 
 public:
 	static void Initialize();
+	static void ConfigureMPU();
+	static void ConfigurePower();
 	static void ConfigureForHsi();
 	static void ConfigureForXtal();
 
@@ -53,5 +53,4 @@ public:
 	static inline void DisableIRQ() { __disable_irq(); }
 };
 
-
-#endif /* __SYSTEM_H__ */
+#endif //!__SYSTEM_H__
