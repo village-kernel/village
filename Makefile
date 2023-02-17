@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of VK.Kernel
+# The Makefile of vk.kernel
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,9 +8,9 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./VK.Kernel/kernel/inc \
-	-I./VK.Kernel/libary/fatfs/inc \
-	-I./VK.Kernel/utilities/inc
+INCLUDES += -I./vk.kernel/kernel/inc \
+	-I./vk.kernel/libary/fatfs/inc \
+	-I./vk.kernel/utilities/inc
 
 
 ######################################
@@ -23,14 +23,14 @@ ASM_SOURCES +=
 C_SOURCES += 
 
 # Cpp sources
-CPP_SOURCES += VK.Kernel/kernel/src/Console.cpp \
-	VK.Kernel/kernel/src/Device.cpp \
-	VK.Kernel/kernel/src/Kernel.cpp \
-	VK.Kernel/kernel/src/Thread.cpp \
-	VK.Kernel/libary/fatfs/src/diskio.cpp \
-	VK.Kernel/libary/fatfs/src/ff.cpp \
-	VK.Kernel/libary/fatfs/src/ffsystem.cpp \
-	VK.Kernel/libary/fatfs/src/ffunicode.cpp \
-	# VK.Kernel/utilities/src/FileStream.cpp \
-	# VK.kernel/utilities/src/iniParser.cpp \
-	# VK.kernel/utilities/src/pinParser.cpp
+CPP_SOURCES += vk.kernel/kernel/src/Console.cpp \
+	vk.kernel/kernel/src/Device.cpp \
+	vk.kernel/kernel/src/Kernel.cpp \
+	vk.kernel/kernel/src/Thread.cpp \
+	vk.kernel/libary/fatfs/src/diskio.cpp \
+	vk.kernel/libary/fatfs/src/ff.cpp \
+	vk.kernel/libary/fatfs/src/ffsystem.cpp \
+	vk.kernel/libary/fatfs/src/ffunicode.cpp \
+	# vk.kernel/utilities/src/FileStream.cpp \
+	# vk.kernel/utilities/src/iniParser.cpp \
+	# vk.kernel/utilities/src/pinParser.cpp
