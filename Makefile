@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of VK.Hardware
+# The Makefile of vk.hardware
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,24 +8,24 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Include \
-	-I./VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Include \
-	-I./VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc \
-	-I./VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc/Legacy \
-	-I./VK.Hardware/HAL/ST/stm32f4xx/inc \
+INCLUDES += -I./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Include \
+	-I./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Include \
+	-I./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc \
+	-I./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc/Legacy \
+	-I./vk.hardware/HAL/ST/stm32f4xx/inc \
 
 ######################################
 # sources
 ######################################
 # ASM sources
-ASM_SOURCES += VK.Hardware/BSP/ST/stm32f4xx/StartupFiles/startup_stm32f407xx.s
+ASM_SOURCES += vk.hardware/BSP/ST/stm32f4xx/StartupFiles/startup_stm32f407xx.s
 
 # C sources
-C_SOURCES += $(wildcard ./VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Src/*.c) \
-	$(wildcard ./VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Source/*.c)
+C_SOURCES += $(wildcard ./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Src/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Source/*.c)
 
 # Cpp sources
-CPP_SOURCES += $(wildcard ./VK.Hardware/HAL/ST/stm32f4xx/src/*.cpp)
+CPP_SOURCES += $(wildcard ./vk.hardware/HAL/ST/stm32f4xx/src/*.cpp)
 
 
 #######################################
@@ -55,7 +55,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT := VK.Hardware/BSP/ST/stm32f4xx/LinkerScripts/STM32F407ZE_flash.ld
+LDSCRIPT := vk.hardware/BSP/ST/stm32f4xx/LinkerScripts/STM32F407ZE_flash.ld
 
 # libraries
 LIBS = -lc -lm -lnosys
