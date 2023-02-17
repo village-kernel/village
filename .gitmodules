@@ -1,3 +1,6 @@
 [submodule "vk.hardware"]
 	path = vk.hardware
 	url = git@git.aicodeone.fun:STM32/vk.hardware.git
+[submodule "vk.kernel"]
+	path = vk.kernel
+	url = git@git.aicodeone.fun:STM32/vk.kernel.git
