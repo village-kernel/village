@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of VK.Application
+# The Makefile of vk.aplication
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,7 +8,7 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./VK.Application/application/inc
+INCLUDES += -I./vk.application/application/inc
 
 
 ######################################
@@ -21,7 +21,7 @@ ASM_SOURCES +=
 C_SOURCES += 
 
 # Cpp sources
-CPP_SOURCES += VK.Application/Start.cpp \
-	VK.Application/application/src/Application1.cpp \
-	VK.Application/application/src/Application2.cpp
+CPP_SOURCES += vk.application/Start.cpp \
+	vk.application/application/src/Application1.cpp \
+	vk.application/application/src/Application2.cpp
 
