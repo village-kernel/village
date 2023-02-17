@@ -25,15 +25,15 @@ OPT = -O0
 # paths
 #######################################
 # Build path
-BUILD_DIR := VK.Build
+BUILD_DIR := vk.build
 
 
 ######################################
 # includes
 ######################################
--include VK.Application/Makefile
--include VK.Hardware/Makefile
--include VK.Kernel/Makefile
+-include vk.application/Makefile
+-include vk.hardware/Makefile
+-include vk.kernel/Makefile
 
 
 #######################################
