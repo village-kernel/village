@@ -14,6 +14,8 @@ MEMORY
 }
 
 _estack = 0x2001c000;
+_min_heap_size = 0x200;  /* required amount of heap */
+_min_stack_size = 0x400; /* required amount of stack */
 
 SECTIONS
 {
@@ -87,56 +89,53 @@ SECTIONS
 		PROVIDE(__fini_array_end = .);
 	} > FLASH
 
+	/* Used by the startup to initialize data */
+	_sidata = LOADADDR(.data);
+
+	/* Used by the startup to initialize data */
+	_sidata = LOADADDR(.data);
+
+	/* Initialized data sections into "RAM" Ram type memory */
 	.data :
 	{
 		. = ALIGN(4);
-		_sdata = .;
+		_sdata = .;        /* create a global symbol at data start */
+		*(.data)           /* .data sections */
+		*(.data*)          /* .data* sections */
+		*(.RamFunc)        /* .RamFunc sections */
+		*(.RamFunc*)       /* .RamFunc* sections */
 
-		PROVIDE(__data_start__ = _sdata);
-		*(.data)
-		*(.data*)
 		. = ALIGN(4);
-		_edata = .;
+		_edata = .;        /* define a global symbol at data end */
 
-		PROVIDE(__data_end__ = _edata);
-	} > SRAM AT >FLASH
+	} > SRAM AT> FLASH
 
-	_sidata = LOADADDR(.data);
-
+	/* Uninitialized data section into "RAM" Ram type memory */
+	. = ALIGN(4);
 	.bss :
 	{
-		. = ALIGN(4);
-		_sbss = .;
-
-		PROVIDE(__bss_start__ = _sbss);
+		/* This is used by the startup in order to initialize the .bss section */
+		_sbss = .;         /* define a global symbol at bss start */
+		__bss_start__ = _sbss;
 		*(.bss)
 		*(.bss*)
 		*(COMMON)
-		. = ALIGN(4);
-		_ebss = .;
 
-		PROVIDE(__bss_end__ = _ebss);
+		. = ALIGN(4);
+		_ebss = .;         /* define a global symbol at bss end */
+		__bss_end__ = _ebss;
 	} > SRAM
 
-	PROVIDE(end = .);
-
-	.heap (NOLOAD) :
+	/* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
+	._user_heap_stack :
 	{
-		. = ALIGN(4);
-		PROVIDE(__heap_start__ = .);
-		KEEP(*(.heap))
-		. = ALIGN(4);
-		PROVIDE(__heap_end__ = .);
+		. = ALIGN(8);
+		PROVIDE ( end = . );
+		PROVIDE ( _end = . );
+		. = . + _min_heap_size;
+		. = . + _min_stack_size;
+		. = ALIGN(8);
 	} > SRAM
 
-	.reserved_for_stack (NOLOAD) :
-	{
-		. = ALIGN(4);
-		PROVIDE(__reserved_for_stack_start__ = .);
-		KEEP(*(.reserved_for_stack))
-		. = ALIGN(4);
-		PROVIDE(__reserved_for_stack_end__ = .);
-	} > SRAM
-
+	.ARM.attributes 0 : { *(.ARM.attributes) }
 }
-

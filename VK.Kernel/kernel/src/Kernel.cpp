@@ -43,19 +43,23 @@ void Kernel::UpdateParams()
 	}
 }
 
+#include "Thread.h"
 
 ///Execute module object->Execute
 void Kernel::Execute()
 {
+	//Test code
+	StartScheduler();
+
 	while (1)
 	{
-		if (isReady)
-		{
-			for (volatile ModuleNode* node = list; NULL != node; node = node->next)
-			{
-				node->module->Execute();
-			}
-		}
+		// if (isReady)
+		// {
+		// 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
+		// 	{
+		// 		node->module->Execute();
+		// 	}
+		// }
 	}
 }
 
