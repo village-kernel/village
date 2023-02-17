@@ -3,15 +3,15 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Include",
-                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Include",
-                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc",
-                "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc/Legacy",
-                "${workspaceRoot}/VK.Hardware/HAL/ST/stm32f4xx/inc",
-                "${workspaceRoot}/VK.Kernel/kernel/inc",
-                "${workspaceRoot}/VK.Kernel/libary/fatfs/inc",
-                "${workspaceRoot}/VK.Kernel/utilities/inc",
-                "${workspaceRoot}/VK.Application/application/inc"
+                "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/CMSIS/Include",
+                "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Include",
+                "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc",
+                "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc/Legacy",
+                "${workspaceRoot}/vk.hardware/HAL/ST/stm32f4xx/inc",
+                "${workspaceRoot}/vk.kernel/kernel/inc",
+                "${workspaceRoot}/vk.kernel/libary/fatfs/inc",
+                "${workspaceRoot}/vk.kernel/utilities/inc",
+                "${workspaceRoot}/vk.application/application/inc"
             ],
             "defines": [],
             "browse": {
