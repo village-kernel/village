@@ -5,7 +5,7 @@
 // courtesy of:
 // https://blog.frankvh.com/2011/12/07/cortex-m3-m4-hard-fault-handler/
 //
-// $Copyright: Copyright (C) jingwei
+// $Copyright: Copyright (C) village
 //###########################################################################
 
 #include "stm32f4xx.h"
