@@ -20,7 +20,7 @@
 				"-f",
 				"target/stm32f4x.cfg",
 				"-c",
-				"program VK.Build/village-target.bin verify reset exit 0x08000000"
+				"program vk.build/village-target.bin verify reset exit 0x08000000"
 			],
 			"detail": "Program with OpenOCD"
 		}

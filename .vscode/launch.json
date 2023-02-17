@@ -8,7 +8,7 @@
         {
             "name": "Cortex Debug-jlink",
             "cwd": "${workspaceRoot}/",
-            "executable": "${workspaceFolder}/VK.Build/${workspaceFolderBasename}.elf",
+            "executable": "${workspaceFolder}/vk.build/${workspaceFolderBasename}.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "jlink",
@@ -16,13 +16,13 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_svd/STM32F407.svd",
             "preLaunchTask": "Build"
         },
         {
             "name": "Cortex Debug-stlink",
             "cwd": "${workspaceRoot}/",
-            "executable": "${workspaceFolder}/VK.Build/${workspaceFolderBasename}.elf",
+            "executable": "${workspaceFolder}/vk.build/${workspaceFolderBasename}.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
@@ -34,7 +34,7 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/VK.Hardware/BSP/ST/stm32f4xx/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_svd/STM32F407.svd",
             "preLaunchTask": "Build"
         }
     ]
