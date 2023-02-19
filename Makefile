@@ -27,6 +27,7 @@ CPP_SOURCES += vk.kernel/kernel/src/Console.cpp \
 	vk.kernel/kernel/src/Device.cpp \
 	vk.kernel/kernel/src/Kernel.cpp \
 	vk.kernel/kernel/src/Thread.cpp \
+	vk.kernel/kernel/src/Scheduler.cpp \
 	vk.kernel/libary/fatfs/src/diskio.cpp \
 	vk.kernel/libary/fatfs/src/ff.cpp \
 	vk.kernel/libary/fatfs/src/ffsystem.cpp \

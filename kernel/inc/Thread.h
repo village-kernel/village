@@ -7,34 +7,20 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "Kernel.h"
-
-extern "C" 
-{
-void IdleTask(void);
-void Task0(void);
-void Task1(void);
-
-void StartScheduler(void);
-}
+#include "System.h"
 
 
 ///Thread
 class Thread
 {
-private:
+public:
+	//Enumerations
 	enum TaskState 
 	{
 		Running = 0,
 		Blocked = 1,
 	};
-
-    enum Access
-    {
-        Unprivileged = 0,
-        Privileged = 1,
-    };
-
+private:
 	struct Task 
 	{
 		void (*handler)(void);
@@ -50,30 +36,24 @@ private:
 		{}
 	};
 
-    //Static constants
-    static const unsigned int end_stack = 0x2001c000;
+	//Static constants
+	static const unsigned int end_stack = 0x2001c000;
 	static const unsigned int task_number_size = 16;
 	static const unsigned int task_stack_szie = 1024;
 
-    //Members
-    static unsigned int storedIndex;
-   	static unsigned int taskIndex;
-	static unsigned int sysTicks;
+	//Members
+	static unsigned int storedIndex;
+	static unsigned int taskIndex;
 	static Task tasks[task_number_size];
-
-    //Methods
-    static void Rescheduler(Access access);
 public:
-    ///Methods
-    Thread();
-    static void CreateTask(void (*handler)());
-    static void SaveTaskPSP(uint32_t psp);
-    static uint32_t GetTaskPSP();
-    static uint32_t GetTaskHandler();
-    static void SelectNextTask();
-    static void Sleep(uint32_t ticks);
-    static void SystickCount();
-    static void TaskOperator(uint32_t* SP);
+	///Methods
+	Thread();
+	static void CreateTask(void (*handler)());
+	static void SaveTaskPSP(uint32_t psp);
+	static uint32_t GetTaskPSP();
+	static uint32_t GetTaskHandler();
+	static void SelectNextTask();
+	static void Sleep(uint32_t ticks);
 };
 
 #endif // !__THREAD_H__

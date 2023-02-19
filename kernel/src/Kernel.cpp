@@ -43,13 +43,52 @@ void Kernel::UpdateParams()
 	}
 }
 
+//Test code
 #include "Thread.h"
+#include "Scheduler.h"
+#include "Gpo.h"
+
+void Task0(void)
+{
+	Gpo led;
+
+	led.Initialize(Gpio::_ChE, 5, Gpio::_Low);
+
+	while(1) 
+	{
+		led.Set();
+		Thread::Sleep(500);
+		led.Clear();
+		Thread::Sleep(500);
+	}
+}
+
+void Task1(void)
+{
+	Gpo led;
+
+	led.Initialize(Gpio::_ChA, 8, Gpio::_Low);
+
+	while (1)
+	{
+		led.Set();
+		Thread::Sleep(500);
+		led.Clear();
+		Thread::Sleep(500);
+	}
+}
+
 
 ///Execute module object->Execute
 void Kernel::Execute()
 {
-	//Test code
-	StartScheduler();
+	//Create tasks
+	Thread::CreateTask(Task0);
+	Thread::CreateTask(Task1);
+
+	//Initialize and start scheduler 
+	Scheduler::Initialize();
+	Scheduler::StartScheduler();
 
 	while (1)
 	{
