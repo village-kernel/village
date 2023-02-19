@@ -22,7 +22,8 @@ ASM_SOURCES += vk.hardware/BSP/ST/stm32f4xx/StartupFiles/startup_stm32f407xx.s
 
 # C sources
 C_SOURCES += $(wildcard ./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Src/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Source/*.c)
+	$(wildcard ./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Source/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/stm32f4xx/GCC/*.c) \
 
 # Cpp sources
 CPP_SOURCES += $(wildcard ./vk.hardware/HAL/ST/stm32f4xx/src/*.cpp)
