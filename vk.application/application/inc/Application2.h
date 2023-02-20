@@ -12,15 +12,23 @@
 
 
 ///Application
-class Application2 : public Module
+class Application2 : public Module, public ThreadEndpoint
 {
 private:
-    Gpo led;
+	Gpo led;
+	static ThreadEndpoint* user;
+	static ThreadHandlerCpp handler;
+
+	//Methods
+	void Task();
 public:
-    //Methods
-    Application2();
-    void Initialize();
-    void Execute();
+	//Methods
+	Application2();
+	void Initialize();
+	void Execute();
+
+	//Static methods
+	static void TaskHandler();
 };
 
 #endif //!__APPLICATION2_H__
