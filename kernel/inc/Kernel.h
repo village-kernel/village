@@ -10,10 +10,10 @@
 #include "Module.h"
 
 ///Module create macro
-#define CREATE_MODULE(mod)        static struct MOD{MOD(){mod;}} const module;
+#define CREATE_MODULE(mod, name) static struct _Mod_##name{_Mod_##name(){mod;}} const _mod_##name;
 
 ///Module register macro
-#define REGISTER_MODULE(mod, id)  CREATE_MODULE(Kernel::RegisterModule(mod, id))
+#define REGISTER_MODULE(mod, id, name) CREATE_MODULE(Kernel::RegisterModule(mod, id), name)
 
 ///Kernel
 class Kernel
