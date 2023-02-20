@@ -26,10 +26,16 @@ void Kernel::Initialize()
 {
 	isReady = false;
 
+	//Initialize scheduler
 	Scheduler::Initialize();
 
+	//Initialize thread
+	Thread::Initialize();
+
+	//Add LoopFunc to thread task
 	Thread::CreateTask(Kernel::LoopFunc);
 
+	//Initialize modules
 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
 	{
 		node->module->Initialize();
