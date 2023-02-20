@@ -5,6 +5,9 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "kernel.h"
+#include "Thread.h"
+#include "Scheduler.h"
+
 
 ///Initialize module core
 Kernel::ModuleNode* Kernel::list = NULL;
@@ -22,6 +25,10 @@ Kernel::Kernel()
 void Kernel::Initialize()
 {
 	isReady = false;
+
+	Scheduler::Initialize();
+
+	Thread::CreateTask(Kernel::LoopFunc);
 
 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
 	{
@@ -43,63 +50,29 @@ void Kernel::UpdateParams()
 	}
 }
 
-//Test code
-#include "Thread.h"
-#include "Scheduler.h"
-#include "Gpo.h"
-
-void Task0(void)
-{
-	Gpo led;
-
-	led.Initialize(Gpio::_ChE, 5, Gpio::_Low);
-
-	while(1) 
-	{
-		led.Set();
-		Thread::Sleep(500);
-		led.Clear();
-		Thread::Sleep(500);
-	}
-}
-
-void Task1(void)
-{
-	Gpo led;
-
-	led.Initialize(Gpio::_ChA, 8, Gpio::_Low);
-
-	while (1)
-	{
-		led.Set();
-		Thread::Sleep(500);
-		led.Clear();
-		Thread::Sleep(500);
-	}
-}
-
 
 ///Execute module object->Execute
-void Kernel::Execute()
+void Kernel::LoopFunc()
 {
-	//Create tasks
-	Thread::CreateTask(Task0);
-	Thread::CreateTask(Task1);
-
-	//Initialize and start scheduler 
-	Scheduler::Initialize();
-	Scheduler::StartScheduler();
-
 	while (1)
 	{
-		// if (isReady)
-		// {
-		// 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
-		// 	{
-		// 		node->module->Execute();
-		// 	}
-		// }
+		if (isReady)
+		{
+			for (volatile ModuleNode* node = list; NULL != node; node = node->next)
+			{
+				node->module->Execute();
+			}
+		}
 	}
+}
+
+
+///Start scheduler
+void Kernel::Execute()
+{
+	Scheduler::StartScheduler();
+
+	while (1) {}
 }
 
 

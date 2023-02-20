@@ -34,6 +34,9 @@ private:
 	//Members
 	static ModuleNode* list;
 	static volatile bool isReady;
+
+	//Methods
+	static void LoopFunc();
 public:
 	//Methods
 	Kernel();
