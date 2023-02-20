@@ -9,6 +9,10 @@
 
 #include "System.h"
 
+///Thread end point
+class ThreadEndpoint {};
+typedef void (ThreadEndpoint::*ThreadHandlerCpp)();
+typedef void (*ThreadHandlerC)();
 
 ///Thread
 class Thread
@@ -23,7 +27,7 @@ public:
 private:
 	struct Task 
 	{
-		void (*handler)(void);
+		ThreadHandlerC handler;
 		TaskState state;
 		uint32_t psp;
 		uint32_t waitToTick;
@@ -48,7 +52,7 @@ private:
 public:
 	///Methods
 	Thread();
-	static void CreateTask(void (*handler)());
+	static void CreateTask(ThreadHandlerC handler);
 	static void SaveTaskPSP(uint32_t psp);
 	static uint32_t GetTaskPSP();
 	static uint32_t GetTaskHandler();

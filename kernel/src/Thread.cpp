@@ -25,7 +25,7 @@ static void IdleTask(void) { while(1) { __ASM("NOP"); } }
 
 
 ///Create new task
-void Thread::CreateTask(void (*handler)())
+void Thread::CreateTask(ThreadHandlerC handler)
 {
 	//Check
 	if(storedIndex >= task_number_size) return;
