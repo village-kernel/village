@@ -9,9 +9,8 @@
 
 
 ///Initialize static members
-unsigned int Thread::storedIndex = 0;
-unsigned int Thread::taskIndex = 0;
-Thread::Task Thread::tasks[Thread::task_number_size];
+Thread::TaskNode* Thread::list = NULL;
+Thread::TaskNode* Thread::curNode = NULL;
 
 
 ///Constructor
@@ -20,27 +19,35 @@ Thread::Thread()
 }
 
 
-///Idle task
-static void IdleTask(void) { while(1) { __ASM("NOP"); } }
+///Thread Initialize
+void Thread::Initialize()
+{
+	//Frist task should be idle task
+	CreateTask(Thread::IdleTask);
+
+	//Set current node
+	curNode = list;
+}
 
 
 ///Create new task
 void Thread::CreateTask(ThreadHandlerC handler)
 {
-	//Check
-	if(storedIndex >= task_number_size) return;
+	TaskNode** nextNode = &list;
+	uint32_t index = 0;
 
-	//Init idle if it is not found
-	if (handler != &IdleTask)
+	//Find an empty node
+	while (NULL != *nextNode)
 	{
-		if (tasks[0].handler != IdleTask)
-		{
-			CreateTask(IdleTask);
-		}
+		nextNode = &(*nextNode)->next;
+		index++;
 	}
 
 	//Calculate new task psp
-	uint32_t *psp = (uint32_t*)(end_stack - (storedIndex + 1) * task_stack_szie);
+	uint32_t *psp = (uint32_t*)(end_stack - (index + 1) * task_stack_szie);
+
+	//Check whether the stack has enough space
+	if ((uint32_t)psp <= (start_stack + task_stack_szie)) return;
 
 	//Fill dummy stack frame
 	*(--psp) = 0x01000000u; // Dummy xPSR, just enable Thumb State bit;
@@ -60,42 +67,53 @@ void Thread::CreateTask(ThreadHandlerC handler)
 	*(--psp) = 0x0; // Dummy R5
 	*(--psp) = 0x0; // Dummy R4
 
-	//Stored task info
-	tasks[storedIndex].psp = (uint32_t)psp;
-	tasks[storedIndex].handler = handler;
-	tasks[storedIndex].state = TaskState::Running;
-	storedIndex++;
+	//Add new task node in task list
+	Task task;
+	task.handler = handler;
+	task.state = TaskState::Running;
+	task.psp = (uint32_t)psp;
+	*nextNode = new TaskNode(task);
+}
+
+
+///Idle task
+void Thread::IdleTask()
+{
+	while(1) 
+	{
+		__ASM("NOP");
+	}
 }
 
 
 ///Save task PSP
 void Thread::SaveTaskPSP(uint32_t psp)
 {
-	tasks[taskIndex].psp = psp;
+	curNode->task.psp = psp;
 }
 
 
 ///Get current task psp
 uint32_t Thread::GetTaskPSP()
 {
-	return tasks[taskIndex].psp;
+	return curNode->task.psp;
 }
 
 
 ///Get currenttask handler
 uint32_t Thread::GetTaskHandler()
 {
-	return (uint32_t)tasks[taskIndex].handler;
+	return (uint32_t)curNode->task.handler;
 }
 
 
 ///Thread sleep
 void Thread::Sleep(uint32_t ticks)
 {
-	if(taskIndex)
+	if(Thread::IdleTask != curNode->task.handler)
 	{
-		tasks[taskIndex].state = TaskState::Blocked;
-		tasks[taskIndex].waitToTick = Scheduler::GetSysTicks() + ticks;
+		curNode->task.state = TaskState::Blocked;
+		curNode->task.waitToTick = Scheduler::GetSysTicks() + ticks;
 		Scheduler::Rescheduler(Scheduler::Unprivileged);
 	}
 }
@@ -105,13 +123,13 @@ void Thread::Sleep(uint32_t ticks)
 void Thread::SelectNextTask()
 {
 	//Check all task state
-	for(uint32_t i = 0; i < storedIndex; i++) 
+	for (volatile TaskNode* node = list; NULL != node; node = node->next)
 	{
-		if(tasks[i].state == TaskState::Blocked) 
+		if (TaskState::Blocked == node->task.state)
 		{
-			if(Scheduler::GetSysTicks() >= tasks[i].waitToTick)
+			if(Scheduler::GetSysTicks() >= node->task.waitToTick)
 			{
-				tasks[i].state = TaskState::Running;
+				node->task.state = TaskState::Running;
 			}
 		}
 	}
@@ -119,8 +137,15 @@ void Thread::SelectNextTask()
 	//Round-Robin scheduler
 	while (1)
 	{
-		if (++taskIndex >= storedIndex) taskIndex = 0;
+		if (NULL != curNode->next)
+		{
+			curNode = curNode->next;
+		}
+		else
+		{
+			curNode = list;
+		}
 
-		if(tasks[taskIndex].state == TaskState::Running) break;
+		if(curNode->task.state == TaskState::Running) break;
 	}
 }

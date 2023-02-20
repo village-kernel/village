@@ -25,6 +25,7 @@ public:
 		Blocked = 1,
 	};
 private:
+	//Structures
 	struct Task 
 	{
 		ThreadHandlerC handler;
@@ -40,18 +41,32 @@ private:
 		{}
 	};
 
+	struct TaskNode
+	{
+		Task task;
+		TaskNode* next;
+
+		TaskNode(Task task) :
+			task(task),
+			next(NULL)
+		{}
+	};
+
 	//Static constants
-	static const unsigned int end_stack = 0x2001c000;
-	static const unsigned int task_number_size = 16;
-	static const unsigned int task_stack_szie = 1024;
+	static const uint32_t start_stack = 0x20000000;
+	static const uint32_t end_stack = 0x2001c000;
+	static const uint32_t task_stack_szie = 1024;
 
 	//Members
-	static unsigned int storedIndex;
-	static unsigned int taskIndex;
-	static Task tasks[task_number_size];
+	static TaskNode* list;
+	static TaskNode* curNode;
+
+	//Methods
+	static void IdleTask();
 public:
 	///Methods
 	Thread();
+	static void Initialize();
 	static void CreateTask(ThreadHandlerC handler);
 	static void SaveTaskPSP(uint32_t psp);
 	static uint32_t GetTaskPSP();
