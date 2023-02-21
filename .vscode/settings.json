@@ -1,7 +1,8 @@
 {
     "files.associations": {
-        "cwchar": "cpp"
-    },
+		"cwchar": "cpp",
+		"compare": "cpp"
+	},
     "C_Cpp.errorSquiggles": "disabled",
     "cortex-debug.variableUseNaturalFormat": false
 }
