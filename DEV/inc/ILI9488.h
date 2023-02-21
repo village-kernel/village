@@ -14,7 +14,7 @@
 
 
 ///ILI9488
-class ILI9488 : VirtualDisp
+class ILI9488 : public VirtualDisp
 {
 public:
 	struct Config
