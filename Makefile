@@ -8,25 +8,25 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Include \
-	-I./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Include \
-	-I./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc \
-	-I./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Inc/Legacy \
-	-I./vk.hardware/HAL/ST/stm32f4xx/inc \
+INCLUDES += -I./vk.hardware/BSP/ST/CMSIS/Include \
+	-I./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Include \
+	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc \
+	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy \
+	-I./vk.hardware/HAL/ST/STM32F4xx/inc \
 
 ######################################
 # sources
 ######################################
 # ASM sources
-ASM_SOURCES += vk.hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.s
+ASM_SOURCES += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.s
 
 # C sources
-C_SOURCES += $(wildcard ./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Src/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Source/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/stm32f4xx/GCC/*.c) \
+C_SOURCES += $(wildcard ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Src/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/CMSIS/Source/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/GCC/*.c) \
 
 # Cpp sources
-CPP_SOURCES += $(wildcard ./vk.hardware/HAL/ST/stm32f4xx/src/*.cpp)
+CPP_SOURCES += $(wildcard ./vk.hardware/HAL/ST/STM32F4xx/src/*.cpp)
 
 
 #######################################
@@ -56,7 +56,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT := vk.hardware/BSP/ST/stm32f4xx/LinkerScripts/STM32F407ZE_flash.ld
+LDSCRIPT := vk.hardware/BSP/ST/LinkerScripts/STM32F4xx/STM32F407ZE_flash.ld
 
 # libraries
 LIBS = -lc -lm -lnosys
