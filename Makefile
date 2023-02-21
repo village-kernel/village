@@ -34,6 +34,7 @@ BUILD_DIR := vk.build
 -include vk.application/Makefile
 -include vk.hardware/Makefile
 -include vk.kernel/Makefile
+-include vk.gui/Makefile
 
 
 #######################################
