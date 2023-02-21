@@ -18,7 +18,7 @@ INCLUDES += -I./vk.hardware/BSP/ST/stm32f4xx/CMSIS/Include \
 # sources
 ######################################
 # ASM sources
-ASM_SOURCES += vk.hardware/BSP/ST/stm32f4xx/StartupFiles/startup_stm32f407xx.s
+ASM_SOURCES += vk.hardware/BSP/ST/stm32f4xx/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.s
 
 # C sources
 C_SOURCES += $(wildcard ./vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_HAL_Driver/Src/*.c) \
