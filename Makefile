@@ -13,6 +13,8 @@ INCLUDES += -I./vk.hardware/BSP/ST/CMSIS/Include \
 	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc \
 	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy \
 	-I./vk.hardware/HAL/ST/STM32F4xx/inc \
+	-I./vk.hardware/DEV/inc
+
 
 ######################################
 # sources
@@ -20,13 +22,16 @@ INCLUDES += -I./vk.hardware/BSP/ST/CMSIS/Include \
 # ASM sources
 ASM_SOURCES += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.s
 
+
 # C sources
 C_SOURCES += $(wildcard ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Src/*.c) \
 	$(wildcard ./vk.hardware/BSP/ST/CMSIS/Source/*.c) \
 	$(wildcard ./vk.hardware/BSP/ST/GCC/*.c) \
 
+
 # Cpp sources
-CPP_SOURCES += $(wildcard ./vk.hardware/HAL/ST/STM32F4xx/src/*.cpp)
+CPP_SOURCES += $(wildcard ./vk.hardware/HAL/ST/STM32F4xx/src/*.cpp) \
+	$(wildcard ./vk.hardware/Dev/src/*.cpp)
 
 
 #######################################
