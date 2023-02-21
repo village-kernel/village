@@ -30,6 +30,17 @@ void Gpio::Initialize(GpioChannel channel, uint16_t pin)
 }
 
 
+///Initializes the internal members for the GPIO pin object.
+///does not actually perform any configuration
+void Gpio::Initialize(GpioChannel channel, uint16_t pin, uint8_t altMode, GpioSpeed speed)
+{
+	Initialize(channel, pin);
+	ConfigMode(_Alt);
+	ConfigAltFunc(altMode);
+	ConfigSpeed(speed);
+}
+
+
 ///Sets the mode of the GPIO pin.
 void Gpio::ConfigMode(GpioMode mode)
 {
