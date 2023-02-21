@@ -26,5 +26,6 @@ C_SOURCES +=
 CPP_SOURCES += vk.application/Start.cpp \
 	vk.application/hardware/src/HWManager.cpp \
 	vk.application/application/src/Application1.cpp \
-	vk.application/application/src/Application2.cpp
+	vk.application/application/src/Application2.cpp \
+	vk.application/application/src/Application3.cpp
 
