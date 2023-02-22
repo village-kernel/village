@@ -319,8 +319,19 @@ uint32_t SdCard::GetSectorCount()
 }
 
 
+///Spi sd card Sync
+int SdCard::Sync()
+{
+	uint8_t res = 1;
+	csPin.Clear();
+	if (0 == WaitReady()) res = 0;
+	csPin.Set();
+	return res;
+}
+
+
 ///Spi sd card write data
-int SdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
+int SdCard::Write(uint8_t *txData, uint32_t sector, uint32_t blkSize)
 {
 	uint8_t res = 0;
 
@@ -372,7 +383,7 @@ int SdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 
 
 ///Spi sd card read data
-int SdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
+int SdCard::Read(uint8_t* rxData, uint32_t sector, uint32_t blkSize)
 {
 	uint8_t res = 0;
 

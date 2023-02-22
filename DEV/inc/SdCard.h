@@ -98,11 +98,12 @@ private:
 public:
 	//Methods
 	void Initialize(Config config);
-	int Write(uint8_t *txData, uint32_t blkSize, uint32_t sector);
-	int Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector);
+	int Write(uint8_t *txData, uint32_t sector, uint32_t blkSize);
+	int Read(uint8_t* rxData, uint32_t sector, uint32_t blkSize);
 	int GetCID(uint8_t* cidData);
 	int GetCSD(uint8_t* csdData);
 	uint32_t GetSectorCount();
+	int Sync();
 };
 
 #endif //!__SD_CARD_H__
