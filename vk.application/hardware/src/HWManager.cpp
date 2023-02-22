@@ -13,6 +13,11 @@
 HWManager HWManager::instance;
 
 
+///Initialize the fatfs flash and sd card
+SpiFlash* fatfsFlash = &(HWManager::Instance()->spiFlash);
+SdCard* fatfsSdCard = &(HWManager::Instance()->sdcard);
+
+
 ///Constructor
 HWManager::HWManager()
 {
