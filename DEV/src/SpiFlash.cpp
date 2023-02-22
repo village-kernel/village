@@ -1,5 +1,5 @@
 //###########################################################################
-// SpiFlash.h
+// SpiFlash.cpp
 //
 // Communicates with an external flash using the SPI bus
 //
