@@ -9,6 +9,8 @@
 
 #include "Module.h"
 #include "ILI9488.h"
+#include "SpiFlash.h"
+#include "SdCard.h"
 
 ///HWManager
 class HWManager : public Module
@@ -20,9 +22,13 @@ private:
 	//Methods
 	HWManager();
 	void ILI9488Initialize();
+	void FlashInitialize();
+	void SdCardInitialize();
 public:
 	//Members
-	ILI9488 ili9488;
+	ILI9488      ili9488;
+	SpiFlash     spiFlash;
+	SdCard       sdcard;
 
 	//Methods
 	void Initialize();

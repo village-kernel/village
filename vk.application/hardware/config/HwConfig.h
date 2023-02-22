@@ -72,4 +72,49 @@
 #define LCD_DB15_CH                          Gpio::_ChD
 #define LCD_DB15_PIN                         10
 
+
+//********************************SpiFlash*********************************//
+#define SPI_FLASH_SCK_CH                     Gpio::_ChB
+#define SPI_FLASH_SCK_PIN                    13
+#define SPI_FLASH_SCK_AF_NUM                 5
+
+#define SPI_FLASH_MISO_CH                    Gpio::_ChB
+#define SPI_FLASH_MISO_PIN                   14
+#define SPI_FLAHS_MISO_AF_NUM                5
+
+#define SPI_FLASH_MOSI_CH                    Gpio::_ChB
+#define SPI_FLASH_MOSI_PIN                   15
+#define SPI_FLASH_MOSI_AF_NUM                5
+
+#define SPI_FLASH_CS_CH                      Gpio::_ChB
+#define SPI_FLASH_CS_PIN                     12
+
+#define SPI_FLASH_WP_CH                      Gpio::_ChF
+#define SPI_FLASH_WP_PIN                     15
+
+#define SPI_FLASH_CHANNEL                    Spi::_Spi2
+
+
+//********************************SD Card*********************************//
+#define SPI_SD_SCK_CH                        Gpio::_ChC
+#define SPI_SD_SCK_PIN                       10
+#define SPI_SD_SCK_AF_NUM                    6
+
+#define SPI_SD_MISO_CH                       Gpio::_ChC
+#define SPI_SD_MISO_PIN                      11
+#define SPI_SD_MISO_AF_NUM                   6
+
+#define SPI_SD_MOSI_CH                       Gpio::_ChC
+#define SPI_SD_MOSI_PIN                      12
+#define SPI_SD_MOSI_AF_NUM                   6
+
+#define SPI_SD_CS_CH                         Gpio::_ChB
+#define SPI_SD_CS_PIN                        5
+
+#define SPI_SD_DETECT_CH                     Gpio::_ChB
+#define SPI_SD_DETECT_PIN                    6
+
+#define SPI_SD_CHANNEL                       Spi::_Spi3
+
+
 #endif // !__HW_CONFIG_H__

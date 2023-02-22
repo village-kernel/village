@@ -9,22 +9,27 @@
 #include "Application3.h"
 
 
-/// Constructor
+///Constructor
 Application3::Application3()
 {
 }
 
 
-/// Initialize
+///Initialize
 void Application3::Initialize()
 {
-	gui.Initialize(&(HWManager::Instance()->ili9488));
+	uint8_t wString[] = "hello vk.kernel";
+	uint8_t rString[] = "";
 
-	gui.disp.ShowString(0, 0, (uint8_t*)"hello world!");
+	//HWManager::Instance()->spiFlash.Write(wString, 16, 0);
+	HWManager::Instance()->spiFlash.Read(rString, 16, 0);
+
+	gui.Initialize(&(HWManager::Instance()->ili9488));
+	gui.disp.ShowString(0, 0, rString);
 }
 
 
-/// Execute
+///Execute
 void Application3::Execute()
 {
 

@@ -23,6 +23,8 @@ HWManager::HWManager()
 void HWManager::Initialize()
 {
 	ILI9488Initialize();
+	FlashInitialize();
+	SdCardInitialize();
 }
 
 
@@ -91,6 +93,56 @@ inline void HWManager::ILI9488Initialize()
 	config.fsmcConfig.db15Pin = LCD_DB15_PIN;
 
 	ili9488.Initialize(config);
+}
+
+
+///Initialize flash
+inline void HWManager::FlashInitialize()
+{
+	//Config spi flash
+	SpiFlash::Config config;
+	config.SpiCh = SPI_FLASH_CHANNEL;
+	config.SpiConfig.sckCh = SPI_FLASH_SCK_CH;
+	config.SpiConfig.sckPin = SPI_FLASH_SCK_PIN;
+	config.SpiConfig.sckAltNum = SPI_FLASH_SCK_AF_NUM;
+	config.SpiConfig.misoCh = SPI_FLASH_MISO_CH;
+	config.SpiConfig.misoPin = SPI_FLASH_MISO_PIN;
+	config.SpiConfig.misoAltNum = SPI_FLAHS_MISO_AF_NUM;
+	config.SpiConfig.mosiCh = SPI_FLASH_MOSI_CH;	
+	config.SpiConfig.mosiPin = SPI_FLASH_MOSI_PIN;
+	config.SpiConfig.mosiAltNum = SPI_FLASH_MOSI_AF_NUM;
+	config.flashcsCh = SPI_FLASH_CS_CH;
+	config.flashcsPin = SPI_FLASH_CS_PIN;
+	config.flashwpCh = SPI_FLASH_WP_CH;
+	config.flashwpPin = SPI_FLASH_WP_PIN;
+
+	//Initialize spi flash
+	spiFlash.Initialize(config);
+}
+
+
+///Initialize sd card
+inline void HWManager::SdCardInitialize()
+{
+	//Config sd card
+	SdCard::Config config;
+	config.SpiCh = SPI_SD_CHANNEL;
+	config.SpiConfig.sckCh = SPI_SD_SCK_CH;
+	config.SpiConfig.sckPin = SPI_SD_SCK_PIN;
+	config.SpiConfig.sckAltNum = SPI_SD_SCK_AF_NUM;
+	config.SpiConfig.misoCh = SPI_SD_MISO_CH;
+	config.SpiConfig.misoPin = SPI_SD_MISO_PIN;
+	config.SpiConfig.misoAltNum = SPI_SD_MISO_AF_NUM;
+	config.SpiConfig.mosiCh = SPI_SD_MOSI_CH;	
+	config.SpiConfig.mosiPin = SPI_SD_MOSI_PIN;
+	config.SpiConfig.mosiAltNum = SPI_SD_MOSI_AF_NUM;
+	config.sdcsCh = SPI_SD_CS_CH;
+	config.sdcsPin = SPI_SD_CS_PIN;
+	config.detectCh = SPI_SD_DETECT_CH;
+	config.detectPin = SPI_SD_DETECT_PIN;
+
+	//Initialize sd card
+	sdcard.Initialize(config);
 }
 
 
