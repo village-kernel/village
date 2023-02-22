@@ -10,7 +10,8 @@
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
 #include "stdlib.h"
-//#include "spiFlash.h"
+#include "SpiFlash.h"
+#include "SdCard.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,6 +19,7 @@ extern "C" {
 
 /* Definitions of physical drive number for each drive */
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
+#define DEV_SD      1
 
 
 #define SPI_FLASH_BLOCK_SIZE        1
@@ -25,7 +27,8 @@ extern "C" {
 #define SPI_FLASH_SECTOR_BYTE_SIZE  512
 #define SPI_FLASH_START_SECTOR      10
 
-//extern SpiFlash* fatfsFlash;
+extern SpiFlash* fatfsFlash;
+extern SdCard* fatfsSdCard;
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -37,12 +40,13 @@ DSTATUS disk_status (
 {
 	switch (pdrv) 
 	{
-		//case DEV_MMC: return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+		case DEV_MMC: return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+		case DEV_SD: return 0;
 	}
 	return STA_NOINIT;
 }
 
-
+ 
 
 /*-----------------------------------------------------------------------*/
 /* Inidialize a Drive                                                    */
@@ -55,6 +59,7 @@ DSTATUS disk_initialize (
 	switch (pdrv)
 	{
 		case DEV_MMC: return RES_OK;
+		case DEV_SD: return RES_OK;
 	}
 	return STA_NOINIT;
 }
@@ -80,10 +85,13 @@ DRESULT disk_read (
 			{
 				uint32_t readByteSize = SPI_FLASH_SECTOR_BYTE_SIZE;
 				uint32_t readAddress = (SPI_FLASH_START_SECTOR + sector + i) * SPI_FLASH_SECTOR_BYTE_SIZE;
-				//fatfsFlash->Read((uint8_t*)buff + (i * readByteSize), readByteSize, readAddress);
+				fatfsFlash->Read((uint8_t*)buff + (i * readByteSize), readByteSize, readAddress);
 			}
 
-			//return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+
+		case DEV_SD:
+			return (DRESULT)fatfsSdCard->Read(buff, sector, count);
 	}
 	return RES_PARERR;
 }
@@ -111,10 +119,12 @@ DRESULT disk_write (
 			{
 				uint32_t writeByteSize = SPI_FLASH_SECTOR_BYTE_SIZE;
 				uint32_t writeAddress = (SPI_FLASH_START_SECTOR + sector + i) * SPI_FLASH_SECTOR_BYTE_SIZE;
-				//fatfsFlash->Write((uint8_t*)buff + (i * writeByteSize), writeByteSize, writeAddress);
+				fatfsFlash->Write((uint8_t*)buff + (i * writeByteSize), writeByteSize, writeAddress);
 			}
 
-			//return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+		case DEV_SD:
+			return (DRESULT)fatfsSdCard->Write((uint8_t*)buff, sector, count);
 	}
 	return RES_PARERR;
 }
@@ -160,6 +170,30 @@ DRESULT disk_ioctl (
 					break;
 			}
 
+			return res;
+
+		case DEV_SD:
+			switch(cmd){
+				case CTRL_SYNC:
+					if(0 == fatfsSdCard->Sync())
+						res = RES_OK;
+					break;
+				
+				case GET_SECTOR_COUNT:
+					*(uint32_t*)buff = fatfsSdCard->GetSectorCount();
+					res = RES_OK;
+					break;
+				
+				case GET_SECTOR_SIZE:
+					*(uint32_t *)buff = 512;
+					res = RES_OK;
+					break;
+				
+				case GET_BLOCK_SIZE:
+					*(uint32_t *)buff = 8;
+					res = RES_OK;
+					break;
+			}
 			return res;
 	}
 	return RES_PARERR;
