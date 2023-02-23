@@ -90,6 +90,7 @@ public:
 
 	void PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress);
 	void SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress);
+	int WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t wordAddress);
 	int Write(uint8_t *txData, uint32_t size, uint32_t wordAddress);
 	int Read(uint8_t* rxData, uint32_t size, uint32_t wordAddress);
 

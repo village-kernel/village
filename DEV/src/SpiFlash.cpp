@@ -196,7 +196,7 @@ void SpiFlash::SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAdd
 
 
 ///Writes a specified number of bytes of writeData into provided address
-int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t wordAddress)
+int SpiFlash::WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t wordAddress)
 {
 	//return if there are any problems with the flash;
 	if (flashError) return -1;
@@ -255,6 +255,39 @@ int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t wordAddress)
 		bytesRemain -= sectorWriteSize;
 		writeAddr += sectorWriteSize;
 		writeData += sectorWriteSize;
+	}
+
+	return size;
+}
+
+
+///Writes a specified number of bytes of writeData into provided address
+int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t wordAddress)
+{
+	//return if there are any problems with the flash;
+	if (flashError) return -1;
+
+	uint16_t bytesRemain = size;
+	uint32_t writeAddr = wordAddress;
+	uint8_t* writeData = txData;
+
+	while (bytesRemain)
+	{
+		//Erase sector
+		if (0 == (writeAddr % OneSectorByteSize))
+		{
+			EraseSector(writeAddr);
+		}
+
+		//Calculate the size of the write data
+		uint16_t writeSize = OnePageByteSize - (uint8_t)writeAddr;
+		if (bytesRemain < writeSize) writeSize = bytesRemain;
+
+		//Write bytes
+		PageWriteBytes(writeData, writeSize, writeAddr);
+		bytesRemain -= writeSize;
+		writeAddr += writeSize;
+		writeData += writeSize;
 	}
 
 	return size;

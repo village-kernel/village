@@ -14,9 +14,6 @@
 
 ///USB storage macro
 #define STORAGE_LUN_NBR                  2
-#define STORAGE_BLK_NBR                  1968
-#define STORAGE_BLK_SIZ                  512
-#define STORAGE_START_BLK                10
 
 
 //Using spi flash
@@ -51,12 +48,12 @@ static int8_t STORAGE_GetCapacity_FS(uint8_t lun, uint32_t* block_num, uint16_t*
 	switch (lun)
 	{
 		case 0:
-			*block_num = STORAGE_BLK_NBR;
-			*block_size = STORAGE_BLK_SIZ;
+			*block_num = 2048;
+			*block_size = 512;
 			break;
 		case 1:
 			*block_num = fatfsSdCard->GetSectorCount();
-			*block_size = STORAGE_BLK_SIZ;
+			*block_size = 512;
 			break;
 		default: return (USBD_FAIL);
 	}
@@ -85,12 +82,7 @@ static int8_t STORAGE_Read_FS(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uint
 	switch (lun)
 	{
 		case 0:
-			for (uint32_t i = 0; i < blk_len; ++i)
-			{
-				uint32_t readByteSize = STORAGE_BLK_SIZ;
-				uint32_t readAddress = (STORAGE_START_BLK + blk_addr + i) * STORAGE_BLK_SIZ;
-				fatfsFlash->Read((uint8_t*)buf + (i * readByteSize), readByteSize, readAddress);
-			}
+			fatfsFlash->Read(buf, (blk_len * 512U), (blk_addr * 512U));
 			break;
 		case 1:
 			fatfsSdCard->Read(buf, blk_addr, blk_len);
@@ -108,12 +100,7 @@ static int8_t STORAGE_Write_FS(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uin
 	switch (lun)
 	{
 		case 0:
-			for (uint32_t i = 0; i < blk_len; ++i)
-			{
-				uint32_t writeByteSize = STORAGE_BLK_SIZ;
-				uint32_t writeAddress = (STORAGE_START_BLK + blk_addr + i) * STORAGE_BLK_SIZ;
-				fatfsFlash->Write((uint8_t*)buf + (i * writeByteSize), writeByteSize, writeAddress);
-			}
+			fatfsFlash->Write(buf, (blk_len * 512U), (blk_addr * 512U));
 			break;
 		case 1:
 			fatfsSdCard->Write(buf, blk_addr, blk_len);
