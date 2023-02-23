@@ -47,7 +47,7 @@ void System::ConfigureForHsi()
 	const uint32_t pll_m = 8;
 	const uint32_t pll_n = 168;
 	const uint32_t pll_p = 2;
-	const uint32_t pll_q = 4;
+	const uint32_t pll_q = 7;
 
 	//Enable HSI
 	RCC->CR |= ((uint32_t)RCC_CR_HSION);
@@ -100,7 +100,7 @@ void System::ConfigureForXtal()
 	const uint32_t pll_m = 4;
 	const uint32_t pll_n = 168;
 	const uint32_t pll_p = 2;
-	const uint32_t pll_q = 4;
+	const uint32_t pll_q = 7;
 
 	//Enable HSE
 	RCC->CR |= ((uint32_t)RCC_CR_HSEON);
