@@ -16,7 +16,7 @@ private:
 	static const uint32_t microsInSec = 1000000;
 	static const uint32_t microsInMilli = 1000;
 	static uint32_t cyclesInMicro;
-
+	static uint32_t sysTicks;
 public:
 	static void Initialize();
 	static void ConfigureMPU();
@@ -30,22 +30,35 @@ public:
 		__set_FAULTMASK(1);
 		NVIC_SystemReset();
 	}
-
+#ifdef PRIVILEGED_LEVEL_DELAY
 	///Delays for a specified number of microseconds.
-	///Delay range: 0-798915 us
 	static inline void DelayUs(uint32_t micros)
 	{
-		CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 		uint32_t delayStart = DWT->CYCCNT;
 		uint32_t delayCycles = (micros * cyclesInMicro);
 		while ((DWT->CYCCNT - delayStart) < delayCycles);
 	}
 
 	///Delays for a specified number of milliseconds.
-	///Delay range: 0-798 ms
 	static inline void DelayMs(uint32_t millis) { DelayUs(1000 * millis); }
-	static inline uint32_t GetSysClkCount() { return DWT->CYCCNT; }
 
+	///Get system clock count
+	static inline uint32_t GetSysClkCounts() { return DWT->CYCCNT; }
+#else
+	///Delays for a specified number of milliseconds.
+	static inline void DelayMs(uint32_t millis)
+	{
+		uint32_t delayStart = sysTicks;
+		uint32_t delayCycles = millis;
+		while ((sysTicks - delayStart) < delayCycles);
+	}
+
+	///Get system clock count
+	static inline uint32_t GetSysClkCounts() { return sysTicks; }
+
+	///System clock counter
+	static inline void SysTickCounter() { sysTicks++; }
+#endif
 	///Enables IRQ interrupts by clearing the I-bit in the CPSR.
 	static inline void EnableIRQ() { __enable_irq(); }
 
