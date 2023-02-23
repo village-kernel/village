@@ -12,6 +12,9 @@ INCLUDES += -I./vk.hardware/BSP/ST/CMSIS/Include \
 	-I./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Include \
 	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc \
 	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy \
+	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Inc \
+	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc \
+	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc \
 	-I./vk.hardware/HAL/ST/STM32F4xx/inc \
 	-I./vk.hardware/DEV/inc
 
@@ -25,6 +28,9 @@ ASM_SOURCES += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc
 
 # C sources
 C_SOURCES += $(wildcard ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Src/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src/*.c) \
 	$(wildcard ./vk.hardware/BSP/ST/CMSIS/Source/*.c) \
 	$(wildcard ./vk.hardware/BSP/ST/GCC/*.c) \
 
