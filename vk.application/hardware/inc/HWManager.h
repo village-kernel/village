@@ -11,6 +11,7 @@
 #include "ILI9488.h"
 #include "SpiFlash.h"
 #include "SdCard.h"
+#include "UsbStorage.h"
 
 ///HWManager
 class HWManager : public Module
@@ -24,11 +25,13 @@ private:
 	void ILI9488Initialize();
 	void FlashInitialize();
 	void SdCardInitialize();
+	void UsbInitialize();
 public:
 	//Members
 	ILI9488      ili9488;
 	SpiFlash     spiFlash;
 	SdCard       sdcard;
+	UsbStorage   usbStorage;
 
 	//Methods
 	void Initialize();

@@ -30,6 +30,7 @@ void HWManager::Initialize()
 	ILI9488Initialize();
 	FlashInitialize();
 	SdCardInitialize();
+	UsbInitialize();
 }
 
 
@@ -148,6 +149,14 @@ inline void HWManager::SdCardInitialize()
 
 	//Initialize sd card
 	sdcard.Initialize(config);
+}
+
+
+///Initialize usb storage
+inline void HWManager::UsbInitialize()
+{
+	usbStorage.Initialize();
+	usbStorage.Mount();
 }
 
 
