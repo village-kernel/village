@@ -16,7 +16,7 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_svd/STM32F407.svd",
             "preLaunchTask": "Build"
         },
         {
@@ -34,7 +34,7 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/stm32f4xx/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_svd/STM32F407.svd",
             "preLaunchTask": "Build"
         }
     ]
