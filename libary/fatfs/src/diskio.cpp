@@ -21,12 +21,6 @@ extern "C" {
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
 #define DEV_SD      1
 
-
-#define SPI_FLASH_BLOCK_SIZE        1
-#define SPI_FLASH_SECTOR_SIZE       1968
-#define SPI_FLASH_SECTOR_BYTE_SIZE  512
-#define SPI_FLASH_START_SECTOR      10
-
 extern SpiFlash* fatfsFlash;
 extern SdCard* fatfsSdCard;
 
@@ -80,18 +74,10 @@ DRESULT disk_read (
 	switch (pdrv)
 	{
 		case DEV_MMC:
-
-			for (UINT i = 0; i < count; ++i)
-			{
-				uint32_t readByteSize = SPI_FLASH_SECTOR_BYTE_SIZE;
-				uint32_t readAddress = (SPI_FLASH_START_SECTOR + sector + i) * SPI_FLASH_SECTOR_BYTE_SIZE;
-				fatfsFlash->Read((uint8_t*)buff + (i * readByteSize), readByteSize, readAddress);
-			}
-
+			fatfsFlash->Read((uint8_t*)buff, (count * 512U), (sector * 512U));
 			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
-
 		case DEV_SD:
-			return (DRESULT)fatfsSdCard->Read(buff, sector, count);
+			return (DRESULT)fatfsSdCard->Read((uint8_t*)buff, sector, count);
 	}
 	return RES_PARERR;
 }
@@ -114,14 +100,7 @@ DRESULT disk_write (
 	switch (pdrv)
 	{
 		case DEV_MMC:
-
-			for (UINT i = 0; i < count; ++i)
-			{
-				uint32_t writeByteSize = SPI_FLASH_SECTOR_BYTE_SIZE;
-				uint32_t writeAddress = (SPI_FLASH_START_SECTOR + sector + i) * SPI_FLASH_SECTOR_BYTE_SIZE;
-				fatfsFlash->Write((uint8_t*)buff + (i * writeByteSize), writeByteSize, writeAddress);
-			}
-
+			fatfsFlash->Write((uint8_t*)buff, (count * 512U), (sector * 512U));
 			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
 		case DEV_SD:
 			return (DRESULT)fatfsSdCard->Write((uint8_t*)buff, sector, count);
@@ -155,17 +134,17 @@ DRESULT disk_ioctl (
 					break;
 
 				case GET_SECTOR_SIZE:
-					*(WORD*)buff = SPI_FLASH_SECTOR_BYTE_SIZE;
+					*(WORD*)buff = 512;
 					res = RES_OK;
 					break;
 
 				case GET_BLOCK_SIZE:
-					*(WORD*)buff = SPI_FLASH_BLOCK_SIZE;
+					*(WORD*)buff = 1;
 					res = RES_OK;
 					break;
 
 				case GET_SECTOR_COUNT:
-					*(DWORD*)buff = SPI_FLASH_SECTOR_SIZE;
+					*(DWORD*)buff = 2048;
 					res = RES_OK;
 					break;
 			}
