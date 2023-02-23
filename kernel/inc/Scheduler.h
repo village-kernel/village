@@ -7,7 +7,8 @@
 #ifndef __SCHEDULER_H__
 #define __SCHEDULER_H__
 
-#include "Thread.h"
+#include "System.h"
+
 
 ///Scheduler
 class Scheduler
@@ -21,20 +22,15 @@ public:
 	};
 private:
 	//Members
-	static uint32_t sysTicks;
+	static bool isStartSchedule;
 public:
 	//Methods
 	Scheduler();
-	static void Initialize();
 	static void StartScheduler();
 	static void Rescheduler(Access access);
-	static uint32_t GetSysTicks();
 
 	//Needed called by SVC_Handler
 	static void TaskOperator(uint32_t* SP);
-
-	//Needed called by SysTick_Handler
-	static void SystickCount();
 };
 
 #endif // !__SCHEDULER_H__

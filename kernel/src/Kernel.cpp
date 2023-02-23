@@ -26,9 +26,6 @@ void Kernel::Initialize()
 {
 	isReady = false;
 
-	//Initialize scheduler
-	Scheduler::Initialize();
-
 	//Initialize thread
 	Thread::Initialize();
 

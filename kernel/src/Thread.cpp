@@ -113,7 +113,7 @@ void Thread::Sleep(uint32_t ticks)
 	if(Thread::IdleTask != curNode->task.handler)
 	{
 		curNode->task.state = TaskState::Blocked;
-		curNode->task.waitToTick = Scheduler::GetSysTicks() + ticks;
+		curNode->task.waitToTick = System::GetSysClkCounts() + ticks;
 		Scheduler::Rescheduler(Scheduler::Unprivileged);
 	}
 }
@@ -127,7 +127,7 @@ void Thread::SelectNextTask()
 	{
 		if (TaskState::Blocked == node->task.state)
 		{
-			if(Scheduler::GetSysTicks() >= node->task.waitToTick)
+			if(System::GetSysClkCounts() >= node->task.waitToTick)
 			{
 				node->task.state = TaskState::Running;
 			}

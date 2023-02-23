@@ -5,10 +5,11 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Scheduler.h"
+#include "Thread.h"
 
 
 ///Initialize static members
-uint32_t Scheduler::sysTicks = 0;
+bool Scheduler::isStartSchedule = false;
 
 
 ///Constructor
@@ -17,23 +18,12 @@ Scheduler::Scheduler()
 }
 
 
-///Scheduler initial
-void Scheduler::Initialize()
-{
-	//Enable systick interrupt
-	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;
-	
-	//Set systick reload value
-	SysTick->LOAD = 21000;
-	
-	//Clear systick current value
-	SysTick->VAL = 0;
-}
-
-
 ///Start scheduler
 void Scheduler::StartScheduler()
 {
+	//Clear start schedule flag
+	isStartSchedule = false;
+
 	//Prepare PSP of the first task, return PSP in R0 and set PSP
 	__ASM("bl getTaskPSP");
 	__ASM("msr psp, r0");
@@ -43,13 +33,13 @@ void Scheduler::StartScheduler()
 	__ASM("orr r0, r0, #2");
 	__ASM("msr control, r0");
 
-	//Enable systick
-	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-
 	//Move to Unprivileged level, Set bit[0] nPRIV
 	__ASM("mrs r0, control");
 	__ASM("orr r0, r0, #1");
 	__ASM("msr control, r0");
+
+	//Set start schedule flag
+	isStartSchedule = true;
 
 	//Get the handler of the first task by tracing back from PSP which is at R4 slot
 	void (*Handler)() = (void (*)())((uint32_t*)(Thread::GetTaskHandler()));
@@ -62,6 +52,8 @@ void Scheduler::StartScheduler()
 ///Rescheduler task
 void Scheduler::Rescheduler(Scheduler::Access access)
 {
+	if (false == isStartSchedule) return;
+
 	if (Access::Privileged == access)
 	{
 		// trigger PendSV directly
@@ -96,21 +88,6 @@ void Scheduler::TaskOperator(uint32_t* sp)
 		default:
 			break;
 	}
-}
-
-
-///Get systick count
-uint32_t Scheduler::GetSysTicks()
-{
-	return sysTicks;
-}
-
-
-///Systick count
-void Scheduler::SystickCount()
-{
-	sysTicks++;
-	Scheduler::Rescheduler(Access::Privileged);
 }
 
 
@@ -164,7 +141,8 @@ extern "C"
 	///Systick handler
 	void SysTick_Handler(void)
 	{
-		Scheduler::SystickCount();
+		System::SysTickCounter();
+		Scheduler::Rescheduler(Scheduler::Privileged);
 	}
 
 	//Call scheduler task operator in c function
