@@ -7,19 +7,29 @@
 #ifndef __CONSOLE_H__
 #define __CONSOLE_H__
 
-#include "Kernel.h"
+#include "Module.h"
+#include "CmdDefines.h"
+#include "CmdMsgMgr.h"
 
 ///Console
-class Console
+class Console : public Module
 {
 private:
-	
+	//Function definitions
+	typedef void (Console::*Func)(CmdMsg);
+	static struct FuncMap { Cmd cmd; Func func; } funcmap[];
+
+	//Members
+	CmdMsgMgr msgMgr;
+
+	//Methods
+	void ExecuteCmd(CmdMsg msg);
+	void About(CmdMsg msg);
 public:
 	//Methods
 	Console();
-	static void Initialize();
-	static void Write(uint8_t* data, uint16_t size, uint16_t offset);
-	static void Read(uint8_t* data, uint16_t size, uint16_t offset);
+	void Initialize();
+	void Execute();
 };
 
 #endif // !__CONSOLE_H__

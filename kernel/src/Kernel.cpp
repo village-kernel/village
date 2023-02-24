@@ -7,6 +7,7 @@
 #include "kernel.h"
 #include "Thread.h"
 #include "Scheduler.h"
+#include "Console.h"
 
 
 ///Initialize module core
