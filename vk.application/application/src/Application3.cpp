@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
+#include "Thread.h"
 #include "HWManager.h"
 #include "Application3.h"
 #include "ff.h"
@@ -59,7 +60,8 @@ void Application3::Initialize()
 ///Execute
 void Application3::Execute()
 {
-
+	HWManager::Instance()->uartSerial.SendBytes((uint8_t*)"hello vk.kernel\r\n", 18);
+	Thread::Sleep(1000);
 }
 
 
