@@ -11,15 +11,23 @@
 #include "GUI.h"
 
 ///Application
-class Application3 : public Module
+class Application3 : public Module, public ThreadEndpoint
 {
 private:
 	GUI gui;
+	static ThreadEndpoint* user;
+	static ThreadHandlerCpp handler;
+
+	//Methods
+	void Task();
 public:
 	//Methods
 	Application3();
 	void Initialize();
 	void Execute();
+
+	//Static methods
+	static void TaskHandler();
 };
 
 #endif //!__APPLICATION3_H__

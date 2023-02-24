@@ -10,6 +10,9 @@
 #include "Application3.h"
 #include "ff.h"
 
+ThreadEndpoint* Application3::user;
+ThreadHandlerCpp Application3::handler;
+
 
 ///Constructor
 Application3::Application3()
@@ -54,6 +57,10 @@ void Application3::Initialize()
 			disp_y += 16;
 		}
 	}
+
+	user = this;
+	handler = (ThreadHandlerCpp)(&Application3::Task);
+	Thread::CreateTask(Application3::TaskHandler);
 }
 
 
@@ -62,6 +69,33 @@ void Application3::Execute()
 {
 	HWManager::Instance()->uartSerial.SendBytes((uint8_t*)"hello vk.kernel\r\n", 18);
 	Thread::Sleep(1000);
+}
+
+
+///Task
+void Application3::Task()
+{
+	UartSerial* serial = &(HWManager::Instance()->uartSerial);
+
+	while (1)
+	{
+		serial->Execute();
+		
+		while (serial->HasBytes())
+		{
+			uint8_t byte = serial->ReadByte();
+			serial->SendBytes(&byte, 1, false);
+		}
+
+		Thread::Sleep(100);
+	}
+}
+
+
+///TaskHandler
+void Application3::TaskHandler()
+{
+	if (user != 0) { (user->*handler)(); }
 }
 
 
