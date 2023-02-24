@@ -27,6 +27,7 @@ HWManager::HWManager()
 ///Hardware initialize
 void HWManager::Initialize()
 {
+	SerialInitialize();
 	ILI9488Initialize();
 	FlashInitialize();
 	SdCardInitialize();
@@ -45,6 +46,40 @@ void HWManager::UpdateParams()
 void HWManager::FailSafe(int arg)
 {
 
+}
+
+
+///Initialize serial
+inline void HWManager::SerialInitialize()
+{
+	UartSerial::Config config;
+
+	//Config uart serial
+	config.usartCh = UART_SERIAL_CHANNEL;
+	config.usartBaudrate = UART_SERIAL_BAUD_RATE;
+
+	//Config uart rx pin
+	config.usartRxPin.ch = UART_SERIAL_RX_CH;
+	config.usartRxPin.pin = UART_SERIAL_RX_PIN;
+	config.usartRxPin.alt = UART_SERIAL_RX_AF_NUM;
+
+	//Config uart tx pin
+	config.usartTxPin.ch = UART_SERIAL_TX_CH;
+	config.usartTxPin.pin = UART_SERIAL_TX_PIN;
+	config.usartTxPin.alt = UART_SERIAL_TX_AF_NUM;
+
+	//Config uart rx dma
+	config.usartRxDmaGroup = UART_SERIAL_RX_DMA_GROUP;
+	config.usartRxDmaCh = UART_SERIAL_RX_DMA_CHANNEL;
+	config.usartRxDmaReq = UART_SERIAL_RX_DMA_REQUEST;
+
+	//Config uart tx dma
+	config.usartTxDmaGroup = UART_SERIAL_TX_DMA_GROUP;
+	config.usartTxDmaCh = UART_SERIAL_TX_DMA_CHANNEL;
+	config.usartTxDmaReq = UART_SERIAL_TX_DMA_REQUEST;
+
+	//Initialize uart serial
+	uartSerial.Initialize(config);
 }
 
 

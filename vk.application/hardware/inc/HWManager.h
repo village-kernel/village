@@ -8,10 +8,12 @@
 #define __HW_MANAGER_H__
 
 #include "Module.h"
+#include "UartSerial.h"
 #include "ILI9488.h"
 #include "SpiFlash.h"
 #include "SdCard.h"
 #include "UsbStorage.h"
+
 
 ///HWManager
 class HWManager : public Module
@@ -22,12 +24,14 @@ private:
 
 	//Methods
 	HWManager();
+	void SerialInitialize();
 	void ILI9488Initialize();
 	void FlashInitialize();
 	void SdCardInitialize();
 	void UsbInitialize();
 public:
 	//Members
+	UartSerial   uartSerial;
 	ILI9488      ili9488;
 	SpiFlash     spiFlash;
 	SdCard       sdcard;
