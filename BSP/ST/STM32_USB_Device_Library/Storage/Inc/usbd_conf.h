@@ -31,8 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "stm32f4xx.h"
-#include "stm32f4xx_hal.h"
+#include "HalHeaders.h"
 
 /* USER CODE BEGIN INCLUDE */
 

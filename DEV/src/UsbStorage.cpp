@@ -120,7 +120,7 @@ static int8_t STORAGE_GetMaxLun_FS(void)
 
 
 ///USB Mass storage Standard Inquiry Data
-static const uint8_t STORAGE_Inquirydata_FS[] =
+static const uint8_t STORAGE_Inquirydata[] =
 {
 	//LUN 0
 	0x00,
@@ -147,7 +147,7 @@ static const uint8_t STORAGE_Inquirydata_FS[] =
 	'V', 'K', ' ', ' ', ' ', ' ', ' ', ' ', /* Manufacturer : 8 bytes */
 	'v', 'i', 'l', 'l', 'a', 'g', 'e', ' ', /* Product      : 16 Bytes */
 	' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-	'0', '.', '0' ,'1',                     /* Version      : 4 Bytes */
+	'0', '.', '0' ,'1'                      /* Version      : 4 Bytes */
 };
 
 
@@ -161,7 +161,7 @@ static USBD_StorageTypeDef USBD_Storage_Interface_fops_FS =
 	STORAGE_Read_FS,
 	STORAGE_Write_FS,
 	STORAGE_GetMaxLun_FS,
-	(int8_t*)STORAGE_Inquirydata_FS
+	(int8_t*)STORAGE_Inquirydata
 };
 
 
