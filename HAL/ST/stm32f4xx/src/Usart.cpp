@@ -25,18 +25,27 @@ void Usart::Initialize(uint16_t channel)
 	//also configure clock source to SYSCLK
 	if (1 == channel)
 	{
-		base = USART1;
+		RCC->APB2RSTR |= RCC_APB2RSTR_USART1RST;
+		RCC->APB2RSTR &= ~RCC_APB2RSTR_USART1RST;
+
 		RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
+		base = USART1;
 	}
 	else if (2 == channel)
 	{
-		base = USART2;
+		RCC->APB1RSTR |= RCC_APB1RSTR_USART2RST;
+		RCC->APB1RSTR &= ~RCC_APB1RSTR_USART2RST;
+
 		RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
+		base = USART2;
 	}
 	else if (3 == channel)
 	{
-		base = USART3;
+		RCC->APB1RSTR |= RCC_APB1RSTR_USART3RST;
+		RCC->APB1RSTR &= ~RCC_APB1RSTR_USART3RST;
+		
 		RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
+		base = USART3;
 	}
 
 	//Enable Receiver and Transmitter
