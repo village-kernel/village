@@ -25,19 +25,17 @@ void Application3::Initialize()
 {
 	gui.Initialize(&(HWManager::Instance()->ili9488));
 	
-	gui.disp.ShowString(0, 0, (uint8_t*)"hello vk.kernel");
+	gui.disp.ShowString((uint8_t*)"hello vk.kernel\r\n\r\n");
 
 	FATFS fs; DIR file_dir; FILINFO fileinfo;
 
 	const TCHAR* path[] = { "0:", "1:" };
-
-	uint16_t disp_y = 32;
 	
 	for (uint8_t i = 0; i < 2; i++)
 	{
-		gui.disp.ShowString(0, disp_y, (uint8_t*)"storage");
-		gui.disp.ShowString(60, disp_y, (uint8_t*)path[i]);
-		disp_y += 16;
+		gui.disp.ShowString((uint8_t*)"storage ");
+		gui.disp.ShowString((uint8_t*)path[i]);
+		gui.disp.ShowString((uint8_t*)"\r\n");
 
 		if (f_mount(&fs, path[i], 1) == FR_OK)
 		{
@@ -48,27 +46,27 @@ void Application3::Initialize()
 					FRESULT res = f_readdir(&file_dir, &fileinfo);
 					if (res != FR_OK || fileinfo.fname[0] == 0) break;
 					
-					gui.disp.ShowString(0, disp_y, (uint8_t*)fileinfo.fname);
-					disp_y += 16;
+					gui.disp.ShowString((uint8_t*)fileinfo.fname);
+					gui.disp.ShowString((uint8_t*)"\r\n");
 				}
 			}
 			f_closedir(&file_dir);
 			f_unmount(path[i]);
-			disp_y += 16;
 		}
+		gui.disp.ShowString((uint8_t*)"\r\n");
 	}
 
-	user = this;
-	handler = (ThreadHandlerCpp)(&Application3::Task);
-	Thread::CreateTask(Application3::TaskHandler);
+	//user = this;
+	//handler = (ThreadHandlerCpp)(&Application3::Task);
+	//Thread::CreateTask(Application3::TaskHandler);
 }
 
 
 ///Execute
 void Application3::Execute()
 {
-	HWManager::Instance()->uartSerial.SendBytes((uint8_t*)"hello vk.kernel\r\n", 18);
-	Thread::Sleep(1000);
+	//HWManager::Instance()->uartSerial.SendBytes((uint8_t*)"hello vk.kernel\r\n", 18);
+	//Thread::Sleep(1000);
 }
 
 
