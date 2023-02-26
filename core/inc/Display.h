@@ -74,6 +74,7 @@ public:
 	void DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color = defStrokeColor);
 	void ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
 	void ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
+	void ShowString(uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
 	void ShowPicture(uint8_t *picture, uint16_t x = 0, uint16_t y = 0, uint16_t width = 0, uint16_t height = 0);
 };
 

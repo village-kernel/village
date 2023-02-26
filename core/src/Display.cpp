@@ -230,7 +230,39 @@ void Display::ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize
 		{
 			xOffset = 0;
 			yOffset += fontSize;
-			continue;
+		}
+
+		str++;
+	}
+}
+
+
+///Display show string without x and y
+void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint16_t color)
+{
+	static uint16_t xOffset = 0;
+	static uint16_t yOffset = 0;
+
+	while ('\0' != *str)
+	{
+		if ((xOffset >= disp->device.width) || ('\n' == *str))
+		{
+			xOffset = 0;
+			yOffset += fontSize;
+		}
+
+		if (yOffset >= disp->device.height)
+		{
+			xOffset = 0;
+			yOffset = 0;
+			Clear();
+		}
+
+		if ((*str <= '~') && (*str >= ' '))
+		{
+			ShowChar(xOffset, yOffset, *str, fontSize, mode, color);
+
+			xOffset += fontSize >> 1;
 		}
 
 		str++;
