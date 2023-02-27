@@ -9,6 +9,7 @@
 # includes
 ######################################
 INCLUDES += -I./vk.kernel/console/inc \
+	-I./vk.kernel/kernel/if \
 	-I./vk.kernel/kernel/inc \
 	-I./vk.kernel/libary/fatfs/inc \
 	-I./vk.kernel/utilities/inc
@@ -28,6 +29,7 @@ CPP_SOURCES += vk.kernel/kernel/src/Device.cpp \
 	vk.kernel/kernel/src/Kernel.cpp \
 	vk.kernel/kernel/src/Thread.cpp \
 	vk.kernel/kernel/src/Scheduler.cpp \
+	vk.kernel/kernel/src/IOStream.cpp \
 	vk.kernel/libary/fatfs/src/diskio.cpp \
 	vk.kernel/libary/fatfs/src/ff.cpp \
 	vk.kernel/libary/fatfs/src/ffsystem.cpp \
