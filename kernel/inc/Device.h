@@ -10,10 +10,10 @@
 #include "Driver.h"
 
 ///Driver create macro
-#define CREATE_DRIVER(drv)        static struct DRV{DRV(){drv;}} const drv;
+#define CREATE_DRIVER(drv)        static struct _DRV_##name{_DRV_##name(){drv;}} const _drv_##name;
 
 ///Driver register macro
-#define REGISTER_MODULE(drv, id)  CREATE_DRIVER(Device::RegisterDriver(drv, id))
+#define REGISTER_DRIVER(drv, id, name)  CREATE_DRIVER(Device::RegisterDriver(drv, id), name)
 
 ///Device
 class Device
