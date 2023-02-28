@@ -58,11 +58,13 @@ void Kernel::UpdateParams()
 }
 
 
-///Start scheduler
+///Execute thread tasks 
 void Kernel::Execute()
 {
+	//Start scheduler
 	Scheduler::StartScheduler();
 
+	//Should not go to here
 	while (1) {}
 }
 
