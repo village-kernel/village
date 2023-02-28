@@ -7,7 +7,8 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "System.h"
+#include "stdint.h"
+#include "stddef.h"
 
 ///Thread end point
 class ThreadEndpoint {};

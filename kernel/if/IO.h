@@ -7,7 +7,8 @@
 #ifndef __INPUT_OUTPUT_INTERFACE_H__
 #define __INPUT_OUTPUT_INTERFACE_H__
 
-#include "System.h"
+#include "stdint.h"
+#include "stddef.h"
 
 ///IO
 class IO

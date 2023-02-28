@@ -7,7 +7,8 @@
 #ifndef __MODULE_INTERFACE_H__
 #define __MODULE_INTERFACE_H__
 
-#include "System.h"
+#include "stdint.h"
+#include "stddef.h"
 
 ///Module
 class Module

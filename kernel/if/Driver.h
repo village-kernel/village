@@ -7,7 +7,8 @@
 #ifndef __DRIVER_INTERFACE_H__
 #define __DRIVER_INTERFACE_H__
 
-#include "System.h"
+#include "stdint.h"
+#include "stddef.h"
 
 ///Driver
 class Driver

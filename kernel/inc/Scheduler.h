@@ -7,8 +7,8 @@
 #ifndef __SCHEDULER_H__
 #define __SCHEDULER_H__
 
-#include "System.h"
-
+#include "stdint.h"
+#include "stddef.h"
 
 ///Scheduler
 class Scheduler
