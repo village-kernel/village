@@ -5,15 +5,11 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "kernel.h"
-#include "Thread.h"
-#include "Scheduler.h"
 
-
-///Initialize module core
-Kernel::ModuleNode* Kernel::list = NULL;
 
 ///Clear isReady flag
 volatile bool Kernel::isReady = false;
+
 
 ///Constructor
 Kernel::Kernel()
@@ -29,14 +25,23 @@ void Kernel::Initialize()
 	//Initialize thread
 	Thread::Initialize();
 
-	//Add LoopFunc to thread task
-	Thread::CreateTask(Kernel::LoopFunc);
+	//Add Device execute to thread task stack
+	Thread::CreateTask(Device::Execute);
 
-	//Initialize modules
-	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
-	{
-		node->module->Initialize();
-	}
+	//Add modular execute to thread task stack
+	Thread::CreateTask(Modular::Execute);
+	
+	//Add IOStream execute to thread task stack
+	Thread::CreateTask(IOStream::Execute);
+
+	//Initialize device
+	Device::Initialize();
+
+	//Initialize modular
+	Modular::Initialize();
+
+	//Initialize IOStream
+	IOStream::Initialize();
 
 	isReady = true;
 }
@@ -47,26 +52,9 @@ void Kernel::UpdateParams()
 {
 	if (!isReady) return;
 
-	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
-	{
-		node->module->UpdateParams();
-	}
-}
-
-
-///Execute module object->Execute
-void Kernel::LoopFunc()
-{
-	while (1)
-	{
-		if (isReady)
-		{
-			for (volatile ModuleNode* node = list; NULL != node; node = node->next)
-			{
-				node->module->Execute();
-			}
-		}
-	}
+	Device::UpdateParams();
+	Modular::UpdateParams();
+	IOStream::UpdateParams();
 }
 
 
@@ -84,63 +72,7 @@ void Kernel::FailSafe(int arg)
 {
 	if (!isReady) return;
 
-	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
-	{
-		node->module->FailSafe(arg);
-	}
-}
-
-
-///Register module object
-void Kernel::RegisterModule(Module* module, uint32_t id)
-{
-	ModuleNode** nextNode = &list;
-
-	if (module) module->SetID(id); else return;
-
-	while (NULL != *nextNode)
-	{
-		uint32_t curModuleID = (*nextNode)->module->GetID();
-		uint32_t newModuleID = module->GetID();
-
-		if (newModuleID < curModuleID)
-		{
-			ModuleNode* curNode = *nextNode;
-			*nextNode = new ModuleNode(module);
-			(*nextNode)->next = curNode;
-			return;
-		}
-		
-		nextNode = &(*nextNode)->next;
-	}
-
-	*nextNode = new ModuleNode(module);
-}
-
-
-///Deregister module object
-void Kernel::DeregisterModule(Module* module, uint32_t id)
-{
-	ModuleNode** prevNode = &list;
-	ModuleNode** currNode = &list;
-
-	while (NULL != *currNode)
-	{
-		if (module == (*currNode)->module)
-		{
-			delete *currNode;
-
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
-
-			break;
-		}
-		else
-		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
-		}
-	}
+	Device::FailSafe(arg);
+	Modular::FailSafe(arg);
+	IOStream::FailSafe(arg);
 }
