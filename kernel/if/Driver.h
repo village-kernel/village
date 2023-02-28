@@ -17,7 +17,10 @@ private:
 	uint32_t ID;
 public:
 	//Methods
-	virtual void Initialize();
+	virtual void Initialize()       {}
+	virtual void Execute()          {}
+	virtual void UpdateParams()     {}
+	virtual void FailSafe(int arg)  {}
 	virtual void Write(uint8_t* data, uint16_t size, uint16_t offset);
 	virtual void Read(uint8_t* data, uint16_t size, uint16_t offset);
 	virtual void Enable();
