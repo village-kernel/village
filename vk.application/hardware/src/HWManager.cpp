@@ -195,5 +195,5 @@ inline void HWManager::UsbInitialize()
 }
 
 
-///Register module
-REGISTER_MODULE(HWManager::Instance(), HARDWARE_ID(0), hardware);
+///Register driver
+REGISTER_DRIVER(HWManager::Instance(), 1, hardware);

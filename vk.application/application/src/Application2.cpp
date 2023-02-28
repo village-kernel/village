@@ -64,4 +64,4 @@ void Application2::TaskHandler()
 
 
 ///Register module
-REGISTER_MODULE(new Application2(), FUNCTION_ID(1), app_2);
+REGISTER_MODULE(new Application2(), 2, app_2);

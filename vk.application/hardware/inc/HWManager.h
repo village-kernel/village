@@ -7,7 +7,7 @@
 #ifndef __HW_MANAGER_H__
 #define __HW_MANAGER_H__
 
-#include "Module.h"
+#include "Driver.h"
 #include "UartSerial.h"
 #include "ILI9488.h"
 #include "SpiFlash.h"
@@ -16,7 +16,7 @@
 
 
 ///HWManager
-class HWManager : public Module
+class HWManager : public Driver
 {
 private:
 	//Static members

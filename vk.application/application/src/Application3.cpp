@@ -5,13 +5,9 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
-#include "Thread.h"
 #include "HWManager.h"
 #include "Application3.h"
 #include "ff.h"
-
-ThreadEndpoint* Application3::user;
-ThreadHandlerCpp Application3::handler;
 
 
 ///Constructor
@@ -55,47 +51,15 @@ void Application3::Initialize()
 		}
 		gui.disp.ShowString((uint8_t*)"\r\n");
 	}
-
-	//user = this;
-	//handler = (ThreadHandlerCpp)(&Application3::Task);
-	//Thread::CreateTask(Application3::TaskHandler);
 }
 
 
 ///Execute
 void Application3::Execute()
 {
-	//HWManager::Instance()->uartSerial.SendBytes((uint8_t*)"hello vk.kernel\r\n", 18);
-	//Thread::Sleep(1000);
-}
 
-
-///Task
-void Application3::Task()
-{
-	UartSerial* serial = &(HWManager::Instance()->uartSerial);
-
-	while (1)
-	{
-		serial->Execute();
-		
-		while (serial->HasBytes())
-		{
-			uint8_t byte = serial->ReadByte();
-			serial->SendBytes(&byte, 1, false);
-		}
-
-		Thread::Sleep(100);
-	}
-}
-
-
-///TaskHandler
-void Application3::TaskHandler()
-{
-	if (user != 0) { (user->*handler)(); }
 }
 
 
 ///Register module
-REGISTER_MODULE(new Application3(), FUNCTION_ID(2), app_3);
+REGISTER_MODULE(new Application3(), 3, app_3);
