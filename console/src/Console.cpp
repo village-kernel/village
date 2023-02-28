@@ -7,7 +7,6 @@
 #include "Kernel.h"
 #include "Console.h"
 #include "string.h"
-#include "HWManager.h"
 
 
 ///Thread members initialize
@@ -34,7 +33,7 @@ Console::Console()
 void Console::Initialize()
 {
 	//Initialize msg mgr
-	msgMgr.Initialize(&(HWManager::Instance()->uartSerial));
+	msgMgr.Initialize();
 
 	user = this;
 	handler = (ThreadHandlerCpp)(&Console::RecvMsgThread);

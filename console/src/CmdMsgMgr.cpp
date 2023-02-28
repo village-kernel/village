@@ -6,6 +6,7 @@
 // $Copyright: Copyright (C) village
 //############################################################################
 #include "CmdMsgMgr.h"
+#include "IOStream.h"
 #include "string.h"
 
 
@@ -20,9 +21,9 @@ CmdMsgMgr::CmdMsgMgr()
 
 
 ///CmdMsgMgr initialize
-void CmdMsgMgr::Initialize(VirtualSerial* transceiver)
+void CmdMsgMgr::Initialize()
 {
-	this->transceiver = transceiver;
+	
 }
 
 
@@ -31,11 +32,11 @@ bool CmdMsgMgr::Execute()
 {
 	//Sent data when txbuffer not empty
 	//Reset txBufPos when sent data successfully
-	if (txBufPos && transceiver->SendBytes(txBuffer, txBufPos)) txBufPos = 0;
+	if (txBufPos && IOStream::Write(txBuffer, txBufPos)) txBufPos = 0;
 
 	//Received data and decode
-	transceiver->Execute();
-	return DecodeRxBytes();
+	IOStream::Execute();
+	return HandleInputData();
 }
 
 
@@ -51,84 +52,21 @@ void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 }
 
 
-///CmdMsgMgr decode rx bytes
-bool CmdMsgMgr::DecodeRxBytes()
+///CmdMsgMgr Handle input data
+bool CmdMsgMgr::HandleInputData()
 {
-	while (transceiver->HasBytes())
+	uint8_t databuff[10] = { 0 };
+
+	while (IOStream::Read(databuff, 10))
 	{
 		if (rxBufPos >= arg_buffer_size)
 		{
 			rxBufPos = 0;
-			transceiver->ClearReceiveBuffer();
 			return false;
 		}
 
-		uint8_t byte = transceiver->ReadByte();
+		uint8_t byte = rxBuffer[rxBufPos++];
 
-		//Control code
-		if (0x1b == byte) //Ascii ESC
-		{
-			byte = transceiver->ReadByte();
-
-			if (0x5b == byte)
-			{
-				byte = transceiver->ReadByte();
-				switch (byte)
-				{
-					case 0x41: //up
-						break;
-					case 0x42: //down
-						break;
-					case 0x43: //right
-						break;
-					case 0x44: //left
-						break;
-					default: break;
-				}
-			}
-		}
-		else if (byte == 127) //Ascii DEL
-		{
-			if (rxBufPos)
-			{
-				rxBufPos--;
-				Write(&byte, 1);
-			}
-		}
-		else
-		{
-			//Ascii 32(space) ~ 126(~)
-			if ((byte >= ' ') && (byte <= '~'))
-			{
-				rxBuffer[rxBufPos++] = byte;
-
-				Write(&byte, 1);
-			}
-
-			//Ascii '\r'
-			if ('\r' == byte)
-			{
-				Write((uint8_t*)"\r\n", 2);
-
-				if (rxBufPos <= 1)
-				{
-					rxBufPos = 0;
-					return false; 
-				}
-
-				for (int8_t i = 0; i < rxBufPos ; i++)
-				{
-					if ((' ' == rxBuffer[i]) || ('\r' == rxBuffer[i])) break;
-
-					cmdBuffer[i] = rxBuffer[i];
-				}
-
-				cmdBuffer[rxBufPos] = '\0'; 
-
-				rxBufPos = 0;
-				return true;
-			}
-		}
 	}
 
 	return false;

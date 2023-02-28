@@ -10,7 +10,6 @@
 
 #include "System.h"
 #include "CmdDefines.h"
-#include "VirtualSerial.h"
 
 //CmdMsg struct
 struct CmdMsg
@@ -30,7 +29,6 @@ private:
 
 	//Members
 	CmdMsg rxMsg;
-	VirtualSerial* transceiver;
 	uint16_t txBufPos;
 	uint16_t rxBufPos;
 	uint8_t cmdBuffer[cmd_buffer_size] = { 0 };
@@ -38,11 +36,11 @@ private:
 	uint8_t rxBuffer[arg_buffer_size] = { 0 };
 
 	//Methods
-	bool DecodeRxBytes();
+	bool HandleInputData();
 public:
 	//Methods
 	CmdMsgMgr();
-	void Initialize(VirtualSerial* transceiver);
+	void Initialize();
 	bool Execute();
 	void Write(uint8_t* txMsg, uint16_t size = 0);
 
