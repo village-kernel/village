@@ -33,7 +33,6 @@ private:
 
 	//Members
 	static IONode* list;
-	static volatile bool isReady;
 public:
 	//Methods
 	IOStream();
@@ -41,6 +40,8 @@ public:
 	static void UpdateParams();
 	static void Execute();
 	static void FailSafe(int arg);
+	static int Write(uint8_t* data, uint16_t size = 0);
+	static int Read(uint8_t* data, uint16_t size = 0);
 	static void RegisterIO(IO* io, uint32_t id);
 	static void DeregisterIO(IO* io, uint32_t id);
 };

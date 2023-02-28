@@ -10,8 +10,6 @@
 ///Initialize io core
 IOStream::IONode* IOStream::list = NULL;
 
-///Clear isReady flag
-volatile bool IOStream::isReady = false;
 
 ///Constructor
 IOStream::IOStream()
@@ -22,23 +20,16 @@ IOStream::IOStream()
 ///Execute io object->Initialize
 void IOStream::Initialize()
 {
-	isReady = false;
-
-	//Initialize ios
 	for (volatile IONode* node = list; NULL != node; node = node->next)
 	{
 		node->io->Initialize();
 	}
-
-	isReady = true;
 }
 
 
 ///Execute io object->UpdateParams
 void IOStream::UpdateParams()
 {
-	if (!isReady) return;
-
 	for (volatile IONode* node = list; NULL != node; node = node->next)
 	{
 		node->io->UpdateParams();
@@ -51,12 +42,9 @@ void IOStream::Execute()
 {
 	while (1)
 	{
-		if (isReady)
+		for (volatile IONode* node = list; NULL != node; node = node->next)
 		{
-			for (volatile IONode* node = list; NULL != node; node = node->next)
-			{
-				node->io->Execute();
-			}
+			node->io->Execute();
 		}
 	}
 }
@@ -65,12 +53,42 @@ void IOStream::Execute()
 ///Execute io object->FailSafe
 void IOStream::FailSafe(int arg)
 {
-	if (!isReady) return;
-
 	for (volatile IONode* node = list; NULL != node; node = node->next)
 	{
 		node->io->FailSafe(arg);
 	}
+}
+
+
+
+///Write data to all io
+int IOStream::Write(uint8_t* data, uint16_t size)
+{
+	for (volatile IONode* node = list; NULL != node; node = node->next)
+	{
+		node->io->Write(data, size);
+	}
+
+	return size;
+}
+
+
+///Read data from all io
+int IOStream::Read(uint8_t* data, uint16_t size)
+{
+	uint16_t readSize = 0;
+
+	static volatile IONode* node = NULL;
+
+	if (NULL == node) node = list;
+
+	for (; NULL != node; node = node->next)
+	{
+		readSize = node->io->Read(data, size);
+		if (readSize) break;
+	}
+
+	return readSize;
 }
 
 
