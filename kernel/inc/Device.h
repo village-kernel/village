@@ -36,6 +36,10 @@ private:
 public:
 	//Methods
 	Device();
+	static void Initialize();
+	static void Execute();
+	static void UpdateParams();
+	static void FailSafe(int arg);
 	static void RegisterDriver(Driver* driver, uint32_t id);
 	static void DeregisterDriver(Driver* driver, uint32_t id);
 	static void GetDriver(Driver* driver, uint32_t id);

@@ -16,6 +16,49 @@ Device::Device()
 }
 
 
+///Execute device object->Initialize
+void Device::Initialize()
+{
+	for (volatile DriverNode* node = list; NULL != node; node = node->next)
+	{
+		node->driver->Initialize();
+	}
+}
+
+
+///Execute device object->UpdateParams
+void Device::UpdateParams()
+{
+	for (volatile DriverNode* node = list; NULL != node; node = node->next)
+	{
+		node->driver->UpdateParams();
+	}
+}
+
+
+///Execute device object->Execute
+void Device::Execute()
+{
+	while (1)
+	{
+		for (volatile DriverNode* node = list; NULL != node; node = node->next)
+		{
+			node->driver->Execute();
+		}
+	}
+}
+
+
+///Execute device object->FailSafe
+void Device::FailSafe(int arg)
+{
+	for (volatile DriverNode* node = list; NULL != node; node = node->next)
+	{
+		node->driver->FailSafe(arg);
+	}
+}
+
+
 ///Register driver object
 void Device::RegisterDriver(Driver* driver, uint32_t id)
 {
