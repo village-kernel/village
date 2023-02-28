@@ -7,14 +7,14 @@
 #ifndef __CONSOLE_H__
 #define __CONSOLE_H__
 
-#include "Module.h"
+#include "IO.h"
 #include "Thread.h"
 #include "CmdDefines.h"
 #include "CmdMsgMgr.h"
 
 
 ///Console
-class Console : public Module, public ThreadEndpoint
+class Console : public IO, public ThreadEndpoint
 {
 private:
 	//Thread definitions

@@ -13,7 +13,7 @@
 #define CREATE_IO(io, name) static struct _IO_##name{_IO_##name(){io;}} const _io_##name;
 
 ///io register macro
-#define REGISTER_IO(io, id, name) CREATE_IO(IOMgr::RegisterIO(io, id), name)
+#define REGISTER_IO(io, id, name) CREATE_IO(IOStream::RegisterIO(io, id), name)
 
 ///IOStream
 class IOStream

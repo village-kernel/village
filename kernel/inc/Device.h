@@ -10,7 +10,7 @@
 #include "Driver.h"
 
 ///Driver create macro
-#define CREATE_DRIVER(drv)        static struct _DRV_##name{_DRV_##name(){drv;}} const _drv_##name;
+#define CREATE_DRIVER(drv, name)        static struct _DRV_##name{_DRV_##name(){drv;}} const _drv_##name;
 
 ///Driver register macro
 #define REGISTER_DRIVER(drv, id, name)  CREATE_DRIVER(Device::RegisterDriver(drv, id), name)
@@ -37,8 +37,8 @@ public:
 	//Methods
 	Device();
 	static void Initialize();
-	static void Execute();
 	static void UpdateParams();
+	static void Execute();
 	static void FailSafe(int arg);
 	static void RegisterDriver(Driver* driver, uint32_t id);
 	static void DeregisterDriver(Driver* driver, uint32_t id);

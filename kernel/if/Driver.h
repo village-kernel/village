@@ -21,11 +21,8 @@ public:
 	virtual void Execute()          {}
 	virtual void UpdateParams()     {}
 	virtual void FailSafe(int arg)  {}
-	virtual void Write(uint8_t* data, uint16_t size, uint16_t offset);
-	virtual void Read(uint8_t* data, uint16_t size, uint16_t offset);
-	virtual void Enable();
-	virtual void Disable();
-	virtual void Reset();
+	virtual void Write(uint8_t* data, uint16_t size, uint16_t offset) {}
+	virtual void Read(uint8_t* data, uint16_t size, uint16_t offset)  {}
 
 	///Set the driver id
 	inline void SetID(uint32_t id) { ID = id; }

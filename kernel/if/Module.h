@@ -9,25 +9,6 @@
 
 #include "System.h"
 
-///Module layer id definition
-constexpr auto HARDWARE_ID_START = 0U;
-constexpr auto MISC_DEV_ID_START = 256U;
-constexpr auto FUNCTION_ID_START = 512U;
-constexpr auto COMM_APP_ID_START = 768U;
-constexpr auto EXTENDED_ID_START = 1024U;
-
-///Module layer id macro
-template<typename T>
-constexpr auto HARDWARE_ID(T id) { return (HARDWARE_ID_START + id); }
-template<typename T>
-constexpr auto MISC_DEV_ID(T id) { return (MISC_DEV_ID_START + id); }
-template<typename T>
-constexpr auto FUNCTION_ID(T id) { return (FUNCTION_ID_START + id); }
-template<typename T>
-constexpr auto COMM_APP_ID(T id) { return (COMM_APP_ID_START + id); }
-template<typename T>
-constexpr auto EXTENDED_ID(T id) { return (EXTENDED_ID_START + id); }
-
 ///Module
 class Module
 {
