@@ -8,15 +8,18 @@
 #define __USB_STORAGE_H__
 
 #include "HalHeaders.h"
+#include "Driver.h"
 
 ///UsbStorage
-class UsbStorage
+class UsbStorage : public Driver
 {
+private:
+	//Methods
+	void Mount();
+	void Unmount();
 public:
 	//Methods
 	void Initialize();
-	void Mount();
-	void Unmount();
 };
 
 #endif // !__USB_STORAGE_H__

@@ -7,18 +7,19 @@
 #include "UsbStorage.h"
 #include "usbd_desc.h"
 #include "usbd_msc.h"
-#include "System.h"
 #include "SpiFlash.h"
+#include "Device.h"
 #include "SdCard.h"
+#include "System.h"
+#include "Kernel.h"
 
 
 ///USB storage macro
 #define STORAGE_LUN_NBR                  2
 
 
-//Using spi flash
-extern SpiFlash* fatfsFlash;
-extern SdCard* fatfsSdCard;
+static SpiFlash* fatfsFlash = (SpiFlash*)Device::GetDriver(DriverID::_storage + 0);
+static SdCard* fatfsSdCard = (SdCard*)Device::GetDriver(DriverID::_storage + 1);
 
 
 ///Override HAL_InitTick()
@@ -85,7 +86,7 @@ static int8_t STORAGE_Read_FS(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uint
 			fatfsFlash->Read(buf, (blk_len * 512U), (blk_addr * 512U));
 			break;
 		case 1:
-			fatfsSdCard->Read(buf, blk_addr, blk_len);
+			fatfsSdCard->Read(buf, blk_len, blk_addr);
 			break;
 		default: return (USBD_FAIL);
 	}
@@ -103,7 +104,7 @@ static int8_t STORAGE_Write_FS(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uin
 			fatfsFlash->Write(buf, (blk_len * 512U), (blk_addr * 512U));
 			break;
 		case 1:
-			fatfsSdCard->Write(buf, blk_addr, blk_len);
+			fatfsSdCard->Write(buf, blk_len, blk_addr);
 			break;
 		default: return (USBD_FAIL);
 	}
@@ -187,6 +188,9 @@ void UsbStorage::Initialize()
 
 	//Register usb storage
 	USBD_MSC_RegisterStorage(&hUsbDeviceFS, &USBD_Storage_Interface_fops_FS);
+
+	//Start usbd
+	USBD_Start(&hUsbDeviceFS);
 }
 
 
@@ -202,3 +206,7 @@ void UsbStorage::Unmount()
 {
 	USBD_Stop(&hUsbDeviceFS);
 }
+
+
+///Register driver
+REGISTER_DRIVER(new UsbStorage(), DriverID::_usbStorage, usbStorage);
