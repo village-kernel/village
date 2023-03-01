@@ -8,13 +8,13 @@
 #define __ILI9488_H__
 
 #include "HalHeaders.h"
-#include "VirtualDisp.h"
+#include "Driver.h"
 #include "Gpo.h"
 #include "Fsmc.h"
 
 
 ///ILI9488
-class ILI9488 : public VirtualDisp
+class ILI9488 : public Driver
 {
 public:
 	struct Config
@@ -23,6 +23,31 @@ public:
 		Gpio::GpioChannel backLightCh;
 		uint16_t backLightPin;
 	};
+
+	//Enum
+	enum Dir
+	{
+		Up = 0,
+		Left,
+		Right,
+		Down,
+	};
+
+	//Device struct
+	struct DeviceStruct
+	{
+		uint32_t id;
+		Dir dir;
+		uint16_t width;
+		uint16_t height;
+		uint16_t setXCmd;
+		uint16_t setYCmd;
+		uint16_t wRamCmd;
+		uint16_t rRamCmd;
+	};
+
+	//Members
+	DeviceStruct device;
 protected:
 	struct __packed LCDMap
 	{
@@ -33,8 +58,9 @@ protected:
 	//Members
 	Fsmc fsmc;
 	Gpo backLight;
+	Config config;
 	LCDMap *lcdmap = (LCDMap*)(uint32_t)(0x6C000000 | 0x0000007E);
-	
+
 	//Methods
 	void WriteCmd(uint16_t reg);
 	void WriteData(uint16_t data);
@@ -45,6 +71,7 @@ protected:
 	void WriteRAM(uint16_t rgbVal);
 	
 	//Device methods
+	void InitConfig();
 	void DeviceConfig();
 	void DisplayConfig();
 	uint32_t ReadID();
@@ -55,7 +82,7 @@ protected:
 public:
 	//Device Methods
 	ILI9488();
-	void Initialize(Config config);
+	void Initialize();
 	void BackLightOn();
 	void BackLightOff();
 	void DisplayOn();
