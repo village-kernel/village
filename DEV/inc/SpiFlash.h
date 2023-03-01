@@ -9,11 +9,12 @@
 #define __SPI_FLASH_H__
 
 #include "HalHeaders.h"
+#include "Driver.h"
 #include "Spi.h"
 #include "Gpo.h"
 
 ///SpiFlash
-class SpiFlash
+class SpiFlash : public Driver
 {
 public:
 	//Structures
@@ -67,11 +68,13 @@ private:
 	Spi spi;
 	Gpo csPin;
 	Gpo wpPin;
+	Config config;
 
 	//Members
 	static bool flashError;
 
 	//Methods
+	void InitConfig();
 	void WriteAddr(uint32_t addr);
 	void WriteCmd(uint8_t cmd);
 	void WriteOneByte(uint8_t data);
@@ -83,7 +86,7 @@ private:
 	void WriteDisable();
 public:
 	//Methods
-	void Initialize(Config config);
+	void Initialize();
 	void EraseChip();
 	void EraseSector(uint32_t wordAddress);
 	uint16_t GetDeviceID();
@@ -91,6 +94,7 @@ public:
 	void PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress);
 	void SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress);
 	int WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t wordAddress);
+	
 	int Write(uint8_t *txData, uint32_t size, uint32_t wordAddress);
 	int Read(uint8_t* rxData, uint32_t size, uint32_t wordAddress);
 

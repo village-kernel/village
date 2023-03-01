@@ -6,14 +6,20 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "SpiFlash.h"
+#include "HwConfig.h"
+#include "Kernel.h"
+
 
 ///Static members initialize
 bool SpiFlash::flashError = false;
 
 
 ///Initializes the spi flase module
-void SpiFlash::Initialize(SpiFlash::Config config)
+void SpiFlash::Initialize()
 {
+	//Init config
+	InitConfig();
+
 	//Initialize spi
 	spi.Initialize(config.SpiCh);
 	spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol0Cpha0, config.SpiConfig);
@@ -29,6 +35,26 @@ void SpiFlash::Initialize(SpiFlash::Config config)
 
 	//Check if the device id is correct
 	if (GetDeviceID() != DeviceID) flashError = true;
+}
+
+
+///Init config
+inline void SpiFlash::InitConfig()
+{
+	config.SpiCh = SPI_FLASH_CHANNEL;
+	config.SpiConfig.sckCh = SPI_FLASH_SCK_CH;
+	config.SpiConfig.sckPin = SPI_FLASH_SCK_PIN;
+	config.SpiConfig.sckAltNum = SPI_FLASH_SCK_AF_NUM;
+	config.SpiConfig.misoCh = SPI_FLASH_MISO_CH;
+	config.SpiConfig.misoPin = SPI_FLASH_MISO_PIN;
+	config.SpiConfig.misoAltNum = SPI_FLAHS_MISO_AF_NUM;
+	config.SpiConfig.mosiCh = SPI_FLASH_MOSI_CH;	
+	config.SpiConfig.mosiPin = SPI_FLASH_MOSI_PIN;
+	config.SpiConfig.mosiAltNum = SPI_FLASH_MOSI_AF_NUM;
+	config.flashcsCh = SPI_FLASH_CS_CH;
+	config.flashcsPin = SPI_FLASH_CS_PIN;
+	config.flashwpCh = SPI_FLASH_WP_CH;
+	config.flashwpPin = SPI_FLASH_WP_PIN;
 }
 
 
@@ -314,3 +340,7 @@ int SpiFlash::Read(uint8_t* rxData, uint32_t size, uint32_t wordAddress)
 
 	return size;
 }
+
+
+///Register driver
+REGISTER_DRIVER(new SpiFlash(), DriverID::_storage + 0, spiFlash);
