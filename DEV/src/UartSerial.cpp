@@ -6,13 +6,18 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "Kernel.h"
 #include "UartSerial.h"
+#include "HwConfig.h"
 #include "string.h"
 
 
 ///Initializes internal buffers
-void UartSerial::Initialize(UartSerial::Config config)
+void UartSerial::Initialize()
 {
+	//Init config
+	InitConfig();
+
 	//Configure usart
 	usart.Initialize(config.usartCh);
 	usart.ConfigPin(config.usartTxPin);
@@ -40,11 +45,40 @@ void UartSerial::Initialize(UartSerial::Config config)
 }
 
 
-///Change serial baudrate
-void UartSerial::ChangeBaudrate(uint32_t baudrate)
+///Initialize config
+void UartSerial::InitConfig()
+{
+	//Config uart serial
+	config.usartCh = UART_SERIAL_CHANNEL;
+	config.usartBaudrate = UART_SERIAL_BAUD_RATE;
+
+	//Config uart rx pin
+	config.usartRxPin.ch = UART_SERIAL_RX_CH;
+	config.usartRxPin.pin = UART_SERIAL_RX_PIN;
+	config.usartRxPin.alt = UART_SERIAL_RX_AF_NUM;
+
+	//Config uart tx pin
+	config.usartTxPin.ch = UART_SERIAL_TX_CH;
+	config.usartTxPin.pin = UART_SERIAL_TX_PIN;
+	config.usartTxPin.alt = UART_SERIAL_TX_AF_NUM;
+
+	//Config uart rx dma
+	config.usartRxDmaGroup = UART_SERIAL_RX_DMA_GROUP;
+	config.usartRxDmaCh = UART_SERIAL_RX_DMA_CHANNEL;
+	config.usartRxDmaReq = UART_SERIAL_RX_DMA_REQUEST;
+
+	//Config uart tx dma
+	config.usartTxDmaGroup = UART_SERIAL_TX_DMA_GROUP;
+	config.usartTxDmaCh = UART_SERIAL_TX_DMA_CHANNEL;
+	config.usartTxDmaReq = UART_SERIAL_TX_DMA_REQUEST;
+}
+
+
+///Updata parameters
+void UartSerial::UpdataParams()
 {
 	usart.Disable();
-	usart.SetBaudRate(baudrate);
+	usart.SetBaudRate(config.usartBaudrate);
 	usart.Enable();
 }
 
@@ -65,46 +99,46 @@ inline void UartSerial::CopyTxData(uint8_t* txData, uint16_t length)
 }
 
 
-///Instructs the manager to attempt to transmit data via dma, returns whether data
-///was queued up for transmission.
-bool UartSerial::SendBytes(uint8_t* txData, uint16_t length, bool enaDma)
+///Write data via dma.
+int UartSerial::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	usart.CheckError();
 
-	if (enaDma)
+	if (txDma.IsReady())
 	{
-		if (txDma.IsReady())
-		{
-			CopyTxData(txData, length);
+		CopyTxData(data + offset, size);
 
-			//Reset pipeline, sync bus and memory access
-			__asm ("dmb\n" "dsb\n" "isb\n");
+		//Reset pipeline, sync bus and memory access
+		__asm ("dmb\n" "dsb\n" "isb\n");
 
-			txDma.Disable();
-			txDma.ClearTransferCompleteFlag();
-			txDma.SetMemAddr0(txBuffer);
-			txDma.SetDataLen(length);
-			txDma.Enable();
+		txDma.Disable();
+		txDma.ClearTransferCompleteFlag();
+		txDma.SetMemAddr0(txBuffer);
+		txDma.SetDataLen(size);
+		txDma.Enable();
 
-			return true;
-		}
-	}
-	else
-	{
-		if (0 == usart.Write(txData, length)) return true;
+		return size;
 	}
 
-	return false;
+	return 0;
 }
 
 
-///Indicates whether has message
-bool UartSerial::HasMessage()
+///Read data from rx buffer
+int UartSerial::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
-	if (usart.IsReceiverTimeout())
+	uint32_t readSize = 0;
+
+	while (rxFifo.Length())
 	{
-		usart.ClearReceiverTimeoutFlag();
-		return true;
+		data[offset + readSize++] = rxFifo.Dequeue();
+
+		if (readSize >= size) break;
 	}
-	return false;
+
+	return readSize;
 }
+
+
+///Register driver
+REGISTER_DRIVER(new UartSerial(), DriverID::_serial, uartSerial);

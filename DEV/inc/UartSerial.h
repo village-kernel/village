@@ -10,14 +10,13 @@
 #define __UART_SERIAL_H__
 
 #include "HalHeaders.h"
-#include "VirtualSerial.h"
 #include "Usart.h"
 #include "Dma.h"
 #include "DmaFifo.h"
-
+#include "Driver.h"
 
 ///UartSerial
-class UartSerial : public VirtualSerial
+class UartSerial : public Driver
 {
 public:
 	//Structures
@@ -46,27 +45,20 @@ private:
 	Dma txDma;
 	Usart usart;
 	DmaFifo rxFifo;
+	Config config;
 	uint8_t txBuffer[BufferSize] = { 0 };
 
 	//Methods
+	void InitConfig();
+	void ChangeBaudrate(uint32_t baudrate);
 	void CopyTxData(uint8_t* txData, uint16_t length);
 public:
 	//Methods
-	void Initialize(Config config);
-	void ChangeBaudrate(uint32_t baudrate);
+	void Initialize();
+	void UpdataParams();
 	void Execute();
-	bool SendBytes(uint8_t* txData, uint16_t length, bool enaDma = true);
-	bool HasMessage();
-	
-	///Indicates whether RX buffer has data
-	inline bool HasBytes() { return (rxFifo.Length() > 0); }
-
-	///Read a single byte from the RX buffer.
-	inline uint8_t ReadByte() { return rxFifo.Dequeue(); }
-
-	///Clear receive buffer
-	inline void ClearReceiveBuffer() { rxFifo.Clear(); }
+	int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
+	int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
 };
 
 #endif // !__UART_SERIAL_H__
-
