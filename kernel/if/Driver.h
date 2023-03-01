@@ -23,8 +23,8 @@ public:
 	virtual void FailSafe(int arg)  {}
 
 	//IO ctrl methods
-	virtual int Write(uint8_t* data, uint32_t size, uint32_t offset) { return 0; }
-	virtual int Read(uint8_t* data, uint32_t size, uint32_t offset)  { return 0; }
+	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
+	virtual int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0)  { return 0; }
 
 	///Set the driver id
 	inline void SetID(uint32_t id) { ID = id; }
