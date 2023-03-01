@@ -115,7 +115,7 @@ void Device::DeregisterDriver(Driver* driver, uint32_t id)
 
 
 ///Get the driver object
-void Device::GetDriver(Driver* driver, uint32_t id)
+Driver* Device::GetDriver(uint32_t id)
 {
 	DriverNode** nextNode = &list;
 
@@ -126,10 +126,11 @@ void Device::GetDriver(Driver* driver, uint32_t id)
 
 		if (getDriverID == curDriverID)
 		{
-			driver = (*nextNode)->driver;
-			return;
+			return (*nextNode)->driver;
 		}
 
 		nextNode = &(*nextNode)->next;
 	}
+
+	return NULL;
 }
