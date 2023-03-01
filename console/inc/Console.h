@@ -29,7 +29,7 @@ private:
 	CmdMsgMgr msgMgr;
 
 	//Methods
-	void RecvMsgThread();
+	void ExecuteThread();
 	void ExecuteCmd(CmdMsg msg);
 	void About(CmdMsg msg);
 	void Help(CmdMsg msg);
@@ -37,7 +37,6 @@ public:
 	//Methods
 	Console();
 	void Initialize();
-	void Execute();
 
 	//Static methods
 	static void ThreadHandler();

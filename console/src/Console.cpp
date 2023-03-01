@@ -36,20 +36,13 @@ void Console::Initialize()
 	msgMgr.Initialize();
 
 	user = this;
-	handler = (ThreadHandlerCpp)(&Console::RecvMsgThread);
+	handler = (ThreadHandlerCpp)(&Console::ExecuteThread);
 	Thread::CreateTask(Console::ThreadHandler);
 }
 
 
-///Console execute
-void Console::Execute()
-{
-
-}
-
-
 ///Recevice message thread
-void Console::RecvMsgThread()
+void Console::ExecuteThread()
 {
 	while (1)
 	{
