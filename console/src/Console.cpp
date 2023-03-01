@@ -101,5 +101,5 @@ void Console::Help(CmdMsg msg)
 }
 
 
-///Register io
-REGISTER_IO(new Console(), 0, console);
+///Register module
+REGISTER_MODULE(new Console(), ModuleID::_console, console);
