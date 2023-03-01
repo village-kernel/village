@@ -5,7 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
-#include "HWManager.h"
 #include "Application3.h"
 #include "ff.h"
 
@@ -19,7 +18,11 @@ Application3::Application3()
 ///Initialize
 void Application3::Initialize()
 {
-	gui.Initialize(&(HWManager::Instance()->ili9488));
+	Driver* display = Device::GetDriver(DriverID::_display);
+
+	if (NULL == display) return;
+
+	gui.Initialize((ILI9488*)display);
 	
 	gui.disp.ShowString((uint8_t*)"hello vk.kernel\r\n\r\n");
 
@@ -62,4 +65,4 @@ void Application3::Execute()
 
 
 ///Register module
-REGISTER_MODULE(new Application3(), 3, app_3);
+REGISTER_MODULE(new Application3(), (ModuleID::_application + 2), app_3);

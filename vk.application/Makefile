@@ -8,9 +8,7 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./vk.application/hardware/config \
-	-I./vk.application/hardware/inc \
-	-I./vk.application/application/inc
+INCLUDES += -I./vk.application/application/inc
 
 
 ######################################
@@ -24,7 +22,6 @@ C_SOURCES +=
 
 # Cpp sources
 CPP_SOURCES += vk.application/Start.cpp \
-	vk.application/hardware/src/HWManager.cpp \
 	vk.application/application/src/Application1.cpp \
 	vk.application/application/src/Application2.cpp \
 	vk.application/application/src/Application3.cpp
