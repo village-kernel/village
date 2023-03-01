@@ -7,8 +7,7 @@
 #ifndef __INPUT_OUTPUT_INTERFACE_H__
 #define __INPUT_OUTPUT_INTERFACE_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Defines.h"
 
 ///IO
 class IO
@@ -22,8 +21,10 @@ public:
 	virtual void Execute()          {}
 	virtual void UpdateParams()     {}
 	virtual void FailSafe(int arg)  {}
-	virtual int Write(uint8_t* data, uint8_t size) { return 0; }
-	virtual int Read(uint8_t* data, uint8_t size) { return 0; }
+
+	//IO ctrl methods
+	virtual int Write(uint8_t* data, uint32_t size, uint32_t offset) { return 0; }
+	virtual int Read(uint8_t* data, uint32_t size, uint32_t offset)  { return 0; }
 
 	///Set the input/output id
 	inline void SetID(uint32_t id) { ID = id; }

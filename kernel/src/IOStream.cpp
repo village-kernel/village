@@ -62,11 +62,11 @@ void IOStream::FailSafe(int arg)
 
 
 ///Write data to all io
-int IOStream::Write(uint8_t* data, uint16_t size)
+int IOStream::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	for (volatile IONode* node = list; NULL != node; node = node->next)
 	{
-		node->io->Write(data, size);
+		node->io->Write(data, size, offset);
 	}
 
 	return size;
@@ -74,7 +74,7 @@ int IOStream::Write(uint8_t* data, uint16_t size)
 
 
 ///Read data from all io
-int IOStream::Read(uint8_t* data, uint16_t size)
+int IOStream::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	uint16_t readSize = 0;
 
@@ -84,7 +84,7 @@ int IOStream::Read(uint8_t* data, uint16_t size)
 
 	for (; NULL != node; node = node->next)
 	{
-		readSize = node->io->Read(data, size);
+		readSize = node->io->Read(data, size, offset);
 		if (readSize) break;
 	}
 
