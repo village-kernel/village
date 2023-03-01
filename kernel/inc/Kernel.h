@@ -11,7 +11,6 @@
 #include "Scheduler.h"
 #include "Modular.h"
 #include "Device.h"
-#include "IOStream.h"
 
 ///Kernel
 class Kernel

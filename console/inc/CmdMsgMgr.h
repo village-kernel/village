@@ -8,7 +8,7 @@
 #ifndef __COMMAND_MSG_MGR_H__
 #define __COMMAND_MSG_MGR_H__
 
-#include "System.h"
+#include "Driver.h"
 #include "CmdDefines.h"
 
 //CmdMsg struct
@@ -34,6 +34,7 @@ private:
 	uint8_t cmdBuffer[cmd_buffer_size] = { 0 };
 	uint8_t txBuffer[arg_buffer_size] = { 0 };
 	uint8_t rxBuffer[arg_buffer_size] = { 0 };
+	Driver* transceiver;
 
 	//Methods
 	bool HandleInputData();

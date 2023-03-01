@@ -28,17 +28,11 @@ void Kernel::Initialize()
 	//Add Device execute to thread task stack
 	Thread::CreateTask(Device::Execute);
 
-	//Add IOStream execute to thread task stack
-	Thread::CreateTask(IOStream::Execute);
-
 	//Add modular execute to thread task stack
 	Thread::CreateTask(Modular::Execute);
 
 	//Initialize device
 	Device::Initialize();
-
-	//Initialize IOStream
-	IOStream::Initialize();
 
 	//Initialize modular
 	Modular::Initialize();
@@ -53,7 +47,6 @@ void Kernel::UpdateParams()
 	if (!isReady) return;
 
 	Device::UpdateParams();
-	IOStream::UpdateParams();
 	Modular::UpdateParams();
 }
 
@@ -75,6 +68,5 @@ void Kernel::FailSafe(int arg)
 	if (!isReady) return;
 
 	Device::FailSafe(arg);
-	IOStream::FailSafe(arg);
 	Modular::FailSafe(arg);
 }
