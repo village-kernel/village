@@ -12,6 +12,7 @@
 #include "stdlib.h"
 #include "SpiFlash.h"
 #include "SdCard.h"
+#include "Device.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,8 +22,8 @@ extern "C" {
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
 #define DEV_SD      1
 
-extern SpiFlash* fatfsFlash;
-extern SdCard* fatfsSdCard;
+static SpiFlash* fatfsFlash = (SpiFlash*)Device::GetDriver(DriverID::_storage + 0);
+static SdCard* fatfsSdCard = (SdCard*)Device::GetDriver(DriverID::_storage + 1);
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -77,7 +78,7 @@ DRESULT disk_read (
 			fatfsFlash->Read((uint8_t*)buff, (count * 512U), (sector * 512U));
 			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
 		case DEV_SD:
-			return (DRESULT)fatfsSdCard->Read((uint8_t*)buff, sector, count);
+			return (DRESULT)fatfsSdCard->Read((uint8_t*)buff, count, sector);
 	}
 	return RES_PARERR;
 }
@@ -103,7 +104,7 @@ DRESULT disk_write (
 			fatfsFlash->Write((uint8_t*)buff, (count * 512U), (sector * 512U));
 			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
 		case DEV_SD:
-			return (DRESULT)fatfsSdCard->Write((uint8_t*)buff, sector, count);
+			return (DRESULT)fatfsSdCard->Write((uint8_t*)buff, count, sector);
 	}
 	return RES_PARERR;
 }
