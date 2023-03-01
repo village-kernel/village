@@ -6,11 +6,16 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "SdCard.h"
+#include "HwConfig.h"
+#include "Kernel.h"
 
 
 ///Sd card initialize
-void SdCard::Initialize(Config config)
+void SdCard::Initialize()
 {
+	//Init config
+	InitConfig();
+
 	//Initialize spi
 	spi.Initialize(config.SpiCh);
 	spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol1Cpha1, config.SpiConfig);
@@ -26,6 +31,26 @@ void SdCard::Initialize(Config config)
 
 	//Initialize sd card
 	SdCardInit();
+}
+
+
+///Init config
+inline void SdCard::InitConfig()
+{
+	config.SpiCh = SPI_SD_CHANNEL;
+	config.SpiConfig.sckCh = SPI_SD_SCK_CH;
+	config.SpiConfig.sckPin = SPI_SD_SCK_PIN;
+	config.SpiConfig.sckAltNum = SPI_SD_SCK_AF_NUM;
+	config.SpiConfig.misoCh = SPI_SD_MISO_CH;
+	config.SpiConfig.misoPin = SPI_SD_MISO_PIN;
+	config.SpiConfig.misoAltNum = SPI_SD_MISO_AF_NUM;
+	config.SpiConfig.mosiCh = SPI_SD_MOSI_CH;	
+	config.SpiConfig.mosiPin = SPI_SD_MOSI_PIN;
+	config.SpiConfig.mosiAltNum = SPI_SD_MOSI_AF_NUM;
+	config.sdcsCh = SPI_SD_CS_CH;
+	config.sdcsPin = SPI_SD_CS_PIN;
+	config.detectCh = SPI_SD_DETECT_CH;
+	config.detectPin = SPI_SD_DETECT_PIN;
 }
 
 
@@ -331,7 +356,7 @@ int SdCard::Sync()
 
 
 ///Spi sd card write data
-int SdCard::Write(uint8_t *txData, uint32_t sector, uint32_t blkSize)
+int SdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 {
 	uint8_t res = 0;
 
@@ -383,7 +408,7 @@ int SdCard::Write(uint8_t *txData, uint32_t sector, uint32_t blkSize)
 
 
 ///Spi sd card read data
-int SdCard::Read(uint8_t* rxData, uint32_t sector, uint32_t blkSize)
+int SdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 {
 	uint8_t res = 0;
 
@@ -425,3 +450,7 @@ int SdCard::Read(uint8_t* rxData, uint32_t sector, uint32_t blkSize)
 
 	return res;
 }
+
+
+///Register driver
+REGISTER_DRIVER(new SdCard(), DriverID::_storage + 1, sdcard);
