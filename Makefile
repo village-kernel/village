@@ -16,6 +16,7 @@ INCLUDES += -I./vk.hardware/BSP/ST/CMSIS/Include \
 	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc \
 	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc \
 	-I./vk.hardware/HAL/ST/STM32F4xx/inc \
+	-I./vk.hardware/DEV/config \
 	-I./vk.hardware/DEV/inc
 
 
