@@ -11,26 +11,22 @@
 #include "stddef.h"
 
 
-///Module id defines
-enum ModuleID
-{
-	_console             = 1,
-};
-
-
 ///Driver id defines
 enum DriverID
 {
 	_serial              = 1,
 	_display             = 21,
 	_storage             = 31,
+	_usbStorage          = 41,
 };
 
 
-///IO id defines
-enum IOID
+///Module id defines
+enum ModuleID
 {
-
+	_console             = 1,
+	_application         = 200,
 };
+
 
 #endif //!__DEFINES_H__
