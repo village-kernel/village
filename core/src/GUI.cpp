@@ -13,7 +13,7 @@ GUI::GUI()
 
 
 ///Intialize
-void GUI::Initialize(VirtualDisp* disp)
+void GUI::Initialize(ILI9488* disp)
 {
 	this->disp.Initialize(disp);
 }

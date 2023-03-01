@@ -14,7 +14,7 @@ Display::Display()
 
 
 ///Display Initialize
-void Display::Initialize(VirtualDisp* disp)
+void Display::Initialize(ILI9488* disp)
 {
 	this->disp = disp;
 }

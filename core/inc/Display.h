@@ -8,7 +8,7 @@
 #define __DISPLAY_H__
 
 #include "ASCIIFont.h"
-#include "VirtualDisp.h"
+#include "ILI9488.h"
 
 
 ///Display
@@ -58,11 +58,11 @@ private:
 	static const Color defBackgroundColor = Black;
 
 	//Members
-	VirtualDisp* disp;
+	ILI9488* disp;
 public:
 	//Methods
 	Display();
-	void Initialize(VirtualDisp* disp);
+	void Initialize(ILI9488* disp);
 	void OpenWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 	void SetCursor(uint16_t x, uint16_t y);
 	void Fill(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color = defStrokeColor);

@@ -18,7 +18,7 @@ public:
 
 	//Methods
 	GUI();
-	void Initialize(VirtualDisp* disp);
+	void Initialize(ILI9488* disp);
 };
 
 #endif //!__GUI_H__
