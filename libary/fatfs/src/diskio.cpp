@@ -20,8 +20,8 @@ extern "C" {
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
 #define DEV_SD      1
 
-static Driver* flash;
-static Driver* sdCard;
+static Driver* flash = NULL;
+static Driver* sdCard = NULL;
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -122,8 +122,6 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	DRESULT res;
-
 	switch (pdrv)
 	{
 		case DEV_MMC:
