@@ -23,6 +23,16 @@ struct CmdMsg
 class CmdMsgMgr
 {
 private:
+	//Enumerations
+	enum InputMode
+	{
+		_EDIT = 0,
+		_ANSI,
+		_DCS,
+		_CSI,
+		_OSC,
+	};
+
 	//Static constants
 	static const uint16_t cmd_buffer_size = 20;
 	static const uint16_t arg_buffer_size = 256;
@@ -35,6 +45,7 @@ private:
 	uint8_t txBuffer[arg_buffer_size] = { 0 };
 	uint8_t rxBuffer[arg_buffer_size] = { 0 };
 	Driver* transceiver;
+	InputMode inputMode;
 
 	//Methods
 	bool HandleInputData();

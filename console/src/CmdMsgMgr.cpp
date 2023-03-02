@@ -13,7 +13,8 @@
 ///Constructor
 CmdMsgMgr::CmdMsgMgr()
 	:txBufPos(0),
-	rxBufPos(0)
+	rxBufPos(0),
+	inputMode(_EDIT)
 {
 	rxMsg.cmd = cmdBuffer;
 	rxMsg.args = rxBuffer;
@@ -71,69 +72,152 @@ bool CmdMsgMgr::HandleInputData()
 			return false;
 		}
 
-		//Control code
-		if (0x1b == byte) //Ascii ESC
+		switch (inputMode)
 		{
-			transceiver->Read(&byte, 1);
-
-			if (0x5b == byte)
+			case _EDIT:
 			{
-				transceiver->Read(&byte, 1);
+				//ANSI ESC
+				if ('\033' == byte)
+				{
+					inputMode = _ANSI;
+				}
+
+				//ASCII 32(space) ~ 126(~)
+				else if (byte >= 0x20 && byte <= 0x7e)
+				{
+					txBuffer[txBufPos++] = byte;
+					rxBuffer[rxBufPos++] = byte;
+				}
+
+				//ASCII DEL
+				else if (0x7f == byte)
+				{
+					if (rxBufPos)
+					{
+						rxBufPos--;
+						txBuffer[txBufPos++] = byte;
+					}
+				}
+
+				//ASCII CR
+				else if (0x0d == byte)
+				{
+					//String terminator
+					rxBuffer[rxBufPos++] = '\0';
+
+					//Enter and new line
+					txBuffer[txBufPos++] = '\r';
+					txBuffer[txBufPos++] = '\n';
+
+					//Check rxBufPos
+					if (rxBufPos <= 1)
+					{
+						rxBufPos = 0;
+						return false; 
+					}
+
+					//Set command
+					for (int8_t i = 0; i <= rxBufPos ; i++)
+					{
+						if ((' '  == rxBuffer[i]) ||
+							('\r' == rxBuffer[i]) ||
+							(  i  == rxBufPos   ))
+						{
+							cmdBuffer[i] = '\0'; break;
+						}
+
+						cmdBuffer[i] = rxBuffer[i];
+					}
+
+					//Reset rxBufPos
+					rxBufPos = 0;
+					return true;
+				}
+			}
+			break;
+
+			case _ANSI:
+			{
 				switch (byte)
 				{
-					case 0x41: //up
+					case 'N': //ESC N | 0x8e | SS2 – Single Shift Two
 						break;
-					case 0x42: //down
+					case 'O': //ESC O | 0x8f | SS3 – Single Shift Three
 						break;
-					case 0x43: //right
+					case 'P': //ESC P | 0x90 | DCS – Device Control String
+						inputMode = _DCS;
 						break;
-					case 0x44: //left
+					case '[': //ESC [ | 0x9b | CSI - Control Sequence Introducer
+						inputMode = _CSI;
+						break;
+					case '\\'://ESC \ | 0x9c | ST – String Terminator
+						break;
+					case ']': //ESC ] | 0x9d | OSC – Operating System Command
+						inputMode = _OSC;
+						break;
+					case 'X': //ESC X | 0x98 | SOS – Start of String
+						break;
+					case '^': //ESC ^ | 0x9e | PM – Privacy Message
+						break;
+					case '_': //ESC _ | 0x9f | APC – Application Program Command
+						break;
+					case 'c': //ESC c |      | RIS – Reset to Initial State
 						break;
 					default: break;
 				}
 			}
-		}
-		else if (byte == 127) //Ascii DEL
-		{
-			if (rxBufPos)
+			break;
+
+			case _DCS:
 			{
-				rxBufPos--;
-				Write(&byte, 1);
+				
 			}
-		}
-		else
-		{
-			//Ascii 32(space) ~ 126(~)
-			if ((byte >= ' ') && (byte <= '~'))
+			break;
+
+			case _CSI:
 			{
-				rxBuffer[rxBufPos++] = byte;
-
-				Write(&byte, 1);
-			}
-
-			//Ascii '\r'
-			if ('\r' == byte)
-			{
-				Write((uint8_t*)"\r\n", 2);
-
-				if (rxBufPos <= 1)
+				//Param byte
+				if (byte >= 0x30 && byte <= 0x3f)
 				{
-					rxBufPos = 0;
-					return false; 
+
 				}
 
-				for (int8_t i = 0; i < rxBufPos ; i++)
+				//Middle byte
+				if (byte >= 0x20 && byte <= 0x2f)
 				{
-					if ((' ' == rxBuffer[i]) || ('\r' == rxBuffer[i])) break;
 
-					cmdBuffer[i] = rxBuffer[i];
 				}
 
-				cmdBuffer[rxBufPos] = '\0'; 
+				//Final byte
+				if (byte >= 0x40 && byte <= 0x7e)
+				{
+					switch (byte)
+					{
+						case 'A': //up
+							break;
+						case 'B': //down
+							break;
+						case 'C': //right
+							break;
+						case 'D': //left
+							break;
+						case 'm': //SGR
+							break;
+						default: break;
+					}
 
-				rxBufPos = 0;
-				return true;
+					inputMode = _EDIT;
+				}
 			}
+			break;
+
+			case _OSC:
+			{
+				if ('\0' == byte) inputMode = _EDIT;
+			}
+			break;
+
+			default: break;
 		}
 	}
 
