@@ -288,6 +288,23 @@ uint8_t SdCard::SdCardInit()
 }
 
 
+///Spi sd card get ocr data
+int SdCard::GetOCR(uint8_t* ocrData)
+{
+	uint8_t	res = WriteCmd(_ReadOCR, 0, 0x01);
+
+	if (_response_no_err == res)
+	{
+		for (uint8_t i = 0; i < 4; i++)
+		{
+			ocrData[i] = ReadOneByte();
+		}
+	}
+
+	return res ? 1 : 0;
+}
+
+
 ///Spi sd card get cid data
 int SdCard::GetCID(uint8_t* cidData)
 {
@@ -352,6 +369,46 @@ int SdCard::Sync()
 	if (0 == WaitReady()) res = 0;
 	csPin.Set();
 	return res;
+}
+
+
+///Spi sd card io ctrl
+int SdCard::IOCtrl(uint8_t cmd, void* data)
+{
+	switch (cmd)
+	{
+		case _CtrlSync: 
+			Sync();
+			break;
+		case _GetSectorCount:
+			*(uint32_t*)data = GetSectorCount();
+			break;
+		case _GetSectorSize:
+			*(uint16_t *)data = (SdCardType::_V2HC != sdcardType) ? 512 : 1;
+			break;
+		case _GetBlockSzie:
+			*(uint16_t *)data = 8;
+			break;
+		case _Ctrltrim:
+			break;
+		
+		case _GetType:
+			*(uint32_t *)data = 1;
+			break;
+		case _GetCSDData:
+			GetCSD((uint8_t*)data);
+			break;
+		case _GetCIDData:
+			GetCID((uint8_t*)data);
+			break;
+		case _GetOCRData:
+			GetOCR((uint8_t*)data);
+			break;
+		case _GetSdstat:
+			*(uint32_t *)data = 0;
+		default: break;
+	}
+	return 0;
 }
 
 

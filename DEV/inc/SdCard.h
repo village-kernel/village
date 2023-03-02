@@ -18,6 +18,7 @@
 class SdCard : public Driver
 {
 public:
+	//Enumerations
 	enum SdCardType
 	{
 		_NONE = 0x00,
@@ -25,6 +26,21 @@ public:
 		_V1   = 0x02,
 		_V2   = 0x04,
 		_V2HC = 0x06,
+	};
+
+	enum IOCtrlCmd
+	{
+		_CtrlSync       = 0,
+		_GetSectorCount = 1,
+		_GetSectorSize  = 2,
+		_GetBlockSzie   = 3,
+		_Ctrltrim       = 4,
+
+		_GetType        = 10,
+		_GetCSDData     = 11,
+		_GetCIDData     = 12,
+		_GetOCRData     = 13,
+		_GetSdstat      = 14,
 	};
 
 	//Structures
@@ -98,15 +114,17 @@ private:
 	uint8_t SendData(uint8_t *txData, uint16_t size, uint8_t cmd);
 	uint8_t RecvData(uint8_t *rxData, uint16_t size);
 	uint8_t SdCardInit();
+	uint32_t GetSectorCount();
+	int GetOCR(uint8_t* ocrData);
+	int GetCID(uint8_t* cidData);
+	int GetCSD(uint8_t* csdData);
+	int Sync();
 public:
 	//Methods
 	void Initialize();
 	int Write(uint8_t *txData, uint32_t blkSize, uint32_t sector);
 	int Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector);
-	int GetCID(uint8_t* cidData);
-	int GetCSD(uint8_t* csdData);
-	uint32_t GetSectorCount();
-	int Sync();
+	int IOCtrl(uint8_t cmd, void* data);
 };
 
 #endif //!__SD_CARD_H__
