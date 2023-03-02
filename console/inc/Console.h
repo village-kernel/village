@@ -12,6 +12,9 @@
 #include "CmdDefines.h"
 #include "CmdMsgMgr.h"
 
+#include "CmdAbout.h"
+#include "CmdHelp.h"
+
 
 ///Console
 class Console : public Module, public ThreadEndpoint
@@ -27,6 +30,8 @@ private:
 
 	//Members
 	CmdMsgMgr msgMgr;
+	CmdAbout  about;
+	CmdHelp   help;
 
 	//Methods
 	void ExecuteThread();

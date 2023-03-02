@@ -35,6 +35,11 @@ void Console::Initialize()
 	//Initialize msg mgr
 	msgMgr.Initialize();
 
+	//Initialize cmds
+	about.Initialize(&msgMgr);
+	help.Initialize(&msgMgr);
+
+	//Set execute thread to thread task
 	user = this;
 	handler = (ThreadHandlerCpp)(&Console::ExecuteThread);
 	Thread::CreateTask(Console::ThreadHandler);
@@ -83,14 +88,16 @@ void Console::ExecuteCmd(CmdMsg msg)
 ///Console cmd about handler
 void Console::About(CmdMsg msg)
 {
-	msgMgr.Write((uint8_t*)"vk.kernel 0.0.1(beta), Copyright (C) village.\r\n");
+	about.SetArgs(msg.args);
+	about.Execute();
 }
 
 
 ///Console cmd help handler
 void Console::Help(CmdMsg msg)
 {
-	msgMgr.Write((uint8_t*)"usage: help\r\n");
+	help.SetArgs(msg.args);
+	help.Execute();
 }
 
 

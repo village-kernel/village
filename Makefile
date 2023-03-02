@@ -25,17 +25,8 @@ ASM_SOURCES +=
 C_SOURCES += 
 
 # Cpp sources
-CPP_SOURCES += vk.kernel/kernel/src/Device.cpp \
-	vk.kernel/kernel/src/Kernel.cpp \
-	vk.kernel/kernel/src/Thread.cpp \
-	vk.kernel/kernel/src/Scheduler.cpp \
-	vk.kernel/kernel/src/Modular.cpp \
-	vk.kernel/libary/fatfs/src/diskio.cpp \
-	vk.kernel/libary/fatfs/src/ff.cpp \
-	vk.kernel/libary/fatfs/src/ffsystem.cpp \
-	vk.kernel/libary/fatfs/src/ffunicode.cpp \
-	vk.kernel/utilities/src/FileStream.cpp \
-	vk.kernel/utilities/src/iniParser.cpp \
-	vk.kernel/utilities/src/pinParser.cpp \
-	vk.kernel/console/src/Console.cpp \
-	vk.kernel/console/src/CmdMsgMgr.cpp
+CPP_SOURCES += $(wildcard vk.kernel/kernel/src/*.cpp) \
+	$(wildcard vk.kernel/libary/fatfs/src/*.cpp) \
+	$(wildcard vk.kernel/utilities/src/*.cpp) \
+	$(wildcard vk.kernel/console/src/*.cpp)
+	
