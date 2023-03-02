@@ -25,6 +25,7 @@ public:
 	//IO ctrl methods
 	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
 	virtual int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0)  { return 0; }
+	virtual int IOCtrl(uint8_t cmd, uint8_t* data) { return 0; }
 
 	///Set the driver id
 	inline void SetID(uint32_t id) { ID = id; }
