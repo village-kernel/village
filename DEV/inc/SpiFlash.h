@@ -17,6 +17,14 @@
 class SpiFlash : public Driver
 {
 public:
+	//Enumerations
+	enum IOCtrlCmd
+	{
+		_GetSectorCount = 1,
+		_GetSectorSize  = 2,
+		_GetBlockSize   = 3,
+	};
+
 	//Structures
 	struct Config
 	{
@@ -84,19 +92,21 @@ private:
 	void WaitForBusy();
 	void WriteEnable();
 	void WriteDisable();
+
+	void EraseChip();
+	void EraseSector(uint32_t address);
+	uint16_t GetDeviceID();
+
+	void PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t address);
+	void SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t address);
+	int WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t address);
 public:
 	//Methods
 	void Initialize();
-	void EraseChip();
-	void EraseSector(uint32_t wordAddress);
-	uint16_t GetDeviceID();
 
-	void PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress);
-	void SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress);
-	int WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t wordAddress);
-	
-	int Write(uint8_t *txData, uint32_t size, uint32_t wordAddress);
-	int Read(uint8_t* rxData, uint32_t size, uint32_t wordAddress);
+	int Write(uint8_t *txData, uint32_t size, uint32_t address);
+	int Read(uint8_t* rxData, uint32_t size, uint32_t address);
+	int IOCtrl(uint8_t cmd, void* data);
 
 	//Enable write protection
 	inline void EnableWP() { wpPin.Clear(); }

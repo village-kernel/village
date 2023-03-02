@@ -167,13 +167,13 @@ void SpiFlash::EraseChip()
 
 
 ///Spi flash sector erase
-void SpiFlash::EraseSector(uint32_t wordAddress)
+void SpiFlash::EraseSector(uint32_t address)
 {
 	WriteEnable();
 	SelectChip();
 
 	WriteCmd(_SectorErase);
-	WriteAddr(wordAddress);
+	WriteAddr(address);
 
 	UnselectChip();
 	WaitForBusy();
@@ -181,13 +181,13 @@ void SpiFlash::EraseSector(uint32_t wordAddress)
 
 
 ///Spi flash page write
-void SpiFlash::PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress)
+void SpiFlash::PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t address)
 {
 	WriteEnable();
 	SelectChip();
 
 	WriteCmd(_PageProgram);
-	WriteAddr(wordAddress);
+	WriteAddr(address);
 
 	for (uint16_t i = 0; i < size; i++)
 	{
@@ -200,10 +200,10 @@ void SpiFlash::PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddre
 
 
 ///Spi flash sector write
-void SpiFlash::SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAddress)
+void SpiFlash::SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t address)
 {
 	uint16_t bytesRemain = size;
-	uint32_t writeAddr = wordAddress;
+	uint32_t writeAddr = address;
 	uint8_t* writeData = txData;
 
 	while (bytesRemain)
@@ -222,13 +222,13 @@ void SpiFlash::SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t wordAdd
 
 
 ///Writes a specified number of bytes of writeData into provided address
-int SpiFlash::WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t wordAddress)
+int SpiFlash::WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t address)
 {
 	//return if there are any problems with the flash;
 	if (flashError) return -1;
 
 	uint32_t bytesRemain = size;
-	uint32_t writeAddr = wordAddress;
+	uint32_t writeAddr = address;
 	uint8_t* writeData = txData;
 	uint8_t  buffer[OneSectorByteSize] = { 0 };
 
@@ -288,13 +288,13 @@ int SpiFlash::WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t wordAddress
 
 
 ///Writes a specified number of bytes of writeData into provided address
-int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t wordAddress)
+int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t address)
 {
 	//return if there are any problems with the flash;
 	if (flashError) return -1;
 
 	uint16_t bytesRemain = size;
-	uint32_t writeAddr = wordAddress;
+	uint32_t writeAddr = address;
 	uint8_t* writeData = txData;
 
 	while (bytesRemain)
@@ -321,7 +321,7 @@ int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t wordAddress)
 
 
 ///Reads a specified number of bytes of writeData into the provided address
-int SpiFlash::Read(uint8_t* rxData, uint32_t size, uint32_t wordAddress)
+int SpiFlash::Read(uint8_t* rxData, uint32_t size, uint32_t address)
 {
 	//return if there are any problems with the flash;
 	if (flashError) return -1;
@@ -329,7 +329,7 @@ int SpiFlash::Read(uint8_t* rxData, uint32_t size, uint32_t wordAddress)
 	SelectChip();
 
 	WriteCmd(_ReadData);
-	WriteAddr(wordAddress);
+	WriteAddr(address);
 
 	for (uint32_t i = 0; i < size; i++)
 	{
@@ -339,6 +339,25 @@ int SpiFlash::Read(uint8_t* rxData, uint32_t size, uint32_t wordAddress)
 	UnselectChip();
 
 	return size;
+}
+
+
+///Spi flash io ctrl
+int SpiFlash::IOCtrl(uint8_t cmd, void* data)
+{
+	switch (cmd)
+	{
+		case _GetSectorCount:
+			*(uint32_t*)data = 2048;
+			break;
+		case _GetSectorSize:
+			*(uint16_t *)data = 512;
+			break;
+		case _GetBlockSize:
+			*(uint16_t *)data = 1;
+		default: break;
+	}
+	return 0;
 }
 
 
