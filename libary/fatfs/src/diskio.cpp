@@ -10,8 +10,6 @@
 #include "ff.h"			/* Obtains integer types */
 #include "diskio.h"		/* Declarations of disk functions */
 #include "stdlib.h"
-#include "SpiFlash.h"
-#include "SdCard.h"
 #include "Device.h"
 
 #ifdef __cplusplus
@@ -22,8 +20,8 @@ extern "C" {
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
 #define DEV_SD      1
 
-static SpiFlash* fatfsFlash = (SpiFlash*)Device::GetDriver(DriverID::_storage + 0);
-static SdCard* fatfsSdCard = (SdCard*)Device::GetDriver(DriverID::_storage + 1);
+static Driver* flash;
+static Driver* sdCard;
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -35,8 +33,8 @@ DSTATUS disk_status (
 {
 	switch (pdrv) 
 	{
-		case DEV_MMC: return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
-		case DEV_SD: return 0;
+		case DEV_MMC: return RES_OK;
+		case DEV_SD: return RES_OK;
 	}
 	return STA_NOINIT;
 }
@@ -53,8 +51,12 @@ DSTATUS disk_initialize (
 {
 	switch (pdrv)
 	{
-		case DEV_MMC: return RES_OK;
-		case DEV_SD: return RES_OK;
+		case DEV_MMC:
+			flash =  Device::GetDriver(DriverID::_storage + 0);
+			return RES_OK;
+		case DEV_SD:
+			sdCard = Device::GetDriver(DriverID::_storage + 1);
+			return RES_OK;
 	}
 	return STA_NOINIT;
 }
@@ -75,10 +77,9 @@ DRESULT disk_read (
 	switch (pdrv)
 	{
 		case DEV_MMC:
-			fatfsFlash->Read((uint8_t*)buff, (count * 512U), (sector * 512U));
-			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+			return (DRESULT)flash->Read((uint8_t*)buff, (count * 512U), (sector * 512U));
 		case DEV_SD:
-			return (DRESULT)fatfsSdCard->Read((uint8_t*)buff, count, sector);
+			return (DRESULT)sdCard->Read((uint8_t*)buff, count, sector);
 	}
 	return RES_PARERR;
 }
@@ -101,10 +102,9 @@ DRESULT disk_write (
 	switch (pdrv)
 	{
 		case DEV_MMC:
-			fatfsFlash->Write((uint8_t*)buff, (count * 512U), (sector * 512U));
-			return fatfsFlash->IsFlashError() ? RES_ERROR : RES_OK;
+			return (DRESULT)flash->Write((uint8_t*)buff, (count * 512U), (sector * 512U));
 		case DEV_SD:
-			return (DRESULT)fatfsSdCard->Write((uint8_t*)buff, count, sector);
+			return (DRESULT)sdCard->Write((uint8_t*)buff, count, sector);
 	}
 	return RES_PARERR;
 }
@@ -127,54 +127,9 @@ DRESULT disk_ioctl (
 	switch (pdrv)
 	{
 		case DEV_MMC:
-
-			switch (cmd)
-			{
-				case CTRL_SYNC:
-					res = RES_OK;
-					break;
-
-				case GET_SECTOR_SIZE:
-					*(WORD*)buff = 512;
-					res = RES_OK;
-					break;
-
-				case GET_BLOCK_SIZE:
-					*(WORD*)buff = 1;
-					res = RES_OK;
-					break;
-
-				case GET_SECTOR_COUNT:
-					*(DWORD*)buff = 2048;
-					res = RES_OK;
-					break;
-			}
-
-			return res;
-
+			return (DRESULT)flash->IOCtrl(cmd, (uint8_t*)buff);
 		case DEV_SD:
-			switch(cmd){
-				case CTRL_SYNC:
-					if(0 == fatfsSdCard->Sync())
-						res = RES_OK;
-					break;
-				
-				case GET_SECTOR_COUNT:
-					*(uint32_t*)buff = fatfsSdCard->GetSectorCount();
-					res = RES_OK;
-					break;
-				
-				case GET_SECTOR_SIZE:
-					*(uint32_t *)buff = 512;
-					res = RES_OK;
-					break;
-				
-				case GET_BLOCK_SIZE:
-					*(uint32_t *)buff = 8;
-					res = RES_OK;
-					break;
-			}
-			return res;
+			return (DRESULT)sdCard->IOCtrl(cmd, (uint8_t*)buff);
 	}
 	return RES_PARERR;
 }
