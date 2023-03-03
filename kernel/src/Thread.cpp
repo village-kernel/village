@@ -6,6 +6,7 @@
 //###########################################################################
 #include "Thread.h"
 #include "System.h"
+#include "Memory.h"
 #include "Scheduler.h"
 
 
@@ -34,30 +35,24 @@ void Thread::Initialize()
 ///Create new task
 void Thread::CreateTask(ThreadHandlerC handler)
 {
-	TaskNode** nextNode = &list;
-	uint32_t index = 0;
+	//Create a new task
+	Task task(handler);
 
-	//Find an empty node
-	while (NULL != *nextNode)
-	{
-		nextNode = &(*nextNode)->next;
-		index++;
-	}
-
-	//Calculate new task psp
-	StackFrame* psp = (StackFrame*)(end_stack - (index + 1) * task_stack_szie - psp_frame_size);
-
-	//Check whether the stack has enough space
-	if ((uint32_t)psp <= (start_stack + task_stack_szie)) return;
+	//Allocate memory space
+	task.memory = Memory::Malloc(task_stack_size);
+	
+	//Check whether memory allocation is successful
+	if (0 == task.memory) return;
 
 	//Fill dummy stack frame
-	*psp = StackFrame((uint32_t)handler);
+	task.psp = task.memory - psp_frame_size;
+	*(StackFrame*)task.psp = StackFrame((uint32_t)handler);
+
+	//Find an empty node
+	TaskNode** nextNode = &list;
+	while (NULL != *nextNode) nextNode = &(*nextNode)->next;
 
 	//Add new task node in task list
-	Task task;
-	task.handler = handler;
-	task.state = TaskState::Running;
-	task.psp = (uint32_t)psp;
 	*nextNode = new TaskNode(task);
 }
 
@@ -78,6 +73,8 @@ void Thread::DeleteTask(ThreadHandlerC handler)
 				*prevNode = (*currNode)->next;
 			else
 				(*prevNode)->next = (*currNode)->next;
+
+			Memory::Free((*currNode)->task.memory, task_stack_size);
 
 			break;
 		}

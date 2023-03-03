@@ -32,15 +32,17 @@ private:
 	struct Task 
 	{
 		ThreadHandlerC handler;
-		TaskState state;
+		uint32_t memory;
 		uint32_t psp;
 		uint32_t waitToTick;
+		TaskState state;
 
-		Task()
-			:handler(0),
-			state(TaskState::Running),
+		Task(ThreadHandlerC handler = NULL)
+			:handler(handler),
+			memory(0),
 			psp(0),
-			waitToTick(0)
+			waitToTick(0),
+			state(TaskState::Running)
 		{}
 	};
 
@@ -95,9 +97,7 @@ private:
 	};
 
 	//Static constants
-	static const uint32_t start_stack = 0x20000000;
-	static const uint32_t end_stack = 0x2001c000;
-	static const uint32_t task_stack_szie = 1024;
+	static const uint32_t task_stack_size = 1024;
 	static const uint32_t psp_frame_size = 16;
 
 	//Members
