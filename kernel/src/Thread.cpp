@@ -45,28 +45,13 @@ void Thread::CreateTask(ThreadHandlerC handler)
 	}
 
 	//Calculate new task psp
-	uint32_t *psp = (uint32_t*)(end_stack - (index + 1) * task_stack_szie);
+	StackFrame* psp = (StackFrame*)(end_stack - (index + 1) * task_stack_szie - psp_frame_size);
 
 	//Check whether the stack has enough space
 	if ((uint32_t)psp <= (start_stack + task_stack_szie)) return;
 
 	//Fill dummy stack frame
-	*(--psp) = 0x01000000u; // Dummy xPSR, just enable Thumb State bit;
-	*(--psp) = (uint32_t)handler; // PC
-	*(--psp) = 0xFFFFFFFDu; // LR with EXC_RETURN to return to Thread using PSP
-	*(--psp) = 0x0; // Dummy R12
-	*(--psp) = 0x0; // Dummy R3
-	*(--psp) = 0x0; // Dummy R2
-	*(--psp) = 0x0; // Dummy R1
-	*(--psp) = 0x0; // Dummy R0
-	*(--psp) = 0x0; // Dummy R11
-	*(--psp) = 0x0; // Dummy R10
-	*(--psp) = 0x0; // Dummy R9
-	*(--psp) = 0x0; // Dummy R8
-	*(--psp) = 0x0; // Dummy R7
-	*(--psp) = 0x0; // Dummy R6
-	*(--psp) = 0x0; // Dummy R5
-	*(--psp) = 0x0; // Dummy R4
+	*psp = StackFrame((uint32_t)handler);
 
 	//Add new task node in task list
 	Task task;
