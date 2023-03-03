@@ -15,6 +15,7 @@ class ThreadEndpoint {};
 typedef void (ThreadEndpoint::*ThreadHandlerCpp)();
 typedef void (*ThreadHandlerC)();
 
+
 ///Thread
 class Thread
 {
@@ -24,6 +25,7 @@ public:
 	{
 		Running = 0,
 		Blocked = 1,
+		Exited  = 2,
 	};
 private:
 	//Structures
@@ -69,11 +71,13 @@ public:
 	Thread();
 	static void Initialize();
 	static void CreateTask(ThreadHandlerC handler);
+	static void DeleteTask(ThreadHandlerC handler);
 	static void SaveTaskPSP(uint32_t psp);
 	static uint32_t GetTaskPSP();
 	static uint32_t GetTaskHandler();
 	static void SelectNextTask();
 	static void Sleep(uint32_t ticks);
+	static void Exit();
 };
 
 #endif // !__THREAD_H__

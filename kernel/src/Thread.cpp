@@ -77,6 +77,34 @@ void Thread::CreateTask(ThreadHandlerC handler)
 }
 
 
+///Thread delete task
+void Thread::DeleteTask(ThreadHandlerC handler)
+{
+	TaskNode** prevNode = &list;
+	TaskNode** currNode = &list;
+
+	while (NULL != *currNode)
+	{
+		if (handler == (*currNode)->task.handler)
+		{
+			delete *currNode;
+
+			if (*prevNode == *currNode)
+				*prevNode = (*currNode)->next;
+			else
+				(*prevNode)->next = (*currNode)->next;
+
+			break;
+		}
+		else
+		{
+			prevNode = currNode;
+			currNode = &(*currNode)->next;
+		}
+	}
+}
+
+
 ///Idle task
 void Thread::IdleTask()
 {
@@ -115,6 +143,18 @@ void Thread::Sleep(uint32_t ticks)
 	{
 		curNode->task.state = TaskState::Blocked;
 		curNode->task.waitToTick = System::GetSysClkCounts() + ticks;
+		Scheduler::Rescheduler(Scheduler::Unprivileged);
+	}
+}
+
+
+///Thread Exit
+void Thread::Exit()
+{
+	if(Thread::IdleTask != curNode->task.handler)
+	{
+		curNode->task.state = TaskState::Exited;
+		DeleteTask(curNode->task.handler);
 		Scheduler::Rescheduler(Scheduler::Unprivileged);
 	}
 }
