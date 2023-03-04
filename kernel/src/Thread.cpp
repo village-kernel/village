@@ -74,7 +74,7 @@ void Thread::DeleteTask(ThreadHandlerC handler)
 			else
 				(*prevNode)->next = (*currNode)->next;
 
-			Memory::Free((*currNode)->task.memory, task_stack_size);
+			Memory::Free((*currNode)->task.memory);
 
 			break;
 		}
