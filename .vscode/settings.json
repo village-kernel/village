@@ -5,7 +5,9 @@
 		"typeinfo": "cpp",
 		"array": "cpp",
 		"string_view": "cpp",
-		"initializer_list": "cpp"
+		"initializer_list": "cpp",
+		"string": "cpp",
+		"*.tcc": "cpp"
 	},
     "C_Cpp.errorSquiggles": "disabled",
     "cortex-debug.variableUseNaturalFormat": false
