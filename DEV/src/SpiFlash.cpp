@@ -288,13 +288,14 @@ int SpiFlash::WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t address)
 
 
 ///Writes a specified number of bytes of writeData into provided address
-int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t address)
+int SpiFlash::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 {
 	//return if there are any problems with the flash;
 	if (flashError) return -1;
 
-	uint16_t bytesRemain = size;
-	uint32_t writeAddr = address;
+	//Adapte fatfs
+	uint32_t bytesRemain = blkSize * sector_size;
+	uint32_t writeAddr = sector * sector_size;
 	uint8_t* writeData = txData;
 
 	while (bytesRemain)
@@ -316,29 +317,33 @@ int SpiFlash::Write(uint8_t *txData, uint32_t size, uint32_t address)
 		writeData += writeSize;
 	}
 
-	return size;
+	return blkSize;
 }
 
 
 ///Reads a specified number of bytes of writeData into the provided address
-int SpiFlash::Read(uint8_t* rxData, uint32_t size, uint32_t address)
+int SpiFlash::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 {
 	//return if there are any problems with the flash;
 	if (flashError) return -1;
 
+	//Adapte fatfs
+	uint32_t readAddr = sector * sector_size;
+	uint32_t readSize = blkSize * sector_size;
+
 	SelectChip();
 
 	WriteCmd(_ReadData);
-	WriteAddr(address);
+	WriteAddr(readAddr);
 
-	for (uint32_t i = 0; i < size; i++)
+	for (uint32_t i = 0; i < readSize; i++)
 	{
 		rxData[i] = ReadOneByte();
 	}
 
 	UnselectChip();
 
-	return size;
+	return blkSize;
 }
 
 
@@ -348,13 +353,13 @@ int SpiFlash::IOCtrl(uint8_t cmd, void* data)
 	switch (cmd)
 	{
 		case _GetSectorCount:
-			*(uint32_t*)data = 2048;
+			*(uint32_t*)data = sector_count;
 			break;
 		case _GetSectorSize:
-			*(uint16_t *)data = 512;
+			*(uint16_t *)data = sector_size;
 			break;
 		case _GetBlockSize:
-			*(uint16_t *)data = 1;
+			*(uint16_t *)data = block_size;
 		default: break;
 	}
 	return 0;

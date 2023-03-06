@@ -41,6 +41,9 @@ private:
 	static const uint16_t OneSectorPageSize = 16;
 	static const uint16_t OnePageByteSize = 256;
 	static const uint16_t DeviceID = 0xEF16;
+	static const uint16_t sector_count = 16384;
+	static const uint16_t sector_size = 512;
+	static const uint16_t block_size = 1;
 
 	//Enumerations
 	enum FlashCmd
@@ -104,8 +107,8 @@ public:
 	//Methods
 	void Initialize();
 
-	int Write(uint8_t *txData, uint32_t size, uint32_t address);
-	int Read(uint8_t* rxData, uint32_t size, uint32_t address);
+	int Write(uint8_t *txData, uint32_t blkSize, uint32_t sector);
+	int Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector);
 	int IOCtrl(uint8_t cmd, void* data);
 
 	//Enable write protection
