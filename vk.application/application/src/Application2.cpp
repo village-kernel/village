@@ -5,11 +5,8 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
-#include "Thread.h"
+#include "ThreadEndPoint.h"
 #include "Application2.h"
-
-ThreadEndpoint* Application2::user;
-ThreadHandlerCpp Application2::handler;
 
 
 /// Constructor
@@ -23,9 +20,7 @@ void Application2::Initialize()
 {
 	led.Initialize(Gpio::_ChB, 1, Gpio::_Low);
 
-	user = this;
-	handler = (ThreadHandlerCpp)(&Application2::Task);
-	Thread::CreateTask(Application2::TaskHandler);
+	ThreadEndPoint<Application2, void(Application2::*)()>::CreateTask(this, &Application2::Task);
 }
 
 
@@ -53,13 +48,6 @@ void Application2::Task()
 		led.Clear();
 		Thread::Sleep(500);
 	}
-}
-
-
-///TaskHandler
-void Application2::TaskHandler()
-{
-	if (user != 0) { (user->*handler)(); }
 }
 
 

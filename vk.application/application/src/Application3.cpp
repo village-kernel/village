@@ -6,6 +6,7 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Application3.h"
+#include "ThreadEndPoint.h"
 #include "ff.h"
 
 
@@ -18,7 +19,12 @@ Application3::Application3()
 ///Initialize
 void Application3::Initialize()
 {
-	Thread::CreateTask(Application3::TaskHandler);
+	display = Device::GetDriver(DriverID::_display);
+
+	gui.Initialize((ILI9488*)display);	
+	gui.disp.ShowString((uint8_t*)"hello vk.kernel\r\n\r\n");
+
+	ThreadEndPoint<Application3, void(Application3::*)()>::CreateTask(this, &Application3::ListFiles);
 }
 
 
@@ -29,19 +35,11 @@ void Application3::Execute()
 }
 
 
-///TaskHandler
-void Application3::TaskHandler()
+///ListFiles
+void Application3::ListFiles()
 {
-	Driver* display = Device::GetDriver(DriverID::_display);
-
 	if (NULL != display)
 	{
-		GUI gui;
-
-		gui.Initialize((ILI9488*)display);
-		
-		gui.disp.ShowString((uint8_t*)"hello vk.kernel\r\n\r\n");
-
 		FATFS fs; DIR file_dir; FILINFO fileinfo;
 
 		const TCHAR* path[] = { "0:", "1:" };
@@ -71,8 +69,6 @@ void Application3::TaskHandler()
 			gui.disp.ShowString((uint8_t*)"\r\n");
 		}
 	}
-
-	Thread::Exit();
 }
 
 
