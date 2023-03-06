@@ -8,7 +8,6 @@
 #define __CONSOLE_H__
 
 #include "Module.h"
-#include "Thread.h"
 #include "CmdDefines.h"
 #include "CmdMsgMgr.h"
 
@@ -17,13 +16,9 @@
 
 
 ///Console
-class Console : public Module, public ThreadEndpoint
+class Console : public Module
 {
 private:
-	//Thread definitions
-	static ThreadEndpoint* user;
-	static ThreadHandlerCpp handler;
-
 	//Function definitions
 	typedef void (Console::*Func)(CmdMsg);
 	static struct FuncMap { const char* cmd; Func func; } funcmap[];
@@ -34,7 +29,7 @@ private:
 	CmdHelp   help;
 
 	//Methods
-	void ExecuteThread();
+	void ReceviceThread();
 	void ExecuteCmd(CmdMsg msg);
 	void About(CmdMsg msg);
 	void Help(CmdMsg msg);
@@ -42,9 +37,6 @@ public:
 	//Methods
 	Console();
 	void Initialize();
-
-	//Static methods
-	static void ThreadHandler();
 };
 
 #endif // !__CONSOLE_H__

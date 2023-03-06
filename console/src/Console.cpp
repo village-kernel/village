@@ -7,11 +7,7 @@
 #include "Kernel.h"
 #include "Console.h"
 #include "string.h"
-
-
-///Thread members initialize
-ThreadEndpoint* Console::user;
-ThreadHandlerCpp Console::handler;
+#include "ThreadEndPoint.h"
 
 
 ///Initialize function map table
@@ -40,14 +36,12 @@ void Console::Initialize()
 	help.Initialize(&msgMgr);
 
 	//Set execute thread to thread task
-	user = this;
-	handler = (ThreadHandlerCpp)(&Console::ExecuteThread);
-	Thread::CreateTask(Console::ThreadHandler);
+	ThreadEndPoint<Console, void(Console::*)()>::CreateTask(this, &Console::ReceviceThread);
 }
 
 
 ///Recevice message thread
-void Console::ExecuteThread()
+void Console::ReceviceThread()
 {
 	while (1)
 	{
@@ -57,13 +51,6 @@ void Console::ExecuteThread()
 		}
 		Thread::Sleep(50);
 	}
-}
-
-
-///ThreadHandler
-void Console::ThreadHandler()
-{
-	if (user != 0) { (user->*handler)(); }
 }
 
 
