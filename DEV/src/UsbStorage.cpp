@@ -17,8 +17,7 @@
 
 
 //Static members
-static Driver* usbflash = NULL;
-static Driver* usbsdCard = NULL;
+static Driver* storage[STORAGE_LUN_NBR] = { NULL };
 
 
 ///Override HAL_InitTick()
@@ -38,9 +37,8 @@ void HAL_Delay(uint32_t Delay)
 ///USB storage init
 static int8_t STORAGE_Init_FS(uint8_t lun)
 {
-	//Get flash and sd card driver
-	usbflash  = Device::GetDriver(DriverID::_storage + 0);
-	usbsdCard = Device::GetDriver(DriverID::_storage + 1);
+	storage[0] = Device::GetDriver(DriverID::_storage + 0);
+	storage[1] = Device::GetDriver(DriverID::_storage + 1);
 	return (USBD_OK);
 }
 
@@ -48,19 +46,8 @@ static int8_t STORAGE_Init_FS(uint8_t lun)
 ///USB storage get capacity
 static int8_t STORAGE_GetCapacity_FS(uint8_t lun, uint32_t* block_num, uint16_t* block_size)
 {
-	switch (lun)
-	{
-		case 0:
-			usbflash->IOCtrl(1, (void*)block_num);
-			usbflash->IOCtrl(2, (void*)block_size);
-			break;
-		case 1:
-			usbsdCard->IOCtrl(1, (void*)block_num);
-			usbsdCard->IOCtrl(2, (void*)block_size);
-			break;
-		default: return (USBD_FAIL);
-	}
-
+	storage[lun]->IOCtrl(1, (void*)block_num);
+	storage[lun]->IOCtrl(2, (void*)block_size);
 	return (USBD_OK);
 }
 
@@ -82,17 +69,7 @@ static int8_t STORAGE_IsWriteProtected_FS(uint8_t lun)
 ///USB storage read
 static int8_t STORAGE_Read_FS(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uint16_t blk_len)
 {
-	switch (lun)
-	{
-		case 0:
-			usbflash->Read(buf, (blk_len * 512U), (blk_addr * 512U));
-			break;
-		case 1:
-			usbsdCard->Read(buf, blk_len, blk_addr);
-			break;
-		default: return (USBD_FAIL);
-	}
-
+	storage[lun]->Read(buf, blk_len, blk_addr);
 	return (USBD_OK);
 }
 
@@ -100,17 +77,7 @@ static int8_t STORAGE_Read_FS(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uint
 ///USB storage write
 static int8_t STORAGE_Write_FS(uint8_t lun, uint8_t* buf, uint32_t blk_addr, uint16_t blk_len)
 {
-	switch (lun)
-	{
-		case 0:
-			usbflash->Write(buf, (blk_len * 512U), (blk_addr * 512U));
-			break;
-		case 1:
-			usbsdCard->Write(buf, blk_len, blk_addr);
-			break;
-		default: return (USBD_FAIL);
-	}
-
+	storage[lun]->Write(buf, blk_len, blk_addr);
 	return (USBD_OK);
 }
 
