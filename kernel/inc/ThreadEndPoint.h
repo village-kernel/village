@@ -19,7 +19,7 @@ private:
 	static Handler handler;
 	
 	//Thread Handler
-	static void TaskHandler()
+	static inline void TaskHandler()
 	{
 		//Execute task
 		if (user != 0) { (user->*handler)(); }
@@ -28,7 +28,7 @@ private:
 	}
 public:
 	//Set task end point and create task
-	static void CreateTask(User* _user, Handler _handler)
+	static inline void CreateTask(User* _user, Handler _handler)
 	{
 		user = _user;
 		handler = _handler;
