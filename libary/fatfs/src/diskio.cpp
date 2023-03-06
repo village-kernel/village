@@ -20,8 +20,8 @@ extern "C" {
 #define DEV_MMC		0	/* Example: Map MMC/SD card to physical drive 0 */
 #define DEV_SD      1
 
-static Driver* flash = NULL;
-static Driver* sdCard = NULL;
+/* Storage driver */
+static Driver* storage[2] = { NULL };
 
 /*-----------------------------------------------------------------------*/
 /* Get Drive Status                                                      */
@@ -49,16 +49,8 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	switch (pdrv)
-	{
-		case DEV_MMC:
-			flash =  Device::GetDriver(DriverID::_storage + 0);
-			return RES_OK;
-		case DEV_SD:
-			sdCard = Device::GetDriver(DriverID::_storage + 1);
-			return RES_OK;
-	}
-	return STA_NOINIT;
+	storage[pdrv] = Device::GetDriver(DriverID::_storage + pdrv);
+	return RES_OK;
 }
 
 
@@ -74,14 +66,7 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
-	switch (pdrv)
-	{
-		case DEV_MMC:
-			return (DRESULT)flash->Read((uint8_t*)buff, (count * 512U), (sector * 512U));
-		case DEV_SD:
-			return (DRESULT)sdCard->Read((uint8_t*)buff, count, sector);
-	}
-	return RES_PARERR;
+	return (DRESULT)storage[pdrv]->Read((uint8_t*)buff, count, sector);
 }
 
 
@@ -99,14 +84,7 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
-	switch (pdrv)
-	{
-		case DEV_MMC:
-			return (DRESULT)flash->Write((uint8_t*)buff, (count * 512U), (sector * 512U));
-		case DEV_SD:
-			return (DRESULT)sdCard->Write((uint8_t*)buff, count, sector);
-	}
-	return RES_PARERR;
+	return (DRESULT)storage[pdrv]->Write((uint8_t*)buff, count, sector);
 }
 
 #endif
@@ -122,14 +100,7 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
-	switch (pdrv)
-	{
-		case DEV_MMC:
-			return (DRESULT)flash->IOCtrl(cmd, (uint8_t*)buff);
-		case DEV_SD:
-			return (DRESULT)sdCard->IOCtrl(cmd, (uint8_t*)buff);
-	}
-	return RES_PARERR;
+	return (DRESULT)storage[pdrv]->IOCtrl(cmd, (uint8_t*)buff);
 }
 
 
