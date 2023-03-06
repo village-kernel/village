@@ -317,7 +317,7 @@ int SpiFlash::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 		writeData += writeSize;
 	}
 
-	return blkSize;
+	return flashError ? -1 : 0;
 }
 
 
@@ -343,7 +343,7 @@ int SpiFlash::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 
 	UnselectChip();
 
-	return blkSize;
+	return flashError ? -1 : 0;;
 }
 
 
