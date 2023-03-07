@@ -21,24 +21,24 @@ void HardFault_Handler(void)
 
 void hard_fault_handler_c(unsigned int * hardfault_args)
 {
-	volatile unsigned int stacked_r0;
-	volatile unsigned int stacked_r1;
-	volatile unsigned int stacked_r2;
-	volatile unsigned int stacked_r3;
-	volatile unsigned int stacked_r12;
-	volatile unsigned int stacked_lr;
-	volatile unsigned int stacked_pc;
-	volatile unsigned int stacked_psr;
+	volatile uint32_t stacked_r0;
+	volatile uint32_t stacked_r1;
+	volatile uint32_t stacked_r2;
+	volatile uint32_t stacked_r3;
+	volatile uint32_t stacked_r12;
+	volatile uint32_t stacked_lr;
+	volatile uint32_t stacked_pc;
+	volatile uint32_t stacked_psr;
 
-	stacked_r0 = ((unsigned long)hardfault_args[0]);
-	stacked_r1 = ((unsigned long)hardfault_args[1]);
-	stacked_r2 = ((unsigned long)hardfault_args[2]);
-	stacked_r3 = ((unsigned long)hardfault_args[3]);
+	stacked_r0 = ((uint32_t)hardfault_args[0]);
+	stacked_r1 = ((uint32_t)hardfault_args[1]);
+	stacked_r2 = ((uint32_t)hardfault_args[2]);
+	stacked_r3 = ((uint32_t)hardfault_args[3]);
 
-	stacked_r12 = ((unsigned long)hardfault_args[4]);
-	stacked_lr = ((unsigned long)hardfault_args[5]);
-	stacked_pc = ((unsigned long)hardfault_args[6]);
-	stacked_psr = ((unsigned long)hardfault_args[7]);
+	stacked_r12 = ((uint32_t)hardfault_args[4]);
+	stacked_lr  = ((uint32_t)hardfault_args[5]);
+	stacked_pc  = ((uint32_t)hardfault_args[6]);
+	stacked_psr = ((uint32_t)hardfault_args[7]);
 
 	while (1);
 }
