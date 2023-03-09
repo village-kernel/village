@@ -1,0 +1,19 @@
+mainmenu "Main Menu"
+
+comment "This is a comment to help to structure menu"
+
+menu "Application"
+	source ./vk.application/Kconfig
+endmenu
+
+menu "Hardware"
+	source ./vk.hardware/Kconfig
+endmenu
+
+menu "Kernel"
+	source ./vk.kernel/Kconfig
+endmenu
+
+menu "GUI"
+	source ./vk.gui/Kconfig
+endmenu
