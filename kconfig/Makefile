@@ -7,13 +7,10 @@ cc := gcc
 lxdialog := lxdialog/checklist.o lxdialog/util.o lxdialog/inputbox.o
 lxdialog += lxdialog/textbox.o lxdialog/yesno.o lxdialog/menubox.o
 
-conf-objs  := conf.o  zconf.tab.o
-mconf-objs := mconf.o zconf.tab.o $(lxdialog)
+conf-objs  := zconf.tab.o conf.o  
+mconf-objs := zconf.tab.o mconf.o $(lxdialog)
 
 all: prepare mconf conf
-
-%.o : %.c
-	gcc -c $(CFLAGS) $(LDFLAGS) $< -o $@
 
 prepare:
 	cp zconf.lex.c_shipped zconf.lex.c
@@ -27,5 +24,9 @@ conf: $(conf-objs)
 	@$(MAKE) prepare
 	gcc -o $@ $^ $(LDFLAGS)
 
+%.o : %.c
+	gcc -c $(CFLAGS) $(LDFLAGS) $< -o $@
+
 clean:
-	find -name "*.o" -exec rm "{}" \;
+	@find -name "*.o" -exec rm "{}" \;
+	@rm -rf conf mconf
