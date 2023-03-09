@@ -7,3 +7,6 @@
 [submodule "vk.gui"]
 	path = vk.gui
 	url = git@git.aicodeone.fun:STM32/vk.gui.git
+[submodule "vk.scripts"]
+	path = vk.scripts
+	url = git@git.aicodeone.fun:STM32/vk.scripts.git
