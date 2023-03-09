@@ -135,12 +135,36 @@ $(BUILD_DIR):
 	mkdir $@
 endif
 
+
+#######################################
+# menuconfig
+#######################################
+Scripts      := ./vk.scripts
+Kconfig      := ./Kconfig
+
+menuconfig: $(Scripts)/kconfig/mconf
+	$< $(Kconfig)
+
+oldconfig: $(Scripts)/kconfig/conf
+	mkdir -p include/config include/generated
+	$< -s --$@ $(Kconfig)
+
+$(Scripts)/kconfig/mconf:
+	$(MAKE) -C $(Scripts)/kconfig
+
+$(Scripts)/kconfig/conf:
+	$(MAKE) -C $(Scripts)/kconfig
+
+
 #######################################
 # clean up
 #######################################
 clean:
-#	@rm -r $(BUILD_DIR)
-	@del /Q $(BUILD_DIR)
+	@rm -rf $(BUILD_DIR)
+	@rm -rf include
+#	@del /Q $(BUILD_DIR)
+#	@del /Q include
+	@$(MAKE) -C $(Scripts)/kconfig clean
 
 #######################################
 # dependencies
