@@ -1,0 +1,64 @@
+comment "This is using to configure kernel"
+
+# config console menu
+
+menu "console"
+
+config CONSOLE
+	bool "Enable console function"
+	default n
+
+config CMD_ABOUT
+	depends on CONSOLE
+	bool "Add about cmd to console support list"
+	default n
+
+config CMD_HELP
+	depends on CONSOLE
+	bool "Add help cmd to console support list"
+	default n
+
+endmenu
+
+# config kernel menu
+
+menu "kernel"
+
+config LOADER
+	select FATFS
+	bool "Enable loader elf function"
+	default n
+
+endmenu
+
+# config utilities menu
+
+menu "utilities"
+
+config FILESTREAM
+	select FATFS
+	bool "Enable file stream function"
+	default n
+
+config INIPARSER
+	select FATFS
+	bool "Enable ini file parser function"
+	default n
+
+config PINPARSER
+	select FATFS
+	bool "Enable pin parser function"
+	default n
+
+endmenu
+
+# config  libraries menu
+
+menu "libraries"
+
+config FATFS
+	depends on SDCARD || SPIFLASH
+	bool "Enable fatfs file system"
+	default n
+
+endmenu
