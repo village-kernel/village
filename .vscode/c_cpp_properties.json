@@ -10,7 +10,7 @@
                 "${workspaceRoot}/vk.hardware/HAL/ST/STM32F4xx/inc",
 				"${workspaceRoot}/vk.hardware/Dev/inc",
                 "${workspaceRoot}/vk.kernel/kernel/inc",
-                "${workspaceRoot}/vk.kernel/libary/fatfs/inc",
+                "${workspaceRoot}/vk.kernel/libraries/fatfs/inc",
                 "${workspaceRoot}/vk.kernel/utilities/inc",
 				"${workspaceRoot}/vk.kernel/console/inc",
 				"${workspaceRoot}/vk.gui/core/inc",
