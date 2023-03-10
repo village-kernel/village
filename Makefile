@@ -153,23 +153,28 @@ Scripts      := ./vk.scripts
 Kconfig      := ./Kconfig
 
 menuconfig: $(Scripts)/kconfig/mconf
-	$< $(Kconfig)
+	@$< $(Kconfig)
+	@$(MAKE) silentoldconfig
 
-oldconfig: $(Scripts)/kconfig/conf
-	mkdir -p include/config include/generated
-	$< -s --$@ $(Kconfig)
+silentoldconfig: $(Scripts)/kconfig/conf
+	@mkdir -p include/config include/generated
+	@$< -s --$@ $(Kconfig)
 
 $(Scripts)/kconfig/mconf:
-	$(MAKE) -C $(Scripts)/kconfig
+	@$(MAKE) -C $(Scripts)/kconfig
 
 $(Scripts)/kconfig/conf:
-	$(MAKE) -C $(Scripts)/kconfig
+	@$(MAKE) -C $(Scripts)/kconfig
 
 
 #######################################
 # clean up
 #######################################
 clean:
+	@$(RM) $(BUILD_DIR)
+	@$(RM) include
+
+distclean:
 	@$(RM) $(BUILD_DIR)
 	@$(RM) include
 	@$(MAKE) -C $(Scripts)/kconfig clean
