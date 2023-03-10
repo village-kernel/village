@@ -1,6 +1,6 @@
 mainmenu "Main Menu"
 
-comment "This is a comment to help to structure menu"
+comment "This is village configure menu"
 
 menu "Application"
 	source ./vk.application/Kconfig
