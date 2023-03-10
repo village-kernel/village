@@ -28,6 +28,16 @@ OPT = -O0
 BUILD_DIR := vk.build
 
 
+#######################################
+# remove
+#######################################
+ifeq ($(OS), Windows_NT)
+RM = del /Q
+else
+RM = rm -rf
+endif
+
+
 ######################################
 # includes
 ######################################
@@ -160,11 +170,10 @@ $(Scripts)/kconfig/conf:
 # clean up
 #######################################
 clean:
-	@rm -rf $(BUILD_DIR)
-	@rm -rf include
-#	@del /Q $(BUILD_DIR)
-#	@del /Q include
+	@$(RM) $(BUILD_DIR)
+	@$(RM) include
 	@$(MAKE) -C $(Scripts)/kconfig clean
+
 
 #######################################
 # dependencies
