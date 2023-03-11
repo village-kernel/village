@@ -1,0 +1,3 @@
+if STM32F4xx
+	source ./vk.hardware/HAL/ST/STM32F4xx/Kconfig
+endif

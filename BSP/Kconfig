@@ -1,0 +1,12 @@
+
+choice
+	prompt "Manufacturer"
+	default ST
+
+	config ST
+		bool "ST"
+endchoice
+
+if ST
+	source ./vk.hardware/BSP/ST/Kconfig
+endif

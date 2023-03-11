@@ -1,163 +1,16 @@
 comment "This is using to configure hardware"
 
 # Config mcu menu
-menu "MCU"
-
-choice
-	prompt "Manufacturer"
-	default ST
-
-	config ST
-		bool "ST"
-
-	config GD
-		bool "GD"
-endchoice
-
-choice
-	prompt "MCU Series"
-	depends on ST
-	default STM32F4xx
-
-	config STM32F4xx
-		bool "STM32F4xx"
-
-	config STM32H7xx
-		bool "STM32H7xx"
-endchoice
-
-choice
-	prompt "MCU Model"
-	depends on STM32F4xx
-	default STM32F407ZE
-
-	config STM32F407IE
-		bool "STM32F407IE"
-
-	config STM32F407IG
-		bool "STM32F407IG"
-
-	config STM32F407VE
-		bool "STM32F407VE"
-
-	config STM32F407VG
-		bool "STM32F407VG"
-
-	config STM32F407ZE
-		bool "STM32F407ZE"
-
-	config STM32F407ZG
-		bool "STM32F407ZG"
-endchoice
-
-choice
-	prompt "MCU Model"
-	depends on STM32H7xx
-	default STM32H750IB
-
-	config STM32H750IB
-		bool "STM32H750IB"
-
-	config STM32H750VB
-		bool "STM32H750VB"
-
-	config STM32H750XB
-		bool "STM32H750XB"
-
-	config STM32H750ZB
-		bool "STM32H750ZB"
-endchoice
-
-endmenu
-
 menu "BSP"
-
+	source ./vk.hardware/BSP/Kconfig
 endmenu
 
 # Config HAL menu
-
 menu "HAL"
-
-config HAL_SYSTEM
-	bool "Enable SYSTEM HAL class"
-	default y
-
-config HAL_GPIO
-	bool "Enable GPIO HAL class"
-	default y
-
-config HAL_GPI
-	depends on HAL_GPIO
-	bool "Enable GPI HAL class"
-	default y
-
-config HAL_GPO
-	depends on HAL_GPIO
-	bool "Enable GPO HAL class"
-	default y
-
-config HAL_NVIC
-	bool "Enalbe NVIC HAL class"
-	default y
-
-config HAL_USART
-	select HAL_GPIO
-	bool "Enable USART HAL clas"
-	default n
-
-config HAL_SPI
-	select HAL_GPIO
-	bool "Enable SPI HAL class"
-	default n
-
-config HAL_I2C
-	select HAL_GPIO
-	bool "Enable I2C HAL class"
-	default n
-
-config HAL_DMA
-	bool "Enable dma HAL class"
-	default n
-
-config HAL_FSMC
-	select HAL_GPIO
-	bool "Enable FSMC HAL class"
-	default n
-
+	source ./vk.hardware/HAL/Kconfig
 endmenu
 
 # Config DEV menu
-
 menu "DEV"
-
-config DMAFIFO
-	select HAL_DMA
-	bool "Enable dma fifo support"
-	default n
-
-config ILI9488
-	select HAL_FSMC
-	bool "Enable ILI9488 support"
-	default n
-
-config SDCARD
-	select HAL_SPI
-	bool "Enable SD card support"
-	default n
-
-config SPIFLASH
-	select HAL_SPI
-	bool "Enable SPI flash support"
-	default n
-
-config UARTSERIAL
-	select HAL_USART
-	bool "Enable UART serial support"
-	default n
-
-config USBSTORAGE
-	depends on SDCARD || SPIFLASH
-	bool "Enable USB storage support"
-	default n
-
+	source ./vk.hardware/DEV/Kconfig
 endmenu

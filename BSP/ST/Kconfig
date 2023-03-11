@@ -1,0 +1,91 @@
+choice
+	prompt "MCU Series"
+	depends on ST
+	default STM32F4xx
+
+	config STM32F4xx
+		bool "STM32F4xx"
+
+	config STM32H7xx
+		bool "STM32H7xx"
+endchoice
+
+if STM32F4xx
+
+choice
+	prompt "MCU Type"
+	depends on STM32F4xx
+	default STM32F407xx
+
+	config STM32F401xc
+		bool "STM32F401xc"
+
+	config STM32F401xe
+		bool "STM32F401xe"
+
+	config STM32F405xx
+		bool "STM32F405xx"
+
+	config STM32F407xx
+		bool "STM32F407xx"
+
+endchoice
+
+
+choice
+	prompt "MCU Model"
+	depends on STM32F407xx
+	default STM32F407ZE
+
+	config STM32F407IE
+		bool "STM32F407IE"
+
+	config STM32F407IG
+		bool "STM32F407IG"
+
+	config STM32F407VE
+		bool "STM32F407VE"
+
+	config STM32F407VG
+		bool "STM32F407VG"
+
+	config STM32F407ZE
+		bool "STM32F407ZE"
+
+	config STM32F407ZG
+		bool "STM32F407ZG"
+endchoice
+
+endif
+
+if STM32H7xx
+
+choice
+	prompt "MCU Type"
+	depends on STM32H7xx
+	default STM32H750xx
+
+	config STM32H750xx
+		bool "STM32H750xx"
+
+endchoice
+
+choice
+	prompt "MCU Model"
+	depends on STM32H750xx
+	default STM32H750IB
+
+	config STM32H750IB
+		bool "STM32H750IB"
+
+	config STM32H750VB
+		bool "STM32H750VB"
+
+	config STM32H750XB
+		bool "STM32H750XB"
+
+	config STM32H750ZB
+		bool "STM32H750ZB"
+endchoice
+
+endif
