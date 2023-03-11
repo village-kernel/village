@@ -8,7 +8,7 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./vk.gui/config \
+INCLUDES-$(CONFIG_GUI) += -I./vk.gui/config \
 	-I./vk.gui/core/inc \
 	-I./vk.gui/font/inc
 
