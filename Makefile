@@ -8,11 +8,13 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./vk.kernel/console/inc \
+INCLUDES-y += \
 	-I./vk.kernel/kernel/if \
 	-I./vk.kernel/kernel/inc \
-	-I./vk.kernel/libraries/fatfs/inc \
-	-I./vk.kernel/utilities/inc
+
+INCLUDES-$(CONFIG_FATFS) += -I./vk.kernel/libraries/fatfs/inc
+INCLUDES-$(CONFIG_CONSOLE) += -I./vk.kernel/console/inc
+INCLUDES-$(CONFIG_UTILITIES) += -I./vk.kernel/utilities/inc
 
 
 ######################################

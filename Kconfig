@@ -35,17 +35,24 @@ endmenu
 
 menu "utilities"
 
+config UTILITIES
+	bool "Enable utilities support"
+	default n
+
 config FILESTREAM
+	depends on UTILITIES
 	select FATFS
 	bool "Enable file stream function"
 	default n
 
 config INIPARSER
+	depends on UTILITIES
 	select FATFS
 	bool "Enable ini file parser function"
 	default n
 
 config PINPARSER
+	depends on UTILITIES
 	select FATFS
 	bool "Enable pin parser function"
 	default n
