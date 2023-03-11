@@ -7,4 +7,6 @@
 
 ifeq ($(CONFIG_STM32F4xx), y)
 -include vk.hardware/HAL/ST/STM32F4xx/Makefile
+else ifeq ($(CONFIG_STM32H7xx), y)
+-include vk.hardware/HAL/ST/STM32H7xx/Makefile
 endif

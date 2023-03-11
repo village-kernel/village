@@ -23,5 +23,5 @@ CPP_SOURCES-$(CONFIG_HAL_USART) += ./vk.hardware/HAL/ST/STM32F4xx/src/Usart.cpp
 CPP_SOURCES-$(CONFIG_HAL_SPI) += ./vk.hardware/HAL/ST/STM32F4xx/src/Spi.cpp
 CPP_SOURCES-$(CONFIG_HAL_I2C) += ./vk.hardware/HAL/ST/STM32F4xx/src/I2c.cpp
 CPP_SOURCES-$(CONFIG_HAL_DMA) += ./vk.hardware/HAL/ST/STM32F4xx/src/Dma.cpp
-CPP_SOURCES-$(CONFIG_HAL_FSMC) += ./vk.hardware/HAL/ST/STM32F4xx/src/FSMC.cpp
+CPP_SOURCES-$(CONFIG_HAL_FSMC) += ./vk.hardware/HAL/ST/STM32F4xx/src/Fsmc.cpp
 
