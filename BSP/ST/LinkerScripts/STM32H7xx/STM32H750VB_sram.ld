@@ -15,8 +15,9 @@ MEMORY
 	ITCMRAM (RWX) : ORIGIN = 0x00000000, LENGTH = 64K
 }
 
-_vector = 0x08000000;
 _estack = 0x20020000;
+_min_heap_size = 0x200;  /* required amount of heap */
+_min_stack_size = 0x400; /* required amount of stack */
 
 SECTIONS
 {
@@ -25,7 +26,7 @@ SECTIONS
 		. = ALIGN(4);
 		KEEP(*(.isr_vector))
 		. = ALIGN(4);
-	} > FLASH
+	} > DTCMRAM
 
 	.text :
 	{
@@ -43,7 +44,7 @@ SECTIONS
 		. = ALIGN(4);
 		_etext = .;
 
-	} > FLASH
+	} > DTCMRAM
 
 	.ARM.extab :
 	{
@@ -51,7 +52,7 @@ SECTIONS
 		*(.ARM.extab)
 		*(.gnu.linkonce.armextab.*)
 		. = ALIGN(4);
-	} > FLASH
+	} > DTCMRAM
 
 	.exidx :
 	{
@@ -60,19 +61,19 @@ SECTIONS
 		*(.ARM.exidx*)
 		. = ALIGN(4);
 		PROVIDE(__exidx_end = .);
-	} > FLASH
+	} > DTCMRAM
 
 	.ARM.attributes :
 	{
 		*(.ARM.attributes)
-	} > FLASH
+	} > DTCMRAM
 
 	.preinit_array :
 	{
 		PROVIDE(__preinit_array_start = .);
 		KEEP(*(.preinit_array*))
 		PROVIDE(__preinit_array_end = .);
-	} > FLASH
+	} > DTCMRAM
 
 	.init_array :
 	{
@@ -80,7 +81,7 @@ SECTIONS
 		KEEP(*(SORT(.init_array.*)))
 		KEEP(*(.init_array*))
 		PROVIDE(__init_array_end = .);
-	} > FLASH
+	} > DTCMRAM
 
 	.fini_array :
 	{
@@ -88,7 +89,7 @@ SECTIONS
 		KEEP(*(.fini_array*))
 		KEEP(*(SORT(.fini_array.*)))
 		PROVIDE(__fini_array_end = .);
-	} > FLASH
+	} > DTCMRAM
 
 	.data :
 	{
@@ -102,7 +103,7 @@ SECTIONS
 		_edata = .;
 
 		PROVIDE(__data_end__ = _edata);
-	} > SRAM AT >FLASH
+	} > SRAM
 
 	_sidata = LOADADDR(.data);
 
@@ -121,25 +122,15 @@ SECTIONS
 		PROVIDE(__bss_end__ = _ebss);
 	} > SRAM
 
-	PROVIDE(end = .);
-
-	.heap (NOLOAD) :
+	/* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
+	._user_heap_stack :
 	{
-		. = ALIGN(4);
-		PROVIDE(__heap_start__ = .);
-		KEEP(*(.heap))
-		. = ALIGN(4);
-		PROVIDE(__heap_end__ = .);
+		. = ALIGN(8);
+		PROVIDE ( end = . );
+		PROVIDE ( _end = . );
+		. = . + _min_heap_size;
+		. = . + _min_stack_size;
+		. = ALIGN(8);
 	} > SRAM
-
-	.reserved_for_stack (NOLOAD) :
-	{
-		. = ALIGN(4);
-		PROVIDE(__reserved_for_stack_start__ = .);
-		KEEP(*(.reserved_for_stack))
-		. = ALIGN(4);
-		PROVIDE(__reserved_for_stack_end__ = .);
-	} > SRAM
-
 }
 
