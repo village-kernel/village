@@ -8,91 +8,41 @@
 ######################################
 # includes
 ######################################
-INCLUDES-y += -I./vk.hardware/BSP/ST/CMSIS/Include \
+INCLUDES-y += -I./vk.hardware/BSP/ST/CMSIS/Include
+
+INCLUDES-$(CONFIG_USBSTORAGE) += \
 	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Inc \
 	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc \
 	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc
 
-INCLUDES-$(CONFIG_STM32F4xx) +=	-I./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Include \
-	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc \
-	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy
-	
 
 ######################################
 # sources
 ######################################
 # ASM sources
-ASM_SOURCES-$(CONFIG_STM32F401xc) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f401xc.s
-ASM_SOURCES-$(CONFIG_STM32F401xe) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f401xe.s
-ASM_SOURCES-$(CONFIG_STM32F405xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f405xx.s
-ASM_SOURCES-$(CONFIG_STM32F407xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.s
-ASM_SOURCES-$(CONFIG_STM32F410cx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f410cx.s
-ASM_SOURCES-$(CONFIG_STM32F410rx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f410rx.s
-ASM_SOURCES-$(CONFIG_STM32F410tx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f410tx.s
-ASM_SOURCES-$(CONFIG_STM32F411xe) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f411xe.s
-ASM_SOURCES-$(CONFIG_STM32F412cx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412cx.s
-ASM_SOURCES-$(CONFIG_STM32F412rx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412rx.s
-ASM_SOURCES-$(CONFIG_STM32F412vx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412vx.s
-ASM_SOURCES-$(CONFIG_STM32F412zx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412zx.s
-ASM_SOURCES-$(CONFIG_STM32F413xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f413xx.s
-ASM_SOURCES-$(CONFIG_STM32F415xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f415xx.s
-ASM_SOURCES-$(CONFIG_STM32F417xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f417xx.s
-ASM_SOURCES-$(CONFIG_STM32F423xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f423xx.s
-ASM_SOURCES-$(CONFIG_STM32F427xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f427xx.s
-ASM_SOURCES-$(CONFIG_STM32F429xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f429xx.s
-ASM_SOURCES-$(CONFIG_STM32F437xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f437xx.s
-ASM_SOURCES-$(CONFIG_STM32F439xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f439xx.s
-ASM_SOURCES-$(CONFIG_STM32F446tx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f446tx.s
-ASM_SOURCES-$(CONFIG_STM32F469xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f469xx.s
-ASM_SOURCES-$(CONFIG_STM32F479xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f479xx.s
+ASM_SOURCES-y += 
 
 
 # C sources
 C_SOURCES-y += \
-	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src/*.c) \
 	$(wildcard ./vk.hardware/BSP/ST/CMSIS/Source/*.c) \
 	$(wildcard ./vk.hardware/BSP/ST/GCC/*.c) \
 
-C_SOURCES-$(CONFIG_STM32F4xx) += $(wildcard ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Src/*.c) 
+C_SOURCES-$(CONFIG_USBSTORAGE) += \
+	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src/*.c) \
+	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src/*.c) \
+
 
 # Cpp sources
 CPP_SOURCES-y += 
 
 
-#######################################
-# CFLAGS
-#######################################
-# MUC
-MCU := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=soft
-
-# defines of gcc
-C_DEFS := -DUSE_HAL_DRIVER -DSTM32F407xx
-
-# macros of gcc
-C_MACROS := -D'HSE_VALUE=((uint32_t)8000000)'
-
-# compile gcc flags
-CFLAGS += $(MCU) $(C_DEFS) $(C_MACROS) $(OPT) -Wall -fdata-sections -ffunction-sections
-
-ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
+######################################
+# dependencies
+######################################
+ifeq ($(CONFIG_STM32F4xx), y)
+-include vk.hardware/BSP/ST/MakefileF4
+else ifeq ($(CONFIG_STM32H7xx), y)
+-include vk.hardware/BSP/ST/MakefileH7
 endif
-
-# Generate dependency information
-CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
-
-
-#######################################
-# LDFLAGS
-#######################################
-# link script
-LDSCRIPT-$(CONFIG_STM32F407ZE) := vk.hardware/BSP/ST/LinkerScripts/STM32F4xx/STM32F407ZE_flash.ld
-
-# libraries
-LIBS = -lc -lm -lnosys
-LIBDIR = 
-
-# LDFLAGS
-LDFLAGS := $(MCU) -specs=nano.specs -specs=nosys.specs -T$(LDSCRIPT-y) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections

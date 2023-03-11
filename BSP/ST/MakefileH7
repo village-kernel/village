@@ -1,0 +1,86 @@
+###########################################################################
+# Makefile
+# The Makefile of vk.hardware
+#
+# $Copyright: Copyright (C) village
+############################################################################
+
+######################################
+# includes
+######################################
+INCLUDES-$(CONFIG_STM32H7xx) +=	-I./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Include \
+	-I./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Inc \
+	-I./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Inc/Legacy
+	
+	
+######################################
+# sources
+######################################
+# ASM sources
+ASM_SOURCES-$(CONFIG_STM32H7a3xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h7a3xx.s
+ASM_SOURCES-$(CONFIG_STM32H7a3xxq) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h7a3xxq.s
+ASM_SOURCES-$(CONFIG_STM32H7b0xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h7b0xx.s
+ASM_SOURCES-$(CONFIG_STM32H7b0xxq) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h7b0xxq.s
+ASM_SOURCES-$(CONFIG_STM32H7b3xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h7b3xx.s
+ASM_SOURCES-$(CONFIG_STM32H7b3xxq) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h7b3xxq.s
+ASM_SOURCES-$(CONFIG_STM32H723xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h723xx.s
+ASM_SOURCES-$(CONFIG_STM32H725xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h725xx.s
+ASM_SOURCES-$(CONFIG_STM32H730xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h730xx.s
+ASM_SOURCES-$(CONFIG_STM32H730xxq) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h730xxq.s
+ASM_SOURCES-$(CONFIG_STM32H733xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h733xx.s
+ASM_SOURCES-$(CONFIG_STM32H735xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h735xx.s
+ASM_SOURCES-$(CONFIG_STM32H742xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h742xx.s
+ASM_SOURCES-$(CONFIG_STM32H743xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h743xx.s
+ASM_SOURCES-$(CONFIG_STM32H745xg) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h745xg.s
+ASM_SOURCES-$(CONFIG_STM32H745xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h745xx.s
+ASM_SOURCES-$(CONFIG_STM32H747xg) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h747xg.s
+ASM_SOURCES-$(CONFIG_STM32H747xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h747xx.s
+ASM_SOURCES-$(CONFIG_STM32H750xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h750xx.s
+ASM_SOURCES-$(CONFIG_STM32H753xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h753xx.s
+ASM_SOURCES-$(CONFIG_STM32H755xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h755xx.s
+ASM_SOURCES-$(CONFIG_STM32H757xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc/startup_stm32h757xx.s
+
+
+# C sources
+C_SOURCES-$(CONFIG_STM32H7xx) += $(wildcard ./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Src/*.c) 
+C_SOURCES-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/system_stm32h7xx.c
+
+# Cpp sources
+CPP_SOURCES-y += 
+
+
+#######################################
+# CFLAGS
+#######################################
+# MUC
+MCU := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
+
+# defines of gcc
+C_DEFS := -DUSE_HAL_DRIVER -DSTM32H750xx
+
+# macros of gcc
+C_MACROS := -D'HSE_VALUE=((uint32_t)8000000)'
+
+# compile gcc flags
+CFLAGS += $(MCU) $(C_DEFS) $(C_MACROS) $(OPT) -Wall -fdata-sections -ffunction-sections
+
+ifeq ($(DEBUG), 1)
+CFLAGS += -g -gdwarf-2
+endif
+
+# Generate dependency information
+CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
+
+
+#######################################
+# LDFLAGS
+#######################################
+# link script
+LDSCRIPT-$(CONFIG_STM32H750VB) := vk.hardware/BSP/ST/LinkerScripts/STM32H7xx/STM32H750VB_sram.ld
+
+# libraries
+LIBS = -lc -lm -lnosys
+LIBDIR = 
+
+# LDFLAGS
+LDFLAGS := $(MCU) -specs=nano.specs -specs=nosys.specs -T$(LDSCRIPT-y) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
