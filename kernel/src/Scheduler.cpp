@@ -161,4 +161,39 @@ extern "C"
 		__ASM("mrsne r0, psp"); // save PSP if bit 2 is 1
 		__ASM("b taskOperator"); // pass R0 as the argument
 	}
+	
+	//Call hard_fault_handler_c in c function
+	void hard_fault_handler_c(unsigned int * hardfault_args)
+	{
+		volatile uint32_t stacked_r0;
+		volatile uint32_t stacked_r1;
+		volatile uint32_t stacked_r2;
+		volatile uint32_t stacked_r3;
+		volatile uint32_t stacked_r12;
+		volatile uint32_t stacked_lr;
+		volatile uint32_t stacked_pc;
+		volatile uint32_t stacked_psr;
+
+		stacked_r0 = ((uint32_t)hardfault_args[0]);
+		stacked_r1 = ((uint32_t)hardfault_args[1]);
+		stacked_r2 = ((uint32_t)hardfault_args[2]);
+		stacked_r3 = ((uint32_t)hardfault_args[3]);
+
+		stacked_r12 = ((uint32_t)hardfault_args[4]);
+		stacked_lr  = ((uint32_t)hardfault_args[5]);
+		stacked_pc  = ((uint32_t)hardfault_args[6]);
+		stacked_psr = ((uint32_t)hardfault_args[7]);
+
+		while (1);
+	}
+	
+	///HardFault_Handler
+	void HardFault_Handler(void)
+	{
+		__ASM("tst lr, #4"); // check LR to know which stack is used
+		__ASM("ite eq"); // 2 next instructions are conditional
+		__ASM("mrseq r0, msp"); // save MSP if bit 2 is 0
+		__ASM("mrsne r0, psp"); // save PSP if bit 2 is 1
+		__ASM("b hard_fault_handler_c"); // pass R0 as the argument
+	}
 }
