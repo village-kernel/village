@@ -78,6 +78,7 @@ public:
 	//Methods
 	Gpio();
 	void Initialize(GpioChannel channel, uint16_t pin);
+	void Initialize(GpioChannel channel, uint16_t pin, uint8_t altMode, GpioSpeed speed = _HighSpeed);
 	void ConfigMode(GpioMode mode);
 	void ConfigInputType(GpioInputType inputType);
 	void ConfigOutputType(GpioOutType outputType);
