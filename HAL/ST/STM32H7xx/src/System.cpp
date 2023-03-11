@@ -6,18 +6,34 @@
 //###########################################################################
 #include "System.h"
 
+
+///Initialize static members
+uint32_t System::sysTicks = 0;
 uint32_t System::cyclesInMicro = 8;
 
 
 ///Configure the SysTick timer
 void System::Initialize(void)
 {
+#ifdef PRIVILEGED_LEVEL_DELAY
 	//Enable Data Watchpoint and Trace unit and turn on its main counter
 	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
-
+#endif
 	//Select Systick clock source: SYSCLK_MHZ/8 = 480/8 = 60M
 	SysTick->CTRL &= ~SysTick_CTRL_CLKSOURCE_Msk;
+
+	//Enable systick interrupt
+	SysTick->CTRL |= SysTick_CTRL_TICKINT_Msk;
+
+	//Set systick reload value
+	SysTick->LOAD = 60000;
+
+	//Clear systick current value
+	SysTick->VAL = 0;
+
+	//Enable systick
+	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
 
 	//Calculate the cyclesInMicro variable
 	cyclesInMicro = SystemCoreClock / microsInSec;
@@ -345,4 +361,11 @@ void System::ConfigureForXtal()
 
 	//Update the cyclesInMicro variable
 	cyclesInMicro = SystemCoreClock / microsInSec;
+}
+
+
+///Systick handler
+extern "C" __weak void SysTick_Handler(void)
+{
+	System::SysTickCounter();
 }
