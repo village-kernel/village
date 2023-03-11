@@ -8,7 +8,7 @@
 ######################################
 # includes
 ######################################
-INCLUDES += -I./vk.application/application/inc
+INCLUDES-y += -I./vk.application/application/inc
 
 
 ######################################
