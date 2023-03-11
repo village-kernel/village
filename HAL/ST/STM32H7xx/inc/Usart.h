@@ -8,7 +8,6 @@
 #define __USART_H__
 #include "HalHeaders.h"
 #include "Gpio.h"
-#include "InterruptEndpoint.h"
 
 
 ///Usart
@@ -57,10 +56,6 @@ private:
 
 	//Members
 	volatile USART_TypeDef* base;
-
-	uint8_t irqLine;
-	static InterruptEndpoint* user[interruptSize];
-	static InterruptMemberFunc isr[interruptSize];
 public:
 	//Methods
 	Usart();
@@ -71,12 +66,9 @@ public:
 	void ConfigReceiverTimeout(bool enable, uint32_t rto = 0, uint8_t blen = 0);
 	void ConfigDma(bool dmaTxEnable = true, bool dmaRxEnable = true);
 	void SetBaudRate(uint32_t baudRate, bool over8 = false);
-	void EnableInterrupt();
-	void SetISR(InterruptMemberFunc _isr, InterruptEndpoint* _user);
 	void CheckError();
 	int Write(uint8_t* txData, uint16_t length);
 	int Read(uint8_t* rxData, uint16_t length);
-	static void InterruptHandler(uint8_t irqLine);
 
 	///Enables operation of the USART peripheral
 	inline void Enable() { base->CR1 |= USART_CR1_UE; }

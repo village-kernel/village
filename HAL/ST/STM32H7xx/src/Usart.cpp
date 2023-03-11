@@ -5,10 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Usart.h"
-#include "Nvic.h"
-
-InterruptEndpoint* Usart::user[interruptSize] = { 0 };
-InterruptMemberFunc Usart::isr[interruptSize] = { 0 };
 
 
 ///Default Constructor
@@ -21,9 +17,6 @@ Usart::Usart()
 ///Initializes the serial module
 void Usart::Initialize(uint16_t channel)
 {
-	//Assign the irq line
-	irqLine = channel - 1;
-
 	//Enable the peripheral clock and assign the base pointer
 	if (1 == channel)
 	{
@@ -174,31 +167,6 @@ void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
 }
 
 
-///Enable usart interrupt
-void Usart::EnableInterrupt()
-{
-	IRQn_Type type = USART1_IRQn;
-	if (irqLine <= 2)
-		type = (IRQn_Type)(USART1_IRQn + irqLine);
-	else
-		type = (IRQn_Type)(UART4_IRQn + irqLine - 3);
-
-	Nvic nvic;
-	nvic.Initialize(type);
-	nvic.ConfigPriorityGroupSetting(Nvic::_PriorityGroup3);
-	nvic.SetPriority(0, 1);
-	nvic.EnableInterrupt();
-}
-
-
-///Sets the isr function for the interrupt module
-void Usart::SetISR(InterruptMemberFunc _isr, InterruptEndpoint* _user)
-{
-	user[irqLine] = _user;
-	isr[irqLine] = _isr;
-}
-
-
 ///Write data to usart
 int Usart::Write(uint8_t* txData, uint16_t length)
 {
@@ -237,45 +205,5 @@ void Usart::CheckError()
 	if (base->ISR & (USART_ISR_PE | USART_ISR_FE | USART_ISR_NE | USART_ISR_ORE))
 	{
 		base->ICR = (USART_ICR_PECF | USART_ICR_FECF | USART_ICR_NECF | USART_ICR_ORECF);
-	}
-}
-
-
-///interrupt handler
-void Usart::InterruptHandler(uint8_t irqLine)
-{
-	if (user[irqLine] != 0)
-	{
-		(user[irqLine]->*isr[irqLine])();
-	}
-}
-
-
-///Usart IRQHandler
-extern "C"
-{
-	void USART1_IRQHandler()
-	{
-		Usart::InterruptHandler(0);
-	}
-
-	void USART2_IRQHandler()
-	{
-		Usart::InterruptHandler(1);
-	}
-
-	void USART3_IRQHandler()
-	{
-		Usart::InterruptHandler(2);
-	}
-
-	void USART4_IRQHandler()
-	{
-		Usart::InterruptHandler(3);
-	}
-		
-	void USART5_IRQHandler()
-	{
-		Usart::InterruptHandler(4);
 	}
 }
