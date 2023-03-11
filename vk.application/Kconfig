@@ -1,0 +1,14 @@
+comment "This is using to configure application"
+
+# application
+config APPLICATION1
+	bool "Add application1 to project"
+	default y
+
+config APPLICATION2
+	bool "Add application2 to project"
+	default y
+
+config APPLICATION3
+	bool "Add application3 to project"
+	default y
