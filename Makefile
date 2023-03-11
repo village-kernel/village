@@ -41,6 +41,7 @@ endif
 ######################################
 # includes
 ######################################
+-include .config
 -include vk.application/Makefile
 -include vk.hardware/Makefile
 -include vk.kernel/Makefile
@@ -84,27 +85,27 @@ flash:
 # build the application
 #######################################
 # list of ASM program objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES:.s=.o)))
-vpath %.s $(sort $(dir $(ASM_SOURCES)))
+OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES-y:.s=.o)))
+vpath %.s $(sort $(dir $(ASM_SOURCES-y)))
 # list of c objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES)))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES-y:.c=.o)))
+vpath %.c $(sort $(dir $(C_SOURCES-y)))
 # list of cpp objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES:.cpp=.o)))
-vpath %.cpp $(sort $(dir $(CPP_SOURCES)))
+OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES-y:.cpp=.o)))
+vpath %.cpp $(sort $(dir $(CPP_SOURCES-y)))
 
 ifeq ($(SILENCE), 1)
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	@echo $(notdir $@)
-	@$(AS) -c $(CFLAGS) $< -o $@
+	@$(AS) -c $(CFLAGS) $(INCLUDES-y) $< -o $@
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 	@echo $(notdir $@)
-	@$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	@$(CC) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
 	@echo $(notdir $@)
-	@$(CPP) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
+	@$(CPP) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	@echo output $@
@@ -123,13 +124,13 @@ $(BUILD_DIR):
 	@mkdir $@
 else
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $< -o $@
+	$(AS) -c $(CFLAGS) $(INCLUDES-y) $< -o $@
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
-	$(CC) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	$(CC) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
-	$(CPP) -c $(CFLAGS) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
+	$(CPP) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
