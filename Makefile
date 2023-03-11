@@ -17,11 +17,11 @@ INCLUDES += -I./vk.gui/config \
 # sources
 ######################################
 # ASM sources
-ASM_SOURCES +=
+ASM_SOURCES-y +=
 
 # C sources
-C_SOURCES += 
+C_SOURCES-y += 
 
 # Cpp sources
-CPP_SOURCES += vk.gui/core/src/GUI.cpp \
-	vk.gui/core/src/Display.cpp
+CPP_SOURCES-$(CONFIG_GUI) += vk.gui/core/src/GUI.cpp
+CPP_SOURCES-$(CONFIG_GUI) += vk.gui/core/src/Display.cpp

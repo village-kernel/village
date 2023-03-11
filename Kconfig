@@ -1,0 +1,5 @@
+comment "This is using to configure GUI"
+
+config GUI
+	bool "Enable GUI support"
+	default n
