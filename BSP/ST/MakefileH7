@@ -42,7 +42,7 @@ ASM_SOURCES-$(CONFIG_STM32H757xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7x
 
 
 # C sources
-C_SOURCES-$(CONFIG_STM32H7xx) += $(wildcard ./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Src/*.c) 
+C_SOURCES-$(CONFIG_MANUFACTURER_HAL_DRIVER) += $(wildcard ./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Src/*.c) 
 C_SOURCES-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/system_stm32h7xx.c
 
 # Cpp sources

@@ -5,6 +5,7 @@ config DMAFIFO
 
 config ILI9488
 	select HAL_FSMC
+	select MANUFACTURER_HAL_DRIVER
 	bool "Enable ILI9488 support"
 	default n
 
@@ -25,5 +26,6 @@ config UARTSERIAL
 
 config USBSTORAGE
 	depends on SDCARD || SPIFLASH
+	select MANUFACTURER_HAL_DRIVER
 	bool "Enable USB storage support"
 	default n
