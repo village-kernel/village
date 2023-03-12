@@ -27,6 +27,7 @@ ASM_SOURCES-y +=
 C_SOURCES-y +=
 
 # Cpp sources
+CPP_SOURCES-y += vk.Kernel/Start.cpp
 CPP_SOURCES-y += vk.Kernel/kernel/src/Kernel.cpp
 CPP_SOURCES-y += vk.Kernel/kernel/src/Modular.cpp
 CPP_SOURCES-y += vk.Kernel/kernel/src/Device.cpp
