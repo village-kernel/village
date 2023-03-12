@@ -155,7 +155,6 @@ Kconfig      := ./Kconfig
 
 menuconfig: $(Scripts)/kconfig/mconf
 	@$< $(Kconfig)
-	@$(MAKE) silentoldconfig
 
 silentoldconfig: $(Scripts)/kconfig/conf
 	@mkdir -p include/config include/generated
