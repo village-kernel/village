@@ -10,3 +10,6 @@
 [submodule "vk.scripts"]
 	path = vk.scripts
 	url = git@git.aicodeone.fun:STM32/vk.scripts.git
+[submodule "vk.bootloader"]
+	path = vk.bootloader
+	url = git@git.aicodeone.fun:STM32/vk.bootloader.git
