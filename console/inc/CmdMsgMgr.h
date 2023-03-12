@@ -9,7 +9,6 @@
 #define __COMMAND_MSG_MGR_H__
 
 #include "Driver.h"
-#include "CmdDefines.h"
 
 //CmdMsg struct
 struct CmdMsg

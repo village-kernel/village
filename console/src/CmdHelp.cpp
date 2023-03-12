@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "CmdHelp.h"
+#include "Console.h"
 
 
 ///Cmd help initialize
@@ -26,3 +27,7 @@ void CmdHelp::Execute()
 {
 	msgMgr->Write((uint8_t*)"help: about\r\n");
 }
+
+
+///Register cmd
+REGISTER_CMD(new CmdHelp(), help);

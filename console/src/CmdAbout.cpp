@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "CmdAbout.h"
+#include "Console.h"
 
 
 ///Cmd about initialize
@@ -26,3 +27,7 @@ void CmdAbout::Execute()
 {
 	msgMgr->Write((uint8_t*)"vk.kernel 0.0.1(beta), Copyright (C) village.\r\n");
 }
+
+
+///Register cmd
+REGISTER_CMD(new CmdAbout(), about);

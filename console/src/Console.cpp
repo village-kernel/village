@@ -10,13 +10,8 @@
 #include "ThreadEndPoint.h"
 
 
-///Initialize function map table
-Console::FuncMap Console::funcmap[] = 
-{
-	{ "about",           &Console::About                    },
-	{ "help",            &Console::Help                     },
-	{ "null",            NULL                               }
-};
+///Initialize cmd core
+Console::CmdNode* Console::list = NULL;
 
 
 ///Constructor
@@ -32,8 +27,10 @@ void Console::Initialize()
 	msgMgr.Initialize();
 
 	//Initialize cmds
-	about.Initialize(&msgMgr);
-	help.Initialize(&msgMgr);
+	for (volatile CmdNode* node = list; NULL != node; node = node->next)
+	{
+		node->cmd->Initialize(&msgMgr);
+	}
 
 	//Set execute thread to thread task
 	ThreadEndPoint<Console, void(Console::*)()>::CreateTask(this, &Console::ReceviceThread);
@@ -57,11 +54,12 @@ void Console::ReceviceThread()
 ///Console execute cmd
 void Console::ExecuteCmd(CmdMsg msg)
 {
-	for (uint8_t i = 0; (0 != strcmp(funcmap[i].cmd, "null")); i++)
+	for (volatile CmdNode* node = list; NULL != node; node = node->next)
 	{
-		if (0 == strcmp(funcmap[i].cmd, (const char*)msg.cmd))
+		if (0 == strcmp((const char*)(node->cmd->GetName()), (const char*)msg.cmd))
 		{
-			(this->*funcmap[i].func)(msg);
+			node->cmd->SetArgs(msg.args);
+			node->cmd->Execute();
 			msgMgr.Write((uint8_t*)"# ");
 			return;
 		}
@@ -72,19 +70,58 @@ void Console::ExecuteCmd(CmdMsg msg)
 }
 
 
-///Console cmd about handler
-void Console::About(CmdMsg msg)
+///Register cmd object
+void Console::RegisterCmd(Cmd* cmd, uint8_t* name)
 {
-	about.SetArgs(msg.args);
-	about.Execute();
+	CmdNode** nextNode = &list;
+
+	if (cmd) cmd->SetName(name); else return;
+
+	while (NULL != *nextNode)
+	{
+		uint8_t* curCmdName = (*nextNode)->cmd->GetName();
+		uint8_t* newCmdName = cmd->GetName();
+
+		if (strcmp((const char*)newCmdName, (const char*)curCmdName) < 0)
+		{
+			CmdNode* curNode = *nextNode;
+			*nextNode = new CmdNode(cmd);
+			(*nextNode)->next = curNode;
+			return;
+		}
+
+		nextNode = &(*nextNode)->next;
+	}
+
+	*nextNode = new CmdNode(cmd);
 }
 
 
-///Console cmd help handler
-void Console::Help(CmdMsg msg)
+///Deregister cmd object
+void Console::DeregisterCmd(Cmd* cmd, uint8_t* name)
 {
-	help.SetArgs(msg.args);
-	help.Execute();
+	CmdNode** prevNode = &list;
+	CmdNode** currNode = &list;
+
+	while (NULL != *currNode)
+	{
+		if (cmd == (*currNode)->cmd)
+		{
+			delete *currNode;
+
+			if (*prevNode == *currNode)
+				*prevNode = (*currNode)->next;
+			else
+				(*prevNode)->next = (*currNode)->next;
+
+			break;
+		}
+		else
+		{
+			prevNode = currNode;
+			currNode = &(*currNode)->next;
+		}
+	}
 }
 
 

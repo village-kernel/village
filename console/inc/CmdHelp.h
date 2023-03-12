@@ -7,14 +7,11 @@
 #ifndef __CMD_HELP_H__
 #define __CMD_HELP_H__
 
-#include "CmdMsgMgr.h"
+#include "Cmd.h"
 
 ///CmdHelp
-class CmdHelp
+class CmdHelp : public Cmd
 {
-private:
-	//Members
-	CmdMsgMgr* msgMgr;
 public:
 	//Methods
 	void Initialize(CmdMsgMgr* msgMgr);
