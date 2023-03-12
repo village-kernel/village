@@ -6,6 +6,10 @@ menu "Application"
 	source ./vk.application/Kconfig
 endmenu
 
+menu "Bootloader"
+	source ./vk.bootloader/Kconfig
+endmenu
+
 menu "Hardware"
 	source ./vk.hardware/Kconfig
 endmenu
