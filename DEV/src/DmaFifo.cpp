@@ -11,9 +11,9 @@
 
 ///Default Constructor
 DmaFifo::DmaFifo()
-	: length(0),
-	prevDmaDataCtr(BufferSize),
-	dequeuePtr(0)
+	:prevDmaDataCtr(BufferSize),
+	dequeuePtr(0),
+	length(0)
 {
 }
 

@@ -11,8 +11,8 @@
 Dma::Dma()
 	:streamReg(NULL),
 	commonReg(NULL),
-	statusReg(NULL),
 	flagClearReg(NULL),
+	statusReg(NULL),
 	flagOffset(0)
 {
 }
