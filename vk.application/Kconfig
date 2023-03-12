@@ -10,5 +10,6 @@ config APPLICATION2
 	default y
 
 config APPLICATION3
+	depends on GUI
 	bool "Add application3 to project"
-	default y
+	default n
