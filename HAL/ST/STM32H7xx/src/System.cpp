@@ -112,6 +112,13 @@ void System::ConfigurePower()
 }
 
 
+///Select using HSI or HSE as system clock
+void System::ConfigureClock()
+{
+	ConfigureForHsi();
+}
+
+
 ///Configures the system to use an hsi crystal as clock source.
 ///PLL1: 480Mhz, PLL2 = 84Mhz, System Clock = PLL1.
 void System::ConfigureForHsi()

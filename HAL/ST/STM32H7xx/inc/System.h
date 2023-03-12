@@ -21,6 +21,7 @@ public:
 	static void Initialize();
 	static void ConfigureMPU();
 	static void ConfigurePower();
+	static void ConfigureClock();
 	static void ConfigureForHsi();
 	static void ConfigureForXtal();
 
