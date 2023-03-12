@@ -37,9 +37,6 @@ void Kernel::Initialize()
 	//Initialize modular
 	Modular::Initialize();
 
-	//Initialize loader
-	Loader::Initialize();
-
 	isReady = true;
 }
 

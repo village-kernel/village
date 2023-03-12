@@ -24,7 +24,8 @@ enum DriverID
 ///Module id defines
 enum ModuleID
 {
-	_console             = 1,
+	_loader              = 1,
+	_console             = 2,
 	_application         = 200,
 };
 

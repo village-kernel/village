@@ -7,17 +7,17 @@
 #ifndef __LOADER_H__
 #define __LOADER_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Module.h"
+
 
 ///Loader
-class Loader
+class Loader : public Module
 {
 public:
-	static void Initialize();
-	static void LoadModule();
-	static void LoadDevice();
-	static void LoadLibrary();
+	void Initialize();
+	void LoadModule();
+	void LoadDevice();
+	void LoadLibrary();
 };
 
 #endif //!__LOADER_H__

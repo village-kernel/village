@@ -4,6 +4,7 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "Kernel.h"
 #include "Loader.h"
 #include "Thread.h"
 #include "ff.h"
@@ -43,3 +44,7 @@ void Loader::LoadModule()
 		f_unmount("1:");
 	}
 }
+
+
+///Register module
+REGISTER_MODULE(new Loader(), ModuleID::_loader, loader);
