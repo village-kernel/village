@@ -43,7 +43,7 @@ private:
 
 	struct SectionHeader
 	{
-		uint32_t name;
+		uint32_t nameOffset;
 		uint32_t type;
 		uint32_t flags;
 		uint32_t addr;
@@ -111,9 +111,9 @@ private:
 	//Methods
 	void LoadElf32(const char* path);
 	int ReadELFHeader();
-	int ReadSectionHeader();
-	int ReadSymbolTableEntry();
-	int ReadRelocationEntry();
+	int ReadSectionHeaders();
+	int ReadSymbolTableEntries();
+	int ReadRelocationEntries();
 public:
 	//Methods
 	void Initialize();

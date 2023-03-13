@@ -15,7 +15,11 @@ void Loader::Initialize()
 
 	ReadELFHeader();
 
-	ReadSectionHeader();
+	ReadSectionHeaders();
+
+	ReadSymbolTableEntries();
+
+	ReadRelocationEntries();
 }
 
 
@@ -33,21 +37,26 @@ int Loader::ReadELFHeader()
 }
 
 
-int Loader::ReadSectionHeader()
+int Loader::ReadSectionHeaders()
 {
+	uint32_t sectionHeaderByteSizes = elf32.elfHeader.sectionHeaderNum * elf32.elfHeader.sectionHeaderSize;
+	uint32_t sectionHeaderOffset = elf32.elfHeader.sectionHeaderOffset;
+	
+	elf32.sectionHeaders = (SectionHeader*)malloc(sectionHeaderByteSizes);
 
+	int readSize = file.Read((uint8_t*)elf32.sectionHeaders, sectionHeaderByteSizes, sectionHeaderOffset);
+
+	return (sectionHeaderByteSizes == readSize) ? _OK : _ERR;
+}
+
+
+int Loader::ReadSymbolTableEntries()
+{
 	return _OK;
 }
 
 
-int Loader::ReadSymbolTableEntry()
-{
-
-	return _OK;
-}
-
-
-int Loader::ReadRelocationEntry()
+int Loader::ReadRelocationEntries()
 {
 	return _OK;
 }
