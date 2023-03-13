@@ -6,43 +6,50 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Loader.h"
-#include "Thread.h"
-#include "ff.h"
-#include "Gpi.h"
 
 
 ///Loader Initialize
 void Loader::Initialize()
 {
-	Gpi key;
-	key.Initialize(Gpio::_ChE, 3);
+	LoadElf32("1:app-striped.elf");
 
-	if (0 == key.Read()) LoadModule();
+	ReadELFHeader();
+
+	ReadSectionHeader();
 }
 
 
-///Loader module
-void Loader::LoadModule()
+void Loader::LoadElf32(const char* path)
 {
-	FATFS fs; FIL file; UINT br;
+	file.Open(path);
+}
 
-	uint32_t module = 0x20000000;
 
-	if (f_mount(&fs, "1:", 1) == FR_OK)
-	{
-		if (f_open(&file, "1:test.bin", FA_READ) == FR_OK)
-		{	
-			f_read(&file, (void*)module, f_size(&file), &br);
-			f_close(&file);
+int Loader::ReadELFHeader()
+{
+	int readSize = file.Read((uint8_t*)&(elf32.elfHeader), elf_header_size);
 
-			f_unmount("1:");
+	return (elf_header_size == readSize) ? _OK : _ERR;
+}
 
-			(*(void(*)())(*(uint32_t*)module))();
 
-			//Thread::CreateTask((ThreadHandlerC)module);
-		}
-		f_unmount("1:");
-	}
+int Loader::ReadSectionHeader()
+{
+
+	return _OK;
+}
+
+
+int Loader::ReadSymbolTableEntry()
+{
+
+	return _OK;
+}
+
+
+int Loader::ReadRelocationEntry()
+{
+	return _OK;
 }
 
 
