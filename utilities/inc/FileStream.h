@@ -16,6 +16,7 @@ class FileStream
 {
 private:
 	//Methods
+	std::string driver;
 	std::string filePath;
 public:
 	//Methods
