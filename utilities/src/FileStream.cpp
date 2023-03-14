@@ -6,7 +6,6 @@
 //###########################################################################
 #include "FileStream.h"
 #include "stdlib.h"
-#include "ff.h"
 
 
 ///Constructor
@@ -15,36 +14,28 @@ FileStream::FileStream()
 }
 
 
-///Constructor
-FileStream::FileStream(std::string filePath)
-	:filePath(filePath)
-{
-}
-
-
 ///OpenFile
-void FileStream::Open(std::string filePath)
+int FileStream::Open(std::string filePath, int option)
 {
 	this->filePath = filePath;
 	this->driver = filePath.substr(0, 2);
+
+	FRESULT res = f_mount(&fs, driver.c_str(), 1);
+
+	if (FR_OK != res) return res;
+	
+	return f_open(&file, filePath.c_str(), option);
 }
 
 
 ///Writes a specified number of bytes of writeData into provided address
 int FileStream::Write(uint8_t* txData, uint32_t size, uint32_t seek)
 {
-	FATFS fs; FIL file; UINT bw = 0;
+	UINT bw = 0;
 
-	if (f_mount(&fs, driver.c_str(), 1) == FR_OK)
-	{
-		if (f_open(&file, filePath.c_str(), FA_CREATE_ALWAYS | FA_WRITE) == FR_OK)
-		{
-			f_lseek(&file, (FSIZE_t)seek);
-			f_write(&file, (void*)txData, size, &bw);
-			f_close(&file);
-		}
-		f_unmount(driver.c_str());
-	}
+	f_lseek(&file, (FSIZE_t)seek);
+
+	f_write(&file, (void*)txData, size, &bw);
 
 	return bw;
 }
@@ -53,25 +44,32 @@ int FileStream::Write(uint8_t* txData, uint32_t size, uint32_t seek)
 ///Reads a specified number of bytes of writeData into the provided address
 int FileStream::Read(uint8_t* rxData, uint32_t size, uint32_t seek)
 {
-	FATFS fs; FIL file; UINT br = 0;
+	UINT br = 0;
 
-	if (f_mount(&fs, driver.c_str(), 1) == FR_OK)
-	{
-		if (f_open(&file, filePath.c_str(), FA_READ) == FR_OK)
-		{
-			f_lseek(&file, (FSIZE_t)seek);
-			f_read(&file, (void*)rxData, size, &br);
-			f_close(&file);
-		}
-		f_unmount(driver.c_str());
-	}
+	f_lseek(&file, (FSIZE_t)seek);
+
+	f_read(&file, (void*)rxData, size, &br);
 
 	return br;
 }
 
 
-///Close file
-void FileStream::Close()
+///Get file size
+int FileStream::Size()
 {
+	return f_size(&file);
+}
+
+
+///Close file
+int FileStream::Close()
+{
+	FRESULT res = f_close(&file);
+
+	f_unmount(driver.c_str());
+	
+	this->driver = "";
 	this->filePath = "";
+
+	return res;
 }
