@@ -4,6 +4,7 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+-include .config
 
 ######################################
 # target
@@ -13,17 +14,21 @@ TARGET := village-target
 ######################################
 # building variables
 ######################################
-# silence build
-SILENCE = 1
-# debug build?
-DEBUG = 1
 # optimization
-OPT = -O0
+OPT ?= $(CONFIG_OPT:"%"=%)
 
-ifeq ($(SILENCE),1)
-  Q = @
+# debug build?
+ifeq ($(CONFIG_DEBUG), y)
+  DEBUG ?= 1
 else
-  Q =
+  DEBUG ?= 0
+endif
+
+# silence build
+ifeq ($(CONFIG_VERBOSE_MODE), y)
+  Q = 
+else
+  Q = @
 endif
 
 
@@ -38,16 +43,15 @@ BUILD_DIR := vk.build
 # remove
 #######################################
 ifeq ($(OS), Windows_NT)
-RM = del /Q
+  RM = del /Q
 else
-RM = rm -rf
+  RM = rm -rf
 endif
 
 
 ######################################
-# includes
+# include other makefile
 ######################################
--include .config
 -include vk.application/Makefile
 -include vk.hardware/Makefile
 -include vk.kernel/Makefile
@@ -55,24 +59,14 @@ endif
 
 
 #######################################
-# binaries
+# cross compile tool
 #######################################
-PREFIX = arm-none-eabi-
-# The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
-# either it can be added to the PATH environment variable.
-ifdef GCC_PATH
-CPP = $(GCC_PATH)/$(PREFIX)g++
-CC = $(GCC_PATH)/$(PREFIX)gcc
-AS = $(GCC_PATH)/$(PREFIX)gcc -x assembler-with-cpp
-CP = $(GCC_PATH)/$(PREFIX)objcopy
-SZ = $(GCC_PATH)/$(PREFIX)size
-else
-CPP = $(PREFIX)g++
-CC = $(PREFIX)gcc
-AS = $(PREFIX)gcc -x assembler-with-cpp
-CP = $(PREFIX)objcopy
-SZ = $(PREFIX)size
-endif
+GCC_PREFIX ?= $(CONFIG_CROSS_COMPILE:"%"=%)
+CPP = $(GCC_PREFIX)g++
+CC  = $(GCC_PREFIX)gcc
+AS  = $(GCC_PREFIX)gcc -x assembler-with-cpp
+CP  = $(GCC_PREFIX)objcopy
+SZ  = $(GCC_PREFIX)size
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 
