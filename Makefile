@@ -20,6 +20,12 @@ DEBUG = 1
 # optimization
 OPT = -O0
 
+ifeq ($(SILENCE),1)
+  Q = @
+else
+  Q =
+endif
+
 
 #######################################
 # paths
@@ -94,58 +100,33 @@ vpath %.c $(sort $(dir $(C_SOURCES-y)))
 OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES-y:.cpp=.o)))
 vpath %.cpp $(sort $(dir $(CPP_SOURCES-y)))
 
-ifeq ($(SILENCE), 1)
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	@echo $(notdir $@)
-	@$(AS) -c $(CFLAGS) $(INCLUDES-y) $< -o $@
+	$(Q)echo Compiling $(notdir $@)
+	$(Q)$(AS) -c $(CFLAGS) $(INCLUDES-y) $< -o $@
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
-	@echo $(notdir $@)
-	@$(CC) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	$(Q)echo Compiling $(notdir $@)
+	$(Q)$(CC) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
-	@echo $(notdir $@)
-	@$(CPP) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
+	$(Q)echo Compiling $(notdir $@)
+	$(Q)$(CPP) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	@echo output $@
-	@$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
-	@$(SZ) $@
+	$(Q)echo output $@
+	$(Q)$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
+	$(Q)$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	@echo output $@
-	@$(HEX) $< $@
+	$(Q)echo output $@
+	$(Q)$(HEX) $< $@
 
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	@echo output $@
-	@$(BIN) $< $@
+	$(Q)echo output $@
+	$(Q)$(BIN) $< $@
 
 $(BUILD_DIR):
-	@mkdir $@
-else
-$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	$(AS) -c $(CFLAGS) $(INCLUDES-y) $< -o $@
-
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
-	$(CC) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
-
-$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
-	$(CPP) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
-
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
-	$(SZ) $@
-
-$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(HEX) $< $@
-
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@
-
-$(BUILD_DIR):
-	mkdir $@
-endif
-
+	$(Q)mkdir $@
 
 #######################################
 # menuconfig
@@ -154,30 +135,30 @@ Scripts      := ./vk.scripts
 Kconfig      := ./Kconfig
 
 menuconfig: $(Scripts)/kconfig/mconf
-	@$< $(Kconfig)
+	$(Q)$< $(Kconfig)
 
 silentoldconfig: $(Scripts)/kconfig/conf
-	@mkdir -p include/config include/generated
-	@$< -s --$@ $(Kconfig)
+	$(Q)mkdir -p include/config include/generated
+	$(Q)$< -s --$@ $(Kconfig)
 
 $(Scripts)/kconfig/mconf:
-	@$(MAKE) -C $(Scripts)/kconfig
+	$(Q)$(MAKE) -C $(Scripts)/kconfig
 
 $(Scripts)/kconfig/conf:
-	@$(MAKE) -C $(Scripts)/kconfig
+	$(Q)$(MAKE) -C $(Scripts)/kconfig
 
 
 #######################################
 # clean up
 #######################################
 clean:
-	@$(RM) $(BUILD_DIR)
-	@$(RM) include
+	$(Q)$(RM) $(BUILD_DIR)
+	$(Q)$(RM) include
 
 distclean:
-	@$(RM) $(BUILD_DIR)
-	@$(RM) include
-	@$(MAKE) -C $(Scripts)/kconfig clean
+	$(Q)$(RM) $(BUILD_DIR)
+	$(Q)$(RM) include
+	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
 
 
 #######################################
