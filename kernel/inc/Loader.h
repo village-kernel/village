@@ -9,7 +9,6 @@
 
 #include "Module.h"
 
-
 ///Loader
 class Loader : public Module
 {
@@ -104,7 +103,7 @@ private:
 		_STB_HIPROC   = 15,
 	};
 
-	//Symbol Structures
+	//Structures
 	struct SymbolEntry
 	{
 		uint32_t     name;
@@ -116,45 +115,14 @@ private:
 		uint16_t     index;
 	};
 
-	struct Symbol
-	{
-		uint8_t*     name;
-		SymbolEntry* entry;
-		Symbol*      next;
-	};
-
-	struct SymbolTable
-	{
-		Symbol*      symbols;
-		uint8_t*     sectionName;
-		uint32_t     sectionIndex;
-		SymbolTable* next;
-	};
-
 	struct RelocationEntry
 	{
 		uint32_t offset;
-		uint32_t type:8;
-		uint32_t symbol:8;
-		uint32_t reversed:16;
+		uint8_t  type;
+		uint8_t  symbol;
+		uint16_t reversed;
 	};
 
-	struct Relocation
-	{
-		uint8_t*         name;
-		RelocationEntry* entry;
-		Relocation*      next;
-	};
-
-	struct RelocationTable
-	{
-		Relocation*      relocations;
-		uint8_t*         sectionName;
-		uint32_t         sectionIndex;
-		RelocationTable* next;
-	};
-
-	//Elf header Structures
 	struct ELFHeader
 	{
 		uint8_t  ident[16];
@@ -173,7 +141,6 @@ private:
 		uint16_t sectionHeaderStringTableIndex;
 	};
 
-	//Porgram structures
 	struct ProgramHeader
 	{
 		uint32_t type;
@@ -186,7 +153,6 @@ private:
 		uint32_t align;
 	};
 
-	//Dynamic structures
 	struct DynamicHeader
 	{
 		int32_t tag;
@@ -197,7 +163,6 @@ private:
 		};
 	};
 
-	//Section structures
 	struct SectionHeader
 	{
 		uint32_t name;
@@ -212,27 +177,30 @@ private:
 		uint32_t entireSize;
 	};
 
-	struct Section
+	union SectionData
 	{
-		SectionHeader* header;
-		uint8_t*       name;
-		union
-		{
-			uint8_t*         data;
-			SymbolEntry*     symEntries;
-			RelocationEntry* relEntries;
-		};
-		Section*       next;
+		uint32_t         addr;
+		uint8_t*         data;
+		uint8_t*         shstrtab;
+		uint8_t*         strtab;
+		SymbolEntry*     symEntries;
+		RelocationEntry* relEntries;
+
+		SectionData(uint32_t addr):
+			addr(addr)
+		{}
 	};
 
 	//ELF structure
 	struct ELF
 	{
-		uint8_t*         map;
+		uint32_t         map;
+		uint32_t         exec;
 		ELFHeader*       header;
-		Section*         sections;
-		SymbolTable*     symTabs;
-		RelocationTable* relTabs;
+		SectionHeader*   sections;
+		SymbolEntry*     symbols;
+		uint8_t*         shstrtab;
+		uint8_t*         strtab;
 	};
 	
 	//Members
@@ -240,13 +208,11 @@ private:
 
 	//Methods
 	int LoadElf(const char* path);
-	int ParserElfHeader();
-	int ParserElfSection();
-	int ParserSymbolEntries();
-	int ParserRelocationEntries();
-	int RelocationEntries();
-	int RelocationSymbolCall(uint32_t relAddr, uint32_t symAddr, int type);
-	int RelocationJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
+	int ParserElf();
+	int RelEntries();
+	SectionData GetSectionData(uint32_t index);
+	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
+	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
 	int ExecuteElf();
 public:
 	//Methods
