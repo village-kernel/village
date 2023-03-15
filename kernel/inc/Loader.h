@@ -190,7 +190,7 @@ private:
 	struct DynamicHeader
 	{
 		int32_t tag;
-		union dynUnion
+		union
 		{
 			uint32_t val;
 			uint32_t ptr;
@@ -244,6 +244,10 @@ private:
 	int ParserElfSection();
 	int ParserSymbolEntries();
 	int ParserRelocationEntries();
+	int RelocationEntries();
+	int RelocationSymbolCall(uint32_t relAddr, uint32_t symAddr, int type);
+	int RelocationJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
+	int ExecuteElf();
 public:
 	//Methods
 	void Initialize();

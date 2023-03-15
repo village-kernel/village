@@ -13,7 +13,7 @@
 ///Loader Initialize
 void Loader::Initialize()
 {
-	if (LoadElf("1:app-striped.elf") != _OK) return;
+	if (LoadElf("1:app-cpp-striped.elf") != _OK) return;
 
 	if (ParserElfHeader() != _OK) return;
 
@@ -22,6 +22,10 @@ void Loader::Initialize()
 	if (ParserSymbolEntries() != _OK) return;
 
 	if (ParserRelocationEntries() != _OK) return;
+
+	if (RelocationEntries() != _OK) return;
+
+	ExecuteElf();
 }
 
 
@@ -252,6 +256,106 @@ int Loader::ParserRelocationEntries()
 	}
 
 	return _OK;
+}
+
+
+///Relocation entries
+int Loader::RelocationEntries()
+{
+	for (RelocationTable* relTab = elf.relTabs; relTab != NULL; relTab = relTab->next)
+	{
+		for (Relocation* rel = relTab->relocations; rel != NULL; rel = rel->next)
+		{
+			Symbol symbol = elf.symTabs[0].symbols[rel->entry->symbol];
+			
+			if (symbol.entry->index)
+			{
+				Section section = elf.sections[symbol.entry->index];
+				uint32_t symAddr = ((uint32_t)section.data) + symbol.entry->value;
+				uint32_t relAddr = ((uint32_t)section.data) + rel->entry->offset;
+				
+				RelocationSymbolCall(relAddr, symAddr, rel->entry->type);
+			}
+			else
+			{
+				//return _ERR;
+			}
+		}
+	}
+	return _OK;
+}
+
+
+///Relocation symbol call
+int Loader::RelocationSymbolCall(uint32_t relAddr, uint32_t symAddr, int type)
+{
+	switch (type)
+	{
+		case _R_ARM_ABS32:
+			*((uint32_t*)relAddr) = symAddr;
+			break;
+
+		case _R_ARM_THM_CALL:
+		case _R_ARM_THM_JUMP24:
+			RelocationJumpCall(relAddr, symAddr, type);
+			break;
+
+		case _R_ARM_TARGET1:
+			*((uint32_t*)relAddr) = symAddr;
+			break;
+
+		case _R_ARM_THM_JUMP11:
+			break;
+			
+		default: return 0;
+	}
+	return 0;
+}
+
+
+///Relocation thumb jump call 
+int Loader::RelocationJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
+{
+	uint16_t upper = ((uint16_t *)relAddr)[0];
+	uint16_t lower = ((uint16_t *)relAddr)[1];
+	uint32_t S  = (upper >> 10) & 1;
+	uint32_t J1 = (lower >> 13) & 1;
+	uint32_t J2 = (lower >> 11) & 1;
+
+	int32_t offset = (S    << 24) |  /* S     -> offset[24]    */
+	((~(J1 ^ S)  & 1     ) << 23) |  /* J1    -> offset[23]    */
+	((~(J2 ^ S)  & 1     ) << 22) |  /* J2    -> offset[22]    */
+	((  upper    & 0x03ff) << 12) |  /* imm10 -> offset[12:21] */
+	((  lower    & 0x07ff) << 1 );   /* imm11 -> offset[1:11]  */
+	
+	if (offset & 0x01000000) offset -= 0x02000000;
+
+	offset += symAddr - relAddr;
+
+	S  =       (offset >> 24) & 1;
+	J1 = S ^ (~(offset >> 23) & 1);
+	J2 = S ^ (~(offset >> 22) & 1);
+
+	upper = ((upper & 0xf800) | (S << 10) | ((offset >> 12) & 0x03ff));
+	((uint16_t*)relAddr)[0] = upper;
+
+	lower = ((lower & 0xd000) | (J1 << 13) | (J2 << 11) | ((offset >> 1) & 0x07ff));
+	((uint16_t*)relAddr)[1] = lower;
+
+	return _OK;
+}
+
+
+///Execute elf
+int Loader::ExecuteElf()
+{
+	if (elf.header->entry)
+	{
+		void (*exec)() = (void(*)())((uint32_t)elf.map + elf.header->elfHeaderSize + elf.header->entry);
+		exec();
+		return _OK;
+	}
+	return _ERR;
 }
 
 
