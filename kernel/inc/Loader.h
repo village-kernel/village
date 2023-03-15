@@ -112,7 +112,7 @@ private:
 		uint8_t      type : 4;
 		uint8_t      bind : 4;
 		uint8_t      other;
-		uint16_t     index;
+		uint16_t     shndx;
 	};
 
 	struct RelocationEntry
@@ -183,8 +183,8 @@ private:
 		uint8_t*         data;
 		uint8_t*         shstrtab;
 		uint8_t*         strtab;
-		SymbolEntry*     symEntries;
-		RelocationEntry* relEntries;
+		SymbolEntry*     symtab;
+		RelocationEntry* reltab;
 
 		SectionData(uint32_t addr):
 			addr(addr)
@@ -198,7 +198,7 @@ private:
 		uint32_t         exec;
 		ELFHeader*       header;
 		SectionHeader*   sections;
-		SymbolEntry*     symbols;
+		SymbolEntry*     symtab;
 		uint8_t*         shstrtab;
 		uint8_t*         strtab;
 	};
@@ -210,10 +210,14 @@ private:
 	int LoadElf(const char* path);
 	int ParserElf();
 	int RelEntries();
-	SectionData GetSectionData(uint32_t index);
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
 	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
 	int ExecuteElf();
+	
+	//Tool methods
+	uint8_t* GetSectionName(uint32_t index);
+	uint8_t* GetSymbolName(uint32_t index);
+	SectionData GetSectionData(uint32_t index);
 public:
 	//Methods
 	void Initialize();

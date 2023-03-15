@@ -45,6 +45,20 @@ int Loader::LoadElf(const char* path)
 }
 
 
+///Get section name
+inline uint8_t* Loader::GetSectionName(uint32_t index)
+{
+	return elf.shstrtab + elf.sections[index].name;
+}
+
+
+///Get symbol name
+inline uint8_t* Loader::GetSymbolName(uint32_t index)
+{
+	return elf.strtab + elf.symtab[index].name;
+}
+
+
 ///Get section data
 inline Loader::SectionData Loader::GetSectionData(uint32_t index)
 {
@@ -76,16 +90,15 @@ int Loader::ParserElf()
 	//Get section headers pointer
 	elf.sections = (SectionHeader*)(elf.map + elf.header->sectionHeaderOffset);
 
-	//Set section header and data
+	//Get some information of elf
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
-		//Set section data
 		SectionData data = GetSectionData(i);
 
-		//Set symbol tables
+		//Set symbol tables pointer
 		if (_SHT_SYMTAB == elf.sections[i].type)
 		{
-			elf.symbols = data.symEntries;
+			elf.symtab = data.symtab;
 		}
 		//Set section header string table and symbol string talbe pointer
 		else if (_SHT_STRTAB == elf.sections[i].type)
@@ -101,7 +114,7 @@ int Loader::ParserElf()
 }
 
 
-///Parser ELF relocation entries
+///Relocation symbol entries
 int Loader::RelEntries()
 {
 	//Set relocation tables
@@ -110,27 +123,29 @@ int Loader::RelEntries()
 		if (_SHT_REL == elf.sections[i].type)
 		{
 			//Calculate the number of relocation entries
-			uint32_t relocationNum = elf.sections[i].size / sizeof(RelocationEntry);
+			uint32_t relEntryNum = elf.sections[i].size / sizeof(RelocationEntry);
 
-			//Set relocation entries
-			RelocationEntry* relocations = GetSectionData(i).relEntries;
+			//Get relocation entries table
+			RelocationEntry* reltab = GetSectionData(i).reltab;
 
 			//Relocation symbol entry
-			for (uint32_t n = 0; n < relocationNum; n++)
+			for (uint32_t n = 0; n < relEntryNum; n++)
 			{
-				//Set relocations entry
-				RelocationEntry relEntry = relocations[n];
+				//Get relocation entry
+				RelocationEntry relEntry = reltab[n];
 
-				SymbolEntry symEntry = elf.symbols[relEntry.symbol];
+				//Get symbol entry
+				SymbolEntry symEntry = elf.symtab[relEntry.symbol];
 
-				if (symEntry.index)
+				//Relocation defined symbol entry
+				if (symEntry.shndx)
 				{
-					uint32_t secAddr = GetSectionData(symEntry.index).addr;
+					uint32_t secAddr = GetSectionData(symEntry.shndx).addr;
 					uint32_t symAddr = secAddr + symEntry.value;
 					uint32_t relAddr = secAddr + relEntry.offset;
-					
 					RelSymCall(relAddr, symAddr, relEntry.type);
 				}
+				//Relocation undefined symbol entry
 				else
 				{
 					//return _ERR;
