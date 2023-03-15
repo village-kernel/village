@@ -2,6 +2,26 @@ mainmenu "Main Menu"
 
 comment "This is village configure menu"
 
+menu "Compiler"
+comment "This is using to setting compiler tool"
+
+config CROSS_COMPILE
+	string "cross compile prefix"
+	default "arm-none-eabi-"
+
+config OPT
+	string "optimization level"
+	default "-O0"
+
+config DEBUG
+	bool "debug mode"
+	default y
+
+config VERBOSE_MODE
+	bool "verbose mode"
+	default n
+endmenu
+
 menu "Application"
 	source ./vk.application/Kconfig
 endmenu
