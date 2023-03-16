@@ -6,19 +6,12 @@
 ############################################################################
 
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-$(CONFIG_BOOTLOADER) += -I./vk.bootloader/bootloader/inc
-
+inc-$(CONFIG_BOOTLOADER) += /vk.bootloader/bootloader/inc
+src-$(CONFIG_BOOTLOADER) += /vk.bootloader/bootloader/src
 
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-y +=
-
-# C sources
-C_SOURCES-y += 
-
-# Cpp sources
-CPP_SOURCES-$(CONFIG_APPLICATION1) += vk.bootloader/bootloader/src/Bootloader.cpp
+objs-$(CONFIG_APPLICATION1) += Bootloader.o
