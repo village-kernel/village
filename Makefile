@@ -6,22 +6,16 @@
 ############################################################################
 
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-$(CONFIG_GUI) += -I./vk.gui/config \
-	-I./vk.gui/core/inc \
-	-I./vk.gui/font/inc
+inc-$(CONFIG_GUI) += ./vk.gui/config
+inc-$(CONFIG_GUI) += ./vk.gui/core/inc
+inc-$(CONFIG_GUI) += ./vk.gui/font/inc
+src-$(CONFIG_GUI) += ./vk.gui/core/src
 
 
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-y +=
-
-# C sources
-C_SOURCES-y += 
-
-# Cpp sources
-CPP_SOURCES-$(CONFIG_GUI) += vk.gui/core/src/GUI.cpp
-CPP_SOURCES-$(CONFIG_GUI) += vk.gui/core/src/Display.cpp
+objs-$(CONFIG_GUI) += GUI.o
+objs-$(CONFIG_GUI) += Display.o
