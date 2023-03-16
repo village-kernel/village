@@ -6,21 +6,14 @@
 ############################################################################
 
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-y += -I./vk.application/application/inc
-
+inc-y += ./vk.application/application/inc
+src-y += ./vk.application/application/src
 
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-y +=
-
-# C sources
-C_SOURCES-y += 
-
-# Cpp sources
-CPP_SOURCES-$(CONFIG_APPLICATION1) += vk.application/application/src/Application1.cpp
-CPP_SOURCES-$(CONFIG_APPLICATION2) += vk.application/application/src/Application2.cpp
-CPP_SOURCES-$(CONFIG_APPLICATION3) += vk.application/application/src/Application3.cpp
+objs-$(CONFIG_APPLICATION1) += Application1.o
+objs-$(CONFIG_APPLICATION2) += Application2.o
+objs-$(CONFIG_APPLICATION3) += Application3.o
