@@ -84,27 +84,23 @@ flash:
 #######################################
 # build the application
 #######################################
-# list of ASM program objects
-OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(ASM_SOURCES-y:.s=.o)))
-vpath %.s $(sort $(dir $(ASM_SOURCES-y)))
-# list of c objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES-y:.c=.o)))
-vpath %.c $(sort $(dir $(C_SOURCES-y)))
-# list of cpp objects
-OBJECTS += $(addprefix $(BUILD_DIR)/,$(notdir $(CPP_SOURCES-y:.cpp=.o)))
-vpath %.cpp $(sort $(dir $(CPP_SOURCES-y)))
+INCLUDES =  $(addprefix "-I", $(inc-y))
+OBJECTS  =  $(addprefix $(BUILD_DIR)/, $(objs-y))
+vpath %.s   $(sort $(src-y))
+vpath %.c   $(sort $(src-y))
+vpath %.cpp $(sort $(src-y))
 
 $(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
 	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(AS) -c $(CFLAGS) $(INCLUDES-y) $< -o $@
+	$(Q)$(AS) -c $(CFLAGS) $(INCLUDES) $< -o $@
 
 $(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
 	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(CC) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
+	$(Q)$(CC) -c $(CFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
 
 $(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
 	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(CPP) -c $(CFLAGS) $(INCLUDES-y) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
+	$(Q)$(CPP) -c $(CFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 	$(Q)echo output $@
