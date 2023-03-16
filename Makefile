@@ -6,45 +6,47 @@
 ############################################################################
 
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-y += \
-	-I./vk.kernel/kernel/if \
-	-I./vk.kernel/kernel/inc \
+inc-y                     += ./vk.kernel/kernel/if
+inc-y                     += ./vk.kernel/kernel/inc
 
-INCLUDES-$(CONFIG_FATFS) += -I./vk.kernel/libraries/fatfs/inc
-INCLUDES-$(CONFIG_CONSOLE) += -I./vk.kernel/console/inc
-INCLUDES-$(CONFIG_UTILITIES) += -I./vk.kernel/utilities/inc
+src-y                     += ./vk.kernel
+src-y                     += ./vk.kernel/kernel/src
+
+inc-$(CONFIG_FATFS)       += ./vk.kernel/libraries/fatfs/inc
+inc-$(CONFIG_CONSOLE)     += ./vk.kernel/console/inc
+inc-$(CONFIG_UTILITIES)   += ./vk.kernel/utilities/inc
+
+src-$(CONFIG_FATFS)       += ./vk.kernel/libraries/fatfs/src
+src-$(CONFIG_CONSOLE)     += ./vk.kernel/console/src
+src-$(CONFIG_UTILITIES)   += ./vk.kernel/utilities/src
 
 
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-y += 
+objs-y                    += Start.o
+objs-y                    += Kernel.o
+objs-y                    += Modular.o
+objs-y                    += Device.o
+objs-y                    += Memory.o
+objs-y                    += Thread.o
+objs-y                    += Scheduler.o
+objs-y                    += Interrupt.o
 
-# C sources
-C_SOURCES-y +=
+objs-$(CONFIG_LOADER)     += Loader.o
 
-# Cpp sources
-CPP_SOURCES-y += vk.Kernel/Start.cpp
-CPP_SOURCES-y += vk.Kernel/kernel/src/Kernel.cpp
-CPP_SOURCES-y += vk.Kernel/kernel/src/Modular.cpp
-CPP_SOURCES-y += vk.Kernel/kernel/src/Device.cpp
-CPP_SOURCES-y += vk.Kernel/kernel/src/Memory.cpp
-CPP_SOURCES-y += vk.Kernel/kernel/src/Thread.cpp
-CPP_SOURCES-y += vk.Kernel/kernel/src/Scheduler.cpp
-CPP_SOURCES-y += vk.Kernel/kernel/src/Interrupt.cpp
+objs-$(CONFIG_FILESTREAM) += FileStream.o
+objs-$(CONFIG_INIPARSER)  += iniParser.o
+objs-$(CONFIG_PINPARSER)  += pinParser.o
 
-CPP_SOURCES-$(CONFIG_LOADER) += vk.kernel/kernel/src/Loader.cpp
+objs-$(CONFIG_CMD_ABOUT)  += CmdAbout.o
+objs-$(CONFIG_CMD_HELP)   += CmdHelp.o
+objs-$(CONFIG_CONSOLE)    += CmdMsgMgr.o
+objs-$(CONFIG_CONSOLE)    += Console.o
 
-CPP_SOURCES-$(CONFIG_FILESTREAM) += vk.kernel/utilities/src/FileStream.cpp
-CPP_SOURCES-$(CONFIG_INIPARSER) += vk.kernel/utilities/src/iniParser.cpp
-CPP_SOURCES-$(CONFIG_PINPARSER) += vk.kernel/utilities/src/pinParser.cpp
-
-CPP_SOURCES-$(CONFIG_CMD_ABOUT) += vk.kernel/console/src/CmdAbout.cpp
-CPP_SOURCES-$(CONFIG_CMD_HELP) += vk.kernel/console/src/CmdHelp.cpp
-CPP_SOURCES-$(CONFIG_CONSOLE) += vk.kernel/console/src/CmdMsgMgr.cpp
-CPP_SOURCES-$(CONFIG_CONSOLE) += vk.kernel/console/src/Console.cpp
-
-CPP_SOURCES-$(CONFIG_FATFS) += $(wildcard vk.kernel/libraries/fatfs/src/*.cpp)
+objs-$(CONFIG_FATFS)      += diskio.o
+objs-$(CONFIG_FATFS)      += ff.o
+objs-$(CONFIG_FATFS)      += ffsystem.o
+objs-$(CONFIG_FATFS)      += ffunicode.o
