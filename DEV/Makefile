@@ -6,24 +6,18 @@
 ############################################################################
 
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-y += -I./vk.hardware/DEV/config -I./vk.hardware/DEV/inc
-	
+inc-y += ./vk.hardware/DEV/config
+inc-y += ./vk.hardware/DEV/inc
+src-y += ./vk.hardware/DEV/src
 
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-y += 
-
-# C sources
-C_SOURCES-y +=
-
-# Cpp sources
-CPP_SOURCES-$(CONFIG_DMAFIFO) += vk.hardware/Dev/src/DmaFifo.cpp
-CPP_SOURCES-$(CONFIG_ILI9488) += vk.hardware/Dev/src/ILI9488.cpp
-CPP_SOURCES-$(CONFIG_SDCARD) += vk.hardware/Dev/src/SdCard.cpp
-CPP_SOURCES-$(CONFIG_SPIFLASH) += vk.hardware/Dev/src/SpiFlash.cpp
-CPP_SOURCES-$(CONFIG_UARTSERIAL) += vk.hardware/Dev/src/UartSerial.cpp
-CPP_SOURCES-$(CONFIG_USBSTORAGE) += vk.hardware/Dev/src/UsbStorage.cpp
+objs-$(CONFIG_DMAFIFO)        += DmaFifo.o
+objs-$(CONFIG_ILI9488)        += ILI9488.o
+objs-$(CONFIG_SDCARD)         += SdCard.o
+objs-$(CONFIG_SPIFLASH)       += SpiFlash.o
+objs-$(CONFIG_UARTSERIAL)     += UartSerial.o
+objs-$(CONFIG_USBSTORAGE)     += UsbStorage.o

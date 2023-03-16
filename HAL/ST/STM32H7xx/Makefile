@@ -1,27 +1,20 @@
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-$(CONFIG_STM32H7xx) += -I./vk.hardware/HAL/ST/STM32H7xx/inc
+inc-$(CONFIG_STM32H7xx) += ./vk.hardware/HAL/ST/STM32H7xx/inc
+src-$(CONFIG_STM32H7xx) += ./vk.hardware/HAL/ST/STM32H7xx/src
 
 
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-y += 
-
-# C sources
-C_SOURCES-y += 
-
-# Cpp sources
-CPP_SOURCES-$(CONFIG_HAL_SYSTEM) += ./vk.hardware/HAL/ST/STM32H7xx/src/System.cpp
-CPP_SOURCES-$(CONFIG_HAL_GPIO) += ./vk.hardware/HAL/ST/STM32H7xx/src/Gpio.cpp
-CPP_SOURCES-$(CONFIG_HAL_GPI) += ./vk.hardware/HAL/ST/STM32H7xx/src/Gpi.cpp
-CPP_SOURCES-$(CONFIG_HAL_GPO) += ./vk.hardware/HAL/ST/STM32H7xx/src/Gpo.cpp
-CPP_SOURCES-$(CONFIG_HAL_NVIC) += ./vk.hardware/HAL/ST/STM32H7xx/src/Nvic.cpp
-CPP_SOURCES-$(CONFIG_HAL_USART) += ./vk.hardware/HAL/ST/STM32H7xx/src/Usart.cpp
-CPP_SOURCES-$(CONFIG_HAL_SPI) += ./vk.hardware/HAL/ST/STM32H7xx/src/Spi.cpp
-CPP_SOURCES-$(CONFIG_HAL_I2C) += ./vk.hardware/HAL/ST/STM32H7xx/src/I2c.cpp
-CPP_SOURCES-$(CONFIG_HAL_DMA) += ./vk.hardware/HAL/ST/STM32H7xx/src/Dma.cpp
-CPP_SOURCES-$(CONFIG_HAL_FSMC) += ./vk.hardware/HAL/ST/STM32H7xx/src/Fsmc.cpp
-
+objs-$(CONFIG_HAL_SYSTEM) += System.o
+objs-$(CONFIG_HAL_GPIO)   += Gpio.o
+objs-$(CONFIG_HAL_GPI)    += Gpi.o
+objs-$(CONFIG_HAL_GPO)    += Gpo.o
+objs-$(CONFIG_HAL_NVIC)   += Nvic.o
+objs-$(CONFIG_HAL_USART)  += Usart.o
+objs-$(CONFIG_HAL_SPI)    += Spi.o
+objs-$(CONFIG_HAL_I2C)    += I2c.o
+objs-$(CONFIG_HAL_DMA)    += Dma.o
+objs-$(CONFIG_HAL_FSMC)   += Fsmc.o

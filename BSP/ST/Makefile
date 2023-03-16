@@ -6,36 +6,35 @@
 ############################################################################
 
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-y += -I./vk.hardware/BSP/ST/CMSIS/Include
+inc-y += ./vk.hardware/BSP/ST/CMSIS/Include
 
-INCLUDES-$(CONFIG_USBSTORAGE) += \
-	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Inc \
-	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc \
-	-I./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc
+inc-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Inc
+inc-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc
+inc-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc
+
+src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/GCC
+src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src
+src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src
+src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src
 
 
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-y += 
+objs-y                    += syscalls.o
+objs-y                    += sysmem.o
 
-
-# C sources
-C_SOURCES-y += \
-	$(wildcard ./vk.hardware/BSP/ST/CMSIS/Source/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/GCC/*.c) \
-
-C_SOURCES-$(CONFIG_USBSTORAGE) += \
-	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src/*.c) \
-	$(wildcard ./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src/*.c) \
-
-
-# Cpp sources
-CPP_SOURCES-y += 
+objs-$(CONFIG_USBSTORAGE) += usbd_msc_bot.o
+objs-$(CONFIG_USBSTORAGE) += usbd_msc_data.o
+objs-$(CONFIG_USBSTORAGE) += usbd_msc_scsi.o
+objs-$(CONFIG_USBSTORAGE) += usbd_msc.o
+objs-$(CONFIG_USBSTORAGE) += usbd_core.o
+objs-$(CONFIG_USBSTORAGE) += usbd_ctlreq.o
+objs-$(CONFIG_USBSTORAGE) += usbd_ioreq.o
+objs-$(CONFIG_USBSTORAGE) += usbd_conf.o
+objs-$(CONFIG_USBSTORAGE) += usbd_desc.o
 
 
 ######################################

@@ -11,5 +11,3 @@ if ST
 	source ./vk.hardware/BSP/ST/Kconfig
 endif
 
-config MANUFACTURER_HAL_DRIVER
-	bool "Use the HAL driver provided by the manufacturer"

@@ -10,6 +10,7 @@ choice
 		bool "STM32H7xx"
 endchoice
 
+# config stm32f4xx
 if STM32F4xx
 
 choice
@@ -58,6 +59,7 @@ endchoice
 
 endif
 
+# config stm32h7xx
 if STM32H7xx
 
 choice
@@ -89,3 +91,18 @@ choice
 endchoice
 
 endif
+
+
+# Config manufacturer hal driver
+config MANUFACTURER_HAL_DRIVER
+	bool "Use the HAL driver provided by the manufacturer"
+
+menu "STM32F4xx_HAL_driver"
+	depends on MANUFACTURER_HAL_DRIVER && STM32F4xx
+	source ./vk.hardware/BSP/ST/STM32F4xx_HAL_driver/Kconfig
+endmenu
+
+menu "STM32H7xx_HAL_driver"
+	depends on MANUFACTURER_HAL_DRIVER && STM32H7xx
+	source ./vk.hardware/BSP/ST/STM32F4xx_HAL_driver/Kconfig
+endmenu

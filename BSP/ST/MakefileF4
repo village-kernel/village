@@ -6,48 +6,50 @@
 ############################################################################
 
 ######################################
-# includes
+# paths
 ######################################
-INCLUDES-$(CONFIG_STM32F4xx) +=	-I./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Include \
-	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc \
-	-I./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy
+inc-$(CONFIG_STM32F4xx) += ./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Include
+inc-$(CONFIG_STM32F4xx) += ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc
+inc-$(CONFIG_STM32F4xx) += ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy
 
-	
+src-$(CONFIG_STM32F4xx) += ./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates
+src-$(CONFIG_STM32F4xx) += ./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc
+
+ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
+src-$(CONFIG_STM32F4xx) += ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Src
+endif
+
 ######################################
-# sources
+# objects
 ######################################
-# ASM sources
-ASM_SOURCES-$(CONFIG_STM32F401xc) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f401xc.s
-ASM_SOURCES-$(CONFIG_STM32F401xe) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f401xe.s
-ASM_SOURCES-$(CONFIG_STM32F405xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f405xx.s
-ASM_SOURCES-$(CONFIG_STM32F407xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f407xx.s
-ASM_SOURCES-$(CONFIG_STM32F410cx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f410cx.s
-ASM_SOURCES-$(CONFIG_STM32F410rx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f410rx.s
-ASM_SOURCES-$(CONFIG_STM32F410tx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f410tx.s
-ASM_SOURCES-$(CONFIG_STM32F411xe) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f411xe.s
-ASM_SOURCES-$(CONFIG_STM32F412cx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412cx.s
-ASM_SOURCES-$(CONFIG_STM32F412rx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412rx.s
-ASM_SOURCES-$(CONFIG_STM32F412vx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412vx.s
-ASM_SOURCES-$(CONFIG_STM32F412zx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f412zx.s
-ASM_SOURCES-$(CONFIG_STM32F413xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f413xx.s
-ASM_SOURCES-$(CONFIG_STM32F415xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f415xx.s
-ASM_SOURCES-$(CONFIG_STM32F417xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f417xx.s
-ASM_SOURCES-$(CONFIG_STM32F423xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f423xx.s
-ASM_SOURCES-$(CONFIG_STM32F427xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f427xx.s
-ASM_SOURCES-$(CONFIG_STM32F429xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f429xx.s
-ASM_SOURCES-$(CONFIG_STM32F437xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f437xx.s
-ASM_SOURCES-$(CONFIG_STM32F439xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f439xx.s
-ASM_SOURCES-$(CONFIG_STM32F446tx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f446tx.s
-ASM_SOURCES-$(CONFIG_STM32F469xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f469xx.s
-ASM_SOURCES-$(CONFIG_STM32F479xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc/startup_stm32f479xx.s
+objs-$(CONFIG_STM32F4xx)   += system_stm32f4xx.o
+objs-$(CONFIG_STM32F401xc) += startup_stm32f401xc.o
+objs-$(CONFIG_STM32F401xe) += startup_stm32f401xe.o
+objs-$(CONFIG_STM32F405xx) += startup_stm32f405xx.o
+objs-$(CONFIG_STM32F407xx) += startup_stm32f407xx.o
+objs-$(CONFIG_STM32F410cx) += startup_stm32f410cx.o
+objs-$(CONFIG_STM32F410rx) += startup_stm32f410rx.o
+objs-$(CONFIG_STM32F410tx) += startup_stm32f410tx.o
+objs-$(CONFIG_STM32F411xe) += startup_stm32f411xe.o
+objs-$(CONFIG_STM32F412cx) += startup_stm32f412cx.o
+objs-$(CONFIG_STM32F412rx) += startup_stm32f412rx.o
+objs-$(CONFIG_STM32F412vx) += startup_stm32f412vx.o
+objs-$(CONFIG_STM32F412zx) += startup_stm32f412zx.o
+objs-$(CONFIG_STM32F413xx) += startup_stm32f413xx.o
+objs-$(CONFIG_STM32F415xx) += startup_stm32f415xx.o
+objs-$(CONFIG_STM32F417xx) += startup_stm32f417xx.o
+objs-$(CONFIG_STM32F423xx) += startup_stm32f423xx.o
+objs-$(CONFIG_STM32F427xx) += startup_stm32f427xx.o
+objs-$(CONFIG_STM32F429xx) += startup_stm32f429xx.o
+objs-$(CONFIG_STM32F437xx) += startup_stm32f437xx.o
+objs-$(CONFIG_STM32F439xx) += startup_stm32f439xx.o
+objs-$(CONFIG_STM32F446tx) += startup_stm32f446tx.o
+objs-$(CONFIG_STM32F469xx) += startup_stm32f469xx.o
+objs-$(CONFIG_STM32F479xx) += startup_stm32f479xx.o
 
-
-# C sources
-C_SOURCES-$(CONFIG_MANUFACTURER_HAL_DRIVER) += $(wildcard ./vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Src/*.c) 
-C_SOURCES-$(CONFIG_STM32F4xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c
-
-# Cpp sources
-CPP_SOURCES-y += 
+ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
+-include vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Makefile
+endif
 
 
 #######################################
