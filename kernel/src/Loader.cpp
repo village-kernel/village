@@ -13,13 +13,13 @@
 ///Loader Initialize
 void Loader::Initialize()
 {
-	if (LoadElf("1:app-cpp-striped.elf") != _OK) return;
+	if (LoadElf("1:Application4.mo") != _OK) return;
 
 	if (ParserElf() != _OK) return;
 
 	if (RelEntries() != _OK) return;
 
-	ExecuteElf();
+	ExecuteElf("Entry");
 }
 
 
@@ -46,16 +46,54 @@ int Loader::LoadElf(const char* path)
 
 
 ///Get section name
-inline uint8_t* Loader::GetSectionName(uint32_t index)
+inline const char* Loader::GetSectionName(uint32_t index)
 {
-	return elf.shstrtab + elf.sections[index].name;
+	if (elf.sectionNum > index)
+	{
+		return (const char*)elf.shstrtab + elf.sections[index].name;
+	}
+	return NULL;
 }
 
 
 ///Get symbol name
-inline uint8_t* Loader::GetSymbolName(uint32_t index)
+inline const char* Loader::GetSymbolName(uint32_t index)
 {
-	return elf.strtab + elf.symtab[index].name;
+	if (elf.symtabNum > index)
+	{
+		return (const char*)elf.strtab + elf.symtab[index].name;
+	}
+	return NULL;
+}
+
+
+///Get symbol addr
+inline uint32_t Loader::GetSymbolAddr(uint32_t index)
+{
+	if (elf.symtabNum > index)
+	{
+		SymbolEntry symbol = elf.symtab[index];
+
+		if (symbol.shndx)
+		{
+			return GetSectionData(symbol.shndx).addr + symbol.value;
+		}
+	}
+	return 0;
+}
+
+
+///Get symbol addr by name
+inline uint32_t Loader::GetSymbolAddrByName(const char* name)
+{
+	for (uint32_t i = 0; i < elf.symtabNum; i++)
+	{
+		if(0 == strcmp(name, GetSymbolName(i)))
+		{
+			return GetSymbolAddr(i);
+		}
+	}
+	return 0;
 }
 
 
@@ -82,13 +120,13 @@ int Loader::ParserElf()
 	if (elf.header->type     != _ELF_Type_Rel   ) return _ERR;
 	if (elf.header->machine  != _ELF_Machine_ARM) return _ERR;
 	if (elf.header->version  != _ELF_Ver_Current) return _ERR;
-	if (elf.header->entry    == 0)                return _ERR;
-
+	
 	//Set elf exec entry
 	elf.exec = elf.map + elf.header->elfHeaderSize + elf.header->entry;
 
 	//Get section headers pointer
 	elf.sections = (SectionHeader*)(elf.map + elf.header->sectionHeaderOffset);
+	elf.sectionNum = elf.header->sectionHeaderNum;
 
 	//Get some information of elf
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
@@ -99,6 +137,7 @@ int Loader::ParserElf()
 		if (_SHT_SYMTAB == elf.sections[i].type)
 		{
 			elf.symtab = data.symtab;
+			elf.symtabNum = elf.sections[i].size / sizeof(SymbolEntry);
 		}
 		//Set section header string table and symbol string talbe pointer
 		else if (_SHT_STRTAB == elf.sections[i].type)
@@ -219,10 +258,24 @@ int Loader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 
 
 ///Execute elf
-int Loader::ExecuteElf()
+int Loader::ExecuteElf(const char* symbol)
 {
-	Thread::CreateTask((ThreadHandlerC)elf.exec);
-	return _OK;
+	if (NULL == symbol && 0 != elf.exec)
+	{
+		Thread::CreateTask((ThreadHandlerC)elf.exec);
+		return _OK;
+	}
+	else
+	{
+		uint32_t symbolAddr = GetSymbolAddrByName("Entry");
+		
+		if (symbolAddr)
+		{
+			Thread::CreateTask((ThreadHandlerC)symbolAddr);
+			return _OK;
+		}
+	}
+	return _ERR;
 }
 
 

@@ -198,7 +198,9 @@ private:
 		uint32_t         exec;
 		ELFHeader*       header;
 		SectionHeader*   sections;
+		uint32_t         sectionNum;
 		SymbolEntry*     symtab;
+		uint32_t         symtabNum;
 		uint8_t*         shstrtab;
 		uint8_t*         strtab;
 	};
@@ -212,11 +214,13 @@ private:
 	int RelEntries();
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
 	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
-	int ExecuteElf();
+	int ExecuteElf(const char* symbol = NULL);
 	
 	//Tool methods
-	uint8_t* GetSectionName(uint32_t index);
-	uint8_t* GetSymbolName(uint32_t index);
+	const char* GetSectionName(uint32_t index);
+	const char* GetSymbolName(uint32_t index);
+	uint32_t GetSymbolAddr(uint32_t index);
+	uint32_t GetSymbolAddrByName(const char* name);
 	SectionData GetSectionData(uint32_t index);
 public:
 	//Methods
