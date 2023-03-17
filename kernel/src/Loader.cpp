@@ -13,6 +13,22 @@
 ///Loader Initialize
 void Loader::Initialize()
 {
+	LoadLibraries();
+	LoadModules();
+}
+
+
+///Loader load libraries
+void Loader::LoadLibraries()
+{
+	libraries[0].name = "_ZN6Thread5SleepEm";
+	libraries[0].addr = (uint32_t)&Thread::Sleep;
+}
+
+
+///Loader load modules
+void Loader::LoadModules()
+{
 	if (LoadElf("1:Application4.mo") != _OK) return;
 
 	if (ParserElf() != _OK) return;
@@ -104,6 +120,20 @@ inline Loader::SectionData Loader::GetSectionData(uint32_t index)
 }
 
 
+///Get system call addr
+inline uint32_t Loader::FindUndefinedSymbol(const char* name)
+{
+	for (uint32_t i = 0; i < 10; i++)
+	{
+		if (0 == strcmp(name, libraries[i].name))
+		{
+			return libraries[i].addr;
+		}
+	}
+	return 0;
+}
+
+
 ///Parser elf
 int Loader::ParserElf()
 {
@@ -176,19 +206,26 @@ int Loader::RelEntries()
 				//Get symbol entry
 				SymbolEntry symEntry = elf.symtab[relEntry.symbol];
 
-				//Relocation defined symbol entry
+				//Get relocation section addr
+				uint32_t secAddr = GetSectionData(i - 1).addr;
+				uint32_t relAddr = secAddr + relEntry.offset;
+				uint32_t symAddr = 0;
+
+				//Calculate new symbol entry addr
 				if (symEntry.shndx)
 				{
-					uint32_t secAddr = GetSectionData(symEntry.shndx).addr;
-					uint32_t symAddr = secAddr + symEntry.value;
-					uint32_t relAddr = secAddr + relEntry.offset;
-					RelSymCall(relAddr, symAddr, relEntry.type);
+					//Calculate defined symbol entry symAddr
+					symAddr = secAddr + symEntry.value;
 				}
-				//Relocation undefined symbol entry
 				else
 				{
-					//return _ERR;
+					//Get undefined symbol entry symAddr
+					symAddr = FindUndefinedSymbol(GetSymbolName(relEntry.symbol));
 				}
+
+				//Relocation symbol entry
+				if (0 == symAddr) return _ERR;
+				RelSymCall(relAddr, symAddr, relEntry.type);
 			}
 		}
 	}
