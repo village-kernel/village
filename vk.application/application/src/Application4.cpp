@@ -5,33 +5,24 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Application4.h"
-
-
-void Delay()
-{
-	for (volatile uint32_t i = 0; i < 1000; i++)
-	{
-		for (volatile uint32_t j = 0; j < 1000; j++) {}
-	}
-}
+#include "Thread.h"
 
 
 void Application4::Initialize()
 {
+	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN_Msk;
+	GPIOE->MODER = (GPIOE->MODER & ~GPIO_MODER_MODER5_Msk) | (GPIO_MODER_MODE5_0);
 }
 
 
 void Application4::Execute()
 {
-	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN_Msk;
-	GPIOE->MODER = (GPIOE->MODER & ~GPIO_MODER_MODER5_Msk) | (GPIO_MODER_MODE5_0);
-
 	while(1)
 	{
 		GPIOE->BSRR |= GPIO_BSRR_BR5;
-		Delay();
+		Thread::Sleep(500);
 		GPIOE->BSRR |= GPIO_BSRR_BS5;
-		Delay();
+		Thread::Sleep(500);
 	}
 }
 
