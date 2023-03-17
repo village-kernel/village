@@ -45,7 +45,7 @@ conf: $(conf-objs)
 	gcc -o $@ $^ $(LDFLAGS)
 
 %.o : %.c
-	gcc -c $(CFLAGS) $(LDFLAGS) $< -o $@
+	gcc -c $(CFLAGS) $< -o $@
 
 
 #######################################
