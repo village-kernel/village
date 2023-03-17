@@ -13,3 +13,7 @@ config APPLICATION3
 	depends on GUI
 	bool "Add application3 to project"
 	default n
+
+config APPLICATION4
+	tristate "Add application4 to project"
+	default m
