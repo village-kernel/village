@@ -2,7 +2,7 @@
 ######################################
 # includes
 ######################################
-CFLAGS  := -I/usr/include/ncurses -DCURSES_LOC="<ncurses.h>" -DLOCALE -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+CFLAGS  := -I/usr/include/ncurses -DCURSES_LOC="<ncurses.h>" -D'KBUILD_NO_NLS' -DLOCALE -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
 LDFLAGS := -lncurses
 
 
