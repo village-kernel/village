@@ -31,6 +31,7 @@ else
   Q = @
 endif
 
+export Q
 
 #######################################
 # paths
@@ -66,6 +67,7 @@ GCC_PREFIX ?= $(CONFIG_CROSS_COMPILE:"%"=%)
 CPP = $(GCC_PREFIX)g++
 CC  = $(GCC_PREFIX)gcc
 AS  = $(GCC_PREFIX)gcc -x assembler-with-cpp
+AR  = $(GCC_PREFIX)ar
 LD  = $(GCC_PREFIX)ld
 CP  = $(GCC_PREFIX)objcopy
 SZ  = $(GCC_PREFIX)size
