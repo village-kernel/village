@@ -1,4 +1,4 @@
-ENTRY(_start)
+ENTRY(Entry)
 
 FORCE_GROUP_ALLOCATION
 
