@@ -28,6 +28,11 @@ config LOADER
 	bool "Enable loadable module support"
 	option modules
 	select FATFS
+	select ENVIRONMENT
+
+config ENVIRONMENT
+	bool "Build the environment of Loadable module running"
+	default n
 
 endmenu
 
