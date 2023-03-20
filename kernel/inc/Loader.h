@@ -205,15 +205,8 @@ private:
 		uint8_t*         strtab;
 	};
 	
-	struct Library
-	{
-		const char* name;
-		uint32_t    addr;
-	};
-
 	//Members
 	ELF elf;
-	Library libraries[10];
 
 	//Methods
 	int LoadElf(const char* path);
@@ -229,7 +222,6 @@ private:
 	uint32_t GetSymbolAddr(uint32_t index);
 	uint32_t GetSymbolAddrByName(const char* name);
 	SectionData GetSectionData(uint32_t index);
-	uint32_t FindUndefinedSymbol(const char* name);
 public:
 	//Methods
 	void Initialize();

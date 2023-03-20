@@ -21,8 +21,7 @@ void Loader::Initialize()
 ///Loader load libraries
 void Loader::LoadLibraries()
 {
-	libraries[0].name = "_ZN6Thread5SleepEm";
-	libraries[0].addr = (uint32_t)&Thread::Sleep;
+	EXPORT_SYMBOL("_ZN6Thread5SleepEm", Thread::Sleep);
 }
 
 
@@ -120,20 +119,6 @@ inline Loader::SectionData Loader::GetSectionData(uint32_t index)
 }
 
 
-///Get system call addr
-inline uint32_t Loader::FindUndefinedSymbol(const char* name)
-{
-	for (uint32_t i = 0; i < 10; i++)
-	{
-		if (0 == strcmp(name, libraries[i].name))
-		{
-			return libraries[i].addr;
-		}
-	}
-	return 0;
-}
-
-
 ///Parser elf
 int Loader::ParserElf()
 {
@@ -220,7 +205,7 @@ int Loader::RelEntries()
 				else
 				{
 					//Get undefined symbol entry symAddr
-					symAddr = FindUndefinedSymbol(GetSymbolName(relEntry.symbol));
+					symAddr = SEARCH_SYMBOL(GetSymbolName(relEntry.symbol));
 				}
 
 				//Relocation symbol entry
