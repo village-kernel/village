@@ -25,9 +25,9 @@ endmenu
 menu "kernel"
 
 config LOADER
-	depends on FATFS
-	bool "Enable loader elf function"
-	default n
+	bool "Enable loadable module support"
+	option modules
+	select FATFS
 
 endmenu
 
