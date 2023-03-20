@@ -8,14 +8,14 @@
                 "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc",
                 "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy",
                 "${workspaceRoot}/vk.hardware/HAL/ST/STM32F4xx/inc",
-				"${workspaceRoot}/vk.hardware/Dev/inc",
-				"${workspaceRoot}/vk.kernel/kernel/if",
+                "${workspaceRoot}/vk.hardware/Dev/inc",
+                "${workspaceRoot}/vk.kernel/kernel/if",
                 "${workspaceRoot}/vk.kernel/kernel/inc",
                 "${workspaceRoot}/vk.kernel/libraries/fatfs/inc",
                 "${workspaceRoot}/vk.kernel/utilities/inc",
-				"${workspaceRoot}/vk.kernel/console/inc",
-				"${workspaceRoot}/vk.gui/core/inc",
-				"${workspaceRoot}/vk.gui/font/inc",
+                "${workspaceRoot}/vk.kernel/console/inc",
+                "${workspaceRoot}/vk.gui/core/inc",
+                "${workspaceRoot}/vk.gui/font/inc",
                 "${workspaceRoot}/vk.application/application/inc"
             ],
             "defines": [],
@@ -23,13 +23,13 @@
                 "path": [
                     "${workspaceRoot}"
                 ],
-                "limitSymbolsToIncludedHeaders": true,
+                "limitSymbolsToIncludedHeaders": false,
                 "databaseFilename": ""
             },
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "gcc-arm",
-            "configurationProvider": "ms-vscode.makefile-tools"
+            "compilerPath": "",
+            "intelliSenseMode": "gcc-arm"
         }
     ],
     "version": 4
