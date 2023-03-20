@@ -11,6 +11,7 @@
 #include "Scheduler.h"
 #include "Modular.h"
 #include "Device.h"
+#include "Environment.h"
 
 ///Kernel
 class Kernel
