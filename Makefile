@@ -33,13 +33,6 @@ endif
 
 export Q
 
-#######################################
-# paths
-#######################################
-# Build path
-BUILD_DIR   := vk.build
-MODULES_DIR := $(BUILD_DIR)/modules
-
 
 #######################################
 # remove
@@ -49,6 +42,24 @@ ifeq ($(OS), Windows_NT)
 else
   RM = rm -rf
 endif
+
+
+#######################################
+# paths
+#######################################
+# Build path
+BUILD_DIR   := vk.build
+MODULES_DIR := $(BUILD_DIR)/modules
+
+
+#######################################
+# tasks
+#######################################
+# default action: build all
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+
+# build modules
+modules: $(MODULES_DIR)/$(objs-m:.o=.mo)
 
 
 ######################################
@@ -74,13 +85,6 @@ SZ  = $(GCC_PREFIX)size
 ST  = $(GCC_PREFIX)strip
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
-
-
-# default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
-
-# build modules
-modules: $(MODULES_DIR)/$(objs-m:.o=.mo)
 
 
 #######################################
