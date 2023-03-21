@@ -88,10 +88,5 @@ LIBDIR =
 # LDFLAGS
 LDFLAGS := $(MCU) -specs=nano.specs -specs=nosys.specs -T$(LDSCRIPT-y) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
 
-
-#######################################
-# flash firmware
-#######################################
-flash:
-	openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg \
-		-c "program $(BUILD_DIR)/$(TARGET).bin verify reset exit 0x08000000"
+# Flash CFG
+FLASH_CFG := -f interface/stlink-v2.cfg -f target/stm32f4x.cfg
