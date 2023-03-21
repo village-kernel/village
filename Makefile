@@ -52,16 +52,6 @@ BUILD_DIR   := vk.build
 MODULES_DIR := $(BUILD_DIR)/modules
 
 
-#######################################
-# tasks
-#######################################
-# default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
-
-# build modules
-modules: $(MODULES_DIR)/$(objs-m:.o=.mo)
-
-
 ######################################
 # include other makefile
 ######################################
@@ -69,6 +59,22 @@ modules: $(MODULES_DIR)/$(objs-m:.o=.mo)
 -include vk.hardware/Makefile
 -include vk.kernel/Makefile
 -include vk.gui/Makefile
+
+
+#######################################
+# tasks
+#######################################
+# default action: build all
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+
+
+# build modules
+modules: $(MODULES_DIR)/$(objs-m:.o=.mo)
+
+
+# flash firmware
+flash:
+	openocd $(FLASH_CFG) -c "program $(BUILD_DIR)/$(TARGET).bin verify reset exit 0x08000000"
 
 
 #######################################
