@@ -82,11 +82,6 @@ all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET
 # build modules
 modules: $(MODULES_DIR)/$(objs-m:.o=.mo)
 
-# flash firmware
-flash:
-	openocd -f interface/stlink-v2.cfg -f target/stm32f4x.cfg \
-		-c "program $(BUILD_DIR)/$(TARGET).bin verify reset exit 0x08000000"
-
 
 #######################################
 # setting build environment
