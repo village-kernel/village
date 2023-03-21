@@ -8,6 +8,7 @@
 #include "System.h"
 #include "Memory.h"
 #include "Scheduler.h"
+#include "Environment.h"
 
 
 ///Initialize static members
@@ -55,6 +56,7 @@ void Thread::CreateTask(ThreadHandlerC handler)
 	//Add new task node in task list
 	*nextNode = new TaskNode(task);
 }
+EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvvE);
 
 
 ///Thread delete task
@@ -85,6 +87,7 @@ void Thread::DeleteTask(ThreadHandlerC handler)
 		}
 	}
 }
+EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEPFvvE);
 
 
 ///Idle task
@@ -128,6 +131,7 @@ void Thread::Sleep(uint32_t ticks)
 		Scheduler::Rescheduler(Scheduler::Unprivileged);
 	}
 }
+EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
 
 
 ///Thread Exit
@@ -140,6 +144,7 @@ void Thread::Exit()
 		Scheduler::Rescheduler(Scheduler::Unprivileged);
 	}
 }
+EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
 
 
 ///Select next task

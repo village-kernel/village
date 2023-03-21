@@ -21,7 +21,7 @@ void Loader::Initialize()
 ///Loader load libraries
 void Loader::LoadLibraries()
 {
-	EXPORT_SYMBOL("_ZN6Thread5SleepEm", Thread::Sleep);
+	
 }
 
 

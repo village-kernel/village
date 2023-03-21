@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Memory.h"
+#include "Environment.h"
 
 
 ///Initialize static members
@@ -57,6 +58,7 @@ uint32_t Memory::Malloc(uint32_t size)
 
 	return (*nextNode)->map.addr;
 }
+EXPORT_SYMBOL(Memory::Malloc, _ZN6Memory6MallocEm);
 
 
 ///Memory free
@@ -85,3 +87,4 @@ void Memory::Free(uint32_t memory)
 		}
 	}
 }
+EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);

@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Modular.h"
+#include "Environment.h"
 
 
 ///Initialize module core
@@ -85,6 +86,7 @@ void Modular::RegisterModule(Module* module, uint32_t id)
 
 	*nextNode = new ModuleNode(module);
 }
+EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
 
 
 ///Deregister module object
@@ -113,3 +115,4 @@ void Modular::DeregisterModule(Module* module, uint32_t id)
 		}
 	}
 }
+EXPORT_SYMBOL(Modular::DeregisterModule, _ZN7Modular16DeregisterModuleEP6Modulem);
