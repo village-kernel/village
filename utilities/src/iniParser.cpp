@@ -5,47 +5,59 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "iniParser.h"
+#include "FileStream.h"
 #include "stdlib.h"
-#include "ff.h"
+#include "string.h"
 
 
 ///Load *.ini file and decode
-void IniParser::Load(std::string filePath)
+int IniParser::Load(std::string filePath)
 {
-	FATFS fs; FIL file; UINT br;
+	FileStream file;
+	Result res = _ERR;
 
-	if (f_mount(&fs, "0:", 1) == FR_OK)
+	if (FR_OK == file.Open(filePath, FileStream::_Read))
 	{
-		if (f_open(&file, filePath.c_str(), FA_READ) == FR_OK)
+		int size = file.Size();
+
+		std::string str; str.resize(size);
+
+		if (file.Read((uint8_t*)str.c_str(), size) == size)
 		{
-			std::string str;
-			str.resize(f_size(&file));
-			f_read(&file, (void*)str.c_str(), str.size(), &br);
-			f_close(&file);
 			Decode(str);
-			std::string().swap(str);
+			res = _OK;
 		}
-		f_unmount("0:");
+		
+		file.Close();
+		std::string().swap(str);
 	}
+
+	return res;
 }
 
 
 ///Encode and save to *.ini file
-void IniParser::Save(std::string filePath)
+int IniParser::Save(std::string filePath)
 {
-	FATFS fs; FIL file; UINT bw;
+	FileStream file;
+	Result res = _ERR;
 
-	if (f_mount(&fs, "0:", 1) == FR_OK)
+	if (FR_OK == file.Open(filePath, FileStream::_Create | FileStream::_Write))
 	{
-		if (f_open(&file, filePath.c_str(), FA_CREATE_ALWAYS | FA_WRITE) == FR_OK)
+		std::string str = Encode();
+
+		int size = str.size();
+		
+		if (file.Write((uint8_t*)str.c_str(), size) == size)
 		{
-			std::string str = Encode();
-			f_write(&file, (void*)str.c_str(), str.size(), &bw);
-			f_close(&file);
-			std::string().swap(str);
+			res =  _OK;
 		}
-		f_unmount("0:");
+
+		file.Close();
+		std::string().swap(str);
 	}
+	
+	return res;
 }
 
 

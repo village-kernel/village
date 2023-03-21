@@ -15,6 +15,13 @@
 ///IniParser
 class IniParser
 {
+public:
+	//Enumerations
+	enum Result
+	{
+		_OK     = 0,
+		_ERR    = 1,
+	};
 private:
 	//Enumerations
 	enum ParserStatus
@@ -34,8 +41,8 @@ private:
 	std::string Encode();
 public:
 	//Methods
-	void Load(std::string filePath);
-	void Save(std::string filePath);
+	int Load(std::string filePath);
+	int Save(std::string filePath);
 
 	void WriteValue(std::string section, std::string key, std::string value);
 	std::string ReadValue(std::string section, std::string key);
