@@ -10,11 +10,17 @@
 #include "stdint.h"
 #include "stddef.h"
 
-///Export symbol marco
-#define EXPORT_SYMBOL(name, symbol)    Environment::ExportSymbol(new Environment::Symbol(name, (uint32_t)&symbol))
+///Symbol section, avoid being optimized by the compiler
+#define SYMBOL_SECTION                 __attribute__((used,__section__(".symbols")))
+
+///Symbol create macro
+#define CREATE_SYMBOL(symbol, name)    static struct _Sym_##name{_Sym_##name(){symbol;}} const _sym_##name
+
+///Symbol class macro
+#define SYMBOL_CLASS(symbol, name)     new Environment::Symbol(#name, (uint32_t)&symbol)
 
 ///Export symbol marco
-#define UNEXPORT_SYMBOL(name, symbol)  Environment::UnexportSymbol(new Environment::Symbol(name, (uint32_t)&symbol))
+#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::ExportSymbol(SYMBOL_CLASS(symbol, name)), name) SYMBOL_SECTION
 
 ///Search symbol marco
 #define SEARCH_SYMBOL(name)            Environment::SearchSymbol(name)
