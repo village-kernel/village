@@ -15,7 +15,7 @@
 /  and optional writing functions as well. */
 
 
-#define FF_FS_MINIMIZE	0
+#define FF_FS_MINIMIZE	1
 /* This option defines minimization level to remove some basic API functions.
 /
 /   0: Basic functions are fully enabled.
@@ -38,7 +38,7 @@
 /  f_findnext(). (0:Disable, 1:Enable 2:Enable with matching altname[] too) */
 
 
-#define FF_USE_MKFS		1
+#define FF_USE_MKFS		0
 /* This option switches f_mkfs() function. (0:Disable or 1:Enable) */
 
 
