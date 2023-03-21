@@ -9,11 +9,14 @@
 
 #include "Module.h"
 
+///Module section, avoid being optimized by the compiler
+#define MODULE_SECTION                 __attribute__((used,__section__(".modules")))
+
 ///Module create macro
-#define CREATE_MODULE(mod, name) static struct _Mod_##name{_Mod_##name(){mod;}} const _mod_##name;
+#define CREATE_MODULE(mod, name)       static struct _Mod_##name{_Mod_##name(){mod;}} const _mod_##name
 
 ///Module register macro
-#define REGISTER_MODULE(mod, id, name) CREATE_MODULE(Modular::RegisterModule(mod, id), name)
+#define REGISTER_MODULE(mod, id, name) CREATE_MODULE(Modular::RegisterModule(mod, id), name) MODULE_SECTION
 
 ///Modular
 class Modular

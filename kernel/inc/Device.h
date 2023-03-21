@@ -9,11 +9,14 @@
 
 #include "Driver.h"
 
+///Driver section, avoid being optimized by the compiler
+#define DRIVER_SECTION                  __attribute__((used,__section__(".drivers")))
+
 ///Driver create macro
-#define CREATE_DRIVER(drv, name)        static struct _DRV_##name{_DRV_##name(){drv;}} const _drv_##name;
+#define CREATE_DRIVER(drv, name)        static struct _DRV_##name{_DRV_##name(){drv;}} const _drv_##name
 
 ///Driver register macro
-#define REGISTER_DRIVER(drv, id, name)  CREATE_DRIVER(Device::RegisterDriver(drv, id), name)
+#define REGISTER_DRIVER(drv, id, name)  CREATE_DRIVER(Device::RegisterDriver(drv, id), name) DRIVER_SECTION
 
 ///Device
 class Device
