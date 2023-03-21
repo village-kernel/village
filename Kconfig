@@ -52,7 +52,7 @@ config FILESTREAM
 
 config INIPARSER
 	depends on UTILITIES
-	select FATFS
+	select FILESTREAM
 	bool "Enable ini file parser function"
 	default n
 
@@ -60,6 +60,12 @@ config PINPARSER
 	depends on UTILITIES
 	select FATFS
 	bool "Enable pin parser function"
+	default n
+
+config RCPARSER
+	depends on UTILITIES
+	select FILESTREAM
+	bool "Enable resource script parser function"
 	default n
 
 endmenu
