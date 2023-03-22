@@ -25,3 +25,13 @@ macos 安装开发环境：
 brew install armmbed/formulae/arm-none-eabi-gcc
 2.openocd
 brew install open-ocd
+
+windows 安装开发环境：
+0.cywin：
+以下工具都可以在cywin里面下载。
+注意：不要使用mingw64，问题太多。
+1.make
+2.gcc
+3.arm-none-eabi-gcc
+4.openocd
+
