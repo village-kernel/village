@@ -35,16 +35,6 @@ export Q
 
 
 #######################################
-# remove
-#######################################
-ifeq ($(OS), Windows_NT)
-  RM = del /Q
-else
-  RM = rm -rf
-endif
-
-
-#######################################
 # paths
 #######################################
 # Build path
@@ -190,9 +180,9 @@ $(Scripts)/kconfig/conf:
 # clean up
 #######################################
 clean:
-	$(Q)$(RM) $(BUILD_DIR)
-	$(Q)$(RM) $(MODULES_DIR)
-	$(Q)$(RM) include
+	$(Q)rm -rf $(BUILD_DIR)
+	$(Q)rm -rf $(MODULES_DIR)
+	$(Q)rm -rf include
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
