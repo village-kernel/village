@@ -2,8 +2,8 @@
 ######################################
 # includes
 ######################################
-HOST_CFLAGS  := -I/usr/include/ncurses -DCURSES_LOC="<ncurses.h>" 
-HOST_CFLAGS  += -DLOCALE -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
+HOST_CFLAGS  := -I/usr/include/ncurses -DCURSES_LOC="<ncurses.h>" -DLOCALE -DKBUILD_NO_NLS
+HOST_CFLAGS  +=  -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
 HOST_LDFLAGS := -lncurses
 
 HOST_CC      := gcc
@@ -16,15 +16,6 @@ lxdialog += lxdialog/textbox.o lxdialog/yesno.o lxdialog/menubox.o
 
 conf-objs  := zconf.tab.o conf.o  
 mconf-objs := zconf.tab.o mconf.o $(lxdialog)
-
-#######################################
-# remove
-#######################################
-ifeq ($(OS), Windows_NT)
-RM = del /Q /S
-else
-RM = rm -rf
-endif
 
 # We need this, in case the user has it in its environment
 unexport CONFIG_
@@ -60,8 +51,6 @@ conf: $(conf-objs)
 # clean up
 #######################################
 clean:
-ifneq ($(OS), Windows_NT)
-	$(Q)$(RM) lxdialog/*o
-endif
-	$(Q)$(RM) *.o
-	$(Q)$(RM) conf mconf
+	$(Q)rm -rf lxdialog/*o
+	$(Q)rm -rf *.o
+	$(Q)rm -rf conf mconf zconf.lex.c zconf.tab.c
