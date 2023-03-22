@@ -7,6 +7,7 @@
 #include "Kernel.h"
 #include "Loader.h"
 #include "FileStream.h"
+#include "rcParser.h"
 #include "string.h"
 
 
@@ -28,12 +29,17 @@ void Loader::LoadLibraries()
 ///Loader load modules
 void Loader::LoadModules()
 {
-	if (LoadElf("1:Application4.mo") != _OK) return;
+	RcParser rc;
+	rc.Load("1:init.rc");
+	std::list<std::string> resources = rc.GetResources();
+	std::list<std::string>::iterator it = resources.begin();
+	std::string path("1:");
+	path += (*it).c_str();
 
+	if (LoadElf(path.c_str()) != _OK) return;
 	if (ParserElf() != _OK) return;
-
 	if (RelEntries() != _OK) return;
-
+	
 	ExecuteElf("Entry");
 }
 
