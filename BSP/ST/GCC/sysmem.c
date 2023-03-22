@@ -54,8 +54,8 @@ void *_sbrk(ptrdiff_t incr)
 {
     extern uint8_t _end; /* Symbol defined in the linker script */
     extern uint8_t _estack; /* Symbol defined in the linker script */
-    extern uint32_t _min_stack_size; /* Symbol defined in the linker script */
-    const uint32_t stack_limit = (uint32_t)&_estack - (uint32_t)&_min_stack_size;
+    extern uint32_t _Min_Stack_Size; /* Symbol defined in the linker script */
+    const uint32_t stack_limit = (uint32_t)&_estack - (uint32_t)&_Min_Stack_Size;
     const uint8_t *max_heap = (uint8_t *)stack_limit;
     uint8_t *prev_heap_end;
 
@@ -69,7 +69,7 @@ void *_sbrk(ptrdiff_t incr)
     if (__sbrk_heap_end + incr > max_heap)
     {
         errno = ENOMEM;
-        return (void *)-1;
+        return (void *)NULL;
     }
 
     prev_heap_end = __sbrk_heap_end;
