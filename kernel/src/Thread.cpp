@@ -39,14 +39,14 @@ void Thread::CreateTask(ThreadHandlerC handler)
 	//Create a new task
 	Task task(handler);
 
-	//Allocate memory space
-	task.memory = Memory::Malloc(task_stack_size);
+	//Allocate stack space
+	task.stack = Memory::StackAlloc(task_stack_size);
 	
-	//Check whether memory allocation is successful
-	if (0 == task.memory) return;
+	//Check whether stack allocation is successful
+	if (0 == task.stack) return;
 
 	//Fill dummy stack frame
-	task.psp = task.memory - psp_frame_size;
+	task.psp = task.stack - psp_frame_size;
 	*(StackFrame*)task.psp = StackFrame((uint32_t)handler);
 
 	//Find an empty node
@@ -76,7 +76,7 @@ void Thread::DeleteTask(ThreadHandlerC handler)
 			else
 				(*prevNode)->next = (*currNode)->next;
 
-			Memory::Free((*currNode)->task.memory);
+			Memory::Free((*currNode)->task.stack);
 
 			break;
 		}

@@ -32,14 +32,14 @@ private:
 	struct Task 
 	{
 		ThreadHandlerC handler;
-		uint32_t memory;
+		uint32_t stack;
 		uint32_t psp;
 		uint32_t waitToTick;
 		TaskState state;
 
 		Task(ThreadHandlerC handler = NULL)
 			:handler(handler),
-			memory(0),
+			stack(0),
 			psp(0),
 			waitToTick(0),
 			state(TaskState::Running)
