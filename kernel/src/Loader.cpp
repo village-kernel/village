@@ -52,9 +52,9 @@ int Loader::LoadElf(const char* path)
 	if (FR_OK == file.Open(path, FileStream::_Read))
 	{
 		int size = file.Size();
-		elf.map = (uint32_t)malloc(size);
+		elf.map = (uint32_t)Memory::HeapAlloc(size);
 
-		if (file.Read((uint8_t*)elf.map, size) == size)
+		if (elf.map && (file.Read((uint8_t*)elf.map, size) == size))
 		{
 			file.Close(); return _OK;
 		}
