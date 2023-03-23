@@ -22,6 +22,9 @@ void Kernel::Initialize()
 {
 	isReady = false;
 
+	//Initialize memory
+	Memory::Initialize();
+
 	//Initialize thread
 	Thread::Initialize();
 

@@ -9,6 +9,7 @@
 
 #include "Thread.h"
 #include "Scheduler.h"
+#include "Memory.h"
 #include "Modular.h"
 #include "Device.h"
 #include "Environment.h"
