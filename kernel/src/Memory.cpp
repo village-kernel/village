@@ -9,29 +9,51 @@
 
 
 ///Initialize static members
-Memory::MapNode* Memory::list = NULL;
+uint32_t Memory::sram_start = 0;
+uint32_t Memory::sram_ended = 0;
+uint32_t Memory::sbrk_stack = 0;
+uint32_t Memory::sbrk_heap = 0;
+Memory::MapNode* Memory::head = NULL;
+Memory::MapNode* Memory::tail = NULL;
 
 
-///Memory malloc
-uint32_t Memory::Malloc(uint32_t size)
+///Memory initialize sram parameters
+void Memory::Initialize()
 {
-	MapNode** currNode = &list;
-	MapNode** nextNode = &list;
+	//Calculate sram start and end address
+	sram_start = sbrk_heap + reserved_heap;
+	sram_ended = sbrk_stack;
+
+	//Initialize list align 4 bytes
+	head = new MapNode(Map(sram_start, 4));
+	tail = new MapNode(Map(sram_ended, 4));
+	head->next = tail;
+	tail->prev = head;
+}
+
+
+///Memory heap alloc
+uint32_t Memory::HeapAlloc(uint32_t size)
+{
+	MapNode** currNode = &head;
+	MapNode** nextNode = &head;
 	uint32_t  nextMapAddr = 0;
 	uint32_t  nextEndAddr = 0;
 
 	//Find free space
 	while (NULL != *nextNode)
 	{
-		nextMapAddr = (*currNode)->map.addr - (*currNode)->map.size;
-		nextEndAddr = nextMapAddr - size;
+		nextMapAddr = (*currNode)->map.addr + (*currNode)->map.size;
+		nextEndAddr = nextMapAddr + size;
 
 		//There is free space between the current node and the next node
-		if (nextEndAddr >= (*nextNode)->map.addr)
+		if (nextEndAddr <= (*nextNode)->map.addr)
 		{
 			MapNode* tmpNode = *nextNode;
 			*nextNode = new MapNode(Map(nextMapAddr, size));
-			(*nextNode)->next = tmpNode;
+			(*nextNode)->prev =  tmpNode->prev;
+			  tmpNode  ->prev = *nextNode;
+			(*nextNode)->next =  tmpNode;
 			return (*nextNode)->map.addr;
 		}
 		else
@@ -41,31 +63,52 @@ uint32_t Memory::Malloc(uint32_t size)
 		}
 	}
 
-	//Calculate next map address
-	if (NULL != *currNode)
-		nextMapAddr = (*currNode)->map.addr - (*currNode)->map.size;
-	else
-		nextMapAddr = ended_used_stack;
-	
-	//Calculate next end address
-	nextEndAddr = nextMapAddr - size;
-
-	//Check whether there is free space
-	if (nextEndAddr < start_used_stack) return 0;
-
-	//Add next node
-	*nextNode = new MapNode(Map(nextMapAddr, size));
-
-	return (*nextNode)->map.addr;
+	return 0;
 }
-EXPORT_SYMBOL(Memory::Malloc, _ZN6Memory6MallocEm);
+EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
+
+
+///Memory stack alloc
+uint32_t Memory::StackAlloc(uint32_t size)
+{
+	MapNode** prevNode = &tail;
+	MapNode** currNode = &tail;
+	uint32_t  prevMapAddr = 0;
+	uint32_t  prevEndAddr = 0;
+
+	//Find free space
+	while (NULL != *prevNode)
+	{
+		prevMapAddr = (*currNode)->map.addr - (*currNode)->map.size;
+		prevEndAddr = prevMapAddr - size;
+
+		//There is free space between the current node and the prev node
+		if (prevEndAddr >= (*prevNode)->map.addr)
+		{
+			MapNode* tmpNode = *prevNode;
+			*prevNode = new MapNode(Map(prevMapAddr, size));
+			(*prevNode)->next =  tmpNode->next;
+			  tmpNode  ->next = *prevNode;
+			(*prevNode)->prev =  tmpNode;
+			return (*prevNode)->map.addr;
+		}
+		else
+		{
+			currNode = prevNode;
+			prevNode = &(*prevNode)->prev;
+		}
+	}
+
+	return 0;
+}
+EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
 
 
 ///Memory free
 void Memory::Free(uint32_t memory)
 {
-	MapNode** prevNode = &list;
-	MapNode** currNode = &list;
+	MapNode** prevNode = &head;
+	MapNode** currNode = &head;
 
 	while (NULL != *currNode)
 	{
@@ -88,3 +131,41 @@ void Memory::Free(uint32_t memory)
 	}
 }
 EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
+
+
+///Memory sbrk
+uint32_t Memory::Sbrk(int32_t incr)
+{
+	//Symbol defined in the linker script
+	extern void* _end;
+	extern void* _estack;
+	extern void* _Min_Heap_Size;
+	extern void* _Min_Stack_Size;
+
+	//Calculate sbrk stack address
+	sbrk_stack = (uint32_t)&_estack - (uint32_t)&_Min_Stack_Size;
+
+	//Initialize heap end at first call
+	if (0 == sbrk_heap)
+	{
+		sbrk_heap = (uint32_t)&_end;
+	}
+
+	//Protect heap from growing into the reserved MSP stack
+	if (sbrk_heap + incr > sbrk_stack)
+	{
+		//halt on here
+		while(1) {}
+	}
+
+	//Calculate sbrk heap end
+	sbrk_heap += incr;
+	return (sbrk_heap - incr);
+}
+
+
+///Override _sbrk
+extern "C" void* _sbrk(ptrdiff_t incr)
+{
+	return (void*)Memory::Sbrk((int32_t)incr);
+}
