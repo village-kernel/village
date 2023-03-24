@@ -7,7 +7,8 @@
 #ifndef __FILE_STREAM_H__
 #define __FILE_STREAM_H__
 
-#include "HalHeaders.h"
+#include "stdint.h"
+#include "stddef.h"
 #include <string>
 #include "ff.h"
 

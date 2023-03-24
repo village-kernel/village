@@ -7,7 +7,8 @@
 #ifndef __INI_PARSER_H__
 #define __INI_PARSER_H__
 
-#include "HalHeaders.h"
+#include "stdint.h"
+#include "stddef.h"
 #include <string>
 #include <map>
 
