@@ -28,6 +28,7 @@ config LOADER
 	bool "Enable loadable module support"
 	option modules
 	select FATFS
+	select ELFPARSER
 	select ENVIRONMENT
 
 config ENVIRONMENT
@@ -66,6 +67,12 @@ config RCPARSER
 	depends on UTILITIES
 	select FILESTREAM
 	bool "Enable resource script parser function"
+	default n
+
+config ELFPARSER
+	depends on UTILITIES
+	select FILESTREAM
+	bool "Enable elf parser function"
 	default n
 
 endmenu
