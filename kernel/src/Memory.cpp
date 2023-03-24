@@ -11,7 +11,7 @@
 ///Initialize static members
 uint32_t Memory::sram_start = 0;
 uint32_t Memory::sram_ended = 0;
-uint32_t Memory::sbrk_stack = 0;
+uint32_t Memory::sram_used = 0;
 uint32_t Memory::sbrk_heap = 0;
 Memory::MapNode* Memory::head = NULL;
 Memory::MapNode* Memory::tail = NULL;
@@ -20,11 +20,7 @@ Memory::MapNode* Memory::tail = NULL;
 ///Memory initialize sram parameters
 void Memory::Initialize()
 {
-	//Calculate sram start and end address
-	sram_start = sbrk_heap + reserved_heap;
-	sram_ended = sbrk_stack;
-
-	//Initialize list align 4 bytes
+	//Initialize list, align 4 bytes
 	head = new MapNode(Map(sram_start, 4));
 	tail = new MapNode(Map(sram_ended, 4));
 	head->next = tail;
@@ -49,6 +45,10 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 		//There is free space between the current node and the next node
 		if (nextEndAddr <= (*nextNode)->map.addr)
 		{
+			//Update the used size of sram
+			sram_used += size;
+
+			//Add map node into list
 			MapNode* tmpNode = *nextNode;
 			*nextNode = new MapNode(Map(nextMapAddr, size));
 			(*nextNode)->prev =  tmpNode->prev;
@@ -85,6 +85,10 @@ uint32_t Memory::StackAlloc(uint32_t size)
 		//There is free space between the current node and the prev node
 		if (prevEndAddr >= (*prevNode)->map.addr)
 		{
+			//Update the used size of sram
+			sram_used += size;
+
+			//Add map node into list
 			MapNode* tmpNode = *prevNode;
 			*prevNode = new MapNode(Map(prevMapAddr, size));
 			(*prevNode)->next =  tmpNode->next;
@@ -114,8 +118,10 @@ void Memory::Free(uint32_t memory)
 	{
 		if (memory == (*currNode)->map.addr)
 		{
-			delete *currNode;
+			//Update the used size of sram
+			sram_used -= (*currNode)->map.size;
 
+			//Remove map node from list
 			if (*prevNode == *currNode)
 				*prevNode = (*currNode)->next;
 			else
@@ -136,23 +142,26 @@ EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
 ///Memory sbrk
 uint32_t Memory::Sbrk(int32_t incr)
 {
-	//Symbol defined in the linker script
-	extern void* _end;
-	extern void* _estack;
-	extern void* _Min_Heap_Size;
-	extern void* _Min_Stack_Size;
-
-	//Calculate sbrk stack address
-	sbrk_stack = (uint32_t)&_estack - (uint32_t)&_Min_Stack_Size;
-
 	//Initialize heap end at first call
 	if (0 == sbrk_heap)
 	{
-		sbrk_heap = (uint32_t)&_end;
+		//Symbol defined in the linker script
+		extern void* _end;
+		extern void* _estack;
+
+		//Calculate sram start and end address
+		sram_start = (uint32_t)&_end    + user_rsvd_heap;
+		sram_ended = (uint32_t)&_estack - user_rsvd_stack;
+
+		//Calculate the used size of sram
+		sram_used  = user_rsvd_heap + user_rsvd_stack;
+
+		//Calculate sbrk stack address
+		sbrk_heap  = (uint32_t)&_end;
 	}
 
 	//Protect heap from growing into the reserved MSP stack
-	if (sbrk_heap + incr > sbrk_stack)
+	if (sbrk_heap + incr > sram_start)
 	{
 		//halt on here
 		while(1) {}
@@ -160,6 +169,10 @@ uint32_t Memory::Sbrk(int32_t incr)
 
 	//Calculate sbrk heap end
 	sbrk_heap += incr;
+
+	//updata the used siez of sram
+	sram_used += incr;
+
 	return (sbrk_heap - incr);
 }
 

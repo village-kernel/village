@@ -40,12 +40,13 @@ private:
 	};
 
 	//Static constants
-	static const uint32_t reserved_heap = 0x3200;
+	const static uint32_t user_rsvd_heap  = 0x4000;  //10k
+	const static uint32_t user_rsvd_stack = 0x3200;  //8k
 
 	//Sram parameters
 	static uint32_t sram_start;
 	static uint32_t sram_ended;
-	static uint32_t sbrk_stack;
+	static uint32_t sram_used;
 	static uint32_t sbrk_heap;
 
 	//Members
@@ -58,6 +59,9 @@ public:
 	static uint32_t StackAlloc(uint32_t size);
 	static uint32_t Sbrk(int32_t incr);
 	static void Free(uint32_t memory);
+
+	//Get the used szie of sram
+	static uint32_t GetUsed() { return sram_used; }
 };
 
 #endif //!__MEMORY_H__
