@@ -146,18 +146,18 @@ uint32_t Memory::Sbrk(int32_t incr)
 	if (0 == sbrk_heap)
 	{
 		//Symbol defined in the linker script
-		extern void* _end;
+		extern void* _ebss;
 		extern void* _estack;
 
 		//Calculate sram start and end address
-		sram_start = (uint32_t)&_end    + user_rsvd_heap;
+		sram_start = (uint32_t)&_ebss   + user_rsvd_heap;
 		sram_ended = (uint32_t)&_estack - user_rsvd_stack;
 
 		//Calculate the used size of sram
 		sram_used  = user_rsvd_heap + user_rsvd_stack;
 
 		//Calculate sbrk stack address
-		sbrk_heap  = (uint32_t)&_end;
+		sbrk_heap  = (uint32_t)&_ebss;
 	}
 
 	//Protect heap from growing into the reserved MSP stack
