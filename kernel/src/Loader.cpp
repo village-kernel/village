@@ -37,7 +37,7 @@ void Loader::LoadModules()
 	path += (*it).c_str();
 
 	ElfParser elf;
-	if (elf.Load(path.c_str()) != ElfParser::_OK) return;
+	if (elf.Load(path.c_str()) != Result::_OK) return;
 	elf.Execute("Entry");
 }
 

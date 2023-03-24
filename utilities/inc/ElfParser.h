@@ -7,18 +7,11 @@
 #ifndef __ELF_PARSER_H__
 #define __ELF_PARSER_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Defines.h"
 
 ///ElfParser
 class ElfParser
 {
-public:
-	enum Result
-	{
-		_OK     = 0,
-		_ERR    = 1,
-	};
 private:
 	//Enumerations
 	enum ELFClass

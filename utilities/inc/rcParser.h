@@ -7,6 +7,7 @@
 #ifndef __RC_PARSER_H__
 #define __RC_PARSER_H__
 
+#include "Defines.h"
 #include <string>
 #include <list>
 
@@ -14,13 +15,6 @@
 ///RcParser
 class RcParser
 {
-public:
-	//Enumerations
-	enum Result
-	{
-		_OK     = 0,
-		_ERR    = 1,
-	};
 private:
 	//Enumerations
 	enum ParserStatus

@@ -7,8 +7,7 @@
 #ifndef __INI_PARSER_H__
 #define __INI_PARSER_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Defines.h"
 #include <string>
 #include <map>
 
@@ -16,13 +15,6 @@
 ///IniParser
 class IniParser
 {
-public:
-	//Enumerations
-	enum Result
-	{
-		_OK     = 0,
-		_ERR    = 1,
-	};
 private:
 	//Enumerations
 	enum ParserStatus
