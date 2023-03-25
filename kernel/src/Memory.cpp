@@ -31,35 +31,35 @@ void Memory::Initialize()
 ///Memory heap alloc
 uint32_t Memory::HeapAlloc(uint32_t size)
 {
-	MapNode** currNode = &head;
-	MapNode** nextNode = &head;
-	uint32_t  nextMapAddr = 0;
-	uint32_t  nextEndAddr = 0;
+	MapNode* currNode = head;
+	MapNode* nextNode = head->next;
+	uint32_t nextMapAddr = 0;
+	uint32_t nextEndAddr = 0;
 
 	//Find free space
-	while (NULL != *nextNode)
+	while (NULL != nextNode)
 	{
-		nextMapAddr = (*currNode)->map.addr + (*currNode)->map.size;
+		nextMapAddr = currNode->map.addr + currNode->map.size;
 		nextEndAddr = nextMapAddr + size;
 
 		//There is free space between the current node and the next node
-		if (nextEndAddr <= (*nextNode)->map.addr)
+		if (nextEndAddr <= nextNode->map.addr)
 		{
 			//Update the used size of sram
 			sram_used += size;
 
 			//Add map node into list
-			MapNode* tmpNode = *nextNode;
-			*nextNode = new MapNode(Map(nextMapAddr, size));
-			(*nextNode)->prev =  tmpNode->prev;
-			  tmpNode  ->prev = *nextNode;
-			(*nextNode)->next =  tmpNode;
-			return (*nextNode)->map.addr;
+			MapNode* newNode = new MapNode(Map(nextMapAddr, size));
+			newNode->prev  = currNode;
+			newNode->next  = nextNode;
+			currNode->next = newNode;
+			nextNode->prev = newNode;
+			return newNode->map.addr;
 		}
 		else
 		{
 			currNode = nextNode;
-			nextNode = &(*nextNode)->next;
+			nextNode = nextNode->next;
 		}
 	}
 
@@ -73,35 +73,35 @@ EXPORT_SYMBOL(Memory::HeapAlloc, _Znaj);
 ///Memory stack alloc
 uint32_t Memory::StackAlloc(uint32_t size)
 {
-	MapNode** prevNode = &tail;
-	MapNode** currNode = &tail;
-	uint32_t  prevMapAddr = 0;
-	uint32_t  prevEndAddr = 0;
+	MapNode* prevNode = tail->prev;
+	MapNode* currNode = tail;
+	uint32_t prevMapAddr = 0;
+	uint32_t prevEndAddr = 0;
 
 	//Find free space
-	while (NULL != *prevNode)
+	while (NULL != prevNode)
 	{
-		prevMapAddr = (*currNode)->map.addr - (*currNode)->map.size;
+		prevMapAddr = currNode->map.addr - currNode->map.size;
 		prevEndAddr = prevMapAddr - size;
 
 		//There is free space between the current node and the prev node
-		if (prevEndAddr >= (*prevNode)->map.addr)
+		if (prevEndAddr >= prevNode->map.addr)
 		{
 			//Update the used size of sram
 			sram_used += size;
 
 			//Add map node into list
-			MapNode* tmpNode = *prevNode;
-			*prevNode = new MapNode(Map(prevMapAddr, size));
-			(*prevNode)->next =  tmpNode->next;
-			  tmpNode  ->next = *prevNode;
-			(*prevNode)->prev =  tmpNode;
-			return (*prevNode)->map.addr;
+			MapNode* newNode = new MapNode(Map(prevMapAddr, size));
+			newNode->prev  = prevNode;
+			newNode->next  = currNode;
+			currNode->prev = newNode;
+			prevNode->next = newNode;
+			return newNode->map.addr;
 		}
 		else
 		{
 			currNode = prevNode;
-			prevNode = &(*prevNode)->prev;
+			prevNode = prevNode->prev;
 		}
 	}
 
@@ -110,31 +110,28 @@ uint32_t Memory::StackAlloc(uint32_t size)
 EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
 
 
+
 ///Memory free
 void Memory::Free(uint32_t memory)
 {
-	MapNode** prevNode = &head;
-	MapNode** currNode = &head;
+	MapNode* currNode = head;
 
-	while (NULL != *currNode)
+	while (NULL != currNode)
 	{
-		if (memory == (*currNode)->map.addr)
+		if (memory == currNode->map.addr)
 		{
 			//Update the used size of sram
-			sram_used -= (*currNode)->map.size;
+			sram_used -= currNode->map.size;
 
 			//Remove map node from list
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
+			currNode->prev->next = currNode->next;
+			currNode->next->prev = currNode->prev;
 
 			break;
 		}
 		else
 		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
+			currNode = currNode->next;
 		}
 	}
 }
@@ -154,11 +151,11 @@ uint32_t Memory::Sbrk(int32_t incr)
 		extern void* _estack;
 
 		//Calculate sram start and end address
-		sram_start = (uint32_t)&_ebss   + user_rsvd_heap;
-		sram_ended = (uint32_t)&_estack - user_rsvd_stack;
+		sram_start = (uint32_t)&_ebss   + kernel_rsvd_heap;
+		sram_ended = (uint32_t)&_estack - kernel_rsvd_stack;
 
 		//Calculate the used size of sram
-		sram_used  = user_rsvd_heap + user_rsvd_stack;
+		sram_used  = kernel_rsvd_heap + kernel_rsvd_stack;
 
 		//Calculate sbrk stack address
 		sbrk_heap  = (uint32_t)&_ebss;
