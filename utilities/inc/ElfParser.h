@@ -218,6 +218,7 @@ public:
 	int Execute(const char* symbol = NULL);
 	void InitArray();
 	void FiniArray();
+	void Exit();
 
 	//Tool methods
 	const char* GetSectionName(uint32_t index);

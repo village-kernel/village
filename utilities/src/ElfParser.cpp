@@ -330,3 +330,10 @@ void ElfParser::FiniArray()
 		}
 	}
 }
+
+
+///ElfParser exit
+void ElfParser::Exit()
+{
+	Memory::Free(elf.map);
+}
