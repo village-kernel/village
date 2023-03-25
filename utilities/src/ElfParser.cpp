@@ -20,28 +20,6 @@ int ElfParser::Load(const char* path)
 }
 
 
-///ElfParser execute symbol
-int ElfParser::Execute(const char* symbol)
-{
-	if (NULL == symbol && 0 != elf.exec)
-	{
-		Thread::CreateTask((ThreadHandlerC)elf.exec);
-		return _OK;
-	}
-	else
-	{
-		uint32_t symbolAddr = GetSymbolAddrByName("Entry");
-		
-		if (symbolAddr)
-		{
-			Thread::CreateTask((ThreadHandlerC)symbolAddr);
-			return _OK;
-		}
-	}
-	return _ERR;
-}
-
-
 ///ElfParser load elf from path
 int ElfParser::LoadElf(const char* path)
 {
@@ -283,7 +261,7 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 
 
 ///ElfParser init array
-void ElfParser::InitArray()
+int ElfParser::InitArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -304,11 +282,34 @@ void ElfParser::InitArray()
 			break;
 		}
 	}
+	return _OK;
+}
+
+
+///ElfParser execute symbol
+int ElfParser::Execute(const char* symbol)
+{
+	if (NULL == symbol && 0 != elf.exec)
+	{
+		Thread::CreateTask((ThreadHandlerC)elf.exec);
+		return _OK;
+	}
+	else
+	{
+		uint32_t symbolAddr = GetSymbolAddrByName(symbol);
+		
+		if (symbolAddr)
+		{
+			Thread::CreateTask((ThreadHandlerC)symbolAddr);
+			return _OK;
+		}
+	}
+	return _ERR;
 }
 
 
 ///ElfParser fini array
-void ElfParser::FiniArray()
+int ElfParser::FiniArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -329,11 +330,13 @@ void ElfParser::FiniArray()
 			break;
 		}
 	}
+	return _OK;
 }
 
 
 ///ElfParser exit
-void ElfParser::Exit()
+int ElfParser::Exit()
 {
 	Memory::Free(elf.map);
+	return _OK;
 }

@@ -215,10 +215,10 @@ private:
 public:
 	//Methods
 	int Load(const char* path);
+	int InitArray();
 	int Execute(const char* symbol = NULL);
-	void InitArray();
-	void FiniArray();
-	void Exit();
+	int FiniArray();
+	int Exit();
 
 	//Tool methods
 	const char* GetSectionName(uint32_t index);
