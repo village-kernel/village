@@ -13,6 +13,9 @@
 class ElfParser
 {
 private:
+	//Type define
+	typedef void(*Function)();
+
 	//Enumerations
 	enum ELFClass
 	{
@@ -177,6 +180,7 @@ private:
 		uint8_t*         data;
 		uint8_t*         shstrtab;
 		uint8_t*         strtab;
+		Function*        funcs;
 		SymbolEntry*     symtab;
 		RelocationEntry* reltab;
 
@@ -212,6 +216,8 @@ public:
 	//Methods
 	int Load(const char* path);
 	int Execute(const char* symbol = NULL);
+	void InitArray();
+	void FiniArray();
 
 	//Tool methods
 	const char* GetSectionName(uint32_t index);

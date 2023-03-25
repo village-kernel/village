@@ -1,6 +1,6 @@
 //###########################################################################
 // ElfParser.cpp
-// Definitions of the functions that manage loader
+// Definitions of the functions that manage elf parser
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -196,19 +196,18 @@ int ElfParser::RelEntries()
 				SymbolEntry symEntry = elf.symtab[relEntry.symbol];
 
 				//Get relocation section addr
-				uint32_t secAddr = GetSectionData(i - 1).addr;
-				uint32_t relAddr = secAddr + relEntry.offset;
+				uint32_t relAddr = GetSectionData(i - 1).addr + relEntry.offset;
 				uint32_t symAddr = 0;
 
 				//Calculate new symbol entry addr
 				if (symEntry.shndx)
 				{
-					//Calculate defined symbol entry symAddr
-					symAddr = secAddr + symEntry.value;
+					//Calculate the address of defined symbol entry
+					symAddr = GetSectionData(symEntry.shndx).addr + symEntry.value;
 				}
 				else
 				{
-					//Get undefined symbol entry symAddr
+					//Get the address of undefined symbol entry
 					symAddr = SEARCH_SYMBOL(GetSymbolName(relEntry.symbol));
 				}
 
@@ -280,4 +279,54 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 	((uint16_t*)relAddr)[1] = lower;
 
 	return _OK;
+}
+
+
+///ElfParser init array
+void ElfParser::InitArray()
+{
+	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
+	{
+		if (0 == strcmp(".init_array", GetSectionName(i)))
+		{
+			//Get init array
+			Function* funcs = GetSectionData(i).funcs;
+
+			//Calculate the size of init array
+			uint32_t size = elf.sections[i].size / sizeof(Function);
+
+			//Execute init array
+			for (uint32_t i = 0; i < size; i++)
+			{
+				(funcs[i])();
+			}
+
+			break;
+		}
+	}
+}
+
+
+///ElfParser fini array
+void ElfParser::FiniArray()
+{
+	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
+	{
+		if (0 == strcmp(".fini_array", GetSectionName(i)))
+		{
+			//Get fini array
+			Function* funcs = GetSectionData(i).funcs;
+
+			//Calculate the size of fini array
+			uint32_t size = elf.sections[i].size / sizeof(Function);
+
+			//Execute fini array
+			for (uint32_t i = 0; i < size; i++)
+			{
+				(funcs[i])();
+			}
+
+			break;
+		}
+	}
 }
