@@ -66,6 +66,8 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 	return 0;
 }
 EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
+EXPORT_SYMBOL(Memory::HeapAlloc, _Znwj);
+EXPORT_SYMBOL(Memory::HeapAlloc, _Znaj);
 
 
 ///Memory stack alloc
@@ -137,6 +139,8 @@ void Memory::Free(uint32_t memory)
 	}
 }
 EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
+EXPORT_SYMBOL(Memory::Free, _ZdaPv);
+EXPORT_SYMBOL(Memory::Free, _Zdlpv);
 
 
 ///Memory sbrk
