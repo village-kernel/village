@@ -47,7 +47,7 @@ void Thread::CreateTask(ThreadHandlerC handler)
 
 	//Fill dummy stack frame
 	task.psp = task.stack - psp_frame_size;
-	*(StackFrame*)task.psp = StackFrame((uint32_t)&TaskHandler, (uint32_t)handler);
+	*(StackFrame*)task.psp = StackFrame((uint32_t)&TaskHandlerC, (uint32_t)handler);
 
 	//Find an empty node
 	TaskNode** nextNode = &list;
@@ -62,6 +62,8 @@ EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvvE);
 ///Thread delete task
 void Thread::DeleteTask(ThreadHandlerC handler)
 {
+	if (NULL == handler) return;
+
 	TaskNode** prevNode = &list;
 	TaskNode** currNode = &list;
 
@@ -90,6 +92,94 @@ void Thread::DeleteTask(ThreadHandlerC handler)
 EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEPFvvE);
 
 
+///Create new task for cpp
+void Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
+{
+	//Create a new task
+	Task task(user, handler);
+
+	//Allocate stack space
+	task.stack = Memory::StackAlloc(task_stack_size);
+	
+	//Check whether stack allocation is successful
+	if (0 == task.stack) return;
+
+	//Fill dummy stack frame
+	task.psp = task.stack - psp_frame_size;
+	*(StackFrame*)task.psp = StackFrame((uint32_t)&TaskHandlerCpp, (uint32_t)user, *(uint32_t*)&handler);
+
+	//Find an empty node
+	TaskNode** nextNode = &list;
+	while (NULL != *nextNode) nextNode = &(*nextNode)->next;
+
+	//Add new task node in task list
+	*nextNode = new TaskNode(task);
+}
+EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvvE);
+
+
+///Thread delete task for cpp
+void Thread::DeleteTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
+{
+	if (NULL == user)    return;
+	if (NULL == handler) return;
+
+	TaskNode** prevNode = &list;
+	TaskNode** currNode = &list;
+
+	while (NULL != *currNode)
+	{
+		if ((user    == (*currNode)->task.user) &&
+			(handler == (*currNode)->task.handlerCpp))
+		{
+			delete *currNode;
+
+			if (*prevNode == *currNode)
+				*prevNode = (*currNode)->next;
+			else
+				(*prevNode)->next = (*currNode)->next;
+
+			Memory::Free((*currNode)->task.stack);
+
+			break;
+		}
+		else
+		{
+			prevNode = currNode;
+			currNode = &(*currNode)->next;
+		}
+	}
+}
+EXPORT_SYMBOL(Thread::DeleteTaskCpp, _ZN6Thread13DeleteTaskCppEP14ThreadEndpointMS0_FvvE);
+
+
+///Thread sleep
+void Thread::Sleep(uint32_t ticks)
+{
+	if(Thread::IdleTask != curNode->task.handler)
+	{
+		curNode->task.state = TaskState::Blocked;
+		curNode->task.waitToTick = System::GetSysClkCounts() + ticks;
+		Scheduler::Rescheduler(Scheduler::Unprivileged);
+	}
+}
+EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
+
+
+///Thread Exit
+void Thread::Exit()
+{
+	if(Thread::IdleTask != curNode->task.handler)
+	{
+		curNode->task.state = TaskState::Exited;
+		DeleteTask(curNode->task.handler);
+		DeleteTaskCpp(curNode->task.user, curNode->task.handlerCpp);
+		Scheduler::Rescheduler(Scheduler::Unprivileged);
+	}
+}
+EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
+
+
 ///Idle task
 void Thread::IdleTask()
 {
@@ -100,12 +190,23 @@ void Thread::IdleTask()
 }
 
 
-///Thread task handler
-void Thread::TaskHandler(ThreadHandlerC handler)
+///Thread task handler C
+void Thread::TaskHandlerC(ThreadHandlerC handler)
 {
 	if (NULL != handler)
 	{
 		(handler)();
+	}
+	Exit();
+}
+
+
+///Thread task handler Cpp
+void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
+{
+	if (NULL != user && NULL != handler)
+	{
+		(user->*handler)();
 	}
 	Exit();
 }
@@ -130,32 +231,6 @@ uint32_t Thread::GetTaskHandler()
 {
 	return (uint32_t)curNode->task.handler;
 }
-
-
-///Thread sleep
-void Thread::Sleep(uint32_t ticks)
-{
-	if(Thread::IdleTask != curNode->task.handler)
-	{
-		curNode->task.state = TaskState::Blocked;
-		curNode->task.waitToTick = System::GetSysClkCounts() + ticks;
-		Scheduler::Rescheduler(Scheduler::Unprivileged);
-	}
-}
-EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
-
-
-///Thread Exit
-void Thread::Exit()
-{
-	if(Thread::IdleTask != curNode->task.handler)
-	{
-		curNode->task.state = TaskState::Exited;
-		DeleteTask(curNode->task.handler);
-		Scheduler::Rescheduler(Scheduler::Unprivileged);
-	}
-}
-EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
 
 
 ///Select next task

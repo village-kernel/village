@@ -31,14 +31,28 @@ private:
 	//Structures
 	struct Task 
 	{
-		ThreadHandlerC handler;
-		uint32_t stack;
-		uint32_t psp;
-		uint32_t waitToTick;
-		TaskState state;
+		ThreadEndpoint*  user;
+		ThreadHandlerCpp handlerCpp;
+		ThreadHandlerC   handler;
+		uint32_t         stack;
+		uint32_t         psp;
+		uint32_t         waitToTick;
+		TaskState        state;
 
 		Task(ThreadHandlerC handler = NULL)
-			:handler(handler),
+			:user(NULL),
+			handlerCpp(NULL),
+			handler(handler),
+			stack(0),
+			psp(0),
+			waitToTick(0),
+			state(TaskState::Running)
+		{}
+
+		Task(ThreadEndpoint *user = NULL, ThreadHandlerCpp handler = NULL)
+			:user(user),
+			handlerCpp(handler),
+			handler(NULL),
 			stack(0),
 			psp(0),
 			waitToTick(0),
@@ -122,19 +136,24 @@ private:
 
 	//Methods
 	static void IdleTask();
-	static void TaskHandler(ThreadHandlerC handler);
+	static void TaskHandlerC(ThreadHandlerC handler);
+	static void TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler);
 public:
 	///Methods
 	Thread();
 	static void Initialize();
 	static void CreateTask(ThreadHandlerC handler);
 	static void DeleteTask(ThreadHandlerC handler);
+	static void CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler);
+	static void DeleteTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler);
+	static void Sleep(uint32_t ticks);
+	static void Exit();
+
+	//Scheduler Methods
 	static void SaveTaskPSP(uint32_t psp);
 	static uint32_t GetTaskPSP();
 	static uint32_t GetTaskHandler();
 	static void SelectNextTask();
-	static void Sleep(uint32_t ticks);
-	static void Exit();
 };
 
 #endif // !__THREAD_H__
