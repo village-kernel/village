@@ -47,7 +47,7 @@ void Thread::CreateTask(ThreadHandlerC handler)
 
 	//Fill dummy stack frame
 	task.psp = task.stack - psp_frame_size;
-	*(StackFrame*)task.psp = StackFrame((uint32_t)handler);
+	*(StackFrame*)task.psp = StackFrame((uint32_t)&TaskHandler, (uint32_t)handler);
 
 	//Find an empty node
 	TaskNode** nextNode = &list;
@@ -97,6 +97,17 @@ void Thread::IdleTask()
 	{
 		__ASM("NOP");
 	}
+}
+
+
+///Thread task handler
+void Thread::TaskHandler(ThreadHandlerC handler)
+{
+	if (NULL != handler)
+	{
+		(handler)();
+	}
+	Exit();
 }
 
 

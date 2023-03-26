@@ -76,20 +76,36 @@ private:
 		uint32_t pc;
 		uint32_t xpsr;
 
-		StackFrame(uint32_t pc = 0):
-			r4(0),
-			r5(0),
-			r6(0),
-			r7(0),
-			r8(0),
-			r9(0),
-			r10(0),
-			r11(0),
-			r0(0),
-			r1(0),
-			r2(0),
-			r3(0),
-			r12(0),
+		StackFrame
+		(
+			uint32_t pc = 0, 
+			uint32_t r0 = 0,
+			uint32_t r1 = 0,
+			uint32_t r2 = 0,
+			uint32_t r3 = 0,
+			uint32_t r4 = 0,
+			uint32_t r5 = 0,
+			uint32_t r6 = 0,
+			uint32_t r7 = 0,
+			uint32_t r8 = 0,
+			uint32_t r9 = 0,
+			uint32_t r10 = 0,
+			uint32_t r11 = 0,
+			uint32_t r12 = 0
+		):
+			r4(r4),
+			r5(r5),
+			r6(r6),
+			r7(r7),
+			r8(r8),
+			r9(r9),
+			r10(r10),
+			r11(r11),
+			r0(r0),
+			r1(r1),
+			r2(r2),
+			r3(r3),
+			r12(r12),
 			lr(0xFFFFFFFDu),
 			pc(pc),
 			xpsr(0x01000000u)
@@ -106,6 +122,7 @@ private:
 
 	//Methods
 	static void IdleTask();
+	static void TaskHandler(ThreadHandlerC handler);
 public:
 	///Methods
 	Thread();

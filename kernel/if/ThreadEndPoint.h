@@ -21,10 +21,7 @@ private:
 	//Thread Handler
 	static inline void TaskHandler()
 	{
-		//Execute task
 		if (user != 0) { (user->*handler)(); }
-		//Exit task
-		Thread::Exit();
 	}
 public:
 	//Set task end point and create task
