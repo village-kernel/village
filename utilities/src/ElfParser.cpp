@@ -291,7 +291,7 @@ int ElfParser::Execute(const char* symbol)
 {
 	if (NULL == symbol && 0 != elf.exec)
 	{
-		Thread::CreateTask((ThreadHandlerC)elf.exec);
+		((Function)elf.exec)();
 		return _OK;
 	}
 	else
@@ -300,7 +300,7 @@ int ElfParser::Execute(const char* symbol)
 		
 		if (symbolAddr)
 		{
-			Thread::CreateTask((ThreadHandlerC)symbolAddr);
+			((Function)symbolAddr)();
 			return _OK;
 		}
 	}
