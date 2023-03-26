@@ -6,7 +6,6 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Application3.h"
-#include "ThreadEndPoint.h"
 #include "ff.h"
 
 
@@ -24,7 +23,7 @@ void Application3::Initialize()
 	gui.Initialize((ILI9488*)display);	
 	gui.disp.ShowString((uint8_t*)"hello vk.kernel\r\n\r\n");
 
-	ThreadEndPoint<Application3, void(Application3::*)()>::CreateTask(this, &Application3::ListFiles);
+	Thread::CreateTaskCpp(this, (ThreadHandlerCpp)&Application3::ListFiles);
 }
 
 

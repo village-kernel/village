@@ -4,10 +4,17 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "Kernel.h"
 #include "Application4.h"
-#include "Thread.h"
 
 
+///Constructor
+Application4::Application4()
+{
+}
+
+
+///Application4 initialize
 void Application4::Initialize()
 {
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN_Msk;
@@ -15,9 +22,10 @@ void Application4::Initialize()
 }
 
 
+///Application4 execute
 void Application4::Execute()
 {
-	while(1)
+	for (uint8_t i = 0; i < 10; i++)
 	{
 		GPIOE->BSRR |= GPIO_BSRR_BR5;
 		Thread::Sleep(500);
@@ -27,6 +35,7 @@ void Application4::Execute()
 }
 
 
+///Application4 entry
 extern "C" void Entry()
 {
 	Application4 app;
@@ -34,3 +43,6 @@ extern "C" void Entry()
 	app.Execute();
 }
 
+
+//Register module
+//REGISTER_MODULE(new Application4(), (ModuleID::_application + 4), app_4);

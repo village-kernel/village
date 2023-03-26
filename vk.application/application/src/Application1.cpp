@@ -5,7 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
-#include "ThreadEndPoint.h"
 #include "Application1.h"
 
 
@@ -20,7 +19,7 @@ void Application1::Initialize()
 {
 	led.Initialize(Gpio::_ChA, 3, Gpio::_Low);
 
-	ThreadEndPoint<Application1, void(Application1::*)()>::CreateTask(this, &Application1::Task);
+	Thread::CreateTaskCpp(this, (ThreadHandlerCpp)&Application1::Task);
 }
 
 
