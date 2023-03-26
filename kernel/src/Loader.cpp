@@ -6,39 +6,32 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Loader.h"
-#include "rcParser.h"
-#include "ElfParser.h"
 #include "string.h"
 
 
 ///Loader Initialize
 void Loader::Initialize()
 {
-	LoadLibraries();
-	LoadModules();
-}
-
-
-///Loader load libraries
-void Loader::LoadLibraries()
-{
-	
-}
-
-
-///Loader load modules
-void Loader::LoadModules()
-{
-	RcParser rc;
+	//Load and parser init.rc file
 	rc.Load("1:init.rc");
 	std::list<std::string> resources = rc.GetResources();
 	std::list<std::string>::iterator it = resources.begin();
 	std::string path("1:");
 	path += (*it).c_str();
 
-	ElfParser elf;
+	//Load, parser and execute elf file
 	if (elf.Load(path.c_str()) != Result::_OK) return;
-	elf.Execute("Entry");
+	Thread::CreateTaskCpp(this, (ThreadHandlerCpp)&Loader::ExecuteApp);
+}
+
+
+///Loader execute app
+void Loader::ExecuteApp()
+{
+	elf.InitArray();
+	elf.Execute();
+	elf.FiniArray();
+	elf.Exit();
 }
 
 

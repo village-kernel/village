@@ -8,18 +8,21 @@
 #define __LOADER_H__
 
 #include "Module.h"
+#include "rcParser.h"
+#include "ElfParser.h"
 
 
 ///Loader
 class Loader : public Module
 {
 private:
-
+	//Members
+	RcParser  rc;
+	ElfParser elf;
 public:
 	//Methods
 	void Initialize();
-	void LoadLibraries();
-	void LoadModules();
+	void ExecuteApp();
 };
 
 #endif //!__LOADER_H__
