@@ -7,7 +7,6 @@
 #include "Kernel.h"
 #include "Console.h"
 #include "string.h"
-#include "ThreadEndPoint.h"
 
 
 ///Initialize cmd core
@@ -33,7 +32,7 @@ void Console::Initialize()
 	}
 
 	//Set execute thread to thread task
-	ThreadEndPoint<Console, void(Console::*)()>::CreateTask(this, &Console::ReceviceThread);
+	Thread::CreateTaskCpp(this, (ThreadHandlerCpp)&Console::ReceviceThread);
 }
 
 

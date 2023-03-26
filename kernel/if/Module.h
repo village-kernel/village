@@ -8,9 +8,10 @@
 #define __MODULE_INTERFACE_H__
 
 #include "Defines.h"
+#include "Thread.h"
 
 ///Module
-class Module
+class Module : public ThreadEndpoint
 {
 private:
 	//Members
