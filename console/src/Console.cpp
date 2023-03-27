@@ -45,7 +45,7 @@ void Console::ReceviceThread()
 		{
 			ExecuteCmd(msgMgr.Read());
 		}
-		Thread::Sleep(50);
+		Thread::Sleep(1);
 	}
 }
 
