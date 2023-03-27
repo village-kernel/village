@@ -21,6 +21,7 @@ private:
 	ElfParser elf;
 public:
 	//Methods
+	Loader();
 	void Initialize();
 	void ExecuteApp();
 };

@@ -9,6 +9,12 @@
 #include "string.h"
 
 
+///Constructor 
+Loader::Loader()
+{
+}
+
+
 ///Loader Initialize
 void Loader::Initialize()
 {
@@ -21,7 +27,7 @@ void Loader::Initialize()
 
 	//Load, parser and execute elf file
 	if (elf.Load(path.c_str()) != Result::_OK) return;
-	Thread::CreateTaskCpp(this, (ThreadHandlerCpp)&Loader::ExecuteApp);
+	elf.InitArray();
 }
 
 
