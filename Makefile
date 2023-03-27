@@ -93,6 +93,14 @@ vpath %.cpp $(sort $(src-y) $(src-m))
 
 
 #######################################
+# setting build environment marco
+#######################################
+ifneq ($(CONFIG_ENVIRONMENT), y)
+  CFLAGS += -DKBUILD_NO_ENVIRONNEMNT
+endif
+
+
+#######################################
 # build the kernel
 #######################################
 OBJECTS  =  $(addprefix $(BUILD_DIR)/, $(objs-y))
