@@ -10,20 +10,28 @@
 #include "stdint.h"
 #include "stddef.h"
 
-///Symbol section, avoid being optimized by the compiler
-#define SYMBOL_SECTION                 __attribute__((used,__section__(".symbols")))
+#ifdef KBUILD_NO_ENVIRONNEMNT
+	///Export symbol marco
+	#define EXPORT_SYMBOL(symbol, name)    /*export symbol*/
 
-///Symbol create macro
-#define CREATE_SYMBOL(symbol, name)    static struct _Sym_##name{_Sym_##name(){symbol;}} const _sym_##name
+	///Search symbol marco
+	#define SEARCH_SYMBOL(name)            (0)
+#else
+	///Symbol section, avoid being optimized by the compiler
+	#define SYMBOL_SECTION                 __attribute__((used,__section__(".symbols")))
 
-///Symbol class macro
-#define SYMBOL_CLASS(symbol, name)     new Environment::Symbol(#name, (uint32_t)&symbol)
+	///Symbol create macro
+	#define CREATE_SYMBOL(symbol, name)    static struct _Sym_##name{_Sym_##name(){symbol;}} const _sym_##name
 
-///Export symbol marco
-#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::ExportSymbol(SYMBOL_CLASS(symbol, name)), name) SYMBOL_SECTION
+	///Symbol class macro
+	#define SYMBOL_CLASS(symbol, name)     new Environment::Symbol(#name, (uint32_t)&symbol)
 
-///Search symbol marco
-#define SEARCH_SYMBOL(name)            Environment::SearchSymbol(name)
+	///Export symbol marco
+	#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::ExportSymbol(SYMBOL_CLASS(symbol, name)), name) SYMBOL_SECTION
+
+	///Search symbol marco
+	#define SEARCH_SYMBOL(name)            Environment::SearchSymbol(name)
+#endif
 
 ///Environment
 class Environment
