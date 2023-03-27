@@ -192,6 +192,10 @@ int ElfParser::RelEntries()
 				//Relocation symbol entry
 				if (0 == symAddr) return _ERR;
 				RelSymCall(relAddr, symAddr, relEntry.type);
+
+				//Output debug message
+				printf("rel name %s, relAddr 0x%lx, symAddr 0x%lx\r\n", 
+					GetSymbolName(relEntry.symbol), relAddr, symAddr);
 			}
 		}
 	}
@@ -206,7 +210,7 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 	switch (type)
 	{
 		case _R_ARM_ABS32:
-			*((uint32_t*)relAddr) = symAddr;
+			*((uint32_t*)relAddr) += symAddr;
 			break;
 
 		case _R_ARM_THM_CALL:
@@ -215,7 +219,7 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 			break;
 
 		case _R_ARM_TARGET1:
-			*((uint32_t*)relAddr) = symAddr;
+			*((uint32_t*)relAddr) += symAddr;
 			break;
 
 		case _R_ARM_THM_JUMP11:
