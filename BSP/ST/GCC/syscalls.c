@@ -29,15 +29,7 @@
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
-
-
-/* Variables */
-extern int __io_putchar(int ch) __attribute__((weak));
-extern int __io_getchar(void)   __attribute__((weak));
-
-
-char *__env[1] = { 0 };
-char **environ = __env;
+#include "HalHeaders.h"
 
 
 /* Functions */
@@ -62,6 +54,11 @@ __attribute__((weak)) void _exit (int status)
 	while (1) {}		/* Make sure we hang here */
 }
 
+__attribute__((weak)) int __io_getchar(void)
+{
+	return 0;
+}
+
 __attribute__((weak)) int _read(int file, char *ptr, int len)
 {
 	for (int index = 0; index < len; index++)
@@ -69,6 +66,11 @@ __attribute__((weak)) int _read(int file, char *ptr, int len)
 		*ptr++ = __io_getchar();
 	}
 	return len;
+}
+
+__attribute__((weak)) void __io_putchar(int ch)
+{
+	ITM_SendChar(ch);
 }
 
 __attribute__((weak)) int _write(int file, char *ptr, int len)
