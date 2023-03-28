@@ -29,10 +29,10 @@ void Kernel::Initialize()
 	Thread::Initialize();
 
 	//Add Device execute to thread task stack
-	Thread::CreateTask(Device::Execute);
+	Thread::CreateTask((ThreadHandler)&Device::Execute);
 
 	//Add modular execute to thread task stack
-	Thread::CreateTask(Modular::Execute);
+	Thread::CreateTask((ThreadHandler)&Modular::Execute);
 
 	//Initialize device
 	Device::Initialize();

@@ -12,6 +12,7 @@
 
 
 ///Initialize static members
+int Thread::pidCounter = 0;
 Thread::TaskNode* Thread::list = NULL;
 Thread::TaskNode* Thread::curNode = NULL;
 
@@ -25,16 +26,38 @@ Thread::Thread()
 ///Thread Initialize
 void Thread::Initialize()
 {
-	//Frist task should be idle task
-	CreateTask(Thread::IdleTask);
+	//Frist task should be idle task and the pid is 0
+	CreateTask((ThreadHandler)&Thread::IdleTask);
 
 	//Set current node
 	curNode = list;
 }
 
 
+///Thread append a task to the list
+int Thread::AppendTask(Task task)
+{
+	//Find an empty node
+	TaskNode** nextNode = &list;
+	while (NULL != *nextNode) nextNode = &(*nextNode)->next;
+
+	//Add new task node in task list
+	*nextNode = new TaskNode(task);
+
+	//Set the pid for task 
+	if (NULL != *nextNode)
+	{
+		(*nextNode)->task.pid = pidCounter++;
+		return (*nextNode)->task.pid;
+	}
+
+	//Return -1 when create task failed
+	return -1;
+}
+
+
 ///Create new task
-void Thread::CreateTask(ThreadHandlerC handler)
+int Thread::CreateTask(ThreadHandler handler, int argc, char* argv[])
 {
 	//Create a new task
 	Task task(handler);
@@ -43,57 +66,25 @@ void Thread::CreateTask(ThreadHandlerC handler)
 	task.stack = Memory::StackAlloc(task_stack_size);
 	
 	//Check whether stack allocation is successful
-	if (0 == task.stack) return;
+	if (0 == task.stack) return -1;
 
-	//Fill dummy stack frame
+	//Fill the stack content
 	task.psp = task.stack - psp_frame_size;
-	*(StackFrame*)task.psp = StackFrame((uint32_t)&TaskHandlerC, (uint32_t)handler);
+	*(StackFrame*)task.psp = StackFrame
+	(
+		(uint32_t)&TaskHandlerC,
+		(uint32_t)handler,
+		(uint32_t)argc,
+		(uint32_t)argv
+	);
 
-	//Find an empty node
-	TaskNode** nextNode = &list;
-	while (NULL != *nextNode) nextNode = &(*nextNode)->next;
-
-	//Add new task node in task list
-	*nextNode = new TaskNode(task);
+	return AppendTask(task);
 }
-EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvvE);
-
-
-///Thread delete task
-void Thread::DeleteTask(ThreadHandlerC handler)
-{
-	if (NULL == handler) return;
-
-	TaskNode** prevNode = &list;
-	TaskNode** currNode = &list;
-
-	while (NULL != *currNode)
-	{
-		if (handler == (*currNode)->task.handler)
-		{
-			delete *currNode;
-
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
-
-			Memory::Free((*currNode)->task.stack);
-
-			break;
-		}
-		else
-		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
-		}
-	}
-}
-EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEPFvvE);
+EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFviPPcEiS1_);
 
 
 ///Create new task for cpp
-void Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
+int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc, char* argv[])
 {
 	//Create a new task
 	Task task(user, handler);
@@ -102,35 +93,35 @@ void Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
 	task.stack = Memory::StackAlloc(task_stack_size);
 	
 	//Check whether stack allocation is successful
-	if (0 == task.stack) return;
+	if (0 == task.stack) return -1;
 
-	//Fill dummy stack frame
+	//Fill the stack content
 	task.psp = task.stack - psp_frame_size;
-	*(StackFrame*)task.psp = StackFrame((uint32_t)&TaskHandlerCpp, (uint32_t)user, *(uint32_t*)&handler);
+	*(StackFrame*)task.psp = StackFrame
+	(
+		(uint32_t)&TaskHandlerCpp, 
+		(uint32_t)user, 
+		*(uint32_t*)&handler,
+		(uint32_t)argc,
+		(uint32_t)argv	
+	);
 
-	//Find an empty node
-	TaskNode** nextNode = &list;
-	while (NULL != *nextNode) nextNode = &(*nextNode)->next;
-
-	//Add new task node in task list
-	*nextNode = new TaskNode(task);
+	return AppendTask(task);
 }
-EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvvE);
+EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FviPPcEiS3_);
 
 
-///Thread delete task for cpp
-void Thread::DeleteTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
+///Thread delete task
+int Thread::DeleteTask(int pid)
 {
-	if (NULL == user)    return;
-	if (NULL == handler) return;
+	if (pid <= 0) return _ERR;
 
 	TaskNode** prevNode = &list;
 	TaskNode** currNode = &list;
 
 	while (NULL != *currNode)
 	{
-		if ((user    == (*currNode)->task.user) &&
-			(handler == (*currNode)->task.handlerCpp))
+		if (pid == (*currNode)->task.pid)
 		{
 			delete *currNode;
 
@@ -141,7 +132,7 @@ void Thread::DeleteTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
 
 			Memory::Free((*currNode)->task.stack);
 
-			break;
+			return _OK;
 		}
 		else
 		{
@@ -149,17 +140,19 @@ void Thread::DeleteTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
 			currNode = &(*currNode)->next;
 		}
 	}
+
+	return _ERR;
 }
-EXPORT_SYMBOL(Thread::DeleteTaskCpp, _ZN6Thread13DeleteTaskCppEP14ThreadEndpointMS0_FvvE);
+EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
 
 
 ///Thread sleep
 void Thread::Sleep(uint32_t ticks)
 {
-	if(Thread::IdleTask != curNode->task.handler)
+	if(curNode->task.pid > 0)
 	{
 		curNode->task.state = TaskState::Blocked;
-		curNode->task.waitToTick = System::GetSysClkCounts() + ticks;
+		curNode->task.ticks = System::GetSysClkCounts() + ticks;
 		Scheduler::Rescheduler(Scheduler::Unprivileged);
 	}
 }
@@ -169,11 +162,10 @@ EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
 ///Thread Exit
 void Thread::Exit()
 {
-	if(Thread::IdleTask != curNode->task.handler)
+	if(curNode->task.pid > 0)
 	{
 		curNode->task.state = TaskState::Exited;
-		DeleteTask(curNode->task.handler);
-		DeleteTaskCpp(curNode->task.user, curNode->task.handlerCpp);
+		DeleteTask(curNode->task.pid);
 		Scheduler::Rescheduler(Scheduler::Unprivileged);
 	}
 }
@@ -191,22 +183,22 @@ void Thread::IdleTask()
 
 
 ///Thread task handler C
-void Thread::TaskHandlerC(ThreadHandlerC handler)
+void Thread::TaskHandlerC(ThreadHandler handler, int argc, char* argv[])
 {
 	if (NULL != handler)
 	{
-		(handler)();
+		(handler)(argc, argv);
 	}
 	Exit();
 }
 
 
 ///Thread task handler Cpp
-void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler)
+void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc, char* argv[])
 {
 	if (NULL != user && NULL != handler)
 	{
-		(user->*handler)();
+		(user->*handler)(argc, argv);
 	}
 	Exit();
 }
@@ -241,7 +233,7 @@ void Thread::SelectNextTask()
 	{
 		if (TaskState::Blocked == node->task.state)
 		{
-			if(System::GetSysClkCounts() >= node->task.waitToTick)
+			if(System::GetSysClkCounts() >= node->task.ticks)
 			{
 				node->task.state = TaskState::Running;
 			}

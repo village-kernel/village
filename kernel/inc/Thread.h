@@ -7,13 +7,12 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Defines.h"
 
 ///Thread end point
 class ThreadEndpoint {};
-typedef void (ThreadEndpoint::*ThreadHandlerCpp)();
-typedef void (*ThreadHandlerC)();
+typedef void (ThreadEndpoint::*ThreadHandlerCpp)(int, char**);
+typedef void (*ThreadHandler)(int, char**);
 
 
 ///Thread
@@ -33,30 +32,33 @@ private:
 	{
 		ThreadEndpoint*  user;
 		ThreadHandlerCpp handlerCpp;
-		ThreadHandlerC   handler;
+		ThreadHandler    handler;
+		TaskState        state;
+		uint32_t         ticks;
 		uint32_t         stack;
 		uint32_t         psp;
-		uint32_t         waitToTick;
-		TaskState        state;
+		int              pid;
 
-		Task(ThreadHandlerC handler = NULL)
+		Task(ThreadHandler handler = NULL)
 			:user(NULL),
 			handlerCpp(NULL),
 			handler(handler),
+			state(TaskState::Running),
+			ticks(0),
 			stack(0),
 			psp(0),
-			waitToTick(0),
-			state(TaskState::Running)
+			pid(0)
 		{}
 
 		Task(ThreadEndpoint *user = NULL, ThreadHandlerCpp handler = NULL)
 			:user(user),
 			handlerCpp(handler),
 			handler(NULL),
+			state(TaskState::Running),
+			ticks(0),
 			stack(0),
 			psp(0),
-			waitToTick(0),
-			state(TaskState::Running)
+			pid(0)
 		{}
 	};
 
@@ -131,21 +133,22 @@ private:
 	static const uint32_t psp_frame_size = 16;
 
 	//Members
+	static int pidCounter;
 	static TaskNode* list;
 	static TaskNode* curNode;
 
 	//Methods
+	static int AppendTask(Task task);
 	static void IdleTask();
-	static void TaskHandlerC(ThreadHandlerC handler);
-	static void TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler);
+	static void TaskHandlerC(ThreadHandler handler, int argc = 0, char* argv[] = NULL);
+	static void TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc = 0, char* argv[] = NULL);
 public:
 	///Methods
 	Thread();
 	static void Initialize();
-	static void CreateTask(ThreadHandlerC handler);
-	static void DeleteTask(ThreadHandlerC handler);
-	static void CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler);
-	static void DeleteTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler);
+	static int CreateTask(ThreadHandler handler, int argc = 0, char* argv[] = NULL);
+	static int CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc = 0, char* argv[] = NULL);
+	static int DeleteTask(int pid);
 	static void Sleep(uint32_t ticks);
 	static void Exit();
 
