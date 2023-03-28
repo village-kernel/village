@@ -35,6 +35,10 @@ config ENVIRONMENT
 	bool "Build the environment of Loadable module running"
 	default n
 
+config EXECUTOR
+	bool "Enable executor support"
+	default n
+
 endmenu
 
 # config utilities menu

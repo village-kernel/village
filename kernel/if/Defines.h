@@ -23,18 +23,21 @@ enum Result
 enum DriverID
 {
 	_serial              = 1,
-	_display             = 21,
-	_storage             = 31,
-	_usbStorage          = 41,
+	_storage             = 21,
+	_drvLoadr            = 41,
+	_display             = 61,
+	_network             = 81,
+	_miscdev             = 101,
 };
 
 
 ///Module id defines
 enum ModuleID
 {
-	_loader              = 1,
-	_console             = 2,
-	_application         = 200,
+	_console             = 1,
+	_modLoader           = 2,
+	_executor            = 21,
+	_application         = 101,
 };
 
 
