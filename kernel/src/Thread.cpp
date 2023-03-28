@@ -146,6 +146,24 @@ int Thread::DeleteTask(int pid)
 EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
 
 
+///Thread wait for task
+int Thread::WaitForTask(int pid)
+{
+	//Check if the task exists
+	for (volatile TaskNode* node = list; NULL != node; node = node->next)
+	{
+		if (pid == node->task.pid)
+		{
+			//Blocking wait
+			while(node->task.state != TaskState::Exited) {}
+			return _OK;
+		}
+	}
+	return _ERR;
+}
+EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
+
+
 ///Thread sleep
 void Thread::Sleep(uint32_t ticks)
 {

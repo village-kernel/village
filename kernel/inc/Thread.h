@@ -149,6 +149,7 @@ public:
 	static int CreateTask(ThreadHandler handler, int argc = 0, char* argv[] = NULL);
 	static int CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc = 0, char* argv[] = NULL);
 	static int DeleteTask(int pid);
+	static int WaitForTask(int pid);
 	static void Sleep(uint32_t ticks);
 	static void Exit();
 
