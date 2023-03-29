@@ -1,6 +1,6 @@
 //###########################################################################
 // rcParser.h
-// Parse resource script
+// Parse run command script
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -9,30 +9,41 @@
 
 #include "Defines.h"
 #include <string>
-#include <list>
-
 
 ///RcParser
 class RcParser
 {
+public:
+	//Structrues
+	struct RunCmdNode
+	{
+		std::string cmd;
+		RunCmdNode* next;
+
+		RunCmdNode(std::string cmd = NULL) :
+			cmd(cmd),
+			next(NULL)
+		{}
+	};
 private:
 	//Enumerations
 	enum ParserStatus
 	{
-		_NullRecord = 0,
-		_RecordResource,
-		_SaveResource,
+		_NotRecord = 0,
+		_RecordCmd,
+		_SaveCmd,
 	};
 
 	//Members
-	std::list<std::string> resources;
+	RunCmdNode* runcmds;
 
 	//Methods
-	void Decode(std::string rcString);
+	void Decode(char* rcString);
 public:
 	//Methods
-	int Load(std::string filePath);
-	std::list<std::string> GetResources();
+	RcParser(const char* filename = NULL);
+	int Load(const char* filename);
+	RunCmdNode* GetRunCmds();
 	void Release();
 };
 

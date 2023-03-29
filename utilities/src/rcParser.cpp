@@ -8,26 +8,35 @@
 #include "FileStream.h"
 
 
+///Constructor
+RcParser::RcParser(const char* filename)
+	: runcmds(NULL)
+{
+	if (NULL != filename) Load(filename);
+}
+
+
 ///Load file
-int RcParser::Load(std::string filePath)
+int RcParser::Load(const char* filename)
 {
 	FileStream file;
 	Result res = _ERR;
 
-	if (FR_OK == file.Open(filePath, FileStream::_Read))
+	if (FR_OK == file.Open(filename, FileStream::_Read))
 	{
 		int size = file.Size();
 
-		std::string str; str.resize(size);
+		char* text = (char*)malloc(size); 
 
-		if (file.Read((uint8_t*)str.c_str(), size) == size)
+		if (file.Read((uint8_t*)text, size) == size)
 		{
-			Decode(str);
+			Decode(text);
 			res = _OK;
 		}
 		
 		file.Close();
-		std::string().swap(str);
+		
+		free(text);
 	}
 
 	return res;
@@ -35,60 +44,72 @@ int RcParser::Load(std::string filePath)
 
 
 ///Decode the rc data
-void RcParser::Decode(std::string rcString)
+void RcParser::Decode(char* rcString)
 {
-	std::string resource = "";
-	std::string::iterator it;
-	ParserStatus status = _RecordResource;
-
-	for (it = rcString.begin(); it != rcString.end(); it++)
+	std::string  cmd = "";
+	RunCmdNode** nextNode = &runcmds;
+	ParserStatus status   = _RecordCmd;
+	
+	for (int32_t i = 0; rcString[i] != '\0'; i++)
 	{
-		char byte = *it;
+		char byte = rcString[i];
 
 		switch (byte)
 		{
 			case '#':
-				status = _NullRecord;
+				status = _NotRecord;
 				break;
 			
 			case ' ':
+				if (_RecordCmd == status)
+					status = _SaveCmd;
+				break;
+
+			case '\r':
+				continue;
+				
 			case '\n':
-				status = _SaveResource;
+				if (_RecordCmd == status)
+					status = _SaveCmd;
+				else if (_NotRecord == status)
+					status = _RecordCmd;
 				break;
 
 			default:
-				if (byte > ' ' && byte <= '~')
+				if (_RecordCmd == status)
 				{
-					if (_RecordResource == status)
-						resource += byte;
+					if (byte > ' ' && byte <= '~') cmd += byte;
 				}
 				break;
 		}
 
-		//Save rerourece path
-		if (_SaveResource == status)
+		//Save cmd
+		if (_SaveCmd == status)
 		{
-			if (resource != "")
+			if (cmd != "")
 			{
-				resources.push_front(resource);
-				resource = "";
+				*nextNode = new RunCmdNode(cmd);
+				nextNode  = &(*nextNode)->next;
+				cmd = "";
 			}
-			status = _RecordResource;
+			status = _RecordCmd;
 		}
 	}
 }
 
 
-///Get resources
-std::list<std::string> RcParser::GetResources()
+///Get run commands
+RcParser::RunCmdNode* RcParser::GetRunCmds()
 {
-	return resources;
+	return runcmds;
 }
 
 
 ///Release
 void RcParser::Release()
 {
-	resources.clear();
-	std::list<std::string>().swap(resources);
+	for (RunCmdNode* node = runcmds; NULL != node; node = node->next)
+	{
+		delete node;
+	}
 }
