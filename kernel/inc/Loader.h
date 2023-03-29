@@ -13,17 +13,29 @@
 
 
 ///Loader
-class Loader : public Module
+class Loader
 {
-private:
-	//Members
-	RcParser  rc;
-	ElfParser elf;
+protected:
+	//Methods
+	void Loading(const char* filename);
+};
+
+
+///Drivers laoder
+class DrvLoader : public Loader, public Driver
+{
 public:
 	//Methods
-	Loader();
 	void Initialize();
-	void ExecuteApp();
+};
+
+
+///Module loader
+class ModLoader : public Loader, public Module
+{
+public:
+	//Methods
+	void Initialize();
 };
 
 #endif //!__LOADER_H__
