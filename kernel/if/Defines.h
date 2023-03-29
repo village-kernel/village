@@ -28,7 +28,7 @@ enum DriverID
 	_display             = 61,
 	_network             = 81,
 	_usbdev              = 101,
-	_usbhost             = 151.
+	_usbhost             = 151,
 	_miscdev             = 201,
 };
 
