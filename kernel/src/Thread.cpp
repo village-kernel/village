@@ -57,7 +57,7 @@ int Thread::AppendTask(Task task)
 
 
 ///Create new task
-int Thread::CreateTask(ThreadHandler handler, int argc, char* argv[])
+int Thread::CreateTask(ThreadHandler handler, char* argv)
 {
 	//Create a new task
 	Task task(handler);
@@ -74,17 +74,16 @@ int Thread::CreateTask(ThreadHandler handler, int argc, char* argv[])
 	(
 		(uint32_t)&TaskHandlerC,
 		(uint32_t)handler,
-		(uint32_t)argc,
 		(uint32_t)argv
 	);
 
 	return AppendTask(task);
 }
-EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFviPPcEiS1_);
+EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 
 
 ///Create new task for cpp
-int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc, char* argv[])
+int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv)
 {
 	//Create a new task
 	Task task(user, handler);
@@ -99,16 +98,15 @@ int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int ar
 	task.psp = task.stack - psp_frame_size;
 	*(StackFrame*)task.psp = StackFrame
 	(
-		(uint32_t)&TaskHandlerCpp, 
-		(uint32_t)user, 
+		(uint32_t)&TaskHandlerCpp,
+		(uint32_t)user,
 		*(uint32_t*)&handler,
-		(uint32_t)argc,
-		(uint32_t)argv	
+		(uint32_t)argv
 	);
 
 	return AppendTask(task);
 }
-EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FviPPcEiS3_);
+EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvPcES2_);
 
 
 ///Thread delete task
@@ -201,22 +199,22 @@ void Thread::IdleTask()
 
 
 ///Thread task handler C
-void Thread::TaskHandlerC(ThreadHandler handler, int argc, char* argv[])
+void Thread::TaskHandlerC(ThreadHandler handler, char* argv)
 {
 	if (NULL != handler)
 	{
-		(handler)(argc, argv);
+		(handler)(argv);
 	}
 	Exit();
 }
 
 
 ///Thread task handler Cpp
-void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc, char* argv[])
+void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv)
 {
 	if (NULL != user && NULL != handler)
 	{
-		(user->*handler)(argc, argv);
+		(user->*handler)(argv);
 	}
 	Exit();
 }

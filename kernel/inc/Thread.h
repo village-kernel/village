@@ -11,8 +11,8 @@
 
 ///Thread end point
 class ThreadEndpoint {};
-typedef void (ThreadEndpoint::*ThreadHandlerCpp)(int, char**);
-typedef void (*ThreadHandler)(int, char**);
+typedef void (ThreadEndpoint::*ThreadHandlerCpp)(char*);
+typedef void (*ThreadHandler)(char*);
 
 
 ///Thread
@@ -140,14 +140,14 @@ private:
 	//Methods
 	static int AppendTask(Task task);
 	static void IdleTask();
-	static void TaskHandlerC(ThreadHandler handler, int argc = 0, char* argv[] = NULL);
-	static void TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc = 0, char* argv[] = NULL);
+	static void TaskHandlerC(ThreadHandler handler, char* argv = NULL);
+	static void TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv = NULL);
 public:
 	///Methods
 	Thread();
 	static void Initialize();
-	static int CreateTask(ThreadHandler handler, int argc = 0, char* argv[] = NULL);
-	static int CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, int argc = 0, char* argv[] = NULL);
+	static int CreateTask(ThreadHandler handler, char* argv = NULL);
+	static int CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv = NULL);
 	static int DeleteTask(int pid);
 	static int WaitForTask(int pid);
 	static void Sleep(uint32_t ticks);
