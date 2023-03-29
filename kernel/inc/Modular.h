@@ -34,14 +34,11 @@ private:
 		{}
 	};
 	
-	//Static constants
-	static const uint8_t initialize = 0;
-	static const uint8_t updateparams = 1;
-	static const uint8_t execute = 2;
-	static const uint8_t failsafe = 3;
-	
 	//Members
 	static ModuleNode* list;
+
+	//Methods
+	void Handler(Module* module);
 public:
 	//Methods
 	Modular();
@@ -49,8 +46,8 @@ public:
 	static void UpdateParams();
 	static void Execute();
 	static void FailSafe(int arg);
-	static void RegisterModule(Module* module, uint32_t id);
-	static void DeregisterModule(Module* module, uint32_t id);
+	static void RegisterModule(Module* module, uint32_t id = 0);
+	static void DeregisterModule(Module* module, uint32_t id = 0);
 };
 
 #endif // !__MODULAR_H__

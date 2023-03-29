@@ -38,14 +38,21 @@ void Modular::UpdateParams()
 }
 
 
-///Execute module object->Execute
+///Create task threads for each module
 void Modular::Execute()
 {
 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
 	{
-		intptr_t* __vtp = (intptr_t*)(*(intptr_t*)(node->module));
-		Thread::CreateTask((ThreadHandler)(__vtp[execute]), (char*)(node->module));
+		Thread::CreateTask((ThreadHandler)&Modular::Handler, (char*)node->module);
 	}
+}
+
+
+///Modular execute handler
+void Modular::Handler(Module* module)
+{
+	module->Execute();
+	Modular::DeregisterModule(module);
 }
 
 
@@ -93,9 +100,12 @@ void Modular::DeregisterModule(Module* module, uint32_t id)
 	ModuleNode** prevNode = &list;
 	ModuleNode** currNode = &list;
 
+	if (NULL == module && 0 == id) return;
+
 	while (NULL != *currNode)
 	{
-		if (module == (*currNode)->module)
+		if ((module == (*currNode)->module) || 
+			(id == (*currNode)->module->GetID()))
 		{
 			delete *currNode;
 
