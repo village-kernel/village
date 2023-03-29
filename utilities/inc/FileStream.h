@@ -26,13 +26,12 @@ public:
 private:
 	//Methods
 	std::string driver;
-	std::string filePath;
 	FATFS fs; 
 	FIL file;
 public:
 	//Methods
-	FileStream();
-	int Open(std::string filePath, int option);
+	FileStream(std::string driver = "1:");
+	int Open(std::string filename, int option);
 	int Write(uint8_t* txData, uint32_t size, uint32_t seek = 0);
 	int Read(uint8_t* rxData, uint32_t size, uint32_t seek = 0);
 	int Size();

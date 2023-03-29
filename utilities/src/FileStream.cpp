@@ -9,22 +9,22 @@
 
 
 ///Constructor
-FileStream::FileStream()
+FileStream::FileStream(std::string driver)
+	: driver(driver)
 {
 }
 
 
 ///OpenFile
-int FileStream::Open(std::string filePath, int option)
+int FileStream::Open(std::string filename, int option)
 {
-	this->filePath = filePath;
-	this->driver = filePath.substr(0, 2);
+	filename.insert(0, driver);
 
 	FRESULT res = f_mount(&fs, driver.c_str(), 1);
 
 	if (FR_OK != res) return res;
 	
-	return f_open(&file, filePath.c_str(), option);
+	return f_open(&file, filename.c_str(), option);
 }
 
 
@@ -69,7 +69,6 @@ int FileStream::Close()
 	f_unmount(driver.c_str());
 	
 	this->driver = "";
-	this->filePath = "";
 
 	return res;
 }
