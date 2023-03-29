@@ -19,8 +19,8 @@ private:
 public:
 	//Methods
 	virtual void Initialize()       {}
-	virtual void Execute()          {}
 	virtual void UpdateParams()     {}
+	virtual void Execute()          {}
 	virtual void FailSafe(int arg)  {}
 
 	///Set the module id
