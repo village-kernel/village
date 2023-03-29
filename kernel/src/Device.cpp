@@ -41,12 +41,10 @@ void Device::UpdateParams()
 ///Execute device object->Execute
 void Device::Execute()
 {
-	while (1)
+	for (volatile DriverNode* node = list; NULL != node; node = node->next)
 	{
-		for (volatile DriverNode* node = list; NULL != node; node = node->next)
-		{
-			node->driver->Execute();
-		}
+		intptr_t* __vtp = (intptr_t*)(*(intptr_t*)(node->driver));
+		Thread::CreateTask((ThreadHandler)(__vtp[execute]), (char*)(node->driver));
 	}
 }
 

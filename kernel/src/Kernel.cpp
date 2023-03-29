@@ -28,12 +28,6 @@ void Kernel::Initialize()
 	//Initialize thread
 	Thread::Initialize();
 
-	//Add Device execute to thread task stack
-	Thread::CreateTask((ThreadHandler)&Device::Execute);
-
-	//Add modular execute to thread task stack
-	Thread::CreateTask((ThreadHandler)&Modular::Execute);
-
 	//Initialize device
 	Device::Initialize();
 
@@ -57,6 +51,12 @@ void Kernel::UpdateParams()
 ///Execute thread tasks 
 void Kernel::Execute()
 {
+	//Execute device
+	Device::Execute();
+
+	//Execute modular
+	Modular::Execute();
+
 	//Start scheduler
 	Scheduler::StartScheduler();
 

@@ -34,6 +34,12 @@ private:
 		{}
 	};
 
+	//Static constants
+	static const uint8_t initialize = 0;
+	static const uint8_t updateparams = 1;
+	static const uint8_t execute = 2;
+	static const uint8_t failsafe = 3;
+	
 	//Members
 	static DriverNode* list;
 public:

@@ -41,12 +41,10 @@ void Modular::UpdateParams()
 ///Execute module object->Execute
 void Modular::Execute()
 {
-	while (1)
+	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
 	{
-		for (volatile ModuleNode* node = list; NULL != node; node = node->next)
-		{
-			node->module->Execute();
-		}
+		intptr_t* __vtp = (intptr_t*)(*(intptr_t*)(node->module));
+		Thread::CreateTask((ThreadHandler)(__vtp[execute]), (char*)(node->module));
 	}
 }
 
