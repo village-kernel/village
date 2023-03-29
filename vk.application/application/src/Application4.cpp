@@ -25,10 +25,13 @@ void Application4::Initialize()
 ///Application4 execute
 void Application4::Execute()
 {
-	GPIOE->BSRR |= GPIO_BSRR_BR5;
-	Thread::Sleep(500);
-	GPIOE->BSRR |= GPIO_BSRR_BS5;
-	Thread::Sleep(500);
+	while (1)
+	{
+		GPIOE->BSRR |= GPIO_BSRR_BS5;
+		Thread::Sleep(500);
+		GPIOE->BSRR |= GPIO_BSRR_BR5;
+		Thread::Sleep(500);
+	}
 }
 
 

@@ -18,28 +18,12 @@ Application2::Application2()
 void Application2::Initialize()
 {
 	led.Initialize(Gpio::_ChB, 1, Gpio::_Low);
-
-	Thread::CreateTaskCpp(this, (ThreadHandlerCpp)&Application2::Task);
 }
 
 
 /// Execute
 void Application2::Execute()
 {
-	led.Set();
-	Thread::Sleep(500);
-	led.Clear();
-	Thread::Sleep(500);
-}
-
-
-///Task
-void Application2::Task()
-{
-	Gpo led;
-
-	led.Initialize(Gpio::_ChA, 8, Gpio::_Low);
-
 	while (1)
 	{
 		led.Set();

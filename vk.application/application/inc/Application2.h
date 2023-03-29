@@ -17,9 +17,6 @@ class Application2 : public Module
 private:
 	//Members
 	Gpo led;
-	
-	//Methods
-	void Task();
 public:
 	//Methods
 	Application2();
