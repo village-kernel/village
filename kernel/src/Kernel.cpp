@@ -51,9 +51,6 @@ void Kernel::UpdateParams()
 ///Execute thread tasks 
 void Kernel::Execute()
 {
-	//Execute device
-	Device::Execute();
-
 	//Execute modular
 	Modular::Execute();
 

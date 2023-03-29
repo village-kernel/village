@@ -38,17 +38,6 @@ void Device::UpdateParams()
 }
 
 
-///Execute device object->Execute
-void Device::Execute()
-{
-	for (volatile DriverNode* node = list; NULL != node; node = node->next)
-	{
-		intptr_t* __vtp = (intptr_t*)(*(intptr_t*)(node->driver));
-		Thread::CreateTask((ThreadHandler)(__vtp[execute]), (char*)(node->driver));
-	}
-}
-
-
 ///Execute device object->FailSafe
 void Device::FailSafe(int arg)
 {
@@ -92,6 +81,8 @@ void Device::DeregisterDriver(Driver* driver, uint32_t id)
 {
 	DriverNode** prevNode = &list;
 	DriverNode** currNode = &list;
+
+	if (NULL == driver && 0 == id) return;
 
 	while (NULL != *currNode)
 	{
