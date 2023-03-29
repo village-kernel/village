@@ -207,14 +207,15 @@ private:
 	ELF elf;
 
 	//Methods
-	int LoadElf(const char* path);
+	int LoadElf(const char* filename);
 	int ParserElf();
 	int RelEntries();
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
 	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
 public:
 	//Methods
-	int Load(const char* path);
+	ElfParser(const char* filename = NULL);
+	int Load(const char* filename);
 	int InitArray();
 	int Execute(const char* symbol = NULL);
 	int FiniArray();

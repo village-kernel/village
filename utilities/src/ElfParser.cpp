@@ -10,22 +10,29 @@
 #include "string.h"
 
 
-///ElfParser load and parser elf
-int ElfParser::Load(const char* path)
+///Constructor
+ElfParser::ElfParser(const char* filename)
 {
-	if (LoadElf(path) != _OK) return _ERR;
-	if (ParserElf()   != _OK) return _ERR;
-	if (RelEntries()  != _OK) return _ERR;
+	if (NULL != filename) Load(filename);
+}
+
+
+///ElfParser load and parser elf file
+int ElfParser::Load(const char* filename)
+{
+	if (LoadElf(filename) != _OK) return _ERR;
+	if (ParserElf()       != _OK) return _ERR;
+	if (RelEntries()      != _OK) return _ERR;
 	return _OK;
 }
 
 
-///ElfParser load elf from path
-int ElfParser::LoadElf(const char* path)
+///ElfParser load elf file
+int ElfParser::LoadElf(const char* filename)
 {
 	FileStream file;
 
-	if (FR_OK == file.Open(path, FileStream::_Read))
+	if (FR_OK == file.Open(filename, FileStream::_Read))
 	{
 		int size = file.Size();
 		elf.map = (uint32_t)Memory::HeapAlloc(size);
