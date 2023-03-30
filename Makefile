@@ -8,10 +8,10 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_GUI) += ./vk.gui/config
-inc-$(CONFIG_GUI) += ./vk.gui/core/inc
-inc-$(CONFIG_GUI) += ./vk.gui/font/inc
-src-$(CONFIG_GUI) += ./vk.gui/core/src
+inc-$(CONFIG_GUI) += vk.gui/config
+inc-$(CONFIG_GUI) += vk.gui/core/inc
+inc-$(CONFIG_GUI) += vk.gui/font/inc
+src-$(CONFIG_GUI) += vk.gui/core/src
 
 
 ######################################
