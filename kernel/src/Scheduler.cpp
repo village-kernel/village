@@ -165,24 +165,25 @@ extern "C"
 	//Call hard_fault_handler_c in c function
 	void hard_fault_handler_c(unsigned int * hardfault_args)
 	{
-		volatile uint32_t stacked_r0;
-		volatile uint32_t stacked_r1;
-		volatile uint32_t stacked_r2;
-		volatile uint32_t stacked_r3;
-		volatile uint32_t stacked_r12;
-		volatile uint32_t stacked_lr;
-		volatile uint32_t stacked_pc;
-		volatile uint32_t stacked_psr;
+		volatile uint32_t stacked_r0 = ((uint32_t)hardfault_args[0]);
+		volatile uint32_t stacked_r1 = ((uint32_t)hardfault_args[1]);
+		volatile uint32_t stacked_r2 = ((uint32_t)hardfault_args[2]);
+		volatile uint32_t stacked_r3 = ((uint32_t)hardfault_args[3]);
 
-		stacked_r0 = ((uint32_t)hardfault_args[0]);
-		stacked_r1 = ((uint32_t)hardfault_args[1]);
-		stacked_r2 = ((uint32_t)hardfault_args[2]);
-		stacked_r3 = ((uint32_t)hardfault_args[3]);
+		volatile uint32_t stacked_r12 = ((uint32_t)hardfault_args[4]);
+		volatile uint32_t stacked_lr  = ((uint32_t)hardfault_args[5]);
+		volatile uint32_t stacked_pc  = ((uint32_t)hardfault_args[6]);
+		volatile uint32_t stacked_psr = ((uint32_t)hardfault_args[7]);
 
-		stacked_r12 = ((uint32_t)hardfault_args[4]);
-		stacked_lr  = ((uint32_t)hardfault_args[5]);
-		stacked_pc  = ((uint32_t)hardfault_args[6]);
-		stacked_psr = ((uint32_t)hardfault_args[7]);
+		printf("Hard_Fault_Handler: \r\n");
+		printf("r0:   0x%08lx\r\n", stacked_r0);
+		printf("r1:   0x%08lx\r\n", stacked_r1);
+		printf("r2:   0x%08lx\r\n", stacked_r2);
+		printf("r3:   0x%08lx\r\n", stacked_r3);
+		printf("r12:  0x%08lx\r\n", stacked_r12);
+		printf("lr:   0x%08lx\r\n", stacked_lr);
+		printf("pc:   0x%08lx\r\n", stacked_pc);
+		printf("xpsr: 0x%08lx\r\n", stacked_psr);
 
 		while (1);
 	}
