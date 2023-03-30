@@ -8,8 +8,8 @@
 ######################################
 # paths
 ######################################
-inc-y += ./vk.application/application/inc
-src-y += ./vk.application/application/src
+inc-y += vk.application/application/inc
+src-y += vk.application/application/src
 
 ######################################
 # objects

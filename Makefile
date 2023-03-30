@@ -55,12 +55,7 @@ MODULES_DIR := $(BUILD_DIR)/modules
 # tasks
 #######################################
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
-
-
-# build modules
-modules: $(MODULES_DIR)/$(objs-m:.o=.mo)
-
+all: village module
 
 # flash firmware
 flash:
@@ -71,7 +66,7 @@ flash:
 # cross compile tool
 #######################################
 GCC_PREFIX ?= $(CONFIG_CROSS_COMPILE:"%"=%)
-CPP = $(GCC_PREFIX)g++
+CXX = $(GCC_PREFIX)g++
 CC  = $(GCC_PREFIX)gcc
 AS  = $(GCC_PREFIX)gcc -x assembler-with-cpp
 AR  = $(GCC_PREFIX)ar
@@ -87,81 +82,93 @@ BIN = $(CP) -O binary -S
 # setting build environment
 #######################################
 INCLUDES  = $(addprefix "-I", $(inc-y) $(inc-m))
-vpath %.s   $(sort $(src-y) $(src-m))
-vpath %.c   $(sort $(src-y) $(src-m))
-vpath %.cpp $(sort $(src-y) $(src-m))
+VPATH     = $(addprefix $(BUILD_DIR)/, $(src-y) $(src-m)) $(src-y) $(src-m)
 
 
 #######################################
-# setting build environment marco
+# compiler flags
 #######################################
-ifneq ($(CONFIG_ENVIRONMENT), y)
-  CFLAGS += -DKBUILD_NO_ENVIRONNEMNT
+ifeq ($(DEBUG), 1)
+CFLAGS    += -g -gdwarf-2
 endif
+
+ifneq ($(CONFIG_ENVIRONMENT), y)
+CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
+endif
+
+# gcc flags
+CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
+CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.lst)
+CFLAGS    += -MMD -MP -MF"$(BUILD_DIR)/$(dir $<)/$(@:%.o=%.d)"
+CFLAGS    += -Wall -fdata-sections -ffunction-sections
+CFLAGS    += -mword-relocations -mlong-calls -fno-common
+CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
+
+# ld flags
+LDFLAGS   += $(MCU) $(LDSCRIPT-y) -specs=nano.specs -lc -lm -lnosys
+LDFLAGS   += -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref
+LDFLAGS   += -Wl,--gc-sections
+LDFLAGS   += -Wl,--no-warn-rwx-segment
+
+# mod ld flags
+MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
+MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
+MLDFLAGS  += -r -Bsymbolic -nostartfiles
+
+
+#######################################
+# mixed compiling
+#######################################
+%.o: %.s
+	$(Q)echo Compiling $@
+	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
+	$(Q)$(AS) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(dir $<)/$@
+
+%.o: %.c
+	$(Q)echo Compiling $@
+	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
+	$(Q)$(CC) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(dir $<)/$@
+
+%.o: %.cpp
+	$(Q)echo Compiling $@
+	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
+	$(Q)$(CXX) -c $(CXXFLAGS) $< -o $(BUILD_DIR)/$(dir $<)/$@
 
 
 #######################################
 # build the kernel
 #######################################
-OBJECTS  =  $(addprefix $(BUILD_DIR)/, $(objs-y))
+village: $(objs-y)
+	$(Q)$(MAKE) \
+	$(BUILD_DIR)/$(TARGET).elf \
+	$(BUILD_DIR)/$(TARGET).hex \
+	$(BUILD_DIR)/$(TARGET).bin
 
-$(BUILD_DIR)/%.o: %.s Makefile | $(BUILD_DIR)
-	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(AS) -c $(CFLAGS) $(INCLUDES) $< -o $@
-
-$(BUILD_DIR)/%.o: %.c Makefile | $(BUILD_DIR)
-	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(CC) -c $(CFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.c=.lst)) $< -o $@
-
-$(BUILD_DIR)/%.o: %.cpp Makefile | $(BUILD_DIR)
-	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(CPP) -c $(CFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
-
-$(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
+$(BUILD_DIR)/$(TARGET).elf: $(objs-y)
 	$(Q)echo output $@
-	$(Q)$(CPP) $(OBJECTS) $(LDFLAGS) -o $@
+	$(Q)$(CXX) $(LDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
 
-$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf
 	$(Q)echo output $@
 	$(Q)$(HEX) $< $@
 
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
+$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
 	$(Q)echo output $@
 	$(Q)$(BIN) $< $@
-
-$(BUILD_DIR):
-	$(Q)mkdir -p $@
 
 
 #######################################
 # build the modules
 #######################################
-MODULES   =  $(addprefix $(MODULES_DIR)/, $(objs-m))
+module: $(objs-m)
+	$(Q)mkdir -p $(MODULES_DIR)
+	$(Q)$(MAKE) $(addprefix $(MODULES_DIR)/, $(objs-m:.o=.mo))
 
-MCFLAGS   = $(MCU) $(C_DEFS) $(C_MACROS) $(OPT) -mword-relocations -mlong-calls -fno-common
-MCPPFLAGS = $(MCFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit 
-MLDFLAGS  = $(MCU) -r -Bsymbolic -nostartfiles -T vk.scripts/ldscript/module.ld -Wl,-Map=$(@:.mo=.map)
-
-$(MODULES_DIR)/%.o: %.s Makefile | $(MODULES_DIR)
-	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(AS) -c $(MCFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(MODULES_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
-
-$(MODULES_DIR)/%.o: %.c Makefile | $(MODULES_DIR)
-	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(CC) -c $(MCFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(MODULES_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
-
-$(MODULES_DIR)/%.o: %.cpp Makefile | $(MODULES_DIR)
-	$(Q)echo Compiling $(notdir $@)
-	$(Q)$(CPP) -c $(MCPPFLAGS) $(INCLUDES) -Wa,-a,-ad,-alms=$(MODULES_DIR)/$(notdir $(<:.cpp=.lst)) $< -o $@
-
-$(MODULES_DIR)/%.mo: $(MODULES) Makefile
-	$(Q)echo Making $(notdir $@)
-	$(Q)$(CC) $(MLDFLAGS) $< -o $(@:.mo=.elf)
+$(MODULES_DIR)/%.mo: %.o
+	$(Q)echo Generating $(notdir $@)
+	$(Q)$(CXX) $(MLDFLAGS) $< -o $(@:.mo=.elf)
 	$(Q)$(ST) -g -o $@ $(@:.mo=.elf)
-
-$(MODULES_DIR):
-	$(Q)mkdir -p $@
 
 
 #######################################
@@ -192,12 +199,8 @@ clean:
 	$(Q)rm -rf $(MODULES_DIR)
 	$(Q)rm -rf include
 
+modclean:
+	$(Q)rm -rf $(MODULES_DIR)
+
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
-
-
-#######################################
-# dependencies
-#######################################
--include $(wildcard $(BUILD_DIR)/*.d)
--include $(wildcard $(MODULES_DIR)/*.d)
