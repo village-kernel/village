@@ -12,17 +12,11 @@
 		},
 		{
 			"type": "shell",
-			"label": "Program",
-			"command": "openocd",
+			"label": "Flash",
+			"command": "make flash",
 			"args": [
-				"-f",
-				"interface/stlink-v2.cfg",
-				"-f",
-				"target/stm32f4x.cfg",
-				"-c",
-				"program vk.build/village-target.bin verify reset exit 0x08000000"
 			],
-			"detail": "Program with OpenOCD"
+			"detail": "Flash firmware"
 		}
 	]
 }
