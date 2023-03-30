@@ -38,7 +38,7 @@ private:
 	static ModuleNode* list;
 
 	//Methods
-	void Handler(Module* module);
+	static void Handler(Module* module);
 public:
 	//Methods
 	Modular();
