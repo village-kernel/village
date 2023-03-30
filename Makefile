@@ -8,8 +8,8 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_BOOTLOADER) += /vk.bootloader/bootloader/inc
-src-$(CONFIG_BOOTLOADER) += /vk.bootloader/bootloader/src
+inc-$(CONFIG_BOOTLOADER) += vk.bootloader/bootloader/inc
+src-$(CONFIG_BOOTLOADER) += vk.bootloader/bootloader/src
 
 ######################################
 # objects
