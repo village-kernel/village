@@ -8,19 +8,19 @@
 ######################################
 # paths
 ######################################
-inc-y                     += ./vk.kernel/kernel/if
-inc-y                     += ./vk.kernel/kernel/inc
+inc-y                     += vk.kernel/kernel/if
+inc-y                     += vk.kernel/kernel/inc
 
-src-y                     += ./vk.kernel
-src-y                     += ./vk.kernel/kernel/src
+src-y                     += vk.kernel
+src-y                     += vk.kernel/kernel/src
 
-inc-$(CONFIG_FATFS)       += ./vk.kernel/libraries/fatfs/inc
-inc-$(CONFIG_CONSOLE)     += ./vk.kernel/console/inc
-inc-$(CONFIG_UTILITIES)   += ./vk.kernel/utilities/inc
+inc-$(CONFIG_FATFS)       += vk.kernel/libraries/fatfs/inc
+inc-$(CONFIG_CONSOLE)     += vk.kernel/console/inc
+inc-$(CONFIG_UTILITIES)   += vk.kernel/utilities/inc
 
-src-$(CONFIG_FATFS)       += ./vk.kernel/libraries/fatfs/src
-src-$(CONFIG_CONSOLE)     += ./vk.kernel/console/src
-src-$(CONFIG_UTILITIES)   += ./vk.kernel/utilities/src
+src-$(CONFIG_FATFS)       += vk.kernel/libraries/fatfs/src
+src-$(CONFIG_CONSOLE)     += vk.kernel/console/src
+src-$(CONFIG_UTILITIES)   += vk.kernel/utilities/src
 
 
 ######################################
