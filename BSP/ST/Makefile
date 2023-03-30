@@ -8,16 +8,16 @@
 ######################################
 # paths
 ######################################
-inc-y += ./vk.hardware/BSP/ST/CMSIS/Include
+inc-y += vk.hardware/BSP/ST/CMSIS/Include
 
-inc-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Inc
-inc-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc
-inc-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc
+inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Inc
+inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc
+inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc
 
-src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/GCC
-src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src
-src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src
-src-$(CONFIG_USBSTORAGE) +=	./vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src
+src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/GCC
+src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src
+src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src
+src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src
 
 
 ######################################

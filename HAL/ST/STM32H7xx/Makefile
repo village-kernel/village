@@ -1,8 +1,8 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx) += ./vk.hardware/HAL/ST/STM32H7xx/inc
-src-$(CONFIG_STM32H7xx) += ./vk.hardware/HAL/ST/STM32H7xx/src
+inc-$(CONFIG_STM32H7xx) += vk.hardware/HAL/ST/STM32H7xx/inc
+src-$(CONFIG_STM32H7xx) += vk.hardware/HAL/ST/STM32H7xx/src
 
 
 ######################################

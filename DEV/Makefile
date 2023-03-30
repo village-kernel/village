@@ -8,9 +8,9 @@
 ######################################
 # paths
 ######################################
-inc-y += ./vk.hardware/DEV/config
-inc-y += ./vk.hardware/DEV/inc
-src-y += ./vk.hardware/DEV/src
+inc-y += vk.hardware/DEV/config
+inc-y += vk.hardware/DEV/inc
+src-y += vk.hardware/DEV/src
 
 ######################################
 # objects

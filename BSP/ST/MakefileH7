@@ -8,15 +8,15 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx) += ./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Include
-inc-$(CONFIG_STM32H7xx) += ./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Inc
-inc-$(CONFIG_STM32H7xx) += ./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Inc/Legacy
+inc-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Include
+inc-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Inc
+inc-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Inc/Legacy
 
-src-$(CONFIG_STM32H7xx) += ./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates
-src-$(CONFIG_STM32H7xx) += ./vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc
+src-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates
+src-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
-src-$(CONFIG_STM32H7xx) += ./vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Src
+src-$(CONFIG_STM32H7xx) += vk.hardware/BSP/ST/STM32H7xx_HAL_Driver/Src
 endif
 
 	
@@ -52,41 +52,17 @@ ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
 endif
 
 
-#######################################
-# CFLAGS
-#######################################
-# MUC
-MCU := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
+######################################
+# arch
+######################################
+# MCU
+MCU  := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 
-# defines of gcc
-C_DEFS := -DUSE_HAL_DRIVER -DSTM32H750xx
+# defines
+DEFS := -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8000000)'
 
-# macros of gcc
-C_MACROS := -D'HSE_VALUE=((uint32_t)8000000)'
-
-# compile gcc flags
-CFLAGS += $(MCU) $(C_DEFS) $(C_MACROS) $(OPT) -Wall -fdata-sections -ffunction-sections
-
-ifeq ($(DEBUG), 1)
-CFLAGS += -g -gdwarf-2
-endif
-
-# Generate dependency information
-CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
-
-
-#######################################
-# LDFLAGS
-#######################################
 # link script
-LDSCRIPT-$(CONFIG_STM32H750VB) := vk.hardware/BSP/ST/LinkerScripts/STM32H7xx/STM32H750VB_sram.ld
+LDSCRIPT-$(CONFIG_STM32H750VB) := -T vk.hardware/BSP/ST/LinkerScripts/STM32H7xx/STM32H750VB_flash.ld
 
-# libraries
-LIBS = -lc -lm -lnosys
-LIBDIR = 
-
-# LDFLAGS
-LDFLAGS := $(MCU) -specs=nano.specs -T$(LDSCRIPT-y) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections
-
-# Flash CFG
+# flash CFG
 FLASH_CFG := -f interface/stlink-v2.cfg -f target/stm32h7x.cfg
