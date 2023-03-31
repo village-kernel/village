@@ -32,7 +32,7 @@ private:
 		MapNode* prev;
 		MapNode* next;
 
-		MapNode(Map map):
+		MapNode(Map map = 0):
 			map(map),
 			prev(NULL),
 			next(NULL)
