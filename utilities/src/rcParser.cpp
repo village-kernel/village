@@ -127,6 +127,7 @@ void RcParser::Release()
 {
 	for (RunCmdNode* node = runcmds; NULL != node; node = node->next)
 	{
+		Memory::Free((uint32_t)node->cmd);
 		delete node;
 	}
 }
