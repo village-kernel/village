@@ -32,6 +32,10 @@ void Memory::Initialize()
 		sram_start = (uint32_t)&_ebss   + kernel_rsvd_heap;
 		sram_ended = (uint32_t)&_estack - kernel_rsvd_stack;
 
+		//Aligning sram_start and sram_ended by align byte
+		if (sram_start % align) sram_start += (align - (sram_start % align));
+		if (sram_ended % align) sram_ended -= (sram_ended % align);
+
 		//Calculate the used size of sram
 		sram_used  = kernel_rsvd_heap + kernel_rsvd_stack;
 
@@ -71,8 +75,14 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 	//Find free space
 	while (NULL != nextNode)
 	{
-		nextMapAddr = currNode->map.addr + currNode->map.size;
+		//Calculate the next map size
 		nextMapSize = size_of_node + size;
+
+		//Align memory by aligning allocation sizes
+		if (nextMapSize % align) nextMapSize += (align - (nextMapSize % align));
+
+		//Calculate the next map and end addr
+		nextMapAddr = currNode->map.addr + currNode->map.size;
 		nextEndAddr = nextMapAddr + nextMapSize;
 
 		//There is free space between the current node and the next node
@@ -85,12 +95,13 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 			sram_used += nextMapSize;
 
 			//Add map node into list
-			newNode        = (MapNode*)(nextMapAddr);
-			newNode->map   = Map(nextMapAddr, nextMapSize);
-			newNode->prev  = currNode;
-			newNode->next  = nextNode;
-			currNode->next = newNode;
-			nextNode->prev = newNode;
+			newNode           = (MapNode*)(nextMapAddr);
+			newNode->map.addr = nextMapAddr;
+			newNode->map.size = nextMapSize;
+			newNode->prev     = currNode;
+			newNode->next     = nextNode;
+			currNode->next    = newNode;
+			nextNode->prev    = newNode;
 			return newNode->map.addr + size_of_node;
 		}
 		else
@@ -113,30 +124,39 @@ uint32_t Memory::StackAlloc(uint32_t size)
 	MapNode* newNode  = new MapNode();
 	MapNode* prevNode = tail->prev;
 	MapNode* currNode = tail;
+	uint32_t prevMapSize = 0;
 	uint32_t prevMapAddr = 0;
 	uint32_t prevEndAddr = 0;
 
 	//Find free space
 	while (NULL != prevNode)
 	{
+		//Calculate the prev map size
+		prevMapSize = size;
+
+		//Align memory by aligning allocation sizes
+		if (prevMapSize % align) prevMapSize += (align - (prevMapSize % align));
+
+		//Calculate the prev map and end addr
 		prevMapAddr = currNode->map.addr - currNode->map.size;
-		prevEndAddr = prevMapAddr - size;
+		prevEndAddr = prevMapAddr - prevMapSize;
 
 		//There is free space between the current node and the prev node
 		if (prevEndAddr >= prevNode->map.addr)
 		{
 			//Output debug info
-			printf("stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, size);
+			printf("stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, prevMapSize);
 
 			//Update the used size of sram
-			sram_used += size;
+			sram_used += prevMapSize;
 
 			//Add map node into list
-			newNode->map   = Map(prevMapAddr, size);
-			newNode->prev  = prevNode;
-			newNode->next  = currNode;
-			currNode->prev = newNode;
-			prevNode->next = newNode;
+			newNode->map.addr = prevMapAddr;
+			newNode->map.size = prevMapSize;
+			newNode->prev     = prevNode;
+			newNode->next     = currNode;
+			currNode->prev    = newNode;
+			prevNode->next    = newNode;
 			return newNode->map.addr;
 		}
 		else
