@@ -11,16 +11,20 @@ config GUI
 menu "Wedget"
 	depends on GUI 
 
-config MENU
-	bool "Enable menu support"
-	default y
-
 config BUTTON
 	bool "Enable button support"
 	default y
 
+config FRAME
+	bool "Enable frame support"
+	default y
+
 config LISTBOX
 	bool "Enable list box support"
+	default y
+
+config MENU
+	bool "Enable menu support"
 	default y
 
 config MSGBOX
@@ -33,10 +37,6 @@ config TOOLBAR
 
 config WINDOW
 	bool "Enable window support"
-	default y
-
-config STACKFRAME
-	bool "Enable stack frame support"
 	default y
 
 endmenu
