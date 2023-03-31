@@ -7,8 +7,10 @@
 #ifndef __VK_TOOL_BAR_H__
 #define __VK_TOOL_BAR_H__
 
+#include "Wedget.h"
+
 ///Toolbar
-class Toolbar
+class Toolbar : public Wedget
 {
 
 };

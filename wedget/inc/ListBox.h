@@ -7,8 +7,10 @@
 #ifndef __VK_LIST_BOX_H__
 #define __VK_LIST_BOX_H__
 
+#include "Wedget.h"
+
 ///ListBox
-class ListBox
+class ListBox : public Wedget
 {
 
 };

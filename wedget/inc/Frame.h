@@ -7,8 +7,10 @@
 #ifndef __VK_FRAME_H__
 #define __VK_FRAME_H__
 
+#include "Wedget.h"
+
 ///Frame
-class Frame
+class Frame : public Wedget
 {
 
 };

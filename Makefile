@@ -22,6 +22,7 @@ src-$(CONFIG_GUI)                   += vk.gui/wedget/src
 objs-$(CONFIG_GUI)                  += GUI.o
 objs-$(CONFIG_GUI)                  += Display.o
 
+objs-$(CONFIG_GUI)                  += Wedget.o
 objs-$(CONFIG_BUTTON)               += Button.o
 objs-$(CONFIG_FRAME)                += Frame.o
 objs-$(CONFIG_LISTBOX)              += ListBox.o

@@ -7,8 +7,10 @@
 #ifndef __VK_BUTTON_H__
 #define __VK_BUTTON_H__
 
+#include "Wedget.h"
+
 ///Button
-class Button
+class Button : public Wedget
 {
 
 };

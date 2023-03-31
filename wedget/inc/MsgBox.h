@@ -7,8 +7,10 @@
 #ifndef __VK_MSG_BOX_H__
 #define __VK_MSG_BOX_H__
 
+#include "Wedget.h"
+
 ///MsgBox
-class MsgBox
+class MsgBox : public Wedget
 {
 
 };

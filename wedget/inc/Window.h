@@ -7,10 +7,13 @@
 #ifndef __VK_WINDOW_H__
 #define __VK_WINDOW_H__
 
-///Window
-class Window
-{
+#include "Wedget.h"
 
+///Window
+class Window : public Wedget
+{
+public:
+	void Initialize();
 };
 
 #endif //!__VK_WINDOW_H__

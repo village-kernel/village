@@ -7,8 +7,10 @@
 #ifndef __VK_MENU_H__
 #define __VK_MENU_H__
 
+#include "Wedget.h"
+
 ///Menu
-class Menu
+class Menu : public Wedget
 {
 
 };
