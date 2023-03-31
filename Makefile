@@ -25,3 +25,7 @@ objs-$(CONFIG_GUI)                  += Display.o
 objs-$(CONFIG_MENU)                 += Menu.o
 objs-$(CONFIG_BUTTON)               += Button.o
 objs-$(CONFIG_LISTBOX)              += ListBox.o
+objs-$(CONFIG_MSGBOX)               += MsgBox.o
+objs-$(CONFIG_TOOLBAR)              += Toolbar.o
+objs-$(CONFIG_WINDOW)               += Window.o
+objs-$(CONFIG_STACKFRAME)           += StackFrame.o

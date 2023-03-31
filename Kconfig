@@ -23,4 +23,20 @@ config LISTBOX
 	bool "Enable list box support"
 	default y
 
+config MSGBOX
+	bool "Enable message box support"
+	default y
+
+config TOOLBAR
+	bool "Enable tool bar support"
+	default y
+
+config WINDOW
+	bool "Enable window support"
+	default y
+
+config STACKFRAME
+	bool "Enable stack frame support"
+	default y
+
 endmenu
