@@ -9,6 +9,7 @@
 
 #include "Module.h"
 #include "GUI.h"
+#include "ff.h"
 
 ///Application
 class Application3 : public Module
@@ -17,9 +18,9 @@ private:
 	//Members
 	GUI gui;
 	Driver* display;
-
-	//Methods
-	void ListFiles();
+	FATFS   fs;
+	DIR     filedir;
+	FILINFO fileinfo;
 public:
 	//Methods
 	Application3();
