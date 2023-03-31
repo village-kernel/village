@@ -164,6 +164,10 @@ void Memory::Free(uint32_t memory)
 		if ((memory >= currNode->map.addr) && 
 			(memory < (currNode->map.addr + currNode->map.size)))
 		{
+			//Output debug info
+			printf("free memory: addr: 0x%08lx, size: %ld\r\n",
+			currNode->map.addr, currNode->map.size);
+
 			//Update the used size of sram
 			sram_used -= currNode->map.size;
 
