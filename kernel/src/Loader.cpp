@@ -19,7 +19,7 @@ void Loader::Loading(const char* filename)
 	for (; NULL != node; node = node->next)
 	{
 		ElfParser* elf = new ElfParser();
-		if (elf->Load(node->cmd.c_str()) == Result::_OK)
+		if (elf->Load(node->cmd) == Result::_OK)
 		{
 			elf->InitArray();
 		}

@@ -8,7 +8,6 @@
 #define __RC_PARSER_H__
 
 #include "Defines.h"
-#include <string>
 
 ///RcParser
 class RcParser
@@ -17,10 +16,10 @@ public:
 	//Structrues
 	struct RunCmdNode
 	{
-		std::string cmd;
+		const char* cmd;
 		RunCmdNode* next;
 
-		RunCmdNode(std::string cmd = NULL) :
+		RunCmdNode(const char* cmd = NULL) :
 			cmd(cmd),
 			next(NULL)
 		{}
@@ -38,7 +37,7 @@ private:
 	RunCmdNode* runcmds;
 
 	//Methods
-	void Decode(char* rcString);
+	void Decode(const char* rcString);
 public:
 	//Methods
 	RcParser(const char* filename = NULL);

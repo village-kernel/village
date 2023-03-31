@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "rcParser.h"
+#include "Memory.h"
 #include "FileStream.h"
 
 
@@ -26,7 +27,7 @@ int RcParser::Load(const char* filename)
 	{
 		int size = file.Size();
 
-		char* text = (char*)malloc(size); 
+		const char* text = (const char*)Memory::HeapAlloc(size); 
 
 		if (file.Read((uint8_t*)text, size) == size)
 		{
@@ -36,7 +37,7 @@ int RcParser::Load(const char* filename)
 		
 		file.Close();
 		
-		free(text);
+		Memory::Free((uint32_t)text);
 	}
 
 	return res;
@@ -44,11 +45,12 @@ int RcParser::Load(const char* filename)
 
 
 ///Decode the rc data
-void RcParser::Decode(char* rcString)
+void RcParser::Decode(const char* rcString)
 {
-	std::string  cmd = "";
 	RunCmdNode** nextNode = &runcmds;
-	ParserStatus status   = _RecordCmd;
+	ParserStatus status = _RecordCmd;
+	int32_t startIndex = 0;
+	int32_t recordBytes = 0;
 	
 	for (int32_t i = 0; rcString[i] != '\0'; i++)
 	{
@@ -78,7 +80,8 @@ void RcParser::Decode(char* rcString)
 			default:
 				if (_RecordCmd == status)
 				{
-					if (byte > ' ' && byte <= '~') cmd += byte;
+					if (0 == startIndex) startIndex = i;
+					if (byte > ' ' && byte <= '~') recordBytes++;
 				}
 				break;
 		}
@@ -86,13 +89,27 @@ void RcParser::Decode(char* rcString)
 		//Save cmd
 		if (_SaveCmd == status)
 		{
-			if (cmd != "")
+			char* cmd = (char*)Memory::HeapAlloc(recordBytes + 1);
+
+			if (NULL != cmd)
 			{
-				*nextNode = new RunCmdNode(cmd);
-				nextNode  = &(*nextNode)->next;
-				cmd = "";
+				//Copy cmd
+				for (int32_t j = 0; j < recordBytes; j++)
+				{
+					cmd[j] = rcString[startIndex + j];
+				}
+				cmd[recordBytes] = '\0';
+
+				//Add cmd to run cmd list
+				*nextNode  = new RunCmdNode(cmd);
+				nextNode   = &(*nextNode)->next;
+				status     = _RecordCmd;
+				startIndex = 0;
 			}
-			status = _RecordCmd;
+			else
+			{
+				break;
+			}
 		}
 	}
 }
