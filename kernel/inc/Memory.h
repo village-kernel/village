@@ -40,6 +40,7 @@ private:
 	};
 
 	//Static constants
+	const static uint32_t size_of_node = sizeof(MapNode);
 	const static uint32_t kernel_rsvd_heap  = 0x4000;  //10k
 	const static uint32_t kernel_rsvd_stack = 0x3200;  //8k
 

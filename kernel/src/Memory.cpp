@@ -42,16 +42,14 @@ void Memory::Initialize()
 	//Initialize list, align 4 bytes
 	if (NULL == head || NULL == tail)
 	{
-		uint8_t size = sizeof(MapNode);
-
 		head       = (MapNode*)(sram_start) + 0;
 		tail       = (MapNode*)(sram_start) + 1;
 
-		head->map  = Map(sram_start + size, size);
+		head->map  = Map(sram_start + size_of_node, size_of_node);
 		head->prev = NULL;
 		head->next = tail;
 
-		tail->map  = Map(sram_ended - size, size);
+		tail->map  = Map(sram_ended - size_of_node, size_of_node);
 		tail->prev = head;
 		tail->next = NULL;
 	}
@@ -73,8 +71,8 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 	//Find free space
 	while (NULL != nextNode)
 	{
-		nextMapSize = size + sizeof(MapNode);
 		nextMapAddr = currNode->map.addr + currNode->map.size;
+		nextMapSize = size_of_node + size;
 		nextEndAddr = nextMapAddr + nextMapSize;
 
 		//There is free space between the current node and the next node
@@ -93,7 +91,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 			newNode->next  = nextNode;
 			currNode->next = newNode;
 			nextNode->prev = newNode;
-			return newNode->map.addr + sizeof(MapNode);
+			return newNode->map.addr + size_of_node;
 		}
 		else
 		{
