@@ -23,16 +23,16 @@ void Kernel::Initialize()
 	isReady = false;
 
 	//Initialize memory
-	Memory::Initialize();
+	Memory::Instance().Initialize();
 
 	//Initialize thread
-	Thread::Initialize();
+	Thread::Instance().Initialize();
 
 	//Initialize device
-	Device::Initialize();
+	Device::Instance().Initialize();
 
 	//Initialize modular
-	Modular::Initialize();
+	Modular::Instance().Initialize();
 
 	isReady = true;
 }
@@ -43,8 +43,8 @@ void Kernel::UpdateParams()
 {
 	if (!isReady) return;
 
-	Device::UpdateParams();
-	Modular::UpdateParams();
+	Device::Instance().UpdateParams();
+	Modular::Instance().UpdateParams();
 }
 
 
@@ -52,10 +52,10 @@ void Kernel::UpdateParams()
 void Kernel::Execute()
 {
 	//Execute modular
-	Modular::Execute();
+	Modular::Instance().Execute();
 
 	//Start scheduler
-	Scheduler::StartScheduler();
+	Scheduler::Instance().StartScheduler();
 
 	//Should not go to here
 	while (1) {}
@@ -67,6 +67,6 @@ void Kernel::FailSafe(int arg)
 {
 	if (!isReady) return;
 
-	Device::FailSafe(arg);
-	Modular::FailSafe(arg);
+	Device::Instance().FailSafe(arg);
+	Modular::Instance().FailSafe(arg);
 }
