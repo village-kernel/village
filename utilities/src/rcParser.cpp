@@ -5,7 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "rcParser.h"
-#include "Memory.h"
 #include "FileStream.h"
 
 
@@ -27,7 +26,7 @@ int RcParser::Load(const char* filename)
 	{
 		int size = file.Size();
 
-		const char* text = (const char*)Memory::HeapAlloc(size); 
+		const char* text = new const char[size]();
 
 		if (file.Read((uint8_t*)text, size) == size)
 		{
@@ -37,7 +36,7 @@ int RcParser::Load(const char* filename)
 		
 		file.Close();
 		
-		Memory::Free((uint32_t)text);
+		delete[] text;
 	}
 
 	return res;
@@ -87,9 +86,9 @@ void RcParser::Decode(const char* rcString)
 		}
 
 		//Save cmd
-		if (_SaveCmd == status)
+		if ((_SaveCmd == status) && (0 != startIndex))
 		{
-			char* cmd = (char*)Memory::HeapAlloc(recordBytes + 1);
+			char* cmd = new char[recordBytes + 1]();
 
 			if (NULL != cmd)
 			{
@@ -127,7 +126,7 @@ void RcParser::Release()
 {
 	for (RunCmdNode* node = runcmds; NULL != node; node = node->next)
 	{
-		Memory::Free((uint32_t)node->cmd);
+		delete[] node->cmd;
 		delete node;
 	}
 }
