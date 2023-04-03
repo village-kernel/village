@@ -16,7 +16,7 @@
 #define CREATE_MODULE(mod, name)       static struct _Mod_##name{_Mod_##name(){mod;}} const _mod_##name
 
 ///Module register macro
-#define REGISTER_MODULE(mod, id, name) CREATE_MODULE(Modular::RegisterModule(mod, id), name) MODULE_SECTION
+#define REGISTER_MODULE(mod, id, name) CREATE_MODULE(Modular::Instance().RegisterModule(mod, id), name) MODULE_SECTION
 
 ///Modular
 class Modular
@@ -35,19 +35,22 @@ private:
 	};
 	
 	//Members
-	static ModuleNode* list;
+	ModuleNode* list;
 
 	//Methods
+	Modular();
 	static void Handler(Module* module);
 public:
 	//Methods
-	Modular();
-	static void Initialize();
-	static void UpdateParams();
-	static void Execute();
-	static void FailSafe(int arg);
-	static void RegisterModule(Module* module, uint32_t id = 0);
-	static void DeregisterModule(Module* module, uint32_t id = 0);
+	void Initialize();
+	void UpdateParams();
+	void Execute();
+	void FailSafe(int arg);
+	void RegisterModule(Module* module, uint32_t id = 0);
+	void DeregisterModule(Module* module, uint32_t id = 0);
+
+	//Singleton Instance
+	static Modular& Instance();
 };
 
 #endif // !__MODULAR_H__

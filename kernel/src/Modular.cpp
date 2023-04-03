@@ -8,12 +8,17 @@
 #include "Environment.h"
 
 
-///Initialize module core
-Modular::ModuleNode* Modular::list = NULL;
+///Singleton instance
+Modular& Modular::Instance()
+{
+	static Modular instance;
+	return instance;
+}
 
 
 ///Constructor
 Modular::Modular()
+	:list(NULL)
 {
 }
 
@@ -43,7 +48,7 @@ void Modular::Execute()
 {
 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
 	{
-		Thread::CreateTask((ThreadHandler)&Modular::Handler, (char*)node->module);
+		Thread::Instance().CreateTask((ThreadHandler)&Modular::Handler, (char*)node->module);
 	}
 }
 
@@ -52,7 +57,7 @@ void Modular::Execute()
 void Modular::Handler(Module* module)
 {
 	module->Execute();
-	Modular::DeregisterModule(module);
+	Modular::Instance().DeregisterModule(module);
 }
 
 
@@ -91,7 +96,7 @@ void Modular::RegisterModule(Module* module, uint32_t id)
 
 	*nextNode = new ModuleNode(module);
 }
-EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
+//EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
 
 
 ///Deregister module object
@@ -123,4 +128,4 @@ void Modular::DeregisterModule(Module* module, uint32_t id)
 		}
 	}
 }
-EXPORT_SYMBOL(Modular::DeregisterModule, _ZN7Modular16DeregisterModuleEP6Modulem);
+//EXPORT_SYMBOL(Modular::DeregisterModule, _ZN7Modular16DeregisterModuleEP6Modulem);
