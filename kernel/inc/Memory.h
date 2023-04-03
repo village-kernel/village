@@ -46,24 +46,30 @@ private:
 	const static uint32_t kernel_rsvd_stack = 0x3200;  //8k
 
 	//Sram parameters
-	static uint32_t sram_start;
-	static uint32_t sram_ended;
-	static uint32_t sram_used;
-	static uint32_t sbrk_heap;
+	uint32_t sram_start;
+	uint32_t sram_ended;
+	uint32_t sram_used;
+	uint32_t sbrk_heap;
 
 	//Members
-	static MapNode* head;
-	static MapNode* tail;
+	MapNode* head;
+	MapNode* tail;
+
+	//Methods
+	Memory();
 public:
 	//Methods
-	static void Initialize();
-	static uint32_t HeapAlloc(uint32_t size);
-	static uint32_t StackAlloc(uint32_t size);
-	static uint32_t Sbrk(int32_t incr);
-	static void Free(uint32_t memory);
+	void Initialize();
+	uint32_t HeapAlloc(uint32_t size);
+	uint32_t StackAlloc(uint32_t size);
+	uint32_t Sbrk(int32_t incr);
+	void Free(uint32_t memory);
 
 	//Get the used szie of sram
-	static uint32_t GetUsed() { return sram_used; }
+	uint32_t GetUsed() { return sram_used; }
+
+	//Singleton Instance
+	static Memory& Instance();
 };
 
 #endif //!__MEMORY_H__

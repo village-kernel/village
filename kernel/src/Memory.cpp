@@ -9,13 +9,25 @@
 #include "stdio.h"
 
 
-///Initialize static members
-uint32_t Memory::sram_start = 0;
-uint32_t Memory::sram_ended = 0;
-uint32_t Memory::sram_used = 0;
-uint32_t Memory::sbrk_heap = 0;
-Memory::MapNode* Memory::head = NULL;
-Memory::MapNode* Memory::tail = NULL;
+///Singleton instance
+Memory& Memory::Instance()
+{
+	static Memory instance;
+	return instance;
+}
+
+
+///Constructor
+Memory::Memory()
+	:sram_start(0),
+	sram_ended(0),
+	sram_used(0),
+	sbrk_heap(0),
+	head(NULL),
+	tail(NULL)
+{
+	Initialize();
+}
 
 
 ///Memory initialize sram parameters
@@ -63,8 +75,6 @@ void Memory::Initialize()
 ///Memory heap alloc
 uint32_t Memory::HeapAlloc(uint32_t size)
 {
-	Memory::Initialize();
-
 	MapNode* newNode  = NULL;
 	MapNode* currNode = head;
 	MapNode* nextNode = head->next;
@@ -113,14 +123,12 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 
 	return 0;
 }
-EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
+//EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
 
 
 ///Memory stack alloc
 uint32_t Memory::StackAlloc(uint32_t size)
 {
-	Memory::Initialize();
-
 	MapNode* newNode  = new MapNode();
 	MapNode* prevNode = tail->prev;
 	MapNode* currNode = tail;
@@ -169,14 +177,12 @@ uint32_t Memory::StackAlloc(uint32_t size)
 	delete newNode;
 	return 0;
 }
-EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
+//EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
 
 
 ///Memory free
 void Memory::Free(uint32_t memory)
 {
-	Memory::Initialize();
-
 	MapNode* currNode = head;
 
 	while (NULL != currNode)
@@ -203,14 +209,12 @@ void Memory::Free(uint32_t memory)
 		}
 	}
 }
-EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
+//EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
 
 
 ///Memory sbrk
 uint32_t Memory::Sbrk(int32_t incr)
 {
-	Memory::Initialize();
-
 	//Protect heap from growing into the reserved MSP stack
 	if (sbrk_heap + incr > sram_start)
 	{
@@ -232,37 +236,37 @@ uint32_t Memory::Sbrk(int32_t incr)
 ///Override new
 void *operator new(size_t size)
 {
-	return (void*)Memory::HeapAlloc((uint32_t)size);
+	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
-EXPORT_SYMBOL(Memory::HeapAlloc, _Znwj);
+//EXPORT_SYMBOL(Memory::HeapAlloc, _Znwj);
 
 
 ///Override new[]
 void *operator new[](size_t size)
 {
-	return (void*)Memory::HeapAlloc((uint32_t)size);
+	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
-EXPORT_SYMBOL(Memory::HeapAlloc, _Znaj);
+//EXPORT_SYMBOL(Memory::HeapAlloc, _Znaj);
 
 
 ///Override delete
 void operator delete(void *ptr)
 {
-	Memory::Free((uint32_t)ptr);
+	Memory::Instance().Free((uint32_t)ptr);
 }
-EXPORT_SYMBOL(Memory::Free, _ZdaPv);
+//EXPORT_SYMBOL(Memory::Free, _ZdaPv);
 
 
 ///Override delete[]
 void operator delete[](void *ptr)
 {
-	Memory::Free((uint32_t)ptr);
+	Memory::Instance().Free((uint32_t)ptr);
 }
-EXPORT_SYMBOL(Memory::Free, _Zdlpv);
+//EXPORT_SYMBOL(Memory::Free, _Zdlpv);
 
 
 ///Override _sbrk
 extern "C" void* _sbrk(ptrdiff_t incr)
 {
-	return (void*)Memory::Sbrk((int32_t)incr);
+	return (void*)Memory::Instance().Sbrk((int32_t)incr);
 }
