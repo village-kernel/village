@@ -35,7 +35,7 @@ int ElfParser::LoadElf(const char* filename)
 	if (FR_OK == file.Open(filename, FileStream::_Read))
 	{
 		int size = file.Size();
-		elf.map = (uint32_t)Memory::HeapAlloc(size);
+		elf.map = (uint32_t)new uint8_t[size]();
 
 		if (elf.map && (file.Read((uint8_t*)elf.map, size) == size))
 		{
@@ -348,6 +348,6 @@ int ElfParser::FiniArray()
 ///ElfParser exit
 int ElfParser::Exit()
 {
-	Memory::Free(elf.map);
+	delete[] (uint8_t*)elf.map;
 	return _OK;
 }
