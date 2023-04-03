@@ -8,8 +8,19 @@
 #include "string.h"
 
 
-///Initialize symbol list
-Environment::SymbolNode* Environment::list = NULL;
+///Singleton instance
+Environment& Environment::Instance()
+{
+	static Environment instance;
+	return instance;	
+}
+
+
+///Constructor
+Environment::Environment()
+	:list(NULL)
+{
+}
 
 
 ///Export symbol

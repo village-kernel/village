@@ -27,10 +27,10 @@
 	#define SYMBOL_CLASS(symbol, name)     new Environment::Symbol(#name, (uint32_t)&symbol)
 
 	///Export symbol marco
-	#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::ExportSymbol(SYMBOL_CLASS(symbol, name)), name) SYMBOL_SECTION
+	#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::Instance().ExportSymbol(SYMBOL_CLASS(symbol, name)), name) SYMBOL_SECTION
 
 	///Search symbol marco
-	#define SEARCH_SYMBOL(name)            Environment::SearchSymbol(name)
+	#define SEARCH_SYMBOL(name)            Environment::Instance().SearchSymbol(name)
 #endif
 
 ///Environment
@@ -62,12 +62,18 @@ private:
 	};
 
 	//Members
-	static SymbolNode* list;
+	SymbolNode* list;
+
+	//Methods
+	Environment();
 public:
 	//Methods
-	static void ExportSymbol(Symbol* symbol);
-	static void UnexportSymbol(Symbol* symbol);
-	static uint32_t SearchSymbol(const char* name);
+	void ExportSymbol(Symbol* symbol);
+	void UnexportSymbol(Symbol* symbol);
+	uint32_t SearchSymbol(const char* name);
+
+	//Singleton Instance
+	static Environment& Instance();
 };
 
 #endif //!__ENVIRONMENT_H__
