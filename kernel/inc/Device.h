@@ -16,9 +16,9 @@
 #define CREATE_DRIVER(drv, name)        static struct _DRV_##name{_DRV_##name(){drv;}} const _drv_##name
 
 ///Driver register macro
-#define REGISTER_DRIVER(drv, id, name)  CREATE_DRIVER(Device::RegisterDriver(drv, id), name) DRIVER_SECTION
+#define REGISTER_DRIVER(drv, id, name)  CREATE_DRIVER(Device::Instance().RegisterDriver(drv, id), name) DRIVER_SECTION
 
-///Device
+///Devic
 class Device
 {
 private:
@@ -35,16 +35,21 @@ private:
 	};
 
 	//Members
-	static DriverNode* list;
-public:
+	DriverNode* list;
+
 	//Methods
 	Device();
-	static void Initialize();
-	static void UpdateParams();
-	static void FailSafe(int arg);
-	static void RegisterDriver(Driver* driver, uint32_t id);
-	static void DeregisterDriver(Driver* driver, uint32_t id);
-	static Driver* GetDriver(uint32_t id);
+public:
+	//Methods
+	void Initialize();
+	void UpdateParams();
+	void FailSafe(int arg);
+	void RegisterDriver(Driver* driver, uint32_t id);
+	void DeregisterDriver(Driver* driver, uint32_t id);
+	Driver* GetDriver(uint32_t id);
+
+	//Singleton Instance
+	static Device& Instance();
 };
 
 #endif // !__DEVICE_H__

@@ -8,12 +8,17 @@
 #include "Environment.h"
 
 
-///Initialize module core
-Device::DriverNode* Device::list = NULL;
+///Singleton instance
+Device& Device::Instance()
+{
+	static Device instance;
+	return instance;
+}
 
 
 ///Constructor
 Device::Device()
+	:list(NULL)
 {
 }
 
@@ -73,7 +78,7 @@ void Device::RegisterDriver(Driver* driver, uint32_t id)
 
 	*nextNode = new DriverNode(driver);
 }
-EXPORT_SYMBOL(Device::RegisterDriver, _ZN6Device14RegisterDriverEP6Driverm);
+//EXPORT_SYMBOL(Device::RegisterDriver, _ZN6Device14RegisterDriverEP6Driverm);
 
 
 ///Deregister driver object
@@ -104,7 +109,7 @@ void Device::DeregisterDriver(Driver* driver, uint32_t id)
 		}
 	}
 }
-EXPORT_SYMBOL(Device::DeregisterDriver, _ZN6Device16DeregisterDriverEP6Driverm);
+//EXPORT_SYMBOL(Device::DeregisterDriver, _ZN6Device16DeregisterDriverEP6Driverm);
 
 
 ///Get the driver object
@@ -127,4 +132,4 @@ Driver* Device::GetDriver(uint32_t id)
 
 	return NULL;
 }
-EXPORT_SYMBOL(Device::GetDriver, _ZN6Device9GetDriverEm);
+//EXPORT_SYMBOL(Device::GetDriver, _ZN6Device9GetDriverEm);
