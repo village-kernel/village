@@ -22,15 +22,20 @@ public:
 	};
 private:
 	//Members
-	static bool isStartSchedule;
-public:
+	bool isStartSchedule;
+
 	//Methods
 	Scheduler();
-	static void StartScheduler();
-	static void Rescheduler(Access access);
+public:
+	//Methods
+	void StartScheduler();
+	void Rescheduler(Access access);
 
 	//Needed called by SVC_Handler
-	static void TaskOperator(uint32_t* SP);
+	void TaskOperator(uint32_t* SP);
+
+	//Static methods
+	static Scheduler& Instance();
 };
 
 #endif // !__SCHEDULER_H__

@@ -11,14 +11,19 @@
 #include "Environment.h"
 
 
-///Initialize static members
-int Thread::pidCounter = 0;
-Thread::TaskNode* Thread::list = NULL;
-Thread::TaskNode* Thread::curNode = NULL;
+///Singleton instance
+Thread& Thread::Instance()
+{
+	static Thread instance;
+	return instance;	
+}
 
 
 ///Constructor
 Thread::Thread()
+	:pidCounter(0),
+	list(NULL),
+	curNode(NULL)
 {
 }
 
@@ -63,7 +68,7 @@ int Thread::CreateTask(ThreadHandler handler, char* argv)
 	Task task(handler);
 
 	//Allocate stack space
-	task.stack = Memory::StackAlloc(task_stack_size);
+	task.stack = Memory::Instance().StackAlloc(task_stack_size);
 	
 	//Check whether stack allocation is successful
 	if (0 == task.stack) return -1;
@@ -79,7 +84,7 @@ int Thread::CreateTask(ThreadHandler handler, char* argv)
 
 	return AppendTask(task);
 }
-EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
+//EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 
 
 ///Create new task for cpp
@@ -89,7 +94,7 @@ int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* 
 	Task task(user, handler);
 
 	//Allocate stack space
-	task.stack = Memory::StackAlloc(task_stack_size);
+	task.stack = Memory::Instance().StackAlloc(task_stack_size);
 	
 	//Check whether stack allocation is successful
 	if (0 == task.stack) return -1;
@@ -106,7 +111,7 @@ int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* 
 
 	return AppendTask(task);
 }
-EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvPcES2_);
+//EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvPcES2_);
 
 
 ///Thread delete task
@@ -128,7 +133,7 @@ int Thread::DeleteTask(int pid)
 			else
 				(*prevNode)->next = (*currNode)->next;
 
-			Memory::Free((*currNode)->task.stack);
+			Memory::Instance().Free((*currNode)->task.stack);
 
 			return _OK;
 		}
@@ -141,7 +146,7 @@ int Thread::DeleteTask(int pid)
 
 	return _ERR;
 }
-EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
+//EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
 
 
 ///Thread wait for task
@@ -159,7 +164,7 @@ int Thread::WaitForTask(int pid)
 	}
 	return _ERR;
 }
-EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
+//EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
 
 
 ///Thread sleep
@@ -169,10 +174,10 @@ void Thread::Sleep(uint32_t ticks)
 	{
 		curNode->task.state = TaskState::Blocked;
 		curNode->task.ticks = System::GetSysClkCounts() + ticks;
-		Scheduler::Rescheduler(Scheduler::Unprivileged);
+		Scheduler::Instance().Rescheduler(Scheduler::Unprivileged);
 	}
 }
-EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
+//EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
 
 
 ///Thread Exit
@@ -182,10 +187,10 @@ void Thread::Exit()
 	{
 		curNode->task.state = TaskState::Exited;
 		DeleteTask(curNode->task.pid);
-		Scheduler::Rescheduler(Scheduler::Unprivileged);
+		Scheduler::Instance().Rescheduler(Scheduler::Unprivileged);
 	}
 }
-EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
+//EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
 
 
 ///Idle task
@@ -205,7 +210,7 @@ void Thread::TaskHandlerC(ThreadHandler handler, char* argv)
 	{
 		(handler)(argv);
 	}
-	Exit();
+	Thread::Instance().Exit();
 }
 
 
@@ -216,7 +221,7 @@ void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char
 	{
 		(user->*handler)(argv);
 	}
-	Exit();
+	Thread::Instance().Exit();
 }
 
 

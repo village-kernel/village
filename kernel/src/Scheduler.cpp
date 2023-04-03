@@ -9,12 +9,17 @@
 #include "System.h"
 
 
-///Initialize static members
-bool Scheduler::isStartSchedule = false;
+///Singleton instance
+Scheduler& Scheduler::Instance()
+{
+	static Scheduler instance;
+	return instance;
+}
 
 
 ///Constructor
 Scheduler::Scheduler()
+	:isStartSchedule(false)
 {
 }
 
@@ -43,7 +48,7 @@ void Scheduler::StartScheduler()
 	isStartSchedule = true;
 
 	//Get the handler of the first task by tracing back from PSP which is at R4 slot
-	void (*Handler)() = (void (*)())((uint32_t*)(Thread::GetTaskHandler()));
+	void (*Handler)() = (void (*)())((uint32_t*)(Thread::Instance().GetTaskHandler()));
 
 	//Execute the handler
 	Handler();
@@ -98,13 +103,13 @@ extern "C"
 	//Call thread save task psp in c function
 	void saveTaskPSP(uint32_t psp)
 	{
-		Thread::SaveTaskPSP(psp);
+		Thread::Instance().SaveTaskPSP(psp);
 	}
 
 	//Call thread get task psp in c function
 	uint32_t getTaskPSP()
 	{
-		return Thread::GetTaskPSP();
+		return Thread::Instance().GetTaskPSP();
 	}
 
 	///PendSV_Handler
@@ -123,7 +128,7 @@ extern "C"
 		__ASM("bl saveTaskPSP");
 
 		//Select next task
-		Thread::SelectNextTask();
+		Thread::Instance().SelectNextTask();
 
 		//Get its past psp value, return psp is in R0
 		__ASM("bl getTaskPSP"); 
@@ -143,13 +148,13 @@ extern "C"
 	void SysTick_Handler(void)
 	{
 		System::SysTickCounter();
-		Scheduler::Rescheduler(Scheduler::Privileged);
+		Scheduler::Instance().Rescheduler(Scheduler::Privileged);
 	}
 
 	//Call scheduler task operator in c function
 	void taskOperator(uint32_t* sp)
 	{
-		Scheduler::TaskOperator(sp);
+		Scheduler::Instance().TaskOperator(sp);
 	}
 
 	///SVC_Handler
