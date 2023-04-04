@@ -24,13 +24,15 @@ Thread::Thread()
 Thread& Thread::Instance()
 {
 	static Thread instance;
-	return instance;	
+	return instance;
 }
 EXPORT_SYMBOL(Thread::Instance, _ZN6Thread8InstanceEv);
 
 
-//Definitions thread
+//Definitions thread and export
 Thread& thread = Thread::Instance();
+static Thread* pthread = &thread;
+EXPORT_SYMBOL(pthread, thread);
 
 
 ///Thread Initialize
