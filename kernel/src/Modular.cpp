@@ -53,7 +53,7 @@ void Modular::Execute()
 {
 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
 	{
-		Thread::Instance().CreateTask((ThreadHandler)&Modular::Handler, (char*)node->module);
+		thread.CreateTask((ThreadHandler)&Modular::Handler, (char*)node->module);
 	}
 }
 
@@ -62,7 +62,7 @@ void Modular::Execute()
 void Modular::Handler(Module* module)
 {
 	module->Execute();
-	Modular::Instance().DeregisterModule(module);
+	modular.DeregisterModule(module);
 }
 
 
