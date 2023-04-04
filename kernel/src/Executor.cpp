@@ -15,10 +15,10 @@ int Executor::Run(const char* path, char* argv[])
 	if (elf.Load(path) != Result::_OK) return _ERR;
 	
 	//Create a sandboxed thread to run the app
-	int pid = Thread::Instance().CreateTaskCpp(this, (ThreadHandlerCpp)&Executor::Sandbox);
+	int pid = thread.CreateTaskCpp(this, (ThreadHandlerCpp)&Executor::Sandbox);
 
 	//Wait for task done
-	return Thread::Instance().WaitForTask(pid);
+	return thread.WaitForTask(pid);
 }
 
 
