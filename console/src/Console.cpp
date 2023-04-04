@@ -32,7 +32,7 @@ void Console::Initialize()
 	}
 
 	//Set execute thread to thread task
-	Thread::Instance().CreateTaskCpp(this, (ThreadHandlerCpp)&Console::ReceviceThread);
+	thread.CreateTaskCpp(this, (ThreadHandlerCpp)&Console::ReceviceThread);
 }
 
 
@@ -45,7 +45,7 @@ void Console::ReceviceThread()
 		{
 			ExecuteCmd(msgMgr.Read());
 		}
-		Thread::Instance().Sleep(1);
+		thread.Sleep(1);
 	}
 }
 
