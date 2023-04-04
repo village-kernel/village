@@ -39,12 +39,15 @@ int ElfParser::LoadElf(const char* filename)
 
 		if (elf.map && (file.Read((uint8_t*)elf.map, size) == size))
 		{
-			file.Close(); return _OK;
+			printf("Load %s successful\r\n", filename);
+			file.Close();
+			return _OK;
 		}
 
 		file.Close();
 	}
 
+	printf("Load %s failed\r\n", filename);
 	return _ERR;
 }
 
@@ -153,6 +156,7 @@ int ElfParser::ParserElf()
 		}
 	}
 
+	printf("Parser elf successful\r\n");
 	return _OK;
 }
 
@@ -207,6 +211,7 @@ int ElfParser::RelEntries()
 		}
 	}
 
+	printf("Relocation elf successful\r\n");
 	return _OK;
 }
 
