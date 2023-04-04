@@ -234,40 +234,54 @@ uint32_t Memory::Sbrk(int32_t incr)
 }
 
 
-///Override new
-void *operator new(size_t size)
+///Override _sbrk
+extern "C" void* _sbrk(ptrdiff_t incr)
+{
+	return (void*)Memory::Instance().Sbrk((int32_t)incr);
+}
+
+
+///Memory new method
+void* New(size_t size)
 {
 	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
-EXPORT_SYMBOL(Memory::HeapAlloc, _Znwj);
+EXPORT_SYMBOL(New, _Znwj);
+EXPORT_SYMBOL(New, _Znaj);
+
+
+///Memory delete method
+void Delete(void* ptr)
+{
+	Memory::Instance().Free((uint32_t)ptr);
+}
+EXPORT_SYMBOL(Delete, _ZdaPv);
+EXPORT_SYMBOL(Delete, _Zdlpv);
+
+
+///Override new
+void *operator new(size_t size)
+{
+	return New(size);
+}
 
 
 ///Override new[]
 void *operator new[](size_t size)
 {
-	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
+	return New(size);
 }
-EXPORT_SYMBOL(Memory::HeapAlloc, _Znaj);
 
 
 ///Override delete
 void operator delete(void *ptr)
 {
-	Memory::Instance().Free((uint32_t)ptr);
+	Delete(ptr);
 }
-EXPORT_SYMBOL(Memory::Free, _ZdaPv);
 
 
 ///Override delete[]
 void operator delete[](void *ptr)
 {
-	Memory::Instance().Free((uint32_t)ptr);
-}
-EXPORT_SYMBOL(Memory::Free, _Zdlpv);
-
-
-///Override _sbrk
-extern "C" void* _sbrk(ptrdiff_t incr)
-{
-	return (void*)Memory::Instance().Sbrk((int32_t)incr);
+	Delete(ptr);
 }
