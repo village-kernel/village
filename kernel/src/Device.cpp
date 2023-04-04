@@ -26,6 +26,8 @@ EXPORT_SYMBOL(Device::Instance, _ZN6Device8InstanceEv);
 
 //Definitions device
 Device& device = Device::Instance();
+static Device* pdevice = &device;
+EXPORT_SYMBOL(pdevice, device);
 
 
 ///Execute device object->Initialize
