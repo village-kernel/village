@@ -38,4 +38,7 @@ public:
 	static Scheduler& Instance();
 };
 
+///Declarations scheduler reference
+extern Scheduler& scheduler;
+
 #endif // !__SCHEDULER_H__

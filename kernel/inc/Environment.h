@@ -71,4 +71,7 @@ public:
 	static Environment& Instance();
 };
 
+///Declarations environment reference
+extern Environment& environment;
+
 #endif //!__ENVIRONMENT_H__

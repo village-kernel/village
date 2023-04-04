@@ -49,7 +49,7 @@ DSTATUS disk_initialize (
 	BYTE pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	storage[pdrv] = Device::Instance().GetDriver(DriverID::_storage + pdrv);
+	storage[pdrv] = device.GetDriver(DriverID::_storage + pdrv);
 	return RES_OK;
 }
 

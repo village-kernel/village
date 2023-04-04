@@ -24,7 +24,7 @@ CmdMsgMgr::CmdMsgMgr()
 ///CmdMsgMgr initialize
 void CmdMsgMgr::Initialize()
 {
-	transceiver = Device::Instance().GetDriver(DriverID::_serial);
+	transceiver = device.GetDriver(DriverID::_serial);
 }
 
 

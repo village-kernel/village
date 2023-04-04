@@ -8,6 +8,13 @@
 #include "Environment.h"
 
 
+///Constructor
+Modular::Modular()
+	:list(NULL)
+{
+}
+
+
 ///Singleton instance
 Modular& Modular::Instance()
 {
@@ -17,11 +24,8 @@ Modular& Modular::Instance()
 EXPORT_SYMBOL(Modular::Instance, _ZN7Modular8InstanceEv);
 
 
-///Constructor
-Modular::Modular()
-	:list(NULL)
-{
-}
+//Definitions modular
+Modular& modular = Modular::Instance();
 
 
 ///Execute module object->Initialize

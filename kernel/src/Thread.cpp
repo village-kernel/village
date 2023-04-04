@@ -11,6 +11,15 @@
 #include "Environment.h"
 
 
+///Constructor
+Thread::Thread()
+	:pidCounter(0),
+	list(NULL),
+	curNode(NULL)
+{
+}
+
+
 ///Singleton instance
 Thread& Thread::Instance()
 {
@@ -20,13 +29,8 @@ Thread& Thread::Instance()
 EXPORT_SYMBOL(Thread::Instance, _ZN6Thread8InstanceEv);
 
 
-///Constructor
-Thread::Thread()
-	:pidCounter(0),
-	list(NULL),
-	curNode(NULL)
-{
-}
+//Definitions thread
+Thread& thread = Thread::Instance();
 
 
 ///Thread Initialize
@@ -69,7 +73,7 @@ int Thread::CreateTask(ThreadHandler handler, char* argv)
 	Task task(handler);
 
 	//Allocate stack space
-	task.stack = Memory::Instance().StackAlloc(task_stack_size);
+	task.stack = memory.StackAlloc(task_stack_size);
 	
 	//Check whether stack allocation is successful
 	if (0 == task.stack) return -1;
@@ -95,7 +99,7 @@ int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* 
 	Task task(user, handler);
 
 	//Allocate stack space
-	task.stack = Memory::Instance().StackAlloc(task_stack_size);
+	task.stack = memory.StackAlloc(task_stack_size);
 	
 	//Check whether stack allocation is successful
 	if (0 == task.stack) return -1;
@@ -134,7 +138,7 @@ int Thread::DeleteTask(int pid)
 			else
 				(*prevNode)->next = (*currNode)->next;
 
-			Memory::Instance().Free((*currNode)->task.stack);
+			memory.Free((*currNode)->task.stack);
 
 			return _OK;
 		}
@@ -175,7 +179,7 @@ void Thread::Sleep(uint32_t ticks)
 	{
 		curNode->task.state = TaskState::Blocked;
 		curNode->task.ticks = System::GetSysClkCounts() + ticks;
-		Scheduler::Instance().Rescheduler(Scheduler::Unprivileged);
+		scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
 EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
@@ -188,7 +192,7 @@ void Thread::Exit()
 	{
 		curNode->task.state = TaskState::Exited;
 		DeleteTask(curNode->task.pid);
-		Scheduler::Instance().Rescheduler(Scheduler::Unprivileged);
+		scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
 EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
@@ -211,7 +215,7 @@ void Thread::TaskHandlerC(ThreadHandler handler, char* argv)
 	{
 		(handler)(argv);
 	}
-	Thread::Instance().Exit();
+	thread.Exit();
 }
 
 
@@ -222,7 +226,7 @@ void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char
 	{
 		(user->*handler)(argv);
 	}
-	Thread::Instance().Exit();
+	thread.Exit();
 }
 
 

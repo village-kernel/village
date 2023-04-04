@@ -53,4 +53,7 @@ public:
 	static Modular& Instance();
 };
 
+///Declarations modular reference
+extern Modular& modular;
+
 #endif // !__MODULAR_H__

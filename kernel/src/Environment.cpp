@@ -8,6 +8,13 @@
 #include "string.h"
 
 
+///Constructor
+Environment::Environment()
+	:list(NULL)
+{
+}
+
+
 ///Singleton instance
 Environment& Environment::Instance()
 {
@@ -16,11 +23,8 @@ Environment& Environment::Instance()
 }
 
 
-///Constructor
-Environment::Environment()
-	:list(NULL)
-{
-}
+//Definitions environment
+Environment& environment = Environment::Instance();
 
 
 ///Export symbol

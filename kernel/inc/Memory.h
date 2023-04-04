@@ -72,4 +72,7 @@ public:
 	static Memory& Instance();
 };
 
+///Declarations memory reference
+extern Memory& memory;
+
 #endif //!__MEMORY_H__

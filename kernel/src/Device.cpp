@@ -8,6 +8,13 @@
 #include "Environment.h"
 
 
+///Constructor
+Device::Device()
+	:list(NULL)
+{
+}
+
+
 ///Singleton instance
 Device& Device::Instance()
 {
@@ -17,11 +24,8 @@ Device& Device::Instance()
 EXPORT_SYMBOL(Device::Instance, _ZN6Device8InstanceEv);
 
 
-///Constructor
-Device::Device()
-	:list(NULL)
-{
-}
+//Definitions device
+Device& device = Device::Instance();
 
 
 ///Execute device object->Initialize

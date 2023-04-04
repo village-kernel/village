@@ -163,4 +163,7 @@ public:
 	static Thread& Instance();
 };
 
+///Declarations thread reference
+extern Thread& thread;
+
 #endif // !__THREAD_H__

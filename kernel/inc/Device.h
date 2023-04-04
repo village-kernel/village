@@ -52,4 +52,7 @@ public:
 	static Device& Instance();
 };
 
+///Declarations device reference
+extern Device& device;
+
 #endif // !__DEVICE_H__

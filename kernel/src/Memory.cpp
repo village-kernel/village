@@ -9,15 +9,6 @@
 #include "stdio.h"
 
 
-///Singleton instance
-Memory& Memory::Instance()
-{
-	static Memory instance;
-	return instance;
-}
-EXPORT_SYMBOL(Memory::Instance, _ZN6Memory8InstanceEv);
-
-
 ///Constructor
 Memory::Memory()
 	:sram_start(0),
@@ -29,6 +20,19 @@ Memory::Memory()
 {
 	Initialize();
 }
+
+
+///Singleton instance
+Memory& Memory::Instance()
+{
+	static Memory instance;
+	return instance;
+}
+EXPORT_SYMBOL(Memory::Instance, _ZN6Memory8InstanceEv);
+
+
+//Definitions memory
+Memory& memory = Memory::Instance();
 
 
 ///Memory initialize sram parameters
