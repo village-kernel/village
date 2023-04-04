@@ -15,6 +15,7 @@ Memory& Memory::Instance()
 	static Memory instance;
 	return instance;
 }
+EXPORT_SYMBOL(Memory::Instance, _ZN6Memory8InstanceEv);
 
 
 ///Constructor
@@ -123,7 +124,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 
 	return 0;
 }
-//EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
+EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
 
 
 ///Memory stack alloc
@@ -177,7 +178,7 @@ uint32_t Memory::StackAlloc(uint32_t size)
 	delete newNode;
 	return 0;
 }
-//EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
+EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
 
 
 ///Memory free
@@ -209,7 +210,7 @@ void Memory::Free(uint32_t memory)
 		}
 	}
 }
-//EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
+EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
 
 
 ///Memory sbrk
@@ -238,7 +239,7 @@ void *operator new(size_t size)
 {
 	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
-//EXPORT_SYMBOL(Memory::HeapAlloc, _Znwj);
+EXPORT_SYMBOL(Memory::HeapAlloc, _Znwj);
 
 
 ///Override new[]
@@ -246,7 +247,7 @@ void *operator new[](size_t size)
 {
 	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
-//EXPORT_SYMBOL(Memory::HeapAlloc, _Znaj);
+EXPORT_SYMBOL(Memory::HeapAlloc, _Znaj);
 
 
 ///Override delete
@@ -254,7 +255,7 @@ void operator delete(void *ptr)
 {
 	Memory::Instance().Free((uint32_t)ptr);
 }
-//EXPORT_SYMBOL(Memory::Free, _ZdaPv);
+EXPORT_SYMBOL(Memory::Free, _ZdaPv);
 
 
 ///Override delete[]
@@ -262,7 +263,7 @@ void operator delete[](void *ptr)
 {
 	Memory::Instance().Free((uint32_t)ptr);
 }
-//EXPORT_SYMBOL(Memory::Free, _Zdlpv);
+EXPORT_SYMBOL(Memory::Free, _Zdlpv);
 
 
 ///Override _sbrk

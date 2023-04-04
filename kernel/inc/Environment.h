@@ -7,8 +7,7 @@
 #ifndef __ENVIRONMENT_H__
 #define __ENVIRONMENT_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Templates.h"
 
 #ifdef KBUILD_NO_ENVIRONNEMNT
 	///Export symbol marco
@@ -23,11 +22,8 @@
 	///Symbol create macro
 	#define CREATE_SYMBOL(symbol, name)    static struct _Sym_##name{_Sym_##name(){symbol;}} const _sym_##name
 
-	///Symbol class macro
-	#define SYMBOL_CLASS(symbol, name)     new Environment::Symbol(#name, (uint32_t)&symbol)
-
 	///Export symbol marco
-	#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::Instance().ExportSymbol(SYMBOL_CLASS(symbol, name)), name) SYMBOL_SECTION
+	#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::Instance().ExportSymbol(union_cast<uint32_t>(&symbol), #name), name) SYMBOL_SECTION
 
 	///Search symbol marco
 	#define SEARCH_SYMBOL(name)            Environment::Instance().SearchSymbol(name)
@@ -36,7 +32,7 @@
 ///Environment
 class Environment
 {
-public:
+private:
 	//Structures
 	struct Symbol
 	{
@@ -48,8 +44,7 @@ public:
 			addr(addr)
 		{}
 	};
-private:
-	//Structures
+
 	struct SymbolNode
 	{
 		Symbol*     symbol;
@@ -68,8 +63,8 @@ private:
 	Environment();
 public:
 	//Methods
-	void ExportSymbol(Symbol* symbol);
-	void UnexportSymbol(Symbol* symbol);
+	void ExportSymbol(uint32_t symAddr, const char* name);
+	void UnexportSymbol(uint32_t symAddr, const char* name);
 	uint32_t SearchSymbol(const char* name);
 
 	//Singleton Instance

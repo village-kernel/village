@@ -24,9 +24,9 @@ Environment::Environment()
 
 
 ///Export symbol
-void Environment::ExportSymbol(Symbol* symbol)
+void Environment::ExportSymbol(uint32_t symAddr, const char* name)
 {
-	if (NULL == symbol) return;
+	if (0 == symAddr) return;
 
 	SymbolNode** nextNode = &list;
 
@@ -35,19 +35,20 @@ void Environment::ExportSymbol(Symbol* symbol)
 		nextNode = &(*nextNode)->next;
 	}
 
-	*nextNode = new SymbolNode(symbol);
+	*nextNode = new SymbolNode(new Symbol(name, symAddr));
 }
 
 
 ///Unexport symbol
-void Environment::UnexportSymbol(Symbol* symbol)
+void Environment::UnexportSymbol(uint32_t symAddr, const char* name)
 {
 	SymbolNode** prevNode = &list;
 	SymbolNode** currNode = &list;
 
 	while (NULL != *currNode)
 	{
-		if (symbol == (*currNode)->symbol)
+		if ((symAddr == (*currNode)->symbol->addr) &&
+			(0 == strcmp(name, (*currNode)->symbol->name)))
 		{
 			delete *currNode;
 

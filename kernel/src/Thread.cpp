@@ -17,6 +17,7 @@ Thread& Thread::Instance()
 	static Thread instance;
 	return instance;	
 }
+EXPORT_SYMBOL(Thread::Instance, _ZN6Thread8InstanceEv);
 
 
 ///Constructor
@@ -84,7 +85,7 @@ int Thread::CreateTask(ThreadHandler handler, char* argv)
 
 	return AppendTask(task);
 }
-//EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
+EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 
 
 ///Create new task for cpp
@@ -111,7 +112,7 @@ int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* 
 
 	return AppendTask(task);
 }
-//EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvPcES2_);
+EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvPcES2_);
 
 
 ///Thread delete task
@@ -146,7 +147,7 @@ int Thread::DeleteTask(int pid)
 
 	return _ERR;
 }
-//EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
+EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
 
 
 ///Thread wait for task
@@ -164,7 +165,7 @@ int Thread::WaitForTask(int pid)
 	}
 	return _ERR;
 }
-//EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
+EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
 
 
 ///Thread sleep
@@ -177,7 +178,7 @@ void Thread::Sleep(uint32_t ticks)
 		Scheduler::Instance().Rescheduler(Scheduler::Unprivileged);
 	}
 }
-//EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
+EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
 
 
 ///Thread Exit
@@ -190,7 +191,7 @@ void Thread::Exit()
 		Scheduler::Instance().Rescheduler(Scheduler::Unprivileged);
 	}
 }
-//EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
+EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
 
 
 ///Idle task
