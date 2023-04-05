@@ -14,7 +14,7 @@
 #define CREATE_CMD(cmd, name)    static struct _CMD_##name{_CMD_##name(){cmd;}} const _cmd_##name;
 
 ///Command register macro
-#define REGISTER_CMD(cmd, name)  CREATE_CMD(Console::RegisterCmd(cmd, (uint8_t*)#name), name)
+#define REGISTER_CMD(cmd, name)  CREATE_CMD(Console::Instance().RegisterCmd(cmd, (uint8_t*)#name), name)
 
 
 ///Console
@@ -34,22 +34,21 @@ private:
 	};
 
 	//Members
-	static CmdNode* list;
-
-	//Members
+	CmdNode*  list;
 	CmdMsgMgr msgMgr;
 
 	//Methods
-	void ReceviceThread();
+	Console();
 	void ExecuteCmd(CmdMsg msg);
 public:
 	//Methods
-	Console();
 	void Initialize();
+	void Execute();
+	void RegisterCmd(Cmd* cmd, uint8_t* name);
+	void DeregisterCmd(Cmd* cmd, uint8_t* name);
 
-	//static members
-	static void RegisterCmd(Cmd* cmd, uint8_t* name);
-	static void DeregisterCmd(Cmd* cmd, uint8_t* name);
+	//Singleton Instance
+	static Console& Instance();
 };
 
 #endif // !__CONSOLE_H__

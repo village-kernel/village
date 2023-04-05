@@ -9,13 +9,18 @@
 #include "string.h"
 
 
-///Initialize cmd core
-Console::CmdNode* Console::list = NULL;
-
-
 ///Constructor
 Console::Console()
+	:list(NULL)
 {
+}
+
+
+///Singleton instance
+Console& Console::Instance()
+{
+	static Console instance;
+	return instance;
 }
 
 
@@ -30,14 +35,11 @@ void Console::Initialize()
 	{
 		node->cmd->Initialize(&msgMgr);
 	}
-
-	//Set execute thread to thread task
-	thread.CreateTaskCpp(this, (ThreadHandlerCpp)&Console::ReceviceThread);
 }
 
 
 ///Recevice message thread
-void Console::ReceviceThread()
+void Console::Execute()
 {
 	while (1)
 	{
@@ -125,4 +127,4 @@ void Console::DeregisterCmd(Cmd* cmd, uint8_t* name)
 
 
 ///Register module
-REGISTER_MODULE(new Console(), ModuleID::_console, console);
+REGISTER_MODULE(&Console::Instance(), ModuleID::_console, console);
