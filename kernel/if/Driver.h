@@ -8,10 +8,10 @@
 #define __DRIVER_INTERFACE_H__
 
 #include "Defines.h"
-#include "Thread.h"
+#include "Templates.h"
 
 ///Driver
-class Driver : public ThreadEndpoint
+class Driver : public Class
 {
 private:
 	//Members

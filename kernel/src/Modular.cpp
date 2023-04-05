@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Modular.h"
+#include "Thread.h"
 #include "Environment.h"
 
 
@@ -53,7 +54,7 @@ void Modular::Execute()
 {
 	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
 	{
-		thread.CreateTask((ThreadHandler)&Modular::Handler, (char*)node->module);
+		thread.CreateTask((Function)&Modular::Handler, (char*)node->module);
 	}
 }
 

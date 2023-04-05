@@ -39,7 +39,7 @@ EXPORT_SYMBOL(pthread, thread);
 void Thread::Initialize()
 {
 	//Frist task should be idle task and the pid is 0
-	CreateTask((ThreadHandler)&Thread::IdleTask);
+	CreateTask((Function)&Thread::IdleTask);
 
 	//Set current node
 	curNode = list;
@@ -69,10 +69,10 @@ int Thread::AppendTask(Task task)
 
 
 ///Create new task
-int Thread::CreateTask(ThreadHandler handler, char* argv)
+int Thread::CreateTask(Function function, char* argv)
 {
 	//Create a new task
-	Task task(handler);
+	Task task(function);
 
 	//Allocate stack space
 	task.stack = memory.StackAlloc(task_stack_size);
@@ -84,8 +84,8 @@ int Thread::CreateTask(ThreadHandler handler, char* argv)
 	task.psp = task.stack - psp_frame_size;
 	*(StackFrame*)task.psp = StackFrame
 	(
-		(uint32_t)&TaskHandlerC,
-		(uint32_t)handler,
+		(uint32_t)&FuncHandler,
+		(uint32_t)function,
 		(uint32_t)argv
 	);
 
@@ -95,10 +95,10 @@ EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 
 
 ///Create new task for cpp
-int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv)
+int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 {
 	//Create a new task
-	Task task(user, handler);
+	Task task(user, method);
 
 	//Allocate stack space
 	task.stack = memory.StackAlloc(task_stack_size);
@@ -110,15 +110,15 @@ int Thread::CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* 
 	task.psp = task.stack - psp_frame_size;
 	*(StackFrame*)task.psp = StackFrame
 	(
-		(uint32_t)&TaskHandlerCpp,
+		(uint32_t)&MethodHandler,
 		(uint32_t)user,
-		*(uint32_t*)&handler,
+		*(uint32_t*)&method,
 		(uint32_t)argv
 	);
 
 	return AppendTask(task);
 }
-EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP14ThreadEndpointMS0_FvPcES2_);
+EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP5ClassMS0_FvPcES2_);
 
 
 ///Thread delete task
@@ -210,23 +210,23 @@ void Thread::IdleTask()
 }
 
 
-///Thread task handler C
-void Thread::TaskHandlerC(ThreadHandler handler, char* argv)
+///Thread task function handler 
+void Thread::FuncHandler(Function function, char* argv)
 {
-	if (NULL != handler)
+	if (NULL != function)
 	{
-		(handler)(argv);
+		(function)(argv);
 	}
 	thread.Exit();
 }
 
 
-///Thread task handler Cpp
-void Thread::TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv)
+///Thread task method handler 
+void Thread::MethodHandler(Class *user, Method method, char* argv)
 {
-	if (NULL != user && NULL != handler)
+	if (NULL != user && NULL != method)
 	{
-		(user->*handler)(argv);
+		(user->*method)(argv);
 	}
 	thread.Exit();
 }

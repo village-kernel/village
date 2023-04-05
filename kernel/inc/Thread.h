@@ -8,15 +8,10 @@
 #define __THREAD_H__
 
 #include "Defines.h"
-
-///Thread end point
-class ThreadEndpoint {};
-typedef void (ThreadEndpoint::*ThreadHandlerCpp)(char*);
-typedef void (*ThreadHandler)(char*);
-
+#include "Templates.h"
 
 ///Thread
-class Thread : public ThreadEndpoint
+class Thread : public Class
 {
 public:
 	//Enumerations
@@ -30,18 +25,18 @@ private:
 	//Structures
 	struct Task 
 	{
-		ThreadEndpoint*  user;
-		ThreadHandlerCpp handlerCpp;
-		ThreadHandler    handler;
+		Class*           user;
+		Method           method;
+		Function         handler;
 		TaskState        state;
 		uint32_t         ticks;
 		uint32_t         stack;
 		uint32_t         psp;
 		int              pid;
 
-		Task(ThreadHandler handler = NULL)
+		Task(Function handler = NULL)
 			:user(NULL),
-			handlerCpp(NULL),
+			method(NULL),
 			handler(handler),
 			state(TaskState::Running),
 			ticks(0),
@@ -50,9 +45,9 @@ private:
 			pid(0)
 		{}
 
-		Task(ThreadEndpoint *user = NULL, ThreadHandlerCpp handler = NULL)
+		Task(Class *user = NULL, Method method = NULL)
 			:user(user),
-			handlerCpp(handler),
+			method(method),
 			handler(NULL),
 			state(TaskState::Running),
 			ticks(0),
@@ -141,13 +136,13 @@ private:
 	Thread();
 	int AppendTask(Task task);
 	static void IdleTask();
-	static void TaskHandlerC(ThreadHandler handler, char* argv = NULL);
-	static void TaskHandlerCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv = NULL);
+	static void FuncHandler(Function function, char* argv = NULL);
+	static void MethodHandler(Class *user, Method method, char* argv = NULL);
 public:
 	///Methods
 	void Initialize();
-	int CreateTask(ThreadHandler handler, char* argv = NULL);
-	int CreateTaskCpp(ThreadEndpoint *user, ThreadHandlerCpp handler, char* argv = NULL);
+	int CreateTask(Function function, char* argv = NULL);
+	int CreateTaskCpp(Class *user, Method method, char* argv = NULL);
 	int DeleteTask(int pid);
 	int WaitForTask(int pid);
 	void Sleep(uint32_t ticks);

@@ -37,4 +37,10 @@ dst_type union_cast(src_type src)
 }
 
 
+///Class end point
+class Class {};
+typedef void (Class::*Method)(char*);
+typedef void (*Function)(char*);
+
+
 #endif //!__TEMPLATES_H__
