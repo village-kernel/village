@@ -39,7 +39,7 @@ int ElfParser::LoadElf(const char* filename)
 
 		if (elf.map && (file.Read((uint8_t*)elf.map, size) == size))
 		{
-			printf("Load %s successful\r\n", filename);
+			printk("Load %s successful\r\n", filename);
 			file.Close();
 			return _OK;
 		}
@@ -47,7 +47,7 @@ int ElfParser::LoadElf(const char* filename)
 		file.Close();
 	}
 
-	printf("Load %s failed\r\n", filename);
+	printk("Load %s failed\r\n", filename);
 	return _ERR;
 }
 
@@ -156,7 +156,7 @@ int ElfParser::ParserElf()
 		}
 	}
 
-	printf("Parser elf successful\r\n");
+	printk("Parser elf successful\r\n");
 	return _OK;
 }
 
@@ -205,13 +205,13 @@ int ElfParser::RelEntries()
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
-				printf("rel name %s, relAddr 0x%lx, symAddr 0x%lx\r\n", 
+				printk("rel name %s, relAddr 0x%lx, symAddr 0x%lx\r\n", 
 					GetSymbolName(relEntry.symbol), relAddr, symAddr);
 			}
 		}
 	}
 
-	printf("Relocation elf successful\r\n");
+	printk("Relocation elf successful\r\n");
 	return _OK;
 }
 

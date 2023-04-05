@@ -6,7 +6,6 @@
 //###########################################################################
 #include "Memory.h"
 #include "Environment.h"
-#include "stdio.h"
 
 
 ///Constructor
@@ -104,7 +103,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 		if (nextEndAddr <= nextNode->map.addr)
 		{
 			//Output debug info
-			printf("heap alloc: addr = 0x%08lx, size = %ld\r\n", nextMapAddr, nextMapSize);
+			printk("heap alloc: addr = 0x%08lx, size = %ld\r\n", nextMapAddr, nextMapSize);
 
 			//Update the used size of sram
 			sram_used += nextMapSize;
@@ -158,7 +157,7 @@ uint32_t Memory::StackAlloc(uint32_t size)
 		if (prevEndAddr >= prevNode->map.addr)
 		{
 			//Output debug info
-			printf("stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, prevMapSize);
+			printk("stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, prevMapSize);
 
 			//Update the used size of sram
 			sram_used += prevMapSize;
@@ -196,7 +195,7 @@ void Memory::Free(uint32_t memory)
 			(memory < (currNode->map.addr + currNode->map.size)))
 		{
 			//Output debug info
-			printf("free memory: addr: 0x%08lx, size: %ld\r\n",
+			printk("free memory: addr: 0x%08lx, size: %ld\r\n",
 			currNode->map.addr, currNode->map.size);
 
 			//Update the used size of sram
@@ -223,7 +222,7 @@ uint32_t Memory::Sbrk(int32_t incr)
 	//Protect heap from growing into the reserved MSP stack
 	if (sbrk_heap + incr > sram_start)
 	{
-		printf("error: out of memory.\r\n");
+		printk("error: out of memory.\r\n");
 		//halt on here
 		while(1) {}
 	}

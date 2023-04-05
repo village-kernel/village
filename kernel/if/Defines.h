@@ -9,6 +9,7 @@
 
 #include "stdint.h"
 #include "stddef.h"
+#include "Debug.h"
 
 
 ///Execute result defines

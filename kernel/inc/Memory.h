@@ -7,8 +7,7 @@
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Defines.h"
 
 ///Memory
 class Memory
