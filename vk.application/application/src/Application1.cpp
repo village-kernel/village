@@ -27,9 +27,9 @@ void Application1::Execute()
 	while (1)
 	{
 		led.Set();
-		Thread::Sleep(500);
+		thread.Sleep(500);
 		led.Clear();
-		Thread::Sleep(500);
+		thread.Sleep(500);
 	}
 }
 

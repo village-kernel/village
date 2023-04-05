@@ -28,9 +28,9 @@ void Application4::Execute()
 	while (1)
 	{
 		GPIOE->BSRR |= GPIO_BSRR_BS5;
-		Thread::Sleep(500);
+		thread.Sleep(500);
 		GPIOE->BSRR |= GPIO_BSRR_BR5;
-		Thread::Sleep(500);
+		thread.Sleep(500);
 	}
 }
 

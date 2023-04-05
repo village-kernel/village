@@ -17,7 +17,7 @@ Application3::Application3()
 ///Initialize
 void Application3::Initialize()
 {
-	display = Device::GetDriver(DriverID::_display);
+	display = device.GetDriver(DriverID::_display);
 
 	gui.Initialize((ILI9488*)display);	
 	gui.disp.ShowString((uint8_t*)"hello vk.kernel\r\n\r\n");
