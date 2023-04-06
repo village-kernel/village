@@ -44,3 +44,9 @@ config HAL_FSMC
 	select HAL_GPIO
 	bool "Enable FSMC HAL class"
 	default n
+
+config HAL_EXTI
+	select HAL_GPIO
+	select HAL_NVIC
+	bool "Enable EXTI HAL class"
+	default n

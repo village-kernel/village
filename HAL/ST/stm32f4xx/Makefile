@@ -18,3 +18,4 @@ objs-$(CONFIG_HAL_SPI)    += Spi.o
 objs-$(CONFIG_HAL_I2C)    += I2c.o
 objs-$(CONFIG_HAL_DMA)    += Dma.o
 objs-$(CONFIG_HAL_FSMC)   += Fsmc.o
+objs-$(CONFIG_HAL_EXTI)   += Exti.o
