@@ -46,6 +46,13 @@ void Thread::Initialize()
 }
 
 
+///Thread execute
+void Thread::Execute()
+{
+	FuncHandler((Function)&Thread::IdleTask);
+}
+
+
 ///Thread append a task to the list
 int Thread::AppendTask(Task task)
 {
@@ -71,11 +78,8 @@ int Thread::AppendTask(Task task)
 ///Create new task
 int Thread::CreateTask(Function function, char* argv)
 {
-	//Create a new task
-	Task task(function);
-
-	//Allocate stack space
-	task.stack = memory.StackAlloc(task_stack_size);
+	//Create a new task and allocate stack space
+	Task task(memory.StackAlloc(task_stack_size));
 	
 	//Check whether stack allocation is successful
 	if (0 == task.stack) return -1;
@@ -97,11 +101,8 @@ EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 ///Create new task for cpp
 int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 {
-	//Create a new task
-	Task task(user, method);
-
-	//Allocate stack space
-	task.stack = memory.StackAlloc(task_stack_size);
+	//Create a new task and allocate stack space
+	Task task(memory.StackAlloc(task_stack_size));
 	
 	//Check whether stack allocation is successful
 	if (0 == task.stack) return -1;
@@ -179,7 +180,7 @@ void Thread::Sleep(uint32_t ticks)
 {
 	if(curNode->task.pid > 0)
 	{
-		curNode->task.state = TaskState::Blocked;
+		curNode->task.state = TaskState::Suspend;
 		curNode->task.ticks = System::GetSysClkCounts() + ticks;
 		scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
@@ -246,40 +247,24 @@ uint32_t Thread::GetTaskPSP()
 }
 
 
-///Get currenttask handler
-uint32_t Thread::GetTaskHandler()
-{
-	return (uint32_t)curNode->task.handler;
-}
-
-
-///Select next task
+///Select next task, round-Robin scheduler
 void Thread::SelectNextTask()
 {
-	//Check all task state
-	for (volatile TaskNode* node = list; NULL != node; node = node->next)
-	{
-		if (TaskState::Blocked == node->task.state)
-		{
-			if(System::GetSysClkCounts() >= node->task.ticks)
-			{
-				node->task.state = TaskState::Running;
-			}
-		}
-	}
-
-	//Round-Robin scheduler
 	while (1)
 	{
-		if (NULL != curNode->next)
+		//Set next task as current task
+		curNode = (NULL != curNode->next) ? curNode->next : list;
+
+		//Check current task state
+		if (TaskState::Suspend == curNode->task.state)
 		{
-			curNode = curNode->next;
-		}
-		else
-		{
-			curNode = list;
+			if(System::GetSysClkCounts() >= curNode->task.ticks)
+			{
+				curNode->task.state = TaskState::Running;
+			}
 		}
 
-		if(curNode->task.state == TaskState::Running) break;
+		//Break when task state is running
+		if (TaskState::Running == curNode->task.state) break;
 	}
 }

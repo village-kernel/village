@@ -51,11 +51,8 @@ void Scheduler::StartScheduler()
 	//Set start schedule flag
 	isStartSchedule = true;
 
-	//Get the handler of the first task by tracing back from PSP which is at R4 slot
-	void (*Handler)() = (void (*)())((uint32_t*)(thread.GetTaskHandler()));
-
-	//Execute the handler
-	Handler();
+	//Execute thread
+	thread.Execute();
 }
 
 
@@ -164,15 +161,15 @@ extern "C"
 	///SVC_Handler
 	__attribute__ ((naked)) void SVC_Handler(void)
 	{
-		__ASM("tst lr, 4"); // check LR to know which stack is used
-		__ASM("ite eq"); // 2 next instructions are conditional
-		__ASM("mrseq r0, msp"); // save MSP if bit 2 is 0
-		__ASM("mrsne r0, psp"); // save PSP if bit 2 is 1
-		__ASM("b taskOperator"); // pass R0 as the argument
+		__ASM("tst lr, 4");        // check LR to know which stack is used
+		__ASM("ite eq");           // 2 next instructions are conditional
+		__ASM("mrseq r0, msp");    // save MSP if bit 2 is 0
+		__ASM("mrsne r0, psp");    // save PSP if bit 2 is 1
+		__ASM("b taskOperator");   // pass R0 as the argument
 	}
 	
-	//Call hard_fault_handler_c in c function
-	void hard_fault_handler_c(unsigned int * hardfault_args)
+	//Output stacked info
+	void stacked_info(unsigned int * hardfault_args)
 	{
 		volatile uint32_t stacked_r0 = ((uint32_t)hardfault_args[0]);
 		volatile uint32_t stacked_r1 = ((uint32_t)hardfault_args[1]);
@@ -184,15 +181,15 @@ extern "C"
 		volatile uint32_t stacked_pc  = ((uint32_t)hardfault_args[6]);
 		volatile uint32_t stacked_psr = ((uint32_t)hardfault_args[7]);
 
-		printf("Hard_Fault_Handler: \r\n");
-		printf("r0:   0x%08lx\r\n", stacked_r0);
-		printf("r1:   0x%08lx\r\n", stacked_r1);
-		printf("r2:   0x%08lx\r\n", stacked_r2);
-		printf("r3:   0x%08lx\r\n", stacked_r3);
-		printf("r12:  0x%08lx\r\n", stacked_r12);
-		printf("lr:   0x%08lx\r\n", stacked_lr);
-		printf("pc:   0x%08lx\r\n", stacked_pc);
-		printf("xpsr: 0x%08lx\r\n", stacked_psr);
+		printk("Hard_Fault_Handler: \r\n");
+		printk("r0:   0x%08lx\r\n", stacked_r0);
+		printk("r1:   0x%08lx\r\n", stacked_r1);
+		printk("r2:   0x%08lx\r\n", stacked_r2);
+		printk("r3:   0x%08lx\r\n", stacked_r3);
+		printk("r12:  0x%08lx\r\n", stacked_r12);
+		printk("lr:   0x%08lx\r\n", stacked_lr);
+		printk("pc:   0x%08lx\r\n", stacked_pc);
+		printk("xpsr: 0x%08lx\r\n", stacked_psr);
 
 		while (1);
 	}
@@ -200,10 +197,10 @@ extern "C"
 	///HardFault_Handler
 	void HardFault_Handler(void)
 	{
-		__ASM("tst lr, #4"); // check LR to know which stack is used
-		__ASM("ite eq"); // 2 next instructions are conditional
-		__ASM("mrseq r0, msp"); // save MSP if bit 2 is 0
-		__ASM("mrsne r0, psp"); // save PSP if bit 2 is 1
-		__ASM("b hard_fault_handler_c"); // pass R0 as the argument
+		__ASM("tst lr, #4");      // check LR to know which stack is used
+		__ASM("ite eq");          // 2 next instructions are conditional
+		__ASM("mrseq r0, msp");   // save MSP if bit 2 is 0
+		__ASM("mrsne r0, psp");   // save PSP if bit 2 is 1
+		__ASM("b stacked_info");  // pass R0 as the argument
 	}
 }

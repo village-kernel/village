@@ -18,40 +18,24 @@ public:
 	enum TaskState 
 	{
 		Running = 0,
-		Blocked = 1,
-		Exited  = 2,
+		Suspend,
+		Blocked,
+		Exited,
 	};
 private:
 	//Structures
 	struct Task 
 	{
-		Class*           user;
-		Method           method;
-		Function         handler;
 		TaskState        state;
-		uint32_t         ticks;
 		uint32_t         stack;
+		uint32_t         ticks;
 		uint32_t         psp;
 		int              pid;
 
-		Task(Function handler = NULL)
-			:user(NULL),
-			method(NULL),
-			handler(handler),
-			state(TaskState::Running),
+		Task(uint32_t stack = 0)
+			:state(TaskState::Suspend),
+			stack(stack),
 			ticks(0),
-			stack(0),
-			psp(0),
-			pid(0)
-		{}
-
-		Task(Class *user = NULL, Method method = NULL)
-			:user(user),
-			method(method),
-			handler(NULL),
-			state(TaskState::Running),
-			ticks(0),
-			stack(0),
 			psp(0),
 			pid(0)
 		{}
@@ -59,7 +43,7 @@ private:
 
 	struct TaskNode
 	{
-		Task task;
+		Task      task;
 		TaskNode* next;
 
 		TaskNode(Task task) :
@@ -141,6 +125,7 @@ private:
 public:
 	///Methods
 	void Initialize();
+	void Execute();
 	int CreateTask(Function function, char* argv = NULL);
 	int CreateTaskCpp(Class *user, Method method, char* argv = NULL);
 	int DeleteTask(int pid);
@@ -151,7 +136,6 @@ public:
 	//Scheduler Methods
 	void SaveTaskPSP(uint32_t psp);
 	uint32_t GetTaskPSP();
-	uint32_t GetTaskHandler();
 	void SelectNextTask();
 
 	//Singleton Instance
