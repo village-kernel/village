@@ -18,7 +18,7 @@ public:
 
 	//Methods
 	GUI();
-	void Initialize(ILI9488* disp);
+	void Initialize(LcdDriver* lcd);
 };
 
 #endif //!__GUI_H__

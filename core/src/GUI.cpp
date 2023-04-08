@@ -13,7 +13,7 @@ GUI::GUI()
 
 
 ///Intialize
-void GUI::Initialize(ILI9488* disp)
+void GUI::Initialize(LcdDriver* lcd)
 {
-	this->disp.Initialize(disp);
+	this->disp.Initialize(lcd);
 }

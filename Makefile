@@ -8,7 +8,7 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_GUI)                   += vk.gui/config
+inc-$(CONFIG_GUI)                   += vk.gui/core/if
 inc-$(CONFIG_GUI)                   += vk.gui/core/inc
 inc-$(CONFIG_GUI)                   += vk.gui/font/inc
 inc-$(CONFIG_GUI)                   += vk.gui/wedget/inc

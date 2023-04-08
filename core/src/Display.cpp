@@ -14,51 +14,51 @@ Display::Display()
 
 
 ///Display Initialize
-void Display::Initialize(ILI9488* disp)
+void Display::Initialize(LcdDriver* lcd)
 {
-	this->disp = disp;
+	this->lcd = lcd;
 }
 
 
 ///Display open window
 void Display::OpenWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
-	disp->OpenWindow(x, y, width, height);
+	lcd->OpenWindow(x, y, width, height);
 }
 
 
 ///Display set cursor
 void Display::SetCursor(uint16_t x, uint16_t y)
 {
-	disp->SetCursor(x, y);
+	lcd->SetCursor(x, y);
 }
 
 
 ///Display fill color
 void Display::Fill(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
-	disp->Fill(x0, y0, x1, y1, color);
+	lcd->Fill(x0, y0, x1, y1, color);
 }
 
 
 ///Display clear
 void Display::Clear(uint16_t color)
 {
-	disp->Clear(color);
+	lcd->Clear(color);
 }
 
 
 ///Display draw point
 void Display::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 {
-	disp->DrawPoint(x, y, color);
+	lcd->DrawPoint(x, y, color);
 }
 
 
 ///Display read point
 uint16_t Display::ReadPoint(uint16_t x, uint16_t y)
 {
-	return disp->ReadPoint(x, y);
+	return lcd->ReadPoint(x, y);
 }
 
 
@@ -206,10 +206,10 @@ void Display::ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSiz
 
 			charLine >>= 1;
 				
-			if ((x + col) >= disp->device.width) return;
+			if ((x + col) >= lcd->device.width) return;
 		}
 
-		if ((y + row) >= disp->device.height) return;
+		if ((y + row) >= lcd->device.height) return;
 	}
 }
 
@@ -226,7 +226,7 @@ void Display::ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize
 
 		xOffset += fontSize >> 1;
 
-		if (xOffset > disp->device.width)
+		if (xOffset > lcd->device.width)
 		{
 			xOffset = 0;
 			yOffset += fontSize;
@@ -245,13 +245,13 @@ void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint
 
 	while ('\0' != *str)
 	{
-		if ((xOffset >= disp->device.width) || ('\n' == *str))
+		if ((xOffset >= lcd->device.width) || ('\n' == *str))
 		{
 			xOffset = 0;
 			yOffset += fontSize;
 		}
 
-		if (yOffset >= disp->device.height)
+		if (yOffset >= lcd->device.height)
 		{
 			xOffset = 0;
 			yOffset = 0;
@@ -284,7 +284,7 @@ void Display::ShowPicture(uint8_t *picture, uint16_t x, uint16_t y, uint16_t wid
 	{
 		for (uint16_t xOffset = 0; xOffset < width; xOffset++)
 		{
-			if (x + xOffset < disp->device.width && y + yOffset < disp->device.height)
+			if (x + xOffset < lcd->device.width && y + yOffset < lcd->device.height)
 			{
 				DrawPoint(x + xOffset, y + yOffset, (*picture << 8) + *(picture + 1));
 			}
