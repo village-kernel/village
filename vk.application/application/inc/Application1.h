@@ -9,6 +9,8 @@
 
 #include "Module.h"
 #include "Gpo.h"
+#include "Gpi.h"
+#include "Exti.h"
 
 
 ///Application
@@ -17,6 +19,12 @@ class Application1 : public Module
 private:
 	//Members
 	Gpo led;
+	Gpo extLed;
+	Gpi extKey;
+	Exti exti;
+
+	//Methods
+	void ExtHandler();
 public:
 	//Methods
 	Application1();
