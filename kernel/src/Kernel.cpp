@@ -25,6 +25,9 @@ void Kernel::Initialize()
 	//Initialize memory
 	memory.Initialize();
 
+	//Initialize interrupt
+	interrupt.Initialize();
+
 	//Initialize thread
 	thread.Initialize();
 

@@ -12,6 +12,7 @@
 #include "Memory.h"
 #include "Modular.h"
 #include "Device.h"
+#include "Interrupt.h"
 #include "Environment.h"
 
 ///Kernel
