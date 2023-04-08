@@ -39,6 +39,10 @@ config EXECUTOR
 	bool "Enable executor support"
 	default n
 
+config WORKQUEUE
+	bool "Enable workqueue support"
+	default y
+
 endmenu
 
 # config utilities menu

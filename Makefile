@@ -38,6 +38,7 @@ objs-y                    += Interrupt.o
 objs-$(CONFIG_LOADER)     += Loader.o
 objs-$(CONFIG_EXECUTOR)   += Executor.o
 objs-$(CONFIG_ENVIRONMENT)+= Environment.o
+objs-$(CONFIG_WORKQUEUE)  += WorkQueue.o
 
 objs-$(CONFIG_FILESTREAM) += FileStream.o
 objs-$(CONFIG_INIPARSER)  += iniParser.o
