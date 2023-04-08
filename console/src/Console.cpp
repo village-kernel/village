@@ -9,6 +9,19 @@
 #include "string.h"
 
 
+///vk.kernel console welcome string
+const char* vk_welcome[] = {
+"\r\n",
+R"(        _ ____                    __                        __ )",
+R"( _   __(_) / /___ _____ ____     / /_____  _________  ___  / / )",
+R"(| | / / / / / __ `/ __ `/ _ \   / //_/ _ \/ ___/ __ \/ _ \/ /  )",
+R"(| |/ / / / / /_/ / /_/ /  __/  / ,< /  __/ /  / / / /  __/ /   )",
+R"(|___/_/_/_/\__,_/\__, /\___/  /_/|_|\___/_/  /_/ /_/\___/_/    )",
+R"(                /____/                                         )",
+"\r\n",
+};
+
+
 ///Constructor
 Console::Console()
 	:list(NULL)
@@ -35,6 +48,19 @@ void Console::Initialize()
 	{
 		node->cmd->Initialize(&msgMgr);
 	}
+
+	//Output welcome message
+	uint8_t sizeofstr = sizeof(vk_welcome) / sizeof(char*);
+	for (uint8_t i = 0; i < sizeofstr; i++)
+	{	
+		msgMgr.Write((uint8_t*)vk_welcome[i]);
+		msgMgr.Write((uint8_t*)"\r\n");
+		msgMgr.Execute();
+	}
+
+	//Output console symbol
+	msgMgr.Write((uint8_t*)"# ");
+	msgMgr.Execute();
 }
 
 
