@@ -302,7 +302,7 @@ void ILI9488::DisplayOff()
 
 
 ///ILI9488 set direction
-void ILI9488::SetDirection(Dir dir)
+void ILI9488::SetDirection(Direction dir)
 {
 	switch (dir)
 	{

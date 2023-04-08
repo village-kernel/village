@@ -8,13 +8,14 @@
 #define __ILI9488_H__
 
 #include "HalHeaders.h"
+#include "LcdDriver.h"
 #include "Driver.h"
 #include "Gpo.h"
 #include "Fsmc.h"
 
 
 ///ILI9488
-class ILI9488 : public Driver
+class ILI9488 : public Driver, public LcdDriver
 {
 public:
 	struct Config
@@ -23,31 +24,6 @@ public:
 		Gpio::GpioChannel backLightCh;
 		uint16_t backLightPin;
 	};
-
-	//Enum
-	enum Dir
-	{
-		Up = 0,
-		Left,
-		Right,
-		Down,
-	};
-
-	//Device struct
-	struct DeviceStruct
-	{
-		uint32_t id;
-		Dir dir;
-		uint16_t width;
-		uint16_t height;
-		uint16_t setXCmd;
-		uint16_t setYCmd;
-		uint16_t wRamCmd;
-		uint16_t rRamCmd;
-	};
-
-	//Members
-	DeviceStruct device;
 protected:
 	struct __packed LCDMap
 	{
@@ -91,7 +67,7 @@ public:
 	//Display methods
 	void OpenWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 	void SetCursor(uint16_t x, uint16_t y);
-	void SetDirection(Dir dir);
+	void SetDirection(Direction dir);
 	void DrawPoint(uint16_t x, uint16_t y, uint16_t color);
 	uint16_t ReadPoint(uint16_t x, uint16_t y);
 	void Fill(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
