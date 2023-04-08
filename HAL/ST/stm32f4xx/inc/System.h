@@ -24,6 +24,7 @@ public:
 	static void ConfigureClock();
 	static void ConfigureForHsi();
 	static void ConfigureForXtal();
+	static void ConfigVectorTable(uint32_t vector);
 
 	///Reset STM32 core and peripherals
 	static inline void Reboot()

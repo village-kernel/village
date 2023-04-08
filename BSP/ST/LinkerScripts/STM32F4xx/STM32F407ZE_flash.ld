@@ -69,13 +69,18 @@ MEMORY
 /* Define output sections */
 SECTIONS
 {
+  /* used by the startup to initialize isr vector */
+  _sivector = LOADADDR(.isr_vector);
+  
   /* The startup code goes first into FLASH */
   .isr_vector :
   {
     . = ALIGN(4);
+	_svector = .;
     KEEP(*(.isr_vector)) /* Startup code */
     . = ALIGN(4);
-  } >FLASH
+	_evector = .;
+  } >RAM AT> FLASH
 
   /* The program code and other data goes into FLASH */
   .text :

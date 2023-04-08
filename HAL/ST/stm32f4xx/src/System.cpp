@@ -169,6 +169,13 @@ void System::ConfigureForXtal()
 }
 
 
+///System config vector table, this value must be a multiple of 0x200.
+void System::ConfigVectorTable(uint32_t vector)
+{
+	SCB->VTOR = vector;
+}
+
+
 ///Systick handler
 extern "C" __weak void SysTick_Handler(void)
 {
