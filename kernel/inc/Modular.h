@@ -8,6 +8,7 @@
 #define __MODULAR_H__
 
 #include "Module.h"
+#include "Templates.h"
 
 ///Module section, avoid being optimized by the compiler
 #define MODULE_SECTION                 __attribute__((used,__section__(".modules")))
@@ -22,20 +23,8 @@
 class Modular
 {
 private:
-	//Structures
-	struct ModuleNode
-	{
-		Module* module;
-		ModuleNode* next;
-
-		ModuleNode(Module* module = NULL) :
-			module(module),
-			next(NULL)
-		{}
-	};
-	
 	//Members
-	ModuleNode* list;
+	List<Module> modules;
 
 	//Methods
 	Modular();

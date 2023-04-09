@@ -11,7 +11,6 @@
 
 ///Constructor
 Modular::Modular()
-	:list(NULL)
 {
 }
 
@@ -32,9 +31,9 @@ Modular& modular = Modular::Instance();
 ///Execute module object->Initialize
 void Modular::Initialize()
 {
-	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
+	for (modules.Begin(); !modules.End(); modules.Next())
 	{
-		node->module->Initialize();
+		modules.Item()->Initialize();
 	}
 }
 
@@ -42,9 +41,9 @@ void Modular::Initialize()
 ///Execute module object->UpdateParams
 void Modular::UpdateParams()
 {
-	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
+	for (modules.Begin(); !modules.End(); modules.Next())
 	{
-		node->module->UpdateParams();
+		modules.Item()->UpdateParams();
 	}
 }
 
@@ -52,9 +51,9 @@ void Modular::UpdateParams()
 ///Create task threads for each module
 void Modular::Execute()
 {
-	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
+	for (modules.Begin(); !modules.End(); modules.Next())
 	{
-		thread.CreateTask((Function)&Modular::Handler, (char*)node->module);
+		thread.CreateTask((Function)&Modular::Handler, (char*)(modules.Item()));
 	}
 }
 
@@ -70,9 +69,9 @@ void Modular::Handler(Module* module)
 ///Execute module object->FailSafe
 void Modular::FailSafe(int arg)
 {
-	for (volatile ModuleNode* node = list; NULL != node; node = node->next)
+	for (modules.Begin(); !modules.End(); modules.Next())
 	{
-		node->module->FailSafe(arg);
+		modules.Item()->FailSafe(arg);
 	}
 }
 
@@ -80,27 +79,7 @@ void Modular::FailSafe(int arg)
 ///Register module object
 void Modular::RegisterModule(Module* module, uint32_t id)
 {
-	ModuleNode** nextNode = &list;
-
-	if (module) module->SetID(id); else return;
-
-	while (NULL != *nextNode)
-	{
-		uint32_t curModuleID = (*nextNode)->module->GetID();
-		uint32_t newModuleID = module->GetID();
-
-		if (newModuleID < curModuleID)
-		{
-			ModuleNode* curNode = *nextNode;
-			*nextNode = new ModuleNode(module);
-			(*nextNode)->next = curNode;
-			return;
-		}
-		
-		nextNode = &(*nextNode)->next;
-	}
-
-	*nextNode = new ModuleNode(module);
+	modules.Add(module, id);
 }
 EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
 
@@ -108,30 +87,6 @@ EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
 ///Deregister module object
 void Modular::DeregisterModule(Module* module, uint32_t id)
 {
-	ModuleNode** prevNode = &list;
-	ModuleNode** currNode = &list;
-
-	if (NULL == module && 0 == id) return;
-
-	while (NULL != *currNode)
-	{
-		if ((module == (*currNode)->module) || 
-			(id == (*currNode)->module->GetID()))
-		{
-			delete *currNode;
-
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
-
-			break;
-		}
-		else
-		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
-		}
-	}
+	modules.Remove(module, id);
 }
 EXPORT_SYMBOL(Modular::DeregisterModule, _ZN7Modular16DeregisterModuleEP6Modulem);
