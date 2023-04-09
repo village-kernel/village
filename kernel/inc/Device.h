@@ -8,6 +8,7 @@
 #define __DEVICE_H__
 
 #include "Driver.h"
+#include "Templates.h"
 
 ///Driver section, avoid being optimized by the compiler
 #define DRIVER_SECTION                  __attribute__((used,__section__(".drivers")))
@@ -22,20 +23,8 @@
 class Device
 {
 private:
-	//Structures
-	struct DriverNode
-	{
-		Driver* driver;
-		DriverNode* next;
-
-		DriverNode(Driver* driver = NULL) :
-			driver(driver),
-			next(NULL)
-		{}
-	};
-
 	//Members
-	DriverNode* list;
+	List<Driver> drivers;
 
 	//Methods
 	Device();
