@@ -10,7 +10,6 @@
 
 ///Constructor
 Environment::Environment()
-	:list(NULL)
 {
 }
 
@@ -30,43 +29,18 @@ Environment& environment = Environment::Instance();
 ///Export symbol
 void Environment::ExportSymbol(uint32_t symAddr, const char* name)
 {
-	if (0 == symAddr) return;
-
-	SymbolNode** nextNode = &list;
-
-	while (NULL != *nextNode)
-	{
-		nextNode = &(*nextNode)->next;
-	}
-
-	*nextNode = new SymbolNode(new Symbol(name, symAddr));
+	symbols.Add(new Symbol(name, symAddr));
 }
 
 
 ///Unexport symbol
-void Environment::UnexportSymbol(uint32_t symAddr, const char* name)
+void Environment::UnexportSymbol(const char* name)
 {
-	SymbolNode** prevNode = &list;
-	SymbolNode** currNode = &list;
-
-	while (NULL != *currNode)
+	for (symbols.Begin(); !symbols.End(); symbols.Next())
 	{
-		if ((symAddr == (*currNode)->symbol->addr) &&
-			(0 == strcmp(name, (*currNode)->symbol->name)))
+		if (0 == strcmp(name, symbols.Item()->name))
 		{
-			delete *currNode;
-
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
-
-			break;
-		}
-		else
-		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
+			symbols.Remove(symbols.Item(), symbols.GetNid());
 		}
 	}
 }
@@ -75,11 +49,11 @@ void Environment::UnexportSymbol(uint32_t symAddr, const char* name)
 ///Search symbol by name and return addr
 uint32_t Environment::SearchSymbol(const char* name)
 {
-	for (volatile SymbolNode* node = list; NULL != node; node = node->next)
+	for (symbols.Begin(); !symbols.End(); symbols.Next())
 	{
-		if (0 == strcmp(name, node->symbol->name))
+		if (0 == strcmp(name, symbols.Item()->name))
 		{
-			return node->symbol->addr;
+			return symbols.Item()->addr;
 		}
 	}
 	return 0;

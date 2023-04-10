@@ -45,26 +45,15 @@ private:
 		{}
 	};
 
-	struct SymbolNode
-	{
-		Symbol*     symbol;
-		SymbolNode* next;
-
-		SymbolNode(Symbol* symbol = NULL) :
-			symbol(symbol),
-			next(NULL)
-		{}
-	};
-
 	//Members
-	SymbolNode* list;
+	List<Symbol> symbols;
 
 	//Methods
 	Environment();
 public:
 	//Methods
 	void ExportSymbol(uint32_t symAddr, const char* name);
-	void UnexportSymbol(uint32_t symAddr, const char* name);
+	void UnexportSymbol(const char* name);
 	uint32_t SearchSymbol(const char* name);
 
 	//Singleton Instance
