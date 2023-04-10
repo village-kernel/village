@@ -11,8 +11,7 @@
 
 ///Constructor
 Interrupt::Interrupt()
-	:isrSizes(0),
-	lists(NULL)
+	:isrSizes(0)
 {
 }
 
@@ -51,7 +50,7 @@ void Interrupt::Initialize()
 	vectors = (uint32_t*)&_svector + rsvd_isr_size;
 
 	//Alloc lists heap
-	lists = (IsrNode**)new IsrNode[isrSizes]();
+	isrTabs = (List<Isr>*)new List<Isr>[isrSizes]();
 
 	//Relocation isr vecotr table
 	System::ConfigVectorTable((uint32_t)&_svector);
@@ -59,45 +58,25 @@ void Interrupt::Initialize()
 
 
 ///Interrupt Set ISR
-void Interrupt::SetISR(int irq, Function isr, char* argv)
+void Interrupt::SetISR(int irq, Function func, char* argv)
 {
-	if (0 > irq && NULL == isr) return;
-
-	IsrNode** nextNode = &lists[irq];
-
-	while (NULL != *nextNode) nextNode = &(*nextNode)->next;
-
-	*nextNode = new IsrNode(irq, isr, argv);
-
+	isrTabs[irq].Add(new Isr(irq, func, argv));
 	vectors[irq] = union_cast<uint32_t>(&Interrupt::DefaultHandler);
 }
 
 
 ///Interrupt clear isr
-void Interrupt::ClearISR(int irq, Function isr, char* argv)
+void Interrupt::ClearISR(int irq, Function func, char* argv)
 {
-	IsrNode** prevNode = &lists[irq];
-	IsrNode** currNode = &lists[irq];
+	List<Isr> isr = isrTabs[irq];
 
-	while (NULL != *currNode)
+	for (isr.Begin(); !isr.End(); isr.Next())
 	{
-		if ((irq == (*currNode)->irq) &&
-			(isr == (*currNode)->isr) &&
-			(argv == (*currNode)->argv))
+		if ((irq  == isr.Item()->irq ) &&
+			(func == isr.Item()->func) &&
+			(argv == isr.Item()->argv))
 		{
-			delete *currNode;
-
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
-
-			break;
-		}
-		else
-		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
+			isr.Remove(isr.Item(), isr.GetNid()); break;
 		}
 	}
 }
@@ -106,10 +85,11 @@ void Interrupt::ClearISR(int irq, Function isr, char* argv)
 ///Interrupt handler
 void Interrupt::Handler(int irq)
 {
-	IsrNode* node = interrupt.lists[irq - rsvd_isr_size];
-	for (; NULL != node; node = node->next)
+	List<Isr> isr = interrupt.isrTabs[irq - rsvd_isr_size];
+	
+	for (isr.Begin(); !isr.End(); isr.Next())
 	{
-		(node->isr)(node->argv);
+		(isr.Item()->func)(isr.Item()->argv);
 	}
 }
 

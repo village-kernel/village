@@ -15,18 +15,16 @@ class Interrupt
 {
 private:
 	//Structures
-	struct IsrNode
+	struct Isr
 	{
 		int32_t     irq;
-		Function    isr;
+		Function    func;
 		char*       argv;
-		IsrNode*    next;
 
-		IsrNode(int32_t irq = 0, Function isr = NULL, char* argv = NULL)
+		Isr(int32_t irq = 0, Function func = NULL, char* argv = NULL)
 			:irq(irq),
-			isr(isr),
-			argv(argv),
-			next(NULL)
+			func(func),
+			argv(argv)
 		{}
 	};
 
@@ -34,9 +32,9 @@ private:
 	static const uint32_t rsvd_isr_size = 16;
 
 	//Members
-	uint32_t  isrSizes;
-	uint32_t* vectors;
-	IsrNode** lists;
+	uint32_t   isrSizes;
+	uint32_t*  vectors;
+	List<Isr>* isrTabs;
 
 	//Methods
 	Interrupt();
