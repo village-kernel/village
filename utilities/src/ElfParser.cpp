@@ -200,8 +200,15 @@ int ElfParser::RelEntries()
 					symAddr = SEARCH_SYMBOL(GetSymbolName(relEntry.symbol));
 				}
 
+				//Return when symAddr is 0
+				if (0 == symAddr) 
+				{
+					printk("Err: count not relocation %s.\r\n", GetSymbolName(relEntry.symbol));
+					printk("Relocation elf failed\r\n");
+					return _ERR;
+				}
+
 				//Relocation symbol entry
-				if (0 == symAddr) return _ERR;
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
