@@ -13,9 +13,6 @@
 
 ///Constructor
 Thread::Thread()
-	:pidCounter(0),
-	list(NULL),
-	curNode(NULL)
 {
 }
 
@@ -41,8 +38,8 @@ void Thread::Initialize()
 	//Frist task should be idle task and the pid is 0
 	CreateTask((Function)&Thread::IdleTask);
 
-	//Set current node
-	curNode = list;
+	//Set first node
+	tasks.Begin();
 }
 
 
@@ -53,47 +50,25 @@ void Thread::Execute()
 }
 
 
-///Thread append a task to the list
-int Thread::AppendTask(Task task)
-{
-	//Find an empty node
-	TaskNode** nextNode = &list;
-	while (NULL != *nextNode) nextNode = &(*nextNode)->next;
-
-	//Add new task node in task list
-	*nextNode = new TaskNode(task);
-
-	//Set the pid for task 
-	if (NULL != *nextNode)
-	{
-		(*nextNode)->task.pid = pidCounter++;
-		return (*nextNode)->task.pid;
-	}
-
-	//Return -1 when create task failed
-	return -1;
-}
-
-
 ///Create new task
 int Thread::CreateTask(Function function, char* argv)
 {
 	//Create a new task and allocate stack space
-	Task task(memory.StackAlloc(task_stack_size));
+	Task* task = new Task(memory.StackAlloc(task_stack_size));
 	
 	//Check whether stack allocation is successful
-	if (0 == task.stack) return -1;
+	if (NULL == task && 0 == task->stack) return -1;
 
 	//Fill the stack content
-	task.psp = task.stack - psp_frame_size;
-	*(StackFrame*)task.psp = StackFrame
+	task->psp = task->stack - psp_frame_size;
+	*(StackFrame*)task->psp = StackFrame
 	(
 		(uint32_t)&FuncHandler,
 		(uint32_t)function,
 		(uint32_t)argv
 	);
 
-	return AppendTask(task);
+	return tasks.Add(task);
 }
 EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 
@@ -102,14 +77,14 @@ EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 {
 	//Create a new task and allocate stack space
-	Task task(memory.StackAlloc(task_stack_size));
+	Task* task = new Task(memory.StackAlloc(task_stack_size));
 	
 	//Check whether stack allocation is successful
-	if (0 == task.stack) return -1;
+	if (NULL == task && 0 == task->stack) return -1;
 
 	//Fill the stack content
-	task.psp = task.stack - psp_frame_size;
-	*(StackFrame*)task.psp = StackFrame
+	task->psp = task->stack - psp_frame_size;
+	*(StackFrame*)task->psp = StackFrame
 	(
 		(uint32_t)&MethodHandler,
 		(uint32_t)user,
@@ -117,7 +92,7 @@ int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 		(uint32_t)argv
 	);
 
-	return AppendTask(task);
+	return tasks.Add(task);
 }
 EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP5ClassMS0_FvPcES2_);
 
@@ -125,34 +100,9 @@ EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP5ClassMS0_FvPcES
 ///Thread delete task
 int Thread::DeleteTask(int pid)
 {
-	if (pid <= 0) return _ERR;
-
-	TaskNode** prevNode = &list;
-	TaskNode** currNode = &list;
-
-	while (NULL != *currNode)
-	{
-		if (pid == (*currNode)->task.pid)
-		{
-			delete *currNode;
-
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
-
-			memory.Free((*currNode)->task.stack);
-
-			return _OK;
-		}
-		else
-		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
-		}
-	}
-
-	return _ERR;
+	Task* task = tasks.GetItem(pid);
+	memory.Free(task->stack);
+	return tasks.Remove(task, pid);
 }
 EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
 
@@ -160,15 +110,15 @@ EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
 ///Thread wait for task
 int Thread::WaitForTask(int pid)
 {
-	//Check if the task exists
-	for (volatile TaskNode* node = list; NULL != node; node = node->next)
+	//Gets the task
+	Task* task = tasks.GetItem(pid);
+
+	//Check task is valid
+	if (NULL != task)
 	{
-		if (pid == node->task.pid)
-		{
-			//Blocking wait
-			while(node->task.state != TaskState::Exited) {}
-			return _OK;
-		}
+		//Blocking wait
+		while(task->state != TaskState::Exited) {}
+		return _OK;
 	}
 	return _ERR;
 }
@@ -178,10 +128,10 @@ EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
 ///Thread sleep
 void Thread::Sleep(uint32_t ticks)
 {
-	if(curNode->task.pid > 0)
+	if(tasks.GetNid() > 0)
 	{
-		curNode->task.state = TaskState::Suspend;
-		curNode->task.ticks = System::GetSysClkCounts() + ticks;
+		tasks.Item()->state = TaskState::Suspend;
+		tasks.Item()->ticks = System::GetSysClkCounts() + ticks;
 		scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
@@ -191,10 +141,10 @@ EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
 ///Thread Exit
 void Thread::Exit()
 {
-	if(curNode->task.pid > 0)
+	if(tasks.GetNid() > 0)
 	{
-		curNode->task.state = TaskState::Exited;
-		DeleteTask(curNode->task.pid);
+		tasks.Item()->state = TaskState::Exited;
+		DeleteTask(tasks.GetNid());
 		scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
@@ -204,7 +154,7 @@ EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
 ///Idle task
 void Thread::IdleTask()
 {
-	while(1) 
+	while (1) 
 	{
 		__ASM("NOP");
 	}
@@ -236,14 +186,14 @@ void Thread::MethodHandler(Class *user, Method method, char* argv)
 ///Save task PSP
 void Thread::SaveTaskPSP(uint32_t psp)
 {
-	curNode->task.psp = psp;
+	tasks.Item()->psp = psp;
 }
 
 
 ///Get current task psp
 uint32_t Thread::GetTaskPSP()
 {
-	return curNode->task.psp;
+	return tasks.Item()->psp;
 }
 
 
@@ -253,18 +203,18 @@ void Thread::SelectNextTask()
 	while (1)
 	{
 		//Set next task as current task
-		curNode = (NULL != curNode->next) ? curNode->next : list;
+		tasks.Next(); if (tasks.End()) tasks.Begin();
 
 		//Check current task state
-		if (TaskState::Suspend == curNode->task.state)
+		if (TaskState::Suspend == tasks.Item()->state)
 		{
-			if(System::GetSysClkCounts() >= curNode->task.ticks)
+			if(System::GetSysClkCounts() >= tasks.Item()->ticks)
 			{
-				curNode->task.state = TaskState::Running;
+				tasks.Item()->state = TaskState::Running;
 			}
 		}
 
 		//Break when task state is running
-		if (TaskState::Running == curNode->task.state) break;
+		if (TaskState::Running == tasks.Item()->state) break;
 	}
 }

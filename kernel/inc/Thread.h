@@ -30,25 +30,12 @@ private:
 		uint32_t         stack;
 		uint32_t         ticks;
 		uint32_t         psp;
-		int              pid;
 
 		Task(uint32_t stack = 0)
 			:state(TaskState::Suspend),
 			stack(stack),
 			ticks(0),
-			psp(0),
-			pid(0)
-		{}
-	};
-
-	struct TaskNode
-	{
-		Task      task;
-		TaskNode* next;
-
-		TaskNode(Task task) :
-			task(task),
-			next(NULL)
+			psp(0)
 		{}
 	};
 
@@ -112,13 +99,10 @@ private:
 	static const uint32_t psp_frame_size = 16;
 	
 	//Members
-	int pidCounter;
-	TaskNode* list;
-	TaskNode* curNode;
+	List<Task> tasks;
 
 	//Methods
 	Thread();
-	int AppendTask(Task task);
 	static void IdleTask();
 	static void FuncHandler(Function function, char* argv = NULL);
 	static void MethodHandler(Class *user, Method method, char* argv = NULL);
