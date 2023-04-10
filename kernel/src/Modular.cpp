@@ -79,7 +79,7 @@ void Modular::FailSafe(int arg)
 ///Register module object
 void Modular::RegisterModule(Module* module, uint32_t id)
 {
-	modules.Add(module, id);
+	modules.Insert(module, id);
 }
 EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
 

@@ -44,7 +44,7 @@ typedef void (*Function)(char*);
 
 
 ///List class template 
-template<typename Object, typename Id = int>
+template<typename Object>
 class List
 {
 private:
@@ -52,10 +52,12 @@ private:
 	struct Node
 	{
 		Object* obj;
+		int     nid;
 		Node*   next;
 
-		Node(Object* obj = NULL) :
+		Node(Object* obj = NULL, int nid = 0) :
 			obj(obj),
+			nid(nid),
 			next(NULL)
 		{}
 	};
@@ -63,9 +65,14 @@ private:
 	//Members
 	Node* list;
 	Node* curNode;
+	int   nidCounter;
 public:
 	///Constructor
-	List() : list(NULL) {}
+	List() :
+		list(NULL),
+		curNode(NULL),
+		nidCounter(0)
+	{}
 
 	///List begin node
 	void Begin() { curNode = list; }
@@ -80,21 +87,33 @@ public:
 	Object* Item() { return curNode->obj; }
 
 	///Add object node to list
-	void Add(Object* obj, Id id)
+	void Add(Object* obj)
 	{
+		if (NULL == obj) return;
+
 		Node** nextNode = &list;
 
-		if (obj) obj->SetID(id); else return;
+		while (NULL != *nextNode)
+		{			
+			nextNode = &(*nextNode)->next;
+		}
+
+		*nextNode = new Node(obj, ++nidCounter);
+	}
+
+	///Insert object node to list
+	void Insert(Object* obj, int nid)
+	{
+		if (NULL == obj) return;
+
+		Node** nextNode = &list;
 
 		while (NULL != *nextNode)
 		{
-			uint32_t curModuleID = (*nextNode)->obj->GetID();
-			uint32_t newModuleID = obj->GetID();
-
-			if (newModuleID < curModuleID)
+			if (nid < (*nextNode)->nid)
 			{
 				Node* curNode = *nextNode;
-				*nextNode = new Node(obj);
+				*nextNode = new Node(obj, nid);
 				(*nextNode)->next = curNode;
 				return;
 			}
@@ -102,18 +121,21 @@ public:
 			nextNode = &(*nextNode)->next;
 		}
 
-		*nextNode = new Node(obj);
+		*nextNode = new Node(obj, nid);
 	}
 
 	///Remove object node from list
-	void Remove(Object* obj, Id id)
+	void Remove(Object* obj, int nid)
 	{
+		if (NULL == obj && 0 == nid) return;
+
 		Node** prevNode = &list;
 		Node** currNode = &list;
 
 		while (NULL != *currNode)
 		{
-			if (obj == (*currNode)->obj)
+			if ((obj == (*currNode)->obj) || 
+				(nid == (*currNode)->nid))
 			{
 				delete *currNode;
 
@@ -133,16 +155,13 @@ public:
 	}
 
 	///List GetItem
-	Object* GetItem(Id id)
+	Object* GetItem(int nid)
 	{
 		Node** nextNode = &list;
 
 		while (NULL != *nextNode)
 		{
-			Id curObjId = (*nextNode)->obj->GetID();
-			Id getObjId = id;
-
-			if (getObjId == curObjId)
+			if (nid == (*nextNode)->nid)
 			{
 				return (*nextNode)->obj;
 			}

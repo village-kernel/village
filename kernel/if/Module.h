@@ -13,21 +13,12 @@
 ///Module
 class Module : public Class
 {
-private:
-	//Members
-	uint32_t ID;
 public:
 	//Methods
 	virtual void Initialize()       {}
 	virtual void UpdateParams()     {}
 	virtual void Execute()          {}
 	virtual void FailSafe(int arg)  {}
-
-	///Set the module id
-	inline void SetID(uint32_t id) { ID = id; }
-
-	///Get the module id
-	inline uint32_t GetID() { return ID; }
 };
 
 #endif // !__MODULE_INTERFACE_H__

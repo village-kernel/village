@@ -62,7 +62,7 @@ void Device::FailSafe(int arg)
 ///Register driver object
 void Device::RegisterDriver(Driver* driver, uint32_t id)
 {
-	drivers.Add(driver, id);
+	drivers.Insert(driver, id);
 }
 EXPORT_SYMBOL(Device::RegisterDriver, _ZN6Device14RegisterDriverEP6Driverm);
 
