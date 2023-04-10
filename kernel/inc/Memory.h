@@ -62,7 +62,7 @@ public:
 	uint32_t HeapAlloc(uint32_t size);
 	uint32_t StackAlloc(uint32_t size);
 	uint32_t Sbrk(int32_t incr);
-	void Free(uint32_t memory);
+	void Free(uint32_t memory, uint32_t size = 0);
 
 	//Get the used szie of sram
 	uint32_t GetUsed() { return sram_used; }

@@ -185,7 +185,7 @@ EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
 
 
 ///Memory free
-void Memory::Free(uint32_t memory)
+void Memory::Free(uint32_t memory, uint32_t size)
 {
 	MapNode* currNode = head;
 
@@ -194,16 +194,24 @@ void Memory::Free(uint32_t memory)
 		if ((memory >= currNode->map.addr) && 
 			(memory < (currNode->map.addr + currNode->map.size)))
 		{
-			//Output debug info
-			printk("free memory: addr: 0x%08lx, size: %ld\r\n",
-			currNode->map.addr, currNode->map.size);
+			if (0 == size)
+			{
+				//Remove map node from list
+				currNode->prev->next = currNode->next;
+				currNode->next->prev = currNode->prev;
+			}
+			else
+			{
+				//Reduce space
+				currNode->map.size = currNode->map.size - size;
+			}
 
 			//Update the used size of sram
 			sram_used -= currNode->map.size;
 
-			//Remove map node from list
-			currNode->prev->next = currNode->next;
-			currNode->next->prev = currNode->prev;
+			//Output debug info
+			printk("free memory: addr: 0x%08lx, size: %ld\r\n",
+			currNode->map.addr, currNode->map.size);
 
 			break;
 		}
@@ -213,7 +221,7 @@ void Memory::Free(uint32_t memory)
 		}
 	}
 }
-EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEm);
+EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEmm);
 
 
 ///Memory sbrk
@@ -249,6 +257,8 @@ void* New(size_t size)
 {
 	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
+EXPORT_SYMBOL(New, _Znwm);
+EXPORT_SYMBOL(New, _Znam);
 EXPORT_SYMBOL(New, _Znwj);
 EXPORT_SYMBOL(New, _Znaj);
 
@@ -259,7 +269,18 @@ void Delete(void* ptr)
 	Memory::Instance().Free((uint32_t)ptr);
 }
 EXPORT_SYMBOL(Delete, _ZdaPv);
-EXPORT_SYMBOL(Delete, _Zdlpv);
+EXPORT_SYMBOL(Delete, _ZdlPv);
+
+
+///Memory delete method
+void DeleteSize(void* ptr, size_t size)
+{
+	Memory::Instance().Free((uint32_t)ptr, size);
+}
+EXPORT_SYMBOL(DeleteSize, _ZdaPvm);
+EXPORT_SYMBOL(DeleteSize, _ZdlPvm);
+EXPORT_SYMBOL(DeleteSize, _ZdaPvj);
+EXPORT_SYMBOL(DeleteSize, _ZdlPvj);
 
 
 ///Override new
@@ -287,4 +308,18 @@ void operator delete(void *ptr)
 void operator delete[](void *ptr)
 {
 	Delete(ptr);
+}
+
+
+///Override delete
+void operator delete(void *ptr, size_t size)
+{
+	DeleteSize(ptr, size);
+}
+
+
+///Override delete[]
+void operator delete[](void *ptr, size_t size)
+{
+	DeleteSize(ptr, size);
 }
