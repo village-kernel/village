@@ -40,7 +40,7 @@ void Environment::UnexportSymbol(const char* name)
 	{
 		if (0 == strcmp(name, symbols.Item()->name))
 		{
-			symbols.Remove(symbols.Item(), symbols.GetNid());
+			symbols.Remove(symbols.Item(), symbols.GetNid()); break;
 		}
 	}
 }
