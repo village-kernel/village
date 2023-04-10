@@ -14,6 +14,12 @@
 class Module : public Class
 {
 public:
+	//Constructor
+	Module() {}
+
+	//Deconstructor
+	virtual ~Module() {}
+
 	//Methods
 	virtual void Initialize()       {}
 	virtual void UpdateParams()     {}
