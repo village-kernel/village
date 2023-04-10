@@ -9,7 +9,7 @@
 
 #include "stdint.h"
 #include "stddef.h"
-
+#include "Defines.h"
 
 /// @brief Get method address
 /// @tparam dst_type 
@@ -86,10 +86,13 @@ public:
 	///List item
 	Object* Item() { return curNode->obj; }
 
+	///List get nid 
+	int GetNid() { return curNode->nid; }
+
 	///Add object node to list
-	void Add(Object* obj)
+	int Add(Object* obj)
 	{
-		if (NULL == obj) return;
+		if (NULL == obj) return -1;
 
 		Node** nextNode = &list;
 
@@ -98,13 +101,15 @@ public:
 			nextNode = &(*nextNode)->next;
 		}
 
-		*nextNode = new Node(obj, ++nidCounter);
+		*nextNode = new Node(obj, nidCounter++);
+
+		return (NULL != *nextNode) ? (*nextNode)->nid : -1;
 	}
 
 	///Insert object node to list
-	void Insert(Object* obj, int nid)
+	int Insert(Object* obj, int nid)
 	{
-		if (NULL == obj) return;
+		if (NULL == obj) return -1;
 
 		Node** nextNode = &list;
 
@@ -112,22 +117,24 @@ public:
 		{
 			if (nid < (*nextNode)->nid)
 			{
-				Node* curNode = *nextNode;
+				Node* currNode = *nextNode;
 				*nextNode = new Node(obj, nid);
-				(*nextNode)->next = curNode;
-				return;
+				(*nextNode)->next = currNode;
+				return -1;
 			}
 			
 			nextNode = &(*nextNode)->next;
 		}
 
 		*nextNode = new Node(obj, nid);
+
+		return (NULL != *nextNode) ? (*nextNode)->nid : -1;
 	}
 
 	///Remove object node from list
-	void Remove(Object* obj, int nid)
+	int Remove(Object* obj, int nid)
 	{
-		if (NULL == obj && 0 == nid) return;
+		if (NULL == obj && 0 > nid) return _ERR;
 
 		Node** prevNode = &list;
 		Node** currNode = &list;
@@ -144,7 +151,9 @@ public:
 				else
 					(*prevNode)->next = (*currNode)->next;
 
-				break;
+				delete obj;
+
+				return _OK;
 			}
 			else
 			{
@@ -152,23 +161,17 @@ public:
 				currNode = &(*currNode)->next;
 			}
 		}
+
+		return _ERR;
 	}
 
 	///List GetItem
 	Object* GetItem(int nid)
 	{
-		Node** nextNode = &list;
-
-		while (NULL != *nextNode)
+		for (Node* node = list; NULL != node; node = node->next)
 		{
-			if (nid == (*nextNode)->nid)
-			{
-				return (*nextNode)->obj;
-			}
-
-			nextNode = &(*nextNode)->next;
+			if (nid == node->nid) return node->obj;
 		}
-
 		return NULL;
 	}
 };
