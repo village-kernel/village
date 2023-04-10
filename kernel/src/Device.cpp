@@ -32,7 +32,7 @@ EXPORT_SYMBOL(pdevice, device);
 ///Execute device object->Initialize
 void Device::Initialize()
 {
-	for (drivers.Begin(); !drivers.End(); drivers.Next())
+	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
 	{
 		drivers.Item()->Initialize();
 	}
@@ -42,7 +42,7 @@ void Device::Initialize()
 ///Execute device object->UpdateParams
 void Device::UpdateParams()
 {
-	for (drivers.Begin(); !drivers.End(); drivers.Next())
+	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
 	{
 		drivers.Item()->UpdateParams();
 	}
@@ -52,7 +52,7 @@ void Device::UpdateParams()
 ///Execute device object->FailSafe
 void Device::FailSafe(int arg)
 {
-	for (drivers.Begin(); !drivers.End(); drivers.Next())
+	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
 	{
 		drivers.Item()->FailSafe(arg);
 	}

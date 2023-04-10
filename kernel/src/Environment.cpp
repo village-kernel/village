@@ -36,7 +36,7 @@ void Environment::ExportSymbol(uint32_t symAddr, const char* name)
 ///Unexport symbol
 void Environment::UnexportSymbol(const char* name)
 {
-	for (symbols.Begin(); !symbols.End(); symbols.Next())
+	for (symbols.Begin(); !symbols.IsEnd(); symbols.Next())
 	{
 		if (0 == strcmp(name, symbols.Item()->name))
 		{
@@ -49,7 +49,7 @@ void Environment::UnexportSymbol(const char* name)
 ///Search symbol by name and return addr
 uint32_t Environment::SearchSymbol(const char* name)
 {
-	for (symbols.Begin(); !symbols.End(); symbols.Next())
+	for (symbols.Begin(); !symbols.IsEnd(); symbols.Next())
 	{
 		if (0 == strcmp(name, symbols.Item()->name))
 		{

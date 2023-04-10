@@ -203,7 +203,7 @@ void Thread::SelectNextTask()
 	while (1)
 	{
 		//Set next task as current task
-		tasks.Next(); if (tasks.End()) tasks.Begin();
+		tasks.Next(); if (tasks.IsEnd()) tasks.Begin();
 
 		//Check current task state
 		if (TaskState::Suspend == tasks.Item()->state)

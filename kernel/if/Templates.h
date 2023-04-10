@@ -53,57 +53,73 @@ private:
 	{
 		Object* obj;
 		int     nid;
+		Node*   prev;
 		Node*   next;
 
 		Node(Object* obj = NULL, int nid = 0) :
 			obj(obj),
 			nid(nid),
+			prev(NULL),
 			next(NULL)
 		{}
 	};
 
 	//Members
-	Node* list;
-	Node* curNode;
+	Node* head;
+	Node* tail;
+	Node* iterator;
 	int   nidCounter;
 public:
 	///Constructor
 	List() :
-		list(NULL),
-		curNode(NULL),
+		head(NULL),
+		tail(NULL),
+		iterator(NULL),
 		nidCounter(0)
 	{}
 
 	///List begin node
-	void Begin() { curNode = list; }
+	void Begin() { iterator = head; }
 
 	///List next node
-	void Next() { if (NULL != curNode) curNode = curNode->next; }
+	void Next() { if (NULL != iterator) iterator = iterator->next; }
 
-	///List end
-	bool End() { return (NULL == curNode); }
+	///List prev node
+	void Prev() { if (NULL != iterator) iterator = iterator->prev; }
+
+	///List end node
+	void End() { iterator = tail; }
+
+	///List is begin
+	bool IsBegin() { return (NULL == iterator); }
+
+	///List is end
+	bool IsEnd() { return (NULL == iterator); }
 
 	///List item
-	Object* Item() { return curNode->obj; }
+	Object* Item() { return iterator->obj; }
 
-	///List get nid 
-	int GetNid() { return curNode->nid; }
+	///List get node id 
+	int GetNid() { return iterator->nid; }
 
 	///Add object node to list
 	int Add(Object* obj)
 	{
 		if (NULL == obj) return -1;
 
-		Node** nextNode = &list;
-
-		while (NULL != *nextNode)
-		{			
-			nextNode = &(*nextNode)->next;
+		if (0 == nidCounter)
+		{
+			head = new Node(obj, nidCounter++);
+			tail = head;
+		}
+		else
+		{
+			tail->next = new Node(obj, nidCounter++);
+			tail->next->prev = tail;
+			tail = tail->next;
 		}
 
-		*nextNode = new Node(obj, nidCounter++);
-
-		return (NULL != *nextNode) ? (*nextNode)->nid : -1;
+		return (NULL != tail) ? tail->nid : -1;
 	}
 
 	///Insert object node to list
@@ -111,24 +127,58 @@ public:
 	{
 		if (NULL == obj) return -1;
 
-		Node** nextNode = &list;
+		Node* temp = NULL;
 
-		while (NULL != *nextNode)
+		if (NULL == head)
 		{
-			if (nid < (*nextNode)->nid)
+			temp = new Node(obj, nid);
+			head = temp;
+			tail = head;
+		}
+		else
+		{
+			if (nid > tail->nid)
 			{
-				Node* currNode = *nextNode;
-				*nextNode = new Node(obj, nid);
-				(*nextNode)->next = currNode;
-				return -1;
+				temp = new Node(obj, nid);
+				temp->prev = tail;
+				tail->next = temp;
+				tail = tail->next;
 			}
-			
-			nextNode = &(*nextNode)->next;
+			else if (nid < head->nid)
+			{
+				temp = new Node(obj, nid);
+				temp->next = head;
+				head->prev = temp;
+				head = head->prev;
+			}
+			else
+			{
+				Node* prevNode = head;
+				Node* nextNode = head->next;
+
+				while (NULL != nextNode)
+				{
+					if (nid < nextNode->nid)
+					{
+						temp = new Node(obj, nid);
+						temp->prev = prevNode;
+						temp->next = nextNode;
+						prevNode->next = temp;
+						nextNode->prev = temp;
+						break;
+					}
+					else
+					{
+						prevNode = nextNode;
+						nextNode = nextNode->next;
+					}
+				}
+			}
 		}
 
-		*nextNode = new Node(obj, nid);
+		nidCounter = tail->nid;
 
-		return (NULL != *nextNode) ? (*nextNode)->nid : -1;
+		return (NULL != temp) ? temp->nid : -1;
 	}
 
 	///Remove object node from list
@@ -136,29 +186,23 @@ public:
 	{
 		if (NULL == obj && 0 > nid) return _ERR;
 
-		Node** prevNode = &list;
-		Node** currNode = &list;
-
-		while (NULL != *currNode)
+		for (Node* node = head; NULL != node; node = node->next)
 		{
-			if ((obj == (*currNode)->obj) || 
-				(nid == (*currNode)->nid))
+			if ((obj == node->obj) || (nid == node->nid))
 			{
-				delete *currNode;
-
-				if (*prevNode == *currNode)
-					*prevNode = (*currNode)->next;
+				if (NULL != node->prev)
+					node->prev->next = node->next;
 				else
-					(*prevNode)->next = (*currNode)->next;
+					head = node->next;
 
+				if (NULL != node->next)
+					node->next->prev = node->prev;
+				else
+					tail = node->prev;
+
+				delete node;
 				delete obj;
-
 				return _OK;
-			}
-			else
-			{
-				prevNode = currNode;
-				currNode = &(*currNode)->next;
 			}
 		}
 
@@ -168,7 +212,7 @@ public:
 	///List GetItem
 	Object* GetItem(int nid)
 	{
-		for (Node* node = list; NULL != node; node = node->next)
+		for (Node* node = head; NULL != node; node = node->next)
 		{
 			if (nid == node->nid) return node->obj;
 		}

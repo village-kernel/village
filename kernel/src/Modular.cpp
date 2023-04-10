@@ -31,7 +31,7 @@ Modular& modular = Modular::Instance();
 ///Execute module object->Initialize
 void Modular::Initialize()
 {
-	for (modules.Begin(); !modules.End(); modules.Next())
+	for (modules.Begin(); !modules.IsEnd(); modules.Next())
 	{
 		modules.Item()->Initialize();
 	}
@@ -41,7 +41,7 @@ void Modular::Initialize()
 ///Execute module object->UpdateParams
 void Modular::UpdateParams()
 {
-	for (modules.Begin(); !modules.End(); modules.Next())
+	for (modules.Begin(); !modules.IsEnd(); modules.Next())
 	{
 		modules.Item()->UpdateParams();
 	}
@@ -51,7 +51,7 @@ void Modular::UpdateParams()
 ///Create task threads for each module
 void Modular::Execute()
 {
-	for (modules.Begin(); !modules.End(); modules.Next())
+	for (modules.Begin(); !modules.IsEnd(); modules.Next())
 	{
 		thread.CreateTask((Function)&Modular::Handler, (char*)(modules.Item()));
 	}
@@ -69,7 +69,7 @@ void Modular::Handler(Module* module)
 ///Execute module object->FailSafe
 void Modular::FailSafe(int arg)
 {
-	for (modules.Begin(); !modules.End(); modules.Next())
+	for (modules.Begin(); !modules.IsEnd(); modules.Next())
 	{
 		modules.Item()->FailSafe(arg);
 	}

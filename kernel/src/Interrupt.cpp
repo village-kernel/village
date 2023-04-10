@@ -70,7 +70,7 @@ void Interrupt::ClearISR(int irq, Function func, char* argv)
 {
 	List<Isr> isr = isrTabs[irq];
 
-	for (isr.Begin(); !isr.End(); isr.Next())
+	for (isr.Begin(); !isr.IsEnd(); isr.Next())
 	{
 		if ((irq  == isr.Item()->irq ) &&
 			(func == isr.Item()->func) &&
@@ -87,7 +87,7 @@ void Interrupt::Handler(int irq)
 {
 	List<Isr> isr = interrupt.isrTabs[irq - rsvd_isr_size];
 	
-	for (isr.Begin(); !isr.End(); isr.Next())
+	for (isr.Begin(); !isr.IsEnd(); isr.Next())
 	{
 		(isr.Item()->func)(isr.Item()->argv);
 	}
