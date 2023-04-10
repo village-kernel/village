@@ -14,6 +14,12 @@
 class Driver : public Class
 {
 public:
+	//Constructor
+	Driver()  {}
+
+	//Deconstructor
+	virtual ~Driver() {}
+
 	//Methods
 	virtual void Initialize()       {}
 	virtual void UpdateParams()     {}
