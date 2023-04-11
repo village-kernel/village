@@ -8,7 +8,7 @@
 #include "Environment.h"
 
 
-///Constructor
+/// @brief Constructor
 Memory::Memory()
 	:sram_start(0),
 	sram_ended(0),
@@ -21,7 +21,8 @@ Memory::Memory()
 }
 
 
-///Singleton instance
+/// @brief Singleton Instance
+/// @return Memory instance
 Memory& Memory::Instance()
 {
 	static Memory instance;
@@ -30,11 +31,11 @@ Memory& Memory::Instance()
 EXPORT_SYMBOL(Memory::Instance, _ZN6Memory8InstanceEv);
 
 
-//Definitions memory
+/// @brief Definitions memory
 Memory& memory = Memory::Instance();
 
 
-///Memory initialize sram parameters
+/// @brief Memory initialize sram parameters
 void Memory::Initialize()
 {
 	//Initialize heap end at first call
@@ -76,7 +77,9 @@ void Memory::Initialize()
 }
 
 
-///Memory heap alloc
+/// @brief Memory heap alloc
+/// @param size heap alloc byte size
+/// @return alloc address
 uint32_t Memory::HeapAlloc(uint32_t size)
 {
 	MapNode* newNode  = NULL;
@@ -130,7 +133,9 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
 
 
-///Memory stack alloc
+/// @brief Memory stack alloc
+/// @param size stack alloc byte size
+/// @return alloc address
 uint32_t Memory::StackAlloc(uint32_t size)
 {
 	MapNode* newNode  = new MapNode();
@@ -184,7 +189,9 @@ uint32_t Memory::StackAlloc(uint32_t size)
 EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
 
 
-///Memory free
+/// @brief Memory free
+/// @param memory free address
+/// @param size free byte size
 void Memory::Free(uint32_t memory, uint32_t size)
 {
 	MapNode* currNode = head;
@@ -224,7 +231,9 @@ void Memory::Free(uint32_t memory, uint32_t size)
 EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEmm);
 
 
-///Memory sbrk
+/// @brief Memory sbrk
+/// @param incr increase byte size
+/// @return address
 uint32_t Memory::Sbrk(int32_t incr)
 {
 	//Protect heap from growing into the reserved MSP stack
@@ -245,14 +254,18 @@ uint32_t Memory::Sbrk(int32_t incr)
 }
 
 
-///Override _sbrk
+/// @brief Override _sbrk
+/// @param incr increase byte size
+/// @return address
 extern "C" void* _sbrk(ptrdiff_t incr)
 {
 	return (void*)Memory::Instance().Sbrk((int32_t)incr);
 }
 
 
-///Memory new method
+/// @brief Memory new method
+/// @param size byte size
+/// @return address
 void* New(size_t size)
 {
 	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
@@ -263,7 +276,8 @@ EXPORT_SYMBOL(New, _Znwj);
 EXPORT_SYMBOL(New, _Znaj);
 
 
-///Memory delete method
+/// @brief Memory delete method
+/// @param ptr address
 void Delete(void* ptr)
 {
 	Memory::Instance().Free((uint32_t)ptr);
@@ -272,7 +286,9 @@ EXPORT_SYMBOL(Delete, _ZdaPv);
 EXPORT_SYMBOL(Delete, _ZdlPv);
 
 
-///Memory delete method
+/// @brief Memory delete method
+/// @param ptr address
+/// @param size byte size
 void DeleteSize(void* ptr, size_t size)
 {
 	Memory::Instance().Free((uint32_t)ptr, size);
@@ -283,42 +299,52 @@ EXPORT_SYMBOL(DeleteSize, _ZdaPvj);
 EXPORT_SYMBOL(DeleteSize, _ZdlPvj);
 
 
-///Override new
+/// @brief Override new
+/// @param size byte size
+/// @return address
 void *operator new(size_t size)
 {
 	return New(size);
 }
 
 
-///Override new[]
+/// @brief Override new[]
+/// @param size byte size
+/// @return address
 void *operator new[](size_t size)
 {
 	return New(size);
 }
 
 
-///Override delete
+/// @brief Override delete
+/// @param ptr address
 void operator delete(void *ptr)
 {
 	Delete(ptr);
 }
 
 
-///Override delete[]
+/// @brief Override delete[]
+/// @param ptr address
 void operator delete[](void *ptr)
 {
 	Delete(ptr);
 }
 
 
-///Override delete
+/// @brief Override delete
+/// @param ptr address
+/// @param size byte size
 void operator delete(void *ptr, size_t size)
 {
 	DeleteSize(ptr, size);
 }
 
 
-///Override delete[]
+/// @brief Override delete[]
+/// @param ptr address
+/// @param size byte size
 void operator delete[](void *ptr, size_t size)
 {
 	DeleteSize(ptr, size);
