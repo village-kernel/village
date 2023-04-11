@@ -7,17 +7,17 @@
 #include "kernel.h"
 
 
-///Clear isReady flag
+/// @brief Clear isReady flag
 volatile bool Kernel::isReady = false;
 
 
-///Constructor
+/// @brief Constructor
 Kernel::Kernel()
 {
 }
 
 
-///Execute module object->Initialize
+/// @brief Execute module object->Initialize
 void Kernel::Initialize()
 {
 	isReady = false;
@@ -41,7 +41,7 @@ void Kernel::Initialize()
 }
 
 
-///Execute module object->UpdateParams
+/// @brief Execute module object->UpdateParams
 void Kernel::UpdateParams()
 {
 	if (!isReady) return;
@@ -51,7 +51,7 @@ void Kernel::UpdateParams()
 }
 
 
-///Execute thread tasks 
+/// @brief Execute thread tasks 
 void Kernel::Execute()
 {
 	//Execute modular
@@ -65,7 +65,8 @@ void Kernel::Execute()
 }
 
 
-///Execute module object->FailSafe
+/// @brief Execute module object->FailSafe
+/// @param arg fail arg
 void Kernel::FailSafe(int arg)
 {
 	if (!isReady) return;
