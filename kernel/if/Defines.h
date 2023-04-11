@@ -39,6 +39,7 @@ enum ModuleID
 {
 	_console             = 1,
 	_modLoader           = 2,
+	_workQueue           = 3,
 	_executor            = 21,
 	_application         = 101,
 };
