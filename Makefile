@@ -34,6 +34,7 @@ objs-y                    += Memory.o
 objs-y                    += Thread.o
 objs-y                    += Scheduler.o
 objs-y                    += Interrupt.o
+objs-y                    += Synchronize.o
 
 objs-$(CONFIG_LOADER)     += Loader.o
 objs-$(CONFIG_EXECUTOR)   += Executor.o
