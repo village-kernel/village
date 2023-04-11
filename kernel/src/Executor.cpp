@@ -8,7 +8,10 @@
 #include "Executor.h"
 
 
-///Executor Initialize
+/// @brief Executor Initialize
+/// @param path elf file path
+/// @param argv running argv
+/// @return result
 int Executor::Run(const char* path, char* argv[])
 {
 	//Load, parser and execute elf file
@@ -22,7 +25,7 @@ int Executor::Run(const char* path, char* argv[])
 }
 
 
-///Executor execute app
+/// @brief Executor execute app
 void Executor::Sandbox()
 {
 	elf.InitArray();
