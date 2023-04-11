@@ -9,13 +9,14 @@
 #include "Environment.h"
 
 
-///Constructor
+/// @brief Constructor
 Modular::Modular()
 {
 }
 
 
-///Singleton instance
+/// @brief Singleton Instance
+/// @return Modular instance
 Modular& Modular::Instance()
 {
 	static Modular instance;
@@ -24,41 +25,42 @@ Modular& Modular::Instance()
 EXPORT_SYMBOL(Modular::Instance, _ZN7Modular8InstanceEv);
 
 
-//Definitions modular
+/// @brief Definitions modular
 Modular& modular = Modular::Instance();
 
 
-///Execute module object->Initialize
+/// @brief Execute module object->Initialize
 void Modular::Initialize()
 {
-	for (modules.Begin(); !modules.IsEnd(); modules.Next())
+	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		modules.Item()->Initialize();
+		module->Initialize();
 	}
 }
 
 
-///Execute module object->UpdateParams
+/// @brief Execute module object->UpdateParams
 void Modular::UpdateParams()
 {
-	for (modules.Begin(); !modules.IsEnd(); modules.Next())
+	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		modules.Item()->UpdateParams();
+		module->UpdateParams();
 	}
 }
 
 
-///Create task threads for each module
+/// @brief Create task threads for each module
 void Modular::Execute()
 {
-	for (modules.Begin(); !modules.IsEnd(); modules.Next())
+	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		thread.CreateTask((Function)&Modular::Handler, (char*)(modules.Item()));
+		thread.CreateTask((Function)&Modular::Handler, (char*)(module));
 	}
 }
 
 
-///Modular execute handler
+/// @brief Modular execute handler
+/// @param module module pointer
 void Modular::Handler(Module* module)
 {
 	module->Execute();
@@ -66,17 +68,20 @@ void Modular::Handler(Module* module)
 }
 
 
-///Execute module object->FailSafe
+/// @brief Execute module object->FailSafe
+/// @param arg fail arg
 void Modular::FailSafe(int arg)
 {
-	for (modules.Begin(); !modules.IsEnd(); modules.Next())
+	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		modules.Item()->FailSafe(arg);
+		module->FailSafe(arg);
 	}
 }
 
 
-///Register module object
+/// @brief Register module object
+/// @param module module pointer
+/// @param id module id
 void Modular::RegisterModule(Module* module, uint32_t id)
 {
 	modules.Insert(module, id);
@@ -84,7 +89,9 @@ void Modular::RegisterModule(Module* module, uint32_t id)
 EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
 
 
-///Deregister module object
+/// @brief Deregister module object
+/// @param module module pointer
+/// @param id module id
 void Modular::DeregisterModule(Module* module, uint32_t id)
 {
 	modules.Remove(module, id);
