@@ -11,20 +11,28 @@
 #include "Gpo.h"
 #include "Gpi.h"
 #include "Exti.h"
+#include "WorkQueue.h"
 
 
 ///Application
 class Application1 : public Module
 {
 private:
+	//Static constants
+	static const int work_delay = 10;
+
 	//Members
-	Gpo led;
-	Gpo extLed;
-	Gpi extKey;
+	Gpo  led;
+	Gpo  extLed;
+	Gpi  extKey;
 	Exti exti;
+	
+	//WorkQueue
+	WorkQueue::Work* work;
 
 	//Methods
 	void ExtHandler();
+	void WorkHandler();
 public:
 	//Methods
 	Application1();

@@ -24,10 +24,11 @@ void Application1::Initialize()
 	exti.Initialize(0);
 	exti.ConfigExtPin(Gpio::_ChE, 0);
 	exti.ConfigMode(Exti::_Interrupt);
-	exti.ConfigTriggerEdge(Exti::_BothEdge);
+	exti.ConfigTriggerEdge(Exti::_Rising);
 	exti.EnableInterrupt();
 
 	interrupt.SetISR(EXTI0_IRQn, union_cast<Function>(&Application1::ExtHandler), (char*)this);
+	work = workQueue.Create(union_cast<Function>(&Application1::WorkHandler), (char*)this, work_delay);
 }
 
 
@@ -49,8 +50,18 @@ void Application1::ExtHandler()
 {
 	if (exti.Check())
 	{
-		extLed.Toggle();
+		workQueue.Schedule(work);
 		exti.Clear();
+	}
+}
+
+
+///Work handler
+void Application1::WorkHandler()
+{
+	if (Gpio::_High == extKey.Read())
+	{
+		extLed.Toggle();
 	}
 }
 
