@@ -8,13 +8,14 @@
 #include "string.h"
 
 
-///Constructor
+/// @brief Constructor
 Environment::Environment()
 {
 }
 
 
-///Singleton instance
+/// @brief Singleton Instance
+/// @return Environment instance
 Environment& Environment::Instance()
 {
 	static Environment instance;
@@ -22,38 +23,43 @@ Environment& Environment::Instance()
 }
 
 
-//Definitions environment
+/// @brief Definitions environment
 Environment& environment = Environment::Instance();
 
 
-///Export symbol
+/// @brief Export symbol
+/// @param symAddr symbol address
+/// @param name symbol name
 void Environment::ExportSymbol(uint32_t symAddr, const char* name)
 {
 	symbols.Add(new Symbol(name, symAddr));
 }
 
 
-///Unexport symbol
+/// @brief Unexport symbol
+/// @param name symbol name
 void Environment::UnexportSymbol(const char* name)
 {
-	for (symbols.Begin(); !symbols.IsEnd(); symbols.Next())
+	for (Symbol* symbol = symbols.Begin(); !symbols.IsEnd(); symbol = symbols.Next())
 	{
-		if (0 == strcmp(name, symbols.Item()->name))
+		if (0 == strcmp(name, symbol->name))
 		{
-			symbols.Remove(symbols.Item(), symbols.GetNid()); break;
+			symbols.Remove(symbol, symbols.GetNid()); break;
 		}
 	}
 }
 
 
-///Search symbol by name and return addr
+/// @brief Search symbol by name and return addr
+/// @param name symbol name
+/// @return symbol address
 uint32_t Environment::SearchSymbol(const char* name)
 {
-	for (symbols.Begin(); !symbols.IsEnd(); symbols.Next())
+	for (Symbol* symbol = symbols.Begin(); !symbols.IsEnd(); symbol = symbols.Next())
 	{
-		if (0 == strcmp(name, symbols.Item()->name))
+		if (0 == strcmp(name, symbol->name))
 		{
-			return symbols.Item()->addr;
+			return symbol->addr;
 		}
 	}
 	return 0;
