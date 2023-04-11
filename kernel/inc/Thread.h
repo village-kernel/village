@@ -103,6 +103,7 @@ private:
 
 	//Methods
 	Thread();
+	~Thread();
 	static void IdleTask();
 	static void FuncHandler(Function function, char* argv = NULL);
 	static void MethodHandler(Class *user, Method method, char* argv = NULL);

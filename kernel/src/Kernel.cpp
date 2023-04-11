@@ -17,6 +17,12 @@ Kernel::Kernel()
 }
 
 
+/// @brief Fini constructor
+Kernel::~Kernel()
+{
+}
+
+
 /// @brief Execute module object->Initialize
 void Kernel::Initialize()
 {

@@ -28,6 +28,7 @@ private:
 
 	//Methods
 	Device();
+	~Device();
 public:
 	//Methods
 	void Initialize();

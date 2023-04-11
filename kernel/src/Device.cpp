@@ -14,6 +14,12 @@ Device::Device()
 }
 
 
+/// @brief Fini constructor
+Device::~Device()
+{
+}
+
+
 /// @brief Singleton Instance
 /// @return Device instance
 Device& Device::Instance()

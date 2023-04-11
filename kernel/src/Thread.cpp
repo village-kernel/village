@@ -17,6 +17,12 @@ Thread::Thread()
 }
 
 
+/// @brief Fini constructor
+Thread::~Thread()
+{
+}
+
+
 /// @brief Singleton Instance
 /// @return Thread instance
 Thread& Thread::Instance()

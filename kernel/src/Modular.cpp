@@ -15,6 +15,12 @@ Modular::Modular()
 }
 
 
+/// @brief Fini constructor
+Modular::~Modular()
+{
+}
+
+
 /// @brief Singleton Instance
 /// @return Modular instance
 Modular& Modular::Instance()

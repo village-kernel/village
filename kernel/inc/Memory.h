@@ -56,6 +56,7 @@ private:
 
 	//Methods
 	Memory();
+	~Memory();
 public:
 	//Methods
 	void Initialize();

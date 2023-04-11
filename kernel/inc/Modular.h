@@ -28,6 +28,7 @@ private:
 
 	//Methods
 	Modular();
+	~Modular();
 	static void Handler(Module* module);
 public:
 	//Methods

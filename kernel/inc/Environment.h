@@ -50,6 +50,7 @@ private:
 
 	//Methods
 	Environment();
+	~Environment();
 public:
 	//Methods
 	void ExportSymbol(uint32_t symAddr, const char* name);

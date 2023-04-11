@@ -26,6 +26,7 @@ private:
 
 	//Methods
 	Scheduler();
+	~Scheduler();
 public:
 	//Methods
 	void StartScheduler();

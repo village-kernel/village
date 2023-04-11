@@ -16,6 +16,12 @@ Scheduler::Scheduler()
 }
 
 
+/// @brief Fini constructor
+Scheduler::~Scheduler()
+{
+}
+
+
 /// @brief Singleton Instance
 /// @return Scheduler instance
 Scheduler& Scheduler::Instance()

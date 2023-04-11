@@ -21,6 +21,12 @@ Memory::Memory()
 }
 
 
+/// @brief Fini constructor
+Memory::~Memory()
+{
+}
+
+
 /// @brief Singleton Instance
 /// @return Memory instance
 Memory& Memory::Instance()

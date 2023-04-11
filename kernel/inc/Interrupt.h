@@ -38,6 +38,7 @@ private:
 
 	//Methods
 	Interrupt();
+	~Interrupt();
 	static void Handler(int irq);
 	static void DefaultHandler();
 public:

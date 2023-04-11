@@ -24,6 +24,7 @@ private:
 public:
 	//Methods
 	Kernel();
+	~Kernel();
 	static void Initialize();
 	static void UpdateParams();
 	static void Execute();

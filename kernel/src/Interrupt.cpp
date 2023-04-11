@@ -16,6 +16,12 @@ Interrupt::Interrupt()
 }
 
 
+/// @brief Fini constructor
+Interrupt::~Interrupt()
+{
+}
+
+
 /// @brief Singleton Instance
 /// @return Interrupt instance
 Interrupt& Interrupt::Instance()

@@ -14,6 +14,12 @@ Environment::Environment()
 }
 
 
+/// @brief Fini constructor
+Environment::~Environment()
+{
+}
+
+
 /// @brief Singleton Instance
 /// @return Environment instance
 Environment& Environment::Instance()
