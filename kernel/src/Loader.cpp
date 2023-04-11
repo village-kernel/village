@@ -8,7 +8,8 @@
 #include "Loader.h"
 
 
-///Loader load
+/// @brief Loader load
+/// @param filename rc file path
 void Loader::Loading(const char* filename)
 {
 	//Load rc file
@@ -30,7 +31,7 @@ void Loader::Loading(const char* filename)
 }
 
 
-///DrvLoader Initialize
+/// @brief DrvLoader Initialize
 void DrvLoader::Initialize()
 {
 	Loading("driver.rc");
@@ -38,7 +39,7 @@ void DrvLoader::Initialize()
 REGISTER_DRIVER(new DrvLoader(), DriverID::_drvLoadr, drvLoader);
 
 
-///ModLoader Initialize
+/// @brief ModLoader Initialize
 void ModLoader::Initialize()
 {
 	Loading("init.rc");
