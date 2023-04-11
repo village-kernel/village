@@ -9,14 +9,15 @@
 #include "System.h"
 
 
-///Constructor
+/// @brief Constructor
 Interrupt::Interrupt()
 	:isrSizes(0)
 {
 }
 
 
-///Singleton instance
+/// @brief Singleton Instance
+/// @return Interrupt instance
 Interrupt& Interrupt::Instance()
 {
 	static Interrupt instance;
@@ -25,13 +26,13 @@ Interrupt& Interrupt::Instance()
 EXPORT_SYMBOL(Interrupt::Instance, _ZN9Interrupt8InstanceEv);
 
 
-///Definitions interrupt and export
+/// @brief Definitions interrupt and export
 Interrupt& interrupt = Interrupt::Instance();
 Interrupt* pinterrupt = &interrupt;
 EXPORT_SYMBOL(pinterrupt, interrupt);
 
 
-///Interrupt initialize
+/// @brief Interrupt initialize
 void Interrupt::Initialize()
 {
 	//Symbol defined in the linker script
@@ -57,7 +58,10 @@ void Interrupt::Initialize()
 }
 
 
-///Interrupt Set ISR
+/// @brief Interrupt Set ISR
+/// @param irq irq number
+/// @param func interupt function
+/// @param argv interrupt argv
 void Interrupt::SetISR(int irq, Function func, char* argv)
 {
 	isrTabs[irq].Add(new Isr(irq, func, argv));
@@ -65,36 +69,40 @@ void Interrupt::SetISR(int irq, Function func, char* argv)
 }
 
 
-///Interrupt clear isr
+/// @brief Interrupt clear isr
+/// @param irq irq number
+/// @param func interrupt function
+/// @param argv interrupt argv
 void Interrupt::ClearISR(int irq, Function func, char* argv)
 {
-	List<Isr> isr = isrTabs[irq];
+	List<Isr> isrs = isrTabs[irq];
 
-	for (isr.Begin(); !isr.IsEnd(); isr.Next())
+	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
 	{
-		if ((irq  == isr.Item()->irq ) &&
-			(func == isr.Item()->func) &&
-			(argv == isr.Item()->argv))
+		if ((irq  == isr->irq ) &&
+			(func == isr->func) &&
+			(argv == isr->argv))
 		{
-			isr.Remove(isr.Item(), isr.GetNid()); break;
+			isrs.Remove(isr, isrs.GetNid()); break;
 		}
 	}
 }
 
 
-///Interrupt handler
+/// @brief Interrupt handler
+/// @param irq irq number
 void Interrupt::Handler(int irq)
 {
-	List<Isr> isr = interrupt.isrTabs[irq - rsvd_isr_size];
+	List<Isr> isrs = interrupt.isrTabs[irq - rsvd_isr_size];
 	
-	for (isr.Begin(); !isr.IsEnd(); isr.Next())
+	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
 	{
-		(isr.Item()->func)(isr.Item()->argv);
+		(isr->func)(isr->argv);
 	}
 }
 
 
-///Default handler
+/// @brief Default handler
 __attribute__ ((naked)) void Interrupt::DefaultHandler()
 {
 	//Save LR back to main, must do this firstly
