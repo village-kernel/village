@@ -11,13 +11,14 @@
 #include "Environment.h"
 
 
-///Constructor
+/// @brief Constructor
 Thread::Thread()
 {
 }
 
 
-///Singleton instance
+/// @brief Singleton Instance
+/// @return Thread instance
 Thread& Thread::Instance()
 {
 	static Thread instance;
@@ -26,13 +27,13 @@ Thread& Thread::Instance()
 EXPORT_SYMBOL(Thread::Instance, _ZN6Thread8InstanceEv);
 
 
-//Definitions thread and export
+/// @brief Definitions thread and export
 Thread& thread = Thread::Instance();
 static Thread* pthread = &thread;
 EXPORT_SYMBOL(pthread, thread);
 
 
-///Thread Initialize
+/// @brief Thread Initialize
 void Thread::Initialize()
 {
 	//Frist task should be idle task and the pid is 0
@@ -43,14 +44,17 @@ void Thread::Initialize()
 }
 
 
-///Thread execute
+/// @brief Thread execute
 void Thread::Execute()
 {
 	FuncHandler((Function)&Thread::IdleTask);
 }
 
 
-///Create new task
+/// @brief Create new task
+/// @param function task execute function
+/// @param argv task execute argv
+/// @return result
 int Thread::CreateTask(Function function, char* argv)
 {
 	//Create a new task and allocate stack space
@@ -73,7 +77,11 @@ int Thread::CreateTask(Function function, char* argv)
 EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
 
 
-///Create new task for cpp
+/// @brief Create new task for cpp
+/// @param user task execute class
+/// @param method task execute class method
+/// @param argv task execute argv
+/// @return result
 int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 {
 	//Create a new task and allocate stack space
@@ -97,7 +105,9 @@ int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP5ClassMS0_FvPcES2_);
 
 
-///Thread delete task
+/// @brief Thread delete task
+/// @param pid process id
+/// @return result
 int Thread::DeleteTask(int pid)
 {
 	Task* task = tasks.GetItem(pid);
@@ -107,7 +117,9 @@ int Thread::DeleteTask(int pid)
 EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
 
 
-///Thread wait for task
+/// @brief Thread wait for task
+/// @param pid process id
+/// @return result
 int Thread::WaitForTask(int pid)
 {
 	//Gets the task
@@ -125,7 +137,8 @@ int Thread::WaitForTask(int pid)
 EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
 
 
-///Thread sleep
+/// @brief Thread sleep
+/// @param ticks sleep ticks
 void Thread::Sleep(uint32_t ticks)
 {
 	if(tasks.GetNid() > 0)
@@ -138,7 +151,7 @@ void Thread::Sleep(uint32_t ticks)
 EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
 
 
-///Thread Exit
+/// @brief Thread Exit
 void Thread::Exit()
 {
 	if(tasks.GetNid() > 0)
@@ -151,7 +164,7 @@ void Thread::Exit()
 EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
 
 
-///Idle task
+/// @brief Idle task
 void Thread::IdleTask()
 {
 	while (1) 
@@ -161,7 +174,9 @@ void Thread::IdleTask()
 }
 
 
-///Thread task function handler 
+/// @brief Thread task function handler 
+/// @param function execute function
+/// @param argv execute argv
 void Thread::FuncHandler(Function function, char* argv)
 {
 	if (NULL != function)
@@ -172,7 +187,10 @@ void Thread::FuncHandler(Function function, char* argv)
 }
 
 
-///Thread task method handler 
+/// @brief Thread task method handler 
+/// @param user execute class
+/// @param method execute class method
+/// @param argv execute argv
 void Thread::MethodHandler(Class *user, Method method, char* argv)
 {
 	if (NULL != user && NULL != method)
@@ -183,21 +201,23 @@ void Thread::MethodHandler(Class *user, Method method, char* argv)
 }
 
 
-///Save task PSP
+/// @brief Save task PSP
+/// @param psp process stack pointer
 void Thread::SaveTaskPSP(uint32_t psp)
 {
 	tasks.Item()->psp = psp;
 }
 
 
-///Get current task psp
+/// @brief Get current task psp
+/// @return process stack pointer
 uint32_t Thread::GetTaskPSP()
 {
 	return tasks.Item()->psp;
 }
 
 
-///Select next task, round-Robin scheduler
+/// @brief Select next task, round-Robin scheduler
 void Thread::SelectNextTask()
 {
 	while (1)
