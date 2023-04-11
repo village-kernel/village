@@ -8,13 +8,14 @@
 #include "Environment.h"
 
 
-///Constructor
+/// @brief Constructor
 Device::Device()
 {
 }
 
 
-///Singleton instance
+/// @brief Singleton Instance
+/// @return Device instance
 Device& Device::Instance()
 {
 	static Device instance;
@@ -23,43 +24,45 @@ Device& Device::Instance()
 EXPORT_SYMBOL(Device::Instance, _ZN6Device8InstanceEv);
 
 
-//Definitions device
+/// @brief Definitions device
 Device& device = Device::Instance();
 static Device* pdevice = &device;
 EXPORT_SYMBOL(pdevice, device);
 
 
-///Execute device object->Initialize
+/// @brief Execute device object->Initialize
 void Device::Initialize()
 {
-	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
+	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
 	{
-		drivers.Item()->Initialize();
+		driver->Initialize();
 	}
 }
 
 
-///Execute device object->UpdateParams
+/// @brief Execute device object->UpdateParams
 void Device::UpdateParams()
 {
-	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
+	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
 	{
-		drivers.Item()->UpdateParams();
+		driver->UpdateParams();
 	}
 }
 
 
-///Execute device object->FailSafe
+/// @brief Execute device object->FailSafe
 void Device::FailSafe(int arg)
 {
-	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
+	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
 	{
-		drivers.Item()->FailSafe(arg);
+		driver->FailSafe(arg);
 	}
 }
 
 
-///Register driver object
+/// @brief Register driver object
+/// @param driver driver pointer
+/// @param id driver id
 void Device::RegisterDriver(Driver* driver, uint32_t id)
 {
 	drivers.Insert(driver, id);
@@ -67,7 +70,9 @@ void Device::RegisterDriver(Driver* driver, uint32_t id)
 EXPORT_SYMBOL(Device::RegisterDriver, _ZN6Device14RegisterDriverEP6Driverm);
 
 
-///Deregister driver object
+/// @brief Deregister driver object
+/// @param driver driver pointer
+/// @param id driver id
 void Device::DeregisterDriver(Driver* driver, uint32_t id)
 {
 	drivers.Remove(driver, id);
@@ -75,7 +80,8 @@ void Device::DeregisterDriver(Driver* driver, uint32_t id)
 EXPORT_SYMBOL(Device::DeregisterDriver, _ZN6Device16DeregisterDriverEP6Driverm);
 
 
-///Get the driver object
+/// @brief Get the driver object
+/// @param id driver id
 Driver* Device::GetDriver(uint32_t id)
 {
 	return drivers.GetItem(id);
