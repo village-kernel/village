@@ -9,14 +9,15 @@
 #include "System.h"
 
 
-///Constructor
+/// @brief Constructor
 Scheduler::Scheduler()
 	:isStartSchedule(false)
 {
 }
 
 
-///Singleton instance
+/// @brief Singleton Instance
+/// @return Scheduler instance
 Scheduler& Scheduler::Instance()
 {
 	static Scheduler instance;
@@ -24,11 +25,11 @@ Scheduler& Scheduler::Instance()
 }
 
 
-//Definitions scheduler
+/// @brief Definitions scheduler
 Scheduler& scheduler = Scheduler::Instance();
 
 
-///Start scheduler
+/// @brief Start scheduler
 void Scheduler::StartScheduler()
 {
 	//Clear start schedule flag
@@ -56,7 +57,8 @@ void Scheduler::StartScheduler()
 }
 
 
-///Rescheduler task
+/// @brief Rescheduler task
+/// @param access scheduler access
 void Scheduler::Rescheduler(Scheduler::Access access)
 {
 	if (false == isStartSchedule) return;
@@ -74,7 +76,8 @@ void Scheduler::Rescheduler(Scheduler::Access access)
 }
 
 
-///Execute task requests
+/// @brief Execute task requests
+/// @param sp stack pointer
 void Scheduler::TaskOperator(uint32_t* sp)
 {
 	//Get the address of the instruction saved in PC
@@ -98,22 +101,27 @@ void Scheduler::TaskOperator(uint32_t* sp)
 }
 
 
-///Interrupt handlers
+/// @brief Interrupt handlers
 extern "C" 
 {
-	//Call thread save task psp in c function
+	/// @brief Call thread save task psp in c function
+	/// @param psp process stack pointer
 	void saveTaskPSP(uint32_t psp)
 	{
 		thread.SaveTaskPSP(psp);
 	}
 
-	//Call thread get task psp in c function
+
+	/// @brief Call thread get task psp in c function
+	/// @return process stack pointer
 	uint32_t getTaskPSP()
 	{
 		return thread.GetTaskPSP();
 	}
 
-	///PendSV_Handler
+
+	/// @brief PendSV_Handler
+	/// @param  
 	__attribute__ ((naked)) void PendSV_Handler(void)
 	{
 		//Save LR back to main, must do this firstly
@@ -145,20 +153,26 @@ extern "C"
 		__ASM("bx lr");
 	}
 
-	///Systick handler
+
+	/// @brief Systick handler
+	/// @param  
 	void SysTick_Handler(void)
 	{
 		System::SysTickCounter();
 		scheduler.Rescheduler(Scheduler::Privileged);
 	}
 
-	//Call scheduler task operator in c function
+
+	/// @brief Call scheduler task operator in c function
+	/// @param sp stack pointer
 	void taskOperator(uint32_t* sp)
 	{
 		scheduler.TaskOperator(sp);
 	}
 
-	///SVC_Handler
+
+	/// @brief SVC_Handler
+	/// @param  
 	__attribute__ ((naked)) void SVC_Handler(void)
 	{
 		__ASM("tst lr, 4");        // check LR to know which stack is used
@@ -168,7 +182,9 @@ extern "C"
 		__ASM("b taskOperator");   // pass R0 as the argument
 	}
 	
-	//Output stacked info
+
+	/// @brief Output stacked info
+	/// @param hardfault_args stack pointer
 	void stacked_info(unsigned int * hardfault_args)
 	{
 		volatile uint32_t stacked_r0 = ((uint32_t)hardfault_args[0]);
@@ -194,7 +210,9 @@ extern "C"
 		while (1);
 	}
 	
-	///HardFault_Handler
+	
+	/// @brief HardFault_Handler
+	/// @param  
 	void HardFault_Handler(void)
 	{
 		__ASM("tst lr, #4");      // check LR to know which stack is used
