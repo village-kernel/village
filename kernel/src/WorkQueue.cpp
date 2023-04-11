@@ -21,8 +21,8 @@ WorkQueue::~WorkQueue()
 }
 
 
-/// @brief WorkQueue instance
-/// @return Singleton instance
+/// @brief Singleton Instance
+/// @return WorkQueue instance
 WorkQueue& WorkQueue::Instance()
 {
 	static WorkQueue instance;
@@ -64,9 +64,9 @@ void WorkQueue::Execute()
 
 
 /// @brief WorkQueue create
-/// @param func 
-/// @param argv 
-/// @param ticks 
+/// @param func work function
+/// @param argv work argv
+/// @param ticks delay ticks
 /// @return work
 WorkQueue::Work* WorkQueue::Create(Function func, char* argv, uint32_t ticks)
 {
@@ -77,7 +77,7 @@ WorkQueue::Work* WorkQueue::Create(Function func, char* argv, uint32_t ticks)
 
 
 /// @brief WorkQueue delete
-/// @param work 
+/// @param work workqueue work
 /// @return result
 int WorkQueue::Delete(Work* work)
 {
@@ -90,7 +90,7 @@ int WorkQueue::Delete(Work* work)
 
 
 /// @brief WorkQueue schedule
-/// @param work 
+/// @param work workqueue work
 /// @return result
 int WorkQueue::Schedule(Work* work)
 {
