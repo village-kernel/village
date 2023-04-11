@@ -79,28 +79,62 @@ public:
 	{}
 
 	///List begin node
-	void Begin() { iterator = head; }
+	Object* Begin()
+	{
+		iterator = head;
+		return iterator->obj;
+	}
 
 	///List next node
-	void Next() { if (NULL != iterator) iterator = iterator->next; }
+	Object* Next()
+	{
+		if (NULL != iterator)
+		{
+			iterator = iterator->next;
+		}
+		return iterator->obj;
+	}
 
 	///List prev node
-	void Prev() { if (NULL != iterator) iterator = iterator->prev; }
+	Object* Prev()
+	{
+		if (NULL != iterator)
+		{
+			iterator = iterator->prev;
+		}
+		return iterator->obj;
+	}
 
 	///List end node
-	void End() { iterator = tail; }
+	Object* End()
+	{
+		iterator = tail;
+		return iterator->obj;
+	}
 
 	///List is begin
-	bool IsBegin() { return (NULL == iterator); }
+	bool IsBegin()
+	{
+		return (NULL == iterator);
+	}
 
 	///List is end
-	bool IsEnd() { return (NULL == iterator); }
+	bool IsEnd()
+	{
+		return (NULL == iterator);
+	}
 
 	///List item
-	Object* Item() { return iterator->obj; }
+	Object* Item()
+	{
+		return iterator->obj;
+	}
 
 	///List get node id 
-	int GetNid() { return iterator->nid; }
+	int GetNid()
+	{
+		return iterator->nid;
+	}
 
 	///Add object node to list
 	int Add(Object* obj)
@@ -182,9 +216,9 @@ public:
 	}
 
 	///Remove object node from list
-	int Remove(Object* obj, int nid)
+	int Remove(Object* obj, int nid = -1)
 	{
-		if (NULL == obj && 0 > nid) return _ERR;
+		if (NULL == obj) return _ERR;
 
 		for (Node* node = head; NULL != node; node = node->next)
 		{
