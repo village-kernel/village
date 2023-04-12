@@ -10,21 +10,32 @@
 #include "Defines.h"
 
 
-/// @brief Mutex
-class Mutex
+/// @brief SpinLock
+class SpinLock
 {
+private:
+	//Members
+	bool lock;
 public:
 	//Methods
+	SpinLock();
+	~SpinLock();
 	void Lock();
 	void Unlock();
 };
 
 
-/// @brief SpinLock
-class SpinLock
+/// @brief Mutex
+class Mutex
 {
+private:
+	//Members
+	bool lock;
+	int  ticks;
 public:
 	//Methods
+	Mutex(int ticks = 1);
+	~Mutex();
 	void Lock();
 	void Unlock();
 };
@@ -36,9 +47,12 @@ class Semaphore
 private:
 	//Members
 	int limit;
+	int counter;
+	int ticks;
 public:
 	//Methods
-	void Set(int limit);
+	Semaphore(int limit = 1, int ticks = 1);
+	~Semaphore();
 	void Up();
 	void Down();
 };
