@@ -16,8 +16,7 @@ class Application3 : public Module
 {
 private:
 	//Members
-	GUI gui;
-	Driver* display;
+	GUI     gui;
 	FATFS   fs;
 	DIR     filedir;
 	FILINFO fileinfo;
