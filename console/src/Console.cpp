@@ -22,14 +22,20 @@ R"(                /____/                                         )",
 };
 
 
-///Constructor
+/// @brief Console constructor
 Console::Console()
-	:list(NULL)
 {
 }
 
 
-///Singleton instance
+/// @brief Console deconstructor
+Console::~Console()
+{
+}
+
+
+/// @brief Singleton Instance
+/// @return Console instance
 Console& Console::Instance()
 {
 	static Console instance;
@@ -37,16 +43,22 @@ Console& Console::Instance()
 }
 
 
-///Console initialize
+/// @brief Definitions console and export
+Console& console = Console::Instance();
+Console* pConsole = &console;
+EXPORT_SYMBOL(pConsole, console);
+
+
+/// @brief Console initialize
 void Console::Initialize()
 {
 	//Initialize msg mgr
 	msgMgr.Initialize();
 
 	//Initialize cmds
-	for (volatile CmdNode* node = list; NULL != node; node = node->next)
+	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
-		node->cmd->Initialize(&msgMgr);
+		cmd->Initialize(&msgMgr);
 	}
 
 	//Output welcome message
@@ -64,7 +76,7 @@ void Console::Initialize()
 }
 
 
-///Recevice message thread
+/// @brief Recevice and handler message
 void Console::Execute()
 {
 	while (1)
@@ -78,15 +90,16 @@ void Console::Execute()
 }
 
 
-///Console execute cmd
+/// @brief Console execute cmd
+/// @param msg recevice message data
 void Console::ExecuteCmd(CmdMsg msg)
 {
-	for (volatile CmdNode* node = list; NULL != node; node = node->next)
+	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
-		if (0 == strcmp((const char*)(node->cmd->GetName()), (const char*)msg.cmd))
+		if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
 		{
-			node->cmd->SetArgs(msg.args);
-			node->cmd->Execute();
+			cmd->SetArgs(msg.args);
+			cmd->Execute();
 			msgMgr.Write((uint8_t*)"# ");
 			return;
 		}
@@ -97,58 +110,21 @@ void Console::ExecuteCmd(CmdMsg msg)
 }
 
 
-///Register cmd object
-void Console::RegisterCmd(Cmd* cmd, uint8_t* name)
+/// @brief Register cmd object
+/// @param cmd console command pointer
+/// @param name console command name
+void Console::RegisterCmd(Cmd* cmd, char* name)
 {
-	CmdNode** nextNode = &list;
-
-	if (cmd) cmd->SetName(name); else return;
-
-	while (NULL != *nextNode)
-	{
-		uint8_t* curCmdName = (*nextNode)->cmd->GetName();
-		uint8_t* newCmdName = cmd->GetName();
-
-		if (strcmp((const char*)newCmdName, (const char*)curCmdName) < 0)
-		{
-			CmdNode* curNode = *nextNode;
-			*nextNode = new CmdNode(cmd);
-			(*nextNode)->next = curNode;
-			return;
-		}
-
-		nextNode = &(*nextNode)->next;
-	}
-
-	*nextNode = new CmdNode(cmd);
+	cmds.InsertByName(cmd, name);
 }
 
 
-///Deregister cmd object
-void Console::DeregisterCmd(Cmd* cmd, uint8_t* name)
+/// @brief Deregister cmd object
+/// @param cmd console command pointer
+/// @param name console command name 
+void Console::DeregisterCmd(Cmd* cmd, char* name)
 {
-	CmdNode** prevNode = &list;
-	CmdNode** currNode = &list;
-
-	while (NULL != *currNode)
-	{
-		if (cmd == (*currNode)->cmd)
-		{
-			delete *currNode;
-
-			if (*prevNode == *currNode)
-				*prevNode = (*currNode)->next;
-			else
-				(*prevNode)->next = (*currNode)->next;
-
-			break;
-		}
-		else
-		{
-			prevNode = currNode;
-			currNode = &(*currNode)->next;
-		}
-	}
+	cmds.RemoveByName(cmd, name);
 }
 
 
