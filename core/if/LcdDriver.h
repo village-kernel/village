@@ -40,8 +40,13 @@ public:
 	//Members
 	DeviceInfo device;
 public:
+	//Constructor
+	LcdDriver()  {}
+
+	//Deconstructor
+	virtual ~LcdDriver() {}
+
 	//Methods
-	virtual void Initialize() = 0;
 	virtual void OpenWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height) = 0;
 	virtual void SetCursor(uint16_t x, uint16_t y) = 0;
 	virtual void Fill(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color) = 0;

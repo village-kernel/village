@@ -13,6 +13,18 @@ Display::Display()
 }
 
 
+///Singleton instance
+Display& Display::Instance()
+{
+	static Display instance;
+	return instance;
+}
+
+
+//Definitions display
+Display& display = Display::Instance();
+
+
 ///Display Initialize
 void Display::Initialize(LcdDriver* lcd)
 {
