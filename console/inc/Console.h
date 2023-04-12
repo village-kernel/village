@@ -7,6 +7,7 @@
 #ifndef __CONSOLE_H__
 #define __CONSOLE_H__
 
+#include "Synchronize.h"
 #include "Module.h"
 #include "Cmd.h"
 
@@ -21,9 +22,14 @@
 class Console : public Module
 {
 private:
+	//Static constants
+	static const uint16_t buf_size = 100;
+
 	//Members
 	List<Cmd> cmds;
+	Mutex     mutex;
 	CmdMsgMgr msgMgr;
+	char      data[buf_size];
 
 	//Methods
 	Console();
@@ -37,10 +43,10 @@ public:
 	void DeregisterCmd(Cmd* cmd, char* name);
 
 	//Methods
-	int log(...);
-	int info(...);
-	int error(...);
-	int warn(...);
+	void log(const char* format, ...);
+	void info(const char* format, ...);
+	void error(const char* format, ...);
+	void warn(const char* format, ...);
 
 	//Singleton Instance
 	static Console& Instance();

@@ -7,6 +7,8 @@
 #include "Kernel.h"
 #include "Console.h"
 #include "string.h"
+#include "stdarg.h"
+#include "stdio.h"
 
 
 ///vk.kernel console welcome string
@@ -125,6 +127,74 @@ void Console::RegisterCmd(Cmd* cmd, char* name)
 void Console::DeregisterCmd(Cmd* cmd, char* name)
 {
 	cmds.RemoveByName(cmd, name);
+}
+
+
+/// @brief Console log
+/// @param format 
+/// @param  
+void Console::log(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsprintf(data, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)"Log: ");
+	msgMgr.Write((uint8_t*)data);
+	msgMgr.Write((uint8_t*)"\r\n");
+	mutex.Unlock();
+}
+
+
+/// @brief Console info
+/// @param format 
+/// @param  
+void Console::info(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsprintf(data, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)"\033[36mInfo: ");
+	msgMgr.Write((uint8_t*)data);
+	msgMgr.Write((uint8_t*)"\r\n\033[39m");
+	mutex.Unlock();
+}
+
+
+/// @brief Console error
+/// @param format 
+/// @param  
+void Console::error(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsprintf(data, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)"\033[31mError: ");
+	msgMgr.Write((uint8_t*)data);
+	msgMgr.Write((uint8_t*)"\r\n\033[39m");
+	mutex.Unlock();
+}
+
+
+/// @brief Console warn
+/// @param format 
+/// @param  
+void Console::warn(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsprintf(data, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)"\033[33mWarning: ");
+	msgMgr.Write((uint8_t*)data);
+	msgMgr.Write((uint8_t*)"\r\n\033[39m");
+	mutex.Unlock();
 }
 
 
