@@ -9,6 +9,7 @@
 
 #include "stdint.h"
 #include "stddef.h"
+#include "string.h"
 #include "Defines.h"
 
 /// @brief Get method address
@@ -37,13 +38,14 @@ dst_type union_cast(src_type src)
 }
 
 
-///Class end point
+/// @brief Class end point
 class Class {};
 typedef void (Class::*Method)(char*);
 typedef void (*Function)(char*);
 
 
-///List class template 
+/// @brief List class template 
+/// @tparam Object 
 template<typename Object>
 class List
 {
@@ -53,12 +55,19 @@ private:
 	{
 		Object* obj;
 		int     nid;
+		char*   name;
 		Node*   prev;
 		Node*   next;
 
-		Node(Object* obj = NULL, int nid = 0) :
+		Node
+		(
+			Object* obj  = NULL,
+			int     nid  = 0,
+			char*   name = NULL
+		):
 			obj(obj),
 			nid(nid),
+			name(name),
 			prev(NULL),
 			next(NULL)
 		{}
@@ -70,7 +79,7 @@ private:
 	Node* iterator;
 	int   nidCounter;
 public:
-	///Constructor
+	/// @brief Constructor
 	List() :
 		head(NULL),
 		tail(NULL),
@@ -78,14 +87,16 @@ public:
 		nidCounter(0)
 	{}
 
-	///List begin node
+	/// @brief List begin node
+	/// @return object pointer
 	Object* Begin()
 	{
 		iterator = head;
 		return iterator->obj;
 	}
 
-	///List next node
+	/// @brief List next node
+	/// @return object pointer
 	Object* Next()
 	{
 		if (NULL != iterator)
@@ -95,7 +106,8 @@ public:
 		return iterator->obj;
 	}
 
-	///List prev node
+	/// @brief List prev node
+	/// @return object pointer
 	Object* Prev()
 	{
 		if (NULL != iterator)
@@ -105,38 +117,52 @@ public:
 		return iterator->obj;
 	}
 
-	///List end node
+	/// @brief List end node
+	/// @return object pointer
 	Object* End()
 	{
 		iterator = tail;
 		return iterator->obj;
 	}
 
-	///List is begin
+	/// @brief List is begin
+	/// @return result
 	bool IsBegin()
 	{
 		return (NULL == iterator);
 	}
 
-	///List is end
+	/// @brief List is begin
+	/// @return result
 	bool IsEnd()
 	{
 		return (NULL == iterator);
 	}
 
-	///List item
+	/// @brief List item
+	/// @return object pointer
 	Object* Item()
 	{
 		return iterator->obj;
 	}
 
-	///List get node id 
+	/// @brief List get node id 
+	/// @return node id
 	int GetNid()
 	{
 		return iterator->nid;
 	}
 
-	///Add object node to list
+	/// @brief List get node name
+	/// @return node name
+	char* GetName()
+	{
+		return iterator->name;
+	}
+
+	/// @brief Add object node to list
+	/// @param obj object pointer
+	/// @return result
 	int Add(Object* obj)
 	{
 		if (NULL == obj) return -1;
@@ -156,7 +182,10 @@ public:
 		return (NULL != tail) ? tail->nid : -1;
 	}
 
-	///Insert object node to list
+	/// @brief Insert object node to list
+	/// @param obj object pointer
+	/// @param nid object node id
+	/// @return result
 	int Insert(Object* obj, int nid)
 	{
 		if (NULL == obj) return -1;
@@ -215,7 +244,72 @@ public:
 		return (NULL != temp) ? temp->nid : -1;
 	}
 
-	///Remove object node from list
+	/// @brief Insert object node to list
+	/// @param obj object pointer
+	/// @param nid object node id
+	/// @return result
+	int InsertByName(Object* obj, char* name)
+	{
+		if (NULL == obj) return -1;
+
+		Node* temp = NULL;
+
+		if (NULL == head)
+		{
+			temp = new Node(obj, nidCounter++, name);
+			head = temp;
+			tail = head;
+		}
+		else
+		{
+			if (strcmp(name, tail->name) > 0)
+			{
+				temp = new Node(obj, nidCounter++, name);
+				temp->prev = tail;
+				tail->next = temp;
+				tail = tail->next;
+			}
+			else if (strcmp(name, head->name) < 0)
+			{
+				temp = new Node(obj, nidCounter++, name);
+				temp->next = head;
+				head->prev = temp;
+				head = head->prev;
+			}
+			else
+			{
+				Node* prevNode = head;
+				Node* nextNode = head->next;
+
+				while (NULL != nextNode)
+				{
+					if (strcmp(name, nextNode->name) < 0)
+					{
+						temp = new Node(obj, nidCounter++, name);
+						temp->prev = prevNode;
+						temp->next = nextNode;
+						prevNode->next = temp;
+						nextNode->prev = temp;
+						break;
+					}
+					else
+					{
+						prevNode = nextNode;
+						nextNode = nextNode->next;
+					}
+				}
+			}
+		}
+
+		nidCounter = tail->nid;
+
+		return (NULL != temp) ? temp->nid : -1;
+	}
+
+	/// @brief Remove object node from list
+	/// @param obj object pointer
+	/// @param nid node id
+	/// @return result
 	int Remove(Object* obj, int nid = -1)
 	{
 		if (NULL == obj) return _ERR;
@@ -243,12 +337,58 @@ public:
 		return _ERR;
 	}
 
-	///List GetItem
+	/// @brief Remove object node from list
+	/// @param obj object pointer
+	/// @param nid node id
+	/// @return result
+	int RemoveByName(Object* obj, char* name)
+	{
+		if (NULL == obj) return _ERR;
+
+		for (Node* node = head; NULL != node; node = node->next)
+		{
+			if ((0 == strcmp(name, node->name)) ||
+				(obj == node->obj))
+			{
+				if (NULL != node->prev)
+					node->prev->next = node->next;
+				else
+					head = node->next;
+
+				if (NULL != node->next)
+					node->next->prev = node->prev;
+				else
+					tail = node->prev;
+
+				delete node;
+				delete obj;
+				return _OK;
+			}
+		}
+
+		return _ERR;
+	}
+
+	/// @brief List GetItem
+	/// @param nid node id
+	/// @return object pointer
 	Object* GetItem(int nid)
 	{
 		for (Node* node = head; NULL != node; node = node->next)
 		{
 			if (nid == node->nid) return node->obj;
+		}
+		return NULL;
+	}
+
+	/// @brief List GetItemByName
+	/// @param nid node name
+	/// @return object pointer
+	Object* GetItemByName(char* name)
+	{
+		for (Node* node = head; NULL != node; node = node->next)
+		{
+			if (0 == strcmp(name, node->name)) return node->obj;
 		}
 		return NULL;
 	}
