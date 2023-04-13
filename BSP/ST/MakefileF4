@@ -55,6 +55,9 @@ endif
 ######################################
 # arch
 ######################################
+# flash CFG
+FLASH_CFG := -f interface/stlink-v2.cfg -f target/stm32f4x.cfg
+
 # MCU
 MCU  := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
@@ -62,9 +65,6 @@ MCU  := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 DEFS := -DUSE_HAL_DRIVER -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-$(CONFIG_STM32F407ZE) := -T vk.hardware/BSP/ST/LinkerScripts/STM32F4xx/STM32F407ZE_flash.ld
 LDSCRIPT-$(CONFIG_STM32F405RG) := -T vk.hardware/BSP/ST/LinkerScripts/STM32F4xx/STM32F405RG_flash.ld
-
-
-# flash CFG
-FLASH_CFG := -f interface/stlink-v2.cfg -f target/stm32f4x.cfg
+LDSCRIPT-$(CONFIG_STM32F407ZE) := -T vk.hardware/BSP/ST/LinkerScripts/STM32F4xx/STM32F407ZE_flash.ld
+LDSCRIPT-$(CONFIG_STM32F407ZG) := -T vk.hardware/BSP/ST/LinkerScripts/STM32F4xx/STM32F407ZG_flash.ld

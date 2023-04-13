@@ -14,7 +14,7 @@ inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MS
 inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Inc
 inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Inc
 
-src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/GCC
+src-y                    +=	vk.hardware/BSP/ST/GCC
 src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Class/MSC/Src
 src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Core/Src
 src-$(CONFIG_USBSTORAGE) +=	vk.hardware/BSP/ST/STM32_USB_Device_Library/Storage/Src
