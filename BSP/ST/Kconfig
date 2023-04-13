@@ -57,6 +57,27 @@ choice
 		bool "STM32F407ZG"
 endchoice
 
+choice
+	prompt "MCU Model"
+	depends on STM32F405xx
+	default STM32F405RG
+
+	config STM32F405OE
+		bool "STM32F405OE"
+
+	config STM32F405OG
+		bool "STM32F405OG"
+
+	config STM32F405RG
+		bool "STM32F405RG"
+
+	config STM32F405VG
+		bool "STM32F405VG"
+
+	config STM32F405ZG
+		bool "STM32F405ZG"
+endchoice
+
 endif
 
 # config stm32h7xx
