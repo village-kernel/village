@@ -36,6 +36,7 @@ config ENVIRONMENT
 	default n
 
 config EXECUTOR
+	depends on LOADER
 	bool "Enable executor support"
 	default n
 
