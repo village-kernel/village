@@ -8,10 +8,10 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_BOOTLOADER) += vk.bootloader/bootloader/inc
-src-$(CONFIG_BOOTLOADER) += vk.bootloader/bootloader/src
+inc-$(CONFIG_BOOTLOADER) += vk.bootloader/arm/inc
+src-$(CONFIG_BOOTLOADER) += vk.bootloader/arm/src
 
 ######################################
 # objects
 ######################################
-objs-$(CONFIG_APPLICATION1) += Bootloader.o
+objs-$(CONFIG_BOOTLOADER) += Bootloader.o
