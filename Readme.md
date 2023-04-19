@@ -1,37 +1,41 @@
-乡村计划：
-1.开发一个通用嵌入式开发平台
+# 乡村内核计划：
+# Village内核特点:
+- ### 1.支持模块化，代码模块可分离
+- ### 2.上层功能代码与底层驱动代码分离，可移植性强
 
-目的：
+---
+# 目录：
+- ## vk.application: 应用层代码
+- ## vk.bootloader: 加载器代码
+- ## vk.hardware: 硬件层代码
+- ## vk.kernel: 微内核代码
+- ## vk.scripts: 工具脚本
+- ## vk.build：编译文件
 
-1.实现代码模块可分离，减少耦合
-2.实现上层功能代码与底层驱动代码分离，增强可移植性
+---
+# 环境搭建：
+## ubuntu 安装开发环境:
+- ### arm-none-eabi-gcc
+		sudo apt install arm-none-eabi-gcc
 
-目录：
-VK.Application: 用来存放上层代码
-VK.Hardware: 用来存放硬件层代码
-VK.Kernel: 用来存放微内核代码
-VK.Build：用来存放编译文件
+- ### openocd
+		sudo apt install openocd
 
-ubuntu 安装开发环境:
-1.arm-none-eabi-gcc
-sudo apt install arm-none-eabi-gcc
-2.openocd
-sudo apt install openocd
+## macos 安装开发环境：
+- ### brew
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-macos 安装开发环境：
-0.brew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-1.arm-none-eabi-gcc
-brew install armmbed/formulae/arm-none-eabi-gcc
-2.openocd
-brew install open-ocd
+- ### arm-none-eabi-gcc
+		brew install armmbed/formulae/arm-none-eabi-gcc
 
-windows 安装开发环境：
-0.cywin：
-以下工具都可以在cywin里面下载。
-注意：不要使用mingw64，问题太多。
-1.make
-2.gcc
-3.arm-none-eabi-gcc
-4.openocd
+- ### openocd
+		brew install open-ocd
 
+## windows 安装开发环境：
+- ### cywin：
+- ### make：
+- ### gcc:
+- ### arm-none-eabi-gcc:
+- ### openocd:
+
+### 以上工具都可以在cywin里面下载。注意：不要使用mingw64，问题太多。
