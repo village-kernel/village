@@ -9,7 +9,7 @@
 ######################################
 # target
 ######################################
-TARGET := village-target
+TARGET := village
 
 ######################################
 # building variables
@@ -55,7 +55,7 @@ MODULES_DIR := $(BUILD_DIR)/modules
 # tasks
 #######################################
 # default action: build all
-all: village module
+all: bootloader kernel module
 
 # flash firmware
 flash:
@@ -104,11 +104,17 @@ CFLAGS    += -Wall -fdata-sections -ffunction-sections
 CFLAGS    += -mword-relocations -mlong-calls -fno-common
 CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
 
-# ld flags
-LDFLAGS   += $(MCU) $(LDSCRIPT-y) -specs=nano.specs -lc -lm -lnosys
-LDFLAGS   += -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref
-LDFLAGS   += -Wl,--gc-sections
-LDFLAGS   += -Wl,--no-warn-rwx-segment
+# bootloader ld flags
+BLDFLAGS  += $(MCU) $(LDSCRIPT-y) -specs=nano.specs -lc -lm -lnosys
+BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
+BLDFLAGS  += -Wl,--gc-sections
+BLDFLAGS  += -Wl,--no-warn-rwx-segment
+
+# kernel ld flags
+KLDFLAGS  += $(MCU) $(LDSCRIPT-y) -specs=nano.specs -lc -lm -lnosys
+KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
+KLDFLAGS  += -Wl,--gc-sections
+KLDFLAGS  += -Wl,--no-warn-rwx-segment
 
 # mod ld flags
 MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
@@ -134,28 +140,43 @@ MLDFLAGS  += -r -Bsymbolic -nostartfiles
 	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
 	$(Q)$(CXX) -c $(CXXFLAGS) $< -o $(BUILD_DIR)/$(dir $<)/$@
 
+%.hex: %.elf
+	$(Q)echo output $@
+	$(Q)$(HEX) $< $@
+
+%.bin: %.elf
+	$(Q)echo output $@
+	$(Q)$(BIN) $< $@
+
+
+#######################################
+# build the bootloader
+#######################################
+bootloader: $(objs-y)
+	$(Q)$(MAKE) \
+	$(BUILD_DIR)/$(TARGET)-boot.elf \
+	$(BUILD_DIR)/$(TARGET)-boot.hex \
+	$(BUILD_DIR)/$(TARGET)-boot.bin
+
+$(BUILD_DIR)/$(TARGET)-boot.elf: $(objs-y)
+	$(Q)echo output $@
+	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@
+	$(Q)$(SZ) $@
+
 
 #######################################
 # build the kernel
 #######################################
-village: $(objs-y)
+kernel: $(objs-y)
 	$(Q)$(MAKE) \
-	$(BUILD_DIR)/$(TARGET).elf \
-	$(BUILD_DIR)/$(TARGET).hex \
-	$(BUILD_DIR)/$(TARGET).bin
+	$(BUILD_DIR)/$(TARGET)-kernel.elf \
+	$(BUILD_DIR)/$(TARGET)-kernel.hex \
+	$(BUILD_DIR)/$(TARGET)-kernel.bin
 
-$(BUILD_DIR)/$(TARGET).elf: $(objs-y)
+$(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(LDFLAGS) $^ -o $@
+	$(Q)$(CXX) $(KLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
-
-$(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf
-	$(Q)echo output $@
-	$(Q)$(HEX) $< $@
-
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
-	$(Q)echo output $@
-	$(Q)$(BIN) $< $@
 
 
 #######################################
