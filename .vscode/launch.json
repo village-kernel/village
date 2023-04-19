@@ -8,7 +8,7 @@
         {
             "name": "Cortex Debug-jlink",
             "cwd": "${workspaceRoot}/",
-            "executable": "${workspaceFolder}/vk.build/${workspaceFolderBasename}.elf",
+            "executable": "${workspaceFolder}/vk.build/village-kernel.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "jlink",
@@ -31,7 +31,7 @@
         {
             "name": "Cortex Debug-stlink",
             "cwd": "${workspaceRoot}/",
-            "executable": "${workspaceFolder}/vk.build/${workspaceFolderBasename}.elf",
+            "executable": "${workspaceFolder}/vk.build/village-kernel.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
