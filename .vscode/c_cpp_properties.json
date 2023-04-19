@@ -14,6 +14,7 @@
                 "${workspaceRoot}/vk.kernel/libraries/fatfs/inc",
                 "${workspaceRoot}/vk.kernel/utilities/inc",
                 "${workspaceRoot}/vk.kernel/console/inc",
+                "${workspaceRoot}/vk.gui/core/if",
                 "${workspaceRoot}/vk.gui/core/inc",
                 "${workspaceRoot}/vk.gui/font/inc",
                 "${workspaceRoot}/vk.application/application/inc"
