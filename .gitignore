@@ -1,3 +1,4 @@
 /Makefile_gen
 /Kconfig_gen
 /kconfig/*.exe
+.DS_Store

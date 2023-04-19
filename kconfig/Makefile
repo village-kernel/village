@@ -4,7 +4,7 @@
 ######################################
 HOST_CFLAGS  := -I/usr/include/ncurses -DCURSES_LOC="<ncurses.h>" -DLOCALE -DKBUILD_NO_NLS
 HOST_CFLAGS  +=  -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer
-HOST_LDFLAGS := -lncurses
+HOST_LDFLAGS := -lncurses 
 
 HOST_CC      := gcc
 
@@ -31,16 +31,16 @@ all: prepare mconf conf
 prepare:
 	$(Q)cp zconf.lex.c_shipped zconf.lex.c
 	$(Q)cp zconf.tab.c_shipped zconf.tab.c
+	$(Q)$(MAKE) $(mconf-objs)
+	$(Q)$(MAKE) $(conf-objs)
 
-mconf: $(mconf-objs)
+mconf:
 	$(Q)echo Host Building mconf
-	$(Q)$(MAKE) prepare
-	$(Q)$(HOST_CC) -o $@ $^ $(HOST_LDFLAGS)
+	$(Q)$(HOST_CC) $(HOST_CFLAGS) $(HOST_LDFLAGS)-o $@ $(mconf-objs)
 
-conf: $(conf-objs)
+conf:
 	$(Q)echo Host Building conf
-	$(Q)$(MAKE) prepare
-	$(Q)$(HOST_CC) -o $@ $^ $(HOST_LDFLAGS)
+	$(Q)$(HOST_CC) $(HOST_CFLAGS) $(HOST_LDFLAGS) -o $@ $(conf-objs)
 
 %.o : %.c
 	$(Q)echo Host Compiling $(notdir $@)
