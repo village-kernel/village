@@ -1,15 +1,15 @@
 [submodule "vk.hardware"]
 	path = vk.hardware
-	url = git@git.aicodeone.fun:STM32/vk.hardware.git
+	url = git@git.aicodeone.fun:village-kernel/vk.hardware.git
 [submodule "vk.kernel"]
 	path = vk.kernel
-	url = git@git.aicodeone.fun:STM32/vk.kernel.git
+	url = git@git.aicodeone.fun:village-kernel/vk.kernel.git
 [submodule "vk.gui"]
 	path = vk.gui
-	url = git@git.aicodeone.fun:STM32/vk.gui.git
+	url = git@git.aicodeone.fun:village-kernel/vk.gui.git
 [submodule "vk.scripts"]
 	path = vk.scripts
-	url = git@git.aicodeone.fun:STM32/vk.scripts.git
+	url = git@git.aicodeone.fun:village-kernel/vk.scripts.git
 [submodule "vk.bootloader"]
 	path = vk.bootloader
-	url = git@git.aicodeone.fun:STM32/vk.bootloader.git
+	url = git@git.aicodeone.fun:village-kernel/vk.bootloader.git
