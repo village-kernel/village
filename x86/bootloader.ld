@@ -3,7 +3,6 @@ ENTRY(_start)
 MEMORY
 {
 	RAM (xrw)    : ORIGIN = 0x0000, LENGTH = 512
-	FLASH (rx)   : ORIGIN = 0x0000, LENGTH = 512
 }
 
 SECTIONS
@@ -14,7 +13,7 @@ SECTIONS
 		*(.text)
 		*(.text*)
 		. = ALIGN(8);
-	} > FLASH
+	} > RAM
 
 	.rodata :
 	{
@@ -22,7 +21,7 @@ SECTIONS
 		*(.rodata)
 		*(.rodata*)
 		. = ALIGN(8);
-	} > FLASH
+	} > RAM
 
 	.data :
 	{
@@ -30,7 +29,7 @@ SECTIONS
 		*(.data)
 		*(.data*)
 		. = ALIGN(8);
-	} > RAM AT> FLASH
+	} > RAM
 
 	.bss :
 	{
@@ -38,5 +37,5 @@ SECTIONS
 		*(.bss)
 		*(.bss*)
 		. = ALIGN(8);
-	} > RAM AT> FLASH
+	} > RAM
 }

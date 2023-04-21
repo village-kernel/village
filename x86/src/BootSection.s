@@ -4,15 +4,14 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+
 BOOTSEG		= 0x07C0		/* original address of boot-sector */
 
 	.code16
     .section ".text", "ax"
-
 	.global  _start
 
 _start:
-
 	# Normalize the start address
 	ljmp $BOOTSEG, $start2
 
@@ -21,23 +20,37 @@ start2:
 	movw %ax, %ds
 	movw %ax, %es
 	movw %ax, %ss
-	movw $0x100, %sp
-	jmp  DispStr
+	movw $0x8000, %bp
+	movw %bp, %sp
 
-DispStr:
-	movw $BootMessage, %ax
-	movw %ax, %bp
-	movw $50, %cx
-	movw $0x1301, %ax
-	movw $0x000c, %bx
-	movb $0, %dh
-	movb $3, %dl
-	int  $0x10
+	movw $bootMsg, %bx
+	call PrintString
 
-Loop:
-	jmp Loop
+	movw $diskLoadMsg, %bx
+	call PrintString
 
-BootMessage:
-	.ascii	"Hello, OS world!"
+	movw $0x1234, %dx
+	call PrintHex
+
+loop:
+	jmp loop
+
+#include "BootPrint.s"
+#include "BootGPT.s"
+
+bootMsg:
+	.asciz "Hello, OS world!"
+
+diskLoadMsg:
+	.asciz "Loading data from disk!"
+
+diskErrorMsg:
+	.asciz "Disk error!"
+
+switchPmMsg:
+	.asciz "Switch protected mode..."
+
+BootSectionEnd:
 	.org	510
 	.word	0xaa55
+

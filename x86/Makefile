@@ -10,15 +10,15 @@ ST  = $(GCC_PREFIX)strip
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 
-CFLAG  = -m32
+CFLAG  = -m32 -o0 -gdwarf-2 -ffreestanding
 LDFLAG = -m elf_i386 -Tbootloader.ld
 
 boot:
-	$(AS)  -c $(CFLAG) src/boot.s -o boot.o
-#	$(CXX) -c $(CFLAG) src/Bootloader.cpp -o Bootloader.o
-	$(LD) $(LDFLAG) boot.o -o boot.elf
-	$(HEX) boot.elf boot.hex
-	$(BIN) boot.elf boot.bin
+	$(AS)  -c $(CFLAG) src/BootSection.s -o BootSection.o
+	$(CXX) -c $(CFLAG) src/Bootloader.cpp -o Bootloader.o
+	$(LD) $(LDFLAG) BootSection.o -o BootSection.elf
+	$(HEX) BootSection.elf BootSection.hex
+	$(BIN) BootSection.elf BootSection.bin
 
 clean:
-	rm -rf Bootloader.o boot.o boot.elf boot.hex boot.bin
+	rm -rf *.o *.elf *.hex *.bin
