@@ -4,53 +4,72 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+.org 0
+.code16
+.section ".text", "ax"
 
-BOOTSEG		= 0x07C0		/* original address of boot-sector */
+estack16 = 0x9000
+estack32 = 0x90000
+bootloader = 0x1000
 
-	.code16
-    .section ".text", "ax"
-	.global  _start
-
+.global _start
 _start:
-	# Normalize the start address
-	ljmp $BOOTSEG, $start2
-
-start2:
 	movw %cs, %ax
 	movw %ax, %ds
 	movw %ax, %es
 	movw %ax, %ss
-	movw $0x8000, %bp
+	movw $estack16, %bp
 	movw %bp, %sp
 
-	movw $bootMsg, %bx
-	call PrintString
+	call LoadBootLoader
+	call SwitchToPM
+	jmp .
 
-	movw $diskLoadMsg, %bx
-	call PrintString
 
-	movw $0x1234, %dx
-	call PrintHex
+LoadBootLoader:
+	movw $bootloader, %bx
+	movb $2, %dh
+	call ReadDisk
+	ret
 
-loop:
-	jmp loop
+SwitchToPM:
+	# disable interrupts
+	cli
 
-#include "BootPrint.s"
+	# load the GDT descriptor
+	lgdt gdtDescriptor
+
+	# set 32-bit mode bit in cr0
+	mov %cr0, %eax 
+	or  $0x1, %eax
+	mov %eax, %cr0
+
+	# far jump by using a different segment
+	ljmp $codeSeg, $InitPM  
+
+
+#include "BootDisk.s"
 #include "BootGPT.s"
+#include "BootPrint.s"
 
-bootMsg:
-	.asciz "Hello, OS world!"
+.code32
+	InitPM:
+	# update segment
+	movw $dataSeg, %ax 
+	movw %ax, %ds
+	movw %ax, %ss
+	movw %ax, %es
+	movw %ax, %fs
+	movw %ax, %gs
 
-diskLoadMsg:
-	.asciz "Loading data from disk!"
+	# update stack
+	movl $estack32, %ebp  
+	movl %ebp, %esp 
 
-diskErrorMsg:
-	.asciz "Disk error!"
+	# call bootloader
+	call bootloader
+	jmp .
 
-switchPmMsg:
-	.asciz "Switch protected mode..."
-
-BootSectionEnd:
+bootSectionEnd:
 	.org	510
 	.word	0xaa55
-
