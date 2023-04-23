@@ -12,9 +12,7 @@ BIN = $(CP) -O binary -S
 
 ASFLAG = --32 -gstabs
 CFLAG  = -m32 -o0 -gdwarf-2 -ffreestanding
-#CFLAG  = -m32 -o0 -ffreestanding
-#LDFLAG = -m elf_i386 -Tbootloader.ld
-LDFLAG1 = -m elf_i386 -Ttext 0x1000
+LDFLAG1 = -m elf_i386 -Tbootloader.ld
 LDFLAG2 = -m elf_i386 --oformat binary -Ttext 0x7c00
 
 boot:
@@ -25,7 +23,10 @@ boot:
 
 	$(AS) -c $(CFLAG) src/BootSection.s -o BootSection.o
 	$(LD) $(LDFLAG2) BootSection.o -o BootSection.bin
-	cat BootSection.bin Bootloader.bin BootSection.bin > os-image
+
+	dd if=/dev/zero of=vboot.img bs=512 count=18
+	dd if=BootSection.bin of=vboot.img bs=512 seek=0 conv=notrunc
+	dd if=Bootloader.bin  of=vboot.img bs=512 seek=1 conv=notrunc
 
 clean:
-	rm -rf *.o *.elf *.hex *.bin
+	rm -rf *.o *.elf *.hex *.bin *.img
