@@ -152,7 +152,7 @@ bootsection: $(objs-bs-y)
 
 $(BUILD_DIR)/$(TARGET)-bs.elf: $(objs-bs-y)
 	$(Q)echo output $@
-	$(Q)$(LD) $(BSLDFLAGS) $^ -o $@
+	$(Q)$(CXX) $(BSLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
 
 
@@ -203,9 +203,10 @@ $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 # generate the os image
 #######################################
 osImage:
-	dd if=/dev/zero                   of=$(BUILD_DIR)/village-os.img bs=512 count=18
-	dd if=$(BUILD_DIR)/village-bs.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
-	dd if=$(BUILD_DIR)/village-bl.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
+	$(Q)echo generated village kernel image
+	$(Q)dd if=/dev/zero                   of=$(BUILD_DIR)/village-os.img bs=512 count=18
+	$(Q)dd if=$(BUILD_DIR)/village-bs.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
+	$(Q)dd if=$(BUILD_DIR)/village-bl.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
 #	cat $(BUILD_DIR)/village-os.img $(BUILD_DIR)/village-kernel.bin > $(BUILD_DIR)/village-os.img
 
 
