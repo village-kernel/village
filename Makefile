@@ -57,11 +57,22 @@ MODULES_DIR := $(BUILD_DIR)/modules
 #######################################
 # default action: build all
 all:
+ifeq ($(CONFIG_BOOTSECTION), y)
 	$(Q)$(MAKE) bootsection
+endif
+ifeq ($(CONFIG_BOOTLOADER), y)
 	$(Q)$(MAKE) bootloader
+endif
+ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
+endif
+ifeq ($(CONFIG_MODULE), y)
 	$(Q)$(MAKE) module
+endif
+ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
+endif
+
 
 # flash firmware
 flash:
@@ -133,7 +144,6 @@ endif
 #######################################
 # build the bootsection
 #######################################
-ifeq ($(CONFIG_BOOTSECTION), y)
 bootsection: $(objs-bs-y)
 	$(Q)$(MAKE) \
 	$(BUILD_DIR)/$(TARGET)-bs.elf \
@@ -144,15 +154,11 @@ $(BUILD_DIR)/$(TARGET)-bs.elf: $(objs-bs-y)
 	$(Q)echo output $@
 	$(Q)$(LD) $(BSLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
-else
-bootsection:
-endif
 
 
 #######################################
 # build the bootloader
 #######################################
-ifeq ($(CONFIG_BOOTLOADER), y)
 bootloader: $(objs-bl-y)
 	$(Q)$(MAKE) \
 	$(BUILD_DIR)/$(TARGET)-bl.elf \
@@ -161,34 +167,26 @@ bootloader: $(objs-bl-y)
 
 $(BUILD_DIR)/$(TARGET)-bl.elf: $(objs-bl-y)
 	$(Q)echo output $@
-	$(Q)$(LD) $(BLDFLAGS) $^ -o $@
+	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
-else
-bootloader:
-endif
 
 
 #######################################
 # build the modules
 #######################################
-ifeq ($(CONFIG_MODULE), y)
 module: $(objs-m)
 	$(Q)mkdir -p $(MODULES_DIR)
 	$(Q)$(MAKE) $(addprefix $(MODULES_DIR)/, $(objs-m:.o=.mo))
 
 $(MODULES_DIR)/%.mo: %.o
 	$(Q)echo Generating $(notdir $@)
-	$(Q)$(LD) $(MLDFLAGS) $< -o $(@:.mo=.elf)
+	$(Q)$(CXX) $(MLDFLAGS) $< -o $(@:.mo=.elf)
 	$(Q)$(ST) -g -o $@ $(@:.mo=.elf)
-else
-module:
-endif
 
 
 #######################################
 # build the kernel
 #######################################
-ifeq ($(CONFIG_KERNEL), y)
 kernel: $(objs-y)
 	$(Q)$(MAKE) \
 	$(BUILD_DIR)/$(TARGET)-kernel.elf \
@@ -197,11 +195,8 @@ kernel: $(objs-y)
 
 $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 	$(Q)echo output $@
-	$(Q)$(LD) $(KLDFLAGS) $^ -o $@
+	$(Q)$(CXX) $(KLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
-else
-kernel:
-endif
 
 
 #######################################
