@@ -46,6 +46,7 @@ MODULES_DIR := $(BUILD_DIR)/modules
 # include other makefile
 ######################################
 -include vk.application/Makefile
+-include vk.bootloader/Makefile
 -include vk.hardware/Makefile
 -include vk.kernel/Makefile
 -include vk.gui/Makefile
@@ -55,7 +56,12 @@ MODULES_DIR := $(BUILD_DIR)/modules
 # tasks
 #######################################
 # default action: build all
-all: bootloader kernel module
+all:
+	$(Q)$(MAKE) bootsection
+	$(Q)$(MAKE) bootloader
+	$(Q)$(MAKE) kernel
+	$(Q)$(MAKE) module
+	$(Q)$(MAKE) osImage
 
 # flash firmware
 flash:
@@ -81,7 +87,7 @@ BIN = $(CP) -O binary -S
 #######################################
 # setting build environment
 #######################################
-INCLUDES  = $(addprefix "-I", $(inc-y) $(inc-m))
+INCLUDES  = $(addprefix -I, $(inc-y) $(inc-m))
 VPATH     = $(addprefix $(BUILD_DIR)/, $(src-y) $(src-m)) $(src-y) $(src-m)
 
 
@@ -89,37 +95,12 @@ VPATH     = $(addprefix $(BUILD_DIR)/, $(src-y) $(src-m)) $(src-y) $(src-m)
 # compiler flags
 #######################################
 ifeq ($(DEBUG), 1)
-CFLAGS    += -g -gdwarf-2
+CFLAGS    += -g -gdwarf-2 -DDebug
 endif
 
 ifneq ($(CONFIG_ENVIRONMENT), y)
 CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
 endif
-
-# gcc flags
-CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
-CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.lst)
-CFLAGS    += -MMD -MP -MF"$(BUILD_DIR)/$(dir $<)/$(@:%.o=%.d)"
-CFLAGS    += -Wall -fdata-sections -ffunction-sections
-CFLAGS    += -mword-relocations -mlong-calls -fno-common
-CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
-
-# bootloader ld flags
-BLDFLAGS  += $(MCU) $(LDSCRIPT-y) -specs=nano.specs -lc -lm -lnosys
-BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
-BLDFLAGS  += -Wl,--gc-sections
-BLDFLAGS  += -Wl,--no-warn-rwx-segment
-
-# kernel ld flags
-KLDFLAGS  += $(MCU) $(LDSCRIPT-y) -specs=nano.specs -lc -lm -lnosys
-KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
-KLDFLAGS  += -Wl,--gc-sections
-KLDFLAGS  += -Wl,--no-warn-rwx-segment
-
-# mod ld flags
-MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
-MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
-MLDFLAGS  += -r -Bsymbolic -nostartfiles
 
 
 #######################################
@@ -150,23 +131,64 @@ MLDFLAGS  += -r -Bsymbolic -nostartfiles
 
 
 #######################################
+# build the bootsection
+#######################################
+ifeq ($(CONFIG_BOOTSECTION), y)
+bootsection: $(objs-bs-y)
+	$(Q)$(MAKE) \
+	$(BUILD_DIR)/$(TARGET)-bs.elf \
+	$(BUILD_DIR)/$(TARGET)-bs.hex \
+	$(BUILD_DIR)/$(TARGET)-bs.bin
+
+$(BUILD_DIR)/$(TARGET)-bs.elf: $(objs-bs-y)
+	$(Q)echo output $@
+	$(Q)$(LD) $(BSLDFLAGS) $^ -o $@
+	$(Q)$(SZ) $@
+else
+bootsection:
+endif
+
+
+#######################################
 # build the bootloader
 #######################################
-bootloader: $(objs-y)
+ifeq ($(CONFIG_BOOTLOADER), y)
+bootloader: $(objs-bl-y)
 	$(Q)$(MAKE) \
-	$(BUILD_DIR)/$(TARGET)-boot.elf \
-	$(BUILD_DIR)/$(TARGET)-boot.hex \
-	$(BUILD_DIR)/$(TARGET)-boot.bin
+	$(BUILD_DIR)/$(TARGET)-bl.elf \
+	$(BUILD_DIR)/$(TARGET)-bl.hex \
+	$(BUILD_DIR)/$(TARGET)-bl.bin
 
-$(BUILD_DIR)/$(TARGET)-boot.elf: $(objs-y)
+$(BUILD_DIR)/$(TARGET)-bl.elf: $(objs-bl-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@
+	$(Q)$(LD) $(BLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
+else
+bootloader:
+endif
+
+
+#######################################
+# build the modules
+#######################################
+ifeq ($(CONFIG_MODULE), y)
+module: $(objs-m)
+	$(Q)mkdir -p $(MODULES_DIR)
+	$(Q)$(MAKE) $(addprefix $(MODULES_DIR)/, $(objs-m:.o=.mo))
+
+$(MODULES_DIR)/%.mo: %.o
+	$(Q)echo Generating $(notdir $@)
+	$(Q)$(LD) $(MLDFLAGS) $< -o $(@:.mo=.elf)
+	$(Q)$(ST) -g -o $@ $(@:.mo=.elf)
+else
+module:
+endif
 
 
 #######################################
 # build the kernel
 #######################################
+ifeq ($(CONFIG_KERNEL), y)
 kernel: $(objs-y)
 	$(Q)$(MAKE) \
 	$(BUILD_DIR)/$(TARGET)-kernel.elf \
@@ -175,21 +197,21 @@ kernel: $(objs-y)
 
 $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(KLDFLAGS) $^ -o $@
+	$(Q)$(LD) $(KLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
+else
+kernel:
+endif
 
 
 #######################################
-# build the modules
+# generate the os image
 #######################################
-module: $(objs-m)
-	$(Q)mkdir -p $(MODULES_DIR)
-	$(Q)$(MAKE) $(addprefix $(MODULES_DIR)/, $(objs-m:.o=.mo))
-
-$(MODULES_DIR)/%.mo: %.o
-	$(Q)echo Generating $(notdir $@)
-	$(Q)$(CXX) $(MLDFLAGS) $< -o $(@:.mo=.elf)
-	$(Q)$(ST) -g -o $@ $(@:.mo=.elf)
+osImage:
+	dd if=/dev/zero                   of=$(BUILD_DIR)/village-os.img bs=512 count=18
+	dd if=$(BUILD_DIR)/village-bs.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
+	dd if=$(BUILD_DIR)/village-bl.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
+#	cat $(BUILD_DIR)/village-os.img $(BUILD_DIR)/village-kernel.bin > $(BUILD_DIR)/village-os.img
 
 
 #######################################
