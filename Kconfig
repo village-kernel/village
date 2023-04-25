@@ -1,16 +1,16 @@
 comment "This is using to configure hardware"
 
 # Config mcu menu
-menu "BSP"
+menu "Board Support Package"
 	source ./vk.hardware/BSP/Kconfig
 endmenu
 
 # Config HAL menu
-menu "HAL"
+menu "Hardware Abstraction Layer"
 	source ./vk.hardware/HAL/Kconfig
 endmenu
 
 # Config DEV menu
-menu "DEV"
+menu "Generic Device Driver"
 	source ./vk.hardware/DEV/Kconfig
 endmenu

@@ -2,3 +2,8 @@
 config HAL_SYSTEM
 	bool "Enable SYSTEM HAL class"
 	default y
+
+
+config HAL_GPIO
+	bool "Enable GPIO HAL class"
+	default y
