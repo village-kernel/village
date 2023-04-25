@@ -17,3 +17,7 @@ config APPLICATION3
 config APPLICATION4
 	tristate "Add application4 to project"
 	default m
+
+config APPLICATION5
+	tristate "Add application5 to project"
+	default m
