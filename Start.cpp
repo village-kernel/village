@@ -20,4 +20,6 @@ int main(void)
 	Kernel::Initialize();
 	Kernel::UpdateParams();
 	Kernel::Execute();
+
+	return _ERR;
 }
