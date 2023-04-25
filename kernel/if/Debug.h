@@ -9,8 +9,12 @@
 
 #include "stdint.h"
 #include "stddef.h"
-#include "stdio.h"
 
+#ifdef Debug
+#include "stdio.h"
 #define printk(...)               printf(__VA_ARGS__)
+#else
+#define printk(...)               /* */
+#endif
 
 #endif //!__DEBUG_H__
