@@ -1,6 +1,12 @@
 comment "This is using to configure kernel"
 
+config KERNEL
+	bool "Enable building kernel"
+	default y
+
 # config console menu
+
+if KERNEL
 
 menu "console"
 
@@ -24,12 +30,17 @@ endmenu
 
 menu "kernel"
 
-config LOADER
+config MODULE
 	bool "Enable loadable module support"
 	option modules
 	select FATFS
 	select ELFPARSER
 	select ENVIRONMENT
+
+config LOADER
+	depends on MODULE
+	bool "Enable loader support"
+	default n
 
 config ENVIRONMENT
 	bool "Build the environment of Loadable module running"
@@ -96,3 +107,5 @@ config FATFS
 	default n
 
 endmenu
+
+endif
