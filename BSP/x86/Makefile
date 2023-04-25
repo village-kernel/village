@@ -41,31 +41,29 @@ LDSCRIPT-KERNEL := -T vk.hardware/BSP/x86/LinkerScripts/kernel.ld
 # gcc flags
 CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
 CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.lst)
-#CFLAGS    += -MMD -MP -MF"$(BUILD_DIR)/$(dir $<)/$(@:%.o=%.d)"
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
-CFLAGS    += -ffreestanding
 CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
 
 # boot section ld flags
-BSLDFLAGS += -m elf_i386 $(LDSCRIPT-BS)
+BSLDFLAGS += -Wl,-m,elf_i386 $(LDSCRIPT-BS) -ffreestanding -nostdlib
 
 # boot loader ld flags
-BLDFLAGS  += $(MCU) $(LDSCRIPT-BL)
-BLDFLAGS  += -Map=$(BUILD_DIR)/$(TARGET)-boot.map --cref
-BLDFLAGS  += --gc-sections
-BLDFLAGS  += --no-warn-rwx-segment
-BLDFLAGS  += -m elf_i386
+BLDFLAGS  += $(MCU) $(LDSCRIPT-BL) -ffreestanding -nostdlib
+BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
+BLDFLAGS  += -Wl,--gc-sections
+BLDFLAGS  += -Wl,--no-warn-rwx-segment
+BLDFLAGS  += -Wl,-m,elf_i386
 
 # kernel ld flags
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL)
-KLDFLAGS  += -Map=$(BUILD_DIR)/$(TARGET)-kernel.map --cref
-KLDFLAGS  += --gc-sections
-KLDFLAGS  += --no-warn-rwx-segment
-KLDFLAGS  += -m elf_i386 
+KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL) -ffreestanding -nostdlib
+KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
+KLDFLAGS  += -Wl,--gc-sections
+KLDFLAGS  += -Wl,--no-warn-rwx-segment
+KLDFLAGS  += -Wl,-m,elf_i386 
 
 # mod ld flags
 MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
-MLDFLAGS  += -Map=$(@:.mo=.map) --cref
-MLDFLAGS  += -r -Bsymbolic
-MLDFLAGS  += -m elf_i386 
+MLDFLAGS  += -Wl,-Map=$(@:.mo=.map) --cref
+MLDFLAGS  += -Wl,-r -Wl,-Bsymbolic
+MLDFLAGS  += -Wl,-m,elf_i386 
 
