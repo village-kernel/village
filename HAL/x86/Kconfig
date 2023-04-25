@@ -1,0 +1,4 @@
+
+config HAL_SYSTEM
+	bool "Enable SYSTEM HAL class"
+	default y

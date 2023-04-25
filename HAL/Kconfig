@@ -5,3 +5,7 @@ endif
 if STM32H7xx
 	source ./vk.hardware/HAL/ST/STM32H7xx/Kconfig
 endif
+
+if CONFIG_X86
+	source ./vk.hardware/HAL/x86/Kconfig
+endif

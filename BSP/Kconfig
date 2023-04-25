@@ -5,9 +5,16 @@ choice
 
 	config ST
 		bool "ST"
+
+	config X86
+		bool "x86"
+
 endchoice
 
 if ST
 	source ./vk.hardware/BSP/ST/Kconfig
 endif
 
+if X86
+	source ./vk.hardware/BSP/x86/Kconfig
+endif

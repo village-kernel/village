@@ -45,3 +45,32 @@ ifeq ($(CONFIG_STM32F4xx), y)
 else ifeq ($(CONFIG_STM32H7xx), y)
 -include vk.hardware/BSP/ST/MakefileH7
 endif
+
+
+#######################################
+# compiler flags
+#######################################
+# gcc flags
+CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
+CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.lst)
+CFLAGS    += -MMD -MP -MF"$(BUILD_DIR)/$(dir $<)/$(@:%.o=%.d)"
+CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
+CFLAGS    += -mword-relocations -mlong-calls
+CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
+
+# bootloader ld flags
+BLDFLAGS  += $(MCU) $(LDSCRIPTB-BOOT-y) -specs=nano.specs -lc -lm -lnosys
+BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
+BLDFLAGS  += -Wl,--gc-sections
+BLDFLAGS  += -Wl,--no-warn-rwx-segment
+
+# kernel ld flags
+KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y) -specs=nano.specs -lc -lm -lnosys
+KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
+KLDFLAGS  += -Wl,--gc-sections
+KLDFLAGS  += -Wl,--no-warn-rwx-segment
+
+# mod ld flags
+MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
+MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
+MLDFLAGS  += -r -Bsymbolic -nostartfiles

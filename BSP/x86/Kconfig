@@ -1,0 +1,6 @@
+comment "This is using to configure x86 arch"
+
+# bootsection
+config BOOTSECTION
+	bool "The arch has boot setion"
+	default y
