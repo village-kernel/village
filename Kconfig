@@ -20,6 +20,11 @@ config DEBUG
 config VERBOSE_MODE
 	bool "verbose mode"
 	default n
+
+config GENERATED_IMG
+	bool "generated os image"
+	default n
+
 endmenu
 
 menu "Application"
