@@ -92,7 +92,7 @@ public:
 	Object* Begin()
 	{
 		iterator = head;
-		return iterator->obj;
+		return Item();
 	}
 
 	/// @brief List next node
@@ -103,7 +103,7 @@ public:
 		{
 			iterator = iterator->next;
 		}
-		return iterator->obj;
+		return Item();
 	}
 
 	/// @brief List prev node
@@ -114,7 +114,7 @@ public:
 		{
 			iterator = iterator->prev;
 		}
-		return iterator->obj;
+		return Item();
 	}
 
 	/// @brief List end node
@@ -122,7 +122,7 @@ public:
 	Object* End()
 	{
 		iterator = tail;
-		return iterator->obj;
+		return Item();
 	}
 
 	/// @brief List is begin
@@ -143,21 +143,21 @@ public:
 	/// @return object pointer
 	Object* Item()
 	{
-		return iterator->obj;
+		return (NULL != iterator) ? iterator->obj : NULL;
 	}
 
 	/// @brief List get node id 
 	/// @return node id
 	int GetNid()
 	{
-		return iterator->nid;
+		return (NULL != iterator) ? iterator->nid : 0;
 	}
 
 	/// @brief List get node name
 	/// @return node name
 	char* GetName()
 	{
-		return iterator->name;
+		return (NULL != iterator) ? iterator->name : (char*)"None";
 	}
 
 	/// @brief Add object node to list
