@@ -204,9 +204,10 @@ $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 #######################################
 osImage:
 	$(Q)echo generated village kernel image
-	$(Q)dd if=/dev/zero                   of=$(BUILD_DIR)/village-os.img bs=512 count=18
-	$(Q)dd if=$(BUILD_DIR)/village-bs.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
-	$(Q)dd if=$(BUILD_DIR)/village-bl.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
+	$(Q)dd if=/dev/zero                       of=$(BUILD_DIR)/village-os.img bs=512 count=18
+	$(Q)dd if=$(BUILD_DIR)/village-bs.bin     of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
+#	$(Q)dd if=$(BUILD_DIR)/village-bl.bin     of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
+	$(Q)dd if=$(BUILD_DIR)/village-kernel.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
 #	cat $(BUILD_DIR)/village-os.img $(BUILD_DIR)/village-kernel.bin > $(BUILD_DIR)/village-os.img
 
 
