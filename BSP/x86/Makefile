@@ -8,13 +8,16 @@
 ######################################
 # paths
 ######################################
-inc-y                    += vk.hardware/BSP/x86/GCC
-src-y                    += vk.hardware/BSP/x86/GCC
+inc-y                        += vk.hardware/BSP/x86/GCC
+src-y                        += vk.hardware/BSP/x86/GCC
 
 
 ######################################
 # objects
 ######################################
+objs-y                        += syscalls.o
+objs-y                        += sysmem.o
+
 objs-bs-$(CONFIG_BOOTSECTION) += boot.o
 objs-bl-$(CONFIG_BOOTLOADER)  += startup.o
 objs-y                        += startup.o
@@ -42,24 +45,24 @@ LDSCRIPT-KERNEL := -T vk.hardware/BSP/x86/LinkerScripts/kernel.ld
 CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
 CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.lst)
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
-CFLAGS    += -ffreestanding -nostdlib
+#CFLAGS    += -ffreestanding -nostdlib
 CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
 
 # boot section ld flags
 BSLDFLAGS += -Wl,-m,elf_i386 $(LDSCRIPT-BS) -ffreestanding -nostdlib
 
 # boot loader ld flags
-BLDFLAGS  += $(MCU) $(LDSCRIPT-BL) -ffreestanding -nostdlib
+BLDFLAGS  += $(MCU) $(LDSCRIPT-BL) -specs=nosys.specs -lc -lm -lnosys
 BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-bl.map,--cref
 BLDFLAGS  += -Wl,--gc-sections
-BLDFLAGS  += -Wl,--no-warn-rwx-segment
+# BLDFLAGS  += -Wl,--no-warn-rwx-segment
 BLDFLAGS  += -Wl,-m,elf_i386
 
 # kernel ld flags
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL) -ffreestanding -nostdlib
+KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL) -specs=nosys.specs -lc -lm -lnosys
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
-KLDFLAGS  += -Wl,--no-warn-rwx-segment
+# KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-m,elf_i386 
 
 # mod ld flags

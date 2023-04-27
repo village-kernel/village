@@ -11,11 +11,26 @@ MEMORY
 
 SECTIONS
 {
+	_sivector = LOADADDR(.isr_vector);
+
+	.isr_vector :
+	{
+		. = ALIGN(4);
+		_svector = .;
+		KEEP(*(.isr_vector))
+		. = ALIGN(4);
+		_evector = .;
+	} > RAM
+
 	.text :
 	{
 		. = ALIGN(4);
 		*(.text)
 		*(.text*)
+
+		KEEP (*(.init))
+		KEEP (*(.fini))
+
 		. = ALIGN(4);
 		 _etext = .; 
 	} > RAM

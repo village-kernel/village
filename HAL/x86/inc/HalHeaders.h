@@ -8,5 +8,6 @@
 #define __HAL_HEADERS_H__
 
 #include "stdint.h"
+#include "stdio.h"
 
 #endif
