@@ -175,7 +175,7 @@ void Thread::IdleTask()
 {
 	while (1) 
 	{
-		__ASM("NOP");
+		__asm volatile("NOP");
 	}
 }
 

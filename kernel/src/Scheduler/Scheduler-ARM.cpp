@@ -77,7 +77,7 @@ void Scheduler::Rescheduler(Scheduler::Access access)
 	else
 	{
 		// call Supervisor exception to get Privileged access
-		__ASM("SVC #255");
+		__asm volatile("SVC #255");
 	}
 }
 
@@ -131,32 +131,32 @@ extern "C"
 	__attribute__ ((naked)) void PendSV_Handler(void)
 	{
 		//Save LR back to main, must do this firstly
-		__ASM("push {lr}");
+		__asm volatile("push {lr}");
 
 		//Gets the current psp
-		__ASM("mrs r0, psp");
+		__asm volatile("mrs r0, psp");
 
 		//Save R4 to R11 to psp frame stack
-		__ASM("stmdb r0!, {r4-r11}");
+		__asm volatile("stmdb r0!, {r4-r11}");
 
 		//Save current value of psp
-		__ASM("bl saveTaskPSP");
+		__asm volatile("bl saveTaskPSP");
 
 		//Select next task
 		thread.SelectNextTask();
 
 		//Get its past psp value, return psp is in R0
-		__ASM("bl getTaskPSP"); 
+		__asm volatile("bl getTaskPSP"); 
 
 		//Retrieve R4-R11 from psp frame stack
-		__ASM("ldmia r0!, {r4-r11}");
+		__asm volatile("ldmia r0!, {r4-r11}");
 		
 		//Update psp
-		__ASM("msr psp, r0");
+		__asm volatile("msr psp, r0");
 
 		//Exit
-		__ASM("pop {lr}");
-		__ASM("bx lr");
+		__asm volatile("pop {lr}");
+		__asm volatile("bx lr");
 	}
 
 
@@ -181,11 +181,11 @@ extern "C"
 	/// @param  
 	__attribute__ ((naked)) void SVC_Handler(void)
 	{
-		__ASM("tst lr, 4");        // check LR to know which stack is used
-		__ASM("ite eq");           // 2 next instructions are conditional
-		__ASM("mrseq r0, msp");    // save MSP if bit 2 is 0
-		__ASM("mrsne r0, psp");    // save PSP if bit 2 is 1
-		__ASM("b taskOperator");   // pass R0 as the argument
+		__asm volatile("tst lr, 4");        // check LR to know which stack is used
+		__asm volatile("ite eq");           // 2 next instructions are conditional
+		__asm volatile("mrseq r0, msp");    // save MSP if bit 2 is 0
+		__asm volatile("mrsne r0, psp");    // save PSP if bit 2 is 1
+		__asm volatile("b taskOperator");   // pass R0 as the argument
 	}
 	
 
@@ -221,10 +221,10 @@ extern "C"
 	/// @param  
 	void HardFault_Handler(void)
 	{
-		__ASM("tst lr, #4");      // check LR to know which stack is used
-		__ASM("ite eq");          // 2 next instructions are conditional
-		__ASM("mrseq r0, msp");   // save MSP if bit 2 is 0
-		__ASM("mrsne r0, psp");   // save PSP if bit 2 is 1
-		__ASM("b stacked_info");  // pass R0 as the argument
+		__asm volatile("tst lr, #4");      // check LR to know which stack is used
+		__asm volatile("ite eq");          // 2 next instructions are conditional
+		__asm volatile("mrseq r0, msp");   // save MSP if bit 2 is 0
+		__asm volatile("mrsne r0, psp");   // save PSP if bit 2 is 1
+		__asm volatile("b stacked_info");  // pass R0 as the argument
 	}
 }

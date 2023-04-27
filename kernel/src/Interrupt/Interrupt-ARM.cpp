@@ -112,15 +112,15 @@ void Interrupt::Handler(int irq)
 __attribute__ ((naked)) void Interrupt::DefaultHandler()
 {
 	//Save LR back to main, must do this firstly
-	__ASM("push {lr}");
+	__asm volatile("push {lr}");
 
 	//Gets the ipsr value
-	__ASM("mrs r0, ipsr");
+	__asm volatile("mrs r0, ipsr");
 
 	//Go to interrupt handler
-	__ASM("bl _ZN9Interrupt7HandlerEi");
+	__asm volatile("bl _ZN9Interrupt7HandlerEi");
 
 	//Exit
-	__ASM("pop {lr}");
-	__ASM("bx lr");
+	__asm volatile("pop {lr}");
+	__asm volatile("bx lr");
 }
