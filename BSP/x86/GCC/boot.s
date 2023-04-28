@@ -9,9 +9,9 @@
 .section ".text", "ax"
 
 .set estack16,   0x9000
-.set estack32,   0x90000
-.set bootloader, 0x1000
-.set bootCount,  0x11
+.set estack32,   0x9fc00
+.set bootloader, 0x9200
+.set bootCounts, 0x80
 
 .global _start
 _start:
@@ -29,7 +29,7 @@ _start:
 # Loading bootloader from disk 
 ReadBootLoader:
 	movw $bootloader, %bx   # Read into bootloader
-	movb $bootCount,  %dh   # The counts of read sector 
+	movb $bootCounts, %dh   # The counts of read sector 
 	call ReadFromDisk
 	ret
 
@@ -57,6 +57,14 @@ ReadFromDisk:
 
 # Display disk error message
 DiskError:
+    movw $0x0600, %ax       # Clear screen
+    movw $0x0700, %bx       # Page 0, white on black
+    movw $0x00,   %cx       # left:  (0, 0)
+    movw $0x184f, %dx       # right: (80, 50)
+    int  $0x10              # Display interrupt
+
+	movw $0x0,    %ax       # Reset es
+	movw %ax,     %es
 	movw $diskErrMsg, %ax   # Set the display msg address
 	movw %ax,     %bp
 	movw $0x1301, %ax       # Display string
@@ -126,7 +134,7 @@ Setup:
 	movl $estack32, %ebp    # update stack
 	movl %ebp, %esp 
 
-	call bootloader         # call bootloader
+	jmp *(bootloader)       # jmp to bootloader
 	jmp  .
 
 # boot section end

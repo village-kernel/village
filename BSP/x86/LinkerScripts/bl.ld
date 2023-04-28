@@ -6,16 +6,31 @@ _Min_Stack_Size = 0x800;
 
 MEMORY
 {
-	RAM (xrw)    : ORIGIN = 0x1000, LENGTH = 1M
+	RAM (xrw)    : ORIGIN = 0x9200, LENGTH = 638k
 }
 
 SECTIONS
 {
+	_sivector = LOADADDR(.isr_vector);
+
+	.isr_vector :
+	{
+		. = ALIGN(4);
+		_svector = .;
+		KEEP(*(.isr_vector))
+		. = ALIGN(4);
+		_evector = .;
+	} > RAM
+
 	.text :
 	{
 		. = ALIGN(4);
 		*(.text)
 		*(.text*)
+
+		KEEP (*(.init))
+		KEEP (*(.fini))
+
 		. = ALIGN(4);
 		 _etext = .; 
 	} > RAM

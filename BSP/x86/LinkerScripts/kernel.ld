@@ -6,7 +6,7 @@ _Min_Stack_Size = 0x800;
 
 MEMORY
 {
-	RAM (xrw)    : ORIGIN = 0x1000, LENGTH = 10M
+	RAM (xrw)    : ORIGIN = 0x9200, LENGTH = 638k
 }
 
 SECTIONS
