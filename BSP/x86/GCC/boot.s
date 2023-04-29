@@ -8,10 +8,11 @@
 .code16
 .section ".text", "ax"
 
-.set estack16,   0x9000
-.set estack32,   0x9fc00
-.set bootloader, 0x9200
-.set bootCounts, 0x80
+.set estack16,       0x9000
+.set estack32,       0x2000000
+.set appBaseAddr,    0x100000
+.set appBaseSector,  1
+.set appSectors,     2879
 
 .global _start
 _start:
@@ -22,41 +23,14 @@ _start:
 	movw $estack16, %bp
 	movw %bp, %sp
 
-	call ReadBootLoader
+	call DisplayMsg
+	call ReadApplication
 	call SwitchToProtectedMode
 	jmp  .
 
-# Loading bootloader from disk 
-ReadBootLoader:
-	movw $bootloader, %bx   # Read into bootloader
-	movb $bootCounts, %dh   # The counts of read sector 
-	call ReadFromDisk
-	ret
-
-# Read data from disk
-ReadFromDisk:
+# Display boot message
+DisplayMsg:
 	pusha
-	push %dx                # Store DX on stack so later we can recall
-	                        # how many sectors were request to be read,
-						    # even if it is altered in the meantime
-
-	movb $0x02, %ah         # BIOS read sector function
-	movb %dh,   %al         # Read DH sector
-	movb $0x00, %ch         # Select cylinder 0
-	movb $0x02, %cl         # Start reading from second sector
-	movb $0x00, %dh         # Select head 0
-	int  $0x13              # Disk interrupt
-
-	jc   DiskError          # Jump if error (i.e. carry flag set)
-
-	pop  %dx                # Restore DX from the stack
-	cmp  %dh, %al           # If AL (sectors read) != DH (sector expected)
-	jne  DiskError          # Display error message
-	popa
-	ret
-
-# Display disk error message
-DiskError:
     movw $0x0600, %ax       # Clear screen
     movw $0x0700, %bx       # Page 0, white on black
     movw $0x00,   %cx       # left:  (0, 0)
@@ -65,16 +39,76 @@ DiskError:
 
 	movw $0x0,    %ax       # Reset es
 	movw %ax,     %es
-	movw $diskErrMsg, %ax   # Set the display msg address
+	movw $diskBootMsg, %ax  # Set the display msg address
 	movw %ax,     %bp
 	movw $0x1301, %ax       # Display string
-	movw $0x000c, %bx       # Page 0, Red on black
-	movw $21,     %cx       # String length
+	movw $0x0007, %bx       # Page 0, Red on black
+	movw $26,     %cx       # String length
 	movw $0,      %dx       # Show in where, dh: row dl: col
 	int  $0x10              # Display interrupt
-	jmp  .
+	popa
+	ret
 
-diskErrMsg: .asciz "Load from disk error!"
+ diskBootMsg: .asciz "Booting from Hard Disk..."
+
+# Loading application from disk 
+ReadApplication:
+	movw $appSectors,    %cx
+	movl $appBaseAddr,   %ebx
+	movl $appBaseSector, %esi
+_ReadAppData:
+	call ReadFromDisk
+	addl $1,             %esi
+	addl $512,           %ebx
+	loop _ReadAppData
+	ret
+
+# Read data from disk
+ReadFromDisk:
+	pusha
+
+	movw $0x1f2,  %dx      # 0x1f2
+	movb $0,    %al        # read one sector
+	out  %al,   %dx
+
+	inc  %dx               # 0x1f3
+	movl %esi,  %eax
+	out  %al,   %dx
+
+	inc  %dx               # 0x1f4
+	movb %ah,   %al
+	out  %al,   %dx
+
+	inc  %dx               # 0x1f5
+	shrl $16,   %eax
+	out  %al,   %dx
+
+	inc  %dx               # 0x1f6
+	movb $0xe0, %al        # LBA28 mode
+	orb  %ah,   %al        # LBA address 27 ~ 24
+	out  %al,   %dx
+
+	inc  %dx               # 0x1f7
+	movb $0x20, %al        # read cmd
+	out  %al,   %dx
+
+_Waits:
+	in  %dx,     %al
+	and $0x88,   %al
+	cmp $0x08,   %al
+	jnz _Waits
+
+	movw $256,   %cx
+	movw $0x1f0, %dx
+
+_Readw:
+	in   %dx,   %ax
+	movw %ax,  (%ebx)
+	addl $2,    %ebx
+	loop _Readw
+
+	popa
+	ret
 
 # GDT start label
 gdtStart:
@@ -132,9 +166,9 @@ Setup:
 	movw %ax, %gs
 	
 	movl $estack32, %ebp    # update stack
-	movl %ebp, %esp 
-
-	jmp *(bootloader)       # jmp to bootloader
+	movl %ebp, %esp
+	
+	jmp *(appBaseAddr)      # jmp to application
 	jmp  .
 
 # boot section end

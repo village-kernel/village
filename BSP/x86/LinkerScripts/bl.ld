@@ -6,7 +6,7 @@ _Min_Stack_Size = 0x800;
 
 MEMORY
 {
-	RAM (xrw)    : ORIGIN = 0x9200, LENGTH = 638k
+	RAM  (xrw)    : ORIGIN = 0x100000, LENGTH = 10M
 }
 
 SECTIONS
@@ -82,10 +82,14 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		_sbss = .; 
+		__bss_start__ = _sbss;
 		*(.bss)
 		*(.bss*)
+		*(COMMON)
+
 		. = ALIGN(4);
 		_ebss = .; 
+		 __bss_end__ = _ebss;
 	} > RAM
 
 	._user_heap_stack :
