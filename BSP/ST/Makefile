@@ -52,7 +52,7 @@ endif
 #######################################
 # gcc flags
 CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
-CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.lst)
+CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.list)
 CFLAGS    += -MMD -MP -MF"$(BUILD_DIR)/$(dir $<)/$(@:%.o=%.d)"
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
 CFLAGS    += -mword-relocations -mlong-calls
