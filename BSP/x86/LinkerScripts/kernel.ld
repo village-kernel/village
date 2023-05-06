@@ -43,6 +43,13 @@ SECTIONS
 		. = ALIGN(4);
 	} > RAM
 
+	.x86.extab : { *(.gcc_except_table.*  .got.plt .dtors .ctors ) } > RAM
+	.x86 : {
+		__exidx_start = .;
+		*(.x86.extab*)
+		__exidx_end = .;
+	} > RAM
+
 	.preinit_array :
 	{
 		PROVIDE_HIDDEN (__preinit_array_start = .);
@@ -101,4 +108,11 @@ SECTIONS
 		. = . + _Min_Stack_Size;
 		. = ALIGN(4);
 	} > RAM
+
+	/*/DISCARD/ :
+	{
+		libc.a ( * )
+		libm.a ( * )
+		libgcc.a ( * )
+	}*/
 }

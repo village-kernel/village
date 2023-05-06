@@ -67,30 +67,30 @@ _ReadAppData:
 ReadFromDisk:
 	pusha
 
-	movw $0x1f2,  %dx      # 0x1f2
-	movb $0,    %al        # read one sector
-	out  %al,   %dx
+	movw $0x1f2, %dx       # 0x1f2
+	movb $0,     %al       # read one sector
+	out  %al,    %dx
 
 	inc  %dx               # 0x1f3
-	movl %esi,  %eax
-	out  %al,   %dx
+	movl %esi,   %eax
+	out  %al,    %dx
 
 	inc  %dx               # 0x1f4
-	movb %ah,   %al
-	out  %al,   %dx
+	movb %ah,    %al
+	out  %al,    %dx
 
 	inc  %dx               # 0x1f5
-	shrl $16,   %eax
-	out  %al,   %dx
+	shrl $16,    %eax
+	out  %al,    %dx
 
 	inc  %dx               # 0x1f6
-	movb $0xe0, %al        # LBA28 mode
-	orb  %ah,   %al        # LBA address 27 ~ 24
-	out  %al,   %dx
+	movb $0xe0,  %al       # LBA28 mode
+	orb  %ah,    %al       # LBA address 27 ~ 24
+	out  %al,    %dx
 
 	inc  %dx               # 0x1f7
-	movb $0x20, %al        # read cmd
-	out  %al,   %dx
+	movb $0x20,  %al       # read cmd
+	out  %al,    %dx
 
 _Waits:
 	in  %dx,     %al
