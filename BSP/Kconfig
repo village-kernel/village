@@ -8,6 +8,7 @@ choice
 
 	config X86
 		bool "x86"
+		select BOOTSECTION
 
 endchoice
 
