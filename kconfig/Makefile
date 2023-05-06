@@ -36,10 +36,12 @@ prepare:
 
 mconf:
 	$(Q)echo Host Building mconf
+	$(Q)$(MAKE) prepare
 	$(Q)$(HOST_CC) $(HOST_CFLAGS) $(HOST_LDFLAGS)-o $@ $(mconf-objs)
 
 conf:
 	$(Q)echo Host Building conf
+	$(Q)$(MAKE) prepare
 	$(Q)$(HOST_CC) $(HOST_CFLAGS) $(HOST_LDFLAGS) -o $@ $(conf-objs)
 
 %.o : %.c
