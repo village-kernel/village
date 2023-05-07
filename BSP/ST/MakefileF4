@@ -62,7 +62,7 @@ FLASH_CFG := -f interface/stlink-v2.cfg -f target/stm32f4x.cfg
 MCU  := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 
 # defines
-DEFS := -DUSE_HAL_DRIVER -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
+DEFS := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
 LDSCRIPT-BOOT-$(CONFIG_STM32F405RG) := -T vk.hardware/BSP/ST/LinkerScripts/STM32F4xx/STM32F405RG_flash.ld

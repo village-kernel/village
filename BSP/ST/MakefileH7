@@ -59,7 +59,7 @@ endif
 MCU  := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 
 # defines
-DEFS := -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8000000)'
+DEFS := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
 LDSCRIPT-$(CONFIG_STM32H750VB) := -T vk.hardware/BSP/ST/LinkerScripts/STM32H7xx/STM32H750VB_flash.ld

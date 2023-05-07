@@ -34,7 +34,7 @@ objs-y                        += startup.o
 MCU  := -m32
 
 # defines
-DEFS := 
+DEFS := -DARCH_X86
 
 # link script
 LDSCRIPT-BS     := -T vk.hardware/BSP/x86/LinkerScripts/bs.ld
