@@ -43,7 +43,7 @@ SECTIONS
 		. = ALIGN(4);
 	} > RAM
 
-	.x86.extab : { *(.gcc_except_table.*  .got.plt .dtors .ctors ) } > RAM
+	.x86.extab : { *(.gcc_except_table.*  .got.plt ) } > RAM
 	.x86 : {
 		__exidx_start = .;
 		*(.x86.extab*)
@@ -62,6 +62,7 @@ SECTIONS
 		PROVIDE_HIDDEN (__init_array_start = .);
 		KEEP (*(SORT(.init_array.*)))
 		KEEP (*(.init_array*))
+		KEEP (*(.ctors*))
 		PROVIDE_HIDDEN (__init_array_end = .);
 	} > RAM
 
@@ -70,6 +71,7 @@ SECTIONS
 		PROVIDE_HIDDEN (__fini_array_start = .);
 		KEEP (*(SORT(.fini_array.*)))
 		KEEP (*(.fini_array*))
+		KEEP (*(.dtors*))
 		PROVIDE_HIDDEN (__fini_array_end = .);
 	} > RAM
 

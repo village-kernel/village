@@ -49,7 +49,7 @@ LDSCRIPT-KERNEL := -T vk.hardware/BSP/x86/LinkerScripts/kernel.ld
 CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
 CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.list)
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
-CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
+CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit -fno-threadsafe-statics
 
 # boot section ld flags
 BSLDFLAGS += -Wl,-m,elf_i386 $(LDSCRIPT-BS) -ffreestanding -nostdlib
