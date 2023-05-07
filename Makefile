@@ -9,6 +9,7 @@
 # paths
 ######################################
 inc-y                                += vk.kernel/kernel/if
+inc-y                                += vk.kernel/kernel/if/Registers
 inc-y                                += vk.kernel/kernel/inc
 
 src-y                                += vk.kernel
