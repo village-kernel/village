@@ -39,7 +39,7 @@ private:
 		{}
 	};
 
-	struct StackFrame
+	struct Registers
 	{
 		uint32_t r4;
 		uint32_t r5;
@@ -58,7 +58,7 @@ private:
 		uint32_t pc;
 		uint32_t xpsr;
 
-		StackFrame
+		Registers
 		(
 			uint32_t pc = 0, 
 			uint32_t r0 = 0,
@@ -96,7 +96,7 @@ private:
 
 	//Static constants
 	static const uint32_t task_stack_size = 1024;
-	static const uint32_t psp_frame_size = 16;
+	static const uint32_t psp_frame_size = sizeof(Registers) >> 2;
 	
 	//Members
 	List<Task> tasks;
