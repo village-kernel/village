@@ -58,7 +58,8 @@ extern "C" {
 #define IRQ_Coprocessor_Fault                16
 #define IRQ_Alignment_Check                  17
 #define IRQ_Machine_Check                    18
-#define IRQ_31                               31
+#define IRQ_SVC                              30
+#define IRQ_PendSV                           31
 
 #define IRQ_Systick                          32
 #define IRQ_Keyboard_Controller              33
