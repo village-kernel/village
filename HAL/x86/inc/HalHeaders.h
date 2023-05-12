@@ -9,5 +9,6 @@
 
 #include "stdint.h"
 #include "stdio.h"
+#include "i386.h"
 
 #endif
