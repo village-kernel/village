@@ -5,17 +5,29 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "System.h"
+#include "Interrupt.h"
 
 
 ///Initialize static members
 uint32_t System::sysTicks = 0;
-uint32_t System::cyclesInMicro = 8;
 
 
 ///Configure the SysTick timer
 void System::Initialize(void)
 {
+    //Get the PIT value: hardware clock at 1193182 Hz
+	uint32_t freq = 1000; //1000hz, 1ms
+    uint32_t divider = 1193182 / freq;
+    uint8_t low  = low_8(divider);
+    uint8_t high = high_8(divider);
 
+    //Send the command
+    PortByteOut(TIMER_CMD, 0x36); //Command port
+    PortByteOut(TIMER_CH0, low);
+    PortByteOut(TIMER_CH0, high);
+
+	//Set interrupt handler
+	interrupt.SetISR(IRQ_Systick, union_cast<Function>(&System::SysTickCounter));
 }
 
 
@@ -37,11 +49,4 @@ void System::ConfigurePower()
 void System::ConfigureClock()
 {
 
-}
-
-
-///System config vector table
-void System::ConfigVectorTable(uint32_t vector)
-{
-	
 }

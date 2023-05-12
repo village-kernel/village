@@ -13,16 +13,12 @@
 class System
 {
 private:
-	static const uint32_t microsInSec = 1000000;
-	static const uint32_t microsInMilli = 1000;
-	static uint32_t cyclesInMicro;
 	static uint32_t sysTicks;
 public:
 	static void Initialize();
 	static void ConfigureMPU();
 	static void ConfigurePower();
 	static void ConfigureClock();
-	static void ConfigVectorTable(uint32_t vector);
 
 	///Reset x86 core
 	static inline void Reboot()
@@ -45,10 +41,10 @@ public:
 	static inline void SysTickCounter() { sysTicks++; }
 
 	///Enables IRQ interrupts
-	static inline void EnableIRQ() {  }
+	static inline void EnableIRQ() { __asm volatile("sti"); }
 
 	///Disables IRQ interrupts
-	static inline void DisableIRQ() {  }
+	static inline void DisableIRQ() { __asm volatile("cli"); }
 };
 
 #endif //!__SYSTEM_H__
