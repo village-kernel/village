@@ -75,6 +75,7 @@ private:
 	~Interrupt();
 	void SetIdtGate(int irq, uint32_t handler);
 	void SetIdt();
+	void RemapPIC();
 public:
 	//Methods
 	void Initialize();
@@ -86,6 +87,9 @@ public:
 	
 	//Interrupt handler
 	static void Handler(int irq);
+	static uint16_t GetPicIrqReg(int ocw3);
+	static uint16_t GetPicIrr();
+	static uint16_t GetPicIsr();
 };
 
 ///Declarations interrupt reference

@@ -56,19 +56,71 @@ void Interrupt::Initialize()
 	}
 
 	//Remap the PIC
-	PortByteOut(0x20, 0x11);  //restart PIC1
-	PortByteOut(0xA0, 0x11);  //restart PIC2
-	PortByteOut(0x21, 0x20);  //PIC1 now starts at 32
-	PortByteOut(0xA1, 0x28);  //PIC2 now starts at 40
-	PortByteOut(0x21, 0x04);  //setup cascading
-	PortByteOut(0xA1, 0x02);
-	PortByteOut(0x21, 0x01);  //done!
-	PortByteOut(0xA1, 0x01);
-	PortByteOut(0x21, 0x0);
-	PortByteOut(0xA1, 0x0);
+	RemapPIC();
 
 	//Load with ASM
 	SetIdt();
+}
+
+
+/// @brief Remap the PIC
+void Interrupt::RemapPIC()
+{
+	uint8_t a1 = 0, a2 = 0;
+
+	//Save masks
+	a1 = PortByteIn(PIC1_DATA);
+	a2 = PortByteIn(PIC2_DATA);
+
+	//starts the initialization sequence (in cascade mode)
+	PortByteOut(PIC1_CMD, ICW1_INIT | ICW1_ICW4);
+	PortByteOut(PIC2_CMD, ICW1_INIT | ICW1_ICW4);
+
+	//ICW2: Master PIC vector offset
+	PortByteOut(PIC1_DATA, 0x20);
+	//ICW2: Slave PIC vector offset
+	PortByteOut(PIC2_DATA, 0x28);
+	
+	//ICW3: tell Master PIC that there is a slave PIC at IRQ2 (0000 0100)
+	PortByteOut(PIC1_DATA, 0x04);
+	//ICW3: tell Slave PIC its cascade identity (0000 0010)
+	PortByteOut(PIC2_DATA, 0x02);
+
+	//ICW4: have the PICs use 8086 mode (and not 8080 mode)
+	PortByteOut(PIC1_DATA, ICW4_8086);  
+	PortByteOut(PIC2_DATA, ICW4_8086);
+
+	//Restore saved masks
+	PortByteOut(PIC1_DATA, a1);
+	PortByteOut(PIC2_DATA, a2);
+}
+
+
+/// @brief Get pic irq reg
+/// @param ocw3 OCW3 to PIC CMD to get the register values PIC2 is chained, 
+///             and represents IRQs 8-15. PIC1 is IRQs 0-7, with 2 being the chain
+/// @return irq reg value
+uint16_t Interrupt::GetPicIrqReg(int ocw3)
+{
+	PortByteOut(PIC1_CMD, ocw3);
+	PortByteOut(PIC2_CMD, ocw3);
+	return (PortByteIn(PIC2_CMD) << 8) | PortByteIn(PIC1_CMD);
+}
+
+
+/// @brief Get PIC irr value
+/// @return Returns the combined value of the cascaded PICs irq request register 
+uint16_t Interrupt::GetPicIrr()
+{
+	return GetPicIrqReg(PIC_READ_IRR);
+}
+
+
+/// @brief Get PIC isr value
+/// @return Returns the combined value of the cascaded PICs in-service register
+uint16_t Interrupt::GetPicIsr()
+{
+	return GetPicIrqReg(PIC_READ_ISR);
 }
 
 
@@ -77,19 +129,18 @@ void Interrupt::Initialize()
 /// @param handler 
 void Interrupt::SetIdtGate(int irq, uint32_t handler)
 {
-    idt[irq].lowOffset = (uint16_t)((handler) & 0xFFFF);
+    idt[irq].lowOffset = low_16(handler);
+	idt[irq].highOffset = high_16(handler);
     idt[irq].sel = kernel_code_segment;
     idt[irq].flags = 0x8E; 
-    idt[irq].highOffset = (uint16_t)(((handler) >> 16) & 0xFFFF);
 }
 
 
 /// @brief Set idt
 void Interrupt::SetIdt()
 {
-    idtReg.base = (uint32_t) &idt;
+    idtReg.base = (uint32_t)&idt;
     idtReg.limit = idt_entires * sizeof(IdtGate) - 1;
-    /* Don't make the mistake of loading &idt -- always load &idtReg */
     __asm volatile("lidtl (%0)" : : "r" (&idtReg));
 }
 
@@ -141,12 +192,11 @@ void Interrupt::Handler(int irq)
 /// @param regs 
 extern "C" void IRQ_Handler(Registers regs)
 {
-    //After every interrupt we need to send an EOI to the PICs
-    //or they will not send another interrupt again
+    //Send an EOI to the PICs
     if (regs.irq >= 32 && regs.irq < 40)
-		PortByteOut(0x20, 0x20); //master
+		PortByteOut(PIC1_CMD, PIC_EOI); //master
 	else if (regs.irq >= 40)
-		PortByteOut(0xA0, 0x20); //slave
+		PortByteOut(PIC2_CMD, PIC_EOI); //slave
 
     //Handle the interrupt in a more modular way
 	Interrupt::Handler(regs.irq);
