@@ -9,8 +9,10 @@
 # paths
 ######################################
 inc-y                        += vk.hardware/BSP/x86/GCC
-src-y                        += vk.hardware/BSP/x86/GCC
+inc-y                        += vk.hardware/BSP/x86/CORE/inc
 
+src-y                        += vk.hardware/BSP/x86/GCC
+src-y                        += vk.hardware/BSP/x86/CORE/src
 
 ######################################
 # objects
@@ -25,6 +27,8 @@ endif
 objs-bs-$(CONFIG_BOOTSECTION) += boot.o
 objs-bl-$(CONFIG_BOOTLOADER)  += startup.o
 objs-y                        += startup.o
+
+objs-y                        += i386.o
 
 
 ######################################
