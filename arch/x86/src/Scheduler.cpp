@@ -58,6 +58,9 @@ void Scheduler::StartScheduler()
 	//Set start schedule flag
 	isStartSchedule = true;
 
+	//Set interrupt flag
+	__asm volatile("sti");
+
 	//Execute thread
 	thread.Execute();
 }
@@ -72,12 +75,12 @@ void Scheduler::Rescheduler(Scheduler::Access access)
 	if (Access::Privileged == access)
 	{
 		// trigger PendSV directly
-		//SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+		__asm volatile("int $31");
 	}
 	else
 	{
 		// call Supervisor exception to get Privileged access
-		//__ASM("SVC #255");
+		__asm volatile("int $30");
 	}
 }
 
@@ -99,7 +102,7 @@ void Scheduler::TaskOperator(uint32_t* sp)
 	{
 		case 0xFF:
 			//Trigger PendSV
-			//SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+			__asm volatile("int $31");
 			break;
 		default:
 			break;
@@ -125,50 +128,35 @@ extern "C"
 		return thread.GetTaskPSP();
 	}
 
-
 	/// @brief PendSV_Handler
 	/// @param  
-	__attribute__ ((naked)) void PendSV_Handler(void)
+	void PendSV_Handler(void)
 	{
-		////Save LR back to main, must do this firstly
-		//__asm volatile("push {lr}");
-
-		////Gets the current psp
-		//__asm volatile("mrs r0, psp");
-
-		////Save R4 to R11 to psp frame stack
-		//__asm volatile("stmdb r0!, {r4-r11}");
-
+		//
+		
 		//Save current value of psp
-		__asm volatile("call saveTaskPSP");
+		//__asm volatile("call saveTaskPSP");
 
 		//Select next task
 		thread.SelectNextTask();
 
 		//Get its past psp value, return psp is in R0
-		__asm volatile("call getTaskPSP"); 
+		//__asm volatile("call getTaskPSP"); 
 
-		////Retrieve R4-R11 from psp frame stack
-		//__asm volatile("ldmia r0!, {r4-r11}");
-		
-		////Update psp
-		//__asm volatile("msr psp, r0");
-
-		////Exit
-		//__asm volatile("pop {lr}");
-		//__asm volatile("bx lr");
+		//
 	}
 
 
-	/// @brief Systick handler
+	/// @brief SysTick_Handler
 	/// @param  
 	void SysTick_Handler(void)
 	{
+		//Update systick count
 		System::SysTickCounter();
 		scheduler.Rescheduler(Scheduler::Privileged);
 	}
 
-
+	
 	/// @brief Call scheduler task operator in c function
 	/// @param sp stack pointer
 	void taskOperator(uint32_t* sp)
@@ -181,50 +169,6 @@ extern "C"
 	/// @param  
 	__attribute__ ((naked)) void SVC_Handler(void)
 	{
-		//__asm volatile("tst lr, 4");        // check LR to know which stack is used
-		//__asm volatile("ite eq");           // 2 next instructions are conditional
-		//__asm volatile("mrseq r0, msp");    // save MSP if bit 2 is 0
-		//__asm volatile("mrsne r0, psp");    // save PSP if bit 2 is 1
-		//__asm volatile("b taskOperator");   // pass R0 as the argument
-	}
-	
-
-	/// @brief Output stacked info
-	/// @param hardfault_args stack pointer
-	void stacked_info(unsigned int * hardfault_args)
-	{
-		//volatile uint32_t stacked_r0 = ((uint32_t)hardfault_args[0]);
-		//volatile uint32_t stacked_r1 = ((uint32_t)hardfault_args[1]);
-		//volatile uint32_t stacked_r2 = ((uint32_t)hardfault_args[2]);
-		//volatile uint32_t stacked_r3 = ((uint32_t)hardfault_args[3]);
-
-		//volatile uint32_t stacked_r12 = ((uint32_t)hardfault_args[4]);
-		//volatile uint32_t stacked_lr  = ((uint32_t)hardfault_args[5]);
-		//volatile uint32_t stacked_pc  = ((uint32_t)hardfault_args[6]);
-		//volatile uint32_t stacked_psr = ((uint32_t)hardfault_args[7]);
-
-		//printk("Hard_Fault_Handler: \r\n");
-		//printk("r0:   0x%08lx\r\n", stacked_r0);
-		//printk("r1:   0x%08lx\r\n", stacked_r1);
-		//printk("r2:   0x%08lx\r\n", stacked_r2);
-		//printk("r3:   0x%08lx\r\n", stacked_r3);
-		//printk("r12:  0x%08lx\r\n", stacked_r12);
-		//printk("lr:   0x%08lx\r\n", stacked_lr);
-		//printk("pc:   0x%08lx\r\n", stacked_pc);
-		//printk("xpsr: 0x%08lx\r\n", stacked_psr);
-
-		//while (1);
-	}
-	
-	
-	/// @brief HardFault_Handler
-	/// @param  
-	void HardFault_Handler(void)
-	{
-		//__asm volatile("tst lr, #4");      // check LR to know which stack is used
-		//__asm volatile("ite eq");          // 2 next instructions are conditional
-		//__asm volatile("mrseq r0, msp");   // save MSP if bit 2 is 0
-		//__asm volatile("mrsne r0, psp");   // save PSP if bit 2 is 1
-		//__asm volatile("b stacked_info");  // pass R0 as the argument
+		
 	}
 }
