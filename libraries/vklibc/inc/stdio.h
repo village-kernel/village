@@ -11,6 +11,9 @@
 extern "C" {
 #endif
 
+#include "stdarg.h"
+
+int vsprintf(char* str, const char* format, va_list ap);
 int printf(char const*, ...);
 
 #ifdef __cplusplus
