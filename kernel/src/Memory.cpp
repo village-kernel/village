@@ -112,7 +112,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 		if (nextEndAddr <= nextNode->map.addr)
 		{
 			//Output debug info
-			printk("heap alloc: addr = 0x%08lx, size = %ld\r\n", nextMapAddr, nextMapSize);
+			printk("heap alloc: addr = 0x%08x, size = %d\r\n", nextMapAddr, nextMapSize);
 
 			//Update the used size of sram
 			sram_used += nextMapSize;
@@ -168,7 +168,7 @@ uint32_t Memory::StackAlloc(uint32_t size)
 		if (prevEndAddr >= prevNode->map.addr)
 		{
 			//Output debug info
-			printk("stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, prevMapSize);
+			printk("stack alloc: addr = 0x%08x, size = %d\r\n", prevMapAddr, prevMapSize);
 
 			//Update the used size of sram
 			sram_used += prevMapSize;
@@ -223,7 +223,7 @@ void Memory::Free(uint32_t memory, uint32_t size)
 			sram_used -= currNode->map.size;
 
 			//Output debug info
-			printk("free memory: addr: 0x%08lx, size: %ld\r\n",
+			printk("free memory: addr: 0x%08x, size: %d\r\n",
 			currNode->map.addr, currNode->map.size);
 
 			break;
