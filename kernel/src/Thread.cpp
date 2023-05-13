@@ -71,7 +71,7 @@ int Thread::CreateTask(Function function, char* argv)
 
 	//Fill the stack content
 	task->psp = task->stack - psp_frame_size;
-	*(Registers*)task->psp = Registers
+	*(TaskContext*)task->psp = TaskContext
 	(
 		(uint32_t)&FuncHandler,
 		(uint32_t)function,
@@ -98,7 +98,7 @@ int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 
 	//Fill the stack content
 	task->psp = task->stack - psp_frame_size;
-	*(Registers*)task->psp = Registers
+	*(TaskContext*)task->psp = TaskContext
 	(
 		(uint32_t)&MethodHandler,
 		(uint32_t)user,

@@ -42,7 +42,7 @@ private:
 
 	//Static constants
 	static const uint32_t task_stack_size = 1024;
-	static const uint32_t psp_frame_size = sizeof(Registers) >> 2;
+	static const uint32_t psp_frame_size = sizeof(TaskContext) >> 2;
 	
 	//Members
 	List<Task> tasks;
