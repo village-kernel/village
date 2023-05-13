@@ -37,6 +37,9 @@ void Kernel::Initialize()
 	//Initialize thread
 	thread.Initialize();
 
+	//Initialize scheduler
+	scheduler.Initialize();
+
 	//Initialize device
 	device.Initialize();
 
@@ -64,7 +67,7 @@ void Kernel::Execute()
 	modular.Execute();
 
 	//Start scheduler
-	scheduler.StartScheduler();
+	scheduler.Execute();
 
 	//Should not go to here
 	while (1) {}
