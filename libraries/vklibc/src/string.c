@@ -35,14 +35,29 @@ char* strncat(char* s1, const char* s2, size_t n)
 /// @return <0 if the first non-matching character in str1 is lower (in ASCII) than that of str2.
 int strcmp(const char* s1, const char* s2)
 {
-	return 0;
+	int ret = 0 ;
+
+    while (!(ret = (unsigned int)*s1 - (unsigned int)*s2) && *s2)
+	{
+        ++s1;
+        ++s2;
+    }
+
+    if (ret < 0) ret = -1;
+    else if (ret > 0) ret = 1;
+
+    return ret;
 }
 
 
 /// @brief 
-/// @param s1 
+/// @param str
 /// @return 
-size_t strlen(const char* s1)
+size_t strlen(const char* str)
 {
-	return 0;
+	size_t size = 0;
+
+    while(str[size]) size++;
+
+    return size;
 }

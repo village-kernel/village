@@ -16,7 +16,7 @@ extern "C" {
 char* strcat(char* s1, const char* s2);
 char* strncat(char* s1, const char* s2, size_t n);
 int strcmp(const char* s1, const char* s2);
-size_t strlen(const char* s1);
+size_t strlen(const char* str);
 
 #ifdef __cplusplus
 }
