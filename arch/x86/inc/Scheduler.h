@@ -27,9 +27,13 @@ private:
 	//Methods
 	Scheduler();
 	~Scheduler();
+	void PendSVHandler();
+	void SysTickHandler();
+	void FaultHandler();
 public:
 	//Methods
-	void StartScheduler();
+	void Initialize();
+	void Execute();
 	void Rescheduler(Access access);
 
 	//Needed called by SVC_Handler

@@ -22,15 +22,15 @@ struct Registers
 	uint32_t ecx;
 	uint32_t eax;
 
-	//Interrupt number and error code (if applicable)
+	//Interrupt number and error code
 	uint32_t irq;
-	uint32_t error;
+	uint32_t err;
 	
 	//Pushed by the processor automatically
 	uint32_t eip;
 	uint32_t cs;
 	uint32_t eflags;
-	uint32_t useresp;
+	uint32_t psp;
 	uint32_t ss;
 
 	Registers
@@ -55,12 +55,47 @@ struct Registers
 		ecx(ecx),
 		eax(eax),
 		irq(0),
-		error(0),
+		err(0),
 		eip(eip),
 		cs(0),
-		eflags(0x00000000u),
-		useresp(0),
+		eflags(0x00000200u),
+		psp(0),
 		ss(0)
+	{}
+};
+
+struct TaskContext
+{
+	uint32_t edi;
+	uint32_t esi;
+	uint32_t ebx;
+	uint32_t ebp;
+	uint32_t eip;
+
+	uint32_t ret;
+	uint32_t arg0;
+	uint32_t arg1;
+	uint32_t arg2;
+	uint32_t arg3;
+
+	TaskContext
+	(
+		uint32_t eip  = 0,
+		uint32_t arg0 = 0,
+		uint32_t arg1 = 0,
+		uint32_t arg2 = 0,
+		uint32_t arg3 = 0
+	):
+		edi(0),
+		esi(0),
+		ebx(0),
+		ebp(0x2000000),
+		eip(eip),
+		ret(0),
+		arg0(arg0),
+		arg1(arg1),
+		arg2(arg2),
+		arg3(arg3)
 	{}
 };
 

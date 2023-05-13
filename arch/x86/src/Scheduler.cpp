@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Scheduler.h"
+#include "Interrupt.h"
 #include "Thread.h"
 #include "System.h"
 
@@ -35,31 +36,33 @@ Scheduler& Scheduler::Instance()
 Scheduler& scheduler = Scheduler::Instance();
 
 
+/// @brief Scheduler initialize
+void Scheduler::Initialize()
+{
+	//Set interrupt handler
+	interrupt.SetISR(IRQ_PendSV, union_cast<Function>(&Scheduler::PendSVHandler), (char*)this);
+	interrupt.SetISR(IRQ_Systick, union_cast<Function>(&Scheduler::SysTickHandler), (char*)this);
+	interrupt.SetISR(IRQ_General_Protection_Fault, union_cast<Function>(&Scheduler::FaultHandler), (char*)this);
+}
+
+
 /// @brief Start scheduler
-void Scheduler::StartScheduler()
+void Scheduler::Execute()
 {
 	//Clear start schedule flag
 	isStartSchedule = false;
 
-	////Prepare PSP of the first task, return PSP in R0 and set PSP
-	//__asm volatile("bl getTaskPSP");
-	//__asm volatile("msr psp, r0");
+	//Get frist task psp
+	uint32_t psp = thread.GetTaskPSP();
 
-	////Change to use PSP, set bit[1] SPSEL
-	//__asm volatile("mrs r0, control");
-	//__asm volatile("orr r0, r0, #2");
-	//__asm volatile("msr control, r0");
-
-	////Move to Unprivileged level, Set bit[0] nPRIV
-	//__asm volatile("mrs r0, control");
-	//__asm volatile("orr r0, r0, #1");
-	//__asm volatile("msr control, r0");
-
-	//Set start schedule flag
-	isStartSchedule = true;
+	//Set frist task esp
+	__asm volatile("movl %0, %%esp" : "=r"(psp));
 
 	//Set interrupt flag
 	__asm volatile("sti");
+
+	//Set start schedule flag
+	isStartSchedule = true;
 
 	//Execute thread
 	thread.Execute();
@@ -72,103 +75,54 @@ void Scheduler::Rescheduler(Scheduler::Access access)
 {
 	if (false == isStartSchedule) return;
 
-	if (Access::Privileged == access)
-	{
-		// trigger PendSV directly
-		__asm volatile("int $31");
-	}
-	else
-	{
-		// call Supervisor exception to get Privileged access
-		__asm volatile("int $30");
-	}
+	// trigger PendSV directly
+	__asm volatile("int $31");
 }
 
 
-/// @brief Execute task requests
-/// @param sp stack pointer
-void Scheduler::TaskOperator(uint32_t* sp)
+/// @brief PendSV handler
+void __attribute__((naked)) Scheduler::PendSVHandler()
 {
-	//Get the address of the instruction saved in PC
-	uint8_t *pInstruction = (uint8_t*)(sp[6]);
+	uint32_t psp = 0;
 
-	//Go back 2 bytes (16-bit opcode)
-	pInstruction -= 2;
+	//Push old task registers
+	__asm volatile("pushl %ebp");
+	__asm volatile("pushl %ebx");
+	__asm volatile("pushl %esi");
+	__asm volatile("pushl %edi");
+	__asm volatile("movl %%esp, %0" : "=r"(psp));
 
-	//Get the opcode, in little endian
-	uint8_t svcNumber = *pInstruction;
+	//Save old task psp
+	thread.SaveTaskPSP(psp);
 
-	switch(svcNumber)
-	{
-		case 0xFF:
-			//Trigger PendSV
-			__asm volatile("int $31");
-			break;
-		default:
-			break;
-	}
+	//Select next task
+	thread.SelectNextTask();
+
+	//Get new task psp
+	psp = thread.GetTaskPSP();
+
+	//Set new task esp
+	__asm volatile("movl %0, %%esp" : "=r"(psp));
+
+	//Pop new task registers
+	__asm volatile("popl %edi");
+	__asm volatile("popl %esi");
+	__asm volatile("popl %ebx");
+	__asm volatile("popl %ebp");
+	__asm volatile("sti");
+	__asm volatile("ret");
 }
 
 
-/// @brief Interrupt handlers
-extern "C" 
+/// @brief SysTick handler
+void Scheduler::SysTickHandler()
 {
-	/// @brief Call thread save task psp in c function
-	/// @param psp process stack pointer
-	void saveTaskPSP(uint32_t psp)
-	{
-		thread.SaveTaskPSP(psp);
-	}
+	scheduler.Rescheduler(Scheduler::Privileged);
+}
 
 
-	/// @brief Call thread get task psp in c function
-	/// @return process stack pointer
-	uint32_t getTaskPSP()
-	{
-		return thread.GetTaskPSP();
-	}
-
-	/// @brief PendSV_Handler
-	/// @param  
-	void PendSV_Handler(void)
-	{
-		//
-		
-		//Save current value of psp
-		//__asm volatile("call saveTaskPSP");
-
-		//Select next task
-		thread.SelectNextTask();
-
-		//Get its past psp value, return psp is in R0
-		//__asm volatile("call getTaskPSP"); 
-
-		//
-	}
-
-
-	/// @brief SysTick_Handler
-	/// @param  
-	void SysTick_Handler(void)
-	{
-		//Update systick count
-		System::SysTickCounter();
-		scheduler.Rescheduler(Scheduler::Privileged);
-	}
-
-	
-	/// @brief Call scheduler task operator in c function
-	/// @param sp stack pointer
-	void taskOperator(uint32_t* sp)
-	{
-		scheduler.TaskOperator(sp);
-	}
-
-
-	/// @brief SVC_Handler
-	/// @param  
-	__attribute__ ((naked)) void SVC_Handler(void)
-	{
-		
-	}
+/// @brief Fault handler
+void Scheduler::FaultHandler()
+{
+	while(1);;
 }
