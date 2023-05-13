@@ -1,6 +1,6 @@
 ENTRY(_start)
 
-_estack = ORIGIN(RAM) + LENGTH(RAM);
+_estack = 0x2000000;
 _Min_Heap_Size  = 0x400;
 _Min_Stack_Size = 0x800;
 
