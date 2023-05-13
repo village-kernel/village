@@ -29,7 +29,8 @@ private:
 	~Scheduler();
 public:
 	//Methods
-	void StartScheduler();
+	void Initialize();
+	void Execute();
 	void Rescheduler(Access access);
 
 	//Needed called by SVC_Handler

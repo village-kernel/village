@@ -35,8 +35,15 @@ Scheduler& Scheduler::Instance()
 Scheduler& scheduler = Scheduler::Instance();
 
 
+/// @brief Scheduler initialize
+void Scheduler::Initialize()
+{
+
+}
+
+
 /// @brief Start scheduler
-void Scheduler::StartScheduler()
+void Scheduler::Execute()
 {
 	//Clear start schedule flag
 	isStartSchedule = false;
