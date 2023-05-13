@@ -62,4 +62,6 @@ struct Registers
 	{}
 };
 
+typedef Registers TaskContext;
+
 #endif //!__REGISTERS_ARM_H__
