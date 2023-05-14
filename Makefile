@@ -58,6 +58,14 @@ objs-$(CONFIG_CONSOLE)               += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)               += Console.o
 
 
+#######################################
+# compiler flags
+#######################################
+ifdef CONFIG_TASK_STACK
+CFLAGS    += -DTASK_STACK=$(CONFIG_TASK_STACK)
+endif
+
+
 ######################################
 # dependencies
 ######################################

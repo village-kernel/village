@@ -11,6 +11,10 @@
 #include "Registers.h"
 #include "Templates.h"
 
+#ifndef TASK_STACK
+#define TASK_STACK      1024
+#endif
+
 ///Thread
 class Thread : public Class
 {
@@ -41,7 +45,7 @@ private:
 	};
 
 	//Static constants
-	static const uint32_t task_stack_size = 1024;
+	static const uint32_t task_stack_size = TASK_STACK;
 	static const uint32_t psp_frame_size = sizeof(TaskContext) >> 2;
 	
 	//Members

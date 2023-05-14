@@ -30,6 +30,10 @@ endmenu
 
 menu "kernel"
 
+config TASK_STACK
+	int "The size of thread task stack"
+	default 1024
+
 config MODULE
 	bool "Enable loadable module support"
 	option modules
