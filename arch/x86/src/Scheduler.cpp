@@ -39,9 +39,10 @@ Scheduler& scheduler = Scheduler::Instance();
 /// @brief Scheduler initialize
 void Scheduler::Initialize()
 {
-	//Set interrupt handler
+	//Set the PendSV interrupt handler
 	interrupt.SetISR(IRQ_PendSV, union_cast<Function>(&Scheduler::PendSVHandler), (char*)this);
-	interrupt.SetISR(IRQ_Systick, union_cast<Function>(&Scheduler::SysTickHandler), (char*)this);
+	//Append the systick interrupt handler
+	interrupt.AppendISR(IRQ_Systick, union_cast<Function>(&Scheduler::SysTickHandler), (char*)this);
 }
 
 
@@ -57,11 +58,11 @@ void Scheduler::Execute()
 	//Set frist task esp
 	__asm volatile("movl %0, %%esp" : "=r"(psp));
 
-	//Set interrupt flag
-	__asm volatile("sti");
-
 	//Set start schedule flag
 	isStartSchedule = true;
+
+	//Set interrupt flag
+	__asm volatile("sti");
 
 	//Execute thread
 	thread.Execute();
