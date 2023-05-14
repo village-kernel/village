@@ -15,6 +15,7 @@ extern "C" {
 #include "stdarg.h"
 
 int puts(const char* str);
+int putchar(int c);
 
 int printf(char const* format, ...);
 int sprintf(char* str, const char* format, ...);
