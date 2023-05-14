@@ -20,15 +20,9 @@ src-y                                += vk.kernel/kernel/src
 src-$(CONFIG_X86)                    += vk.kernel/arch/x86/src
 src-$(CONFIG_CORTEX_M)               += vk.kernel/arch/arm/cortex-m/src
 
-inc-$(CONFIG_VKLIBC)                 += vk.kernel/libraries/vklibc/inc
-inc-$(CONFIG_VKLIBC)                 += vk.kernel/libraries/vklibc++/inc
-inc-$(CONFIG_FATFS)                  += vk.kernel/libraries/fatfs/inc
 inc-$(CONFIG_CONSOLE)                += vk.kernel/console/inc
 inc-$(CONFIG_UTILITIES)              += vk.kernel/utilities/inc
 
-src-$(CONFIG_VKLIBC)                 += vk.kernel/libraries/vklibc/src
-src-$(CONFIG_VKLIBC)                 += vk.kernel/libraries/vklibc++/src
-src-$(CONFIG_FATFS)                  += vk.kernel/libraries/fatfs/src
 src-$(CONFIG_CONSOLE)                += vk.kernel/console/src
 src-$(CONFIG_UTILITIES)              += vk.kernel/utilities/src
 
@@ -63,13 +57,10 @@ objs-$(CONFIG_CMD_HELP)              += CmdHelp.o
 objs-$(CONFIG_CONSOLE)               += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)               += Console.o
 
-objs-$(CONFIG_FATFS)                 += diskio.o
-objs-$(CONFIG_FATFS)                 += ff.o
-objs-$(CONFIG_FATFS)                 += ffsystem.o
-objs-$(CONFIG_FATFS)                 += ffunicode.o
 
-objs-$(CONFIG_VKLIBC)                += init.o
-objs-$(CONFIG_VKLIBC)                += stdio.o
-objs-$(CONFIG_VKLIBC)                += stdlib.o
-objs-$(CONFIG_VKLIBC)                += string.o
-objs-$(CONFIG_VKLIBC)                += icxxabi.o
+######################################
+# dependencies
+######################################
+-include vk.kernel/libraries/fatfs/Makefile
+-include vk.kernel/libraries/vklibc/Makefile
+-include vk.kernel/libraries/vklibc++/Makefile
