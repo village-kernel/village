@@ -117,7 +117,7 @@ bool CmdMsgMgr::HandleInputData()
 					}
 
 					//Set command
-					for (int8_t i = 0; i <= rxBufPos ; i++)
+					for (uint16_t i = 0; i <= rxBufPos ; i++)
 					{
 						if ((' '  == rxBuffer[i]) ||
 							('\r' == rxBuffer[i]) ||
