@@ -19,7 +19,8 @@ void* memset(void* b, int c, size_t len);
 char* strcat(char* s1, const char* s2);
 char* strncat(char* s1, const char* s2, size_t n);
 int strcmp(const char* s1, const char* s2);
-size_t strlen(const char* str);
+size_t strlen(const char* s);
+size_t strnlen(const char* s, size_t maxlen);
 
 #ifdef __cplusplus
 }
