@@ -5,6 +5,36 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "string.h"
+#include "stdint.h"
+
+
+/// @brief memcpy - copy memory area
+/// @param dst 
+/// @param src 
+/// @param n 
+/// @return the original value of dst
+void* memcpy(void* dst, const void* src, size_t n)
+{
+    for (int i = 0; i < n; i++)
+	{
+        ((uint8_t*)dst)[i] = ((uint8_t*)src)[i];
+    }
+	return dst;
+}
+
+
+/// @brief memset - fill a byte string with a byte value
+/// @param b 
+/// @param c 
+/// @param len 
+/// @return its first argument
+void* memset(void* b, int c, size_t len)
+{
+    uint8_t *temp = (uint8_t *)b;
+    for ( ; len != 0; len--) *temp++ = c;
+	return b;
+}
+
 
 /// @brief 
 /// @param s1 
