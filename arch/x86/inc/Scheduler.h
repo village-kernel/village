@@ -29,7 +29,6 @@ private:
 	~Scheduler();
 	void PendSVHandler();
 	void SysTickHandler();
-	void FaultHandler();
 public:
 	//Methods
 	void Initialize();

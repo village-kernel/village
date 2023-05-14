@@ -42,7 +42,6 @@ void Scheduler::Initialize()
 	//Set interrupt handler
 	interrupt.SetISR(IRQ_PendSV, union_cast<Function>(&Scheduler::PendSVHandler), (char*)this);
 	interrupt.SetISR(IRQ_Systick, union_cast<Function>(&Scheduler::SysTickHandler), (char*)this);
-	interrupt.SetISR(IRQ_General_Protection_Fault, union_cast<Function>(&Scheduler::FaultHandler), (char*)this);
 }
 
 
@@ -118,11 +117,4 @@ void __attribute__((naked)) Scheduler::PendSVHandler()
 void Scheduler::SysTickHandler()
 {
 	scheduler.Rescheduler(Scheduler::Privileged);
-}
-
-
-/// @brief Fault handler
-void Scheduler::FaultHandler()
-{
-	while(1);;
 }
