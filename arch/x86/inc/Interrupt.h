@@ -79,8 +79,10 @@ private:
 public:
 	//Methods
 	void Initialize();
-	void SetISR(int irq, Function isr, char* argv = NULL);
-	void ClearISR(int irq, Function isr, char* argv = NULL);
+	int SetISR(int irq, Function func, char* argv = NULL);
+	int AppendISR(int irq, Function func, char* argv = NULL);
+	int RemoveISR(int irq, Function func, char* argv = NULL);
+	void ClearISR(int irq);
 
 	//Singleton Instance
 	static Interrupt& Instance();

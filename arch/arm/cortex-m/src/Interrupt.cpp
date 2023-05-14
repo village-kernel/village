@@ -64,22 +64,35 @@ void Interrupt::Initialize()
 }
 
 
-/// @brief Interrupt Set ISR
+/// @brief Interrupt Set ISR, this will clean the isrTabs[irq]
 /// @param irq irq number
 /// @param func interupt function
 /// @param argv interrupt argv
-void Interrupt::SetISR(int irq, Function func, char* argv)
+/// @return the number of the isr in isrTabs, return -1 when fail.
+int Interrupt::SetISR(int irq, Function func, char* argv)
 {
-	isrTabs[irq].Add(new Isr(irq, func, argv));
-	vectors[irq] = union_cast<uint32_t>(&Interrupt::DefaultHandler);
+	ClearISR(irq);
+	return isrTabs[irq].Add(new Isr(irq, func, argv));
 }
 
 
-/// @brief Interrupt clear isr
+/// @brief Interrupt append ISR
+/// @param irq irq number
+/// @param func interupt function
+/// @param argv interrupt argv
+/// @return the number of the isr in isrTabs, return -1 when fail.
+int Interrupt::AppendISR(int irq, Function func, char* argv)
+{
+	return isrTabs[irq].Add(new Isr(irq, func, argv));
+}
+
+
+/// @brief Interrupt remove isr
 /// @param irq irq number
 /// @param func interrupt function
 /// @param argv interrupt argv
-void Interrupt::ClearISR(int irq, Function func, char* argv)
+/// @return Result::_OK / Result::_ERR
+int Interrupt::RemoveISR(int irq, Function func, char* argv)
 {
 	List<Isr> isrs = isrTabs[irq];
 
@@ -89,11 +102,30 @@ void Interrupt::ClearISR(int irq, Function func, char* argv)
 			(func == isr->func) &&
 			(argv == isr->argv))
 		{
-			isrs.Remove(isr, isrs.GetNid()); break;
+			Result res = (Result)isrs.Remove(isr, isrs.GetNid());
+			if (_OK == res) isrTabs[irq] = isrs;
+			return res;
 		}
 	}
+
+	return _ERR;
 }
 
+
+/// @brief Interrupt clear isr
+/// @param irq irq number
+/// @return Result::_OK / Result::_ERR
+void Interrupt::ClearISR(int irq)
+{
+	List<Isr> isrs = isrTabs[irq];
+
+	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
+	{
+		isrs.Remove(isr, isrs.GetNid());
+	}
+
+	isrTabs[irq] = isrs;
+}
 
 /// @brief Interrupt handler
 /// @param irq irq number
