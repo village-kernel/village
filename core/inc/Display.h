@@ -54,8 +54,11 @@ public:
 	};
 private:
 	//Static constants
-	static const Color defStrokeColor = White;
-	static const Color defBackgroundColor = Black;
+	//static const Color defStrokeColor = White;
+	//static const Color defBackgroundColor = Black;
+
+	static const Color defStrokeColor = Lgray;
+	static const Color defBackgroundColor = Magenta;
 
 	//Members
 	LcdDriver* lcd;
@@ -63,12 +66,9 @@ public:
 	//Methods
 	Display();
 	void Initialize(LcdDriver* lcd);
-	void OpenWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
-	void SetCursor(uint16_t x, uint16_t y);
-	void Fill(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color = defStrokeColor);
-	void Clear(uint16_t color = defBackgroundColor);
 	void DrawPoint(uint16_t x, uint16_t y, uint16_t color = defStrokeColor);
 	uint16_t ReadPoint(uint16_t x, uint16_t y);
+	void Clear(uint16_t color = defBackgroundColor);
 	void DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color = defStrokeColor);
 	void DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color = defStrokeColor);
 	void DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color = defStrokeColor);

@@ -29,34 +29,7 @@ Display& display = Display::Instance();
 void Display::Initialize(LcdDriver* lcd)
 {
 	this->lcd = lcd;
-}
-
-
-///Display open window
-void Display::OpenWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
-{
-	lcd->OpenWindow(x, y, width, height);
-}
-
-
-///Display set cursor
-void Display::SetCursor(uint16_t x, uint16_t y)
-{
-	lcd->SetCursor(x, y);
-}
-
-
-///Display fill color
-void Display::Fill(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
-{
-	lcd->Fill(x0, y0, x1, y1, color);
-}
-
-
-///Display clear
-void Display::Clear(uint16_t color)
-{
-	lcd->Clear(color);
+	Clear();
 }
 
 
@@ -71,6 +44,13 @@ void Display::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 uint16_t Display::ReadPoint(uint16_t x, uint16_t y)
 {
 	return lcd->ReadPoint(x, y);
+}
+
+
+///Display clear
+void Display::Clear(uint16_t color)
+{
+	lcd->Clear(color);
 }
 
 
@@ -257,17 +237,34 @@ void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint
 
 	while ('\0' != *str)
 	{
-		if ((xOffset >= lcd->device.width) || ('\n' == *str))
+		if ((xOffset + (fontSize >> 1) > lcd->device.width) || ('\n' == *str))
 		{
 			xOffset = 0;
 			yOffset += fontSize;
 		}
 
-		if (yOffset >= lcd->device.height)
+		if (yOffset + fontSize > lcd->device.height)
 		{
+			uint16_t y0 = (yOffset + fontSize) - lcd->device.height;
+			for (uint16_t y = y0; y < lcd->device.height; y++)
+			{
+				for (uint16_t x = 0; x < lcd->device.width; x++)
+				{
+					uint16_t color = ReadPoint(x, y);
+					DrawPoint(x, y - y0, color);
+				}
+			}
+
 			xOffset = 0;
-			yOffset = 0;
-			Clear();
+			yOffset = lcd->device.height - fontSize;
+			
+			for (uint16_t y = yOffset; y < lcd->device.height; y++)
+			{
+				for (uint16_t x = 0; x < lcd->device.width; x++)
+				{
+					DrawPoint(x, y, defBackgroundColor);
+				}
+			}
 		}
 
 		if ((*str <= '~') && (*str >= ' '))
