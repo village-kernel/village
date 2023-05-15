@@ -25,6 +25,7 @@ _start:
 
 	call DisplayMsg
 	call ReadApplication
+	call ChangeVideoMode
 	call SwitchToProtectedMode
 	jmp  .
 
@@ -108,6 +109,12 @@ _Readw:
 	loop _Readw
 
 	popa
+	ret
+
+# Change video mode: 320x200 256color
+ChangeVideoMode:
+	movw $0x13, %ax
+	int $0x10
 	ret
 
 # GDT start label

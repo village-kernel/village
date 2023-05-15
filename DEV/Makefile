@@ -21,3 +21,4 @@ objs-$(CONFIG_SDCARD)         += SdCard.o
 objs-$(CONFIG_SPIFLASH)       += SpiFlash.o
 objs-$(CONFIG_UARTSERIAL)     += UartSerial.o
 objs-$(CONFIG_USBSTORAGE)     += UsbStorage.o
+objs-$(CONFIG_X86VGA)         += X86VGA.o
