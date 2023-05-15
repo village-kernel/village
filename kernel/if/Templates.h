@@ -384,7 +384,7 @@ public:
 	/// @brief List GetItemByName
 	/// @param nid node name
 	/// @return object pointer
-	Object* GetItemByName(char* name)
+	Object* GetItemByName(const char* name)
 	{
 		for (Node* node = head; NULL != node; node = node->next)
 		{

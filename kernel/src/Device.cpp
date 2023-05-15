@@ -88,8 +88,19 @@ EXPORT_SYMBOL(Device::DeregisterDriver, _ZN6Device16DeregisterDriverEP6Driverm);
 
 /// @brief Get the driver object
 /// @param id driver id
+/// @return driver
 Driver* Device::GetDriver(uint32_t id)
 {
 	return drivers.GetItem(id);
 }
 EXPORT_SYMBOL(Device::GetDriver, _ZN6Device9GetDriverEm);
+
+
+/// @brief Get the driver object by name
+/// @param name driver name
+/// @return driver
+Driver* Device::GetDriverByName(const char* name)
+{
+	return drivers.GetItemByName(name);
+}
+EXPORT_SYMBOL(Device::GetDriverByName, _ZN6Device15GetDriverByNameEPKc);
