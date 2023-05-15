@@ -60,7 +60,7 @@ private:
 
 	//Members
 	LcdDriver* lcd;
-	SpinLock   lock;
+	Mutex      lock;
 	char       data[buf_size];
 public:
 	//Methods
