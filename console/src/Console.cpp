@@ -87,7 +87,6 @@ void Console::Execute()
 		{
 			ExecuteCmd(msgMgr.Read());
 		}
-		thread.Sleep(1);
 	}
 }
 
