@@ -29,7 +29,7 @@ void ILI9488::Initialize()
 
 	DeviceConfig();
 
-	if (device.id == ReadID())
+	if (lcd.id == ReadID())
 	{
 		DisplayConfig();
 		Clear();
@@ -91,14 +91,17 @@ void ILI9488::InitConfig()
 ///Config lcd info
 void ILI9488::DeviceConfig()
 {
-	device.id = 0x548066;
-	device.dir = Down;
-	device.height = 480;
-	device.width = 320;
-	device.setXCmd = 0x2A;
-	device.setYCmd = 0x2B;
-	device.wRamCmd = 0X2C;
-	device.rRamCmd = 0x2E;
+	lcd.id = 0x548066;
+	lcd.dir = Down;
+	lcd.width = 320;
+	lcd.height = 480;
+	lcd.setXCmd = 0x2A;
+	lcd.setYCmd = 0x2B;
+	lcd.wRamCmd = 0X2C;
+	lcd.rRamCmd = 0x2E;
+
+	device.width = lcd.width;
+	device.height = lcd.height;
 }
 
 
@@ -191,7 +194,7 @@ void ILI9488::DisplayConfig()
 	WriteData(0x00);
 
 	// Set direction
-	SetDirection(device.dir);
+	SetDirection(lcd.dir);
 
 	// Interface Pixel Format (3Ah)
 	WriteCmd(0x3A);
@@ -262,7 +265,7 @@ uint16_t ILI9488::ReadRegData(uint16_t reg)
 ///ILI9488 prepare write gram
 void ILI9488::PrepareWriteRAM()
 {
-	lcdmap->reg = device.wRamCmd;
+	lcdmap->reg = lcd.wRamCmd;
 }
 
 
@@ -327,34 +330,34 @@ void ILI9488::SetDirection(Direction dir)
 		break;
 	}
 
-	WriteCmd(device.setXCmd);
+	WriteCmd(lcd.setXCmd);
 	// x start
 	WriteData(0x00);
 	WriteData(0x00);
 	// x end
-	WriteData((device.width - 1) >> 8);
-	WriteData((device.width - 1) & 0xff);
+	WriteData((lcd.width - 1) >> 8);
+	WriteData((lcd.width - 1) & 0xff);
 
-	WriteCmd(device.setYCmd);
+	WriteCmd(lcd.setYCmd);
 	// y start
 	WriteData(0x00);
 	WriteData(0x00);
 	// y end
-	WriteData((device.height - 1) >> 8);
-	WriteData((device.height - 1) & 0xff);
+	WriteData((lcd.height - 1) >> 8);
+	WriteData((lcd.height - 1) & 0xff);
 }
 
 
 ///ILI9488 open window
 void ILI9488::OpenWindow(uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
-	WriteCmd(device.setXCmd);
+	WriteCmd(lcd.setXCmd);
 	WriteData(x >> 8);
 	WriteData(x & 0XFF);
 	WriteData((x + width - 1) >> 8);
 	WriteData((x + width - 1) & 0xff);
 
-	WriteCmd(device.setYCmd);
+	WriteCmd(lcd.setYCmd);
 	WriteData(y >> 8);
 	WriteData(y & 0XFF);
 	WriteData((y + height - 1) >> 8);
@@ -373,7 +376,7 @@ void ILI9488::SetCursor(uint16_t x, uint16_t y)
 void ILI9488::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 {
 	SetCursor(x, y);
-	WriteReg(device.wRamCmd, color);
+	WriteReg(lcd.wRamCmd, color);
 }
 
 
@@ -382,7 +385,7 @@ uint16_t ILI9488::ReadPoint()
 {
 	uint16_t usR = 0, usG = 0, usB = 0;
 
-	WriteCmd(device.rRamCmd);
+	WriteCmd(lcd.rRamCmd);
 
 	usR = ReadData();
 	usR = ReadData();
@@ -431,8 +434,8 @@ void ILI9488::Fill(uint32_t pointSizes, uint16_t color)
 ///ILI9488 clear
 void ILI9488::Clear(uint16_t color)
 {
-	OpenWindow(0, 0, device.width, device.height);
-	uint32_t totalpoint = device.width * device.height;
+	OpenWindow(0, 0, lcd.width, lcd.height);
+	uint32_t totalpoint = lcd.width * lcd.height;
 	Fill(totalpoint, color);
 }
 

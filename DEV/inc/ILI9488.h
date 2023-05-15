@@ -25,6 +25,27 @@ public:
 		uint16_t backLightPin;
 	};
 protected:
+	//Enumerates
+	enum Direction
+	{
+		Up = 0,
+		Left,
+		Right,
+		Down,
+	};
+
+	//Structures
+	struct DriverInfo
+	{
+		uint32_t  id;
+		uint16_t  setXCmd;
+		uint16_t  setYCmd;
+		uint16_t  wRamCmd;
+		uint16_t  rRamCmd;
+		Direction dir;
+	};
+
+	//LCD map
 	struct __packed LCDMap
 	{
 		volatile uint16_t reg;
@@ -35,6 +56,7 @@ protected:
 	Fsmc fsmc;
 	Gpo backLight;
 	Config config;
+	DriverInfo lcd;
 	LCDMap *lcdmap = (LCDMap*)(uint32_t)(0x6C000000 | 0x0000007E);
 
 	//Methods
