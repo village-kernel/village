@@ -1,59 +1,59 @@
 //###########################################################################
-// X86VGA.cpp
+// VGA.cpp
 // Definitions of the functions that manage x86 VGA
 //
 // $Copyright: Copyright (C)
 //###########################################################################
-#include "X86VGA.h"
+#include "VGA.h"
 #include "Kernel.h"
 
 
 ///Constructor
-X86VGA::X86VGA()
+VGA::VGA()
 {
 }
 
 
-///X86VGA initialize
-void X86VGA::Initialize()
+///VGA initialize
+void VGA::Initialize()
 {
 	device.width = 320;
 	device.height = 200;
 }
 
 
-///X86VGA write reg
-void X86VGA::WriteData(uint16_t reg, uint16_t value)
+///VGA write reg
+void VGA::WriteData(uint16_t reg, uint16_t value)
 {
 	unsigned char* videos = (unsigned char*)0xA0000;
 	videos[reg] = value;
 }
 
 
-///X86VGA read reg
-uint16_t X86VGA::ReadData(uint16_t reg)
+///VGA read reg
+uint16_t VGA::ReadData(uint16_t reg)
 {
 	unsigned char* videos = (unsigned char*)0xA0000;
 	return videos[reg];
 }
 
 
-///X86VGA draw point
-void X86VGA::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
+///VGA draw point
+void VGA::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 {
 	WriteData((x + y * device.width), color);
 }
 
 
-///X86VGA read point
-uint16_t X86VGA::ReadPoint(uint16_t x, uint16_t y)
+///VGA read point
+uint16_t VGA::ReadPoint(uint16_t x, uint16_t y)
 {
 	return ReadData((x + y * device.width));
 }
 
 
-///X86VGA clear
-void X86VGA::Clear(uint16_t color)
+///VGA clear
+void VGA::Clear(uint16_t color)
 {
 	for (uint16_t y = 0; y < device.height; y++)
 	{
@@ -66,4 +66,4 @@ void X86VGA::Clear(uint16_t color)
 
 
 ///Register driver
-REGISTER_DRIVER(new X86VGA(), DriverID::_display + 1, vga);
+REGISTER_DRIVER(new VGA(), DriverID::_display, vga);

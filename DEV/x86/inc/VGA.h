@@ -1,19 +1,19 @@
 //###########################################################################
-// X86VGA.h
+// VGA.h
 // Declarations of the functions that manage x86 VGA
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __X86_VGA_H__
-#define __X86_VGA_H__
+#ifndef __VGA_H__
+#define __VGA_H__
 
 #include "HalHeaders.h"
 #include "LcdDriver.h"
 #include "Driver.h"
 
 
-///X86VGA
-class X86VGA : public Driver, public LcdDriver
+///VGA
+class VGA : public Driver, public LcdDriver
 {
 protected:
 	//Methods
@@ -21,7 +21,7 @@ protected:
 	uint16_t ReadData(uint16_t reg);
 public:
 	//Device Methods
-	X86VGA();
+	VGA();
 	void Initialize();
 	
 	//Display methods

@@ -29,8 +29,3 @@ config USBSTORAGE
 	select MANUFACTURER_HAL_DRIVER
 	bool "Enable USB storage support"
 	default n
-
-config X86VGA
-	bool "Enable X86VGA support"
-	default n
-	
