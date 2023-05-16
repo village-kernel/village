@@ -1,9 +1,0 @@
-config UARTSERIAL
-	select HAL_USART
-	bool "Enable UART serial support"
-	default n
-
-config VGA
-	bool "Enable VGA support"
-	default n
-	

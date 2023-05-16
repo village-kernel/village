@@ -1,16 +1,21 @@
-comment "This is using to configure hardware"
+comment "Select CPU Architecture"
 
-# Config mcu menu
-menu "Board Support Package"
-	source ./vk.hardware/BSP/Kconfig
-endmenu
+choice
+	prompt "Architecture"
+	default ARM
 
-# Config HAL menu
-menu "Hardware Abstraction Layer"
-	source ./vk.hardware/HAL/Kconfig
-endmenu
+	config ARM
+		bool "arm"
 
-# Config DEV menu
-menu "Generic Device Driver"
-	source ./vk.hardware/DEV/Kconfig
-endmenu
+	config X86
+		bool "x86"
+		select BOOTSECTION
+endchoice
+
+if ARM
+	source ./vk.hardware/arm/Kconfig
+endif
+
+if X86
+	source ./vk.hardware/x86/Kconfig
+endif

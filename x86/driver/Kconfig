@@ -1,0 +1,12 @@
+# Config driver menu
+menu "Generic Device Driver"
+
+config SERIAL
+	bool "Enable serial support"
+	default n
+
+config VGA
+	bool "Enable VGA support"
+	default n
+	
+endmenu

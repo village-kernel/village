@@ -1,7 +1,0 @@
-if CORTEX_M
-	source ./vk.hardware/DEV/arm/cortex-m/Kconfig
-endif
-
-if X86
-	source ./vk.hardware/DEV/x86/Kconfig
-endif

@@ -1,0 +1,4 @@
+comment "Configure Support Function"
+
+source ./vk.hardware/x86/cpu/Kconfig
+source ./vk.hardware/x86/driver/Kconfig
