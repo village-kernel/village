@@ -7,7 +7,7 @@
 #ifndef __SYSTEM_H__
 #define __SYSTEM_H__
 
-#include "HalHeaders.h"
+#include "Hardware.h"
 
 ///System
 class System
