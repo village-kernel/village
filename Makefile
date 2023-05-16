@@ -13,12 +13,16 @@ inc-y                                += vk.kernel/kernel/inc
 
 inc-$(CONFIG_X86)                    += vk.kernel/arch/x86/inc
 inc-$(CONFIG_CORTEX_M)               += vk.kernel/arch/arm/cortex-m/inc
+inc-$(CONFIG_STM32F4xx)              += vk.kernel/arch/arm/cortex-m/inc/stm32f4xx
+inc-$(CONFIG_STM32H7xx)              += vk.kernel/arch/arm/cortex-m/inc/stm32h7xx
 
 src-y                                += vk.kernel
 src-y                                += vk.kernel/kernel/src
 
 src-$(CONFIG_X86)                    += vk.kernel/arch/x86/src
 src-$(CONFIG_CORTEX_M)               += vk.kernel/arch/arm/cortex-m/src
+src-$(CONFIG_STM32F4xx)              += vk.kernel/arch/arm/cortex-m/src/stm32f4xx
+src-$(CONFIG_STM32H7xx)              += vk.kernel/arch/arm/cortex-m/src/stm32h7xx
 
 inc-$(CONFIG_CONSOLE)                += vk.kernel/console/inc
 inc-$(CONFIG_UTILITIES)              += vk.kernel/utilities/inc
@@ -40,6 +44,7 @@ objs-y                               += Synchronize.o
 
 objs-y                               += Interrupt.o
 objs-y                               += Scheduler.o
+objs-y                               += System.o
 
 objs-$(CONFIG_LOADER)                += Loader.o
 objs-$(CONFIG_EXECUTOR)              += Executor.o
