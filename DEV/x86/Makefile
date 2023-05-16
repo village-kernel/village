@@ -14,4 +14,5 @@ src-y += vk.hardware/DEV/x86/src
 ######################################
 # objects
 ######################################
+objs-$(CONFIG_UARTSERIAL)  += UartSerial.o
 objs-$(CONFIG_VGA)         += VGA.o

@@ -59,6 +59,8 @@ bool Usart::IsTxRegisterEmpty()
 ///Write data to usart
 int Usart::Write(uint8_t* txData, uint16_t length)
 {
+	int count = length;
+
 	while (length)
 	{
 		if (IsTxRegisterEmpty())
@@ -68,7 +70,7 @@ int Usart::Write(uint8_t* txData, uint16_t length)
 		}
 	}
 
-	return 0;
+	return count;
 }
 
 
