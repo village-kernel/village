@@ -1,23 +1,12 @@
 ###########################################################################
 # Makefile
-# The Makefile of vk.hardware/DEV
+# The Makefile of vk.hardware/HAL
 #
 # $Copyright: Copyright (C) village
 ############################################################################
 
-######################################
-# paths
-######################################
-inc-y += vk.hardware/DEV/config
-inc-y += vk.hardware/DEV/inc
-src-y += vk.hardware/DEV/src
-
-######################################
-# objects
-######################################
-objs-$(CONFIG_DMAFIFO)        += DmaFifo.o
-objs-$(CONFIG_ILI9488)        += ILI9488.o
-objs-$(CONFIG_SDCARD)         += SdCard.o
-objs-$(CONFIG_SPIFLASH)       += SpiFlash.o
-objs-$(CONFIG_UARTSERIAL)     += UartSerial.o
-objs-$(CONFIG_USBSTORAGE)     += UsbStorage.o
+ifeq ($(CONFIG_CORTEX_M), y)
+-include vk.hardware/DEV/arm/cortex-m/Makefile
+else ifeq ($(CONFIG_X86), y)
+-include vk.hardware/DEV/x86/Makefile
+endif
