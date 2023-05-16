@@ -49,43 +49,10 @@ void Usart::Initialize(uint16_t channel)
 }
 
 
-///Configures basic port settings
-void Usart::ConfigPortSettings(DataBits dataBits, Parity parity, StopBits stopBits)
+///Check if the send register is empty
+bool Usart::IsTxRegisterEmpty()
 {
-	//uint8_t settings = (dataBits << COM_LINE_CTRL_DATA_BITS_Pos) | 
-	//					(parity << COM_LINE_CTRL_PARITY_Pos) |
-	//					(stopBits << COM_LINE_CTRL_STOP_BITS_Pos);
-	//PortByteOut(base + COM_LINE_CTRL_Pos, settings);
-}
-
-
-///Sets the baud rate of the serial bus
-///baudRate indicates the desired baudRate
-///over8 indicates the whether oversampling by 8 will be used (otherwise oversampling of 16)
-void Usart::SetBaudRate(uint32_t baudRate, bool over8)
-{
-
-}
-
-
-///Configure RS485 driver enable mode
-void Usart::ConfigDriverEnableMode(bool usingDEM, bool polarity)
-{
-	//unsupport
-}
-
-
-///Configure receiver timeout
-void Usart::ConfigReceiverTimeout(bool enable, uint32_t rto, uint8_t blen)
-{
-	//unsupport
-}
-
-
-///Enables or disables DMA transmitter / DMA receiver
-void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
-{
-
+	return (bool)(PortByteIn(base + COM_LINE_STATUS_Pos) & COM_LINE_STATUS_THRE);
 }
 
 
@@ -105,6 +72,13 @@ int Usart::Write(uint8_t* txData, uint16_t length)
 }
 
 
+///Check if the read date register not empty
+bool Usart::IsReadDataRegNotEmpty()
+{
+	return (bool)(PortByteIn(base + COM_LINE_STATUS_Pos) & COM_LINE_STATUS_DR);
+}
+
+
 ///Read data from usart
 int Usart::Read(uint8_t* rxData, uint16_t length)
 {
@@ -117,11 +91,4 @@ int Usart::Read(uint8_t* rxData, uint16_t length)
 	}
 
 	return count;
-}
-
-
-///Check error
-void Usart::CheckError()
-{
-
 }
