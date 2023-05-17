@@ -81,7 +81,12 @@ KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-m,elf_i386
 
 # mod ld flags
-MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
+ifeq ($(CONFIG_VKLIBC), y)
+MLDFLAGS  += $(MCU) -ffreestanding -nostdlib
+else
+MLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
+endif
+MLDFLAGS  += -T vk.scripts/ldscript/module.ld
 MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
 MLDFLAGS  += -Wl,-r -Wl,-Bsymbolic
 MLDFLAGS  += -Wl,--no-warn-rwx-segment
