@@ -73,7 +73,7 @@ int Disk::Write(uint8_t* data, uint32_t count, uint32_t blk)
 /// @return 
 int Disk::Read(uint8_t* data, uint32_t count, uint32_t blk)
 {
-	while (count--)
+	for (uint32_t cnt = 0; cnt < count; cnt++, blk++)
 	{
 		//LBA 28 mode
 		PortByteOut(0x1f6, 0xe0 | (drv << 4) | ((blk >> 24) & 0x0f));
@@ -94,13 +94,10 @@ int Disk::Read(uint8_t* data, uint32_t count, uint32_t blk)
 		while (!(PortByteIn(0x1f7) & 0x08)) {}
 
 		//Read data
-		for (uint16_t i = 0; i < 256; i++)
+		for (uint16_t size = 0; size < 256; size++)
 		{
-			((uint16_t*)data)[i] = PortWordIn(0x1f0);
+			((uint16_t*)data)[size + cnt * 256] = PortWordIn(0x1f0);
 		}
-
-		//Update blk
-		blk++;
 	}
 	
 	return 0;
