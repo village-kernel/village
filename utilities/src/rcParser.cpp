@@ -46,9 +46,11 @@ int RcParser::Load(const char* filename)
 ///Decode the rc data
 void RcParser::Decode(const char* rcString)
 {
+	const int32_t start_delimiter= -1;
+
 	RunCmdNode** nextNode = &runcmds;
 	ParserStatus status = _RecordCmd;
-	int32_t startIndex = 0;
+	int32_t startIndex = start_delimiter;
 	int32_t recordBytes = 0;
 	
 	for (int32_t i = 0; rcString[i] != '\0'; i++)
@@ -79,14 +81,14 @@ void RcParser::Decode(const char* rcString)
 			default:
 				if (_RecordCmd == status)
 				{
-					if (0 == startIndex) startIndex = i;
+					if (start_delimiter == startIndex) startIndex = i;
 					if (byte > ' ' && byte <= '~') recordBytes++;
 				}
 				break;
 		}
 
 		//Save cmd
-		if ((_SaveCmd == status) && (0 != startIndex))
+		if ((_SaveCmd == status) && (start_delimiter != startIndex))
 		{
 			char* cmd = new char[recordBytes + 1]();
 
@@ -103,7 +105,7 @@ void RcParser::Decode(const char* rcString)
 				*nextNode  = new RunCmdNode(cmd);
 				nextNode   = &(*nextNode)->next;
 				status     = _RecordCmd;
-				startIndex = 0;
+				startIndex = start_delimiter;
 			}
 			else
 			{
