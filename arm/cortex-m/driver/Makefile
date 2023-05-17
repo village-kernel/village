@@ -8,9 +8,9 @@
 ######################################
 # paths
 ######################################
-inc-y += vk.hardware/arm/cortex-m/config
-inc-y += vk.hardware/arm/cortex-m/inc
-src-y += vk.hardware/arm/cortex-m/src
+inc-y += vk.hardware/arm/cortex-m/driver/config
+inc-y += vk.hardware/arm/cortex-m/driver/inc
+src-y += vk.hardware/arm/cortex-m/driver/src
 
 ######################################
 # objects

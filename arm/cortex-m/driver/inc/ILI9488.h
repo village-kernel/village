@@ -38,6 +38,8 @@ protected:
 	struct DriverInfo
 	{
 		uint32_t  id;
+		uint16_t  width;
+		uint16_t  height;
 		uint16_t  setXCmd;
 		uint16_t  setYCmd;
 		uint16_t  wRamCmd;

@@ -5,9 +5,6 @@
 # $Copyright: Copyright (C) village
 ############################################################################
 
-######################################
-# includes
-######################################
 -include vk.hardware/arm/cortex-m/driver/Makefile
 
 ifeq ($(CONFIG_ST), y)
