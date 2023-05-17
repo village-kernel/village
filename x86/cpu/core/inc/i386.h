@@ -238,6 +238,18 @@ extern "C" {
 #define COM_MODEM_STATUS_DCD_Msk             (0x1 << COM_MODEM_STATUS_DCD_Pos)
 #define COM_MODEM_STATUS_DCD                 COM_MODEM_STATUS_DCD_Msk
 
+/* LBA disk difines */
+#define LBA_DISK                             0x1f0
+#define LBA_DISK_DATA                        (LBA_DISK + 0)
+#define LBA_DISK_ERR                         (LBA_DISK + 1)
+#define LBA_DISK_SECTOR_CNT                  (LBA_DISK + 2)
+#define LBA_DISK_SECTOR_0_7_BITS             (LBA_DISK + 3)
+#define LBA_DISK_SECTOR_8_15_BITS            (LBA_DISK + 4)
+#define LBA_DISK_SECTOR_16_23_BITS           (LBA_DISK + 5)
+#define LBA_DISK_SECTOR_24_27_BITS           (LBA_DISK + 6)
+#define LBA_DISK_CMD                         (LBA_DISK + 7)
+#define LBA_DISK_STATUS                      (LBA_DISK + 7)
+
 /* IRQ numbers */
 #define IRQ_Division_By_Zero                 0
 #define IRQ_Debug                            1

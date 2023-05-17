@@ -8,5 +8,9 @@ config SERIAL
 config VGA
 	bool "Enable VGA support"
 	default n
+
+config DISK
+	bool "Enable LBA disk support"
+	default n
 	
 endmenu
