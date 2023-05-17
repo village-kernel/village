@@ -66,6 +66,7 @@ DRESULT disk_read (
 	UINT count		/* Number of sectors to read */
 )
 {
+	if(NULL == storage[pdrv]) return RES_ERROR;
 	return (DRESULT)storage[pdrv]->Read((uint8_t*)buff, count, sector);
 }
 
@@ -84,6 +85,7 @@ DRESULT disk_write (
 	UINT count			/* Number of sectors to write */
 )
 {
+	if(NULL == storage[pdrv]) return RES_ERROR;
 	return (DRESULT)storage[pdrv]->Write((uint8_t*)buff, count, sector);
 }
 
@@ -100,6 +102,7 @@ DRESULT disk_ioctl (
 	void *buff		/* Buffer to send/receive control data */
 )
 {
+	if(NULL == storage[pdrv]) return RES_ERROR;
 	return (DRESULT)storage[pdrv]->IOCtrl(cmd, (uint8_t*)buff);
 }
 
@@ -116,27 +119,27 @@ DWORD get_fattime(void)
 
 
 
-/*-----------------------------------------------------------------------*/
-/* Fatfs malloc memory functions                                         */
-/*-----------------------------------------------------------------------*/
-#if FF_USE_LFN != 3
-void* ff_memalloc(UINT mszie)
-{
-	return (void*)malloc(mszie);
-}
-#endif
+///*-----------------------------------------------------------------------*/
+///* Fatfs malloc memory functions                                         */
+///*-----------------------------------------------------------------------*/
+//#if FF_USE_LFN != 3
+//void* ff_memalloc(UINT mszie)
+//{
+//	return (void*)malloc(mszie);
+//}
+//#endif
 
 
 
-/*-----------------------------------------------------------------------*/
-/* Fatfs free memory functions                                           */
-/*-----------------------------------------------------------------------*/
-#if FF_USE_LFN != 3
-void ff_memfree(void* mblock)
-{
-	free((void*)mblock);
-}
-#endif
+///*-----------------------------------------------------------------------*/
+///* Fatfs free memory functions                                           */
+///*-----------------------------------------------------------------------*/
+//#if FF_USE_LFN != 3
+//void ff_memfree(void* mblock)
+//{
+//	free((void*)mblock);
+//}
+//#endif
 
 
 #ifdef __cplusplus
