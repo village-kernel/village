@@ -47,7 +47,7 @@ config LOADER
 	default n
 
 config ENVIRONMENT
-	bool "Build the environment of Loadable module running"
+	bool "Build the environment of Loadable module"
 	default n
 
 config EXECUTOR
@@ -106,7 +106,6 @@ endmenu
 menu "libraries"
 
 config FATFS
-	depends on SDCARD || SPIFLASH
 	bool "Enable fatfs file system"
 	default n
 
