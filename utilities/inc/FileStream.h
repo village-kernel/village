@@ -9,7 +9,6 @@
 
 #include "stdint.h"
 #include "stddef.h"
-#include <string>
 #include "ff.h"
 
 ///FileStream
@@ -25,13 +24,13 @@ public:
 	};
 private:
 	//Methods
-	std::string driver;
+	char* driver;
 	FATFS fs; 
 	FIL file;
 public:
 	//Methods
-	FileStream(std::string driver = "1:");
-	int Open(std::string filename, int option);
+	FileStream(const char* driver = "1:");
+	int Open(const char* filename, int option);
 	int Write(uint8_t* txData, uint32_t size, uint32_t seek = 0);
 	int Read(uint8_t* rxData, uint32_t size, uint32_t seek = 0);
 	int Size();

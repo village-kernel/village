@@ -6,25 +6,28 @@
 //###########################################################################
 #include "FileStream.h"
 #include "stdlib.h"
+#include "string.h"
 
 
 ///Constructor
-FileStream::FileStream(std::string driver)
-	: driver(driver)
+FileStream::FileStream(const char* driver)
+	: driver((char*)driver)
 {
 }
 
 
 ///OpenFile
-int FileStream::Open(std::string filename, int option)
+int FileStream::Open(const char* filename, int option)
 {
-	filename.insert(0, driver);
+	char path[strlen(driver) + strlen(filename) + 1] = { 0 };
+	strcat(path, driver);
+	strcat(path, filename);
 
-	FRESULT res = f_mount(&fs, driver.c_str(), 1);
+	FRESULT res = f_mount(&fs, driver, 1);
 
-	if (FR_OK != res) return res;
+	if (FR_OK != res) { f_unmount(driver); return res; }
 	
-	return f_open(&file, filename.c_str(), option);
+	return f_open(&file, path, option);
 }
 
 
@@ -66,9 +69,9 @@ int FileStream::Close()
 {
 	FRESULT res = f_close(&file);
 
-	f_unmount(driver.c_str());
+	f_unmount(driver);
 	
-	this->driver = "";
+	this->driver = (char*)"";
 
 	return res;
 }
