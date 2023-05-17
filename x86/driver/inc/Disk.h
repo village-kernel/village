@@ -13,8 +13,12 @@
 /// @brief Disk
 class Disk : public Driver
 {
-public:
+private:
+	//Members
+	uint8_t drv;
+public: 
 	//Methods
+	Disk(uint8_t drv);
 	Disk();
 	~Disk();
 	int Write(uint8_t* data, uint32_t count = 0, uint32_t blk = 0);

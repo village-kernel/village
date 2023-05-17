@@ -9,7 +9,15 @@
 
 
 /// @brief Constructor
+Disk::Disk(uint8_t drv)
+	:drv(drv)
+{
+}
+
+
+/// @brief Constructor
 Disk::Disk()
+	:drv(0)
 {
 }
 
@@ -29,22 +37,23 @@ int Disk::Write(uint8_t* data, uint32_t count, uint32_t blk)
 {
 	while (count--)
 	{
+		//LBA 28 mode
+		PortByteOut(0x1f6, 0xe0 | (drv << 4) | ((blk >> 24) & 0x0f));
+
 		//Write one sector
 		PortByteOut(0x1f2, 0);
 
 		//Set block address
-		PortByteOut(0x1f3, ((blk >>  0) & 0xff));
-		PortByteOut(0x1f4, ((blk >>  8) & 0xff));
-		PortByteOut(0x1f5, ((blk >> 16) & 0xff));
-
-		//LBA mode
-		PortByteOut(0x1f6, 0xe | ((blk >> 24) & 0x0f));
+		PortByteOut(0x1f3, (uint8_t)(blk >>  0));
+		PortByteOut(0x1f4, (uint8_t)(blk >>  8));
+		PortByteOut(0x1f5, (uint8_t)(blk >> 16));
 
 		//Write cmd
 		PortByteOut(0x1f7, 0x30);
 		
 		//Wait
-		while(0x08 != (PortByteIn(0x1f7) & 0x88)) {}
+		while (PortByteIn(0x1f7) & 0x80) {}
+		while (!(PortByteIn(0x1f7) & 0x08)) {}
 
 		//Write data
 		for (uint16_t i = 0; i < 256; i++)
@@ -53,7 +62,7 @@ int Disk::Write(uint8_t* data, uint32_t count, uint32_t blk)
 		}
 	}
 
-	return count;
+	return 0;
 }
 
 
@@ -66,33 +75,38 @@ int Disk::Read(uint8_t* data, uint32_t count, uint32_t blk)
 {
 	while (count--)
 	{
+		//LBA 28 mode
+		PortByteOut(0x1f6, 0xe0 | (drv << 4) | ((blk >> 24) & 0x0f));
+
 		//Read one sector
-		PortByteOut(0x1f2, 0);
+		PortByteOut(0x1f2, 1);
 		
 		//Set block address
-		PortByteOut(0x1f3, ((blk >>  0) & 0xff));
-		PortByteOut(0x1f4, ((blk >>  8) & 0xff));
-		PortByteOut(0x1f5, ((blk >> 16) & 0xff));
-
-		//LBA mode
-		PortByteOut(0x1f6, 0xe0 | ((blk >> 24) & 0x0f));
+		PortByteOut(0x1f3, (uint8_t)(blk >>  0));
+		PortByteOut(0x1f4, (uint8_t)(blk >>  8));
+		PortByteOut(0x1f5, (uint8_t)(blk >> 16));
 
 		//Read cmd
 		PortByteOut(0x1f7, 0x20);
 
 		//Wait
-		while(0x08 != (PortByteIn(0x1f7) & 0x88)) {}
+		while (PortByteIn(0x1f7) & 0x80) {}
+		while (!(PortByteIn(0x1f7) & 0x08)) {}
 
 		//Read data
 		for (uint16_t i = 0; i < 256; i++)
 		{
 			((uint16_t*)data)[i] = PortWordIn(0x1f0);
 		}
+
+		//Update blk
+		blk++;
 	}
 	
-	return count;
+	return 0;
 }
 
 
 ///Register driver
-REGISTER_DRIVER(new Disk(), DriverID::_storage, disk);
+REGISTER_DRIVER(new Disk(0), DriverID::_storage + 0, hda);
+REGISTER_DRIVER(new Disk(1), DriverID::_storage + 1, hdb);
