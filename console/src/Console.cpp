@@ -142,6 +142,7 @@ void Console::log(const char* format, ...)
 	msgMgr.Write((uint8_t*)"Log: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n");
+	msgMgr.Execute();
 	mutex.Unlock();
 }
 
@@ -159,6 +160,7 @@ void Console::info(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\033[36mInfo: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
+	msgMgr.Execute();
 	mutex.Unlock();
 }
 
@@ -176,6 +178,7 @@ void Console::error(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\033[31mError: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
+	msgMgr.Execute();
 	mutex.Unlock();
 }
 
@@ -193,6 +196,7 @@ void Console::warn(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\033[33mWarning: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
+	msgMgr.Execute();
 	mutex.Unlock();
 }
 
