@@ -32,4 +32,18 @@ SECTIONS
 		*(.sbss.*)
 		*(COMMON)
 	}
+
+	.init_array :
+	{
+		*(SORT(.init_array.*))
+		*(.init_array*)
+		*(.ctors*)
+	}
+
+	.fini_array :
+	{
+		*(SORT(.fini_array.*))
+		*(.fini_array*)
+		*(.dtors*)
+	}
 }
