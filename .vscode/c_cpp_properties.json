@@ -3,23 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceRoot}/vk.hardware/BSP/ST/CMSIS/Include",
-                "${workspaceRoot}/vk.hardware/BSP/ST/CMSIS/Device/ST/STM32F4xx/Include",
-                "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc",
-                "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_HAL_Driver/Inc/Legacy",
-                "${workspaceRoot}/vk.hardware/HAL/ST/STM32F4xx/inc",
-                "${workspaceRoot}/vk.hardware/Dev/inc",
-                "${workspaceRoot}/vk.kernel/kernel/if",
-                "${workspaceRoot}/vk.kernel/kernel/inc",
-				"${workspaceRoot}/vk.kernel/libraries/vklibc/inc",
-				"${workspaceRoot}/vk.kernel/libraries/vklibc++/inc",
-                "${workspaceRoot}/vk.kernel/libraries/fatfs/inc",
-                "${workspaceRoot}/vk.kernel/utilities/inc",
-                "${workspaceRoot}/vk.kernel/console/inc",
-                "${workspaceRoot}/vk.gui/core/if",
-                "${workspaceRoot}/vk.gui/core/inc",
-                "${workspaceRoot}/vk.gui/font/inc",
-                "${workspaceRoot}/vk.application/application/inc"
+                "${workspaceRoot}/**"
             ],
             "defines": [],
             "browse": {
