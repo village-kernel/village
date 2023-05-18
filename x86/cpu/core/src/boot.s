@@ -94,10 +94,11 @@ ReadFromDisk:
 	out  %al,    %dx
 
 _Waits:
-	in  %dx,     %al
-	and $0x88,   %al
-	cmp $0x08,   %al
-	jnz _Waits
+	in   %dx,    %al
+	test $0x80,  %al
+	jne  _Waits
+	test $0x08,  %al
+	je   _Waits
 
 	movw $256,   %cx
 	movw $0x1f0, %dx
