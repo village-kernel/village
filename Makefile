@@ -175,8 +175,10 @@ $(BUILD_DIR)/$(TARGET)-bl.elf: $(objs-bl-y)
 # build the modules
 #######################################
 module: $(objs-m)
+ifneq ($(objs-m), )
 	$(Q)mkdir -p $(MODULES_DIR)
 	$(Q)$(MAKE) $(addprefix $(MODULES_DIR)/, $(objs-m:.o=.mo))
+endif
 
 $(MODULES_DIR)/%.mo: %.o
 	$(Q)echo Generating $(notdir $@)
@@ -208,7 +210,6 @@ osImage:
 	$(Q)dd if=$(BUILD_DIR)/village-bs.bin     of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
 #	$(Q)dd if=$(BUILD_DIR)/village-bl.bin     of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
 	$(Q)dd if=$(BUILD_DIR)/village-kernel.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
-#	cat $(BUILD_DIR)/village-os.img $(BUILD_DIR)/village-kernel.bin > $(BUILD_DIR)/village-os.img
 
 
 #######################################
