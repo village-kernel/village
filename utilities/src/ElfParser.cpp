@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
+#include "console.h"
 #include "ElfParser.h"
 #include "FileStream.h"
 #include "string.h"
@@ -39,7 +40,7 @@ int ElfParser::LoadElf(const char* filename)
 
 		if (elf.map && (file.Read((uint8_t*)elf.map, size) == size))
 		{
-			printk("Load %s successful\r\n", filename);
+			console.info("Load %s successful", filename);
 			file.Close();
 			return _OK;
 		}
@@ -47,7 +48,7 @@ int ElfParser::LoadElf(const char* filename)
 		file.Close();
 	}
 
-	printk("Load %s failed\r\n", filename);
+	console.log("Load %s failed", filename);
 	return _ERR;
 }
 
@@ -125,9 +126,12 @@ int ElfParser::ParserElf()
 	if (elf.header->ident[3] !=  elfmagic[3]    ) return _ERR;
 	if (elf.header->ident[4] != _ELF_Class_32   ) return _ERR;
 	if (elf.header->type     != _ELF_Type_Rel   ) return _ERR;
-	if (elf.header->machine  != _ELF_Machine_ARM) return _ERR;
 	if (elf.header->version  != _ELF_Ver_Current) return _ERR;
-	
+#if defined(ARCH_X86)
+	if (elf.header->machine  != _ELF_Machine_X86) return _ERR;
+#elif defined(ARCH_ARM)
+	if (elf.header->machine  != _ELF_Machine_ARM) return _ERR;
+#endif
 	//Set elf exec entry
 	elf.exec = elf.map + elf.header->elfHeaderSize + elf.header->entry;
 
@@ -156,7 +160,7 @@ int ElfParser::ParserElf()
 		}
 	}
 
-	printk("Parser elf successful\r\n");
+	console.info("Parser elf successful");
 	return _OK;
 }
 
@@ -203,8 +207,8 @@ int ElfParser::RelEntries()
 				//Return when symAddr is 0
 				if (0 == symAddr) 
 				{
-					printk("Err: count not relocation %s.\r\n", GetSymbolName(relEntry.symbol));
-					printk("Relocation elf failed\r\n");
+					console.error("Err: count not relocation %s.", GetSymbolName(relEntry.symbol));
+					console.error("Relocation elf failed");
 					return _ERR;
 				}
 
@@ -212,16 +216,52 @@ int ElfParser::RelEntries()
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
-				printk("rel name %s, relAddr 0x%lx, symAddr 0x%lx\r\n", 
+				console.log("rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
 					GetSymbolName(relEntry.symbol), relAddr, symAddr);
 			}
 		}
 	}
 
-	printk("Relocation elf successful\r\n");
+	console.info("Relocation elf successful");
 	return _OK;
 }
 
+#if defined(ARCH_X86)
+
+///Relocation symbol call
+int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
+{
+	switch (type)
+	{
+		case _R_386_32:
+			*((uint32_t*)relAddr) += symAddr;
+			break;
+
+		case _R_386_PC32:
+			*((uint32_t*)relAddr) += (symAddr - relAddr);
+			break;
+			
+		case _R_386_GLOB_DAT:
+			*((uint32_t*)relAddr) = symAddr;
+			break;
+
+		case _R_386_JMP_SLOT:
+			*((uint32_t*)relAddr) = symAddr;
+			break;
+
+		default: return 0;
+	}
+	return 0;
+}
+
+
+///Relocation thumb jump call 
+int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
+{
+	return 0;
+}
+
+#elif defined(ARCH_ARM)
 
 ///Relocation symbol call
 int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
@@ -282,6 +322,7 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 	return _OK;
 }
 
+#endif
 
 ///ElfParser init array
 int ElfParser::InitArray()

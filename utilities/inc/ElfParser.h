@@ -37,8 +37,11 @@ private:
 
 	enum ELFMachine
 	{
-		_ELF_Machine_None  = 0,
-		_ELF_Machine_ARM   = 40,
+		_ELF_Machine_None     = 0x00,
+		_ELF_Machine_X86      = 0x03,
+		_ELF_Machine_ARM      = 0x28,
+		_ELF_Machine_ARM_64   = 0xb7,
+		_ELF_Machine_RISC_V   = 0xf3,
 	};
 
 	enum ELFVersion
@@ -47,6 +50,16 @@ private:
 		_ELF_Ver_Current = 1,
 	};
 
+#if defined(ARCH_X86)
+	enum RelocationCode
+	{
+		_R_386_NONE       = 0,
+		_R_386_32         = 1,
+		_R_386_PC32       = 2,
+		_R_386_GLOB_DAT   = 6,
+		_R_386_JMP_SLOT   = 7,
+	};
+#elif defined(ARCH_ARM)
 	enum RelocationCode
 	{
 		_R_ARM_NONE       = 0,
@@ -56,6 +69,7 @@ private:
 		_R_ARM_TARGET1    = 38,
 		_R_ARM_THM_JUMP11 = 102,
 	};
+#endif
 
 	enum SectionHeadrType
 	{
