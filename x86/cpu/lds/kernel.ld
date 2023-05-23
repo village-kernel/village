@@ -53,6 +53,7 @@ SECTIONS
 	.preinit_array :
 	{
 		PROVIDE_HIDDEN (__preinit_array_start = .);
+		KEEP (*(SORT(.preinit_array.*)))
 		KEEP (*(.preinit_array*))
 		PROVIDE_HIDDEN (__preinit_array_end = .);
 	} > RAM
