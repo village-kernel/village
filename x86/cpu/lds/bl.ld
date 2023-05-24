@@ -1,6 +1,6 @@
 ENTRY(_start)
 
-_estack = ORIGIN(RAM) + LENGTH(RAM);
+_estack = 0x2000000;
 _Min_Heap_Size  = 0x400;
 _Min_Stack_Size = 0x800;
 
@@ -43,9 +43,17 @@ SECTIONS
 		. = ALIGN(4);
 	} > RAM
 
+	.x86.extab : { *(.gcc_except_table.*  .got.plt ) } > RAM
+	.x86 : {
+		__exidx_start = .;
+		*(.x86.extab*)
+		__exidx_end = .;
+	} > RAM
+
 	.preinit_array :
 	{
 		PROVIDE_HIDDEN (__preinit_array_start = .);
+		KEEP (*(SORT(.preinit_array.*)))
 		KEEP (*(.preinit_array*))
 		PROVIDE_HIDDEN (__preinit_array_end = .);
 	} > RAM
@@ -55,6 +63,7 @@ SECTIONS
 		PROVIDE_HIDDEN (__init_array_start = .);
 		KEEP (*(SORT(.init_array.*)))
 		KEEP (*(.init_array*))
+		KEEP (*(.ctors*))
 		PROVIDE_HIDDEN (__init_array_end = .);
 	} > RAM
 
@@ -63,6 +72,7 @@ SECTIONS
 		PROVIDE_HIDDEN (__fini_array_start = .);
 		KEEP (*(SORT(.fini_array.*)))
 		KEEP (*(.fini_array*))
+		KEEP (*(.dtors*))
 		PROVIDE_HIDDEN (__fini_array_end = .);
 	} > RAM
 
@@ -101,4 +111,11 @@ SECTIONS
 		. = . + _Min_Stack_Size;
 		. = ALIGN(4);
 	} > RAM
+
+	/*/DISCARD/ :
+	{
+		libc.a ( * )
+		libm.a ( * )
+		libgcc.a ( * )
+	}*/
 }
