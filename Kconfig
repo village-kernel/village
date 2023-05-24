@@ -35,8 +35,20 @@ menu "Bootloader"
 	source ./vk.bootloader/Kconfig
 endmenu
 
+menu "FileSystem"
+	source ./vk.filesystem/Kconfig
+endmenu
+
 menu "Hardware"
 	source ./vk.hardware/Kconfig
+endmenu
+
+menu "Library"
+	source ./vk.library/Kconfig
+endmenu
+
+menu "Network"
+	source ./vk.network/Kconfig
 endmenu
 
 menu "Kernel"
