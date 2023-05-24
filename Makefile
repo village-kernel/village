@@ -47,7 +47,10 @@ MODULES_DIR := $(BUILD_DIR)/modules
 ######################################
 -include vk.application/Makefile
 -include vk.bootloader/Makefile
+-include vk.filesystem/Makefile
 -include vk.hardware/Makefile
+-include vk.library/Makefile
+-include vk.network/Makefile
 -include vk.kernel/Makefile
 -include vk.gui/Makefile
 
