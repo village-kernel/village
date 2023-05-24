@@ -101,18 +101,4 @@ config ELFPARSER
 
 endmenu
 
-# config  libraries menu
-
-menu "libraries"
-
-config FATFS
-	bool "Enable fatfs file system"
-	default n
-
-config VKLIBC
-	bool "Using village kernel libc as c library"
-	default y
-
-endmenu
-
 endif
