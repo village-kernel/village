@@ -19,3 +19,6 @@
 [submodule "vk.network"]
 	path = vk.network
 	url = git@git.aicodeone.fun:village-kernel/vk.network.git
+[submodule "vk.library"]
+	path = vk.library
+	url = git@git.aicodeone.fun:village-kernel/vk.library.git
