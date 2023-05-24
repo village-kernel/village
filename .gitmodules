@@ -13,3 +13,6 @@
 [submodule "vk.bootloader"]
 	path = vk.bootloader
 	url = git@git.aicodeone.fun:village-kernel/vk.bootloader.git
+[submodule "vk.filesystem"]
+	path = vk.filesystem
+	url = git@git.aicodeone.fun:village-kernel/vk.filesystem.git
