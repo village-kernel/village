@@ -79,14 +79,5 @@ void Application6::Execute()
 }
 
 
-///Application6 entry
-extern "C" void Entry()
-{
-	Application6 app;
-	app.Initialize();
-	app.Execute();
-}
-
-
 //Register module
 REGISTER_MODULE(new Application6(), (ModuleID::_application + 6), app_6);
