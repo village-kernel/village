@@ -38,8 +38,9 @@ export Q
 # paths
 #######################################
 # Build path
-BUILD_DIR   := vk.build
-MODULES_DIR := $(BUILD_DIR)/modules
+BUILD_DIR     := vk.build
+MODULES_DIR   := $(BUILD_DIR)/modules
+LIBRARIES_DIR := $(BUILD_DIR)/libraries
 
 
 ######################################
@@ -60,6 +61,9 @@ MODULES_DIR := $(BUILD_DIR)/modules
 #######################################
 # default action: build all
 all:
+ifeq ($(CONFIG_GENERATED_LIB), y)
+	$(Q)$(MAKE) library
+endif
 ifeq ($(CONFIG_BOOTSECTION), y)
 	$(Q)$(MAKE) bootsection
 endif
@@ -102,8 +106,8 @@ BIN = $(CP) -O binary -S
 # setting build environment
 #######################################
 INCLUDES  = $(addprefix -I, $(inc-y) $(inc-m))
-VPATH     = $(addprefix $(BUILD_DIR)/, $(src-y) $(src-m)) $(src-y) $(src-m)
-
+VPATH     = $(addprefix $(BUILD_DIR)/, $(src-y) $(src-m)) $(LIBRARIES_DIR) $(src-y) $(src-m)
+LIBS      = -L$(LIBRARIES_DIR) $(addprefix -l, $(libs-y))
 
 #######################################
 # compiler flags
@@ -145,13 +149,32 @@ endif
 
 
 #######################################
+# build the libraries
+#######################################
+library: 
+	$(Q)mkdir -p $(LIBRARIES_DIR)
+	$(Q)$(foreach name, $(libs-y), \
+		$(MAKE) $(objs-$(name)-y); \
+		$(MAKE) $(LIBRARIES_DIR)/lib$(name).a  objs="$(objs-$(name)-y)"; \
+		$(MAKE) $(LIBRARIES_DIR)/lib$(name).so objs="$(objs-$(name)-y)"; \
+	)
+
+$(LIBRARIES_DIR)/%.a: $(objs)
+	$(Q)echo output $@
+	$(Q)$(AR) rcs $@ $^
+
+$(LIBRARIES_DIR)/%.so: $(objs)
+	$(Q)echo output $@
+	$(Q)$(CXX) -nostdlib -r -shared -fPIC $^ -o $@
+
+
+#######################################
 # build the bootsection
 #######################################
 bootsection: $(objs-bs-y)
-	$(Q)$(MAKE) \
-	$(BUILD_DIR)/$(TARGET)-bs.elf \
-	$(BUILD_DIR)/$(TARGET)-bs.hex \
-	$(BUILD_DIR)/$(TARGET)-bs.bin
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bs.elf
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bs.hex
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bs.bin
 
 $(BUILD_DIR)/$(TARGET)-bs.elf: $(objs-bs-y)
 	$(Q)echo output $@
@@ -163,14 +186,13 @@ $(BUILD_DIR)/$(TARGET)-bs.elf: $(objs-bs-y)
 # build the bootloader
 #######################################
 bootloader: $(objs-bl-y)
-	$(Q)$(MAKE) \
-	$(BUILD_DIR)/$(TARGET)-bl.elf \
-	$(BUILD_DIR)/$(TARGET)-bl.hex \
-	$(BUILD_DIR)/$(TARGET)-bl.bin
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bl.elf
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bl.hex
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bl.bin
 
 $(BUILD_DIR)/$(TARGET)-bl.elf: $(objs-bl-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@
+	$(Q)$(CXX) $(BLDFLAGS) $(LIBS) $^ -o $@
 	$(Q)$(SZ) $@
 
 
@@ -193,14 +215,13 @@ $(MODULES_DIR)/%.mo: %.o
 # build the kernel
 #######################################
 kernel: $(objs-y)
-	$(Q)$(MAKE) \
-	$(BUILD_DIR)/$(TARGET)-kernel.elf \
-	$(BUILD_DIR)/$(TARGET)-kernel.hex \
-	$(BUILD_DIR)/$(TARGET)-kernel.bin
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.hex
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.bin
 
 $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(KLDFLAGS) $^ -o $@
+	$(Q)$(CXX) $(KLDFLAGS) $(LIBS) $^ -o $@
 	$(Q)$(SZ) $@
 
 
