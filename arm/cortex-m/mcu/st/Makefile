@@ -6,6 +6,12 @@
 ############################################################################
 
 ######################################
+# libraries
+######################################
+libs-y                    += hw
+
+
+######################################
 # paths
 ######################################
 inc-y += vk.hardware/arm/cortex-m/mcu/st/CMSIS/Include
@@ -23,18 +29,18 @@ src-$(CONFIG_USBSTORAGE) +=	vk.hardware/arm/cortex-m/mcu/st/STM32_USB_Device_Lib
 ######################################
 # objects
 ######################################
-objs-y                    += syscalls.o
-objs-y                    += sysmem.o
+objs-hw-y                    += syscalls.o
+objs-hw-y                    += sysmem.o
 
-objs-$(CONFIG_USBSTORAGE) += usbd_msc_bot.o
-objs-$(CONFIG_USBSTORAGE) += usbd_msc_data.o
-objs-$(CONFIG_USBSTORAGE) += usbd_msc_scsi.o
-objs-$(CONFIG_USBSTORAGE) += usbd_msc.o
-objs-$(CONFIG_USBSTORAGE) += usbd_core.o
-objs-$(CONFIG_USBSTORAGE) += usbd_ctlreq.o
-objs-$(CONFIG_USBSTORAGE) += usbd_ioreq.o
-objs-$(CONFIG_USBSTORAGE) += usbd_conf.o
-objs-$(CONFIG_USBSTORAGE) += usbd_desc.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_msc_bot.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_msc_data.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_msc_scsi.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_msc.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_core.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_ctlreq.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_ioreq.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_conf.o
+objs-hw-$(CONFIG_USBSTORAGE) += usbd_desc.o
 
 
 ######################################
