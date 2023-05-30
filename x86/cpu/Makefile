@@ -23,14 +23,11 @@ src-y                        += vk.hardware/x86/cpu/core/src
 # objects
 ######################################
 ifneq ($(CONFIG_VKLIBC), y)
-objs-bl-y                        += syscalls.o
-objs-bl-y                        += sysmem.o
 objs-hw-y                        += syscalls.o
 objs-hw-y                        += sysmem.o
 endif
 
 objs-bs-$(CONFIG_BOOTSECTION)    += boot.o
-objs-bl-$(CONFIG_BOOTLOADER)     += startup.o
 objs-hw-y                        += startup.o
 objs-hw-y                        += i386.o
 
