@@ -39,3 +39,8 @@
 - ### openocd:
 
 ### 以上工具都可以在cywin里面下载。注意：不要使用mingw64，问题太多。
+
+---
+
+# 增加子模块
+	git submodule add git@xxxx.git
