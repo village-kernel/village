@@ -25,3 +25,6 @@
 [submodule "vk.document"]
 	path = vk.document
 	url = git@git.aicodeone.fun:village-kernel/vk.document.git
+[submodule "vk.application"]
+	path = vk.application
+	url = git@git.aicodeone.fun:village-kernel/vk.application.git
