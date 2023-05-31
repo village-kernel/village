@@ -92,3 +92,15 @@ MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
 MLDFLAGS  += -Wl,-r -Wl,-Bsymbolic
 MLDFLAGS  += -Wl,--no-warn-rwx-segment
 MLDFLAGS  += -Wl,-m,elf_i386
+
+# application ld flags
+ifeq ($(CONFIG_VKLIBC), y)
+APPLDFLAGS  += $(MCU) -ffreestanding -nostdlib
+else
+APPLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
+endif
+APPLDFLAGS  += -T vk.scripts/ldscript/application.ld
+APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
+APPLDFLAGS  += -Wl,--gc-sections
+APPLDFLAGS  += -Wl,--no-warn-rwx-segment
+APPLDFLAGS  += -Wl,-m,elf_i386
