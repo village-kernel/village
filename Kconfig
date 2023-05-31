@@ -25,3 +25,20 @@ config APPLICATION5
 config APPLICATION6
 	tristate "Add application6 to project"
 	default m
+
+config TAICHI
+	tristate "Add taichi to project"
+	default y
+
+config TERMINAL
+	tristate "Add terminal to project"
+	default y
+
+config LAUNCH
+	tristate "Add launch to project"
+	default y
+
+config SETTINGS
+	tristate "Add settings to project"
+	default y
+	
