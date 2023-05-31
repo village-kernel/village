@@ -39,6 +39,7 @@ export Q
 #######################################
 # Build path
 BUILD_DIR     := vk.build
+APPS_DIR      := $(BUILD_DIR)/applications
 MODULES_DIR   := $(BUILD_DIR)/modules
 LIBRARIES_DIR := $(BUILD_DIR)/libraries
 
@@ -75,6 +76,9 @@ ifeq ($(CONFIG_KERNEL), y)
 endif
 ifeq ($(CONFIG_MODULE), y)
 	$(Q)$(MAKE) module
+endif
+ifeq ($(CONFIG_GENERATED_APP), y)
+	$(Q)$(MAKE) application
 endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
@@ -207,7 +211,7 @@ endif
 
 $(MODULES_DIR)/%.mo: %.o
 	$(Q)echo Generating $(notdir $@)
-	$(Q)$(CXX) $(MLDFLAGS) $< -o $(@:.mo=.elf)
+	$(Q)$(CXX) $(MLDFLAGS) $(LIBS) $< -o $(@:.mo=.elf)
 	$(Q)$(ST) -g -o $@ $(@:.mo=.elf)
 
 
@@ -223,6 +227,23 @@ $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 	$(Q)echo output $@
 	$(Q)$(CXX) $(KLDFLAGS) $(LIBS) $^ -o $@
 	$(Q)$(SZ) $@
+
+
+#######################################
+# build the applications
+#######################################
+application: 
+	$(Q)mkdir -p $(APPS_DIR)
+	$(Q)$(foreach name, $(apps-y), \
+		$(MAKE) $(objs-$(name)-y); \
+		$(MAKE) $(APPS_DIR)/$(name).exec  objs="$(objs-$(name)-y)"; \
+	)
+
+$(APPS_DIR)/%.exec: $(objs)
+	$(Q)echo output $@
+	$(Q)$(CXX) $(APPLDFLAGS) $(LIBS) $^ -o $(@:.exec=.elf)
+	$(Q)$(SZ) $(@:.exec=.elf)
+	$(Q)$(BIN) $(@:.exec=.elf) $@
 
 
 #######################################
