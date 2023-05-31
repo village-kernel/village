@@ -25,6 +25,10 @@ config GENERATED_LIB
 	bool "generated libs"
 	default y
 
+config GENERATED_APP
+	bool "generated apps"
+	default y
+
 config GENERATED_IMG
 	bool "generated os image"
 	default n
