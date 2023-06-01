@@ -11,24 +11,38 @@
 #include "string.h"
 
 
-///Constructor
+/// @brief Constructor
+/// @param filename 
 ElfParser::ElfParser(const char* filename)
 {
 	if (NULL != filename) Load(filename);
 }
 
 
-///ElfParser load and parser elf file
+/// @brief ElfParser load and parser elf file
+/// @param filename 
+/// @return result
 int ElfParser::Load(const char* filename)
 {
 	if (LoadElf(filename) != _OK) return _ERR;
 	if (ParserElf()       != _OK) return _ERR;
-	if (RelEntries()      != _OK) return _ERR;
+	
+	if (_ELF_Type_Rel == elf.header->type)
+	{
+		if (RelEntries()  != _OK) return _ERR;
+	}
+	else if (_ELF_Type_Exec == elf.header->type)
+	{
+		if (CopyToRAM()   != _OK) return _ERR;
+	}
+	
 	return _OK;
 }
 
 
-///ElfParser load elf file
+/// @brief ElfParser load elf file
+/// @param filename 
+/// @return result
 int ElfParser::LoadElf(const char* filename)
 {
 	FileStream file;
@@ -53,10 +67,12 @@ int ElfParser::LoadElf(const char* filename)
 }
 
 
-///Get section name
+/// @brief Get section name
+/// @param index 
+/// @return name
 inline const char* ElfParser::GetSectionName(uint32_t index)
 {
-	if (elf.sectionNum > index)
+	if (elf.header->sectionHeaderNum > index)
 	{
 		return (const char*)elf.shstrtab + elf.sections[index].name;
 	}
@@ -64,7 +80,9 @@ inline const char* ElfParser::GetSectionName(uint32_t index)
 }
 
 
-///Get symbol name
+/// @brief Get symbol name
+/// @param index 
+/// @return name
 inline const char* ElfParser::GetSymbolName(uint32_t index)
 {
 	if (elf.symtabNum > index)
@@ -75,7 +93,9 @@ inline const char* ElfParser::GetSymbolName(uint32_t index)
 }
 
 
-///Get symbol addr
+/// @brief Get symbol addr
+/// @param index 
+/// @return address
 inline uint32_t ElfParser::GetSymbolAddr(uint32_t index)
 {
 	if (elf.symtabNum > index)
@@ -91,7 +111,9 @@ inline uint32_t ElfParser::GetSymbolAddr(uint32_t index)
 }
 
 
-///Get symbol addr by name
+/// @brief Get symbol addr by name
+/// @param name 
+/// @return address
 inline uint32_t ElfParser::GetSymbolAddrByName(const char* name)
 {
 	for (uint32_t i = 0; i < elf.symtabNum; i++)
@@ -105,14 +127,18 @@ inline uint32_t ElfParser::GetSymbolAddrByName(const char* name)
 }
 
 
-///Get section data
+/// @brief Get section data
+/// @param index 
+/// @return address
 inline ElfParser::SectionData ElfParser::GetSectionData(uint32_t index)
 {
 	return SectionData(elf.map + elf.sections[index].offset);
 }
 
 
-///Parser elf
+
+/// @brief Parser elf
+/// @return result
 int ElfParser::ParserElf()
 {
 	//Set elf header pointer
@@ -125,19 +151,25 @@ int ElfParser::ParserElf()
 	if (elf.header->ident[2] !=  elfmagic[2]    ) return _ERR;
 	if (elf.header->ident[3] !=  elfmagic[3]    ) return _ERR;
 	if (elf.header->ident[4] != _ELF_Class_32   ) return _ERR;
-	if (elf.header->type     != _ELF_Type_Rel   ) return _ERR;
 	if (elf.header->version  != _ELF_Ver_Current) return _ERR;
 #if defined(ARCH_X86)
 	if (elf.header->machine  != _ELF_Machine_X86) return _ERR;
 #elif defined(ARCH_ARM)
 	if (elf.header->machine  != _ELF_Machine_ARM) return _ERR;
 #endif
+	if (elf.header->type     == _ELF_Type_None  ) return _ERR;
+
 	//Set elf exec entry
-	elf.exec = elf.map + elf.header->elfHeaderSize + elf.header->entry;
+	if (elf.header->type == _ELF_Type_Rel)
+		elf.exec = elf.map + elf.header->elfHeaderSize + elf.header->entry;
+	else if (elf.header->type == _ELF_Type_Exec)
+		elf.exec = elf.header->entry;
+
+	//Get program headers pointer
+	elf.programs = (ProgramHeader*)(elf.map + elf.header->programHeaderOffset);
 
 	//Get section headers pointer
 	elf.sections = (SectionHeader*)(elf.map + elf.header->sectionHeaderOffset);
-	elf.sectionNum = elf.header->sectionHeaderNum;
 
 	//Get some information of elf
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
@@ -165,7 +197,8 @@ int ElfParser::ParserElf()
 }
 
 
-///Relocation symbol entries
+/// @brief Relocation symbol entries
+/// @return result
 int ElfParser::RelEntries()
 {
 	//Set relocation tables
@@ -228,7 +261,11 @@ int ElfParser::RelEntries()
 
 #if defined(ARCH_X86)
 
-///Relocation symbol call
+/// @brief Relocation symbol call
+/// @param relAddr 
+/// @param symAddr 
+/// @param type 
+/// @return result
 int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 {
 	switch (type)
@@ -255,7 +292,11 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 }
 
 
-///Relocation thumb jump call 
+/// @brief Relocation thumb jump call 
+/// @param relAddr 
+/// @param symAddr 
+/// @param type 
+/// @return address
 int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 {
 	return 0;
@@ -263,7 +304,11 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 
 #elif defined(ARCH_ARM)
 
-///Relocation symbol call
+/// @brief Relocation symbol call
+/// @param relAddr 
+/// @param symAddr 
+/// @param type 
+/// @return address
 int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 {
 	switch (type)
@@ -290,7 +335,11 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 }
 
 
-///Relocation thumb jump call 
+/// @brief Relocation thumb jump call 
+/// @param relAddr 
+/// @param symAddr 
+/// @param type 
+/// @return result
 int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 {
 	uint16_t upper = ((uint16_t *)relAddr)[0];
@@ -324,7 +373,33 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 
 #endif
 
-///ElfParser init array
+
+/// @brief Load exec to ram
+/// @return result
+int ElfParser::CopyToRAM()
+{
+	for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
+	{
+		ProgramHeader program = elf.programs[i];
+		
+		if (_PHT_LOAD == program.type)
+		{
+			uint8_t* vaddr = (uint8_t*)program.vaddr;
+			uint8_t* src = (uint8_t*)(elf.map + program.offset);
+
+			for (uint32_t size = 0; size < program.memSize; size++)
+			{
+				vaddr[size] = src[size];
+			}
+		}
+	}
+
+	return _OK;
+}
+
+
+/// @brief ElfParser init array
+/// @return result
 int ElfParser::InitArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
@@ -350,7 +425,9 @@ int ElfParser::InitArray()
 }
 
 
-///ElfParser execute symbol
+/// @brief ElfParser execute symbol
+/// @param symbol 
+/// @return result
 int ElfParser::Execute(const char* symbol)
 {
 	if (NULL == symbol && 0 != elf.exec)
@@ -372,7 +449,8 @@ int ElfParser::Execute(const char* symbol)
 }
 
 
-///ElfParser fini array
+/// @brief ElfParser fini array
+/// @return result
 int ElfParser::FiniArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
@@ -398,7 +476,8 @@ int ElfParser::FiniArray()
 }
 
 
-///ElfParser exit
+/// @brief ElfParser exit
+/// @return result
 int ElfParser::Exit()
 {
 	delete[] (uint8_t*)elf.map;

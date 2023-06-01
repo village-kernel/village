@@ -71,6 +71,11 @@ private:
 	};
 #endif
 
+	enum ProgramHeaderType
+	{
+		_PHT_LOAD         = 0x01,
+	};
+
 	enum SectionHeadrType
 	{
 		_SHT_NULL          = 0x00,
@@ -210,7 +215,7 @@ private:
 		uint32_t         exec;
 		ELFHeader*       header;
 		SectionHeader*   sections;
-		uint32_t         sectionNum;
+		ProgramHeader*   programs;
 		SymbolEntry*     symtab;
 		uint32_t         symtabNum;
 		uint8_t*         shstrtab;
@@ -226,6 +231,7 @@ private:
 	int RelEntries();
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
 	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
+	int CopyToRAM();
 public:
 	//Methods
 	ElfParser(const char* filename = NULL);
