@@ -66,6 +66,7 @@ _ReadAppData:
 
 # Read data from disk
 ReadFromDisk:
+	pushl %ebx
 	pusha
 
 	movw $0x1f2, %dx       # 0x1f2
@@ -93,12 +94,15 @@ ReadFromDisk:
 	movb $0x20,  %al       # read cmd
 	out  %al,    %dx
 
-_Waits:
+_Wait1:
 	in   %dx,    %al
 	test $0x80,  %al
-	jne  _Waits
+	jne  _Wait1
+
+_Wait2:
+	in   %dx,    %al
 	test $0x08,  %al
-	je   _Waits
+	je   _Wait2
 
 	movw $256,   %cx
 	movw $0x1f0, %dx
@@ -110,6 +114,7 @@ _Readw:
 	loop _Readw
 
 	popa
+	popl %ebx
 	ret
 
 # Change video mode: 320x200 256color
