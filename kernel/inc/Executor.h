@@ -20,9 +20,13 @@ private:
 
 	//Methods
 	void Sandbox();
+	int Run(const char* path, char* argv[] = NULL);
 public:
 	//Methods
-	int Run(const char* path, char* argv[]);
+	Executor();
+	~Executor();
+	void Initialize();
+	void Execute();
 };
 
 #endif //!__EXECUTOR_H__
