@@ -73,7 +73,26 @@ private:
 
 	enum ProgramHeaderType
 	{
-		_PHT_LOAD         = 0x01,
+		_PT_NULL          = 0x00,
+		_PT_LOAD          = 0x01,
+		_PT_DYNAMIC       = 0x02,
+		_PT_INTERP        = 0x03,
+		_PT_NOTE          = 0x04,
+		_PT_SHLIB         = 0x05,
+		_PT_PHDR          = 0x06,
+		_PT_TLS           = 0x07,
+		_PT_NUM           = 0x08,
+		_PT_LOOS          = 0x60000000,
+		_PT_GNU_EH_FRAME  = 0x6474e550,
+		_PT_GNU_STACK     = 0x6474e551,
+		_PT_GNU_RELRO     = 0x6474e552,
+		_PT_LOSUNW        = 0x6ffffffa,
+		_PT_SUNWBSS       = 0x6ffffffa,
+		_PT_SUNWSTACK     = 0x6ffffffb,
+		_PT_HISUNW        = 0x6fffffff,
+		_PT_HIOS          = 0x6fffffff,
+		_PT_LOPROC        = 0x70000000,
+		_PT_HIPROC        = 0x7fffffff,
 	};
 
 	enum SectionHeadrType
@@ -157,28 +176,6 @@ private:
 		uint16_t sectionHeaderStringTableIndex;
 	};
 
-	struct ProgramHeader
-	{
-		uint32_t type;
-		uint32_t offset;
-		uint32_t vaddr;
-		uint32_t paddr;
-		uint32_t fileSize;
-		uint32_t memSize;
-		uint32_t flags;
-		uint32_t align;
-	};
-
-	struct DynamicHeader
-	{
-		int32_t tag;
-		union
-		{
-			uint32_t val;
-			uint32_t ptr;
-		};
-	};
-
 	struct SectionHeader
 	{
 		uint32_t name;
@@ -193,16 +190,41 @@ private:
 		uint32_t entireSize;
 	};
 
+	struct ProgramHeader
+	{
+		uint32_t type;
+		uint32_t offset;
+		uint32_t vaddr;
+		uint32_t paddr;
+		uint32_t fileSize;
+		uint32_t memSize;
+		uint32_t flags;
+		uint32_t align;
+	};
+
+	struct DynamicSection
+	{
+		int32_t tag;
+		union
+		{
+			uint32_t val;
+			uint32_t ptr;
+		};
+	};
+
 	union SectionData
 	{
 		uint32_t         addr;
 		uint8_t*         data;
-		uint8_t*         shstrtab;
+		uint8_t*         dynstr;
 		uint8_t*         strtab;
+		uint8_t*         shstrtab;
 		Function*        funcs;
 		SymbolEntry*     symtab;
+		SymbolEntry*     dynsym;
+		DynamicSection*  dynamic;
 		RelocationEntry* reltab;
-
+		
 		SectionData(uint32_t addr):
 			addr(addr)
 		{}
@@ -213,15 +235,23 @@ private:
 	{
 		uint32_t         map;
 		uint32_t         exec;
+		uint32_t         laddr;
 		ELFHeader*       header;
 		SectionHeader*   sections;
 		ProgramHeader*   programs;
+		DynamicSection*  dynamics;
+		SymbolEntry*     dynsym;
+		uint32_t         dynsymNum;
 		SymbolEntry*     symtab;
 		uint32_t         symtabNum;
-		uint8_t*         shstrtab;
+		uint8_t*         dynstr;
 		uint8_t*         strtab;
+		uint8_t*         shstrtab;
 	};
 	
+	//Static constants members
+	static const uint32_t load_address = 0x400000;
+
 	//Members
 	ELF elf;
 

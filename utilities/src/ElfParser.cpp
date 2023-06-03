@@ -27,15 +27,17 @@ int ElfParser::Load(const char* filename)
 	if (LoadElf(filename) != _OK) return _ERR;
 	if (ParserElf()       != _OK) return _ERR;
 	
-	if (_ELF_Type_Rel == elf.header->type)
+	switch (elf.header->type)
 	{
+	case _ELF_Type_Rel:
 		if (RelEntries()  != _OK) return _ERR;
-	}
-	else if (_ELF_Type_Exec == elf.header->type)
-	{
+		break;
+	case _ELF_Type_Exec:
+	case _ELF_Type_Dyn:
 		if (CopyToRAM()   != _OK) return _ERR;
+		break;
+	default: break;
 	}
-	
 	return _OK;
 }
 
@@ -159,11 +161,23 @@ int ElfParser::ParserElf()
 #endif
 	if (elf.header->type     == _ELF_Type_None  ) return _ERR;
 
-	//Set elf exec entry
-	if (elf.header->type == _ELF_Type_Rel)
-		elf.exec = elf.map + elf.header->elfHeaderSize + elf.header->entry;
-	else if (elf.header->type == _ELF_Type_Exec)
-		elf.exec = elf.header->entry;
+	//Set executable load address and entry
+	switch (elf.header->type)
+	{
+		case _ELF_Type_Rel:
+			elf.laddr = 0;
+			elf.exec = elf.map + elf.header->elfHeaderSize + elf.header->entry;
+			break;
+		case _ELF_Type_Exec:
+			elf.laddr = 0;
+			elf.exec = elf.header->entry;
+			break;
+		case _ELF_Type_Dyn:
+			elf.laddr = load_address;
+			elf.exec = elf.laddr + elf.header->entry;
+			break;
+		default: break;
+	}
 
 	//Get program headers pointer
 	elf.programs = (ProgramHeader*)(elf.map + elf.header->programHeaderOffset);
@@ -171,13 +185,27 @@ int ElfParser::ParserElf()
 	//Get section headers pointer
 	elf.sections = (SectionHeader*)(elf.map + elf.header->sectionHeaderOffset);
 
+	//Get section string table pointer
+	elf.shstrtab = GetSectionData(elf.header->sectionHeaderStringTableIndex).shstrtab;
+
 	//Get some information of elf
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
 		SectionData data = GetSectionData(i);
 
+		//Set dynsym pointer
+		if (_SHT_DYNSYM == elf.sections[i].type)
+		{
+			elf.dynsym = data.dynsym;
+			elf.dynsymNum = elf.sections[i].size / sizeof(SymbolEntry);
+		}
+		//Set dynamic section pointer
+		if (_SHT_DYNAMIC == elf.sections[i].type)
+		{
+			elf.dynamics = data.dynamic;
+		}
 		//Set symbol tables pointer
-		if (_SHT_SYMTAB == elf.sections[i].type)
+		else if (_SHT_SYMTAB == elf.sections[i].type)
 		{
 			elf.symtab = data.symtab;
 			elf.symtabNum = elf.sections[i].size / sizeof(SymbolEntry);
@@ -185,9 +213,9 @@ int ElfParser::ParserElf()
 		//Set section header string table and symbol string talbe pointer
 		else if (_SHT_STRTAB == elf.sections[i].type)
 		{
-			if (i == elf.header->sectionHeaderStringTableIndex)
-				elf.shstrtab = data.shstrtab;
-			else
+			if (0 == strcmp(".dynstr", GetSectionName(i)))
+				elf.dynstr = data.dynstr;
+			else if (0 == strcmp(".strtab", GetSectionName(i)))
 				elf.strtab = data.strtab;
 		}
 	}
@@ -374,25 +402,29 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 #endif
 
 
-/// @brief Load exec to ram
+/// @brief Load executable to RAM
 /// @return result
 int ElfParser::CopyToRAM()
 {
+	if (0 == elf.header->programHeaderNum) return _ERR;
+
 	for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
 	{
 		ProgramHeader program = elf.programs[i];
-		
-		if (_PHT_LOAD == program.type)
+
+		if (_PT_LOAD == program.type)
 		{
-			uint8_t* vaddr = (uint8_t*)program.vaddr;
-			uint8_t* src = (uint8_t*)(elf.map + program.offset);
+			uint8_t* vaddr = (uint8_t*)(elf.laddr + program.vaddr);
+			uint8_t* code  = (uint8_t*)(elf.map + program.offset);
 
 			for (uint32_t size = 0; size < program.memSize; size++)
 			{
-				vaddr[size] = src[size];
+				vaddr[size] = code[size];
 			}
 		}
 	}
+
+	console.info("Load executable successful");
 
 	return _OK;
 }
