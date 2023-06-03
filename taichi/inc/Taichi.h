@@ -7,12 +7,10 @@
 #ifndef __TAICHI_H__
 #define __TAICHI_H__
 
-
 ///Taichi
 class Taichi
 {
 private:
-
 public:
 	//Methods
 	Taichi();
