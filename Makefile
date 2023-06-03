@@ -169,7 +169,7 @@ $(LIBRARIES_DIR)/%.a: $(objs)
 
 $(LIBRARIES_DIR)/%.so: $(objs)
 	$(Q)echo output $@
-	$(Q)$(CXX) -nostdlib -r -shared -fPIC $^ -o $@
+	$(Q)$(LD) -shared -fPIC $^ -o $@
 
 
 #######################################
@@ -196,7 +196,7 @@ bootloader: $(objs-bl-y)
 
 $(BUILD_DIR)/$(TARGET)-bl.elf: $(objs-bl-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(BLDFLAGS) $(LIBS) $^ -o $@
+	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@ $(LIBS)
 	$(Q)$(SZ) $@
 
 
@@ -211,7 +211,7 @@ endif
 
 $(MODULES_DIR)/%.mo: %.o
 	$(Q)echo Generating $(notdir $@)
-	$(Q)$(CXX) $(MLDFLAGS) $(LIBS) $< -o $(@:.mo=.elf)
+	$(Q)$(CXX) $(MLDFLAGS) $< -o $(@:.mo=.elf) $(LIBS)
 	$(Q)$(ST) -g -o $@ $(@:.mo=.elf)
 
 
@@ -225,7 +225,7 @@ kernel: $(objs-y)
 
 $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(KLDFLAGS) $(LIBS) $^ -o $@
+	$(Q)$(CXX) $(KLDFLAGS) $^ -o $@ $(LIBS)
 	$(Q)$(SZ) $@
 
 
@@ -241,9 +241,8 @@ application:
 
 $(APPS_DIR)/%.exec: $(objs)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(APPLDFLAGS) $(LIBS) $^ -o $(@:.exec=.elf)
-	$(Q)$(SZ) $(@:.exec=.elf)
-	$(Q)$(BIN) $(@:.exec=.elf) $@
+	$(Q)$(CXX) $(APPLDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(SZ) $@
 
 
 #######################################
