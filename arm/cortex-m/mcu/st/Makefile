@@ -69,14 +69,23 @@ BLDFLAGS  += $(MCU) $(LDSCRIPTB-BOOT-y) -specs=nano.specs -lc -lm -lnosys
 BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
 BLDFLAGS  += -Wl,--gc-sections
 BLDFLAGS  += -Wl,--no-warn-rwx-segment
+BLDFLAGS  += -Wl,-static 
 
 # kernel ld flags
 KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y) -specs=nano.specs -lc -lm -lnosys
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
 KLDFLAGS  += -Wl,--no-warn-rwx-segment
+KLDFLAGS  += -Wl,-static
 
 # mod ld flags
 MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
 MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
 MLDFLAGS  += -r -Bsymbolic -nostartfiles
+
+# application ld flags
+APPLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
+APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
+APPLDFLAGS  += -Wl,--gc-sections
+APPLDFLAGS  += -Wl,--no-warn-rwx-segment
+APPLDFLAGS  += -Wl,-static -pie

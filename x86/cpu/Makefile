@@ -58,6 +58,7 @@ CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit -fno-thread
 
 # boot section ld flags
 BSLDFLAGS += -Wl,-m,elf_i386 $(LDSCRIPT-BS) -ffreestanding -nostdlib
+BSLDFLAGS += -Wl,--no-warn-rwx-segment
 
 # boot loader ld flags
 ifeq ($(CONFIG_VKLIBC), y)
@@ -69,6 +70,7 @@ BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-bl.map,--cref
 BLDFLAGS  += -Wl,--gc-sections
 BLDFLAGS  += -Wl,--no-warn-rwx-segment
 BLDFLAGS  += -Wl,-m,elf_i386
+BLDFLAGS  += -Wl,-static
 
 # kernel ld flags
 ifeq ($(CONFIG_VKLIBC), y)
@@ -80,6 +82,7 @@ KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
 KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-m,elf_i386
+KLDFLAGS  += -Wl,-static
 
 # mod ld flags
 ifeq ($(CONFIG_VKLIBC), y)
@@ -99,8 +102,8 @@ APPLDFLAGS  += $(MCU) -ffreestanding -nostdlib
 else
 APPLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
 endif
-APPLDFLAGS  += -T vk.scripts/ldscript/application.ld
 APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
 APPLDFLAGS  += -Wl,--gc-sections
 APPLDFLAGS  += -Wl,--no-warn-rwx-segment
 APPLDFLAGS  += -Wl,-m,elf_i386
+APPLDFLAGS  += -Wl,-static -pie
