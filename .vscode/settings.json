@@ -10,5 +10,6 @@
 		"*.tcc": "cpp",
 	},
     "C_Cpp.errorSquiggles": "disabled",
-    "cortex-debug.variableUseNaturalFormat": false
+    "cortex-debug.variableUseNaturalFormat": false,
+	"terminal.integrated.cursorBlinking": true
 }
