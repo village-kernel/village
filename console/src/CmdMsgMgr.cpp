@@ -100,8 +100,13 @@ bool CmdMsgMgr::HandleInputData()
 					{
 						if (rxBufPos)
 						{
+							//Backspace one character
 							rxBufPos--;
-							txBuffer[txBufPos++] = byte;
+
+							//Backspace character on terminal
+							txBuffer[txBufPos++] = '\b';
+							txBuffer[txBufPos++] = ' ';
+							txBuffer[txBufPos++] = '\b';
 						}
 					}
 
