@@ -24,6 +24,12 @@ config CMD_HELP
 	bool "Add help cmd to console support list"
 	default n
 
+config CMD_RUN
+	depends on CONSOLE
+	select EXECUTOR
+	bool "Add run cmd to console support list"
+	default n
+
 endmenu
 
 # config kernel menu
@@ -48,11 +54,6 @@ config LOADER
 
 config ENVIRONMENT
 	bool "Build the environment of Loadable module"
-	default n
-
-config EXECUTOR
-	depends on LOADER
-	bool "Enable executor support"
 	default n
 
 config WORKQUEUE
@@ -97,6 +98,11 @@ config ELFPARSER
 	depends on UTILITIES
 	select FILESTREAM
 	bool "Enable elf parser function"
+	default n
+
+config EXECUTOR
+	depends on UTILITIES
+	bool "Enable execute program function"
 	default n
 
 endmenu

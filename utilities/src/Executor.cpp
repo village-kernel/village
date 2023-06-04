@@ -6,7 +6,6 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Executor.h"
-#include "Console.h"
 
 
 /// @brief Constructor
@@ -18,21 +17,6 @@ Executor::Executor()
 /// @brief Deconstructor
 Executor::~Executor()
 {
-}
-
-
-/// @brief initialize
-void Executor::Initialize()
-{
-
-}
-
-
-/// @brief execute
-void Executor::Execute()
-{
-	Run("applications/taichi.exec");
-	console.info("executor done!");
 }
 
 
@@ -61,7 +45,3 @@ void Executor::Sandbox()
 	elf.FiniArray();
 	elf.Exit();
 }
-
-
-///Register module
-REGISTER_MODULE(new Executor(), ModuleID::_executor, executor);

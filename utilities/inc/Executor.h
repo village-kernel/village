@@ -7,12 +7,12 @@
 #ifndef __EXECUTOR_H__
 #define __EXECUTOR_H__
 
-#include "Module.h"
+#include "Templates.h"
 #include "ElfParser.h"
 
 
 ///Executor
-class Executor : public Module
+class Executor : public Class
 {
 private:
 	//Members
@@ -20,13 +20,11 @@ private:
 
 	//Methods
 	void Sandbox();
-	int Run(const char* path, char* argv[] = NULL);
 public:
 	//Methods
 	Executor();
 	~Executor();
-	void Initialize();
-	void Execute();
+	int Run(const char* path, char* argv[] = NULL);
 };
 
 #endif //!__EXECUTOR_H__
