@@ -84,9 +84,10 @@ void Taichi::Execute()
 
 
 /// @brief main
-extern "C" void _start()
+extern "C" int main(void)
 {
 	Taichi taichi;
 	taichi.Initialize();
 	taichi.Execute();
+	return 0;
 }
