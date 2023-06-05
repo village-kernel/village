@@ -113,6 +113,7 @@ INCLUDES  = $(addprefix -I, $(inc-y) $(inc-m))
 VPATH     = $(addprefix $(BUILD_DIR)/, $(src-y) $(src-m)) $(LIBRARIES_DIR) $(src-y) $(src-m)
 LIBS      = -L$(LIBRARIES_DIR) $(addprefix -l, $(libs-y))
 
+
 #######################################
 # compiler flags
 #######################################
@@ -236,12 +237,12 @@ application:
 	$(Q)mkdir -p $(APPS_DIR)
 	$(Q)$(foreach name, $(apps-y), \
 		$(MAKE) $(objs-$(name)-y); \
-		$(MAKE) $(APPS_DIR)/$(name).exec  objs="$(objs-$(name)-y)"; \
+		$(MAKE) $(APPS_DIR)/$(name).exec objs="$(objs-$(name)-y)" libs="$(libs-$(name)-y)"; \
 	)
 
 $(APPS_DIR)/%.exec: $(objs)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(APPLDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(CXX) $(APPLDFLAGS) $^ -o $@ -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
 	$(Q)$(SZ) $@
 
 
@@ -284,8 +285,11 @@ clean:
 	$(Q)rm -rf $(MODULES_DIR)
 	$(Q)rm -rf include
 
-modclean:
+clean-mod:
 	$(Q)rm -rf $(MODULES_DIR)
+
+clean-app:
+	$(Q)rm -rf $(APPS_DIR)
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
