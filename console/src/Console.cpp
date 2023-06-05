@@ -212,6 +212,7 @@ void Console::output(const char* format, ...)
 	vsprintf(data, format, arg);
 	va_end(arg);
 	msgMgr.Write((uint8_t*)data);
+	msgMgr.Write((uint8_t*)"\r\n");
 	msgMgr.Execute();
 	mutex.Unlock();
 }
