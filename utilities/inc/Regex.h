@@ -27,6 +27,7 @@ public:
 private:
 	//Members
 	String* strings;
+	char**  array;
 public:
 	//Methods
 	Regex();
@@ -34,6 +35,7 @@ public:
 	String* Split(const char* s, const char r = ' ');
 	int Size();
 	char** ToArray();
+	void Clear();
 };
 
 #endif //!__REGEX_H__

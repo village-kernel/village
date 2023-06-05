@@ -101,6 +101,7 @@ void Console::ExecuteCmd(CmdMsg msg)
 		{
 			regex.Split((const char*)msg.args);
 			cmd->Execute(regex.Size(), regex.ToArray());
+			regex.Clear();
 			msgMgr.Write((uint8_t*)"# ");
 			return;
 		}
