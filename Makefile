@@ -45,3 +45,9 @@ objs-taichi-$(CONFIG_TAICHI)         += Taichi.o
 objs-launch-$(CONFIG_LAUNCH)         += Launch.o
 objs-terinal-$(CONFIG_TERMINAL)      += Terminal.o
 objs-settings-$(CONFIG_SETTINGS)     += Settings.o
+
+
+######################################
+# applications
+######################################
+libs-taichi-$(CONFIG_TAICHI)         += hw
