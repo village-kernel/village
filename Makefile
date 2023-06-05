@@ -60,6 +60,7 @@ objs-$(CONFIG_REGEX)                        += Regex.o
 
 objs-$(CONFIG_CMD_ABOUT)                    += CmdAbout.o
 objs-$(CONFIG_CMD_HELP)                     += CmdHelp.o
+objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
