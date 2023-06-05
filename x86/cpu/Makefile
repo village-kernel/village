@@ -8,6 +8,7 @@
 ######################################
 # libraries
 ######################################
+libs-y                       += crt0
 libs-y                       += hw
 
 ######################################
@@ -28,7 +29,7 @@ objs-hw-y                        += sysmem.o
 endif
 
 objs-bs-$(CONFIG_BOOTSECTION)    += boot.o
-objs-hw-y                        += startup.o
+objs-crt0-y                      += startup.o
 objs-hw-y                        += i386.o
 
 
@@ -106,4 +107,5 @@ APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
 APPLDFLAGS  += -Wl,--gc-sections
 APPLDFLAGS  += -Wl,--no-warn-rwx-segment
 APPLDFLAGS  += -Wl,-m,elf_i386
-APPLDFLAGS  += -Wl,-static -pie
+#APPLDFLAGS  += -Wl,-static -pie -e main
+APPLDFLAGS  += -pie -e main
