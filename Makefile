@@ -56,6 +56,7 @@ objs-$(CONFIG_INIPARSER)                    += iniParser.o
 objs-$(CONFIG_PINPARSER)                    += pinParser.o
 objs-$(CONFIG_RCPARSER)                     += rcParser.o
 objs-$(CONFIG_ELFPARSER)                    += ElfParser.o
+objs-$(CONFIG_REGEX)                        += Regex.o
 
 objs-$(CONFIG_CMD_ABOUT)                    += CmdAbout.o
 objs-$(CONFIG_CMD_HELP)                     += CmdHelp.o

@@ -105,6 +105,11 @@ config EXECUTOR
 	bool "Enable execute program function"
 	default n
 
+config REGEX
+	depends on UTILITIES
+	bool "Enable regex function"
+	default n
+
 endmenu
 
 endif
