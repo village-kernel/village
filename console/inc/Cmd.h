@@ -9,14 +9,10 @@
 
 #include "stdint.h"
 #include "stddef.h"
-#include "CmdMsgMgr.h"
 
 ///Cmd
 class Cmd
 {
-protected:
-	//Members
-	CmdMsgMgr* msgMgr;
 public:
 	//Constructor
 	Cmd() {}
@@ -25,9 +21,8 @@ public:
 	virtual ~Cmd() {};
 
 	//Methods
-	virtual void Initialize(CmdMsgMgr* msgMgr) = 0;
-	virtual void SetArgs(uint8_t* args)        = 0;
-	virtual void Execute()                     = 0;
+	virtual void Initialize()                    = 0;
+	virtual void Execute(int argc, char* argv[]) = 0;
 };
 
 #endif //!__CMD_INTERFACE_H__

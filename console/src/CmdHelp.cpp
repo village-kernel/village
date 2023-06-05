@@ -9,23 +9,16 @@
 
 
 ///Cmd help initialize
-void CmdHelp::Initialize(CmdMsgMgr* msgMgr)
-{
-	this->msgMgr = msgMgr;
-}
-
-
-///Cmd help set args
-void CmdHelp::SetArgs(uint8_t* args)
+void CmdHelp::Initialize()
 {
 
 }
 
 
 ///Cmd help execute
-void CmdHelp::Execute()
+void CmdHelp::Execute(int argc, char* argv[])
 {
-	msgMgr->Write((uint8_t*)"help: about\r\n");
+	console.output("help: about\r\n");
 }
 
 

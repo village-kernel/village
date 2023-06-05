@@ -60,7 +60,7 @@ void Console::Initialize()
 	//Initialize cmds
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
-		cmd->Initialize(&msgMgr);
+		cmd->Initialize();
 	}
 
 	//Output welcome message
@@ -99,8 +99,8 @@ void Console::ExecuteCmd(CmdMsg msg)
 	{
 		if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
 		{
-			cmd->SetArgs(msg.args);
-			cmd->Execute();
+			regex.Split((const char*)msg.args);
+			cmd->Execute(regex.Size(), regex.ToArray());
 			msgMgr.Write((uint8_t*)"# ");
 			return;
 		}
@@ -196,6 +196,22 @@ void Console::warn(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\033[33mWarning: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
+	msgMgr.Execute();
+	mutex.Unlock();
+}
+
+
+/// @brief Console output
+/// @param format 
+/// @param  
+void Console::output(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsprintf(data, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)data);
 	msgMgr.Execute();
 	mutex.Unlock();
 }

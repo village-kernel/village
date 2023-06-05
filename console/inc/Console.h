@@ -8,7 +8,9 @@
 #define __CONSOLE_H__
 
 #include "Synchronize.h"
+#include "CmdMsgMgr.h"
 #include "Module.h"
+#include "Regex.h"
 #include "Cmd.h"
 
 ///Command create macro
@@ -28,6 +30,7 @@ private:
 	//Members
 	List<Cmd> cmds;
 	Mutex     mutex;
+	Regex     regex;
 	CmdMsgMgr msgMgr;
 	char      data[buf_size];
 
@@ -47,6 +50,7 @@ public:
 	void info(const char* format, ...);
 	void error(const char* format, ...);
 	void warn(const char* format, ...);
+	void output(const char* format, ...);
 
 	//Singleton Instance
 	static Console& Instance();

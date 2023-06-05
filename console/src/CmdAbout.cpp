@@ -9,23 +9,16 @@
 
 
 ///Cmd about initialize
-void CmdAbout::Initialize(CmdMsgMgr* msgMgr)
-{
-	this->msgMgr = msgMgr;
-}
-
-
-///Cmd about set args
-void CmdAbout::SetArgs(uint8_t* args)
+void CmdAbout::Initialize()
 {
 
 }
 
 
 ///Cmd about execute
-void CmdAbout::Execute()
+void CmdAbout::Execute(int argc, char* argv[])
 {
-	msgMgr->Write((uint8_t*)"vk.kernel 0.0.1(beta), Copyright (C) village.\r\n");
+	console.output("vk.kernel 0.0.1(beta), Copyright (C) village.\r\n");
 }
 
 

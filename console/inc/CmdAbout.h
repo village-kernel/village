@@ -14,9 +14,8 @@ class CmdAbout : public Cmd
 {
 public:
 	//Methods
-	void Initialize(CmdMsgMgr* msgMgr);
-	void SetArgs(uint8_t* args);
-	void Execute();
+	void Initialize();
+	void Execute(int argc, char* argv[]);
 };
 
 #endif // !__CMD_ABOUT_H__
