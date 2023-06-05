@@ -16,6 +16,8 @@ class Executor : public Class
 {
 private:
 	//Members
+	int argc;
+	char** argv;
 	ElfParser elf;
 
 	//Methods
@@ -24,7 +26,7 @@ public:
 	//Methods
 	Executor();
 	~Executor();
-	int Run(const char* path, char* argv[] = NULL);
+	int Run(const char* path, int argc, char* argv[] = NULL);
 };
 
 #endif //!__EXECUTOR_H__

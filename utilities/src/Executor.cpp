@@ -24,8 +24,12 @@ Executor::~Executor()
 /// @param path elf file path
 /// @param argv running argv
 /// @return result
-int Executor::Run(const char* path, char* argv[])
+int Executor::Run(const char* path, int argc, char* argv[])
 {
+	//Set argc and argv
+	this->argc = argc;
+	this->argv = argv;
+
 	//Load, parser and execute elf file
 	if (elf.Load(path) != Result::_OK) return _ERR;
 	
@@ -41,7 +45,7 @@ int Executor::Run(const char* path, char* argv[])
 void Executor::Sandbox()
 {
 	elf.InitArray();
-	elf.Execute();
+	elf.Execute(NULL, argc, argv);
 	elf.FiniArray();
 	elf.Exit();
 }
