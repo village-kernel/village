@@ -26,18 +26,8 @@ int ElfParser::Load(const char* filename)
 {
 	if (LoadElf(filename) != _OK) return _ERR;
 	if (ParserElf()       != _OK) return _ERR;
-	
-	switch (elf.header->type)
-	{
-	case _ELF_Type_Rel:
-		if (RelEntries()  != _OK) return _ERR;
-		break;
-	case _ELF_Type_Exec:
-	case _ELF_Type_Dyn:
-		if (CopyToRAM()   != _OK) return _ERR;
-		break;
-	default: break;
-	}
+	if (RelEntries()      != _OK) return _ERR;
+	if (CopyToRAM()       != _OK) return _ERR;
 	return _OK;
 }
 
@@ -406,8 +396,6 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 /// @return result
 int ElfParser::CopyToRAM()
 {
-	if (0 == elf.header->programHeaderNum) return _ERR;
-
 	for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
 	{
 		ProgramHeader program = elf.programs[i];
@@ -460,11 +448,11 @@ int ElfParser::InitArray()
 /// @brief ElfParser execute symbol
 /// @param symbol 
 /// @return result
-int ElfParser::Execute(const char* symbol)
+int ElfParser::Execute(const char* symbol, int argc, char* argv[])
 {
 	if (NULL == symbol && 0 != elf.exec)
 	{
-		((Function)elf.exec)();
+		((Entry)elf.exec)(argc, argv);
 		return _OK;
 	}
 	else
@@ -473,7 +461,7 @@ int ElfParser::Execute(const char* symbol)
 		
 		if (symbolAddr)
 		{
-			((Function)symbolAddr)();
+			((Entry)symbolAddr)(argc, argv);
 			return _OK;
 		}
 	}

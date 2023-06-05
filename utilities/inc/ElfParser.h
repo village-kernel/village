@@ -15,6 +15,7 @@ class ElfParser
 private:
 	//Type define
 	typedef void(*Function)();
+	typedef void(*Entry)(int argc, char* argv[]);
 
 	//Enumerations
 	enum ELFClass
@@ -250,7 +251,7 @@ private:
 	};
 	
 	//Static constants members
-	static const uint32_t load_address = 0x400000;
+	static const uint32_t load_address =0x400000;
 
 	//Members
 	ELF elf;
@@ -267,7 +268,7 @@ public:
 	ElfParser(const char* filename = NULL);
 	int Load(const char* filename);
 	int InitArray();
-	int Execute(const char* symbol = NULL);
+	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
 	int FiniArray();
 	int Exit();
 
