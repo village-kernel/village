@@ -106,5 +106,5 @@ void Regex::Clear()
 		delete node;
 	}
 
-	if (NULL != array) delete array;
+	if (NULL != array) delete[] array;
 }
