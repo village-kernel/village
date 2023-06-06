@@ -397,7 +397,7 @@ int ElfParser::RelEntries()
 				//Get relocation entry
 				RelocationEntry relEntry = reltab[n];
 
-				//Get symbol entry
+				//Get symbol entry name
 				const char* symName = GetDynSymName(relEntry.symbol);
 
 				//Get relocation section addr
