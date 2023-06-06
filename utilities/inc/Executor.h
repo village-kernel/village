@@ -26,7 +26,7 @@ public:
 	//Methods
 	Executor();
 	~Executor();
-	int Run(const char* path, int argc, char* argv[] = NULL);
+	int Run(const char* path, int argc = 0, char* argv[] = NULL);
 };
 
 #endif //!__EXECUTOR_H__

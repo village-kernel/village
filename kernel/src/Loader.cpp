@@ -22,7 +22,7 @@ void Loader::Loading(const char* filename)
 		ElfParser* elf = new ElfParser();
 		if (elf->Load(node->cmd) == Result::_OK)
 		{
-			elf->InitArray();
+			elf->Execute();
 		}
 	}
 

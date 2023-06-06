@@ -139,6 +139,24 @@ private:
 		_STB_HIPROC   = 15,
 	};
 
+	enum DynamicType
+	{
+		_DT_NULL        = 0,
+		_DT_NEEDED      = 1,
+		_DT_PLTRELSZ    = 2,
+		_DT_PLTGOT      = 3,
+		_DT_HASH        = 4,
+		_DT_STRTAB      = 5,
+		_DT_SYMTAB      = 6,
+		_DT_RELA        = 7,
+		_DT_RELASZ      = 8,
+		_DT_RELAENT     = 9,
+		_DT_STRSZ       = 10,
+		_DT_SYMENT      = 11,
+		_DT_INIT        = 12,
+		_DT_FINI        = 13,
+	};
+
 	//Structures
 	struct SymbolEntry
 	{
@@ -203,13 +221,14 @@ private:
 		uint32_t align;
 	};
 
-	struct DynamicSection
+	struct DynamicHeader
 	{
 		int32_t tag;
 		union
 		{
 			uint32_t val;
 			uint32_t ptr;
+			uint32_t offset;
 		};
 	};
 
@@ -223,7 +242,7 @@ private:
 		Function*        funcs;
 		SymbolEntry*     symtab;
 		SymbolEntry*     dynsym;
-		DynamicSection*  dynamic;
+		DynamicHeader*   dynamic;
 		RelocationEntry* reltab;
 		
 		SectionData(uint32_t addr):
@@ -235,49 +254,73 @@ private:
 	struct ELF
 	{
 		uint32_t         map;
+		uint32_t         load;
 		uint32_t         exec;
-		uint32_t         laddr;
+		
 		ELFHeader*       header;
 		SectionHeader*   sections;
 		ProgramHeader*   programs;
-		DynamicSection*  dynamics;
+
+		DynamicHeader*   dynamics;
+		uint32_t         dynsecNum;
 		SymbolEntry*     dynsym;
 		uint32_t         dynsymNum;
+		uint8_t*         dynstr;
+
 		SymbolEntry*     symtab;
 		uint32_t         symtabNum;
-		uint8_t*         dynstr;
 		uint8_t*         strtab;
 		uint8_t*         shstrtab;
 	};
+
+	//Shared library
+	struct SharedLibrary
+	{
+		ElfParser*     so;
+		SharedLibrary* next;
+
+		SharedLibrary(ElfParser* so = NULL):
+			so(so),
+			next(NULL)
+		{}
+	};
 	
 	//Static constants members
-	static const uint32_t load_address =0x400000;
+	static const uint32_t base_map_address =0x400000;
+	static uint32_t mapAddr;
+	const char* filename;
 
 	//Members
-	ELF elf;
+	ELF           elf;
+	SharedLibrary libs;
 
 	//Methods
-	int LoadElf(const char* filename);
-	int ParserElf();
+	int LoadElf();
+	int PreParser();
+	int SegmentMapping();
+	int PostParser();
+	int SharedObjs();
 	int RelEntries();
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
 	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
-	int CopyToRAM();
 public:
 	//Methods
 	ElfParser(const char* filename = NULL);
 	int Load(const char* filename);
-	int InitArray();
 	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
-	int FiniArray();
 	int Exit();
 
 	//Tool methods
+	const char* GetDynamicString(uint32_t index);
 	const char* GetSectionName(uint32_t index);
 	const char* GetSymbolName(uint32_t index);
+	const char* GetDynSymName(uint32_t index);
 	uint32_t GetSymbolAddr(uint32_t index);
+	uint32_t GetDynSymAddr(uint32_t index);
 	uint32_t GetSymbolAddrByName(const char* name);
+	uint32_t GetDynSymAddrByName(const char* name);
 	SectionData GetSectionData(uint32_t index);
+	SectionData GetDynSectionData(uint32_t index);
 };
 
 #endif //!__ELF_PARSER_H__

@@ -11,9 +11,14 @@
 #include "string.h"
 
 
+/// @brief Initialize map address
+uint32_t ElfParser::mapAddr = ElfParser::base_map_address;
+
+
 /// @brief Constructor
 /// @param filename 
 ElfParser::ElfParser(const char* filename)
+	:filename(filename)
 {
 	if (NULL != filename) Load(filename);
 }
@@ -24,10 +29,15 @@ ElfParser::ElfParser(const char* filename)
 /// @return result
 int ElfParser::Load(const char* filename)
 {
-	if (LoadElf(filename) != _OK) return _ERR;
-	if (ParserElf()       != _OK) return _ERR;
+	this->filename = filename;
+
+	if (LoadElf()         != _OK) return _ERR;
+	if (PreParser()       != _OK) return _ERR;
+	if (SegmentMapping()  != _OK) return _ERR;
+	if (PostParser()      != _OK) return _ERR;
+	if (SharedObjs()      != _OK) return _ERR;
 	if (RelEntries()      != _OK) return _ERR;
-	if (CopyToRAM()       != _OK) return _ERR;
+	
 	return _OK;
 }
 
@@ -35,18 +45,18 @@ int ElfParser::Load(const char* filename)
 /// @brief ElfParser load elf file
 /// @param filename 
 /// @return result
-int ElfParser::LoadElf(const char* filename)
+int ElfParser::LoadElf()
 {
 	FileStream file;
 
 	if (FR_OK == file.Open(filename, FileStream::_Read))
 	{
 		int size = file.Size();
-		elf.map = (uint32_t)new uint8_t[size]();
+		elf.load = (uint32_t)new uint8_t[size]();
 
-		if (elf.map && (file.Read((uint8_t*)elf.map, size) == size))
+		if (elf.load && (file.Read((uint8_t*)elf.load, size) == size))
 		{
-			console.info("Load %s successful", filename);
+			console.info("%s load successful", filename);
 			file.Close();
 			return _OK;
 		}
@@ -54,8 +64,17 @@ int ElfParser::LoadElf(const char* filename)
 		file.Close();
 	}
 
-	console.log("Load %s failed", filename);
+	console.log("%s load failed", filename);
 	return _ERR;
+}
+
+
+/// @brief Get dynamic string
+/// @param index 
+/// @return string
+inline const char* ElfParser::GetDynamicString(uint32_t index)
+{
+	return (const char*)elf.dynstr + index;
 }
 
 
@@ -85,6 +104,19 @@ inline const char* ElfParser::GetSymbolName(uint32_t index)
 }
 
 
+/// @brief Get dynamic symbol name
+/// @param index 
+/// @return name
+inline const char* ElfParser::GetDynSymName(uint32_t index)
+{
+	if (elf.dynsymNum > index)
+	{
+		return (const char*)elf.dynstr + elf.dynsym[index].name;
+	}
+	return NULL;
+}
+
+
 /// @brief Get symbol addr
 /// @param index 
 /// @return address
@@ -92,12 +124,20 @@ inline uint32_t ElfParser::GetSymbolAddr(uint32_t index)
 {
 	if (elf.symtabNum > index)
 	{
-		SymbolEntry symbol = elf.symtab[index];
+		return elf.map + elf.symtab[index].value;
+	}
+	return 0;
+}
 
-		if (symbol.shndx)
-		{
-			return GetSectionData(symbol.shndx).addr + symbol.value;
-		}
+
+/// @brief Get dynamic symbol addr
+/// @param index 
+/// @return address
+inline uint32_t ElfParser::GetDynSymAddr(uint32_t index)
+{
+	if (elf.dynsymNum > index)
+	{
+		return elf.map + elf.dynsym[index].value;
 	}
 	return 0;
 }
@@ -119,22 +159,46 @@ inline uint32_t ElfParser::GetSymbolAddrByName(const char* name)
 }
 
 
+/// @brief Get dynamic symbol addr by name
+/// @param name 
+/// @return address
+inline uint32_t ElfParser::GetDynSymAddrByName(const char* name)
+{
+	for (uint32_t i = 0; i < elf.dynsymNum; i++)
+	{
+		if (0 == strcmp(name, GetDynSymName(i)))
+		{
+			return GetDynSymAddr(i);
+		}
+	}
+	return 0;
+}
+
+
 /// @brief Get section data
 /// @param index 
 /// @return address
 inline ElfParser::SectionData ElfParser::GetSectionData(uint32_t index)
 {
-	return SectionData(elf.map + elf.sections[index].offset);
+	return SectionData(elf.load + elf.sections[index].offset);
 }
 
 
+/// @brief Get dyn section data
+/// @param index 
+/// @return address
+inline ElfParser::SectionData ElfParser::GetDynSectionData(uint32_t index)
+{
+	return SectionData(elf.map + elf.sections[index].addr);
+}
 
-/// @brief Parser elf
+
+/// @brief Pre parser
 /// @return result
-int ElfParser::ParserElf()
+int ElfParser::PreParser()
 {
 	//Set elf header pointer
-	elf.header = (ELFHeader*)(elf.map);
+	elf.header = (ELFHeader*)(elf.load);
 
 	//Check if it is a valid elf file
 	const uint8_t elfmagic[] = {0x7f, 'E', 'L', 'F'};
@@ -149,31 +213,21 @@ int ElfParser::ParserElf()
 #elif defined(ARCH_ARM)
 	if (elf.header->machine  != _ELF_Machine_ARM) return _ERR;
 #endif
-	if (elf.header->type     == _ELF_Type_None  ) return _ERR;
-
-	//Set executable load address and entry
-	switch (elf.header->type)
+	if ((elf.header->type    != _ELF_Type_Dyn) &&
+		(elf.header->type    != _ELF_Type_Exec))
 	{
-		case _ELF_Type_Rel:
-			elf.laddr = 0;
-			elf.exec = elf.map + elf.header->elfHeaderSize + elf.header->entry;
-			break;
-		case _ELF_Type_Exec:
-			elf.laddr = 0;
-			elf.exec = elf.header->entry;
-			break;
-		case _ELF_Type_Dyn:
-			elf.laddr = load_address;
-			elf.exec = elf.laddr + elf.header->entry;
-			break;
-		default: break;
+		console.error("%s is not executable", filename);
+		return _ERR;
 	}
 
+	//Set executable entry
+	elf.exec = elf.header->entry;
+
 	//Get program headers pointer
-	elf.programs = (ProgramHeader*)(elf.map + elf.header->programHeaderOffset);
+	elf.programs = (ProgramHeader*)(elf.load + elf.header->programHeaderOffset);
 
 	//Get section headers pointer
-	elf.sections = (SectionHeader*)(elf.map + elf.header->sectionHeaderOffset);
+	elf.sections = (SectionHeader*)(elf.load + elf.header->sectionHeaderOffset);
 
 	//Get section string table pointer
 	elf.shstrtab = GetSectionData(elf.header->sectionHeaderStringTableIndex).shstrtab;
@@ -183,19 +237,8 @@ int ElfParser::ParserElf()
 	{
 		SectionData data = GetSectionData(i);
 
-		//Set dynsym pointer
-		if (_SHT_DYNSYM == elf.sections[i].type)
-		{
-			elf.dynsym = data.dynsym;
-			elf.dynsymNum = elf.sections[i].size / sizeof(SymbolEntry);
-		}
-		//Set dynamic section pointer
-		if (_SHT_DYNAMIC == elf.sections[i].type)
-		{
-			elf.dynamics = data.dynamic;
-		}
 		//Set symbol tables pointer
-		else if (_SHT_SYMTAB == elf.sections[i].type)
+		if (_SHT_SYMTAB == elf.sections[i].type)
 		{
 			elf.symtab = data.symtab;
 			elf.symtabNum = elf.sections[i].size / sizeof(SymbolEntry);
@@ -203,22 +246,140 @@ int ElfParser::ParserElf()
 		//Set section header string table and symbol string talbe pointer
 		else if (_SHT_STRTAB == elf.sections[i].type)
 		{
-			if (0 == strcmp(".dynstr", GetSectionName(i)))
-				elf.dynstr = data.dynstr;
-			else if (0 == strcmp(".strtab", GetSectionName(i)))
+			if (0 == strcmp(".strtab", GetSectionName(i)))
 				elf.strtab = data.strtab;
 		}
 	}
 
-	console.info("Parser elf successful");
+	console.info("%s pre parser successful", filename);
 	return _OK;
 }
 
 
-/// @brief Relocation symbol entries
+/// @brief Section to segment mapping
+/// @return result
+int ElfParser::SegmentMapping()
+{
+	//Set map address
+	if (_ELF_Type_Dyn == elf.header->type)
+		elf.map = mapAddr;
+	else if (_ELF_Type_Exec == elf.header->type)
+		elf.map = 0;
+
+	for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
+	{
+		ProgramHeader program = elf.programs[i];
+
+		if (_PT_LOAD == program.type)
+		{
+			uint8_t* vaddr = (uint8_t*)(elf.map  + program.vaddr);
+			uint8_t* code  = (uint8_t*)(elf.load + program.offset);
+
+			for (uint32_t size = 0; size < program.memSize; size++)
+			{
+				vaddr[size] = code[size];
+			}
+
+			if (_ELF_Type_Dyn == elf.header->type) mapAddr += 0x10000;
+		}
+	}
+
+	console.info("%s section to segment mapping successful", filename);
+	return _OK;
+}
+
+
+/// @brief Post parser
+/// @return result
+int ElfParser::PostParser()
+{
+	//Returns when the elf type is not dynamic
+	if (_ELF_Type_Dyn != elf.header->type) return _OK;
+
+	//Set elf header pointer
+	elf.header = (ELFHeader*)(elf.map);
+
+	//Set executable entry
+	elf.exec = elf.map + elf.header->entry;
+
+	//Get some information of elf
+	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
+	{
+		SectionData data = GetDynSectionData(i);
+
+		//Set dynamic section pointer
+		if (_SHT_DYNAMIC == elf.sections[i].type)
+		{
+			elf.dynamics = data.dynamic;
+			elf.dynsecNum = elf.sections[i].size / sizeof(DynamicHeader);
+		}
+		//Set dynsym pointer
+		else if (_SHT_DYNSYM == elf.sections[i].type)
+		{
+			elf.dynsym = data.dynsym;
+			elf.dynsymNum = elf.sections[i].size / sizeof(SymbolEntry);
+		}
+		//Set section header string table and symbol string talbe pointer
+		else if (_SHT_STRTAB == elf.sections[i].type)
+		{
+			if (0 == strcmp(".dynstr", GetSectionName(i)))
+				elf.dynstr = data.dynstr;
+		}
+	}
+
+	console.info("%s post parser successful", filename);
+	return _OK;
+}
+
+
+/// @brief Load shared objects
+/// @return reuslt
+int ElfParser::SharedObjs()
+{
+	SharedLibrary* lib = &libs;
+
+	//Handler dynamic source
+	for (uint32_t i = 0; i < elf.dynsecNum; i++)
+	{
+		DynamicHeader dynamic = elf.dynamics[i];
+
+		if (_DT_NEEDED == dynamic.tag)
+		{
+			ElfParser* so = new ElfParser();
+			
+			const char* prefix = "libraries/";
+			const char* name = GetDynamicString(dynamic.val);
+			char* path = new char[strlen(prefix) + strlen(name) + 1]();
+			strcat(path, prefix);
+			strcat(path, name);
+
+			if (_OK == so->Load(path))
+			{
+				lib->so = so;
+				lib = lib->next;
+			}
+			else
+			{
+				console.error("%s load shared object %s failed", filename, path);
+				delete[] path;
+				return _ERR;
+			}
+
+			delete[] path;
+		}
+	}
+
+	return _OK;
+}
+
+
+/// @brief Relocation dynamic symbol entries
 /// @return result
 int ElfParser::RelEntries()
 {
+	//Returns when elf type is not dynamic
+	if (_ELF_Type_Dyn != elf.header->type) return _OK;
+
 	//Set relocation tables
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -237,29 +398,27 @@ int ElfParser::RelEntries()
 				RelocationEntry relEntry = reltab[n];
 
 				//Get symbol entry
-				SymbolEntry symEntry = elf.symtab[relEntry.symbol];
+				const char* symName = GetDynSymName(relEntry.symbol);
 
 				//Get relocation section addr
-				uint32_t relAddr = GetSectionData(i - 1).addr + relEntry.offset;
+				uint32_t relAddr = elf.map + relEntry.offset;
 				uint32_t symAddr = 0;
 
-				//Calculate new symbol entry addr
-				if (symEntry.shndx)
+				//Searching for symbols in shared libraries
+				for (SharedLibrary* lib = &libs; NULL != lib; lib = lib->next)
 				{
-					//Calculate the address of defined symbol entry
-					symAddr = GetSectionData(symEntry.shndx).addr + symEntry.value;
+					symAddr = lib->so->GetDynSymAddrByName(symName);
+					if (0 != symAddr) break;
 				}
-				else
-				{
-					//Get the address of undefined symbol entry
-					symAddr = SEARCH_SYMBOL(GetSymbolName(relEntry.symbol));
-				}
+				
+				//Get the address of undefined symbol entry
+				if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
 
 				//Return when symAddr is 0
 				if (0 == symAddr) 
 				{
-					console.error("Err: count not relocation %s.", GetSymbolName(relEntry.symbol));
-					console.error("Relocation elf failed");
+					console.error("%s relocation %s not found.", filename, symName);
+					console.error("%s relocation elf failed", filename);
 					return _ERR;
 				}
 
@@ -267,15 +426,16 @@ int ElfParser::RelEntries()
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
-				console.log("rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
-					GetSymbolName(relEntry.symbol), relAddr, symAddr);
+				console.log("%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
+					filename, symName, relAddr, symAddr);
 			}
 		}
 	}
 
-	console.info("Relocation elf successful");
+	console.info("%s relocation dyn elf successful", filename);
 	return _OK;
 }
+
 
 #if defined(ARCH_X86)
 
@@ -392,59 +552,6 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 #endif
 
 
-/// @brief Load executable to RAM
-/// @return result
-int ElfParser::CopyToRAM()
-{
-	for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
-	{
-		ProgramHeader program = elf.programs[i];
-
-		if (_PT_LOAD == program.type)
-		{
-			uint8_t* vaddr = (uint8_t*)(elf.laddr + program.vaddr);
-			uint8_t* code  = (uint8_t*)(elf.map + program.offset);
-
-			for (uint32_t size = 0; size < program.memSize; size++)
-			{
-				vaddr[size] = code[size];
-			}
-		}
-	}
-
-	console.info("Load executable successful");
-
-	return _OK;
-}
-
-
-/// @brief ElfParser init array
-/// @return result
-int ElfParser::InitArray()
-{
-	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
-	{
-		if (0 == strcmp(".init_array", GetSectionName(i)))
-		{
-			//Get init array
-			Function* funcs = GetSectionData(i).funcs;
-
-			//Calculate the size of init array
-			uint32_t size = elf.sections[i].size / sizeof(Function);
-
-			//Execute init array
-			for (uint32_t i = 0; i < size; i++)
-			{
-				(funcs[i])();
-			}
-
-			break;
-		}
-	}
-	return _OK;
-}
-
-
 /// @brief ElfParser execute symbol
 /// @param symbol 
 /// @return result
@@ -465,34 +572,8 @@ int ElfParser::Execute(const char* symbol, int argc, char* argv[])
 			return _OK;
 		}
 	}
+	console.error("%s %s not found", filename, symbol);
 	return _ERR;
-}
-
-
-/// @brief ElfParser fini array
-/// @return result
-int ElfParser::FiniArray()
-{
-	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
-	{
-		if (0 == strcmp(".fini_array", GetSectionName(i)))
-		{
-			//Get fini array
-			Function* funcs = GetSectionData(i).funcs;
-
-			//Calculate the size of fini array
-			uint32_t size = elf.sections[i].size / sizeof(Function);
-
-			//Execute fini array
-			for (uint32_t i = 0; i < size; i++)
-			{
-				(funcs[i])();
-			}
-
-			break;
-		}
-	}
-	return _OK;
 }
 
 
@@ -500,6 +581,11 @@ int ElfParser::FiniArray()
 /// @return result
 int ElfParser::Exit()
 {
+	for (SharedLibrary* lib = &libs; NULL != lib; lib = lib->next)
+	{
+		delete lib->so;
+		delete lib;
+	}
 	delete[] (uint8_t*)elf.map;
 	return _OK;
 }
