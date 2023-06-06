@@ -70,7 +70,7 @@ bool CmdMsgMgr::HandleInputData()
 	{
 		for (uint8_t i = 0; i < brSize; i++)
 		{
-			uint8_t byte = brBuff[i++];
+			uint8_t byte = brBuff[i];
 
 			if (rxBufPos >= arg_buffer_size)
 			{
