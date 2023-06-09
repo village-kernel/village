@@ -14,10 +14,10 @@
 CmdMsgMgr::CmdMsgMgr()
 	:txBufPos(0),
 	rxBufPos(0),
+	history(0),
 	inputMode(_EDIT)
 {
 	rxMsg.cmd = cmdBuffer;
-	rxMsg.args = rxBuffer;
 }
 
 
@@ -53,6 +53,79 @@ void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 	for (int i = 0; i < size; i++)
 	{
 		txBuffer[txBufPos++] = msg[i];
+	}
+}
+
+
+/// @brief 
+void CmdMsgMgr::RecordTempCmd()
+{
+	//Return when history is not last
+	if (cmd_history_size - 1 != history) return;
+
+	//Release the last history memory space
+	if (NULL != cmdHistory[cmd_history_size - 1]) delete[] cmdHistory[cmd_history_size - 1];
+
+	//Alloc new history cmd memory
+	uint8_t* historyCmd = new uint8_t[strlen((const char*)rxBuffer) + 1]();
+
+	//Copy rxBuffer string to historyCmd 
+	strcpy((char*)historyCmd, (const char*)rxBuffer);
+
+	//Set the history cmd as the last history
+	cmdHistory[cmd_history_size - 1] = historyCmd;
+}
+
+
+/// @brief Record history
+void CmdMsgMgr::RecordHistory()
+{
+	//Alloc new history cmd memory
+	uint8_t* historyCmd = new uint8_t[strlen((const char*)rxBuffer) + 1]();
+
+	//Copy rxBuffer string to historyCmd 
+	strcpy((char*)historyCmd, (const char*)rxBuffer);
+	
+	//Release the first history memory space
+	if (NULL != cmdHistory[0]) delete[] cmdHistory[0];
+
+	//Move cmdHistory[i+1] to cmdHistory[i]
+	for (uint16_t i = 0; i < cmd_history_size - 2; i++)
+	{
+		cmdHistory[i] = cmdHistory[i+1];
+	}
+
+	//Set the history cmd as the second to last history
+	cmdHistory[cmd_history_size - 2] = historyCmd;
+	
+	//Reset history position
+	history = cmd_history_size - 1;
+}
+
+
+/// @brief Restored history
+void CmdMsgMgr::RestoredHistory()
+{
+	//Return when history cmd is NULL
+	if (NULL == cmdHistory[history]) return;
+
+	//Clear display string
+	uint16_t length = strlen((const char*)rxBuffer);
+	for (uint16_t i = length; i > 0; i--)
+	{
+		txBuffer[txBufPos++] = '\b';
+		txBuffer[txBufPos++] = ' ';
+		txBuffer[txBufPos++] = '\b';
+	}
+
+	//Reset history cmd to rxBuffer
+	strcpy((char*)rxBuffer, (const char*)cmdHistory[history]);
+
+	//Display new cmd
+	length = strlen((const char*)rxBuffer);
+	for (uint16_t i = 0; i < length; i++)
+	{
+		txBuffer[txBufPos++] = rxBuffer[i];
 	}
 }
 
@@ -186,7 +259,7 @@ bool CmdMsgMgr::HandleInputData()
 						//Check rxBuffer length
 						if (strlen((const char*)rxBuffer) <= 0) return false;
 
-						//Set commandss
+						//Set command
 						for (uint16_t i = 0; ; i++)
 						{
 							if ((' '  == rxBuffer[i]) ||
@@ -199,8 +272,15 @@ bool CmdMsgMgr::HandleInputData()
 							cmdBuffer[i] = rxBuffer[i];
 						}
 
+						//Record history
+						RecordHistory();
+
+						//Set args
+						rxMsg.args = cmdHistory[cmd_history_size - 2];
+
 						//Reset rxBufPos
 						rxBufPos = 0;
+						rxBuffer[rxBufPos] = '\0';
 						return true;
 					}
 				}
@@ -264,8 +344,19 @@ bool CmdMsgMgr::HandleInputData()
 						switch (byte)
 						{
 							case 'A': //up
+								if (NULL != cmdHistory[history-1])
+								{
+									RecordTempCmd();
+									history--;
+									RestoredHistory();
+								}
 								break;
 							case 'B': //down
+								if (history < cmd_history_size - 1)
+								{
+									history++;
+									RestoredHistory();
+								}
 								break;
 							case 'C': //right
 								if ('\0' != rxBuffer[rxBufPos])

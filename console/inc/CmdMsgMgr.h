@@ -34,20 +34,26 @@ private:
 	};
 
 	//Static constants
-	static const uint16_t cmd_buffer_size = 20;
+	static const uint16_t cmd_history_size = 10;
+	static const uint16_t cmd_buffer_size = 256;
 	static const uint16_t arg_buffer_size = 256;
 
 	//Members
 	CmdMsg rxMsg;
 	uint8_t txBufPos;  //uint8_t auto reset 256(arg_buffer_size) -> 0
 	uint8_t rxBufPos;  //uint8_t auto reset 256(arg_buffer_size) -> 0
+	uint8_t history;
 	uint8_t cmdBuffer[cmd_buffer_size] = { 0 };
 	uint8_t txBuffer[arg_buffer_size] = { 0 };
 	uint8_t rxBuffer[arg_buffer_size] = { 0 };
+	uint8_t* cmdHistory[cmd_history_size] = { NULL };
 	Driver* transceiver;
 	InputMode inputMode;
 
 	//Methods
+	void RecordTempCmd();
+	void RecordHistory();
+	void RestoredHistory();
 	bool HandleInputData();
 public:
 	//Methods
