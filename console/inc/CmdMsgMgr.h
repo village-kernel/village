@@ -26,6 +26,7 @@ private:
 	enum InputMode
 	{
 		_EDIT = 0,
+		_INSERT,
 		_ANSI,
 		_DCS,
 		_CSI,
@@ -38,8 +39,8 @@ private:
 
 	//Members
 	CmdMsg rxMsg;
-	uint16_t txBufPos;
-	uint16_t rxBufPos;
+	uint8_t txBufPos;  //uint8_t auto reset 256(arg_buffer_size) -> 0
+	uint8_t rxBufPos;  //uint8_t auto reset 256(arg_buffer_size) -> 0
 	uint8_t cmdBuffer[cmd_buffer_size] = { 0 };
 	uint8_t txBuffer[arg_buffer_size] = { 0 };
 	uint8_t rxBuffer[arg_buffer_size] = { 0 };

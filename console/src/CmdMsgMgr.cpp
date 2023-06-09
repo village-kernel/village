@@ -80,6 +80,71 @@ bool CmdMsgMgr::HandleInputData()
 
 			switch (inputMode)
 			{
+				case _INSERT:
+				{
+					//ASCII 32(space) ~ 126(~)
+					if (byte >= 0x20 && byte <= 0x7e)
+					{
+						//Move char[rxBufPos] to char[rxBufPos+1] and insert new char in char[rxBufPos]
+						for (uint16_t i = strlen((const char*)rxBuffer); i > rxBufPos ; i--)
+						{
+							rxBuffer[i] = rxBuffer[i-1];
+						}
+						rxBuffer[rxBufPos++] = byte;
+						
+						//Sent new string
+						uint16_t back = 0;
+						txBuffer[txBufPos++] = byte;
+						for (uint16_t i = rxBufPos; '\0' != rxBuffer[i]; i++)
+						{
+							txBuffer[txBufPos++] = rxBuffer[i];
+							back++;
+						}
+
+						//Move cursor back
+						for (uint16_t i = 0; i < back; i++)
+						{
+							txBuffer[txBufPos++] = '\b';
+						}
+
+						continue;
+					}
+
+					//ASCII DEL
+					else if (0x7f == byte)
+					{
+						if (rxBufPos)
+						{
+							//Del char[rxBufPos] and move char[rxBufPos] to char[rxBufPos-1]
+							rxBufPos--;
+							for (uint16_t i = rxBufPos; '\0' != rxBuffer[i]; i++)
+							{
+								rxBuffer[i] = rxBuffer[i+1];
+							}
+
+							//Sent new string
+							uint16_t back = 0;
+							txBuffer[txBufPos++] = '\b';
+							for (uint16_t i = rxBufPos; '\0' != rxBuffer[i]; i++)
+							{
+								txBuffer[txBufPos++] = rxBuffer[i];
+								back++;
+							}
+							txBuffer[txBufPos++] = ' ';
+							back++;
+
+							//Move cursor back
+							for (uint16_t i = 0; i < back; i++)
+							{
+								txBuffer[txBufPos++] = '\b';
+							}
+						}
+						continue;
+					}
+
+					inputMode = _EDIT;
+				}
+
 				case _EDIT:
 				{
 					//ANSI ESC
@@ -93,6 +158,7 @@ bool CmdMsgMgr::HandleInputData()
 					{
 						txBuffer[txBufPos++] = byte;
 						rxBuffer[rxBufPos++] = byte;
+						rxBuffer[rxBufPos+1] = '\0';
 					}
 
 					//ASCII DEL
@@ -101,7 +167,7 @@ bool CmdMsgMgr::HandleInputData()
 						if (rxBufPos)
 						{
 							//Backspace one character
-							rxBufPos--;
+							rxBuffer[--rxBufPos] = '\0';
 
 							//Backspace character on terminal
 							txBuffer[txBufPos++] = '\b';
@@ -113,26 +179,19 @@ bool CmdMsgMgr::HandleInputData()
 					//ASCII CR
 					else if (0x0d == byte)
 					{
-						//String terminator
-						rxBuffer[rxBufPos++] = '\0';
-
 						//Enter and new line
 						txBuffer[txBufPos++] = '\r';
 						txBuffer[txBufPos++] = '\n';
 
-						//Check rxBufPos
-						if (rxBufPos <= 1)
-						{
-							rxBufPos = 0;
-							return false; 
-						}
+						//Check rxBuffer length
+						if (strlen((const char*)rxBuffer) <= 0) return false;
 
-						//Set command
-						for (uint16_t i = 0; i <= rxBufPos ; i++)
+						//Set commandss
+						for (uint16_t i = 0; ; i++)
 						{
 							if ((' '  == rxBuffer[i]) ||
 								('\r' == rxBuffer[i]) ||
-								(  i  == rxBufPos   ))
+								('\0' == rxBuffer[i]))
 							{
 								cmdBuffer[i] = '\0'; break;
 							}
@@ -209,8 +268,21 @@ bool CmdMsgMgr::HandleInputData()
 							case 'B': //down
 								break;
 							case 'C': //right
+								if ('\0' != rxBuffer[rxBufPos])
+								{
+									txBuffer[txBufPos++] = rxBuffer[rxBufPos++];
+									inputMode = _INSERT;
+									continue;
+								}
 								break;
 							case 'D': //left
+								if (rxBufPos)
+								{
+									rxBufPos--;
+									txBuffer[txBufPos++] = '\b';
+									inputMode = _INSERT;
+									continue;
+								}
 								break;
 							case 'm': //SGR
 								break;
