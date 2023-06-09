@@ -13,9 +13,11 @@ extern "C" {
 
 #include "stddef.h"
 
-void* memcpy(void* dst, const void* src, size_t n);
+void* memcpy(void* dst, const void* src, size_t len);
 void* memset(void* b, int c, size_t len);
 
+char* strcpy(char* dst, const char* src);
+char* strncpy(char* dst, const char* src, size_t len);
 char* strcat(char* s1, const char* s2);
 char* strncat(char* s1, const char* s2, size_t n);
 int strcmp(const char* s1, const char* s2);
