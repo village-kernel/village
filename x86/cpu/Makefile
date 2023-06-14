@@ -8,7 +8,6 @@
 ######################################
 # libraries
 ######################################
-libs-y                       += crt0
 libs-y                       += hw
 
 ######################################
@@ -23,14 +22,15 @@ src-y                        += vk.hardware/x86/cpu/core/src
 ######################################
 # objects
 ######################################
+objs-bs-$(CONFIG_BOOTSECTION)    += boot.o
+
 ifneq ($(CONFIG_VKLIBC), y)
 objs-hw-y                        += syscalls.o
 objs-hw-y                        += sysmem.o
 endif
-
-objs-bs-$(CONFIG_BOOTSECTION)    += boot.o
-objs-crt0-y                      += startup.o
 objs-hw-y                        += i386.o
+objs-y                           += crt0.o
+objs-y                           += isr.o
 
 
 ######################################
