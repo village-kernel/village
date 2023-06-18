@@ -47,22 +47,22 @@ objs-y                                      += Scheduler.o
 objs-y                                      += System.o
 
 objs-$(CONFIG_LOADER)                       += Loader.o
-objs-$(CONFIG_EXECUTOR)                     += Executor.o
 objs-$(CONFIG_ENVIRONMENT)                  += Environment.o
 objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
-
-objs-$(CONFIG_FILESTREAM)                   += FileStream.o
-objs-$(CONFIG_INIPARSER)                    += iniParser.o
-objs-$(CONFIG_PINPARSER)                    += pinParser.o
-objs-$(CONFIG_RCPARSER)                     += rcParser.o
-objs-$(CONFIG_ELFPARSER)                    += ElfParser.o
-objs-$(CONFIG_REGEX)                        += Regex.o
 
 objs-$(CONFIG_CMD_ABOUT)                    += CmdAbout.o
 objs-$(CONFIG_CMD_HELP)                     += CmdHelp.o
 objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
+
+objs-$(CONFIG_FILESTREAM)                   += FileStream.o
+objs-$(CONFIG_INIPARSER)                    += iniParser.o
+objs-$(CONFIG_PINPARSER)                    += pinParser.o
+objs-$(CONFIG_RCPARSER)                     += rcParser.o
+objs-$(CONFIG_ELFPARSER)                    += ElfParser.o
+objs-$(CONFIG_EXECUTOR)                     += Executor.o
+objs-$(CONFIG_REGEX)                        += Regex.o
 
 
 #######################################
