@@ -53,7 +53,7 @@ void RcParser::Decode(const char* rcString)
 	int32_t startIndex = start_delimiter;
 	int32_t recordBytes = 0;
 	
-	for (int32_t i = 0; rcString[i] != '\0'; i++)
+	for (int32_t i = 0; ; i++)
 	{
 		char byte = rcString[i];
 
@@ -70,8 +70,10 @@ void RcParser::Decode(const char* rcString)
 
 			case '\r':
 				continue;
-				
+
 			case '\n':
+
+			case '\0':
 				if (_RecordCmd == status)
 					status = _SaveCmd;
 				else if (_NotRecord == status)
@@ -112,6 +114,9 @@ void RcParser::Decode(const char* rcString)
 				break;
 			}
 		}
+
+		//Ended decode
+		if ('\0' == byte) break;
 	}
 }
 
