@@ -43,18 +43,22 @@ APPS_DIR      := $(BUILD_DIR)/applications
 MODULES_DIR   := $(BUILD_DIR)/modules
 LIBRARIES_DIR := $(BUILD_DIR)/libraries
 
+# Rootfs path
+ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
+
 
 ######################################
 # include other makefile
 ######################################
 -include vk.application/Makefile
 -include vk.bootloader/Makefile
--include vk.filesystem/Makefile
--include vk.hardware/Makefile
--include vk.library/Makefile
--include vk.network/Makefile
 -include vk.kernel/Makefile
 -include vk.gui/Makefile
+-include vk.filesystem/Makefile
+-include vk.network/Makefile
+-include vk.library/Makefile
+-include vk.hardware/Makefile
+
 
 
 #######################################
@@ -202,21 +206,6 @@ $(BUILD_DIR)/$(TARGET)-bl.elf: $(objs-bl-y)
 
 
 #######################################
-# build the modules
-#######################################
-module: $(objs-m)
-ifneq ($(objs-m), )
-	$(Q)mkdir -p $(MODULES_DIR)
-	$(Q)$(MAKE) $(addprefix $(MODULES_DIR)/, $(objs-m:.o=.mo))
-endif
-
-$(MODULES_DIR)/%.mo: %.o
-	$(Q)echo Generating $(notdir $@)
-	$(Q)$(CXX) $(MLDFLAGS) $< -o $(@:.mo=.elf) $(LIBS)
-	$(Q)$(ST) -g -o $@ $(@:.mo=.elf)
-
-
-#######################################
 # build the kernel
 #######################################
 kernel: $(objs-y)
@@ -227,6 +216,22 @@ kernel: $(objs-y)
 $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 	$(Q)echo output $@
 	$(Q)$(CXX) $(KLDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(SZ) $@
+
+
+#######################################
+# build the modules
+#######################################
+module:
+	$(Q)mkdir -p $(MODULES_DIR)
+	$(Q)$(foreach object, $(objs-m), \
+		$(MAKE) $(object); \
+		$(MAKE) $(MODULES_DIR)/$(object:.o=.mo) objs="$(object)"; \
+	)
+
+$(MODULES_DIR)/%.mo: $(objs)
+	$(Q)echo output $@
+	$(Q)$(LD) -shared -fPIC $^ -o $@
 	$(Q)$(SZ) $@
 
 
@@ -256,6 +261,15 @@ osImage:
 #	$(Q)dd if=$(BUILD_DIR)/village-bl.bin     of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
 	$(Q)dd if=$(BUILD_DIR)/village-kernel.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
 
+
+#######################################
+# copy to rootfs
+#######################################
+rootfs:
+	$(Q)cp $(BUILD_DIR)/applications/*.exec $(ROOTFS_DIR)/applications
+	$(Q)cp $(BUILD_DIR)/libraries/*.so      $(ROOTFS_DIR)/libraries
+	$(Q)cp $(BUILD_DIR)/modules/*.mo        $(ROOTFS_DIR)/modules
+	
 
 #######################################
 # menuconfig
