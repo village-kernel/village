@@ -392,6 +392,16 @@ public:
 		}
 		return NULL;
 	}
+
+	/// @brief Release source
+	void Release()
+	{
+		for (Node* node = head; NULL != node; node = node->next)
+		{
+			delete node->obj;
+			delete node;
+		}
+	}
 };
  
 #endif //!__TEMPLATES_H__
