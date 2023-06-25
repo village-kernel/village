@@ -44,6 +44,8 @@ int Executor::Run(const char* path, int argc, char* argv[])
 /// @brief Executor execute app
 void Executor::Sandbox()
 {
+	elf.InitArray();
 	elf.Execute(NULL, argc, argv);
+	elf.FiniArray();
 	elf.Exit();
 }
