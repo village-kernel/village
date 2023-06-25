@@ -56,7 +56,7 @@ int ElfParser::LoadElf()
 
 		if (elf.load && (file.Read((uint8_t*)elf.load, size) == size))
 		{
-			console.info("%s load successful", filename);
+			console.debug("%s load successful", filename);
 			file.Close();
 			return _OK;
 		}
@@ -64,7 +64,7 @@ int ElfParser::LoadElf()
 		file.Close();
 	}
 
-	console.log("%s load failed", filename);
+	console.error("%s load failed", filename);
 	return _ERR;
 }
 
@@ -251,7 +251,7 @@ int ElfParser::PreParser()
 		}
 	}
 
-	console.info("%s pre parser successful", filename);
+	console.debug("%s pre parser successful", filename);
 	return _OK;
 }
 
@@ -284,7 +284,7 @@ int ElfParser::SegmentMapping()
 		}
 	}
 
-	console.info("%s section to segment mapping successful", filename);
+	console.debug("%s section to segment mapping successful", filename);
 	return _OK;
 }
 
@@ -327,7 +327,7 @@ int ElfParser::PostParser()
 		}
 	}
 
-	console.info("%s post parser successful", filename);
+	console.debug("%s post parser successful", filename);
 	return _OK;
 }
 
@@ -426,8 +426,7 @@ int ElfParser::RelEntries()
 					//Return when symAddr is 0
 					if (0 == symAddr) 
 					{
-						console.error("%s relocation %s not found.", filename, symName);
-						console.error("%s relocation elf failed", filename);
+						console.error("%s relocation symbols failed, symbol %s not found", filename, symName);
 						return _ERR;
 					}
 				}
@@ -436,13 +435,13 @@ int ElfParser::RelEntries()
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
-				console.log("%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
+				console.debug("%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
 					filename, symName, relAddr, symAddr);
 			}
 		}
 	}
 
-	console.info("%s relocation entries successful", filename);
+	console.debug("%s relocation entries successful", filename);
 	return _OK;
 }
 
