@@ -1,11 +1,11 @@
 //###########################################################################
-// Synchronize.h
+// SyncLock.h
 // Declarations of the functions that manage synchronization mechanism
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __SYNCHRONIZE_H__
-#define __SYNCHRONIZE_H__
+#ifndef __SYNC_LOCK_H__
+#define __SYNC_LOCK_H__
 
 #include "Defines.h"
 
@@ -57,4 +57,4 @@ public:
 	void Down();
 };
 
-#endif //!__SYNCHRONIZE_H__
+#endif //!__SYNC_LOCK_H__

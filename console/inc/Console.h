@@ -7,7 +7,7 @@
 #ifndef __CONSOLE_H__
 #define __CONSOLE_H__
 
-#include "Synchronize.h"
+#include "SyncLock.h"
 #include "CmdMsgMgr.h"
 #include "Module.h"
 #include "Regex.h"

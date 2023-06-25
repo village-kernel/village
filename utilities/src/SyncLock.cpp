@@ -1,10 +1,10 @@
 //###########################################################################
-// Synchronize.cpp
+// SyncLock.cpp
 // Definitions of the functions that manage synchronization mechanism
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Synchronize.h"
+#include "SyncLock.h"
 #include "Thread.h"
 
 

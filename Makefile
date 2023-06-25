@@ -6,6 +6,12 @@
 ############################################################################
 
 ######################################
+# libraries
+######################################
+libs-$(CONFIG_UTILITIES)                    += utils
+
+
+######################################
 # paths
 ######################################
 inc-y                                       += vk.kernel/kernel/if
@@ -40,7 +46,6 @@ objs-y                                      += Modular.o
 objs-y                                      += Device.o
 objs-y                                      += Memory.o
 objs-y                                      += Thread.o
-objs-y                                      += Synchronize.o
 
 objs-y                                      += Interrupt.o
 objs-y                                      += Scheduler.o
@@ -56,13 +61,14 @@ objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
-objs-$(CONFIG_FILESTREAM)                   += FileStream.o
-objs-$(CONFIG_INIPARSER)                    += iniParser.o
-objs-$(CONFIG_PINPARSER)                    += pinParser.o
-objs-$(CONFIG_RCPARSER)                     += rcParser.o
-objs-$(CONFIG_ELFPARSER)                    += ElfParser.o
-objs-$(CONFIG_EXECUTOR)                     += Executor.o
-objs-$(CONFIG_REGEX)                        += Regex.o
+objs-utils-$(CONFIG_SYNCLOCK)               += SyncLock.o
+objs-utils-$(CONFIG_FILESTREAM)             += FileStream.o
+objs-utils-$(CONFIG_INIPARSER)              += iniParser.o
+objs-utils-$(CONFIG_PINPARSER)              += pinParser.o
+objs-utils-$(CONFIG_RCPARSER)               += rcParser.o
+objs-utils-$(CONFIG_ELFPARSER)              += ElfParser.o
+objs-utils-$(CONFIG_EXECUTOR)               += Executor.o
+objs-utils-$(CONFIG_REGEX)                  += Regex.o
 
 
 #######################################
