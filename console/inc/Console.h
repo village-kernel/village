@@ -33,6 +33,7 @@ private:
 	Regex     regex;
 	CmdMsgMgr msgMgr;
 	char      data[buf_size];
+	bool      enaDebug;
 
 	//Methods
 	Console();
@@ -50,8 +51,9 @@ public:
 	void info(const char* format, ...);
 	void error(const char* format, ...);
 	void warn(const char* format, ...);
+	void debug(const char* format, ...);
 	void output(const char* format, ...);
-
+	
 	//Singleton Instance
 	static Console& Instance();
 };
