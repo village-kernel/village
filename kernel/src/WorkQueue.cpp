@@ -74,6 +74,7 @@ WorkQueue::Work* WorkQueue::Create(Function func, char* argv, uint32_t ticks)
 	if (NULL != work) works.Add(work);
 	return work;
 }
+EXPORT_SYMBOL(WorkQueue::Create, _ZN9WorkQueue6CreateEPFvPcES0_m);
 
 
 /// @brief WorkQueue delete
@@ -87,6 +88,7 @@ int WorkQueue::Delete(Work* work)
 	}
 	return _ERR;
 }
+EXPORT_SYMBOL(WorkQueue::Delete, _ZN9WorkQueue6DeleteEPNS_4WorkE);
 
 
 /// @brief WorkQueue schedule
@@ -101,6 +103,7 @@ int WorkQueue::Schedule(Work* work)
 	}
 	return _ERR;
 }
+EXPORT_SYMBOL(WorkQueue::Schedule, _ZN9WorkQueue8ScheduleEPNS_4WorkE);
 
 
 ///Register module
