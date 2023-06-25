@@ -43,6 +43,7 @@ Console& Console::Instance()
 	static Console instance;
 	return instance;
 }
+EXPORT_SYMBOL(Console::Instance, _ZN7Console8InstanceEv);
 
 
 /// @brief Definitions console and export
@@ -119,6 +120,7 @@ void Console::RegisterCmd(Cmd* cmd, char* name)
 {
 	cmds.InsertByName(cmd, name);
 }
+EXPORT_SYMBOL(Console::RegisterCmd, _ZN7Console11RegisterCmdEP3CmdPc);
 
 
 /// @brief Deregister cmd object
@@ -128,6 +130,7 @@ void Console::DeregisterCmd(Cmd* cmd, char* name)
 {
 	cmds.RemoveByName(cmd, name);
 }
+EXPORT_SYMBOL(Console::DeregisterCmd, _ZN7Console13DeregisterCmdEP3CmdPc);
 
 
 /// @brief Console log
@@ -146,6 +149,7 @@ void Console::log(const char* format, ...)
 	msgMgr.Execute();
 	mutex.Unlock();
 }
+EXPORT_SYMBOL(Console::log, _ZN7Console3logEPKcz);
 
 
 /// @brief Console info
@@ -164,6 +168,7 @@ void Console::info(const char* format, ...)
 	msgMgr.Execute();
 	mutex.Unlock();
 }
+EXPORT_SYMBOL(Console::info, _ZN7Console4infoEPKcz);
 
 
 /// @brief Console error
@@ -182,6 +187,7 @@ void Console::error(const char* format, ...)
 	msgMgr.Execute();
 	mutex.Unlock();
 }
+EXPORT_SYMBOL(Console::error, _ZN7Console5errorEPKcz);
 
 
 /// @brief Console warn
@@ -200,6 +206,7 @@ void Console::warn(const char* format, ...)
 	msgMgr.Execute();
 	mutex.Unlock();
 }
+EXPORT_SYMBOL(Console::warn, _ZN7Console4warnEPKcz);
 
 
 /// @brief Console output
@@ -217,6 +224,7 @@ void Console::output(const char* format, ...)
 	msgMgr.Execute();
 	mutex.Unlock();
 }
+EXPORT_SYMBOL(Console::output, _ZN7Console6outputEPKcz);
 
 
 ///Register module
