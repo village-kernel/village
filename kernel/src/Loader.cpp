@@ -22,7 +22,7 @@ void Loader::Loading(const char* filename)
 		ElfParser* elf = new ElfParser();
 		if (elf->Load(node->cmd) == Result::_OK)
 		{
-			elf->Execute();
+			elf->InitArray();
 		}
 	}
 
@@ -34,7 +34,7 @@ void Loader::Loading(const char* filename)
 /// @brief DrvLoader Initialize
 void DrvLoader::Initialize()
 {
-	Loading("driver.rc");
+	Loading("drivers/init.rc");
 }
 REGISTER_DRIVER(new DrvLoader(), DriverID::_drvLoadr, drvLoader);
 
@@ -42,6 +42,6 @@ REGISTER_DRIVER(new DrvLoader(), DriverID::_drvLoadr, drvLoader);
 /// @brief ModLoader Initialize
 void ModLoader::Initialize()
 {
-	Loading("init.rc");
+	Loading("modules/init.rc");
 }
 REGISTER_MODULE(new ModLoader(), ModuleID::_modLoader, modLoader);
