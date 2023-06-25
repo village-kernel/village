@@ -83,7 +83,7 @@ KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
 KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-m,elf_i386
-KLDFLAGS  += -Wl,-static
+KLDFLAGS  += -Wl,-static -pie
 
 # mod ld flags
 ifeq ($(CONFIG_VKLIBC), y)
@@ -91,11 +91,13 @@ MLDFLAGS  += $(MCU) -ffreestanding -nostdlib
 else
 MLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
 endif
-MLDFLAGS  += -T vk.scripts/ldscript/module.ld
 MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
-MLDFLAGS  += -Wl,-r -Wl,-Bsymbolic
+MLDFLAGS  += -Wl,-Bsymbolic
+MLDFLAGS  += -Wl,--gc-sections
 MLDFLAGS  += -Wl,--no-warn-rwx-segment
+MLDFLAGS  += -Wl,--unresolved-symbols=ignore-in-shared-libs
 MLDFLAGS  += -Wl,-m,elf_i386
+MLDFLAGS  += -pie
 
 # application ld flags
 ifeq ($(CONFIG_VKLIBC), y)
