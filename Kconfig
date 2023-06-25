@@ -33,6 +33,10 @@ config GENERATED_IMG
 	bool "generated os image"
 	default n
 
+config ROOTFS
+	string "rootfs path"
+	default "/Volumes/SD"
+
 endmenu
 
 menu "Application"
