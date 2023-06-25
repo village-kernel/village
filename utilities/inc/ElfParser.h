@@ -8,6 +8,7 @@
 #define __ELF_PARSER_H__
 
 #include "Defines.h"
+#include "Templates.h"
 
 ///ElfParser
 class ElfParser
@@ -57,8 +58,21 @@ private:
 		_R_386_NONE       = 0,
 		_R_386_32         = 1,
 		_R_386_PC32       = 2,
+		_R_386_GOT32      = 3,
+		_R_386_PLT32      = 4,
+		_R_386_COPY       = 5,
 		_R_386_GLOB_DAT   = 6,
 		_R_386_JMP_SLOT   = 7,
+		_R_386_RELATIVE   = 8,
+		_R_TYPE_RELATIVE  = _R_386_RELATIVE,
+		_R_386_GOTOFF     = 9,
+		_R_386_GOTPC      = 10,
+		_R_386_32PLT      = 11,
+		_R_386_16         = 20,
+		_R_386_PC16       = 21,
+		_R_386_8          = 22,
+		_R_386_PC8        = 23,
+		_R_386_SIZE32     = 38,
 	};
 #elif defined(ARCH_ARM)
 	enum RelocationCode
@@ -66,6 +80,8 @@ private:
 		_R_ARM_NONE       = 0,
 		_R_ARM_ABS32      = 2,
 		_R_ARM_THM_CALL   = 10,
+		_R_ARM_RELATIVE   = 23,
+		_R_TYPE_RELATIVE  = _R_ARM_RELATIVE,
 		_R_ARM_THM_JUMP24 = 30,
 		_R_ARM_TARGET1    = 38,
 		_R_ARM_THM_JUMP11 = 102,
@@ -272,18 +288,6 @@ private:
 		uint8_t*         strtab;
 		uint8_t*         shstrtab;
 	};
-
-	//Shared library
-	struct SharedLibrary
-	{
-		ElfParser*     so;
-		SharedLibrary* next;
-
-		SharedLibrary(ElfParser* so = NULL):
-			so(so),
-			next(NULL)
-		{}
-	};
 	
 	//Static constants members
 	static const uint32_t base_map_address =0x400000;
@@ -291,8 +295,8 @@ private:
 	const char* filename;
 
 	//Members
-	ELF           elf;
-	SharedLibrary libs;
+	ELF             elf;
+	List<ElfParser> sharedObjs;
 
 	//Methods
 	int LoadElf();
@@ -302,12 +306,16 @@ private:
 	int SharedObjs();
 	int RelEntries();
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
+#if defined(ARCH_ARM)
 	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
+#endif
 public:
 	//Methods
 	ElfParser(const char* filename = NULL);
 	int Load(const char* filename);
+	int InitArray();
 	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
+	int FiniArray();
 	int Exit();
 
 	//Tool methods

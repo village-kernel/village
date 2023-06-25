@@ -336,8 +336,6 @@ int ElfParser::PostParser()
 /// @return reuslt
 int ElfParser::SharedObjs()
 {
-	SharedLibrary* lib = &libs;
-
 	//Handler dynamic source
 	for (uint32_t i = 0; i < elf.dynsecNum; i++)
 	{
@@ -355,8 +353,7 @@ int ElfParser::SharedObjs()
 
 			if (_OK == so->Load(path))
 			{
-				lib->so = so;
-				lib = lib->next;
+				 sharedObjs.Add(so);
 			}
 			else
 			{
@@ -397,6 +394,9 @@ int ElfParser::RelEntries()
 				//Get relocation entry
 				RelocationEntry relEntry = reltab[n];
 
+				//Get symbol entry
+				SymbolEntry symEntry = elf.dynsym[relEntry.symbol];
+
 				//Get symbol entry name
 				const char* symName = GetDynSymName(relEntry.symbol);
 
@@ -404,22 +404,32 @@ int ElfParser::RelEntries()
 				uint32_t relAddr = elf.map + relEntry.offset;
 				uint32_t symAddr = 0;
 
-				//Searching for symbols in shared libraries
-				for (SharedLibrary* lib = &libs; NULL != lib; lib = lib->next)
+				//Calculate symbol entry when the relocation entry type is not relative
+				if (_R_TYPE_RELATIVE != relEntry.type)
 				{
-					symAddr = lib->so->GetDynSymAddrByName(symName);
-					if (0 != symAddr) break;
-				}
-				
-				//Get the address of undefined symbol entry
-				if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
+					//Get the address of object symbol entry
+					if (symEntry.shndx) symAddr = GetDynSymAddrByName(symName);
 
-				//Return when symAddr is 0
-				if (0 == symAddr) 
-				{
-					console.error("%s relocation %s not found.", filename, symName);
-					console.error("%s relocation elf failed", filename);
-					return _ERR;
+					//Get the address of undefined symbol entry
+					if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
+
+					//Searching for symbol entry in shared objects
+					if (0 == symAddr)
+					{
+						for (ElfParser* so = sharedObjs.Begin(); !sharedObjs.IsEnd(); so = sharedObjs.Next())
+						{
+							symAddr = so->GetDynSymAddrByName(symName);
+							if (0 != symAddr) break;
+						}
+					}
+
+					//Return when symAddr is 0
+					if (0 == symAddr) 
+					{
+						console.error("%s relocation %s not found.", filename, symName);
+						console.error("%s relocation elf failed", filename);
+						return _ERR;
+					}
 				}
 
 				//Relocation symbol entry
@@ -432,7 +442,7 @@ int ElfParser::RelEntries()
 		}
 	}
 
-	console.info("%s relocation dyn elf successful", filename);
+	console.info("%s relocation entries successful", filename);
 	return _OK;
 }
 
@@ -455,7 +465,16 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 		case _R_386_PC32:
 			*((uint32_t*)relAddr) += (symAddr - relAddr);
 			break;
-			
+
+		case _R_386_GOT32:
+			break;
+
+		case _R_386_PLT32:
+			break;
+
+		case _R_386_COPY:
+			break;
+
 		case _R_386_GLOB_DAT:
 			*((uint32_t*)relAddr) = symAddr;
 			break;
@@ -464,19 +483,36 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 			*((uint32_t*)relAddr) = symAddr;
 			break;
 
+		case _R_386_RELATIVE:
+			*((uint32_t*)relAddr) += elf.map;
+			break;
+		
+		case _R_386_GOTOFF:
+			break;
+		
+		case _R_386_GOTPC:
+			break;
+
+		case _R_386_32PLT:
+			break;
+
+		case _R_386_16:
+			break;
+
+		case _R_386_PC16:
+			break;
+
+		case _R_386_8:
+			break;
+
+		case _R_386_PC8:
+			break;
+
+		case _R_386_SIZE32:
+			break;
+
 		default: return 0;
 	}
-	return 0;
-}
-
-
-/// @brief Relocation thumb jump call 
-/// @param relAddr 
-/// @param symAddr 
-/// @param type 
-/// @return address
-int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
-{
 	return 0;
 }
 
@@ -552,6 +588,33 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 #endif
 
 
+/// @brief ElfParser init array
+/// @return result
+int ElfParser::InitArray()
+{
+	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
+	{
+		if (0 == strcmp(".init_array", GetSectionName(i)))
+		{
+			//Get init array
+			Function* funcs = GetDynSectionData(i).funcs;
+
+			//Calculate the size of init array
+			uint32_t size = elf.sections[i].size / sizeof(Function);
+
+			//Execute init array
+			for (uint32_t i = 0; i < size; i++)
+			{
+				(funcs[i])();
+			}
+
+			break;
+		}
+	}
+	return _OK;
+}
+
+
 /// @brief ElfParser execute symbol
 /// @param symbol 
 /// @return result
@@ -577,15 +640,38 @@ int ElfParser::Execute(const char* symbol, int argc, char* argv[])
 }
 
 
+/// @brief ElfParser fini array
+/// @return result
+int ElfParser::FiniArray()
+{
+	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
+	{
+		if (0 == strcmp(".fini_array", GetSectionName(i)))
+		{
+			//Get fini array
+			Function* funcs = GetDynSectionData(i).funcs;
+
+			//Calculate the size of fini array
+			uint32_t size = elf.sections[i].size / sizeof(Function);
+
+			//Execute fini array
+			for (uint32_t i = 0; i < size; i++)
+			{
+				(funcs[i])();
+			}
+
+			break;
+		}
+	}
+	return _OK;
+}
+
+
 /// @brief ElfParser exit
 /// @return result
 int ElfParser::Exit()
 {
-	for (SharedLibrary* lib = &libs; NULL != lib; lib = lib->next)
-	{
-		delete lib->so;
-		delete lib;
-	}
+	sharedObjs.Release();
 	delete[] (uint8_t*)elf.map;
 	return _OK;
 }
