@@ -9,7 +9,7 @@
 
 #include "ASCIIFont.h"
 #include "LcdDriver.h"
-#include "Synchronize.h"
+#include "SyncLock.h"
 
 ///Display
 class Display
@@ -77,12 +77,6 @@ public:
 	void ShowString(uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
 	void ShowPicture(uint8_t *picture, uint16_t x = 0, uint16_t y = 0, uint16_t width = 0, uint16_t height = 0);
 	void Printf(const char* format, ...);
-
-	//Singleton Instance
-	static Display& Instance();
 };
-
-///Declarations display reference
-extern Display& display;
 
 #endif //!__DISPLAY_H__

@@ -11,20 +11,9 @@
 
 ///Constructor
 Display::Display()
+	:lock(false)
 {
 }
-
-
-///Singleton instance
-Display& Display::Instance()
-{
-	static Display instance;
-	return instance;
-}
-
-
-//Definitions display
-Display& display = Display::Instance();
 
 
 ///Display Initialize
@@ -143,13 +132,13 @@ void Display::DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color)
 	while (xOffset <= yOffset)
 	{
 		DrawPoint(x + xOffset, y - yOffset);             //5
-		DrawPoint(x + yOffset, y - xOffset);             //0           
-		DrawPoint(x + yOffset, y + xOffset);             //4               
-		DrawPoint(x + xOffset, y + yOffset);             //6 
-		DrawPoint(x - xOffset, y + yOffset);             //1       
+		DrawPoint(x + yOffset, y - xOffset);             //0
+		DrawPoint(x + yOffset, y + xOffset);             //4
+		DrawPoint(x + xOffset, y + yOffset);             //6
+		DrawPoint(x - xOffset, y + yOffset);             //1
 		DrawPoint(x - yOffset, y + xOffset);             //3
-		DrawPoint(x - xOffset, y - yOffset);             //2             
-		DrawPoint(x - yOffset, y - xOffset);             //7     	         
+		DrawPoint(x - xOffset, y - yOffset);             //2
+		DrawPoint(x - yOffset, y - xOffset);             //7
 		xOffset++;
 		
 		if (nextPoint < 0)
