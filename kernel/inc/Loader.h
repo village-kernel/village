@@ -18,6 +18,16 @@ class Loader
 protected:
 	//Methods
 	void Loading(const char* filename);
+	void LibLoading(const char* filename);
+};
+
+
+///Libraries laoder
+class LibLoader : public Loader, public Module
+{
+public:
+	//Methods
+	void Initialize();
 };
 
 

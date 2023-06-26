@@ -26,7 +26,7 @@ enum DriverID
 {
 	_serial              = 1,
 	_storage             = 21,
-	_drvLoadr            = 41,
+	_drvLoader           = 41,
 	_display             = 61,
 	_network             = 81,
 	_usbdev              = 101,
@@ -39,8 +39,9 @@ enum DriverID
 enum ModuleID
 {
 	_console             = 1,
-	_modLoader           = 2,
-	_workQueue           = 3,
+	_libLoader           = 2,
+	_modLoader           = 3,
+	_workQueue           = 4,
 	_executor            = 21,
 	_application         = 101,
 };
