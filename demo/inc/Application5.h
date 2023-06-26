@@ -8,6 +8,7 @@
 #define __APPLICATION5_H__
 
 #include "Module.h"
+#include "WorkQueue.h"
 #include "GUI.h"
 
 
@@ -15,14 +16,19 @@
 class Application5 : public Module
 {
 private:
+	//Static constants
+	static const int work_delay = 10;
+
 	//Members
-	GUI     gui;
+	GUI              gui;
+	WorkQueue::Work* work;
+	uint8_t          keycode;
 
 	//Methods
 	void Test1();
 	void Test2();
 	void ExtHandler();
-	void PrintLetter(uint8_t scancode);
+	void PrintLetter();
 public:
 	//Methods
 	Application5();

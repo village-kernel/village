@@ -23,6 +23,8 @@ void Application5::Initialize()
 	gui.disp.Printf("hello vk.kernel\r\n");
 
 	interrupt.SetISR(33, union_cast<Function>(&Application5::ExtHandler), (char*)this);
+	work = workQueue.Create(union_cast<Function>(&Application5::PrintLetter), (char*)this, work_delay);
+
 	thread.CreateTaskCpp(this, (Method)&Application5::Test1);
 	thread.CreateTaskCpp(this, (Method)&Application5::Test2);
 }
@@ -68,19 +70,19 @@ void Application5::Test2()
 }
 
 
-///Ext handler
 void Application5::ExtHandler()
 {
 	/* The PIC leaves us the scancode in port 0x60 */
-	uint8_t scancode = PortByteIn(0x60);
-	gui.disp.Printf("\nKeyboard scancode: %d,", scancode);
-	PrintLetter(scancode);
+	keycode = PortByteIn(0x60);
+	workQueue.Schedule(work);
 }
 
 
-void Application5::PrintLetter(uint8_t scancode)
+void Application5::PrintLetter()
 {
-    switch (scancode) {
+	gui.disp.Printf("\nKeyboard scancode: %d,", keycode);
+
+    switch (keycode) {
         case 0x0:
             gui.disp.Printf((char*)"ERROR");
             break;
@@ -259,11 +261,12 @@ void Application5::PrintLetter(uint8_t scancode)
             /* 'keuyp' event corresponds to the 'keydown' + 0x80 
              * it may still be a scancode we haven't implemented yet, or
              * maybe a control/escape sequence */
-            if (scancode <= 0x7f) {
+            if (keycode <= 0x7f) {
                 gui.disp.Printf((char*)"Unknown key down");
-            } else if (scancode <= 0x39 + 0x80) {
+            } else if (keycode <= 0x39 + 0x80) {
                 gui.disp.Printf((char*)"key up ");
-                PrintLetter(scancode - 0x80);
+				keycode -= 0x80;
+                PrintLetter();
             } else gui.disp.Printf((char*)"Unknown key up");
             break;
     }
