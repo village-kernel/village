@@ -22,7 +22,6 @@ List<ElfParser> ElfParser::sharedObjs;
 /// @brief Constructor
 /// @param filename 
 ElfParser::ElfParser(const char* filename)
-	:filename(filename)
 {
 	if (NULL != filename) Load(filename);
 }
@@ -33,7 +32,9 @@ ElfParser::ElfParser(const char* filename)
 /// @return result
 int ElfParser::Load(const char* filename)
 {
-	this->filename = filename;
+	//Save filename in local
+	this->filename = new char[strlen(filename) + 1]();
+	strcpy(this->filename, filename);
 
 	if (LoadElf()         != _OK) return _ERR;
 	if (PreParser()       != _OK) return _ERR;
@@ -60,7 +61,7 @@ int ElfParser::LoadElf()
 
 		if (elf.load && (file.Read((uint8_t*)elf.load, size) == size))
 		{
-			console.debug("%s load successful", filename);
+			console.debug(_Debug_L1, "%s elf file load successful", filename);
 			file.Close();
 			return _OK;
 		}
@@ -68,7 +69,7 @@ int ElfParser::LoadElf()
 		file.Close();
 	}
 
-	console.error("%s load failed", filename);
+	console.error("%s elf file load failed", filename);
 	return _ERR;
 }
 
@@ -263,7 +264,7 @@ int ElfParser::PreParser()
 		}
 	}
 
-	console.debug("%s pre parser successful", filename);
+	console.debug(_Debug_L1, "%s pre parser successful", filename);
 	return _OK;
 }
 
@@ -296,7 +297,7 @@ int ElfParser::SegmentMapping()
 		}
 	}
 
-	console.debug("%s section to segment mapping successful", filename);
+	console.debug(_Debug_L1, "%s section to segment mapping successful", filename);
 	return _OK;
 }
 
@@ -339,13 +340,52 @@ int ElfParser::PostParser()
 		}
 	}
 
-	console.debug("%s post parser successful", filename);
+	console.debug(_Debug_L1, "%s post parser successful", filename);
+	return _OK;
+}
+
+
+/// @brief Load library
+/// @param filename 
+/// @return result
+int ElfParser::LoadLib(const char* filename)
+{
+	bool isLoaded = false;
+
+	//Check the shared object if it has been loaded
+	for (ElfParser* so = sharedObjs.Begin(); !sharedObjs.IsEnd(); so = sharedObjs.Next())
+	{
+		if (0 == strcmp(filename, so->GetFileName()))
+		{
+			isLoaded = true;
+			break;
+		}
+	}
+
+	//Loading shared object if it has not loaded
+	if (false == isLoaded)
+	{
+		ElfParser* so = new ElfParser();
+
+		if (_OK == so->Load(filename))
+		{
+			sharedObjs.Add(so);
+			console.debug(_Debug_L1, "%s library load successful", filename);
+			return _OK;
+		}
+		else
+		{
+			console.error("%s library load failed", filename);
+			return _ERR;
+		}
+	}
+
 	return _OK;
 }
 
 
 /// @brief Load shared objects
-/// @return reuslt
+/// @return result
 int ElfParser::SharedObjs()
 {
 	//Handler dynamic source
@@ -356,39 +396,21 @@ int ElfParser::SharedObjs()
 		if (_DT_NEEDED == dynamic.tag)
 		{
 			//Gets the shared object path
-			bool isLoaded = false;
 			const char* prefix = "libraries/";
 			const char* name = GetDynamicString(dynamic.val);
 			char* path = new char[strlen(prefix) + strlen(name) + 1]();
 			strcat(path, prefix);
 			strcat(path, name);
 
-			//Check the shared object if it has been loaded
-			for (ElfParser* so = sharedObjs.Begin(); !sharedObjs.IsEnd(); so = sharedObjs.Next())
+			//Load shared object lib
+			if (_OK != LoadLib(path))
 			{
-				if (0 == strcmp(path, so->GetFileName()))
-				{
-					isLoaded = true;
-					break;
-				}
+				console.error("%s load shared object %s failed", filename, path);
+				delete[] path;
+				return _ERR;
 			}
 
-			//Loading shared object if it has not loaded
-			if (false == isLoaded)
-			{
-				ElfParser* so = new ElfParser();
-
-				if (_OK == so->Load(path))
-				{
-					sharedObjs.Add(so);
-				}
-				else
-				{
-					console.error("%s load shared object %s failed", filename, path);
-					delete[] path;
-					return _ERR;
-				}
-			}
+			delete[] path;
 		}
 	}
 
@@ -461,13 +483,13 @@ int ElfParser::RelEntries()
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
-				console.debug("%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
+				console.debug(_Debug_L0, "%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
 					filename, symName, relAddr, symAddr);
 			}
 		}
 	}
 
-	console.debug("%s relocation entries successful", filename);
+	console.debug(_Debug_L1, "%s relocation entries successful", filename);
 	return _OK;
 }
 
@@ -696,7 +718,6 @@ int ElfParser::FiniArray()
 /// @return result
 int ElfParser::Exit()
 {
-	sharedObjs.Release();
 	delete[] filename;
 	delete[] (uint8_t*)elf.map;
 	return _OK;

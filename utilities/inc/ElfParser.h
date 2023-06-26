@@ -292,7 +292,7 @@ private:
 	//Static constants members
 	static const uint32_t base_map_address =0x400000;
 	static uint32_t mapAddr;
-	const char* filename;
+	char* filename;
 	
 	//Shared objects
 	static List<ElfParser> sharedObjs;
@@ -315,6 +315,7 @@ public:
 	//Methods
 	ElfParser(const char* filename = NULL);
 	int Load(const char* filename);
+	int LoadLib(const char* filename);
 	int InitArray();
 	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
 	int FiniArray();
