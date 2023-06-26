@@ -14,10 +14,12 @@ libs-y                       += hw
 # paths
 ######################################
 inc-y                        += vk.hardware/x86/cpu/gcc
-inc-y                        += vk.hardware/x86/cpu/core/inc
+inc-y                        += vk.hardware/x86/cpu/core
+inc-y                        += vk.hardware/x86/cpu/hw/inc
 
 src-y                        += vk.hardware/x86/cpu/gcc
-src-y                        += vk.hardware/x86/cpu/core/src
+src-y                        += vk.hardware/x86/cpu/core
+src-y                        += vk.hardware/x86/cpu/hw/src
 
 ######################################
 # objects
@@ -29,7 +31,9 @@ objs-hw-y                        += syscalls.o
 objs-hw-y                        += sysmem.o
 endif
 objs-hw-y                        += i386.o
+
 objs-y                           += crt0.o
+objs-y                           += init.o
 objs-y                           += isr.o
 
 
