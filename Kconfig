@@ -27,18 +27,18 @@ config APPLICATION6
 	default m
 
 config TAICHI
-	tristate "Add taichi to project"
+	bool "Add taichi to project"
 	default y
 
 config TERMINAL
-	tristate "Add terminal to project"
+	bool "Add terminal to project"
 	default y
 
 config LAUNCH
-	tristate "Add launch to project"
+	bool "Add launch to project"
 	default y
 
 config SETTINGS
-	tristate "Add settings to project"
+	bool "Add settings to project"
 	default y
 	

@@ -51,3 +51,4 @@ objs-settings-$(CONFIG_SETTINGS)     += Settings.o
 # applications
 ######################################
 libs-taichi-$(CONFIG_TAICHI)         += hw
+libs-launch-$(CONFIG_LAUNCH)         += c hw gui
