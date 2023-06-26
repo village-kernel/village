@@ -50,7 +50,7 @@ void RcParser::Decode(const char* rcString)
 
 	RunCmdNode** nextNode = &runcmds;
 	ParserStatus status = _RecordCmd;
-	int32_t startIndex = start_delimiter;
+	int32_t startIndex  = start_delimiter;
 	int32_t recordBytes = 0;
 	
 	for (int32_t i = 0; ; i++)
@@ -104,10 +104,11 @@ void RcParser::Decode(const char* rcString)
 				cmd[recordBytes] = '\0';
 
 				//Add cmd to run cmd list
-				*nextNode  = new RunCmdNode(cmd);
-				nextNode   = &(*nextNode)->next;
-				status     = _RecordCmd;
-				startIndex = start_delimiter;
+				*nextNode   = new RunCmdNode(cmd);
+				nextNode    = &(*nextNode)->next;
+				status      = _RecordCmd;
+				startIndex  = start_delimiter;
+				recordBytes = 0;
 			}
 			else
 			{
