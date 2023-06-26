@@ -15,6 +15,10 @@
 uint32_t ElfParser::mapAddr = ElfParser::base_map_address;
 
 
+/// @brief Initialize shared objects
+List<ElfParser> ElfParser::sharedObjs;
+
+
 /// @brief Constructor
 /// @param filename 
 ElfParser::ElfParser(const char* filename)
@@ -66,6 +70,14 @@ int ElfParser::LoadElf()
 
 	console.error("%s load failed", filename);
 	return _ERR;
+}
+
+
+/// @brief Get file name
+/// @return 
+const char* ElfParser::GetFileName()
+{
+	return filename;
 }
 
 
@@ -343,26 +355,40 @@ int ElfParser::SharedObjs()
 
 		if (_DT_NEEDED == dynamic.tag)
 		{
-			ElfParser* so = new ElfParser();
-			
+			//Gets the shared object path
+			bool isLoaded = false;
 			const char* prefix = "libraries/";
 			const char* name = GetDynamicString(dynamic.val);
 			char* path = new char[strlen(prefix) + strlen(name) + 1]();
 			strcat(path, prefix);
 			strcat(path, name);
 
-			if (_OK == so->Load(path))
+			//Check the shared object if it has been loaded
+			for (ElfParser* so = sharedObjs.Begin(); !sharedObjs.IsEnd(); so = sharedObjs.Next())
 			{
-				 sharedObjs.Add(so);
-			}
-			else
-			{
-				console.error("%s load shared object %s failed", filename, path);
-				delete[] path;
-				return _ERR;
+				if (0 == strcmp(path, so->GetFileName()))
+				{
+					isLoaded = true;
+					break;
+				}
 			}
 
-			delete[] path;
+			//Loading shared object if it has not loaded
+			if (false == isLoaded)
+			{
+				ElfParser* so = new ElfParser();
+
+				if (_OK == so->Load(path))
+				{
+					sharedObjs.Add(so);
+				}
+				else
+				{
+					console.error("%s load shared object %s failed", filename, path);
+					delete[] path;
+					return _ERR;
+				}
+			}
 		}
 	}
 
@@ -671,6 +697,7 @@ int ElfParser::FiniArray()
 int ElfParser::Exit()
 {
 	sharedObjs.Release();
+	delete[] filename;
 	delete[] (uint8_t*)elf.map;
 	return _OK;
 }

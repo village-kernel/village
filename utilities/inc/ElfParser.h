@@ -293,10 +293,12 @@ private:
 	static const uint32_t base_map_address =0x400000;
 	static uint32_t mapAddr;
 	const char* filename;
+	
+	//Shared objects
+	static List<ElfParser> sharedObjs;
 
 	//Members
-	ELF             elf;
-	List<ElfParser> sharedObjs;
+	ELF elf;
 
 	//Methods
 	int LoadElf();
@@ -319,6 +321,7 @@ public:
 	int Exit();
 
 	//Tool methods
+	const char* GetFileName();
 	const char* GetDynamicString(uint32_t index);
 	const char* GetSectionName(uint32_t index);
 	const char* GetSymbolName(uint32_t index);
