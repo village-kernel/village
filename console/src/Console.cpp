@@ -25,12 +25,8 @@ R"(                /____/                                         )",
 
 
 /// @brief Console constructor
-Console::Console() :
-#ifdef Debug
-	enaDebug(true)
-#else
-	enaDebug(false)
-#endif
+Console::Console()
+	:debugLevel(_Debug_L1)
 {
 }
 
@@ -214,28 +210,6 @@ void Console::warn(const char* format, ...)
 EXPORT_SYMBOL(Console::warn, _ZN7Console4warnEPKcz);
 
 
-/// @brief Console debug
-/// @param format 
-/// @param  
-void Console::debug(const char* format, ...)
-{
-	if (true == enaDebug)
-	{
-		mutex.Lock();
-		va_list arg;
-		va_start(arg, format);
-		vsprintf(data, format, arg);
-		va_end(arg);
-		msgMgr.Write((uint8_t*)"\033[36mDebug: ");
-		msgMgr.Write((uint8_t*)data);
-		msgMgr.Write((uint8_t*)"\r\n\033[39m");
-		msgMgr.Execute();
-		mutex.Unlock();
-	}
-}
-EXPORT_SYMBOL(Console::debug, _ZN7Console5debugEPKcz);
-
-
 /// @brief Console output
 /// @param format 
 /// @param  
@@ -252,6 +226,40 @@ void Console::output(const char* format, ...)
 	mutex.Unlock();
 }
 EXPORT_SYMBOL(Console::output, _ZN7Console6outputEPKcz);
+
+
+/// @brief Console debug
+/// @param format 
+/// @param  
+void Console::debug(int level, const char* format, ...)
+{
+	if (level >= debugLevel)
+	{
+		mutex.Lock();
+		va_list arg;
+		va_start(arg, format);
+		vsprintf(data, format, arg);
+		va_end(arg);
+		msgMgr.Write((uint8_t*)"\033[36mDebug: ");
+		msgMgr.Write((uint8_t*)data);
+		msgMgr.Write((uint8_t*)"\r\n\033[39m");
+		msgMgr.Execute();
+		mutex.Unlock();
+	}
+}
+EXPORT_SYMBOL(Console::debug, _ZN7Console5debugEiPKcz);
+
+
+/// @brief Console set debug level
+/// @param level 
+void Console::SetDebugLevel(int level)
+{
+	if (level <= _Debug_L5)
+	{
+		debugLevel = level;
+	}
+}
+EXPORT_SYMBOL(Console::SetDebugLevel, _ZN7Console13SetDebugLevelEi);
 
 
 ///Register module
