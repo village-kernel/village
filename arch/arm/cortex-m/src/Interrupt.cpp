@@ -74,6 +74,7 @@ int Interrupt::SetISR(int irq, Function func, char* argv)
 	ClearISR(irq);
 	return isrTabs[irq].Add(new Isr(irq, func, argv));
 }
+EXPORT_SYMBOL(Interrupt::SetISR, _ZN9Interrupt6SetISREiPFvPcES0_);
 
 
 /// @brief Interrupt append ISR
@@ -85,6 +86,7 @@ int Interrupt::AppendISR(int irq, Function func, char* argv)
 {
 	return isrTabs[irq].Add(new Isr(irq, func, argv));
 }
+EXPORT_SYMBOL(Interrupt::AppendISR, _ZN9Interrupt9AppendISREiPFvPcES0_);
 
 
 /// @brief Interrupt remove isr
@@ -110,6 +112,7 @@ int Interrupt::RemoveISR(int irq, Function func, char* argv)
 
 	return _ERR;
 }
+EXPORT_SYMBOL(Interrupt::RemoveISR, _ZN9Interrupt9RemoveISREiPFvPcES0_);
 
 
 /// @brief Interrupt clear isr
@@ -126,6 +129,8 @@ void Interrupt::ClearISR(int irq)
 
 	isrTabs[irq] = isrs;
 }
+EXPORT_SYMBOL(Interrupt::ClearISR, _ZN9Interrupt8ClearISREi);
+
 
 /// @brief Interrupt handler
 /// @param irq irq number
