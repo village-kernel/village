@@ -72,8 +72,6 @@ void RcParser::Decode(const char* rcString)
 				continue;
 
 			case '\n':
-
-			case '\0':
 				if (_RecordCmd == status)
 					status = _SaveCmd;
 				else if (_NotRecord == status)
@@ -83,8 +81,14 @@ void RcParser::Decode(const char* rcString)
 			default:
 				if (_RecordCmd == status)
 				{
-					if (start_delimiter == startIndex) startIndex = i;
-					if (byte > ' ' && byte <= '~') recordBytes++;
+					if (byte > ' ' && byte <= '~')
+					{
+						if (start_delimiter == startIndex)
+						{
+							startIndex = i;
+						}
+						recordBytes++;
+					}
 				}
 				break;
 		}
