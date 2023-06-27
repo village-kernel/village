@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Memory.h"
+#include "Debug.h"
 #include "Environment.h"
 
 
@@ -112,7 +113,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 		if (nextEndAddr <= nextNode->map.addr)
 		{
 			//Output debug info
-			printk("heap alloc: addr = 0x%08lx, size = %ld\r\n", nextMapAddr, nextMapSize);
+			debug.Output(Debug::_Lv0, "heap alloc: addr = 0x%08lx, size = %ld\r\n", nextMapAddr, nextMapSize);
 
 			//Update the used size of sram
 			sram_used += nextMapSize;
@@ -168,7 +169,7 @@ uint32_t Memory::StackAlloc(uint32_t size)
 		if (prevEndAddr >= prevNode->map.addr)
 		{
 			//Output debug info
-			printk("stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, prevMapSize);
+			debug.Output(Debug::_Lv0, "stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, prevMapSize);
 
 			//Update the used size of sram
 			sram_used += prevMapSize;
@@ -223,7 +224,7 @@ void Memory::Free(uint32_t memory, uint32_t size)
 			sram_used -= currNode->map.size;
 
 			//Output debug info
-			printk("free memory: addr: 0x%08lx, size: %ld\r\n",
+			debug.Output(Debug::_Lv0, "free memory: addr: 0x%08lx, size: %ld\r\n",
 			currNode->map.addr, currNode->map.size);
 
 			break;
@@ -245,7 +246,7 @@ uint32_t Memory::Sbrk(int32_t incr)
 	//Protect heap from growing into the reserved MSP stack
 	if (sbrk_heap + incr > sram_start)
 	{
-		printk("error: out of memory.\r\n");
+		debug.Output(Debug::_Lv0, "error: out of memory.\r\n");
 		//halt on here
 		while(1) {}
 	}
