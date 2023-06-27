@@ -4,10 +4,10 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
-#include "console.h"
 #include "ElfParser.h"
 #include "FileStream.h"
+#include "Environment.h"
+#include "Debug.h"
 #include "string.h"
 
 
