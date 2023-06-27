@@ -7,16 +7,13 @@
 #include "ElfParser.h"
 #include "FileStream.h"
 #include "Environment.h"
+#include "LibManager.h"
 #include "Debug.h"
 #include "string.h"
 
 
 /// @brief Initialize map address
 uint32_t ElfParser::mapAddr = ElfParser::base_map_address;
-
-
-/// @brief Initialize shared objects
-List<ElfParser> ElfParser::sharedObjs;
 
 
 /// @brief Constructor
@@ -346,45 +343,6 @@ int ElfParser::PostParser()
 }
 
 
-/// @brief Load library
-/// @param filename 
-/// @return result
-int ElfParser::LoadLib(const char* filename)
-{
-	bool isLoaded = false;
-
-	//Check the shared object if it has been loaded
-	for (ElfParser* so = sharedObjs.Begin(); !sharedObjs.IsEnd(); so = sharedObjs.Next())
-	{
-		if (0 == strcmp(filename, so->GetFileName()))
-		{
-			isLoaded = true;
-			break;
-		}
-	}
-
-	//Loading shared object if it has not loaded
-	if (false == isLoaded)
-	{
-		ElfParser* so = new ElfParser();
-
-		if (_OK == so->Load(filename))
-		{
-			sharedObjs.Add(so);
-			debug.Output(Debug::_Lv1, "%s library load successful", filename);
-			return _OK;
-		}
-		else
-		{
-			debug.Error("%s library load failed", filename);
-			return _ERR;
-		}
-	}
-
-	return _OK;
-}
-
-
 /// @brief Load shared objects
 /// @return result
 int ElfParser::SharedObjs()
@@ -404,7 +362,7 @@ int ElfParser::SharedObjs()
 			strcat(path, name);
 
 			//Load shared object lib
-			if (_OK != LoadLib(path))
+			if (_OK != LibManager().Install(path))
 			{
 				debug.Error("%s load shared object %s failed", filename, path);
 				delete[] path;
@@ -463,14 +421,7 @@ int ElfParser::RelEntries()
 					if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
 
 					//Searching for symbol entry in shared objects
-					if (0 == symAddr)
-					{
-						for (ElfParser* so = sharedObjs.Begin(); !sharedObjs.IsEnd(); so = sharedObjs.Next())
-						{
-							symAddr = so->GetDynSymAddrByName(symName);
-							if (0 != symAddr) break;
-						}
-					}
+					if (0 == symAddr) symAddr = LibManager().SearchSymbol(symName);
 
 					//Return when symAddr is 0
 					if (0 == symAddr) 
