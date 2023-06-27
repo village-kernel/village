@@ -116,9 +116,14 @@ config EXECUTOR
 	bool "Enable execute program function"
 	default n
 
-config MODINSTALLER
+config LIBMANAGER
 	depends on UTILITIES
-	bool "Enable module installer function"
+	bool "Enable library manager function"
+	default n
+
+config MODMANAGER
+	depends on UTILITIES
+	bool "Enable module manager function"
 	default n
 
 config REGEX

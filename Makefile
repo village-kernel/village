@@ -70,7 +70,8 @@ objs-utils-$(CONFIG_PINPARSER)              += pinParser.o
 objs-utils-$(CONFIG_RCPARSER)               += rcParser.o
 objs-utils-$(CONFIG_ELFPARSER)              += ElfParser.o
 objs-utils-$(CONFIG_EXECUTOR)               += Executor.o
-objs-utils-$(CONFIG_MODINSTALLER)           += ModInstaller.o
+objs-utils-$(CONFIG_LIBMANAGER)             += LibManager.o
+objs-utils-$(CONFIG_MODMANAGER)             += ModManager.o
 objs-utils-$(CONFIG_REGEX)                  += Regex.o
 
 
