@@ -10,6 +10,7 @@
 
 /// @brief Constructor
 Device::Device()
+	:isRuntime(false)
 {
 }
 
@@ -56,6 +57,13 @@ void Device::UpdateParams()
 }
 
 
+/// @brief Device execute
+void Device::Execute()
+{
+	isRuntime = true;
+}
+
+
 /// @brief Execute device object->FailSafe
 void Device::FailSafe(int arg)
 {
@@ -66,14 +74,36 @@ void Device::FailSafe(int arg)
 }
 
 
+/// @brief Register runtime
+/// @param module 
+void Device::RegisterRuntime(Driver* driver)
+{
+	if (true == isRuntime)
+	{
+		driver->Initialize();
+		driver->UpdateParams();
+	}
+}
+
+
 /// @brief Register driver object
 /// @param driver driver pointer
 /// @param id driver id
 void Device::RegisterDriver(Driver* driver, uint32_t id)
 {
 	drivers.Insert(driver, id);
+	RegisterRuntime(driver);
 }
 EXPORT_SYMBOL(Device::RegisterDriver, _ZN6Device14RegisterDriverEP6Driverm);
+
+
+
+/// @brief Deregister exit
+/// @param driver 
+void Device::DeregisterExit(Driver* driver)
+{
+	driver->Exit();
+}
 
 
 /// @brief Deregister driver object
