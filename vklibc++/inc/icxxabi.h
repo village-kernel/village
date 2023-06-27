@@ -48,6 +48,11 @@ extern "C" void __cxa_guard_abort (__guard *)
 
 }
 
+extern "C" void __cxa_pure_virtual ()
+{
+	
+}
+
 #ifdef __cplusplus
 };
 #endif
