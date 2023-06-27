@@ -66,6 +66,9 @@ void Kernel::UpdateParams()
 /// @brief Execute thread tasks 
 void Kernel::Execute()
 {
+	//Execute device
+	device.Execute();
+
 	//Execute modular
 	modular.Execute();
 
