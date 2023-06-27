@@ -40,6 +40,9 @@ void Kernel::Initialize()
 	//Initialize scheduler
 	scheduler.Initialize();
 
+	//Initialize loader
+	loader.Initialize();
+
 	//Initialize device
 	device.Initialize();
 

@@ -4,13 +4,72 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
 #include "Loader.h"
+#include "rcParser.h"
+#include "ElfParser.h"
+#include "Environment.h"
 
 
-/// @brief Loader load
+/// @brief Constructor
+Loader::Loader()
+{
+}
+
+
+/// @brief Deconstructor
+Loader::~Loader()
+{
+}
+
+
+/// @brief Singleton Instance
+/// @return Loader instance
+Loader& Loader::Instance()
+{
+	static Loader instance;
+	return instance;
+}
+EXPORT_SYMBOL(Loader::Instance, _ZN6Loader8InstanceEv);
+
+
+/// @brief Definitions loader
+Loader& loader = Loader::Instance();
+static Loader* ploader = &loader;
+EXPORT_SYMBOL(ploader, loader);
+
+
+/// @brief Loader initialize
+void Loader::Initialize()
+{
+	LoadingLib("libraries/init.rc");
+	LoadingMod("drivers/init.rc");
+	LoadingMod("modules/init.rc");
+}
+
+
+/// @brief Loader load lib
 /// @param filename rc file path
-void Loader::Loading(const char* filename)
+void Loader::LoadingLib(const char* filename)
+{
+	//Load rc file
+	RcParser* rc = new RcParser(filename);
+
+	//Load, parser and execute init array
+	RcParser::RunCmdNode* node = rc->GetRunCmds();
+	for (; NULL != node; node = node->next)
+	{
+		ElfParser* elf = new ElfParser();
+		if (Result::_OK != elf->LoadLib(node->cmd)) break;
+	}
+
+	//Release resource
+	rc->Release();
+}
+
+
+/// @brief Loader load module
+/// @param filename rc file path
+void Loader::LoadingMod(const char* filename)
 {
 	//Load rc file
 	RcParser* rc = new RcParser(filename);
@@ -29,47 +88,3 @@ void Loader::Loading(const char* filename)
 	//Release resource
 	rc->Release();
 }
-
-
-/// @brief Loader load
-/// @param filename rc file path
-void Loader::LibLoading(const char* filename)
-{
-	//Load rc file
-	RcParser* rc = new RcParser(filename);
-
-	//Load, parser and execute init array
-	RcParser::RunCmdNode* node = rc->GetRunCmds();
-	for (; NULL != node; node = node->next)
-	{
-		ElfParser* elf = new ElfParser();
-		if (Result::_OK != elf->LoadLib(node->cmd)) break;
-	}
-
-	//Release resource
-	rc->Release();
-}
-
-
-/// @brief LibLoader Initialize
-void LibLoader::Initialize()
-{
-	LibLoading("libraries/init.rc");
-}
-REGISTER_MODULE(new LibLoader(), ModuleID::_libLoader, libLoader);
-
-
-/// @brief DrvLoader Initialize
-void DrvLoader::Initialize()
-{
-	Loading("drivers/init.rc");
-}
-REGISTER_DRIVER(new DrvLoader(), DriverID::_drvLoader, drvLoader);
-
-
-/// @brief ModLoader Initialize
-void ModLoader::Initialize()
-{
-	Loading("modules/init.rc");
-}
-REGISTER_MODULE(new ModLoader(), ModuleID::_modLoader, modLoader);

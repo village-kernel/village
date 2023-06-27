@@ -10,6 +10,7 @@
 #include "Thread.h"
 #include "Scheduler.h"
 #include "Memory.h"
+#include "Loader.h"
 #include "Modular.h"
 #include "Device.h"
 #include "Interrupt.h"

@@ -7,45 +7,26 @@
 #ifndef __LOADER_H__
 #define __LOADER_H__
 
-#include "Module.h"
-#include "rcParser.h"
-#include "ElfParser.h"
-
+#include "Templates.h"
 
 ///Loader
 class Loader
 {
-protected:
+private:
 	//Methods
-	void Loading(const char* filename);
-	void LibLoading(const char* filename);
-};
-
-
-///Libraries laoder
-class LibLoader : public Loader, public Module
-{
+	Loader();
+	~Loader();
+	void LoadingLib(const char* filename);
+	void LoadingMod(const char* filename);
 public:
 	//Methods
 	void Initialize();
+
+	//Singleton Instance
+	static Loader& Instance();
 };
 
-
-///Drivers laoder
-class DrvLoader : public Loader, public Driver
-{
-public:
-	//Methods
-	void Initialize();
-};
-
-
-///Module loader
-class ModLoader : public Loader, public Module
-{
-public:
-	//Methods
-	void Initialize();
-};
+///Declarations loader reference
+extern Loader& loader;
 
 #endif //!__LOADER_H__
