@@ -26,7 +26,6 @@ R"(                /____/                                         )",
 
 /// @brief Console constructor
 Console::Console()
-	:debugLevel(_Debug_L1)
 {
 }
 
@@ -71,12 +70,10 @@ void Console::Initialize()
 	{	
 		msgMgr.Write((uint8_t*)vk_welcome[i]);
 		msgMgr.Write((uint8_t*)"\r\n");
-		msgMgr.Execute();
 	}
 
 	//Output console symbol
 	msgMgr.Write((uint8_t*)"# ");
-	msgMgr.Execute();
 }
 
 
@@ -97,10 +94,12 @@ void Console::Execute()
 /// @param msg recevice message data
 void Console::ExecuteCmd(CmdMsg msg)
 {
+	msgMgr.Write((uint8_t*)"\r\n");
+
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
 		if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
-		{
+		{		
 			regex.Split((const char*)msg.args);
 			cmd->Execute(regex.Size(), regex.ToArray());
 			regex.Clear();
@@ -137,7 +136,7 @@ EXPORT_SYMBOL(Console::DeregisterCmd, _ZN7Console13DeregisterCmdEP3CmdPc);
 /// @brief Console log
 /// @param format 
 /// @param  
-void Console::log(const char* format, ...)
+void Console::Log(const char* format, ...)
 {
 	mutex.Lock();
 	va_list arg;
@@ -147,16 +146,15 @@ void Console::log(const char* format, ...)
 	msgMgr.Write((uint8_t*)"Log: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n");
-	msgMgr.Execute();
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::log, _ZN7Console3logEPKcz);
+EXPORT_SYMBOL(Console::Log, _ZN7Console3LogEPKcz);
 
 
 /// @brief Console info
 /// @param format 
 /// @param  
-void Console::info(const char* format, ...)
+void Console::Info(const char* format, ...)
 {
 	mutex.Lock();
 	va_list arg;
@@ -166,16 +164,15 @@ void Console::info(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\033[36mInfo: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
-	msgMgr.Execute();
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::info, _ZN7Console4infoEPKcz);
+EXPORT_SYMBOL(Console::Info, _ZN7Console4InfoEPKcz);
 
 
 /// @brief Console error
 /// @param format 
 /// @param  
-void Console::error(const char* format, ...)
+void Console::Error(const char* format, ...)
 {
 	mutex.Lock();
 	va_list arg;
@@ -185,16 +182,15 @@ void Console::error(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\033[31mError: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
-	msgMgr.Execute();
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::error, _ZN7Console5errorEPKcz);
+EXPORT_SYMBOL(Console::Error, _ZN7Console5ErrorEPKcz);
 
 
 /// @brief Console warn
 /// @param format 
 /// @param  
-void Console::warn(const char* format, ...)
+void Console::Warn(const char* format, ...)
 {
 	mutex.Lock();
 	va_list arg;
@@ -204,16 +200,15 @@ void Console::warn(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\033[33mWarning: ");
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
-	msgMgr.Execute();
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::warn, _ZN7Console4warnEPKcz);
+EXPORT_SYMBOL(Console::Warn, _ZN7Console4WarnEPKcz);
 
 
 /// @brief Console output
 /// @param format 
 /// @param  
-void Console::output(const char* format, ...)
+void Console::Output(const char* format, ...)
 {
 	mutex.Lock();
 	va_list arg;
@@ -222,44 +217,9 @@ void Console::output(const char* format, ...)
 	va_end(arg);
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n");
-	msgMgr.Execute();
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::output, _ZN7Console6outputEPKcz);
-
-
-/// @brief Console debug
-/// @param format 
-/// @param  
-void Console::debug(int level, const char* format, ...)
-{
-	if (level >= debugLevel)
-	{
-		mutex.Lock();
-		va_list arg;
-		va_start(arg, format);
-		vsprintf(data, format, arg);
-		va_end(arg);
-		msgMgr.Write((uint8_t*)"\033[36mDebug: ");
-		msgMgr.Write((uint8_t*)data);
-		msgMgr.Write((uint8_t*)"\r\n\033[39m");
-		msgMgr.Execute();
-		mutex.Unlock();
-	}
-}
-EXPORT_SYMBOL(Console::debug, _ZN7Console5debugEiPKcz);
-
-
-/// @brief Console set debug level
-/// @param level 
-void Console::SetDebugLevel(int level)
-{
-	if (level <= _Debug_L5)
-	{
-		debugLevel = level;
-	}
-}
-EXPORT_SYMBOL(Console::SetDebugLevel, _ZN7Console13SetDebugLevelEi);
+EXPORT_SYMBOL(Console::Output, _ZN7Console6OutputEPKcz);
 
 
 ///Register module

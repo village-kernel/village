@@ -25,6 +25,7 @@ CmdMsgMgr::CmdMsgMgr()
 void CmdMsgMgr::Initialize()
 {
 	transceiver = device.GetDriver(DriverID::_serial);
+	if (NULL != transceiver) transceiver->Initialize();
 }
 
 
@@ -54,6 +55,8 @@ void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 	{
 		txBuffer[txBufPos++] = msg[i];
 	}
+
+	if (txBufPos && transceiver->Write(txBuffer, txBufPos)) txBufPos = 0;
 }
 
 
@@ -252,10 +255,6 @@ bool CmdMsgMgr::HandleInputData()
 					//ASCII CR
 					else if (0x0d == byte)
 					{
-						//Enter and new line
-						txBuffer[txBufPos++] = '\r';
-						txBuffer[txBufPos++] = '\n';
-
 						//Check rxBuffer length
 						if (strlen((const char*)rxBuffer) <= 0) return false;
 

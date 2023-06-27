@@ -22,7 +22,7 @@ void CmdRun::Execute(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		console.output("Usage: run [program] <arg1> <arg2> <...>");
+		console.Output("Usage: run [program] <arg1> <arg2> <...>");
 		return;
 	}
 	executor.Run(argv[1], argc, argv);

@@ -18,7 +18,7 @@ void CmdAbout::Initialize()
 ///Cmd about execute
 void CmdAbout::Execute(int argc, char* argv[])
 {
-	console.output("vk.kernel 0.0.1(beta), Copyright (C) village.\r\n");
+	console.Output("vk.kernel 0.0.1(beta), Copyright (C) village.");
 }
 
 

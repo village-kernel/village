@@ -19,16 +19,6 @@
 ///Command register macro
 #define REGISTER_CMD(cmd, name)  CREATE_CMD(Console::Instance().RegisterCmd(cmd, (char*)#name), name)
 
-//Debug level
-enum DebugLevel
-{
-	_Debug_L0 = 0,
-	_Debug_L1,
-	_Debug_L2,
-	_Debug_L3,
-	_Debug_L4,
-	_Debug_L5
-};
 
 ///Console
 class Console : public Module
@@ -43,7 +33,6 @@ private:
 	Regex     regex;
 	CmdMsgMgr msgMgr;
 	char      data[buf_size];
-	int       debugLevel;
 
 	//Methods
 	Console();
@@ -57,16 +46,11 @@ public:
 	void DeregisterCmd(Cmd* cmd, char* name);
 
 	//Methods
-	void log(const char* format, ...);
-	void info(const char* format, ...);
-	void error(const char* format, ...);
-	void warn(const char* format, ...);
-	void output(const char* format, ...);
-	
-	
-	//Debug methods
-	void debug(int level, const char* format, ...);
-	void SetDebugLevel(int level);
+	void Log(const char* format, ...);
+	void Info(const char* format, ...);
+	void Error(const char* format, ...);
+	void Warn(const char* format, ...);
+	void Output(const char* format, ...);
 	
 	//Singleton Instance
 	static Console& Instance();

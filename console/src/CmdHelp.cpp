@@ -18,7 +18,7 @@ void CmdHelp::Initialize()
 ///Cmd help execute
 void CmdHelp::Execute(int argc, char* argv[])
 {
-	console.output("help: about\r\n");
+	console.Output("help: about");
 }
 
 
