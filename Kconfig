@@ -30,6 +30,12 @@ config CMD_RUN
 	bool "Add run cmd to console support list"
 	default n
 
+config CMD_MOD
+	depends on CONSOLE
+	select MODINSTALLER
+	bool "Add insmod and rmmod cmd to console support list"
+	default n
+
 endmenu
 
 # config kernel menu
@@ -108,6 +114,11 @@ config ELFPARSER
 config EXECUTOR
 	depends on UTILITIES
 	bool "Enable execute program function"
+	default n
+
+config MODINSTALLER
+	depends on UTILITIES
+	bool "Enable module installer function"
 	default n
 
 config REGEX

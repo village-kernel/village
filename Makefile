@@ -59,6 +59,7 @@ objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
 objs-$(CONFIG_CMD_ABOUT)                    += CmdAbout.o
 objs-$(CONFIG_CMD_HELP)                     += CmdHelp.o
 objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
+objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
@@ -69,6 +70,7 @@ objs-utils-$(CONFIG_PINPARSER)              += pinParser.o
 objs-utils-$(CONFIG_RCPARSER)               += rcParser.o
 objs-utils-$(CONFIG_ELFPARSER)              += ElfParser.o
 objs-utils-$(CONFIG_EXECUTOR)               += Executor.o
+objs-utils-$(CONFIG_MODINSTALLER)           += ModInstaller.o
 objs-utils-$(CONFIG_REGEX)                  += Regex.o
 
 
