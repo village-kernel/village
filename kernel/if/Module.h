@@ -13,9 +13,12 @@
 ///Module
 class Module : public Class
 {
+private:
+	//Members
+	int pid;    //Process thread id
 public:
 	//Constructor
-	Module() {}
+	Module(): pid(-1) {}
 
 	//Deconstructor
 	virtual ~Module() {}
@@ -25,6 +28,9 @@ public:
 	virtual void UpdateParams()     {}
 	virtual void Execute()          {}
 	virtual void FailSafe(int arg)  {}
+	virtual void Exit()             {}
+	virtual void SetPid(int pid)    { this->pid = pid; }
+	virtual int  GetPid()           { return this->pid; }
 };
 
 #endif // !__MODULE_INTERFACE_H__
