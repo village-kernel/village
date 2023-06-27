@@ -10,25 +10,20 @@
 #include "Module.h"
 #include "Templates.h"
 
-///Module section, avoid being optimized by the compiler
-#define MODULE_SECTION                 __attribute__((used,__section__(".modules")))
-
-///Module create macro
-#define CREATE_MODULE(mod, name)       static struct _Mod_##name{_Mod_##name(){mod;}} const _mod_##name
-
-///Module register macro
-#define REGISTER_MODULE(mod, id, name) CREATE_MODULE(Modular::Instance().RegisterModule(mod, id), name) MODULE_SECTION
 
 ///Modular
 class Modular
 {
 private:
 	//Members
+	bool isRuntime;
 	List<Module> modules;
 
 	//Methods
 	Modular();
 	~Modular();
+	void RegisterRuntime(Module* module);
+	void DeregisterExit(Module* module);
 	static void Handler(Module* module);
 public:
 	//Methods

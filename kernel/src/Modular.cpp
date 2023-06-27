@@ -11,6 +11,7 @@
 
 /// @brief Constructor
 Modular::Modular()
+	:isRuntime(false)
 {
 }
 
@@ -60,8 +61,9 @@ void Modular::Execute()
 {
 	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		thread.CreateTask((Function)&Modular::Handler, (char*)(module));
+		module->SetPid(thread.CreateTask((Function)&Modular::Handler, (char*)(module)));
 	}
+	isRuntime = true;
 }
 
 
@@ -85,14 +87,37 @@ void Modular::FailSafe(int arg)
 }
 
 
+/// @brief Register runtime
+/// @param module 
+void Modular::RegisterRuntime(Module* module)
+{
+	if (true == isRuntime)
+	{
+		module->Initialize();
+		module->UpdateParams();
+		module->SetPid(thread.CreateTask((Function)&Modular::Handler, (char*)(module)));
+	}
+}
+
+
 /// @brief Register module object
 /// @param module module pointer
 /// @param id module id
 void Modular::RegisterModule(Module* module, uint32_t id)
 {
 	modules.Insert(module, id);
+	RegisterRuntime(module);
 }
 EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
+
+
+/// @brief Deregister exit
+/// @param module 
+void Modular::DeregisterExit(Module* module)
+{
+	module->Exit();
+	thread.DeleteTask(module->GetPid());
+}
 
 
 /// @brief Deregister module object
@@ -100,6 +125,7 @@ EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
 /// @param id module id
 void Modular::DeregisterModule(Module* module, uint32_t id)
 {
+	DeregisterExit(module);
 	modules.Remove(module, id);
 }
 EXPORT_SYMBOL(Modular::DeregisterModule, _ZN7Modular16DeregisterModuleEP6Modulem);
