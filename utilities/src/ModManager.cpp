@@ -1,26 +1,26 @@
 //###########################################################################
-// ModInstaller.cpp
-// Definitions of the functions that manage module installer
+// ModManager.cpp
+// Definitions of the functions that manage module
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
 #include "Debug.h"
-#include "ModInstaller.h"
+#include "ModManager.h"
 
 
 /// @brief Initialize modules
-List<ElfParser> ModInstaller::modules;
+List<ElfParser> ModManager::modules;
 
 
 /// @brief Constructor
-ModInstaller::ModInstaller()
+ModManager::ModManager()
 {
 }
 
 
 /// @brief Deconstructor
-ModInstaller::~ModInstaller()
+ModManager::~ModManager()
 {
 }
 
@@ -28,17 +28,17 @@ ModInstaller::~ModInstaller()
 /// @brief Module installer
 /// @param module 
 /// @return result
-bool ModInstaller::Install(const char* module)
+bool ModManager::Install(const char* filename)
 {
 	bool isInstalled = false;
 
 	//Check the module if it has been installed
 	for (ElfParser* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
 	{
-		if (0 == strcmp(module, mod->GetFileName()))
+		if (0 == strcmp(filename, mod->GetFileName()))
 		{
 			isInstalled = true;
-			debug.Output(Debug::_Lv2, "%s module has already been installed", module);
+			debug.Output(Debug::_Lv2, "%s module has already been installed", filename);
 			break;
 		}
 	}
@@ -48,16 +48,16 @@ bool ModInstaller::Install(const char* module)
 	{
 		ElfParser* mod = new ElfParser();
 
-		if (_OK == mod->Load(module))
+		if (_OK == mod->Load(filename))
 		{
 			modules.Add(mod);
 			mod->InitArray();
-			debug.Output(Debug::_Lv2, "%s module install successful", module);
+			debug.Output(Debug::_Lv2, "%s module install successful", filename);
 			return _OK;
 		}
 		else
 		{
-			debug.Error("%s module install failed", module);
+			debug.Error("%s module install failed", filename);
 			return _ERR;
 		}
 	}
@@ -69,19 +69,19 @@ bool ModInstaller::Install(const char* module)
 /// @brief Module uninstaller
 /// @param module 
 /// @return 
-bool ModInstaller::Uninstall(const char* module)
+bool ModManager::Uninstall(const char* filename)
 {
 	for (ElfParser* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
 	{
-		if (0 == strcmp(module, mod->GetFileName()))
+		if (0 == strcmp(filename, mod->GetFileName()))
 		{
 			mod->FiniArray();
 			modules.Remove(mod);
-			debug.Output(Debug::_Lv2, "%s module uninstall successful", module);
+			debug.Output(Debug::_Lv2, "%s module uninstall successful", filename);
 			return _OK;	
 		}
 	}
 
-	debug.Error("%s module not found", module);
+	debug.Error("%s module not found", filename);
 	return _ERR;
 }
