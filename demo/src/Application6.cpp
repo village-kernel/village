@@ -20,7 +20,7 @@ void Application6::Initialize()
 {
 	char data[] = "hello module init";
 
-	console.output(data);
+	console.Output(data);
 }
 
 
@@ -31,7 +31,7 @@ void Application6::Execute()
 
 	for (int i = 0; i < 5; i++)
 	{
-		console.output(data);
+		console.Output(data);
 		thread.Sleep(1000);
 	}
 }

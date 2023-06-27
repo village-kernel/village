@@ -22,11 +22,11 @@ void Application5::Initialize()
 	gui.Initialize((VGA*)display);
 	gui.disp.Printf("hello vk.kernel\r\n");
 
-	interrupt.SetISR(33, union_cast<Function>(&Application5::ExtHandler), (char*)this);
+	interrupt.SetISR(IRQ_Keyboard_Controller, union_cast<Function>(&Application5::ExtHandler), (char*)this);
 	work = workQueue.Create(union_cast<Function>(&Application5::PrintLetter), (char*)this, work_delay);
 
-	thread.CreateTaskCpp(this, (Method)&Application5::Test1);
-	thread.CreateTaskCpp(this, (Method)&Application5::Test2);
+	test1Pid = thread.CreateTaskCpp(this, (Method)&Application5::Test1);
+	test2Pid = thread.CreateTaskCpp(this, (Method)&Application5::Test2);
 }
 
 
@@ -44,6 +44,17 @@ void Application5::Execute()
 }
 
 
+/// @brief Exit
+void Application5::Exit()
+{
+	thread.DeleteTask(test1Pid);
+	thread.DeleteTask(test2Pid);
+	workQueue.Delete(work);
+	interrupt.ClearISR(IRQ_Keyboard_Controller);
+}
+
+
+/// @brief Test1
 void Application5::Test1()
 {
 	uint32_t test = 10;
@@ -57,6 +68,7 @@ void Application5::Test1()
 }
 
 
+/// @brief Test2
 void Application5::Test2()
 {
 	uint32_t test = 20;
@@ -70,6 +82,7 @@ void Application5::Test2()
 }
 
 
+/// @brief Interrupt handler
 void Application5::ExtHandler()
 {
 	/* The PIC leaves us the scancode in port 0x60 */
@@ -78,6 +91,7 @@ void Application5::ExtHandler()
 }
 
 
+/// @brief WorkQueun handler
 void Application5::PrintLetter()
 {
 	gui.disp.Printf("\nKeyboard scancode: %d,", keycode);

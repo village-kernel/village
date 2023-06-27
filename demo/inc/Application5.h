@@ -23,6 +23,8 @@ private:
 	GUI              gui;
 	WorkQueue::Work* work;
 	uint8_t          keycode;
+	int              test1Pid;
+	int              test2Pid;
 
 	//Methods
 	void Test1();
@@ -34,6 +36,7 @@ public:
 	Application5();
 	void Initialize();
 	void Execute();
+	void Exit();
 };
 
 #endif //!__APPLICATION5_H__
