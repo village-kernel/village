@@ -9,25 +9,6 @@
 
 #include "Templates.h"
 
-#ifdef KBUILD_NO_ENVIRONNEMNT
-	///Export symbol marco
-	#define EXPORT_SYMBOL(symbol, name)    /*export symbol*/
-
-	///Search symbol marco
-	#define SEARCH_SYMBOL(name)            (0)
-#else
-	///Symbol section, avoid being optimized by the compiler
-	#define SYMBOL_SECTION                 __attribute__((used,__section__(".symbols")))
-
-	///Symbol create macro
-	#define CREATE_SYMBOL(symbol, name)    static struct _Sym_##name{_Sym_##name(){symbol;}} const _sym_##name
-
-	///Export symbol marco
-	#define EXPORT_SYMBOL(symbol, name)    CREATE_SYMBOL(Environment::Instance().ExportSymbol(union_cast<uint32_t>(&symbol), #name), name) SYMBOL_SECTION
-
-	///Search symbol marco
-	#define SEARCH_SYMBOL(name)            Environment::Instance().SearchSymbol(name)
-#endif
 
 ///Environment
 class Environment
