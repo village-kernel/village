@@ -25,6 +25,7 @@ public:
 	virtual void UpdateParams()     {}
 	virtual void Execute()          {}
 	virtual void FailSafe(int arg)  {}
+	virtual void Exit()             {}
 
 	//IO ctrl methods
 	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
