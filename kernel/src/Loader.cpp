@@ -41,9 +41,8 @@ EXPORT_SYMBOL(ploader, loader);
 /// @brief Loader initialize
 void Loader::Initialize()
 {
-	LoadingLib("libraries/init.rc");
-	LoadingMod("drivers/init.rc");
-	LoadingMod("modules/init.rc");
+	LoadingLib("libraries/_load_.rc");
+	LoadingMod("modules/_load_.rc");
 }
 
 
