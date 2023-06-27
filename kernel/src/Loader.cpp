@@ -41,14 +41,14 @@ EXPORT_SYMBOL(ploader, loader);
 /// @brief Loader initialize
 void Loader::Initialize()
 {
-	LoadingLib("libraries/_load_.rc");
-	LoadingMod("modules/_load_.rc");
+	Loading(_Load_Lib, "libraries/_load_.rc");
+	Loading(_Load_Mod, "modules/_load_.rc");
 }
 
 
-/// @brief Loader load lib
+/// @brief Loader load
 /// @param filename rc file path
-void Loader::LoadingLib(const char* filename)
+void Loader::Loading(int type, const char* filename)
 {
 	//Load rc file
 	RcParser* rc = new RcParser(filename);
@@ -57,30 +57,13 @@ void Loader::LoadingLib(const char* filename)
 	RcParser::RunCmdNode* node = rc->GetRunCmds();
 	for (; NULL != node; node = node->next)
 	{
-		ElfParser* elf = new ElfParser();
-		if (Result::_OK != elf->LoadLib(node->cmd)) break;
-	}
-
-	//Release resource
-	rc->Release();
-}
-
-
-/// @brief Loader load module
-/// @param filename rc file path
-void Loader::LoadingMod(const char* filename)
-{
-	//Load rc file
-	RcParser* rc = new RcParser(filename);
-
-	//Load, parser and execute init array
-	RcParser::RunCmdNode* node = rc->GetRunCmds();
-	for (; NULL != node; node = node->next)
-	{
-		ElfParser* elf = new ElfParser();
-		if (elf->Load(node->cmd) == Result::_OK)
+		if (_Load_Lib == type)
 		{
-			elf->InitArray();
+			libraries.Install(node->cmd);
+		}
+		else if (_Load_Mod == type)
+		{
+			modules.Install(node->cmd);
 		}
 	}
 
