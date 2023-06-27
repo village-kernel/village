@@ -16,4 +16,4 @@ src-y += vk.hardware/x86/driver/src
 ######################################
 objs-$(CONFIG_SERIAL)      += Serial.o
 objs-$(CONFIG_VGA)         += VGA.o
-objs-$(CONFIG_VGA)         += Disk.o
+objs-$(CONFIG_DISK)        += Disk.o

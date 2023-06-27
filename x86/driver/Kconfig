@@ -2,15 +2,15 @@
 menu "Generic Device Driver"
 
 config SERIAL
-	bool "Enable serial support"
+	tristate "Enable serial support"
 	default n
 
 config VGA
-	bool "Enable VGA support"
+	tristate "Enable VGA support"
 	default n
 
 config DISK
-	bool "Enable LBA disk support"
+	tristate "Enable LBA disk support"
 	default n
 	
 endmenu
