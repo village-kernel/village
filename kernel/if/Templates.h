@@ -167,7 +167,7 @@ public:
 	{
 		if (NULL == obj) return -1;
 
-		if (0 == nidCounter)
+		if (NULL == head)
 		{
 			head = new Node(obj, nidCounter++);
 			tail = head;
