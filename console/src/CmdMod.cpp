@@ -26,7 +26,7 @@ void CmdInsMod::Execute(int argc, char* argv[])
 		console.Output("Usage: insmod [module]");
 		return;
 	}
-	if (_OK != installer.Install(argv[1]))
+	if (_OK != modules.Install(argv[1]))
 	{
 		console.Error("Install module %s failed", argv[1]);
 	}
@@ -54,7 +54,7 @@ void CmdRmMod::Execute(int argc, char* argv[])
 		console.Output("Usage: rmmod [module]");
 		return;
 	}
-	if (_OK != installer.Uninstall(argv[1]))
+	if (_OK != modules.Uninstall(argv[1]))
 	{
 		console.Error("Uninstall module %s failed", argv[1]);
 	}

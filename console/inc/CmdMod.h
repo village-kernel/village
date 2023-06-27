@@ -8,7 +8,7 @@
 #define __CMD_MOD_H__
 
 #include "Cmd.h"
-#include "ModInstaller.h"
+#include "ModManager.h"
 
 
 /// @brief CmdInsMod
@@ -16,7 +16,7 @@ class CmdInsMod : public Cmd
 {
 private:
 	//Members
-	ModInstaller installer;
+	ModManager modules;
 public:
 	//Methods
 	void Initialize();
@@ -29,7 +29,7 @@ class CmdRmMod : public Cmd
 {
 private:
 	//Members
-	ModInstaller installer;
+	ModManager modules;
 public:
 	//Methods
 	void Initialize();
