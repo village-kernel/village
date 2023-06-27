@@ -42,6 +42,7 @@ src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 ######################################
 objs-y                                      += Start.o
 objs-y                                      += Kernel.o
+objs-y                                      += Debug.o
 objs-y                                      += Modular.o
 objs-y                                      += Device.o
 objs-y                                      += Memory.o
