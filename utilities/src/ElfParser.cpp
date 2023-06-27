@@ -43,6 +43,7 @@ int ElfParser::Load(const char* filename)
 	if (SharedObjs()      != _OK) return _ERR;
 	if (RelEntries()      != _OK) return _ERR;
 	
+	debug.Output(Debug::_Lv2, "%s load done", filename);
 	return _OK;
 }
 
@@ -61,7 +62,7 @@ int ElfParser::LoadElf()
 
 		if (elf.load && (file.Read((uint8_t*)elf.load, size) == size))
 		{
-			console.debug(_Debug_L1, "%s elf file load successful", filename);
+			debug.Output(Debug::_Lv1, "%s elf file load successful", filename);
 			file.Close();
 			return _OK;
 		}
@@ -69,7 +70,7 @@ int ElfParser::LoadElf()
 		file.Close();
 	}
 
-	console.error("%s elf file load failed", filename);
+	debug.Error("%s elf file load failed", filename);
 	return _ERR;
 }
 
@@ -229,7 +230,7 @@ int ElfParser::PreParser()
 	if ((elf.header->type    != _ELF_Type_Dyn) &&
 		(elf.header->type    != _ELF_Type_Exec))
 	{
-		console.error("%s is not executable", filename);
+		debug.Error("%s is not executable", filename);
 		return _ERR;
 	}
 
@@ -264,7 +265,7 @@ int ElfParser::PreParser()
 		}
 	}
 
-	console.debug(_Debug_L1, "%s pre parser successful", filename);
+	debug.Output(Debug::_Lv1, "%s pre parser successful", filename);
 	return _OK;
 }
 
@@ -297,7 +298,7 @@ int ElfParser::SegmentMapping()
 		}
 	}
 
-	console.debug(_Debug_L1, "%s section to segment mapping successful", filename);
+	debug.Output(Debug::_Lv1, "%s section to segment mapping successful", filename);
 	return _OK;
 }
 
@@ -340,7 +341,7 @@ int ElfParser::PostParser()
 		}
 	}
 
-	console.debug(_Debug_L1, "%s post parser successful", filename);
+	debug.Output(Debug::_Lv1, "%s post parser successful", filename);
 	return _OK;
 }
 
@@ -370,12 +371,12 @@ int ElfParser::LoadLib(const char* filename)
 		if (_OK == so->Load(filename))
 		{
 			sharedObjs.Add(so);
-			console.debug(_Debug_L1, "%s library load successful", filename);
+			debug.Output(Debug::_Lv1, "%s library load successful", filename);
 			return _OK;
 		}
 		else
 		{
-			console.error("%s library load failed", filename);
+			debug.Error("%s library load failed", filename);
 			return _ERR;
 		}
 	}
@@ -405,7 +406,7 @@ int ElfParser::SharedObjs()
 			//Load shared object lib
 			if (_OK != LoadLib(path))
 			{
-				console.error("%s load shared object %s failed", filename, path);
+				debug.Error("%s load shared object %s failed", filename, path);
 				delete[] path;
 				return _ERR;
 			}
@@ -474,7 +475,7 @@ int ElfParser::RelEntries()
 					//Return when symAddr is 0
 					if (0 == symAddr) 
 					{
-						console.error("%s relocation symbols failed, symbol %s not found", filename, symName);
+						debug.Error("%s relocation symbols failed, symbol %s not found", filename, symName);
 						return _ERR;
 					}
 				}
@@ -483,13 +484,13 @@ int ElfParser::RelEntries()
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
-				console.debug(_Debug_L0, "%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
+				debug.Output(Debug::_Lv0, "%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
 					filename, symName, relAddr, symAddr);
 			}
 		}
 	}
 
-	console.debug(_Debug_L1, "%s relocation entries successful", filename);
+	debug.Output(Debug::_Lv1, "%s relocation entries successful", filename);
 	return _OK;
 }
 
@@ -682,7 +683,7 @@ int ElfParser::Execute(const char* symbol, int argc, char* argv[])
 			return _OK;
 		}
 	}
-	console.error("%s %s not found", filename, symbol);
+	debug.Error("%s %s not found", filename, symbol);
 	return _ERR;
 }
 
