@@ -38,6 +38,7 @@ bool ModInstaller::Install(const char* module)
 		if (0 == strcmp(module, mod->GetFileName()))
 		{
 			isInstalled = true;
+			debug.Output(Debug::_Lv2, "%s module has already been installed", module);
 			break;
 		}
 	}
