@@ -46,4 +46,54 @@ enum ModuleID
 };
 
 
+///Driver register macro
+#define REGISTER_DRIVER(drv, id, name)                            \
+static struct _Drv_##name {                                       \
+	Driver* driver = drv;                                         \
+	_Drv_##name() {                                               \
+		Device::Instance().RegisterDriver(driver, id);            \
+	}                                                             \
+	~_Drv_##name() {                                              \
+		Device::Instance().DeregisterDriver(driver, id);          \
+	}                                                             \
+} const _drv_##name __attribute__((used,__section__(".drivers")))
+
+
+///Module register macro
+#define REGISTER_MODULE(mod, id, name)                            \
+static struct _Mod_##name {                                       \
+	Module* module = mod;                                         \
+	_Mod_##name() {                                               \
+		Modular::Instance().RegisterModule(module, id);           \
+	}                                                             \
+	~_Mod_##name() {                                              \
+		Modular::Instance().DeregisterModule(module, id);         \
+	}                                                             \
+} const _mod_##name __attribute__((used,__section__(".modules")))
+
+
+///Environment marco
+#ifdef KBUILD_NO_ENVIRONNEMNT
+	///Export symbol marco
+	#define EXPORT_SYMBOL(symbol, name)    /*export symbol*/
+
+	///Search symbol marco
+	#define SEARCH_SYMBOL(name)            (0)
+#else
+	///Export symbol marco
+	#define EXPORT_SYMBOL(symbol, name)                                                \
+	static struct _Sym_##name {                                                        \
+		_Sym_##name() {                                                                \
+			Environment::Instance().ExportSymbol(union_cast<uint32_t>(&symbol), #name);\
+		}                                                                              \
+		~_Sym_##name() {                                                               \
+			Environment::Instance().UnexportSymbol(#name);                             \
+		}                                                                              \
+	} const _sym_##name __attribute__((used,__section__(".symbols")))
+
+	///Search symbol marco
+	#define SEARCH_SYMBOL(name)            Environment::Instance().SearchSymbol(name)
+#endif
+
+
 #endif //!__DEFINES_H__
