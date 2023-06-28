@@ -313,6 +313,7 @@ public:
 	ElfLoader(const char* filename = NULL);
 	~ElfLoader();
 	int Load(const char* filename);
+	int FillBssZero();
 	int InitArray();
 	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
 	int FiniArray();

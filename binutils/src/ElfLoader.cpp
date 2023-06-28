@@ -594,6 +594,33 @@ int ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 #endif
 
 
+/// @brief ElfLoader Fill bss zero
+/// @return result
+int ElfLoader::FillBssZero()
+{
+	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
+	{
+		if (0 == strcmp(".bss", GetSectionName(i)))
+		{
+			//Get the bss pointer
+			uint8_t* data = GetDynSectionData(i).data;
+
+			//Get the size of bss
+			uint32_t size = elf.sections[i].size;
+
+			//Fill zero
+			for (uint32_t i = 0; i < size; i++)
+			{
+				data[i] = 0;
+			}
+
+			break;
+		}
+	}
+	return _OK;
+}
+
+
 /// @brief ElfLoader init array
 /// @return result
 int ElfLoader::InitArray()

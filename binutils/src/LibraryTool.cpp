@@ -50,6 +50,8 @@ bool LibraryTool::Install(const char* filename)
 
 		if (_OK == library->Load(filename))
 		{
+			library->FillBssZero();
+			library->InitArray();
 			libraries.Add(library);
 			debug.Output(Debug::_Lv2, "%s library install successful", filename);
 			return _OK;
@@ -74,6 +76,7 @@ bool LibraryTool::Uninstall(const char* filename)
 	{
 		if (0 == strcmp(filename, library->GetFileName()))
 		{
+			library->FiniArray();
 			libraries.Remove(library);
 			debug.Output(Debug::_Lv2, "%s library uninstall successful", filename);
 			return _OK;	

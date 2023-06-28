@@ -50,8 +50,9 @@ bool ModuleTool::Install(const char* filename)
 
 		if (_OK == mod->Load(filename))
 		{
-			modules.Add(mod);
+			mod->FillBssZero();
 			mod->InitArray();
+			modules.Add(mod);
 			debug.Output(Debug::_Lv2, "%s module install successful", filename);
 			return _OK;
 		}
