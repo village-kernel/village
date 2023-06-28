@@ -8,8 +8,8 @@
 #define __LOADER_H__
 
 #include "Templates.h"
-#include "LibManager.h"
-#include "ModManager.h"
+#include "LibraryTool.h"
+#include "ModuleTool.h"
 
 ///Loader
 class Loader
@@ -23,8 +23,8 @@ private:
 	};
 
 	//Members
-	LibManager libraries;
-	ModManager modules;
+	LibraryTool libraries;
+	ModuleTool  modules;
 
 	//Methods
 	Loader();

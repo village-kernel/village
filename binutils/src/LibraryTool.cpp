@@ -1,26 +1,26 @@
 //###########################################################################
-// LibManager.cpp
+// LibraryTool.cpp
 // Definitions of the functions that manage library
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
 #include "Debug.h"
-#include "LibManager.h"
+#include "LibraryTool.h"
 
 
 /// @brief Initialize librarys
-List<ElfLoader> LibManager::libraries;
+List<ElfLoader> LibraryTool::libraries;
 
 
 /// @brief Constructor
-LibManager::LibManager()
+LibraryTool::LibraryTool()
 {
 }
 
 
 /// @brief Deconstructor
-LibManager::~LibManager()
+LibraryTool::~LibraryTool()
 {
 }
 
@@ -28,7 +28,7 @@ LibManager::~LibManager()
 /// @brief library installer
 /// @param library 
 /// @return result
-bool LibManager::Install(const char* filename)
+bool LibraryTool::Install(const char* filename)
 {
 	bool isInstalled = false;
 
@@ -68,7 +68,7 @@ bool LibManager::Install(const char* filename)
 /// @brief library uninstaller
 /// @param library 
 /// @return 
-bool LibManager::Uninstall(const char* filename)
+bool LibraryTool::Uninstall(const char* filename)
 {
 	for (ElfLoader* library = libraries.Begin(); !libraries.IsEnd(); library = libraries.Next())
 	{
@@ -88,7 +88,7 @@ bool LibManager::Uninstall(const char* filename)
 /// @brief Search symbol
 /// @param symbol 
 /// @return symbol address
-uint32_t LibManager::SearchSymbol(const char* symbol)
+uint32_t LibraryTool::SearchSymbol(const char* symbol)
 {
 	for (ElfLoader* lib = libraries.Begin(); !libraries.IsEnd(); lib = libraries.Next())
 	{

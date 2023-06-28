@@ -7,7 +7,7 @@
 #include "ElfLoader.h"
 #include "FileStream.h"
 #include "Environment.h"
-#include "LibManager.h"
+#include "LibraryTool.h"
 #include "Debug.h"
 #include "string.h"
 
@@ -362,7 +362,7 @@ int ElfLoader::SharedObjs()
 			strcat(path, name);
 
 			//Load shared object lib
-			if (_OK != LibManager().Install(path))
+			if (_OK != LibraryTool().Install(path))
 			{
 				debug.Error("%s load shared object %s failed", filename, path);
 				delete[] path;
@@ -421,7 +421,7 @@ int ElfLoader::RelEntries()
 					if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
 
 					//Searching for symbol entry in shared objects
-					if (0 == symAddr) symAddr = LibManager().SearchSymbol(symName);
+					if (0 == symAddr) symAddr = LibraryTool().SearchSymbol(symName);
 
 					//Return when symAddr is 0
 					if (0 == symAddr) 

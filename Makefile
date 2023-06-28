@@ -68,8 +68,8 @@ objs-$(CONFIG_CONSOLE)                      += Console.o
 
 objs-ld-$(CONFIG_ELFLOADER)                 += ElfLoader.o
 objs-ld-$(CONFIG_EXECUTOR)                  += Executor.o
-objs-ld-$(CONFIG_LIBMANAGER)                += LibManager.o
-objs-ld-$(CONFIG_MODMANAGER)                += ModManager.o
+objs-ld-$(CONFIG_LIBTOOL)                   += LibraryTool.o
+objs-ld-$(CONFIG_MODTOOL)                   += ModuleTool.o
 
 objs-utils-$(CONFIG_SYNCLOCK)               += SyncLock.o
 objs-utils-$(CONFIG_FILESTREAM)             += FileStream.o

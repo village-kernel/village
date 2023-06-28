@@ -1,26 +1,26 @@
 //###########################################################################
-// ModManager.cpp
+// ModuleTool.cpp
 // Definitions of the functions that manage module
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
 #include "Debug.h"
-#include "ModManager.h"
+#include "ModuleTool.h"
 
 
 /// @brief Initialize modules
-List<ElfLoader> ModManager::modules;
+List<ElfLoader> ModuleTool::modules;
 
 
 /// @brief Constructor
-ModManager::ModManager()
+ModuleTool::ModuleTool()
 {
 }
 
 
 /// @brief Deconstructor
-ModManager::~ModManager()
+ModuleTool::~ModuleTool()
 {
 }
 
@@ -28,7 +28,7 @@ ModManager::~ModManager()
 /// @brief Module installer
 /// @param module 
 /// @return result
-bool ModManager::Install(const char* filename)
+bool ModuleTool::Install(const char* filename)
 {
 	bool isInstalled = false;
 
@@ -69,7 +69,7 @@ bool ModManager::Install(const char* filename)
 /// @brief Module uninstaller
 /// @param module 
 /// @return 
-bool ModManager::Uninstall(const char* filename)
+bool ModuleTool::Uninstall(const char* filename)
 {
 	for (ElfLoader* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
 	{

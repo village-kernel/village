@@ -83,14 +83,14 @@ config ELFLOADER
 	bool "Enable elf load function"
 	default n
 
-config LIBMANAGER
+config LIBTOOL
 	depends on BINUTILS
-	bool "Enable library manager function"
+	bool "Enable library tool function"
 	default n
 
-config MODMANAGER
+config MODTOOL
 	depends on BINUTILS
-	bool "Enable module manager function"
+	bool "Enable module tool function"
 	default n
 
 config EXECUTOR
