@@ -10,7 +10,7 @@
 
 
 /// @brief Initialize librarys
-List<ElfParser> LibManager::libraries;
+List<ElfLoader> LibManager::libraries;
 
 
 /// @brief Constructor
@@ -33,7 +33,7 @@ bool LibManager::Install(const char* filename)
 	bool isInstalled = false;
 
 	//Check the library if it has been installed
-	for (ElfParser* library = libraries.Begin(); !libraries.IsEnd(); library = libraries.Next())
+	for (ElfLoader* library = libraries.Begin(); !libraries.IsEnd(); library = libraries.Next())
 	{
 		if (0 == strcmp(filename, library->GetFileName()))
 		{
@@ -46,7 +46,7 @@ bool LibManager::Install(const char* filename)
 	//Install library if it has not install
 	if (false == isInstalled)
 	{
-		ElfParser* library = new ElfParser();
+		ElfLoader* library = new ElfLoader();
 
 		if (_OK == library->Load(filename))
 		{
@@ -70,7 +70,7 @@ bool LibManager::Install(const char* filename)
 /// @return 
 bool LibManager::Uninstall(const char* filename)
 {
-	for (ElfParser* library = libraries.Begin(); !libraries.IsEnd(); library = libraries.Next())
+	for (ElfLoader* library = libraries.Begin(); !libraries.IsEnd(); library = libraries.Next())
 	{
 		if (0 == strcmp(filename, library->GetFileName()))
 		{
@@ -90,7 +90,7 @@ bool LibManager::Uninstall(const char* filename)
 /// @return symbol address
 uint32_t LibManager::SearchSymbol(const char* symbol)
 {
-	for (ElfParser* lib = libraries.Begin(); !libraries.IsEnd(); lib = libraries.Next())
+	for (ElfLoader* lib = libraries.Begin(); !libraries.IsEnd(); lib = libraries.Next())
 	{
 		uint32_t symAddr = lib->GetDynSymAddrByName(symbol);
 		if (0 != symAddr) return symAddr;

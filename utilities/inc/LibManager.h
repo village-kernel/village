@@ -9,14 +9,14 @@
 
 #include "Defines.h"
 #include "Templates.h"
-#include "ElfParser.h"
+#include "ElfLoader.h"
 
 /// @brief LibManager
 class LibManager
 {
 private:
 	//Members
-	static List<ElfParser> libraries;
+	static List<ElfLoader> libraries;
 public:
 	//Methods
 	LibManager();
@@ -27,7 +27,7 @@ public:
 
 	/// @brief Get libraries
 	/// @return libraries
-	List<ElfParser>* GetLibraries() { return &libraries; }
+	List<ElfLoader>* GetLibraries() { return &libraries; }
 };
 
 #endif //!__LIB_MANAGER_H__

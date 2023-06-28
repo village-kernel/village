@@ -6,7 +6,6 @@
 //###########################################################################
 #include "Loader.h"
 #include "rcParser.h"
-#include "ElfParser.h"
 #include "Environment.h"
 
 

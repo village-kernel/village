@@ -1,17 +1,17 @@
 //###########################################################################
-// ElfParser.h
-// Declarations of the functions that manage elf parser
+// ElfLoader.h
+// Declarations of the functions that manage elf loader
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __ELF_PARSER_H__
-#define __ELF_PARSER_H__
+#ifndef __ELF_LOADER_H__
+#define __ELF_LOADER_H__
 
 #include "Defines.h"
 
 
-///ElfParser
-class ElfParser
+///ElfLoader
+class ElfLoader
 {
 private:
 	//Type define
@@ -310,9 +310,8 @@ private:
 #endif
 public:
 	//Methods
-	ElfParser(const char* filename = NULL);
+	ElfLoader(const char* filename = NULL);
 	int Load(const char* filename);
-	//int LoadLib(const char* filename);
 	int InitArray();
 	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
 	int FiniArray();
@@ -332,4 +331,4 @@ public:
 	SectionData GetDynSectionData(uint32_t index);
 };
 
-#endif //!__ELF_PARSER_H__
+#endif //!__ELF_LOADER_H__

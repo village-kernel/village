@@ -9,14 +9,14 @@
 
 #include "Defines.h"
 #include "Templates.h"
-#include "ElfParser.h"
+#include "ElfLoader.h"
 
 /// @brief ModManager
 class ModManager
 {
 private:
 	//Members
-	static List<ElfParser> modules;
+	static List<ElfLoader> modules;
 public:
 	//Methods
 	ModManager();

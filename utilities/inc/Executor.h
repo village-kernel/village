@@ -8,7 +8,7 @@
 #define __EXECUTOR_H__
 
 #include "Templates.h"
-#include "ElfParser.h"
+#include "ElfLoader.h"
 
 
 ///Executor
@@ -18,7 +18,7 @@ private:
 	//Members
 	int argc;
 	char** argv;
-	ElfParser elf;
+	ElfLoader elf;
 
 	//Methods
 	void Sandbox();

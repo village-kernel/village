@@ -10,7 +10,7 @@
 
 
 /// @brief Initialize modules
-List<ElfParser> ModManager::modules;
+List<ElfLoader> ModManager::modules;
 
 
 /// @brief Constructor
@@ -33,7 +33,7 @@ bool ModManager::Install(const char* filename)
 	bool isInstalled = false;
 
 	//Check the module if it has been installed
-	for (ElfParser* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
+	for (ElfLoader* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
 	{
 		if (0 == strcmp(filename, mod->GetFileName()))
 		{
@@ -46,7 +46,7 @@ bool ModManager::Install(const char* filename)
 	//Install module if it has not install
 	if (false == isInstalled)
 	{
-		ElfParser* mod = new ElfParser();
+		ElfLoader* mod = new ElfLoader();
 
 		if (_OK == mod->Load(filename))
 		{
@@ -71,7 +71,7 @@ bool ModManager::Install(const char* filename)
 /// @return 
 bool ModManager::Uninstall(const char* filename)
 {
-	for (ElfParser* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
+	for (ElfLoader* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
 	{
 		if (0 == strcmp(filename, mod->GetFileName()))
 		{

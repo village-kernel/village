@@ -105,7 +105,7 @@ config RCPARSER
 	bool "Enable resource script parser function"
 	default n
 
-config ELFPARSER
+config ELFLOADER
 	depends on UTILITIES
 	select FILESTREAM
 	bool "Enable elf parser function"

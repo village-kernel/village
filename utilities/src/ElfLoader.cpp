@@ -1,10 +1,10 @@
 //###########################################################################
-// ElfParser.cpp
-// Definitions of the functions that manage elf parser
+// ElfLoader.cpp
+// Definitions of the functions that manage elf loader
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "ElfParser.h"
+#include "ElfLoader.h"
 #include "FileStream.h"
 #include "Environment.h"
 #include "LibManager.h"
@@ -13,21 +13,21 @@
 
 
 /// @brief Initialize map address
-uint32_t ElfParser::mapAddr = ElfParser::base_map_address;
+uint32_t ElfLoader::mapAddr = ElfLoader::base_map_address;
 
 
 /// @brief Constructor
 /// @param filename 
-ElfParser::ElfParser(const char* filename)
+ElfLoader::ElfLoader(const char* filename)
 {
 	if (NULL != filename) Load(filename);
 }
 
 
-/// @brief ElfParser load and parser elf file
+/// @brief ElfLoader load and parser elf file
 /// @param filename 
 /// @return result
-int ElfParser::Load(const char* filename)
+int ElfLoader::Load(const char* filename)
 {
 	//Save filename in local
 	this->filename = new char[strlen(filename) + 1]();
@@ -45,10 +45,10 @@ int ElfParser::Load(const char* filename)
 }
 
 
-/// @brief ElfParser load elf file
+/// @brief ElfLoader load elf file
 /// @param filename 
 /// @return result
-int ElfParser::LoadElf()
+int ElfLoader::LoadElf()
 {
 	FileStream file;
 
@@ -74,7 +74,7 @@ int ElfParser::LoadElf()
 
 /// @brief Get file name
 /// @return 
-const char* ElfParser::GetFileName()
+const char* ElfLoader::GetFileName()
 {
 	return filename;
 }
@@ -83,7 +83,7 @@ const char* ElfParser::GetFileName()
 /// @brief Get dynamic string
 /// @param index 
 /// @return string
-inline const char* ElfParser::GetDynamicString(uint32_t index)
+inline const char* ElfLoader::GetDynamicString(uint32_t index)
 {
 	return (const char*)elf.dynstr + index;
 }
@@ -92,7 +92,7 @@ inline const char* ElfParser::GetDynamicString(uint32_t index)
 /// @brief Get section name
 /// @param index 
 /// @return name
-inline const char* ElfParser::GetSectionName(uint32_t index)
+inline const char* ElfLoader::GetSectionName(uint32_t index)
 {
 	if (elf.header->sectionHeaderNum > index)
 	{
@@ -105,7 +105,7 @@ inline const char* ElfParser::GetSectionName(uint32_t index)
 /// @brief Get symbol name
 /// @param index 
 /// @return name
-inline const char* ElfParser::GetSymbolName(uint32_t index)
+inline const char* ElfLoader::GetSymbolName(uint32_t index)
 {
 	if (elf.symtabNum > index)
 	{
@@ -118,7 +118,7 @@ inline const char* ElfParser::GetSymbolName(uint32_t index)
 /// @brief Get dynamic symbol name
 /// @param index 
 /// @return name
-inline const char* ElfParser::GetDynSymName(uint32_t index)
+inline const char* ElfLoader::GetDynSymName(uint32_t index)
 {
 	if (elf.dynsymNum > index)
 	{
@@ -131,7 +131,7 @@ inline const char* ElfParser::GetDynSymName(uint32_t index)
 /// @brief Get symbol addr
 /// @param index 
 /// @return address
-inline uint32_t ElfParser::GetSymbolAddr(uint32_t index)
+inline uint32_t ElfLoader::GetSymbolAddr(uint32_t index)
 {
 	if (elf.symtabNum > index)
 	{
@@ -144,7 +144,7 @@ inline uint32_t ElfParser::GetSymbolAddr(uint32_t index)
 /// @brief Get dynamic symbol addr
 /// @param index 
 /// @return address
-inline uint32_t ElfParser::GetDynSymAddr(uint32_t index)
+inline uint32_t ElfLoader::GetDynSymAddr(uint32_t index)
 {
 	if (elf.dynsymNum > index)
 	{
@@ -157,7 +157,7 @@ inline uint32_t ElfParser::GetDynSymAddr(uint32_t index)
 /// @brief Get symbol addr by name
 /// @param name 
 /// @return address
-inline uint32_t ElfParser::GetSymbolAddrByName(const char* name)
+inline uint32_t ElfLoader::GetSymbolAddrByName(const char* name)
 {
 	for (uint32_t i = 0; i < elf.symtabNum; i++)
 	{
@@ -173,7 +173,7 @@ inline uint32_t ElfParser::GetSymbolAddrByName(const char* name)
 /// @brief Get dynamic symbol addr by name
 /// @param name 
 /// @return address
-inline uint32_t ElfParser::GetDynSymAddrByName(const char* name)
+inline uint32_t ElfLoader::GetDynSymAddrByName(const char* name)
 {
 	for (uint32_t i = 0; i < elf.dynsymNum; i++)
 	{
@@ -189,7 +189,7 @@ inline uint32_t ElfParser::GetDynSymAddrByName(const char* name)
 /// @brief Get section data
 /// @param index 
 /// @return address
-inline ElfParser::SectionData ElfParser::GetSectionData(uint32_t index)
+inline ElfLoader::SectionData ElfLoader::GetSectionData(uint32_t index)
 {
 	return SectionData(elf.load + elf.sections[index].offset);
 }
@@ -198,7 +198,7 @@ inline ElfParser::SectionData ElfParser::GetSectionData(uint32_t index)
 /// @brief Get dyn section data
 /// @param index 
 /// @return address
-inline ElfParser::SectionData ElfParser::GetDynSectionData(uint32_t index)
+inline ElfLoader::SectionData ElfLoader::GetDynSectionData(uint32_t index)
 {
 	return SectionData(elf.map + elf.sections[index].addr);
 }
@@ -206,7 +206,7 @@ inline ElfParser::SectionData ElfParser::GetDynSectionData(uint32_t index)
 
 /// @brief Pre parser
 /// @return result
-int ElfParser::PreParser()
+int ElfLoader::PreParser()
 {
 	//Set elf header pointer
 	elf.header = (ELFHeader*)(elf.load);
@@ -269,7 +269,7 @@ int ElfParser::PreParser()
 
 /// @brief Section to segment mapping
 /// @return result
-int ElfParser::SegmentMapping()
+int ElfLoader::SegmentMapping()
 {
 	//Set map address
 	if (_ELF_Type_Dyn == elf.header->type)
@@ -302,7 +302,7 @@ int ElfParser::SegmentMapping()
 
 /// @brief Post parser
 /// @return result
-int ElfParser::PostParser()
+int ElfLoader::PostParser()
 {
 	//Returns when the elf type is not dynamic
 	if (_ELF_Type_Dyn != elf.header->type) return _OK;
@@ -345,7 +345,7 @@ int ElfParser::PostParser()
 
 /// @brief Load shared objects
 /// @return result
-int ElfParser::SharedObjs()
+int ElfLoader::SharedObjs()
 {
 	//Handler dynamic source
 	for (uint32_t i = 0; i < elf.dynsecNum; i++)
@@ -379,7 +379,7 @@ int ElfParser::SharedObjs()
 
 /// @brief Relocation dynamic symbol entries
 /// @return result
-int ElfParser::RelEntries()
+int ElfLoader::RelEntries()
 {
 	//Returns when elf type is not dynamic
 	if (_ELF_Type_Dyn != elf.header->type) return _OK;
@@ -453,7 +453,7 @@ int ElfParser::RelEntries()
 /// @param symAddr 
 /// @param type 
 /// @return result
-int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
+int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 {
 	switch (type)
 	{
@@ -522,7 +522,7 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 /// @param symAddr 
 /// @param type 
 /// @return address
-int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
+int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 {
 	switch (type)
 	{
@@ -553,7 +553,7 @@ int ElfParser::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 /// @param symAddr 
 /// @param type 
 /// @return result
-int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
+int ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 {
 	uint16_t upper = ((uint16_t *)relAddr)[0];
 	uint16_t lower = ((uint16_t *)relAddr)[1];
@@ -587,9 +587,9 @@ int ElfParser::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
 #endif
 
 
-/// @brief ElfParser init array
+/// @brief ElfLoader init array
 /// @return result
-int ElfParser::InitArray()
+int ElfLoader::InitArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -614,10 +614,10 @@ int ElfParser::InitArray()
 }
 
 
-/// @brief ElfParser execute symbol
+/// @brief ElfLoader execute symbol
 /// @param symbol 
 /// @return result
-int ElfParser::Execute(const char* symbol, int argc, char* argv[])
+int ElfLoader::Execute(const char* symbol, int argc, char* argv[])
 {
 	if (NULL == symbol && 0 != elf.exec)
 	{
@@ -639,9 +639,9 @@ int ElfParser::Execute(const char* symbol, int argc, char* argv[])
 }
 
 
-/// @brief ElfParser fini array
+/// @brief ElfLoader fini array
 /// @return result
-int ElfParser::FiniArray()
+int ElfLoader::FiniArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -666,9 +666,9 @@ int ElfParser::FiniArray()
 }
 
 
-/// @brief ElfParser exit
+/// @brief ElfLoader exit
 /// @return result
-int ElfParser::Exit()
+int ElfLoader::Exit()
 {
 	delete[] filename;
 	delete[] (uint8_t*)elf.map;
