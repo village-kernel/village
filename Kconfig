@@ -126,6 +126,11 @@ config MODMANAGER
 	bool "Enable module manager function"
 	default n
 
+config BRIDGE
+	depends on UTILITIES
+	bool "Enable the bridge from kernel to user"
+	default n
+
 config REGEX
 	depends on UTILITIES
 	bool "Enable regex function"
