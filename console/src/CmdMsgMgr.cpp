@@ -113,8 +113,7 @@ void CmdMsgMgr::RestoredHistory()
 	if (NULL == cmdHistory[history]) return;
 
 	//Clear display string
-	uint16_t length = strlen((const char*)rxBuffer);
-	for (uint16_t i = length; i > 0; i--)
+	for (uint16_t i = strlen((const char*)rxBuffer); i > 0; i--)
 	{
 		txBuffer[txBufPos++] = '\b';
 		txBuffer[txBufPos++] = ' ';
@@ -123,10 +122,10 @@ void CmdMsgMgr::RestoredHistory()
 
 	//Reset history cmd to rxBuffer
 	strcpy((char*)rxBuffer, (const char*)cmdHistory[history]);
+	rxBufPos = strlen((const char*)rxBuffer);
 
 	//Display new cmd
-	length = strlen((const char*)rxBuffer);
-	for (uint16_t i = 0; i < length; i++)
+	for (uint16_t i = 0; i < rxBufPos; i++)
 	{
 		txBuffer[txBufPos++] = rxBuffer[i];
 	}
