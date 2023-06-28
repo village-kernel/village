@@ -311,6 +311,7 @@ private:
 public:
 	//Methods
 	ElfLoader(const char* filename = NULL);
+	~ElfLoader();
 	int Load(const char* filename);
 	int InitArray();
 	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);

@@ -24,6 +24,13 @@ ElfLoader::ElfLoader(const char* filename)
 }
 
 
+/// @brief Deconstructor
+ElfLoader::~ElfLoader()
+{
+	Exit();
+}
+
+
 /// @brief ElfLoader load and parser elf file
 /// @param filename 
 /// @return result
