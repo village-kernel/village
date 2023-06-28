@@ -68,6 +68,38 @@ config WORKQUEUE
 
 endmenu
 
+# confg binutils menu
+
+menu "binutils"
+
+config BINUTILS
+	select FILESTREAM
+	bool "Enable binutils function"
+	default n
+
+config ELFLOADER
+	depends on BINUTILS
+	select FILESTREAM
+	bool "Enable elf load function"
+	default n
+
+config LIBMANAGER
+	depends on BINUTILS
+	bool "Enable library manager function"
+	default n
+
+config MODMANAGER
+	depends on BINUTILS
+	bool "Enable module manager function"
+	default n
+
+config EXECUTOR
+	depends on BINUTILS
+	bool "Enable execute program function"
+	default n
+
+endmenu
+
 # config utilities menu
 
 menu "utilities"
@@ -103,27 +135,6 @@ config RCPARSER
 	depends on UTILITIES
 	select FILESTREAM
 	bool "Enable resource script parser function"
-	default n
-
-config ELFLOADER
-	depends on UTILITIES
-	select FILESTREAM
-	bool "Enable elf parser function"
-	default n
-
-config EXECUTOR
-	depends on UTILITIES
-	bool "Enable execute program function"
-	default n
-
-config LIBMANAGER
-	depends on UTILITIES
-	bool "Enable library manager function"
-	default n
-
-config MODMANAGER
-	depends on UTILITIES
-	bool "Enable module manager function"
 	default n
 
 config BRIDGE

@@ -8,6 +8,7 @@
 ######################################
 # libraries
 ######################################
+libs-$(CONFIG_BINUTILS)                     += ld
 libs-$(CONFIG_UTILITIES)                    += utils
 
 
@@ -31,9 +32,11 @@ src-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/src/s
 src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32h7xx
 
 inc-$(CONFIG_CONSOLE)                       += vk.kernel/console/inc
+inc-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/inc
 inc-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/inc
 
 src-$(CONFIG_CONSOLE)                       += vk.kernel/console/src
+src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 
 
@@ -63,15 +66,16 @@ objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
+objs-ld-$(CONFIG_ELFLOADER)                 += ElfLoader.o
+objs-ld-$(CONFIG_EXECUTOR)                  += Executor.o
+objs-ld-$(CONFIG_LIBMANAGER)                += LibManager.o
+objs-ld-$(CONFIG_MODMANAGER)                += ModManager.o
+
 objs-utils-$(CONFIG_SYNCLOCK)               += SyncLock.o
 objs-utils-$(CONFIG_FILESTREAM)             += FileStream.o
 objs-utils-$(CONFIG_INIPARSER)              += iniParser.o
 objs-utils-$(CONFIG_PINPARSER)              += pinParser.o
 objs-utils-$(CONFIG_RCPARSER)               += rcParser.o
-objs-utils-$(CONFIG_ELFLOADER)              += ElfLoader.o
-objs-utils-$(CONFIG_EXECUTOR)               += Executor.o
-objs-utils-$(CONFIG_LIBMANAGER)             += LibManager.o
-objs-utils-$(CONFIG_MODMANAGER)             += ModManager.o
 objs-utils-$(CONFIG_BRIDGE)                 += Bridge.o
 objs-utils-$(CONFIG_REGEX)                  += Regex.o
 
