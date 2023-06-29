@@ -20,7 +20,7 @@ void Application5::Initialize()
 {
 	Driver* display = device.GetDriver(DriverID::_display);
 	gui.Initialize((VGA*)display);
-	gui.disp.Printf("hello vk.kernel\r\n");
+	gui.Printf("hello vk.kernel\r\n");
 
 	interrupt.SetISR(IRQ_Keyboard_Controller, union_cast<Function>(&Application5::ExtHandler), (char*)this);
 	work = workQueue.Create(union_cast<Function>(&Application5::PrintLetter), (char*)this, work_delay);
@@ -38,7 +38,7 @@ void Application5::Execute()
 	while (1)
 	{
 		test++;
-		gui.disp.Printf("\nApplication5 Execute: %d", test);
+		gui.Printf("\nApplication5 Execute: %d", test);
 		thread.Sleep(1000);
 	}
 }
@@ -62,7 +62,7 @@ void Application5::Test1()
 	while (1)
 	{
 		test++;
-		gui.disp.Printf("\nApplication5 Test1: %d", test);
+		gui.Printf("\nApplication5 Test1: %d", test);
 		thread.Sleep(1000);
 	}
 }
@@ -76,7 +76,7 @@ void Application5::Test2()
 	while (1)
 	{
 		test++;
-		gui.disp.Printf("\nApplication5 Test2: %d", test);
+		gui.Printf("\nApplication5 Test2: %d", test);
 		thread.Sleep(1000);
 	}
 }
@@ -94,194 +94,194 @@ void Application5::ExtHandler()
 /// @brief WorkQueun handler
 void Application5::PrintLetter()
 {
-	gui.disp.Printf("\nKeyboard scancode: %d,", keycode);
+	gui.Printf("\nKeyboard scancode: %d,", keycode);
 
     switch (keycode) {
         case 0x0:
-            gui.disp.Printf((char*)"ERROR");
+            gui.Printf((char*)"ERROR");
             break;
         case 0x1:
-            gui.disp.Printf((char*)"ESC");
+            gui.Printf((char*)"ESC");
             break;
         case 0x2:
-            gui.disp.Printf((char*)"1");
+            gui.Printf((char*)"1");
             break;
         case 0x3:
-            gui.disp.Printf((char*)"2");
+            gui.Printf((char*)"2");
             break;
         case 0x4:
-            gui.disp.Printf((char*)"3");
+            gui.Printf((char*)"3");
             break;
         case 0x5:
-            gui.disp.Printf((char*)"4");
+            gui.Printf((char*)"4");
             break;
         case 0x6:
-            gui.disp.Printf((char*)"5");
+            gui.Printf((char*)"5");
             break;
         case 0x7:
-            gui.disp.Printf((char*)"6");
+            gui.Printf((char*)"6");
             break;
         case 0x8:
-            gui.disp.Printf((char*)"7");
+            gui.Printf((char*)"7");
             break;
         case 0x9:
-            gui.disp.Printf((char*)"8");
+            gui.Printf((char*)"8");
             break;
         case 0x0A:
-            gui.disp.Printf((char*)"9");
+            gui.Printf((char*)"9");
             break;
         case 0x0B:
-            gui.disp.Printf((char*)"0");
+            gui.Printf((char*)"0");
             break;
         case 0x0C:
-            gui.disp.Printf((char*)"-");
+            gui.Printf((char*)"-");
             break;
         case 0x0D:
-            gui.disp.Printf((char*)"+");
+            gui.Printf((char*)"+");
             break;
         case 0x0E:
-            gui.disp.Printf((char*)"Backspace");
+            gui.Printf((char*)"Backspace");
             break;
         case 0x0F:
-            gui.disp.Printf((char*)"Tab");
+            gui.Printf((char*)"Tab");
             break;
         case 0x10:
-            gui.disp.Printf((char*)"Q");
+            gui.Printf((char*)"Q");
             break;
         case 0x11:
-            gui.disp.Printf((char*)"W");
+            gui.Printf((char*)"W");
             break;
         case 0x12:
-            gui.disp.Printf((char*)"E");
+            gui.Printf((char*)"E");
             break;
         case 0x13:
-            gui.disp.Printf((char*)"R");
+            gui.Printf((char*)"R");
             break;
         case 0x14:
-            gui.disp.Printf((char*)"T");
+            gui.Printf((char*)"T");
             break;
         case 0x15:
-            gui.disp.Printf((char*)"Y");
+            gui.Printf((char*)"Y");
             break;
         case 0x16:
-            gui.disp.Printf((char*)"U");
+            gui.Printf((char*)"U");
             break;
         case 0x17:
-            gui.disp.Printf((char*)"I");
+            gui.Printf((char*)"I");
             break;
         case 0x18:
-            gui.disp.Printf((char*)"O");
+            gui.Printf((char*)"O");
             break;
         case 0x19:
-            gui.disp.Printf((char*)"P");
+            gui.Printf((char*)"P");
             break;
 		case 0x1A:
-			gui.disp.Printf((char*)"[");
+			gui.Printf((char*)"[");
 			break;
 		case 0x1B:
-			gui.disp.Printf((char*)"]");
+			gui.Printf((char*)"]");
 			break;
 		case 0x1C:
-			gui.disp.Printf((char*)"ENTER");
+			gui.Printf((char*)"ENTER");
 			break;
 		case 0x1D:
-			gui.disp.Printf((char*)"LCtrl");
+			gui.Printf((char*)"LCtrl");
 			break;
 		case 0x1E:
-			gui.disp.Printf((char*)"A");
+			gui.Printf((char*)"A");
 			break;
 		case 0x1F:
-			gui.disp.Printf((char*)"S");
+			gui.Printf((char*)"S");
 			break;
         case 0x20:
-            gui.disp.Printf((char*)"D");
+            gui.Printf((char*)"D");
             break;
         case 0x21:
-            gui.disp.Printf((char*)"F");
+            gui.Printf((char*)"F");
             break;
         case 0x22:
-            gui.disp.Printf((char*)"G");
+            gui.Printf((char*)"G");
             break;
         case 0x23:
-            gui.disp.Printf((char*)"H");
+            gui.Printf((char*)"H");
             break;
         case 0x24:
-            gui.disp.Printf((char*)"J");
+            gui.Printf((char*)"J");
             break;
         case 0x25:
-            gui.disp.Printf((char*)"K");
+            gui.Printf((char*)"K");
             break;
         case 0x26:
-            gui.disp.Printf((char*)"L");
+            gui.Printf((char*)"L");
             break;
         case 0x27:
-            gui.disp.Printf((char*)";");
+            gui.Printf((char*)";");
             break;
         case 0x28:
-            gui.disp.Printf((char*)"'");
+            gui.Printf((char*)"'");
             break;
         case 0x29:
-            gui.disp.Printf((char*)"`");
+            gui.Printf((char*)"`");
             break;
 		case 0x2A:
-			gui.disp.Printf((char*)"LShift");
+			gui.Printf((char*)"LShift");
 			break;
 		case 0x2B:
-			gui.disp.Printf((char*)"\\");
+			gui.Printf((char*)"\\");
 			break;
 		case 0x2C:
-			gui.disp.Printf((char*)"Z");
+			gui.Printf((char*)"Z");
 			break;
 		case 0x2D:
-			gui.disp.Printf((char*)"X");
+			gui.Printf((char*)"X");
 			break;
 		case 0x2E:
-			gui.disp.Printf((char*)"C");
+			gui.Printf((char*)"C");
 			break;
 		case 0x2F:
-			gui.disp.Printf((char*)"V");
+			gui.Printf((char*)"V");
 			break;
         case 0x30:
-            gui.disp.Printf((char*)"B");
+            gui.Printf((char*)"B");
             break;
         case 0x31:
-            gui.disp.Printf((char*)"N");
+            gui.Printf((char*)"N");
             break;
         case 0x32:
-            gui.disp.Printf((char*)"M");
+            gui.Printf((char*)"M");
             break;
         case 0x33:
-            gui.disp.Printf((char*)",");
+            gui.Printf((char*)",");
             break;
         case 0x34:
-            gui.disp.Printf((char*)".");
+            gui.Printf((char*)".");
             break;
         case 0x35:
-            gui.disp.Printf((char*)"/");
+            gui.Printf((char*)"/");
             break;
         case 0x36:
-            gui.disp.Printf((char*)"Rshift");
+            gui.Printf((char*)"Rshift");
             break;
         case 0x37:
-            gui.disp.Printf((char*)"Keypad *");
+            gui.Printf((char*)"Keypad *");
             break;
         case 0x38:
-            gui.disp.Printf((char*)"LAlt");
+            gui.Printf((char*)"LAlt");
             break;
         case 0x39:
-            gui.disp.Printf((char*)"Spc");
+            gui.Printf((char*)"Spc");
             break;
         default:
             /* 'keuyp' event corresponds to the 'keydown' + 0x80 
              * it may still be a scancode we haven't implemented yet, or
              * maybe a control/escape sequence */
             if (keycode <= 0x7f) {
-                gui.disp.Printf((char*)"Unknown key down");
+                gui.Printf((char*)"Unknown key down");
             } else if (keycode <= 0x39 + 0x80) {
-                gui.disp.Printf((char*)"key up ");
+                gui.Printf((char*)"key up ");
 				keycode -= 0x80;
                 PrintLetter();
-            } else gui.disp.Printf((char*)"Unknown key up");
+            } else gui.Printf((char*)"Unknown key up");
             break;
     }
 }
