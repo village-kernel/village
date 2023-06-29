@@ -5,13 +5,10 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Display.h"
-#include "stdarg.h"
-#include "stdio.h"
 
 
 ///Constructor
 Display::Display()
-	:lock(false)
 {
 }
 
@@ -291,17 +288,4 @@ void Display::ShowPicture(uint8_t *picture, uint16_t x, uint16_t y, uint16_t wid
 			picture += 2;
 		}
 	}
-}
-
-
-///Display Printf
-void Display::Printf(const char* format, ...)
-{
-	lock.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsprintf(data, format, arg);
-	va_end(arg);
-	ShowString((uint8_t*)data);
-	lock.Unlock();
 }
