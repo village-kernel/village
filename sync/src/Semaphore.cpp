@@ -1,68 +1,11 @@
 //###########################################################################
-// SyncLock.cpp
+// Semaphore.cpp
 // Definitions of the functions that manage synchronization mechanism
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "SyncLock.h"
+#include "Semaphore.h"
 #include "Thread.h"
-
-
-/// @brief SpinLock constructor
-SpinLock::SpinLock()
-	:lock(false)
-{
-}
-
-
-/// @brief SpinLock deconstructor
-SpinLock::~SpinLock()
-{
-}
-
-
-/// @brief SpinLock lock
-void SpinLock::Lock()
-{
-	while (true == lock) {}
-	lock = !lock;
-}
-
-
-/// @brief SpinLock unlock
-void SpinLock::Unlock()
-{
-	lock = !lock;
-}
-
-
-/// @brief Mutex constructor
-Mutex::Mutex(int ticks)
-	:lock(false),
-	ticks(ticks)
-{
-}
-
-
-/// @brief Mutex deconstructor
-Mutex::~Mutex()
-{
-}
-
-
-/// @brief Mutex lock
-void Mutex::Lock()
-{
-	while (true == lock) { thread.Sleep(ticks); }
-	lock = !lock;
-}
-
-
-/// @brief Mutex unlock
-void Mutex::Unlock()
-{
-	lock = !lock;
-}
 
 
 /// @brief Semaphore constructor

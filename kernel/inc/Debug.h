@@ -8,7 +8,7 @@
 #define __DEBUG_H__
 
 #include "Driver.h"
-#include "SyncLock.h"
+#include "Mutex.h"
 
 
 /// @brief Debug

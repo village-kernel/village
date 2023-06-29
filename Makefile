@@ -8,6 +8,7 @@
 ######################################
 # libraries
 ######################################
+libs-$(CONFIG_SYNC)                         += sync
 libs-$(CONFIG_BINUTILS)                     += ld
 libs-$(CONFIG_UTILITIES)                    += utils
 
@@ -31,10 +32,12 @@ src-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/src
 src-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32f4xx
 src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32h7xx
 
+inc-$(CONFIG_SYNC)                          += vk.kernel/sync/inc
 inc-$(CONFIG_CONSOLE)                       += vk.kernel/console/inc
 inc-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/inc
 inc-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/inc
 
+src-$(CONFIG_SYNC)                          += vk.kernel/sync/src
 src-$(CONFIG_CONSOLE)                       += vk.kernel/console/src
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
@@ -66,12 +69,15 @@ objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
+objs-sync-$(CONFIG_SPINLOCK)                += SpinLock.o
+objs-sync-$(CONFIG_MUTEX)                   += Mutex.o
+objs-sync-$(CONFIG_SEMAPHORE)               += Semaphore.o
+
 objs-ld-$(CONFIG_ELFLOADER)                 += ElfLoader.o
 objs-ld-$(CONFIG_EXECUTOR)                  += Executor.o
 objs-ld-$(CONFIG_LIBTOOL)                   += LibraryTool.o
 objs-ld-$(CONFIG_MODTOOL)                   += ModuleTool.o
 
-objs-utils-$(CONFIG_SYNCLOCK)               += SyncLock.o
 objs-utils-$(CONFIG_FILESTREAM)             += FileStream.o
 objs-utils-$(CONFIG_INIPARSER)              += iniParser.o
 objs-utils-$(CONFIG_PINPARSER)              += pinParser.o
