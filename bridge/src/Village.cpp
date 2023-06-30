@@ -1,0 +1,59 @@
+//###########################################################################
+// Village.cpp
+// Definitions of the functions that manage Village
+//
+// $Copyright: Copyright (C) village
+//###########################################################################
+#include "Kernel.h"
+#include "Village.h"
+
+
+/// @brief Constructor
+Village::Village()
+{
+}
+
+
+/// @brief Deconstructor
+Village::~Village()
+{
+}
+
+
+/// @brief Singleton Instance
+/// @return Village instance
+Village& Village::Instance()
+{
+	static Village instance;
+	return instance;
+}
+
+
+/// @brief Definitions Village
+Village& village = Village::Instance();
+
+
+/// @brief Sleep
+/// @param ticks 
+void Village::Sleep(uint32_t ticks)
+{
+	thread.Sleep(ticks);
+}
+
+
+/// @brief Get driver
+/// @param id 
+/// @return driver
+Driver* Village::GetDriver(uint32_t id)
+{
+	return device.GetDriver(id);
+}
+
+
+/// @brief Get driver by name
+/// @param name 
+/// @return drvier
+Driver* Village::GetDriverByName(const char* name)
+{
+	return device.GetDriverByName(name);
+}

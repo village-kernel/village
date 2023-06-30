@@ -73,7 +73,7 @@ objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
 objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o
 objs-kernel-$(CONFIG_SEMAPHORE)             += Semaphore.o
 
-objs-kernel-$(CONFIG_BRIDGE)                += Bridge.o
+objs-kernel-$(CONFIG_VILLAGE)               += Village.o
 
 objs-kernel-$(CONFIG_ELFLOADER)             += ElfLoader.o
 objs-kernel-$(CONFIG_EXECUTOR)              += Executor.o

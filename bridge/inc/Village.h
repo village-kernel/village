@@ -1,24 +1,31 @@
 //###########################################################################
-// Bridge.h
-// Declarations of the functions that manage bridge
+// Village.h
+// Declarations of the functions that manage village
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __BRIDGE_H__
-#define __BRIDGE_H__
+#ifndef __VILLAGE_H__
+#define __VILLAGE_H__
 
 #include "Defines.h"
 #include "Driver.h"
 
-/// @brief Bridge
-class Bridge
+/// @brief Village
+class Village
 {
 public:
 	//Methods
-	Bridge();
-	~Bridge();
+	Village();
+	~Village();
+	void Sleep(uint32_t ticks);
 	Driver* GetDriver(uint32_t id);
 	Driver* GetDriverByName(const char* name);
+
+	//Singleton Instance
+	static Village& Instance();
 };
 
-#endif //!__BRIDGE_H__
+///Declarations Village reference
+extern Village& village;
+
+#endif //!__VILLAGE_H__
