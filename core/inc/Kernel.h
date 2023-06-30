@@ -1,19 +1,19 @@
 //###########################################################################
 // Kernel.h
-// Declarations of the functions that manage module object
+// Declarations of the functions that manage Kernel
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __KERNEL_H__
 #define __KERNEL_H__
 
+#include "Memory.h"
+#include "Interrupt.h"
 #include "Thread.h"
 #include "Scheduler.h"
-#include "Memory.h"
 #include "Loader.h"
-#include "Modular.h"
 #include "Device.h"
-#include "Interrupt.h"
+#include "Modular.h"
 #include "Environment.h"
 
 ///Kernel

@@ -1,29 +1,29 @@
 //###########################################################################
-// kernel.cpp
-// Definitions of the functions that manage module object
+// Kernel.cpp
+// Definitions of the functions that manage Kernel
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "kernel.h"
+#include "Kernel.h"
 
 
 /// @brief Clear isReady flag
 volatile bool Kernel::isReady = false;
 
 
-/// @brief Constructor
+/// @brief Kernel constructor
 Kernel::Kernel()
 {
 }
 
 
-/// @brief Fini constructor
+/// @brief Kernel deconstructor
 Kernel::~Kernel()
 {
 }
 
 
-/// @brief Execute module object->Initialize
+/// @brief Kernel Execute
 void Kernel::Initialize()
 {
 	isReady = false;
@@ -53,7 +53,7 @@ void Kernel::Initialize()
 }
 
 
-/// @brief Execute module object->UpdateParams
+/// @brief Kernel update params
 void Kernel::UpdateParams()
 {
 	if (!isReady) return;
@@ -63,7 +63,7 @@ void Kernel::UpdateParams()
 }
 
 
-/// @brief Execute thread tasks 
+/// @brief Kernel execute
 void Kernel::Execute()
 {
 	//Execute device
@@ -80,7 +80,7 @@ void Kernel::Execute()
 }
 
 
-/// @brief Execute module object->FailSafe
+/// @brief Kernel failsafe
 /// @param arg fail arg
 void Kernel::FailSafe(int arg)
 {
