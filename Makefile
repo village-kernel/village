@@ -8,24 +8,22 @@
 ######################################
 # libraries
 ######################################
-libs-$(CONFIG_SYNC)                         += sync
-libs-$(CONFIG_BINUTILS)                     += ld
-libs-$(CONFIG_UTILITIES)                    += utils
+libs-$(CONFIG_KERNEL)                       += kernel
 
 
 ######################################
 # paths
 ######################################
-inc-y                                       += vk.kernel/kernel/if
-inc-y                                       += vk.kernel/kernel/inc
+inc-y                                       += vk.kernel/core/if
+inc-y                                       += vk.kernel/core/inc
+
+src-y                                       += vk.kernel
+src-y                                       += vk.kernel/core/src
 
 inc-$(CONFIG_X86)                           += vk.kernel/arch/x86/inc
 inc-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/inc
 inc-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/inc/stm32f4xx
 inc-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/inc/stm32h7xx
-
-src-y                                       += vk.kernel
-src-y                                       += vk.kernel/kernel/src
 
 src-$(CONFIG_X86)                           += vk.kernel/arch/x86/src
 src-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/src
@@ -33,11 +31,13 @@ src-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/src/s
 src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32h7xx
 
 inc-$(CONFIG_SYNC)                          += vk.kernel/sync/inc
+inc-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/inc
 inc-$(CONFIG_CONSOLE)                       += vk.kernel/console/inc
 inc-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/inc
 inc-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/inc
 
 src-$(CONFIG_SYNC)                          += vk.kernel/sync/src
+src-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/src
 src-$(CONFIG_CONSOLE)                       += vk.kernel/console/src
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
@@ -69,21 +69,22 @@ objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
-objs-sync-$(CONFIG_SPINLOCK)                += SpinLock.o
-objs-sync-$(CONFIG_MUTEX)                   += Mutex.o
-objs-sync-$(CONFIG_SEMAPHORE)               += Semaphore.o
+objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
+objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o
+objs-kernel-$(CONFIG_SEMAPHORE)             += Semaphore.o
 
-objs-ld-$(CONFIG_ELFLOADER)                 += ElfLoader.o
-objs-ld-$(CONFIG_EXECUTOR)                  += Executor.o
-objs-ld-$(CONFIG_LIBTOOL)                   += LibraryTool.o
-objs-ld-$(CONFIG_MODTOOL)                   += ModuleTool.o
+objs-kernel-$(CONFIG_BRIDGE)                += Bridge.o
 
-objs-utils-$(CONFIG_FILESTREAM)             += FileStream.o
-objs-utils-$(CONFIG_INIPARSER)              += iniParser.o
-objs-utils-$(CONFIG_PINPARSER)              += pinParser.o
-objs-utils-$(CONFIG_RCPARSER)               += rcParser.o
-objs-utils-$(CONFIG_BRIDGE)                 += Bridge.o
-objs-utils-$(CONFIG_REGEX)                  += Regex.o
+objs-kernel-$(CONFIG_ELFLOADER)             += ElfLoader.o
+objs-kernel-$(CONFIG_EXECUTOR)              += Executor.o
+objs-kernel-$(CONFIG_LIBTOOL)               += LibraryTool.o
+objs-kernel-$(CONFIG_MODTOOL)               += ModuleTool.o
+
+objs-kernel-$(CONFIG_FILESTREAM)            += FileStream.o
+objs-kernel-$(CONFIG_INIPARSER)             += iniParser.o
+objs-kernel-$(CONFIG_PINPARSER)             += pinParser.o
+objs-kernel-$(CONFIG_RCPARSER)              += rcParser.o
+objs-kernel-$(CONFIG_REGEX)                 += Regex.o
 
 
 #######################################

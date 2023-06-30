@@ -36,6 +36,17 @@ config WORKQUEUE
 
 endmenu
 
+#config bridge
+
+menu "bridge"
+
+config BRIDGE
+	depends on UTILITIES
+	bool "Enable the bridge from kernel to user"
+	default n
+
+endmenu
+
 # confg console menu
 
 menu "console"
@@ -135,11 +146,6 @@ config RCPARSER
 	depends on UTILITIES
 	select FILESTREAM
 	bool "Enable resource script parser function"
-	default n
-
-config BRIDGE
-	depends on UTILITIES
-	bool "Enable the bridge from kernel to user"
 	default n
 
 config REGEX
