@@ -54,15 +54,14 @@ private:
 	//Methods
 	Thread();
 	~Thread();
-	static void IdleTask();
-	static void FuncHandler(Function function, char* argv = NULL);
-	static void MethodHandler(Class *user, Method method, char* argv = NULL);
+	void IdleTask();
+	void TaskHandler(Function function, void* user = NULL, void* args = NULL);
 public:
 	///Methods
 	void Initialize();
 	void Execute();
-	int CreateTask(Function function, char* argv = NULL);
-	int CreateTask(Class *user, Method method, char* argv = NULL);
+	int CreateTask(Function function, void* user = NULL, void* args = NULL);
+	int CreateTask(Method method, Class *user, void* args = NULL);
 	int DeleteTask(int pid);
 	int WaitForTask(int pid);
 	void Sleep(uint32_t ticks);

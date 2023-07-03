@@ -42,7 +42,7 @@ EXPORT_SYMBOL(thread);
 void Thread::Initialize()
 {
 	//Frist task should be idle task and the pid is 0
-	CreateTask((Function)&Thread::IdleTask);
+	CreateTask((Method)&Thread::IdleTask, this);
 
 	//Set first node
 	tasks.Begin();
@@ -52,15 +52,16 @@ void Thread::Initialize()
 /// @brief Thread execute
 void Thread::Execute()
 {
-	FuncHandler((Function)&Thread::IdleTask);
+	TaskHandler(union_cast<Function>(&Thread::IdleTask), (void*)this);
 }
 
 
 /// @brief Create new task
 /// @param function task execute function
-/// @param argv task execute argv
-/// @return result
-int Thread::CreateTask(Function function, char* argv)
+/// @param user task execute uesr
+/// @param args task execute args
+/// @return pid
+int Thread::CreateTask(Function function, void* user, void* args)
 {
 	//Create a new task and allocate stack space
 	Task* task = new Task(memory.StackAlloc(task_stack_size));
@@ -72,42 +73,28 @@ int Thread::CreateTask(Function function, char* argv)
 	task->psp = task->stack - psp_frame_size;
 	*(TaskContext*)task->psp = TaskContext
 	(
-		(uint32_t)&FuncHandler,
+		(uint32_t)union_cast<uint32_t>(&Thread::TaskHandler),
+		(uint32_t)this,
 		(uint32_t)function,
-		(uint32_t)argv
+		(uint32_t)user,
+		(uint32_t)args
 	);
 
 	return tasks.Add(task);
 }
-EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPFvPcES0_);
+EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPFvPvS0_ES0_S0_);
 
 
 /// @brief Create new task for cpp
-/// @param user task execute class
 /// @param method task execute class method
-/// @param argv task execute argv
-/// @return result
-int Thread::CreateTask(Class *user, Method method, char* argv)
+/// @param user task execute class
+/// @param args task execute args
+/// @return pid
+int Thread::CreateTask(Method method, Class *user, void* args)
 {
-	//Create a new task and allocate stack space
-	Task* task = new Task(memory.StackAlloc(task_stack_size));
-	
-	//Check whether stack allocation is successful
-	if (NULL == task && 0 == task->stack) return -1;
-
-	//Fill the stack content
-	task->psp = task->stack - psp_frame_size;
-	*(TaskContext*)task->psp = TaskContext
-	(
-		(uint32_t)&MethodHandler,
-		(uint32_t)user,
-		*(uint32_t*)&method,
-		(uint32_t)argv
-	);
-
-	return tasks.Add(task);
+	return CreateTask(union_cast<Function>(method), (void*)user, args);
 }
-EXPORT_SYMBOL(_ZN6Thread10CreateTaskEP5ClassMS0_FvPcES2_);
+EXPORT_SYMBOL(_ZN6Thread10CreateTaskEM5ClassFvPvEPS0_S1_);
 
 
 /// @brief Thread delete task
@@ -181,26 +168,12 @@ void Thread::IdleTask()
 
 /// @brief Thread task function handler 
 /// @param function execute function
-/// @param argv execute argv
-void Thread::FuncHandler(Function function, char* argv)
+/// @param user execute user
+void Thread::TaskHandler(Function function, void* user, void* args)
 {
 	if (NULL != function)
 	{
-		(function)(argv);
-	}
-	thread.Exit();
-}
-
-
-/// @brief Thread task method handler 
-/// @param user execute class
-/// @param method execute class method
-/// @param argv execute argv
-void Thread::MethodHandler(Class *user, Method method, char* argv)
-{
-	if (NULL != user && NULL != method)
-	{
-		(user->*method)(argv);
+		(function)(user, args);
 	}
 	thread.Exit();
 }
