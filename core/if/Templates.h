@@ -40,8 +40,8 @@ dst_type union_cast(src_type src)
 
 /// @brief Class end point
 class Class {};
-typedef void (Class::*Method)(char*);
-typedef void (*Function)(char*);
+typedef void (Class::*Method)(void*);
+typedef void (*Function)(void*, void*);
 
 
 /// @brief List class template 
