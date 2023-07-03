@@ -25,8 +25,8 @@ void Application5::Initialize()
 	interrupt.SetISR(IRQ_Keyboard_Controller, union_cast<Function>(&Application5::ExtHandler), (char*)this);
 	work = workQueue.Create(union_cast<Function>(&Application5::PrintLetter), (char*)this, work_delay);
 
-	test1Pid = thread.CreateTaskCpp(this, (Method)&Application5::Test1);
-	test2Pid = thread.CreateTaskCpp(this, (Method)&Application5::Test2);
+	test1Pid = thread.CreateTask(this, (Method)&Application5::Test1);
+	test2Pid = thread.CreateTask(this, (Method)&Application5::Test2);
 }
 
 
