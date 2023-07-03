@@ -35,7 +35,7 @@ Memory& Memory::Instance()
 	static Memory instance;
 	return instance;
 }
-EXPORT_SYMBOL(Memory::Instance, _ZN6Memory8InstanceEv);
+EXPORT_SYMBOL(_ZN6Memory8InstanceEv);
 
 
 /// @brief Definitions memory
@@ -137,7 +137,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 
 	return 0;
 }
-EXPORT_SYMBOL(Memory::HeapAlloc, _ZN6Memory9HeapAllocEm);
+EXPORT_SYMBOL(_ZN6Memory9HeapAllocEm);
 
 
 /// @brief Memory stack alloc
@@ -193,7 +193,7 @@ uint32_t Memory::StackAlloc(uint32_t size)
 	delete newNode;
 	return 0;
 }
-EXPORT_SYMBOL(Memory::StackAlloc, _ZN6Memory10StackAllocEm);
+EXPORT_SYMBOL(_ZN6Memory10StackAllocEm);
 
 
 /// @brief Memory free
@@ -235,7 +235,7 @@ void Memory::Free(uint32_t memory, uint32_t size)
 		}
 	}
 }
-EXPORT_SYMBOL(Memory::Free, _ZN6Memory4FreeEmm);
+EXPORT_SYMBOL(_ZN6Memory4FreeEmm);
 
 
 /// @brief Memory sbrk
@@ -277,10 +277,10 @@ void* New(size_t size)
 {
 	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
-EXPORT_SYMBOL(New, _Znwm);
-EXPORT_SYMBOL(New, _Znam);
-EXPORT_SYMBOL(New, _Znwj);
-EXPORT_SYMBOL(New, _Znaj);
+EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znwm);
+EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znam);
+EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znwj);
+EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znaj);
 
 
 /// @brief Memory delete method
@@ -289,8 +289,8 @@ void Delete(void* ptr)
 {
 	Memory::Instance().Free((uint32_t)ptr);
 }
-EXPORT_SYMBOL(Delete, _ZdaPv);
-EXPORT_SYMBOL(Delete, _ZdlPv);
+EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdaPv);
+EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdlPv);
 
 
 /// @brief Memory delete method
@@ -300,10 +300,10 @@ void DeleteSize(void* ptr, size_t size)
 {
 	Memory::Instance().Free((uint32_t)ptr, size);
 }
-EXPORT_SYMBOL(DeleteSize, _ZdaPvm);
-EXPORT_SYMBOL(DeleteSize, _ZdlPvm);
-EXPORT_SYMBOL(DeleteSize, _ZdaPvj);
-EXPORT_SYMBOL(DeleteSize, _ZdlPvj);
+EXPORT_SYMBOL_ALIAS(_Z10DeleteSizePvm, _ZdaPvm);
+EXPORT_SYMBOL_ALIAS(_Z10DeleteSizePvm, _ZdlPvm);
+EXPORT_SYMBOL_ALIAS(_Z10DeleteSizePvm, _ZdaPvj);
+EXPORT_SYMBOL_ALIAS(_Z10DeleteSizePvm, _ZdlPvj);
 
 
 /// @brief Override new

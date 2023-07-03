@@ -28,13 +28,12 @@ Device& Device::Instance()
 	static Device instance;
 	return instance;
 }
-EXPORT_SYMBOL(Device::Instance, _ZN6Device8InstanceEv);
+EXPORT_SYMBOL(_ZN6Device8InstanceEv);
 
 
 /// @brief Definitions device
 Device& device = Device::Instance();
-static Device* pdevice = &device;
-EXPORT_SYMBOL(pdevice, device);
+EXPORT_SYMBOL(device);
 
 
 /// @brief Execute device object->Initialize
@@ -94,7 +93,7 @@ void Device::RegisterDriver(Driver* driver, uint32_t id)
 	drivers.Insert(driver, id);
 	RegisterRuntime(driver);
 }
-EXPORT_SYMBOL(Device::RegisterDriver, _ZN6Device14RegisterDriverEP6Driverm);
+EXPORT_SYMBOL(_ZN6Device14RegisterDriverEP6Driverm);
 
 
 
@@ -113,7 +112,7 @@ void Device::DeregisterDriver(Driver* driver, uint32_t id)
 {
 	drivers.Remove(driver, id);
 }
-EXPORT_SYMBOL(Device::DeregisterDriver, _ZN6Device16DeregisterDriverEP6Driverm);
+EXPORT_SYMBOL(_ZN6Device16DeregisterDriverEP6Driverm);
 
 
 /// @brief Get the driver object
@@ -123,7 +122,7 @@ Driver* Device::GetDriver(uint32_t id)
 {
 	return drivers.GetItem(id);
 }
-EXPORT_SYMBOL(Device::GetDriver, _ZN6Device9GetDriverEm);
+EXPORT_SYMBOL(_ZN6Device9GetDriverEm);
 
 
 /// @brief Get the driver object by name
@@ -133,4 +132,4 @@ Driver* Device::GetDriverByName(const char* name)
 {
 	return drivers.GetItemByName(name);
 }
-EXPORT_SYMBOL(Device::GetDriverByName, _ZN6Device15GetDriverByNameEPKc);
+EXPORT_SYMBOL(_ZN6Device15GetDriverByNameEPKc);

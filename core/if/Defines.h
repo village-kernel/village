@@ -80,19 +80,32 @@ static struct _Mod_##name {                                       \
 	///Search symbol marco
 	#define SEARCH_SYMBOL(name)            (0)
 #else
+	///Get method address
+#if defined(ARCH_X86)
+	#define marco_cast(src, addr)  __asm volatile("movl $"#src", %0" : "=r"(addr))
+#elif defined(ARCH_ARM)
+	#define marco_cast(src, addr)  __asm volatile("mov %0, $"#src : "=r"(addr))
+#endif
+
 	///Export symbol marco
-	#define EXPORT_SYMBOL(symbol, name)                                                \
-	static struct _Sym_##name {                                                        \
-		_Sym_##name() {                                                                \
-			Environment::Instance().ExportSymbol(union_cast<uint32_t>(&symbol), #name);\
-		}                                                                              \
-		~_Sym_##name() {                                                               \
-			Environment::Instance().UnexportSymbol(#name);                             \
-		}                                                                              \
+	#define EXPORT_SYMBOL_ALIAS(symbol, name)                                         \
+	static struct _Sym_##name {                                                       \
+		_Sym_##name() {                                                               \
+			uint32_t symAddr = 0; marco_cast(symbol, symAddr);                        \
+			Environment::Instance().ExportSymbol(symAddr, #name);                     \
+		}                                                                             \
+		~_Sym_##name() {                                                              \
+			Environment::Instance().UnexportSymbol(#name);                            \
+		}                                                                             \
 	} const _sym_##name __attribute__((used,__section__(".symbols")))
 
+
+	///Export symbol marco
+	#define EXPORT_SYMBOL(symbol)          EXPORT_SYMBOL_ALIAS(symbol, symbol) 
+
+
 	///Search symbol marco
-	#define SEARCH_SYMBOL(name)            Environment::Instance().SearchSymbol(name)
+	#define SEARCH_SYMBOL(symbol)          Environment::Instance().SearchSymbol(symbol)
 #endif
 
 

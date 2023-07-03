@@ -29,11 +29,12 @@ Modular& Modular::Instance()
 	static Modular instance;
 	return instance;
 }
-EXPORT_SYMBOL(Modular::Instance, _ZN7Modular8InstanceEv);
+EXPORT_SYMBOL(_ZN7Modular8InstanceEv);
 
 
 /// @brief Definitions modular
 Modular& modular = Modular::Instance();
+EXPORT_SYMBOL(modular);
 
 
 /// @brief Execute module object->Initialize
@@ -108,7 +109,7 @@ void Modular::RegisterModule(Module* module, uint32_t id)
 	modules.Insert(module, id);
 	RegisterRuntime(module);
 }
-EXPORT_SYMBOL(Modular::RegisterModule, _ZN7Modular14RegisterModuleEP6Modulem);
+EXPORT_SYMBOL(_ZN7Modular14RegisterModuleEP6Modulem);
 
 
 /// @brief Deregister exit
@@ -128,4 +129,4 @@ void Modular::DeregisterModule(Module* module, uint32_t id)
 	DeregisterExit(module);
 	modules.Remove(module, id);
 }
-EXPORT_SYMBOL(Modular::DeregisterModule, _ZN7Modular16DeregisterModuleEP6Modulem);
+EXPORT_SYMBOL(_ZN7Modular16DeregisterModuleEP6Modulem);

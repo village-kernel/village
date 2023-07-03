@@ -27,13 +27,12 @@ Environment& Environment::Instance()
 	static Environment instance;
 	return instance;	
 }
-EXPORT_SYMBOL(Environment::Instance, _ZN11Environment8InstanceEv);
+EXPORT_SYMBOL(_ZN11Environment8InstanceEv);
 
 
 /// @brief Definitions environment
 Environment& environment = Environment::Instance();
-static Environment* penvironment = &environment;
-EXPORT_SYMBOL(penvironment, environment);
+EXPORT_SYMBOL(environment);
 
 
 /// @brief Export symbol
@@ -43,7 +42,7 @@ void Environment::ExportSymbol(uint32_t symAddr, const char* name)
 {
 	symbols.Add(new Symbol(name, symAddr));
 }
-EXPORT_SYMBOL(Environment::ExportSymbol, _ZN11Environment12ExportSymbolEmPKc);
+EXPORT_SYMBOL(_ZN11Environment12ExportSymbolEmPKc);
 
 
 /// @brief Unexport symbol
@@ -58,7 +57,7 @@ void Environment::UnexportSymbol(const char* name)
 		}
 	}
 }
-EXPORT_SYMBOL(Environment::Instance, _ZN11Environment14UnexportSymbolEPKc);
+EXPORT_SYMBOL(_ZN11Environment14UnexportSymbolEPKc);
 
 
 /// @brief Search symbol by name and return addr
@@ -75,4 +74,4 @@ uint32_t Environment::SearchSymbol(const char* name)
 	}
 	return 0;
 }
-EXPORT_SYMBOL(Environment::Instance, _ZN11Environment12SearchSymbolEPKc);
+EXPORT_SYMBOL(_ZN11Environment12SearchSymbolEPKc);

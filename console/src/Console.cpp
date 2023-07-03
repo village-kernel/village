@@ -43,13 +43,12 @@ Console& Console::Instance()
 	static Console instance;
 	return instance;
 }
-EXPORT_SYMBOL(Console::Instance, _ZN7Console8InstanceEv);
+EXPORT_SYMBOL(_ZN7Console8InstanceEv);
 
 
 /// @brief Definitions console and export
 Console& console = Console::Instance();
-Console* pConsole = &console;
-EXPORT_SYMBOL(pConsole, console);
+EXPORT_SYMBOL(console);
 
 
 /// @brief Console initialize
@@ -120,7 +119,7 @@ void Console::RegisterCmd(Cmd* cmd, char* name)
 {
 	cmds.InsertByName(cmd, name);
 }
-EXPORT_SYMBOL(Console::RegisterCmd, _ZN7Console11RegisterCmdEP3CmdPc);
+EXPORT_SYMBOL(_ZN7Console11RegisterCmdEP3CmdPc);
 
 
 /// @brief Deregister cmd object
@@ -130,7 +129,7 @@ void Console::DeregisterCmd(Cmd* cmd, char* name)
 {
 	cmds.RemoveByName(cmd, name);
 }
-EXPORT_SYMBOL(Console::DeregisterCmd, _ZN7Console13DeregisterCmdEP3CmdPc);
+EXPORT_SYMBOL(_ZN7Console13DeregisterCmdEP3CmdPc);
 
 
 /// @brief Console log
@@ -148,7 +147,7 @@ void Console::Log(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\r\n");
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::Log, _ZN7Console3LogEPKcz);
+EXPORT_SYMBOL(_ZN7Console3LogEPKcz);
 
 
 /// @brief Console info
@@ -166,7 +165,7 @@ void Console::Info(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::Info, _ZN7Console4InfoEPKcz);
+EXPORT_SYMBOL(_ZN7Console4InfoEPKcz);
 
 
 /// @brief Console error
@@ -184,7 +183,7 @@ void Console::Error(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::Error, _ZN7Console5ErrorEPKcz);
+EXPORT_SYMBOL(_ZN7Console5ErrorEPKcz);
 
 
 /// @brief Console warn
@@ -202,7 +201,7 @@ void Console::Warn(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\r\n\033[39m");
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::Warn, _ZN7Console4WarnEPKcz);
+EXPORT_SYMBOL(_ZN7Console4WarnEPKcz);
 
 
 /// @brief Console output
@@ -219,7 +218,7 @@ void Console::Output(const char* format, ...)
 	msgMgr.Write((uint8_t*)"\r\n");
 	mutex.Unlock();
 }
-EXPORT_SYMBOL(Console::Output, _ZN7Console6OutputEPKcz);
+EXPORT_SYMBOL(_ZN7Console6OutputEPKcz);
 
 
 ///Register module

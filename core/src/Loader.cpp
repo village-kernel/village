@@ -6,7 +6,6 @@
 //###########################################################################
 #include "Loader.h"
 #include "rcParser.h"
-#include "Environment.h"
 
 
 /// @brief Constructor
@@ -28,13 +27,10 @@ Loader& Loader::Instance()
 	static Loader instance;
 	return instance;
 }
-EXPORT_SYMBOL(Loader::Instance, _ZN6Loader8InstanceEv);
 
 
 /// @brief Definitions loader
 Loader& loader = Loader::Instance();
-static Loader* ploader = &loader;
-EXPORT_SYMBOL(ploader, loader);
 
 
 /// @brief Loader initialize

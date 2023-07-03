@@ -30,13 +30,12 @@ Thread& Thread::Instance()
 	static Thread instance;
 	return instance;
 }
-EXPORT_SYMBOL(Thread::Instance, _ZN6Thread8InstanceEv);
+EXPORT_SYMBOL(_ZN6Thread8InstanceEv);
 
 
 /// @brief Definitions thread and export
 Thread& thread = Thread::Instance();
-static Thread* pthread = &thread;
-EXPORT_SYMBOL(pthread, thread);
+EXPORT_SYMBOL(thread);
 
 
 /// @brief Thread Initialize
@@ -80,7 +79,7 @@ int Thread::CreateTask(Function function, char* argv)
 
 	return tasks.Add(task);
 }
-EXPORT_SYMBOL(Thread::CreateTask, _ZN6Thread10CreateTaskEPFvPcES0_);
+EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPFvPcES0_);
 
 
 /// @brief Create new task for cpp
@@ -108,7 +107,7 @@ int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 
 	return tasks.Add(task);
 }
-EXPORT_SYMBOL(Thread::CreateTaskCpp, _ZN6Thread13CreateTaskCppEP5ClassMS0_FvPcES2_);
+EXPORT_SYMBOL(_ZN6Thread13CreateTaskCppEP5ClassMS0_FvPcES2_);
 
 
 /// @brief Thread delete task
@@ -120,7 +119,7 @@ int Thread::DeleteTask(int pid)
 	memory.Free(task->stack);
 	return tasks.Remove(task, pid);
 }
-EXPORT_SYMBOL(Thread::DeleteTask, _ZN6Thread10DeleteTaskEi);
+EXPORT_SYMBOL(_ZN6Thread10DeleteTaskEi);
 
 
 /// @brief Thread wait for task
@@ -140,7 +139,7 @@ int Thread::WaitForTask(int pid)
 	}
 	return _ERR;
 }
-EXPORT_SYMBOL(Thread::WaitForTask, _ZN6Thread11WaitForTaskEi);
+EXPORT_SYMBOL(_ZN6Thread11WaitForTaskEi);
 
 
 /// @brief Thread sleep
@@ -154,7 +153,7 @@ void Thread::Sleep(uint32_t ticks)
 		scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
-EXPORT_SYMBOL(Thread::Sleep, _ZN6Thread5SleepEm);
+EXPORT_SYMBOL(_ZN6Thread5SleepEm);
 
 
 /// @brief Thread Exit
@@ -167,7 +166,7 @@ void Thread::Exit()
 		scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
-EXPORT_SYMBOL(Thread::Exit, _ZN6Thread4ExitEv);
+EXPORT_SYMBOL(_ZN6Thread4ExitEv);
 
 
 /// @brief Idle task
