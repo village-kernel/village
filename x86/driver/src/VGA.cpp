@@ -8,13 +8,19 @@
 #include "Kernel.h"
 
 
-///Constructor
+/// @brief Constructor
 VGA::VGA()
 {
 }
 
 
-///VGA initialize
+/// @brief
+VGA::~VGA()
+{
+}
+
+
+/// @brief VGA initialize
 void VGA::Initialize()
 {
 	device.width = 320;
@@ -22,7 +28,9 @@ void VGA::Initialize()
 }
 
 
-///VGA write reg
+/// @brief VGA write reg
+/// @param reg 
+/// @param value 
 void VGA::WriteData(uint16_t reg, uint16_t value)
 {
 	unsigned char* videos = (unsigned char*)0xA0000;
@@ -30,7 +38,9 @@ void VGA::WriteData(uint16_t reg, uint16_t value)
 }
 
 
-///VGA read reg
+/// @brief VGA read reg
+/// @param reg 
+/// @return 
 uint16_t VGA::ReadData(uint16_t reg)
 {
 	unsigned char* videos = (unsigned char*)0xA0000;
@@ -38,21 +48,28 @@ uint16_t VGA::ReadData(uint16_t reg)
 }
 
 
-///VGA draw point
+/// @brief VGA draw point
+/// @param x 
+/// @param y 
+/// @param color 
 void VGA::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 {
 	WriteData((x + y * device.width), color);
 }
 
 
-///VGA read point
+/// @brief VGA read point
+/// @param x 
+/// @param y 
+/// @return 
 uint16_t VGA::ReadPoint(uint16_t x, uint16_t y)
 {
 	return ReadData((x + y * device.width));
 }
 
 
-///VGA clear
+/// @brief VGA clear
+/// @param color 
 void VGA::Clear(uint16_t color)
 {
 	for (uint16_t y = 0; y < device.height; y++)

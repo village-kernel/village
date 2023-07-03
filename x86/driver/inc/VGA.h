@@ -12,22 +12,23 @@
 #include "Driver.h"
 
 
-///VGA
+/// @brief VGA
 class VGA : public Driver, public LcdDriver
 {
-protected:
+private:
 	//Methods
 	void WriteData(uint16_t reg, uint16_t value);
 	uint16_t ReadData(uint16_t reg);
 public:
 	//Device Methods
 	VGA();
+	~VGA();
 	void Initialize();
-	
-	//Display methods
+
+	//Methods
 	void DrawPoint(uint16_t x, uint16_t y, uint16_t color);
 	uint16_t ReadPoint(uint16_t x, uint16_t y);
 	void Clear(uint16_t color = 0);
 };
 
-#endif //!__X86_VGA_H__
+#endif //!_VGA_H__
