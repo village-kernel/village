@@ -27,13 +27,15 @@ public:
 	struct Work
 	{
 		Function func;
-		char*    argv;
+		void*    user;
+		void*    args;
 		uint32_t ticks;
 		State    state;
 
-		Work(Function func, char* argv, uint32_t ticks)
+		Work(Function func, void* user, void* args, uint32_t ticks)
 			:func(func),
-			argv(argv),
+			user(user),
+			args(args),
 			ticks(ticks),
 			state(_Suspend)
 		{}
@@ -49,7 +51,8 @@ public:
 	//Methods
 	void Initialize();
 	void Execute();
-	Work* Create(Function func, char* argv = NULL, uint32_t ticks = 0);
+	Work* Create(Function func, void* user = NULL, void* args = NULL, uint32_t ticks = 0);
+	Work* Create(Method method, Class* user, void* args = NULL, uint32_t ticks = 0);
 	int Delete(Work* work);
 	int Schedule(Work* work);
 

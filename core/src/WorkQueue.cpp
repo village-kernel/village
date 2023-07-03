@@ -54,7 +54,7 @@ void WorkQueue::Execute()
 			{
 				work->state = _Running;
 				if (work->ticks) thread.Sleep(work->ticks);
-				(work->func)(work->argv);
+				(work->func)(work->user, work->args);
 				work->state = _Finish;
 			}
 		}
@@ -64,16 +64,30 @@ void WorkQueue::Execute()
 
 /// @brief WorkQueue create
 /// @param func work function
-/// @param argv work argv
+/// @param user work user
+/// @param args work args
 /// @param ticks delay ticks
 /// @return work
-WorkQueue::Work* WorkQueue::Create(Function func, char* argv, uint32_t ticks)
+WorkQueue::Work* WorkQueue::Create(Function func, void* user, void* args, uint32_t ticks)
 {
-	Work* work = new Work(func, argv, ticks);
+	Work* work = new Work(func, user, args, ticks);
 	if (NULL != work) works.Add(work);
 	return work;
 }
-EXPORT_SYMBOL(_ZN9WorkQueue6CreateEPFvPcES0_m);
+EXPORT_SYMBOL(_ZN9WorkQueue6CreateEPFvPvS0_ES0_S0_m);
+
+
+/// @brief WorkQueue create
+/// @param method work method
+/// @param user work user
+/// @param args work args
+/// @param ticks delay ticks
+/// @return work
+WorkQueue::Work* WorkQueue::Create(Method method, Class* user, void* args, uint32_t ticks)
+{
+	return Create(union_cast<Function>(method), (void*)user, args, ticks);
+}
+EXPORT_SYMBOL(_ZN9WorkQueue6CreateEM5ClassFvPvEPS0_S1_m);
 
 
 /// @brief WorkQueue delete
