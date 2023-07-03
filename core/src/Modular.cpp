@@ -60,9 +60,10 @@ void Modular::UpdateParams()
 /// @brief Create task threads for each module
 void Modular::Execute()
 {
+	isRuntime = false;
 	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		module->SetPid(thread.CreateTask((Function)&Modular::Handler, (char*)(module)));
+		module->SetPid(thread.CreateTask((Method)&Modular::ModuleHandler, this, (void*)module));
 	}
 	isRuntime = true;
 }
@@ -70,7 +71,7 @@ void Modular::Execute()
 
 /// @brief Modular execute handler
 /// @param module module pointer
-void Modular::Handler(Module* module)
+void Modular::ModuleHandler(Module* module)
 {
 	module->Execute();
 	modular.DeregisterModule(module);
@@ -96,7 +97,7 @@ void Modular::RegisterRuntime(Module* module)
 	{
 		module->Initialize();
 		module->UpdateParams();
-		module->SetPid(thread.CreateTask((Function)&Modular::Handler, (char*)(module)));
+		module->SetPid(thread.CreateTask((Method)&Modular::ModuleHandler, this, (void*)module));
 	}
 }
 

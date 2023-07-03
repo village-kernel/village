@@ -12,7 +12,7 @@
 
 
 ///Modular
-class Modular
+class Modular : public Class
 {
 private:
 	//Members
@@ -24,7 +24,7 @@ private:
 	~Modular();
 	void RegisterRuntime(Module* module);
 	void DeregisterExit(Module* module);
-	static void Handler(Module* module);
+	void ModuleHandler(Module* module);
 public:
 	//Methods
 	void Initialize();
