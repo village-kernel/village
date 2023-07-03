@@ -62,7 +62,7 @@ public:
 	void Initialize();
 	void Execute();
 	int CreateTask(Function function, char* argv = NULL);
-	int CreateTaskCpp(Class *user, Method method, char* argv = NULL);
+	int CreateTask(Class *user, Method method, char* argv = NULL);
 	int DeleteTask(int pid);
 	int WaitForTask(int pid);
 	void Sleep(uint32_t ticks);

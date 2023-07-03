@@ -87,7 +87,7 @@ EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPFvPcES0_);
 /// @param method task execute class method
 /// @param argv task execute argv
 /// @return result
-int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
+int Thread::CreateTask(Class *user, Method method, char* argv)
 {
 	//Create a new task and allocate stack space
 	Task* task = new Task(memory.StackAlloc(task_stack_size));
@@ -107,7 +107,7 @@ int Thread::CreateTaskCpp(Class *user, Method method, char* argv)
 
 	return tasks.Add(task);
 }
-EXPORT_SYMBOL(_ZN6Thread13CreateTaskCppEP5ClassMS0_FvPcES2_);
+EXPORT_SYMBOL(_ZN6Thread10CreateTaskEP5ClassMS0_FvPcES2_);
 
 
 /// @brief Thread delete task

@@ -34,7 +34,7 @@ int Executor::Run(const char* path, int argc, char* argv[])
 	if (elf.Load(path) != Result::_OK) return _ERR;
 	
 	//Create a sandboxed thread to run the app
-	int pid = thread.CreateTaskCpp(this, (Method)&Executor::Sandbox);
+	int pid = thread.CreateTask(this, (Method)&Executor::Sandbox);
 
 	//Wait for task done
 	return thread.WaitForTask(pid);
