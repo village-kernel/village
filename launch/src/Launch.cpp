@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Launch.h"
-#include "Bridge.h"
+#include "Village.h"
 #include "VGA.h"
 
 
@@ -24,7 +24,7 @@ Launch::~Launch()
 /// @brief Initialize
 void Launch::Initialize()
 {
-	Driver* display = Bridge().GetDriver(DriverID::_display);
+	Driver* display = village.GetDriver(DriverID::_display);
 	gui.Initialize((VGA*)display);
 	gui.Printf("hello vk.kernel\r\n");
 }
