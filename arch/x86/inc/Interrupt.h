@@ -19,12 +19,14 @@ private:
 	{
 		int32_t     irq;
 		Function    func;
-		char*       argv;
+		void*       user;
+		void*       args;
 
-		Isr(int32_t irq = 0, Function func = NULL, char* argv = NULL)
+		Isr(int32_t irq = 0, Function func = NULL, void* user = NULL, void* args = NULL)
 			:irq(irq),
 			func(func),
-			argv(argv)
+			user(user),
+			args(args)
 		{}
 	};
 
@@ -79,19 +81,22 @@ private:
 public:
 	//Methods
 	void Initialize();
-	int SetISR(int irq, Function func, char* argv = NULL);
-	int AppendISR(int irq, Function func, char* argv = NULL);
-	int RemoveISR(int irq, Function func, char* argv = NULL);
+	int SetISR(int irq, Function func, void* user = NULL, void* args = NULL);
+	int SetISR(int irq, Method method, Class* user, void* args = NULL);
+	int AppendISR(int irq, Function func, void* user = NULL, void* args = NULL);
+	int AppendISR(int irq, Method method, Class* user, void* args = NULL);
+	int RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL);
+	int RemoveISR(int irq, Method method, Class* user, void* args = NULL);
 	void ClearISR(int irq);
+
+	//Interrupt handler
+	void Handler(int irq);
+	uint16_t GetPicIrqReg(int ocw3);
+	uint16_t GetPicIrr();
+	uint16_t GetPicIsr();
 
 	//Singleton Instance
 	static Interrupt& Instance();
-	
-	//Interrupt handler
-	static void Handler(int irq);
-	static uint16_t GetPicIrqReg(int ocw3);
-	static uint16_t GetPicIrr();
-	static uint16_t GetPicIsr();
 };
 
 ///Declarations interrupt reference

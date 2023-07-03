@@ -145,34 +145,63 @@ void Interrupt::SetIdt()
 /// @brief Interrupt Set ISR, this will clean the isrTabs[irq]
 /// @param irq irq number
 /// @param func interupt function
-/// @param argv interrupt argv
+/// @param user interrupt user
+/// @param args interrupt args
 /// @return the number of the isr in isrTabs, return -1 when fail.
-int Interrupt::SetISR(int irq, Function func, char* argv)
+int Interrupt::SetISR(int irq, Function func, void* user, void* args)
 {
 	ClearISR(irq);
-	return isrTabs[irq].Add(new Isr(irq, func, argv));
+	return isrTabs[irq].Add(new Isr(irq, func, user, args));
 }
-EXPORT_SYMBOL(_ZN9Interrupt6SetISREiPFvPcES0_);
+EXPORT_SYMBOL(_ZN9Interrupt6SetISREiPFvPvS0_ES0_S0_);
+
+
+/// @brief Interrupt Set ISR, this will clean the isrTabs[irq]
+/// @param irq irq number
+/// @param method interupt method
+/// @param user interrupt user
+/// @param args interrupt args
+/// @return the number of the isr in isrTabs, return -1 when fail.
+int Interrupt::SetISR(int irq, Method method, Class* user, void* args)
+{
+	return SetISR(irq, union_cast<Function>(method), (void*)user, args);
+}
+EXPORT_SYMBOL(_ZN9Interrupt6SetISREiM5ClassFvPvEPS0_S1_);
 
 
 /// @brief Interrupt append ISR
 /// @param irq irq number
 /// @param func interupt function
-/// @param argv interrupt argv
+/// @param user interrupt user
+/// @param args interrupt args
 /// @return the number of the isr in isrTabs, return -1 when fail.
-int Interrupt::AppendISR(int irq, Function func, char* argv)
+int Interrupt::AppendISR(int irq, Function func, void* user, void* args)
 {
-	return isrTabs[irq].Add(new Isr(irq, func, argv));
+	return isrTabs[irq].Add(new Isr(irq, func, user, args));
 }
-EXPORT_SYMBOL(_ZN9Interrupt9AppendISREiPFvPcES0_);
+EXPORT_SYMBOL(_ZN9Interrupt9AppendISREiPFvPvS0_ES0_S0_);
+
+
+/// @brief Interrupt append ISR
+/// @param irq irq number
+/// @param method interupt method
+/// @param user interrupt user
+/// @param args interrupt args
+/// @return the number of the isr in isrTabs, return -1 when fail.
+int Interrupt::AppendISR(int irq, Method method, Class* user, void* args)
+{
+	return AppendISR(irq, union_cast<Function>(method), (void*)user, args);
+}
+EXPORT_SYMBOL(_ZN9Interrupt9AppendISREiM5ClassFvPvEPS0_S1_);
 
 
 /// @brief Interrupt remove isr
 /// @param irq irq number
 /// @param func interrupt function
-/// @param argv interrupt argv
+/// @param user interrupt user
+/// @param args interrupt args
 /// @return Result::_OK / Result::_ERR
-int Interrupt::RemoveISR(int irq, Function func, char* argv)
+int Interrupt::RemoveISR(int irq, Function func, void* user, void* args)
 {
 	List<Isr> isrs = isrTabs[irq];
 
@@ -180,7 +209,8 @@ int Interrupt::RemoveISR(int irq, Function func, char* argv)
 	{
 		if ((irq  == isr->irq ) &&
 			(func == isr->func) &&
-			(argv == isr->argv))
+			(user == isr->user) &&
+			(args == isr->args))
 		{
 			Result res = (Result)isrs.Remove(isr, isrs.GetNid());
 			if (_OK == res) isrTabs[irq] = isrs;
@@ -190,7 +220,20 @@ int Interrupt::RemoveISR(int irq, Function func, char* argv)
 
 	return _ERR;
 }
-EXPORT_SYMBOL(_ZN9Interrupt9RemoveISREiPFvPcES0_);
+EXPORT_SYMBOL(_ZN9Interrupt9RemoveISREiPFvPvS0_ES0_S0_);
+
+
+/// @brief Interrupt remove isr
+/// @param irq irq number
+/// @param method interrupt method
+/// @param user interrupt user
+/// @param args interrupt args
+/// @return Result::_OK / Result::_ERR
+int Interrupt::RemoveISR(int irq, Method method, Class* user, void* args)
+{
+	return RemoveISR(irq, union_cast<Function>(method), (void*)user, args);
+}
+EXPORT_SYMBOL(_ZN9Interrupt9RemoveISREiM5ClassFvPvEPS0_S1_);
 
 
 /// @brief Interrupt clear isr
@@ -218,7 +261,7 @@ void Interrupt::Handler(int irq)
 	
 	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
 	{
-		(isr->func)(isr->argv);
+		(isr->func)(isr->user, isr->args);
 	}
 }
 
@@ -234,5 +277,5 @@ extern "C" void IRQ_Handler(Registers regs)
 		PortByteOut(PIC2_CMD, PIC_EOI); //slave
 
     //Handle the interrupt in a more modular way
-	Interrupt::Handler(regs.irq);
+	Interrupt::Instance().Handler(regs.irq);
 }
