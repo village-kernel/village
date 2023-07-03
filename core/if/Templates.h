@@ -169,6 +169,7 @@ public:
 
 		if (NULL == head)
 		{
+			nidCounter = 0;
 			head = new Node(obj, nidCounter++);
 			tail = head;
 		}
