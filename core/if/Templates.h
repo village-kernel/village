@@ -139,6 +139,13 @@ public:
 		return (NULL == iterator);
 	}
 
+	/// @brief List is empty
+	/// @return result
+	bool IsEmpty()
+	{
+		return (NULL == head);
+	}
+
 	/// @brief List item
 	/// @return object pointer
 	Object* Item()
