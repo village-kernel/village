@@ -75,10 +75,13 @@ static struct _Mod_##name {                                       \
 ///Environment marco
 #ifdef KBUILD_NO_ENVIRONNEMNT
 	///Export symbol marco
-	#define EXPORT_SYMBOL(symbol, name)    /*export symbol*/
+	#define EXPORT_SYMBOL_ALIAS(symbol, name)  /*export symbol alias*/
+
+	///Export symbol marco
+	#define EXPORT_SYMBOL(symbol)              /*export symbol*/
 
 	///Search symbol marco
-	#define SEARCH_SYMBOL(name)            (0)
+	#define SEARCH_SYMBOL(symbol)              (0)
 #else
 	///Get method address
 #if defined(ARCH_X86)
