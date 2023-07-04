@@ -9,6 +9,7 @@
 
 #include "Memory.h"
 #include "Interrupt.h"
+#include "Exception.h"
 #include "Thread.h"
 #include "Scheduler.h"
 #include "Loader.h"

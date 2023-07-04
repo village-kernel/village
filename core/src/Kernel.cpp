@@ -34,6 +34,9 @@ void Kernel::Initialize()
 	//Initialize interrupt
 	interrupt.Initialize();
 
+	//Initialize exception
+	exception.Initialize();
+
 	//Initialize thread
 	thread.Initialize();
 

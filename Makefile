@@ -53,8 +53,10 @@ objs-y                                      += Modular.o
 objs-y                                      += Device.o
 objs-y                                      += Memory.o
 objs-y                                      += Thread.o
-
 objs-y                                      += Interrupt.o
+
+objs-y                                      += ArchInterrupt.o
+objs-y                                      += Exception.o
 objs-y                                      += Scheduler.o
 objs-y                                      += System.o
 
