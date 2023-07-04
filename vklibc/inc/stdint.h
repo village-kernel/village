@@ -7,32 +7,16 @@
 #ifndef __STDINT_H__
 #define __STDINT_H__
 
-#if defined(ARCH_X86)
+typedef signed char              int8_t;
+typedef signed short             int16_t;
+typedef long signed              int32_t;
+typedef long long signed int     int64_t;
 
-#define int8_t          char
-#define int16_t         short
-#define int32_t         long
-#define int64_t         long int
+typedef unsigned char            uint8_t;
+typedef unsigned short           uint16_t;
+typedef long unsigned int        uint32_t;
+typedef long long unsigned int   uint64_t;
 
-#define uint8_t         unsigned char
-#define uint16_t        unsigned short
-#define uint32_t        unsigned long
-#define uint64_t        unsigned long int
-
-#elif defined(ARCH_ARM)
-
-#define int8_t          char
-#define int16_t         short
-#define int32_t         int
-#define int64_t         long
-
-#define uint8_t         unsigned char
-#define uint16_t        unsigned short
-#define uint32_t        unsigned int
-#define uint64_t        unsigned long
-
-#endif
-
-#define __ASM(code)     asm volatile(code)
+//#define __ASM(code)     asm volatile(code)
 
 #endif // !__STDINT_H__
