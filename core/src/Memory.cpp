@@ -273,7 +273,7 @@ extern "C" void* _sbrk(ptrdiff_t incr)
 /// @brief Memory new method
 /// @param size byte size
 /// @return address
-void* New(size_t size)
+void* New(uint32_t size)
 {
 	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
 }
@@ -296,7 +296,7 @@ EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdlPv);
 /// @brief Memory delete method
 /// @param ptr address
 /// @param size byte size
-void DeleteSize(void* ptr, size_t size)
+void DeleteSize(void* ptr, uint32_t size)
 {
 	Memory::Instance().Free((uint32_t)ptr, size);
 }
@@ -355,4 +355,21 @@ void operator delete(void *ptr, size_t size)
 void operator delete[](void *ptr, size_t size)
 {
 	DeleteSize(ptr, size);
+}
+
+
+/// @brief malloc
+/// @param size 
+/// @return 
+extern "C" void* malloc(size_t size)
+{
+	return New(size);
+}
+
+
+/// @brief free
+/// @param ptr 
+extern "C" void free(void* ptr)
+{
+	Delete(ptr);
 }
