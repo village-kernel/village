@@ -24,6 +24,6 @@ src-y                   += vk.library/vklibc/string
 ######################################
 # objects
 ######################################
-objs-c-y                += stdlib.o
+objs-c-y                += $(patsubst %.c, %.o, $(notdir $(wildcard vk.library/vklibc/src/*.c)))
 objs-c-y                += $(patsubst %.c, %.o, $(notdir $(wildcard vk.library/vklibc/stdio/*.c)))
 objs-c-y                += $(patsubst %.c, %.o, $(notdir $(wildcard vk.library/vklibc/string/*.c)))
