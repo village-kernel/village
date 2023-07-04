@@ -33,7 +33,6 @@ endif
 objs-hw-y                        += i386.o
 
 objs-y                           += crt0.o
-objs-y                           += init.o
 objs-y                           += isr.o
 
 
@@ -88,20 +87,6 @@ KLDFLAGS  += -Wl,--gc-sections
 KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-m,elf_i386
 KLDFLAGS  += -Wl,-static -pie
-
-# mod ld flags
-ifeq ($(CONFIG_VKLIBC), y)
-MLDFLAGS  += $(MCU) -ffreestanding -nostdlib
-else
-MLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
-endif
-MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
-MLDFLAGS  += -Wl,-Bsymbolic
-MLDFLAGS  += -Wl,--gc-sections
-MLDFLAGS  += -Wl,--no-warn-rwx-segment
-MLDFLAGS  += -Wl,--unresolved-symbols=ignore-in-shared-libs
-MLDFLAGS  += -Wl,-m,elf_i386
-MLDFLAGS  += -pie
 
 # application ld flags
 ifeq ($(CONFIG_VKLIBC), y)
