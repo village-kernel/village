@@ -27,8 +27,8 @@ void Application1::Initialize()
 	exti.ConfigTriggerEdge(Exti::_Rising);
 	exti.EnableInterrupt();
 
-	interrupt.SetISR(EXTI0_IRQn, union_cast<Function>(&Application1::ExtHandler), (char*)this);
-	work = workQueue.Create(union_cast<Function>(&Application1::WorkHandler), (char*)this, work_delay);
+	interrupt.SetISR(EXTI0_IRQn, (Method)&Application1::ExtHandler, this);
+	work = workQueue.Create((Method)&Application1::WorkHandler, this, NULL, work_delay);
 }
 
 

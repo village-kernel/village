@@ -6,7 +6,11 @@
 //###########################################################################
 #include "Launch.h"
 #include "Village.h"
+#if defined(ARCH_ARM)
+#include "ILI9488.h"
+#elif defined(ARCH_X86)
 #include "VGA.h"
+#endif
 
 
 /// @brief Constructor
@@ -25,7 +29,11 @@ Launch::~Launch()
 void Launch::Initialize()
 {
 	Driver* display = village.GetDriver(DriverID::_display);
+#if defined(ARCH_ARM)
+	gui.Initialize((ILI9488*)display);
+#elif defined(ARCH_X86)
 	gui.Initialize((VGA*)display);
+#endif
 	gui.Printf("hello vk.kernel\r\n");
 }
 

@@ -22,11 +22,11 @@ void Application5::Initialize()
 	gui.Initialize((VGA*)display);
 	gui.Printf("hello vk.kernel\r\n");
 
-	interrupt.SetISR(IRQ_Keyboard_Controller, union_cast<Function>(&Application5::ExtHandler), (char*)this);
-	work = workQueue.Create(union_cast<Function>(&Application5::PrintLetter), (char*)this, work_delay);
+	interrupt.SetISR(IRQ_Keyboard_Controller, (Method)(&Application5::ExtHandler), this);
+	work = workQueue.Create((Method)&Application5::PrintLetter, this, NULL, work_delay);
 
-	test1Pid = thread.CreateTask(this, (Method)&Application5::Test1);
-	test2Pid = thread.CreateTask(this, (Method)&Application5::Test2);
+	test1Pid = thread.CreateTask((Method)&Application5::Test1, this);
+	test2Pid = thread.CreateTask((Method)&Application5::Test2, this);
 }
 
 

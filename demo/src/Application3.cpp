@@ -21,7 +21,7 @@ void Application3::Initialize()
 	Driver* display = device.GetDriver(DriverID::_display);
 
 	gui.Initialize((ILI9488*)display);	
-	gui.disp.ShowString((uint8_t*)"hello vk.kernel\r\n\r\n");
+	gui.Printf("hello vk.kernel\r\n");
 }
 
 
@@ -32,9 +32,7 @@ void Application3::Execute()
 	
 	for (uint8_t i = 0; i < 2; i++)
 	{
-		gui.disp.ShowString((uint8_t*)"storage ");
-		gui.disp.ShowString((uint8_t*)path[i]);
-		gui.disp.ShowString((uint8_t*)"\r\n");
+		gui.Printf("storage %s\r\n", path[i]);
 
 		if (f_mount(&fs, path[i], 1) == FR_OK)
 		{
@@ -45,14 +43,13 @@ void Application3::Execute()
 					FRESULT res = f_readdir(&filedir, &fileinfo);
 					if (res != FR_OK || fileinfo.fname[0] == 0) break;
 					
-					gui.disp.ShowString((uint8_t*)fileinfo.fname);
-					gui.disp.ShowString((uint8_t*)"\r\n");
+					gui.Printf("%s\r\n", fileinfo.fname);
 				}
 			}
 			f_closedir(&filedir);
 			f_unmount(path[i]);
 		}
-		gui.disp.ShowString((uint8_t*)"\r\n");
+		gui.Printf("\r\n");
 	}
 }
 
