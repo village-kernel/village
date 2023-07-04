@@ -52,7 +52,7 @@ void Debug::Write(const char* data)
 	}
 	
 	//Sent data
-	if (NULL != transceiver) transceiver->Write((uint8_t*)data, strlen(data));
+	if (NULL != transceiver) while (0 == transceiver->Write((uint8_t*)data, strlen(data))) {}
 }
 
 
