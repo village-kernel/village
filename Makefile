@@ -95,3 +95,7 @@ objs-kernel-$(CONFIG_REGEX)                 += Regex.o
 ifdef CONFIG_TASK_STACK
 CFLAGS    += -DTASK_STACK=$(CONFIG_TASK_STACK)
 endif
+
+ifdef CONFIG_MAP_ADDR
+CFLAGS    += -DMAP_ADDR=$(CONFIG_MAP_ADDR)
+endif

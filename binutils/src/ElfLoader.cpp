@@ -418,24 +418,23 @@ int ElfLoader::RelEntries()
 				uint32_t relAddr = elf.map + relEntry.offset;
 				uint32_t symAddr = 0;
 
-				//Calculate symbol entry when the relocation entry type is not relative
-				if (_R_TYPE_RELATIVE != relEntry.type)
+				//Get the address of symbol entry when the relocation entry type is relative
+				if (_R_TYPE_RELATIVE == relEntry.type) symAddr = elf.map;
+				
+				//Get the address of object symbol entry
+				if (0 == symAddr && symEntry.shndx) symAddr = GetDynSymAddrByName(symName);
+
+				//Get the address of undefined symbol entry
+				if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
+
+				//Searching for symbol entry in shared objects
+				if (0 == symAddr) symAddr = LibraryTool().SearchSymbol(symName);
+
+				//Return when symAddr is 0
+				if (0 == symAddr) 
 				{
-					//Get the address of object symbol entry
-					if (symEntry.shndx) symAddr = GetDynSymAddrByName(symName);
-
-					//Get the address of undefined symbol entry
-					if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
-
-					//Searching for symbol entry in shared objects
-					if (0 == symAddr) symAddr = LibraryTool().SearchSymbol(symName);
-
-					//Return when symAddr is 0
-					if (0 == symAddr) 
-					{
-						debug.Error("%s relocation symbols failed, symbol %s not found", filename, symName);
-						return _ERR;
-					}
+					debug.Error("%s relocation symbols failed, symbol %s not found", filename, symName);
+					return _ERR;
 				}
 
 				//Relocation symbol entry
@@ -490,7 +489,7 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 			break;
 
 		case _R_386_RELATIVE:
-			*((uint32_t*)relAddr) += elf.map;
+			*((uint32_t*)relAddr) += symAddr;
 			break;
 		
 		case _R_386_GOTOFF:
@@ -543,6 +542,10 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 			break;
 
 		case _R_ARM_TARGET1:
+			*((uint32_t*)relAddr) += symAddr;
+			break;
+
+		case _R_ARM_RELATIVE:
 			*((uint32_t*)relAddr) += symAddr;
 			break;
 

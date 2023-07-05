@@ -16,7 +16,6 @@ config TASK_STACK
 
 config MODULE
 	bool "Enable loadable module support"
-	option modules
 	select FATFS
 	select ELFPARSER
 	select ENVIRONMENT
@@ -91,6 +90,11 @@ config BINUTILS
 	select FILESTREAM
 	bool "Enable binutils function"
 	default n
+
+config MAP_ADDR
+	depends on BINUTILS
+	hex "The elf base map address"
+	default 0x400000
 
 config ELFLOADER
 	depends on BINUTILS

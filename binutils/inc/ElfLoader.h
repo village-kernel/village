@@ -290,7 +290,7 @@ private:
 	};
 	
 	//Static constants members
-	static const uint32_t base_map_address =0x400000;
+	static const uint32_t base_map_address = MAP_ADDR;
 	static uint32_t mapAddr;
 	char* filename;
 
