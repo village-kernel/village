@@ -87,7 +87,7 @@ static struct _Mod_##name {                                       \
 #if defined(ARCH_X86)
 	#define marco_cast(src, addr)  __asm volatile("movl $"#src", %0" : "=r"(addr))
 #elif defined(ARCH_ARM)
-	#define marco_cast(src, addr)  __asm volatile("mov %0, $"#src : "=r"(addr))
+	#define marco_cast(src, addr)  __asm volatile("ldr %0, ="#src : "=r"(addr))
 #endif
 
 	///Export symbol marco
