@@ -78,7 +78,7 @@ endif
 ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
 endif
-ifeq ($(CONFIG_MODULE), y)
+ifeq ($(CONFIG_GENERATED_MOD), y)
 	$(Q)$(MAKE) module
 endif
 ifeq ($(CONFIG_GENERATED_APP), y)
@@ -91,7 +91,7 @@ endif
 
 # flash firmware
 flash:
-	openocd $(FLASH_CFG) -c "program $(BUILD_DIR)/$(TARGET).bin verify reset exit 0x08000000"
+	openocd $(FLASH_CFG) -c "program $(BUILD_DIR)/village-kernel.bin verify reset exit 0x08000000"
 
 
 #######################################
@@ -122,7 +122,7 @@ LIBS      = -L$(LIBRARIES_DIR) $(addprefix -l, $(libs-y))
 # compiler flags
 #######################################
 ifeq ($(DEBUG), 1)
-CFLAGS    += -g -gdwarf-2 -DDebug
+CFLAGS    += -g -gdwarf-2 -DDEBUG
 endif
 
 ifneq ($(CONFIG_ENVIRONMENT), y)
