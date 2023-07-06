@@ -114,6 +114,9 @@ public:
 	///Disable DMA
 	inline void Disable() { streamReg->CR &= ~DMA_SxCR_EN; };
 
+	///Get enable flag
+	inline bool IsEnable() { return streamReg->CR & DMA_SxCR_EN; }
+
 	///Configure dma interrupt
 	inline void ConfigDmaInterrupt(DmaInterruptType type) { streamReg->CR |= (1 << type); }
 

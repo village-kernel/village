@@ -140,8 +140,7 @@ bool Dma::IsReady()
 	if (GetFifoErrorFlag()) { ClearFifoErrorFlag(); Disable(); }
 
 	//Dma transfer is not complete
-	if ((streamReg->CR & DMA_SxCR_EN) && !GetTransferCompleteFlag())
-		return false;
+	if (IsEnable() && !GetTransferCompleteFlag()) return false;
 
 	return true;
 }
