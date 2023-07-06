@@ -39,7 +39,7 @@ public:
 	};
 private:
 	//Static Constants
-	static const uint32_t BufferSize = 1024;
+	static const uint32_t BufferSize = 256;
 
 	//Members
 	Dma txDma;
