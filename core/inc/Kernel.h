@@ -12,7 +12,6 @@
 #include "Exception.h"
 #include "Thread.h"
 #include "Scheduler.h"
-#include "Loader.h"
 #include "Device.h"
 #include "Modular.h"
 #include "Environment.h"

@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Loader.h"
+#include "Kernel.h"
 #include "rcParser.h"
 
 
@@ -65,3 +66,7 @@ void Loader::Loading(int type, const char* filename)
 	//Release resource
 	rc->Release();
 }
+
+
+///Register module
+REGISTER_MODULE(&Loader::Instance(), ModuleID::_loader, loader);

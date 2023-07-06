@@ -7,12 +7,13 @@
 #ifndef __LOADER_H__
 #define __LOADER_H__
 
+#include "Module.h"
 #include "Templates.h"
 #include "LibraryTool.h"
 #include "ModuleTool.h"
 
 ///Loader
-class Loader
+class Loader : public Module
 {
 private:
 	//Enumerations

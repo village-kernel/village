@@ -12,7 +12,7 @@
 #include "stdlib.h"
 
 
-///Execute result defines
+/// @brief Execute result defines
 enum Result
 {
 	_OK     = 0,
@@ -20,7 +20,7 @@ enum Result
 };
 
 
-///Driver id defines
+/// @brief Driver id defines
 enum DriverID
 {
 	_serial              = 1,
@@ -34,15 +34,26 @@ enum DriverID
 };
 
 
-///Module id defines
+/// @brief Module id defines
 enum ModuleID
 {
-	_console             = 1,
-	_libLoader           = 2,
-	_modLoader           = 3,
-	_workQueue           = 4,
-	_executor            = 21,
+	_loader              = 1,
+	_workQueue           = 2,
+	_console             = 3,
 	_application         = 101,
+};
+
+
+/// @brief Module states
+enum States
+{
+	_NoneStates = 0,
+	_StartInitialize,
+	_EndedInitialize,
+	_StartUpdateParams,
+	_EndedUpdateParms,
+	_StartExecute,
+	_EndedExecute,
 };
 
 
