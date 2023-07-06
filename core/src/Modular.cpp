@@ -11,7 +11,7 @@
 
 /// @brief Constructor
 Modular::Modular()
-	:isRuntime(false)
+	:status(_NoneStates)
 {
 }
 
@@ -40,32 +40,36 @@ EXPORT_SYMBOL(modular);
 /// @brief Execute module object->Initialize
 void Modular::Initialize()
 {
+	status = _StartInitialize;
 	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
 		module->Initialize();
 	}
+	status = _EndedInitialize;
 }
 
 
 /// @brief Execute module object->UpdateParams
 void Modular::UpdateParams()
 {
+	status = _StartUpdateParams;
 	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
 		module->UpdateParams();
 	}
+	status = _EndedUpdateParms;
 }
 
 
 /// @brief Create task threads for each module
 void Modular::Execute()
 {
-	isRuntime = false;
+	status = _StartExecute;
 	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
 		module->SetPid(thread.CreateTask((Method)&Modular::ModuleHandler, this, (void*)module));
 	}
-	isRuntime = true;
+	status = _EndedExecute;
 }
 
 
@@ -89,15 +93,27 @@ void Modular::FailSafe(int arg)
 }
 
 
-/// @brief Register runtime
+/// @brief Register in runtime
 /// @param module 
-void Modular::RegisterRuntime(Module* module)
+void Modular::RegisterInRuntime(Module* module)
 {
-	if (true == isRuntime)
-	{
+	if (status >= _EndedInitialize)
 		module->Initialize();
+	if (status >= _EndedUpdateParms)
 		module->UpdateParams();
+	if (status >= _EndedExecute)
 		module->SetPid(thread.CreateTask((Method)&Modular::ModuleHandler, this, (void*)module));
+}
+
+
+/// @brief Deregister in runtime
+/// @param module 
+void Modular::DeregisterInRuntime(Module* module)
+{
+	if (status >= _EndedExecute)
+	{
+		module->Exit();
+		thread.DeleteTask(module->GetPid());
 	}
 }
 
@@ -108,18 +124,9 @@ void Modular::RegisterRuntime(Module* module)
 void Modular::RegisterModule(Module* module, uint32_t id)
 {
 	modules.Insert(module, id);
-	RegisterRuntime(module);
+	RegisterInRuntime(module);
 }
 EXPORT_SYMBOL(_ZN7Modular14RegisterModuleEP6Modulem);
-
-
-/// @brief Deregister exit
-/// @param module 
-void Modular::DeregisterExit(Module* module)
-{
-	module->Exit();
-	thread.DeleteTask(module->GetPid());
-}
 
 
 /// @brief Deregister module object
@@ -127,7 +134,7 @@ void Modular::DeregisterExit(Module* module)
 /// @param id module id
 void Modular::DeregisterModule(Module* module, uint32_t id)
 {
-	DeregisterExit(module);
+	DeregisterInRuntime(module);
 	modules.Remove(module, id);
 }
 EXPORT_SYMBOL(_ZN7Modular16DeregisterModuleEP6Modulem);

@@ -16,14 +16,14 @@ class Modular : public Class
 {
 private:
 	//Members
-	bool isRuntime;
+	States       status;
 	List<Module> modules;
 
 	//Methods
 	Modular();
 	~Modular();
-	void RegisterRuntime(Module* module);
-	void DeregisterExit(Module* module);
+	void RegisterInRuntime(Module* module);
+	void DeregisterInRuntime(Module* module);
 	void ModuleHandler(Module* module);
 public:
 	//Methods
