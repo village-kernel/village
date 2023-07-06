@@ -63,6 +63,9 @@ void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 			txBufPos = 0;
 		}
 	}
+
+	//Sent data when txbuffer not empty
+	if (txBufPos && transceiver->Write(txBuffer, txBufPos)) txBufPos = 0;
 }
 
 
