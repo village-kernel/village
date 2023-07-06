@@ -30,7 +30,11 @@ private:
 		{}
 	};
 
+	//Static constants
+	static const uint32_t warning_times = 10;
+
 	//Members
+	uint8_t       warnings[ArchInterrupt::isr_num] = { 0 };
 	List<Isr>     isrTabs[ArchInterrupt::isr_num];
 	ArchInterrupt archInterrupt;
 

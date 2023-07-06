@@ -163,8 +163,17 @@ void Interrupt::Handler(int irq)
 	
 	if (isrs.IsEmpty())
 	{
+		if (++warnings[irq] >= warning_times)
+		{
+			debug.Error("IRQ %d no being handled correctly, system will halt on here", irq);
+			while(1) {}
+		}
 		debug.Warn("IRQ %d has no interrupt service function", irq);
 		return;
+	}
+	else
+	{
+		warnings[irq] = 0;
 	}
 
 	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
