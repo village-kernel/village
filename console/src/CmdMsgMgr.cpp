@@ -51,12 +51,18 @@ void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 
 	size = (0 == size) ? strlen((const char*)msg) : size;
 
+	//Copy msg data into txBuffer
 	for (int i = 0; i < size; i++)
 	{
 		txBuffer[txBufPos++] = msg[i];
-	}
 
-	if (txBufPos && transceiver->Write(txBuffer, txBufPos)) txBufPos = 0;
+		//The txBuffer is full, block here until the data is sent
+		if (txBufPos >= arg_buffer_size)
+		{
+			while (!transceiver->Write(txBuffer, txBufPos)) {}
+			txBufPos = 0;
+		}
+	}
 }
 
 

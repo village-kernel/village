@@ -40,8 +40,8 @@ private:
 
 	//Members
 	CmdMsg rxMsg;
-	uint8_t txBufPos;  //uint8_t auto reset 256(arg_buffer_size) -> 0
-	uint8_t rxBufPos;  //uint8_t auto reset 256(arg_buffer_size) -> 0
+	uint16_t txBufPos;
+	uint16_t rxBufPos;
 	uint8_t history;
 	uint8_t cmdBuffer[cmd_buffer_size] = { 0 };
 	uint8_t txBuffer[arg_buffer_size] = { 0 };
