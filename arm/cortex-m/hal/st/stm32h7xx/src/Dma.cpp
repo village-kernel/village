@@ -140,18 +140,10 @@ void Dma::ConfigRequest(uint8_t request)
 ///Checks if a transfer is ready, this function should not be used in circular mode
 bool Dma::IsReady()
 {
-	//Dma transfer error
-	if (GetTransferErrorFlag()) { ClearTransferErrorFlag(); Disable(); }
-
-	//Dma direct mode error
-	if (GetDirectModeErrorFlag()) { ClearDirectModeErrorFlag(); Disable(); }
-
-	//Dma fifo error
-	if (GetFifoErrorFlag()) { ClearFifoErrorFlag(); Disable(); }
-
-	//Dma transfer is not complete
-	if (IsEnable() && !GetTransferCompleteFlag()) return false;
-
+	if (IsEnable() && !GetTransferCompleteFlag())
+	{
+		return false;
+	}
 	return true;
 }
 
