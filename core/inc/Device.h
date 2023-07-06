@@ -16,14 +16,14 @@ class Device
 {
 private:
 	//Members
-	bool isRuntime;
+	States       status;
 	List<Driver> drivers;
 
 	//Methods
 	Device();
 	~Device();
-	void RegisterRuntime(Driver* driver);
-	void DeregisterExit(Driver* driver);
+	void RegisterInRuntime(Driver* driver);
+	void DeregisterInRuntime(Driver* driver);
 public:
 	//Methods
 	void Initialize();

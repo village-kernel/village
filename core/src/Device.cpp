@@ -10,7 +10,7 @@
 
 /// @brief Constructor
 Device::Device()
-	:isRuntime(false)
+	:status(_NoneStates)
 {
 }
 
@@ -39,27 +39,32 @@ EXPORT_SYMBOL(device);
 /// @brief Execute device object->Initialize
 void Device::Initialize()
 {
+	status = _StartInitialize;
 	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
 	{
 		driver->Initialize();
 	}
+	status = _EndedInitialize;
 }
 
 
 /// @brief Execute device object->UpdateParams
 void Device::UpdateParams()
 {
+	status = _StartUpdateParams;
 	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
 	{
 		driver->UpdateParams();
 	}
+	status = _EndedUpdateParms;
 }
 
 
 /// @brief Device execute
 void Device::Execute()
 {
-	isRuntime = true;
+	status = _StartExecute;
+	status = _EndedExecute;
 }
 
 
@@ -73,14 +78,24 @@ void Device::FailSafe(int arg)
 }
 
 
-/// @brief Register runtime
+/// @brief Register in runtime
 /// @param module 
-void Device::RegisterRuntime(Driver* driver)
+void Device::RegisterInRuntime(Driver* driver)
 {
-	if (true == isRuntime)
-	{
+	if (status >= _EndedInitialize)
 		driver->Initialize();
+	if (status >= _EndedUpdateParms)
 		driver->UpdateParams();
+}
+
+
+/// @brief Deregister in runtime
+/// @param driver 
+void Device::DeregisterInRuntime(Driver* driver)
+{
+	if (status >= _EndedExecute)
+	{
+		driver->Exit();
 	}
 }
 
@@ -91,18 +106,9 @@ void Device::RegisterRuntime(Driver* driver)
 void Device::RegisterDriver(Driver* driver, uint32_t id)
 {
 	drivers.Insert(driver, id);
-	RegisterRuntime(driver);
+	RegisterInRuntime(driver);
 }
 EXPORT_SYMBOL(_ZN6Device14RegisterDriverEP6Driverm);
-
-
-
-/// @brief Deregister exit
-/// @param driver 
-void Device::DeregisterExit(Driver* driver)
-{
-	driver->Exit();
-}
 
 
 /// @brief Deregister driver object
@@ -110,6 +116,7 @@ void Device::DeregisterExit(Driver* driver)
 /// @param id driver id
 void Device::DeregisterDriver(Driver* driver, uint32_t id)
 {
+	DeregisterInRuntime(driver);
 	drivers.Remove(driver, id);
 }
 EXPORT_SYMBOL(_ZN6Device16DeregisterDriverEP6Driverm);
