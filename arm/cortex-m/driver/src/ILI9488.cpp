@@ -242,7 +242,7 @@ void ILI9488::WriteData(uint16_t data)
 ///ILI9488 read data
 uint16_t ILI9488::ReadData()
 {
-	return uint16_t(lcdmap->ram);
+	return (uint16_t)lcdmap->ram;
 }
 
 
