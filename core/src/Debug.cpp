@@ -153,9 +153,13 @@ EXPORT_SYMBOL(_ZN5Debug6OutputEiPKcz);
 /// @param level 
 void Debug::SetDebugLevel(int level)
 {
-	if (level <= _Lv5)
+	if (level >= _Lv0 && level <= _Lv5)
 	{
 		debugLevel = level;
+	}
+	else
+	{
+		Error("The level %d out of debug level", level);
 	}
 }
 EXPORT_SYMBOL(_ZN5Debug13SetDebugLevelEi);
