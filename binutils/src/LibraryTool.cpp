@@ -48,6 +48,8 @@ bool LibraryTool::Install(const char* filename)
 	{
 		ElfLoader* library = new ElfLoader();
 
+		library->IgnoreUnresolvedSymbols();
+
 		if (_OK == library->Load(filename))
 		{
 			library->FillBssZero();

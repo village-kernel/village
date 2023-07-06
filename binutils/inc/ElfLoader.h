@@ -297,6 +297,9 @@ private:
 	//Members
 	ELF elf;
 
+	//Linker members
+	bool isIgnoreUnresolvedSymbols;
+
 	//Methods
 	int LoadElf();
 	int PreParser();
@@ -331,6 +334,9 @@ public:
 	uint32_t GetDynSymAddrByName(const char* name);
 	SectionData GetSectionData(uint32_t index);
 	SectionData GetDynSectionData(uint32_t index);
+
+	//Linker methods
+	void IgnoreUnresolvedSymbols(bool enable = true);
 };
 
 #endif //!__ELF_LOADER_H__

@@ -19,6 +19,7 @@ uint32_t ElfLoader::mapAddr = ElfLoader::base_map_address;
 /// @brief Constructor
 /// @param filename 
 ElfLoader::ElfLoader(const char* filename)
+	:isIgnoreUnresolvedSymbols(false)
 {
 	if (NULL != filename) Load(filename);
 }
@@ -208,6 +209,14 @@ inline ElfLoader::SectionData ElfLoader::GetSectionData(uint32_t index)
 inline ElfLoader::SectionData ElfLoader::GetDynSectionData(uint32_t index)
 {
 	return SectionData(elf.map + elf.sections[index].addr);
+}
+
+
+/// @brief Ignore unresolved symbols
+/// @param enable 
+void ElfLoader::IgnoreUnresolvedSymbols(bool enable)
+{
+	isIgnoreUnresolvedSymbols = enable;
 }
 
 
@@ -433,8 +442,16 @@ int ElfLoader::RelEntries()
 				//Return when symAddr is 0
 				if (0 == symAddr) 
 				{
-					debug.Error("%s relocation symbols failed, symbol %s not found", filename, symName);
-					return _ERR;
+					if (true == isIgnoreUnresolvedSymbols)
+					{
+						debug.Warn("%s relocation symbols ignore, symbol %s not found", filename, symName);
+						continue;
+					}
+					else
+					{
+						debug.Error("%s relocation symbols failed, symbol %s not found", filename, symName);
+						return _ERR;
+					}
 				}
 
 				//Relocation symbol entry
