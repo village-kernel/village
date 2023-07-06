@@ -62,30 +62,38 @@ CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.list)
 CFLAGS    += -MMD -MP -MF"$(BUILD_DIR)/$(dir $<)/$(@:%.o=%.d)"
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
 CFLAGS    += -mword-relocations -mlong-calls
-CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit
+CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit -fno-threadsafe-statics
 
 # bootloader ld flags
-BLDFLAGS  += $(MCU) $(LDSCRIPTB-BOOT-y) -specs=nano.specs -lc -lm -lnosys
+ifeq ($(CONFIG_VKLIBC), y)
+BLDFLAGS  += $(MCU) $(LDSCRIPT-BOOT-y) -ffreestanding -nostdlib
+else
+BLDFLAGS  += $(MCU) $(LDSCRIPT-BOOT-y) -specs=nano.specs -lc -lm -lnosys
+endif
 BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
 BLDFLAGS  += -Wl,--gc-sections
 BLDFLAGS  += -Wl,--no-warn-rwx-segment
 BLDFLAGS  += -Wl,-static 
 
 # kernel ld flags
+ifeq ($(CONFIG_VKLIBC), y)
+KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y) -ffreestanding -nostdlib
+else
 KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y) -specs=nano.specs -lc -lm -lnosys
+endif
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
 KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-static
 
-# mod ld flags
-MLDFLAGS   = $(MCU) -T vk.scripts/ldscript/module.ld
-MLDFLAGS  += -Wl,-Map=$(@:.mo=.map),--cref
-MLDFLAGS  += -r -Bsymbolic -nostartfiles
-
 # application ld flags
-APPLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
+ifeq ($(CONFIG_VKLIBC), y)
+APPLDFLAGS  += $(MCU) -ffreestanding -nostdlib
+else
+APPLDFLAGS  += $(MCU) -specs=nano.specs -lc -lm -lnosys
+endif
 APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
 APPLDFLAGS  += -Wl,--gc-sections
 APPLDFLAGS  += -Wl,--no-warn-rwx-segment
-APPLDFLAGS  += -Wl,-static -pie
+APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-all
+APPLDFLAGS  += -Wl,-static -pie -e main
