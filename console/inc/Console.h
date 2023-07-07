@@ -8,16 +8,11 @@
 #define __CONSOLE_H__
 
 #include "CmdMsgMgr.h"
+#include "CmdDefs.h"
 #include "Module.h"
 #include "Mutex.h"
 #include "Regex.h"
 #include "Cmd.h"
-
-///Command create macro
-#define CREATE_CMD(cmd, name)    static struct _CMD_##name{_CMD_##name(){cmd;}} const _cmd_##name;
-
-///Command register macro
-#define REGISTER_CMD(cmd, name)  CREATE_CMD(Console::Instance().RegisterCmd(cmd, (char*)#name), name)
 
 
 ///Console
