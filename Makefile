@@ -42,6 +42,11 @@ src-$(CONFIG_CONSOLE)                       += vk.kernel/console/src
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 
+inc-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/inc
+inc-$(CONFIG_FATFS)                        += vk.kernel/filesys/fat/inc
+
+src-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/src
+src-$(CONFIG_FATFS)                        += vk.kernel/filesys/fat/src
 
 ######################################
 # objects
@@ -70,6 +75,9 @@ objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
 objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
+
+objs-$(CONFIG_FATFS)                        += Fatfs.o
+objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
 
 objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
 objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o

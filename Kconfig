@@ -163,6 +163,21 @@ config REGEX
 
 endmenu
 
+# config file system
+
+menu "filesystem"
+
+config FILESYSTEM
+	bool "Enable file system"
+	default n
+
+config FATFS
+	depends on FILESYSTEM
+	bool "Add fat file system in support list"
+	default n
+
+endmenu
+
 # cofing synchronizes menu
 
 menu "synchronizes"
