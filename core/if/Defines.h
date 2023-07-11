@@ -38,6 +38,7 @@ enum DriverID
 enum ModuleID
 {
 	_fileSystem          = 1,
+	_input               = 2,
 	_workQueue           = 3,
 	_loader              = 4,
 	_console             = 5,

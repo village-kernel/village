@@ -33,6 +33,10 @@ config WORKQUEUE
 	bool "Enable workqueue support"
 	default y
 
+config INPUT
+	bool "Enable input event support"
+	default y
+
 endmenu
 
 #config bridge
