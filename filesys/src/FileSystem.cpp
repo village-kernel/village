@@ -37,7 +37,10 @@ FileSystem& filesystem = FileSystem::Instance();
 void FileSystem::Initialize()
 {
 	FileOpt* opt = GetFileOpt("fatfs");
-	if (NULL != opt) opt->Mount();
+	if (NULL != opt)
+	{
+		opt->Mount("/dev/hdb", "/data", 0);
+	}
 }
 
 
@@ -52,7 +55,10 @@ void FileSystem::Execute()
 void FileSystem::Exit()
 {
 	FileOpt* opt = GetFileOpt("fatfs");
-	if (NULL != opt) opt->Unmount();
+	if (NULL != opt)
+	{
+		opt->Unmount("/data");
+	}
 }
 
 

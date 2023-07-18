@@ -8,6 +8,18 @@
 #define __FILE_DEFINES_H__
 
 
+/// @brief FileMode
+enum FileMode
+{
+	_OpenExisting  = 0x00,
+	_Read          = 0x01,
+	_Write         = 0x02,
+	_CreateNew     = 0x04,
+	_CreateAlways  = 0x10,
+	_OpenAppend    = 0x30,
+};
+
+
 ///Command register macro
 #define REGISTER_FS(fs, name)                                 \
 static struct _FS_##name {                                    \
