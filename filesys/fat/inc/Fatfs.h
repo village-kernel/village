@@ -262,12 +262,12 @@ private:
 	void LBA2CHS(uint32_t lba, uint8_t& head, uint8_t& sector, uint16_t& cylinder);
 	uint8_t ChkSum(char* fcbName);
 	void GetShortName(char* dirName, FATShortDir* dir);
-	void GetLongName(char* dirName, FATLongDir* dir);
+	void GetLongName(char* dirName, FATLongDir* ldir, FATShortDir* sdir);
 	void ShortNameLowedCase(char* name, int flag);
+	void DealDir(FATLongDir* ldir, FATShortDir* sdir, char* dirName);
 	void ReadDir(uint32_t dirSecNum, uint32_t dirSecSize);
 	void ReadDisk(char* data, uint32_t SecSize, uint32_t sector);
-	uint32_t GetFirstSerctorOfCluster(uint16_t cluster);
-	uint32_t MegreCluster(uint16_t clusHI, uint16_t clusLO);
+	uint32_t CalcFirstSerctorOfCluster(uint16_t clusHI, uint16_t clusLO);
 	bool ReadMBR();
 	bool ReadDBR();
 	bool CheckFS();

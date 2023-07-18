@@ -231,20 +231,23 @@ void Fatfs::GetShortName(char* dirName, FATShortDir* dir)
 /// @param dirName 
 /// @param dir 
 /// @return 
-void Fatfs::GetLongName(char* dirName, FATLongDir* dir)
+void Fatfs::GetLongName(char* dirName, FATLongDir* ldir, FATShortDir* sdir)
 {
 	uint8_t pos = 0;
-	uint8_t n = dir[0].ord - 0x40;
+	uint8_t n = ldir[0].ord - 0x40;
 	
 	//Loop for sequence of long directory entries
 	while (n--)
 	{
+		//Chksum
+		if (ldir[n].chksum != ChkSum(sdir->name)) return;
+
 		//Part 1 of long name 
 		for (uint8_t i = 0; i < 10; i += 2)
 		{
-			if (0xff != dir[n].name1[i])
+			if (0xff != ldir[n].name1[i])
 			{
-				dirName[pos++] = dir[n].name1[i];
+				dirName[pos++] = ldir[n].name1[i];
 			}
 			else break;
 		}
@@ -252,9 +255,9 @@ void Fatfs::GetLongName(char* dirName, FATLongDir* dir)
 		//Part 2 of long name 
 		for (uint8_t i = 0; i < 11; i += 2)
 		{
-			if (0xff != dir[n].name2[i])
+			if (0xff != ldir[n].name2[i])
 			{
-				dirName[pos++] = dir[n].name2[i];
+				dirName[pos++] = ldir[n].name2[i];
 			}
 			else return;
 		}
@@ -262,13 +265,24 @@ void Fatfs::GetLongName(char* dirName, FATLongDir* dir)
 		//Part 3 of long name
 		for (uint8_t i = 0; i < 4; i += 2)
 		{
-			if (0xff != dir[n].name3[i])
+			if (0xff != ldir[n].name3[i])
 			{
-				dirName[pos++] = dir[n].name3[i];
+				dirName[pos++] = ldir[n].name3[i];
 			}
 			else return;
 		}
 	}
+}
+
+
+/// @brief 
+/// @param clusHI 
+/// @param clusLO 
+/// @return 
+uint32_t Fatfs::CalcFirstSerctorOfCluster(uint16_t clusHI, uint16_t clusLO)
+{
+	uint32_t cluster = (uint32_t)clusHI << 16 | clusLO;
+	return ((cluster - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
 }
 
 
@@ -283,11 +297,52 @@ void Fatfs::ReadDisk(char* data, uint32_t SecSize, uint32_t sector)
 
 
 /// @brief 
+/// @param ldir 
+/// @param sdir 
+void Fatfs::DealDir(FATLongDir* ldir, FATShortDir* sdir, char* dirName)
+{
+	if ((sdir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == 0x00)
+	{
+		debug.Output(Debug::_Lv2, "Found a file: %s", dirName);
+
+		if (0 == strcmp(dirName, "_load_.rc"))
+		{
+			uint32_t secOfClus = CalcFirstSerctorOfCluster(sdir->fstClusHI, sdir->fstClusLO);
+			uint16_t secSize = (sdir->fileSize + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
+			char* text = (char*)new char[secSize * dbr->bpb.bytsPerSec]();
+			ReadDisk(text, secSize, secOfClus);
+
+			debug.Output(Debug::_Lv2, text);
+
+			delete[] text;
+		}
+	}
+	else if ((sdir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY)
+	{
+		debug.Output(Debug::_Lv2, "Found a directory: %s", dirName);
+
+		if (0 != strcmp(dirName, ".") && 0 != strcmp(dirName, ".."))
+		{
+			ReadDir(CalcFirstSerctorOfCluster(sdir->fstClusHI, sdir->fstClusLO), 1);
+		}
+	}
+	else if ((sdir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID)
+	{
+		debug.Output(Debug::_Lv2, "Found a volume label: %s", dirName);
+	}
+	else
+	{
+		debug.Output(Debug::_Lv2, "Found an invalid directory entry");
+	}
+}
+
+
+/// @brief 
 /// @param dirSecNum 
 /// @param dirSecSize 
 void Fatfs::ReadDir(uint32_t dirSecNum, uint32_t dirSecSize)
 {
-	char* secBuf = new char[512]();
+	char* secBuf  = new char[512]();
 	char* dirName = new char[100]();
 
 	for (uint32_t sec = 0; sec < dirSecSize; sec++)
@@ -297,134 +352,63 @@ void Fatfs::ReadDir(uint32_t dirSecNum, uint32_t dirSecSize)
 
 		while (1)
 		{
-			FATLongDir*  longDir = (FATLongDir*)(buff);
-			FATShortDir* shortDir;
+			FATLongDir*  ldir = (FATLongDir*)(buff);
+			FATShortDir* sdir;
 			
 			//Found an active long name sub-component.
-			if (((longDir->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME) && (longDir->ord != 0xE5))
+			if (((ldir->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME) && (ldir->ord != 0xE5))
 			{
-				uint8_t n = longDir->ord - 0x40;
+				uint8_t n = ldir->ord - 0x40;
+				uint32_t allocSize = (n + 1) * 32;
+				uint8_t* allocBuff = (uint8_t*)new char[allocSize]();
+				ldir = (FATLongDir*)allocBuff;
+				sdir = (FATShortDir*)(allocBuff + (n * 32));
 
-				longDir  = new FATLongDir[n]();
-				shortDir = new FATShortDir[1]();
-
-				uint32_t needing = (32 * (n + 1));
 				uint32_t remaining = 512 - ((uint32_t)buff - (uint32_t)secBuf);
 
-				if (needing > remaining)
+				if (allocSize > remaining)
 				{
-					memcpy((void*)longDir, (const void*)buff, remaining);
+					memcpy((void*)allocBuff, (const void*)buff, remaining);
 					
-					sec++;
-					ReadDisk(secBuf, 1, dirSecNum + sec);
-					buff = (uint8_t*)(secBuf);
-
-					uint32_t read = needing - remaining - 32;
-					if (read) memcpy((void*)(longDir + remaining), (const void*)buff, read);
-					memcpy((void*)shortDir, (const void*)(buff + read), 32);
+					sec++; ReadDisk(secBuf, 1, dirSecNum + sec); buff = (uint8_t*)(secBuf);
+					
+					uint32_t read = allocSize - remaining;
+					if (read) memcpy((void*)(allocBuff + remaining), (const void*)buff, read);
 					
 					buff += read;
 				}
 				else
 				{
-					memcpy((void*)longDir, (const void*)buff, 32 * n);
-					memcpy((void*)shortDir, (const void*)(buff + n * 32), 32);
-					
-					buff += (32 * n);
+					memcpy((void*)allocBuff, (const void*)buff, allocSize);
+					buff += allocSize;
 				}
 
-				if ((shortDir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == 0x00)
-				{
-					if (longDir->chksum == ChkSum(shortDir->name))
-					{
-						GetLongName(dirName, longDir);
-						debug.Output(Debug::_Lv2, "Long name Found a file: %s", dirName);
-					}
-				}
-				else if ((shortDir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY)
-				{
-					if (longDir->chksum == ChkSum(shortDir->name))
-					{
-						GetLongName(dirName, longDir);
-						debug.Output(Debug::_Lv2, "Long name Found a directory: %s", dirName);
+				GetLongName(dirName, ldir, sdir);
+				
+				DealDir(ldir, sdir, dirName);
 
-						ReadDir(GetFirstSerctorOfCluster(MegreCluster(shortDir->fstClusHI, shortDir->fstClusLO)), 1);
-					}
-				}
-				else if ((shortDir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID)
-				{
-					if (longDir->chksum == ChkSum(shortDir->name))
-					{
-						GetLongName(dirName, longDir);
-						debug.Output(Debug::_Lv2, "Long name Found a volume label: %s", dirName);
-					}
-				}
-				else
-				{
-					debug.Output(Debug::_Lv2, "Long name Found an invalid directory entry");
-					break;
-				}
-
-				delete[] longDir;
-				delete[] shortDir;
+				delete[] allocBuff;
 			}
-			else if ((longDir->ord != 0) && (longDir->ord != 0xE5))
+			else
 			{
-				shortDir = (FATShortDir*)(buff);
+				if ((ldir->ord != 0) && (ldir->ord != 0xE5))
+				{
+					sdir = (FATShortDir*)(buff);
 
-				if ((shortDir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == 0x00)
-				{
-					GetShortName(dirName, shortDir);
-					debug.Output(Debug::_Lv2, "Short name Found a file: %s", dirName);
-				}
-				else if ((shortDir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY)
-				{
-					GetShortName(dirName, shortDir);
-					debug.Output(Debug::_Lv2, "Short name Found a directory: %s", dirName);
+					GetShortName(dirName, sdir);
 
-					if (0 != strcmp(dirName, ".") && 0 != strcmp(dirName, ".."))
-					{
-						ReadDir(GetFirstSerctorOfCluster(MegreCluster(shortDir->fstClusHI, shortDir->fstClusLO)), 1);
-					}
+					DealDir(ldir, sdir, dirName);
 				}
-				else if ((shortDir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID)
-				{
-					GetShortName(dirName, shortDir);
-					debug.Output(Debug::_Lv2, "Short name Found a volume label: %s", dirName);
-				}
-				else
-				{
-					debug.Output(Debug::_Lv2, "Short name Found an invalid directory entry");
-					break;
-				}
+
+				buff += 32;
 			}
 
-			buff += 32;
 			if (((uint32_t)buff - (uint32_t)secBuf) >= 512) break;
 		}
 	}
 
 	delete[] secBuf;
 	delete[] dirName;
-}
-
-
-/// @brief 
-/// @param clusHI 
-/// @param clusLO 
-/// @return 
-uint32_t Fatfs::MegreCluster(uint16_t clusHI, uint16_t clusLO)
-{
-	return (uint32_t)clusHI << 16 | clusLO;
-}
-
-
-/// @brief 
-/// @param n 
-/// @return 
-uint32_t Fatfs::GetFirstSerctorOfCluster(uint16_t cluster)
-{
-	return ((cluster - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
 }
 
 
