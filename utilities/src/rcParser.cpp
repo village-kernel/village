@@ -22,13 +22,13 @@ int RcParser::Load(const char* filename)
 	FileStream file;
 	Result res = _ERR;
 
-	if (FR_OK == file.Open(filename, FileStream::_Read))
+	if (_OK == file.Open(filename, FileMode::_Read))
 	{
 		int size = file.Size();
 
 		const char* text = new const char[size]();
 
-		if (file.Read((uint8_t*)text, size) == size)
+		if (file.Read((char*)text, size) == size)
 		{
 			Decode(text);
 			res = _OK;

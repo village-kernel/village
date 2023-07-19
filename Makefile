@@ -78,6 +78,7 @@ objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
 objs-$(CONFIG_FATFS)                        += Fatfs.o
+objs-$(CONFIG_FILESTREAM)                   += FileStream.o
 objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
 
 objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
@@ -91,7 +92,6 @@ objs-kernel-$(CONFIG_EXECUTOR)              += Executor.o
 objs-kernel-$(CONFIG_LIBTOOL)               += LibraryTool.o
 objs-kernel-$(CONFIG_MODTOOL)               += ModuleTool.o
 
-objs-kernel-$(CONFIG_FILESTREAM)            += FileStream.o
 objs-kernel-$(CONFIG_INIPARSER)             += iniParser.o
 objs-kernel-$(CONFIG_PINPARSER)             += pinParser.o
 objs-kernel-$(CONFIG_RCPARSER)              += rcParser.o

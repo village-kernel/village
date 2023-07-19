@@ -60,12 +60,12 @@ int ElfLoader::LoadElf()
 {
 	FileStream file;
 
-	if (FR_OK == file.Open(filename, FileStream::_Read))
+	if (_OK == file.Open(filename, FileMode::_Read))
 	{
 		int size = file.Size();
-		elf.load = (uint32_t)new uint8_t[size]();
+		elf.load = (uint32_t)new char[size]();
 
-		if (elf.load && (file.Read((uint8_t*)elf.load, size) == size))
+		if (elf.load && (file.Read((char*)elf.load, size) == size))
 		{
 			debug.Output(Debug::_Lv1, "%s elf file load successful", filename);
 			file.Close();
