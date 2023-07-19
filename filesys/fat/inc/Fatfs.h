@@ -9,6 +9,7 @@
 
 #include "FileOpt.h"
 #include "Driver.h"
+#include "Regex.h"
 
 
 /// @brief Fatfs
@@ -54,27 +55,6 @@ private:
 		_NS_NOLFN    = 0x40,   /* Do not find LFN */
 		_NS_NONAME   = 0x80,   /* Not followed */
 	};
-
-	struct DPT
-	{
-		uint32_t bootIndicator : 8;
-		uint32_t startingHead : 8;
-		uint32_t startingSector : 6;
-		uint32_t startingCylinder: 10;
-		uint32_t sectorID : 8;
-		uint32_t endingHead : 8;
-		uint32_t endingSector : 6;
-		uint32_t endingCylinder : 10;
-		uint32_t relativeSectors;
-		uint32_t totalSectors;
-	} __attribute__((packed));
-
-	struct MBR
-	{
-		uint8_t  boot[446];
-		DPT      dpt[4];
-		uint16_t magic;
-	} __attribute__((packed));
 
 	struct BS
 	{
@@ -253,30 +233,36 @@ private:
 
 	//Member
 	Driver*  disk;
-	MBR*     mbr;
 	DBR*     dbr;
 	FATData* fat;
+	Regex    regex;
+	int      relativeSectors;
+
+	FATShortDir* dir;
 
 	//Methods
-	uint32_t CHS2LBA(uint8_t head, uint8_t sector, uint16_t cylinder);
-	void LBA2CHS(uint32_t lba, uint8_t& head, uint8_t& sector, uint16_t& cylinder);
 	uint8_t ChkSum(char* fcbName);
 	void GetShortName(char* dirName, FATShortDir* dir);
 	void GetLongName(char* dirName, FATLongDir* ldir, FATShortDir* sdir);
 	void ShortNameLowedCase(char* name, int flag);
-	void DealDir(FATLongDir* ldir, FATShortDir* sdir, char* dirName);
+	void DealDir(FATShortDir* sdir, char* dirName);
 	void ReadDir(uint32_t dirSecNum, uint32_t dirSecSize);
-	void ReadDisk(char* data, uint32_t SecSize, uint32_t sector);
+	void ReadDisk(char* data, uint32_t secSize, uint32_t sector);
+	int ReadFile(char* data, uint32_t size, FATShortDir* dir);
+	FATShortDir* ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
+	FATShortDir* SearchDir(const char* name);
+	uint32_t FileSize(FATShortDir* dir);
 	uint32_t CalcFirstSerctorOfCluster(uint16_t clusHI, uint16_t clusLO);
-	bool ReadMBR();
-	bool ReadDBR();
-	bool CheckFS();
+	int ReadMBR();
+	int ReadDBR();
+	int InitVolume();
+	int CheckFS();
 	void ListDir();
 public:
 	//Methods
 	Fatfs();
 	~Fatfs();
-	int Mount(const char* path, const char* mount, int opt);
+	int Mount(const char* path, const char* mount, int opt, int fstSecNum);
 	int Unmount(const char* mount);
 	int Open(const char* name, int mode);
 	int Write(char* data, int size, int offset);

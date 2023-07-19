@@ -21,7 +21,7 @@ public:
 	virtual ~FileOpt() {};
 
 	//File methods
-	virtual int Mount(const char* path, const char* mount, int opt) = 0;
+	virtual int Mount(const char* path, const char* mount, int opt, int fstSecNum) = 0;
 	virtual int Unmount(const char* mount)               = 0;
 	virtual int Open(const char* name, int opt)          = 0;
 	virtual int Write(char* data, int size, int offset)  = 0;

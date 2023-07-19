@@ -6,10 +6,12 @@
 //###########################################################################
 #include "Kernel.h"
 #include "FileSystem.h"
+#include "Debug.h"
 
 
 /// @brief Constructor
 FileSystem::FileSystem()
+	:disk(NULL)
 {
 }
 
@@ -33,13 +35,70 @@ FileSystem& FileSystem::Instance()
 FileSystem& filesystem = FileSystem::Instance();
 
 
+/// @brief CHS to LBA address
+/// @param path 
+/// @param mount 
+/// @param opt 
+/// @return 
+uint32_t FileSystem::CHS2LBA(uint8_t head, uint8_t sector, uint16_t cylinder)
+{
+	//LBA = (C × HPC + H) × SPT + (S − 1)
+	return (cylinder * 16 + head) * 63 + (sector - 1);
+}
+
+
+/// @brief 
+/// @param lba 
+/// @param head 
+/// @param sector 
+/// @param cylinder 
+void FileSystem::LBA2CHS(uint32_t lba, uint8_t& head, uint8_t& sector, uint16_t& cylinder)
+{
+	//C = LBA ÷ (HPC × SPT)
+	//H = (LBA ÷ SPT) mod HPC
+	//S = (LBA mod SPT) + 1
+}
+
+
+/// @brief Read MBR
+int FileSystem::ReadMBR()
+{
+	static const uint8_t mbr_sector = 0;
+	
+	mbr = new MBR();
+
+	if (NULL != mbr)
+	{
+		disk->Read((uint8_t*)mbr, 1, mbr_sector);
+		
+		if (magic == mbr->magic) return _OK;
+	}
+
+	return _ERR;
+}
+
+
 /// @brief File system initialize
 void FileSystem::Initialize()
 {
+	disk = device.GetDriver(DriverID::_storage + 1);
+
+	if (NULL == disk)
+	{
+		debug.Error("Not disk driver found");
+		return;
+	}
+
+	if (_ERR == ReadMBR())
+	{
+		debug.Error("Not a valid disk");
+		return;
+	}
+
 	FileOpt* opt = GetFileOpt("fatfs");
 	if (NULL != opt)
 	{
-		opt->Mount("/dev/hdb", "/data", 0);
+		opt->Mount("/dev/hdb", "/data", 0, mbr->dpt[0].relativeSectors);
 	}
 }
 
