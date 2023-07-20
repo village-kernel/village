@@ -77,7 +77,7 @@ objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
-objs-$(CONFIG_FATFS)                        += Fatfs.o
+objs-$(CONFIG_FATFS)                        += FAT.o
 objs-$(CONFIG_FILESTREAM)                   += FileStream.o
 objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
 

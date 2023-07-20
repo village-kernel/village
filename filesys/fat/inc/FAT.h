@@ -1,5 +1,5 @@
 //###########################################################################
-// Fatfs.h
+// FAT.h
 // Declarations of the functions that manage fat file system
 //
 // $Copyright: Copyright (C) village
@@ -12,8 +12,8 @@
 #include "Regex.h"
 
 
-/// @brief Fatfs
-class Fatfs : public FileOpt
+/// @brief FAT
+class FAT : public FileOpt
 {
 private:
 	enum BootIndicator
@@ -129,7 +129,7 @@ private:
 		uint32_t trailSig;
 	} __attribute__((packed));
 
-	struct FATShortDir
+	struct FATSDir
 	{
 		char     name[11];
 		uint8_t  attr;
@@ -145,7 +145,7 @@ private:
 		uint32_t fileSize;
 	} __attribute__((packed));
 
-	struct FATLongDir
+	struct FATLDir
 	{
 		uint8_t  ord;
 		char     name1[10];
@@ -238,30 +238,28 @@ private:
 	Regex    regex;
 	int      relativeSectors;
 
-	FATShortDir* dir;
+	FATSDir* dir;
 
 	//Methods
 	uint8_t ChkSum(char* fcbName);
-	void GetShortName(char* dirName, FATShortDir* dir);
-	void GetLongName(char* dirName, FATLongDir* ldir, FATShortDir* sdir);
+	void GetShortName(char* dirName, FATSDir* dir);
+	void GetLongName(char* dirName, FATLDir* ldir, FATSDir* sdir);
 	void ShortNameLowedCase(char* name, int flag);
-	void DealDir(FATShortDir* sdir, char* dirName);
-	void ReadDir(uint32_t dirSecNum, uint32_t dirSecSize);
+	void DealDir(FATSDir* sdir, char* dirName);
 	void ReadDisk(char* data, uint32_t secSize, uint32_t sector);
-	int ReadFile(char* data, uint32_t size, FATShortDir* dir);
-	FATShortDir* ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
-	FATShortDir* SearchDir(const char* name);
-	uint32_t FileSize(FATShortDir* dir);
+	int ReadFile(char* data, uint32_t size, FATSDir* dir);
+	FATSDir* ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
+	FATSDir* SearchDir(const char* name);
+	uint32_t FileSize(FATSDir* dir);
 	uint32_t CalcFirstSerctorOfCluster(uint16_t clusHI, uint16_t clusLO);
 	int ReadMBR();
 	int ReadDBR();
 	int InitVolume();
 	int CheckFS();
-	void ListDir();
 public:
 	//Methods
-	Fatfs();
-	~Fatfs();
+	FAT();
+	~FAT();
 	int Mount(const char* path, const char* mount, int opt, int fstSecNum);
 	int Unmount(const char* mount);
 	int Open(const char* name, int mode);

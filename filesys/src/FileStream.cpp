@@ -27,7 +27,7 @@ FileStream::~FileStream()
 /// @return 
 int FileStream::Open(const char* name, int mode)
 {
-	opt = filesystem.GetFileOpt("fatfs");
+	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
 		return opt->Open(name, mode);
@@ -54,7 +54,7 @@ int FileStream::Write(char* data, int size, int offset)
 /// @return 
 int FileStream::Read(char* data, int size, int offset)
 {
-	opt = filesystem.GetFileOpt("fatfs");
+	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
 		return opt->Read(data, size, offset);
@@ -76,7 +76,7 @@ int FileStream::Seek(int offset)
 /// @return 
 int FileStream::Size()
 {
-	opt = filesystem.GetFileOpt("fatfs");
+	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
 		return opt->Size();

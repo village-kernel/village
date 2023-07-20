@@ -95,7 +95,7 @@ void FileSystem::Initialize()
 		return;
 	}
 
-	FileOpt* opt = GetFileOpt("fatfs");
+	FileOpt* opt = GetFileOpt("fat");
 	if (NULL != opt)
 	{
 		opt->Mount("/dev/hdb", "/data", 0, mbr->dpt[0].relativeSectors);
@@ -113,7 +113,7 @@ void FileSystem::Execute()
 /// @brief File system exit
 void FileSystem::Exit()
 {
-	FileOpt* opt = GetFileOpt("fatfs");
+	FileOpt* opt = GetFileOpt("fat");
 	if (NULL != opt)
 	{
 		opt->Unmount("/data");
