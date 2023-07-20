@@ -14,7 +14,7 @@
 FAT::FAT()
 	:disk(NULL),
 	dbr(NULL),
-	relativeSectors(0)
+	startSector(0)
 {
 }
 
@@ -61,6 +61,37 @@ int FAT::ReadDBR()
 
 /// @brief 
 /// @return 
+int FAT::CheckFS()
+{
+	fat = new FATData();
+
+	if (NULL != fat)
+	{
+		if (0 != dbr->bpb.FATSz16)
+			fat->FATSz = dbr->bpb.FATSz16;
+		else
+			fat->FATSz = dbr->fat32.FATSz32;
+		
+		if (0 != dbr->bpb.totSec16)
+			fat->totSec = dbr->bpb.totSec16;
+		else
+			fat->totSec = dbr->bpb.totSec32;
+
+		fat->firstRootDirSecNum = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz);
+		fat->rootDirSectors = ((dbr->bpb.rootEntCnt * 32) + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
+		
+		fat->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) + fat->rootDirSectors;
+		fat->dataSec = fat->totSec - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) - fat->rootDirSectors);
+
+		return _OK;
+	}
+
+	return _ERR;
+}
+
+
+/// @brief 
+/// @return 
 int FAT::InitVolume()
 {
 	fat->countOfClusters = fat->dataSec / dbr->bpb.secPerClus;
@@ -96,63 +127,6 @@ int FAT::InitVolume()
 }
 
 
-/// @brief 
-/// @return 
-int FAT::CheckFS()
-{
-	fat = new FATData();
-
-	if (NULL != fat)
-	{
-		if (0 != dbr->bpb.FATSz16)
-			fat->FATSz = dbr->bpb.FATSz16;
-		else
-			fat->FATSz = dbr->fat32.FATSz32;
-		
-		if (0 != dbr->bpb.totSec16)
-			fat->totSec = dbr->bpb.totSec16;
-		else
-			fat->totSec = dbr->bpb.totSec32;
-
-		fat->firstRootDirSecNum = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz);
-		fat->rootDirSectors = ((dbr->bpb.rootEntCnt * 32) + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
-		
-		fat->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) + fat->rootDirSectors;
-		fat->dataSec = fat->totSec - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) - fat->rootDirSectors);
-
-		return _OK;
-	}
-
-	return _ERR;
-}
-
-
-/// @brief 
-/// @param dirName 
-/// @param flag 
-/// @return 
-void FAT::ShortNameLowedCase(char* name, int flag)
-{
-	//Name body (8 byte)
-	if ((flag & _NS_BODY) == _NS_BODY)
-	{
-		for (uint8_t i = 0; i < 8; i++)
-		{
-			if (name[i] >= 'A' && name[i] <= 'Z') name[i] = name[i] + 0x20;
-		}
-	}
-
-	//Name ext (3 byte)
-	if ((flag & _NS_EXT) == _NS_EXT)
-	{
-		for (uint8_t i = 8; i < 11; i++)
-		{
-			if (name[i] >= 'A' && name[i] <= 'Z') name[i] = name[i] + 0x20;
-		}
-	}
-}
-
-
 /// @brief Get short name
 /// @param dirName 
 /// @param dir 
@@ -160,29 +134,35 @@ void FAT::ShortNameLowedCase(char* name, int flag)
 void FAT::GetShortName(char* dirName, FATSDir* dir)
 {
 	uint8_t pos = 0;
-
-	//8.3 name upper case -> lowed case
-	ShortNameLowedCase(dir->name, dir->NTRes);
-
+	char*   name = dir->name;
+	bool    isBodyLowedCase = (dir->NTRes & _NS_BODY) == _NS_BODY;
+	bool    isExtLowedCase  = (dir->NTRes & _NS_EXT ) == _NS_EXT;
+	
 	//8.3 name body
 	for (uint8_t i = 0; i < 8; i++)
 	{
-		if (' ' !=  dir->name[i])
+		if (' ' !=  name[i])
 		{
-			dirName[pos++] = dir->name[i];
+			if (isBodyLowedCase && (name[i] >= 'A' && name[i] <= 'Z'))
+				dirName[pos++] = name[i] + 0x20;
+			else
+				dirName[pos++] = name[i];
 		} 
 		else break;
 	}
 
 	//8.3 name dot
-	if (' ' != dir->name[8]) dirName[pos++] = '.';
+	if (' ' != name[8]) dirName[pos++] = '.';
 
 	//8.3 name ext
 	for (uint8_t i = 8; i < 11; i++)
 	{
-		if (' ' != dir->name[i])
+		if (' ' != name[i])
 		{
-			dirName[pos++] = dir->name[i]; 
+			if (isExtLowedCase && (name[i] >= 'A' && name[i] <= 'Z'))
+				dirName[pos++] = name[i] + 0x20;
+			else
+				dirName[pos++] = name[i]; 
 		}
 		else break;
 	}
@@ -259,7 +239,7 @@ void FAT::ReadDisk(char* data, uint32_t secSize, uint32_t sector)
 {
 	if (NULL != disk)
 	{
-		disk->Read((uint8_t*)data, secSize, sector + relativeSectors);
+		disk->Read((uint8_t*)data, secSize, sector + startSector);
 	}	
 }
 
@@ -293,26 +273,26 @@ uint32_t FAT::FileSize(FATSDir* dir)
 
 
 /// @brief 
-/// @param ldir 
 /// @param sdir 
-void FAT::DealDir(FATSDir* sdir, char* dirName)
+int FAT::CheckDir(FATSDir* sdir)
 {
 	if ((sdir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == 0x00)
 	{
-		debug.Output(Debug::_Lv2, "Found a file: %s", dirName);
+		//Found a file
 	}
 	else if ((sdir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY)
 	{
-		debug.Output(Debug::_Lv2, "Found a directory: %s", dirName);
+		//Found a directory
 	}
 	else if ((sdir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID)
 	{
-		debug.Output(Debug::_Lv2, "Found a volume label: %s", dirName);
+		//Found a volume label
 	}
 	else
 	{
-		debug.Output(Debug::_Lv2, "Found an invalid directory entry");
+		//Found an invalid directory entry
 	}
+	return _ERR;
 }
 
 
@@ -425,6 +405,10 @@ FAT::FATSDir* FAT::SearchDir(const char* name)
 	{
 		res = ReadDir(dirSecNum, dirSecSize, dirs[i]);
 
+		//bool isDirOfFile = (deep - 1) == i;
+
+		//if ( CheckDir(sdir, isDirOfFile))
+
 		if (NULL != res)
 		{
 			dirSecNum = CalcFirstSerctorOfCluster(res->fstClusHI, res->fstClusLO);
@@ -445,7 +429,7 @@ FAT::FATSDir* FAT::SearchDir(const char* name)
 /// @return 
 int FAT::Mount(const char* path, const char* mount, int opt, int fstSecNum)
 {
-	relativeSectors = fstSecNum;
+	startSector = fstSecNum;
 
 	disk = device.GetDriver(DriverID::_storage + 1);
 	

@@ -236,7 +236,7 @@ private:
 	DBR*     dbr;
 	FATData* fat;
 	Regex    regex;
-	int      relativeSectors;
+	int      startSector;
 
 	FATSDir* dir;
 
@@ -245,17 +245,17 @@ private:
 	void GetShortName(char* dirName, FATSDir* dir);
 	void GetLongName(char* dirName, FATLDir* ldir, FATSDir* sdir);
 	void ShortNameLowedCase(char* name, int flag);
-	void DealDir(FATSDir* sdir, char* dirName);
 	void ReadDisk(char* data, uint32_t secSize, uint32_t sector);
 	int ReadFile(char* data, uint32_t size, FATSDir* dir);
+	int CheckDir(FATSDir* sdir);
 	FATSDir* ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
 	FATSDir* SearchDir(const char* name);
 	uint32_t FileSize(FATSDir* dir);
 	uint32_t CalcFirstSerctorOfCluster(uint16_t clusHI, uint16_t clusLO);
 	int ReadMBR();
 	int ReadDBR();
-	int InitVolume();
 	int CheckFS();
+	int InitVolume();
 public:
 	//Methods
 	FAT();
