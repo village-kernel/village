@@ -10,8 +10,9 @@
 
 /// @brief Constructor
 FileStream::FileStream(const char* name, int mode)
+	:fd(0)
 {
-	if (NULL != name) Open(name, mode);
+	if (NULL != name) fd = Open(name, mode);
 }
 
 
@@ -30,9 +31,9 @@ int FileStream::Open(const char* name, int mode)
 	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
-		return opt->Open(name, mode);
+		fd = opt->Open(name, mode);
 	}
-	return _ERR;
+	return (fd != -1) ? _OK : _ERR;
 }
 
 
@@ -57,9 +58,9 @@ int FileStream::Read(char* data, int size, int offset)
 	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
-		return opt->Read(data, size, offset);
+		return opt->Read(fd, data, size, offset);
 	}
-	return _ERR;
+	return 0;
 }
 
 
@@ -79,7 +80,7 @@ int FileStream::Size()
 	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
-		return opt->Size();
+		return opt->Size(fd);
 	}
 	return 0;
 }

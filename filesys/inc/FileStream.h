@@ -17,6 +17,7 @@ class FileStream
 {
 private:
 	//Members
+	int fd;
 	FileOpt* opt;
 public:
 	//Methods

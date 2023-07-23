@@ -301,57 +301,62 @@ int FAT::CheckDir(FATSDir* sdir)
 /// @param dirSecSize 
 FAT::FATSDir* FAT::ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir)
 {
-	char* secBuf  = new char[dbr->bpb.bytsPerSec]();
-	char* dirName = new char[100]();
+	const uint8_t dir_struct_size = 32;
+	const uint8_t long_name_size = 25;
+	const uint8_t short_name_size = 13;
 
-	FATSDir* res = NULL;
-	bool isFound = false;
+	char* secBuff = new char[dbr->bpb.bytsPerSec]();
+	char* dirName;
 
 	for (uint32_t sec = 0; sec < dirSecSize; sec++)
 	{
-		ReadDisk(secBuf, 1, dirSecNum + sec);
-		uint8_t* buff = (uint8_t*)(secBuf);
+		ReadDisk(secBuff, 1, dirSecNum + sec);
+		uint8_t* tmpBuff = (uint8_t*)(secBuff);
 
-		while (((uint32_t)buff - (uint32_t)secBuf) < dbr->bpb.bytsPerSec)
+		while (((uint32_t)tmpBuff - (uint32_t)secBuff) < dbr->bpb.bytsPerSec)
 		{
-			FATLDir* ldir = (FATLDir*)(buff);
+			FATLDir* ldir = (FATLDir*)(tmpBuff);
 			FATSDir* sdir;
 			
 			//Found an active long name sub-component.
 			if (((ldir->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME) && (ldir->ord != 0xE5))
 			{
 				uint8_t  n = ldir->ord - 0x40;
-				uint32_t allocSize = (n + 1) * 32;
+				uint32_t allocSize = (n + 1) * dir_struct_size;
 				uint8_t* allocBuff = (uint8_t*)new char[allocSize]();
 				ldir = (FATLDir*)allocBuff;
-				sdir = (FATSDir*)(allocBuff + (n * 32));
+				sdir = (FATSDir*)(allocBuff + (n * dir_struct_size));
+				dirName = (char*)new char[n * long_name_size]();
 
-				uint32_t remaining = dbr->bpb.bytsPerSec - ((uint32_t)buff - (uint32_t)secBuf);
+				uint32_t remaining = dbr->bpb.bytsPerSec - ((uint32_t)tmpBuff - (uint32_t)secBuff);
 
 				if (allocSize > remaining)
 				{
-					memcpy((void*)allocBuff, (const void*)buff, remaining);
+					memcpy((void*)allocBuff, (const void*)tmpBuff, remaining);
 					
-					sec++; ReadDisk(secBuf, 1, dirSecNum + sec); buff = (uint8_t*)(secBuf);
+					sec++; ReadDisk(secBuff, 1, dirSecNum + sec); tmpBuff = (uint8_t*)(secBuff);
 					
 					uint32_t read = allocSize - remaining;
-					if (read) memcpy((void*)(allocBuff + remaining), (const void*)buff, read);
+					if (read) memcpy((void*)(allocBuff + remaining), (const void*)tmpBuff, read);
 					
-					buff += read;
+					tmpBuff += read;
 				}
 				else
 				{
-					memcpy((void*)allocBuff, (const void*)buff, allocSize);
-					buff += allocSize;
+					memcpy((void*)allocBuff, (const void*)tmpBuff, allocSize);
+					tmpBuff += allocSize;
 				}
 
 				GetLongName(dirName, ldir, sdir);
 				
 				if (0 == strcmp(dirName, readDir))
 				{
-					res = new FATSDir();
-					memcpy((void*)res, (const void*)sdir, 32);
-					isFound = true;
+					FATSDir* dir = new FATSDir();
+					memcpy((void*)dir, (const void*)sdir, dir_struct_size);
+					delete[] secBuff;
+					delete[] allocBuff;
+					delete[] dirName;
+					return dir;
 				}
 
 				delete[] allocBuff;
@@ -360,30 +365,29 @@ FAT::FATSDir* FAT::ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* 
 			{
 				if ((ldir->ord != 0) && (ldir->ord != 0xE5))
 				{
-					sdir = (FATSDir*)(buff);
+					sdir = (FATSDir*)(tmpBuff);
+					dirName = (char*)new char[short_name_size]();
 
 					GetShortName(dirName, sdir);
 
 					if (0 == strcmp(dirName, readDir))
 					{
-						res = new FATSDir();
-						memcpy((void*)res, (const void*)sdir, 32);
-						isFound = true;
+						FATSDir* dir = new FATSDir();
+						memcpy((void*)dir, (const void*)sdir, dir_struct_size);
+						delete[] secBuff;
+						delete[] dirName;
+						return dir;
 					}
 				}
 
-				buff += 32;
+				tmpBuff += dir_struct_size;
 			}
-
-			if (isFound) break;
 		}
-
-		if (isFound) break;
 	}
 
-	delete[] secBuf;
+	delete[] secBuff;
 	delete[] dirName;
-	return res;
+	return NULL;
 }
 
 
@@ -470,11 +474,12 @@ int FAT::Unmount(const char* mount)
 /// @return 
 int FAT::Open(const char* name, int mode)
 {
-	dir = SearchDir(name);
-
-	if (NULL == dir) return _ERR;
-
-	return _OK;
+	FATSDir* dir = SearchDir(name);
+	if (NULL != dir)
+	{
+		return files.Add(dir);
+	}
+	return -1;
 }
 
 
@@ -483,7 +488,7 @@ int FAT::Open(const char* name, int mode)
 /// @param size 
 /// @param offset 
 /// @return 
-int FAT::Write(char* data, int size, int offset)
+int FAT::Write(int fd, char* data, int size, int offset)
 {
 	return 0;
 }
@@ -494,8 +499,9 @@ int FAT::Write(char* data, int size, int offset)
 /// @param size 
 /// @param offset 
 /// @return 
-int FAT::Read(char* data, int size, int offset)
+int FAT::Read(int fd, char* data, int size, int offset)
 {
+	FATSDir* dir = files.GetItem(fd);
 	return ReadFile(data, size, dir);
 }
 
@@ -503,7 +509,7 @@ int FAT::Read(char* data, int size, int offset)
 /// @brief FAT seek
 /// @param offset 
 /// @return 
-int FAT::Seek(int offset)
+int FAT::Seek(int fd, int offset)
 {
 	return 0;
 }
@@ -513,7 +519,7 @@ int FAT::Seek(int offset)
 /// @param old 
 /// @param now 
 /// @return 
-int FAT::Rename(const char* old, const char* now)
+int FAT::Rename(int fd, const char* old, const char* now)
 {
 	return 0;
 }
@@ -523,7 +529,7 @@ int FAT::Rename(const char* old, const char* now)
 /// @param from 
 /// @param to 
 /// @return 
-int FAT::Copy(const char* from, const char* to)
+int FAT::Copy(int fd, const char* from, const char* to)
 {
 	return 0;
 }
@@ -531,7 +537,7 @@ int FAT::Copy(const char* from, const char* to)
 
 /// @brief FAT remove
 /// @return 
-int FAT::Remove()
+int FAT::Remove(int fd)
 {
 	return 0;
 }
@@ -539,15 +545,16 @@ int FAT::Remove()
 
 /// @brief FAT size
 /// @return 
-int FAT::Size()
+int FAT::Size(int fd)
 {
+	FATSDir* dir = files.GetItem(fd);
 	return FileSize(dir);
 }
 
 
 /// @brief FAT close
 /// @return 
-int FAT::Close()
+int FAT::Close(int fd)
 {
 	return 0;
 }

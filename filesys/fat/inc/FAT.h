@@ -7,6 +7,7 @@
 #ifndef __FAT_FILE_SYSTEM_H__
 #define __FAT_FILE_SYSTEM_H__
 
+#include "Templates.h"
 #include "FileOpt.h"
 #include "Driver.h"
 #include "Regex.h"
@@ -238,7 +239,7 @@ private:
 	Regex    regex;
 	int      startSector;
 
-	FATSDir* dir;
+	List<FATSDir> files;
 
 	//Methods
 	uint8_t ChkSum(char* fcbName);
@@ -263,14 +264,14 @@ public:
 	int Mount(const char* path, const char* mount, int opt, int fstSecNum);
 	int Unmount(const char* mount);
 	int Open(const char* name, int mode);
-	int Write(char* data, int size, int offset);
-	int Read(char* data, int size, int offset);
-	int Seek(int offset);
-	int Rename(const char* old, const char* now);
-	int Copy(const char* from, const char* to);
-	int Remove();
-	int Size();
-	int Close();
+	int Write(int fd, char* data, int size, int offset);
+	int Read(int fd, char* data, int size, int offset);
+	int Seek(int fd, int offset);
+	int Rename(int fd, const char* old, const char* now);
+	int Copy(int fd, const char* from, const char* to);
+	int Remove(int fd);
+	int Size(int fd);
+	int Close(int fd);
 };
 
 #endif //!__FAT_FILE_SYSTEM_H__
