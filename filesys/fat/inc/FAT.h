@@ -166,13 +166,6 @@ private:
 		uint32_t dataSec;
 		uint32_t rootDirSectors;
 		uint32_t countOfClusters;
-
-		uint32_t FATOffset;
-		uint32_t FATSecNum;
-		uint32_t FATEntOffset;
-		uint32_t FAT16ClusEntryVal;
-		uint32_t FAT32ClusEntryVal;
-		
 		uint32_t firstRootDirSecNum;
 		uint32_t firstDataSector;
 		uint32_t firstSectorOfCluster;
@@ -231,6 +224,14 @@ private:
 
 	//Static constants
 	static const uint16_t magic = 0xaa55;
+	static const uint8_t  dir_entry_size = 32;
+	static const uint8_t  long_name_size  = 25;
+	static const uint8_t  short_name_size = 13;
+	static const uint8_t  dir_seq_flag = 0x40;
+	static const uint8_t  dir_free_flag = 0xe5;
+	static const uint16_t fat12_eoc_flag = 0xff8;
+	static const uint16_t fat16_eoc_flag = 0xfff8;
+	static const uint32_t fat32_eoc_flag = 0xffffff8;
 
 	//Member
 	Driver*  disk;
@@ -252,11 +253,10 @@ private:
 	FATSDir* ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
 	FATSDir* SearchDir(const char* name);
 	uint32_t FileSize(FATSDir* dir);
-	uint32_t CalcFirstSerctorOfCluster(uint16_t clusHI, uint16_t clusLO);
-	int ReadMBR();
+	uint32_t CalcSecNumOfFstClus(uint16_t clusHI, uint16_t clusLO);
+	uint32_t CalcSecNumOfNextClus(uint16_t clusHI, uint16_t clusLO);
 	int ReadDBR();
 	int CheckFS();
-	int InitVolume();
 public:
 	//Methods
 	FAT();

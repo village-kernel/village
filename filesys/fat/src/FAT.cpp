@@ -41,92 +41,6 @@ uint8_t FAT::ChkSum(char* fcbName)
 }
 
 
-/// @brief Read DBR
-int FAT::ReadDBR()
-{
-	static const uint8_t dbr_sector = 0;
-
-	dbr = new DBR();
-
-	if (NULL != dbr)
-	{
-		ReadDisk((char*)dbr, 1, dbr_sector);
-		
-		if (magic == dbr->magic) return _OK;
-	}
-
-	return _ERR;
-}
-
-
-/// @brief 
-/// @return 
-int FAT::CheckFS()
-{
-	fat = new FATData();
-
-	if (NULL != fat)
-	{
-		if (0 != dbr->bpb.FATSz16)
-			fat->FATSz = dbr->bpb.FATSz16;
-		else
-			fat->FATSz = dbr->fat32.FATSz32;
-		
-		if (0 != dbr->bpb.totSec16)
-			fat->totSec = dbr->bpb.totSec16;
-		else
-			fat->totSec = dbr->bpb.totSec32;
-
-		fat->firstRootDirSecNum = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz);
-		fat->rootDirSectors = ((dbr->bpb.rootEntCnt * 32) + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
-		
-		fat->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) + fat->rootDirSectors;
-		fat->dataSec = fat->totSec - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) - fat->rootDirSectors);
-
-		return _OK;
-	}
-
-	return _ERR;
-}
-
-
-/// @brief 
-/// @return 
-int FAT::InitVolume()
-{
-	fat->countOfClusters = fat->dataSec / dbr->bpb.secPerClus;
-
-	if (fat->countOfClusters < 4085)
-		fat->type = _FAT12;
-	else if (fat->countOfClusters < 65525)
-		fat->type = _FAT16;
-	else
-		fat->type = _FAT32;
-
-	if (_FAT16 == fat->type)
-		fat->FATOffset = fat->countOfClusters * 2;
-	else if (_FAT32 == fat->type)
-		fat->FATOffset = fat->countOfClusters * 4;
-
-	fat->FATSecNum = dbr->bpb.rsvdSecCnt + (fat->FATOffset / dbr->bpb.bytsPerSec);
-
-	fat->FATEntOffset = (fat->FATOffset % dbr->bpb.bytsPerSec);
-
-	char* secBuf = new char[512]();
-
-	ReadDisk(secBuf, 1, fat->FATSecNum);
-
-	if (_FAT16 == fat->type)
-		fat->FAT16ClusEntryVal = *((uint32_t*)&secBuf[fat->FATEntOffset]);
-	else if (_FAT32 == fat->type)
-		fat->FAT32ClusEntryVal = (*((uint32_t*)&secBuf[fat->FATEntOffset])) & 0x0fffffff;
-	
-	delete[] secBuf;
-
-	return _OK;
-}
-
-
 /// @brief Get short name
 /// @param dirName 
 /// @param dir 
@@ -221,17 +135,6 @@ void FAT::GetLongName(char* dirName, FATLDir* ldir, FATSDir* sdir)
 
 
 /// @brief 
-/// @param clusHI 
-/// @param clusLO 
-/// @return 
-uint32_t FAT::CalcFirstSerctorOfCluster(uint16_t clusHI, uint16_t clusLO)
-{
-	uint32_t cluster = (uint32_t)clusHI << 16 | clusLO;
-	return ((cluster - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
-}
-
-
-/// @brief 
 /// @param data 
 /// @param SecSize 
 /// @param sector 
@@ -244,19 +147,130 @@ void FAT::ReadDisk(char* data, uint32_t secSize, uint32_t sector)
 }
 
 
+/// @brief Read DBR
+int FAT::ReadDBR()
+{
+	static const uint8_t dbr_sector = 0;
+
+	dbr = new DBR();
+
+	if (NULL != dbr)
+	{
+		ReadDisk((char*)dbr, 1, dbr_sector);
+		
+		if (magic == dbr->magic) return _OK;
+	}
+
+	return _ERR;
+}
+
+
+/// @brief 
+/// @return 
+int FAT::CheckFS()
+{
+	fat = new FATData();
+
+	if (NULL != fat)
+	{
+		//Calc fat data
+		if (0 != dbr->bpb.FATSz16)
+			fat->FATSz = dbr->bpb.FATSz16;
+		else
+			fat->FATSz = dbr->fat32.FATSz32;
+		
+		if (0 != dbr->bpb.totSec16)
+			fat->totSec = dbr->bpb.totSec16;
+		else
+			fat->totSec = dbr->bpb.totSec32;
+
+		fat->firstRootDirSecNum = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz);
+		fat->rootDirSectors = ((dbr->bpb.rootEntCnt * dir_entry_size) + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
+		
+		fat->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) + fat->rootDirSectors;
+		fat->dataSec = fat->totSec - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) - fat->rootDirSectors);
+
+		//Detected fat type
+		fat->countOfClusters = fat->dataSec / dbr->bpb.secPerClus;
+
+		if (fat->countOfClusters < 4085)
+			fat->type = _FAT12;
+		else if (fat->countOfClusters < 65525)
+			fat->type = _FAT16;
+		else
+			fat->type = _FAT32;
+
+		return _OK;
+	}
+
+	return _ERR;
+}
+
+
+/// @brief 
+/// @param clusHI 
+/// @param clusLO 
+/// @return 
+uint32_t FAT::CalcSecNumOfFstClus(uint16_t clusHI, uint16_t clusLO)
+{
+	uint32_t cluster = (uint32_t)clusHI << 16 | clusLO;
+	return ((cluster - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
+}
+
+
+/// @brief 
+/// @param clusHI 
+/// @param clusLO 
+/// @return 
+uint32_t FAT::CalcSecNumOfNextClus(uint16_t clusHI, uint16_t clusLO)
+{
+	bool isEOC = false;
+	uint32_t fatOffset = 0;
+	uint32_t fatClusEntryVal = 0;
+	uint32_t cluster = (uint32_t)clusHI << 16 | clusLO;
+
+	if (_FAT16 == fat->type)
+		fatOffset = cluster * 2;
+	else if (_FAT32 == fat->type)
+		fatOffset = cluster * 4;
+
+	uint32_t thisFATSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytsPerSec);
+	uint32_t thisFATEntOffset = fatOffset % dbr->bpb.bytsPerSec;
+
+	char* secBuff = new char[dbr->bpb.bytsPerSec]();
+	
+	ReadDisk(secBuff, 1, thisFATSecNum);
+
+	if (_FAT16 == fat->type)
+	{
+		fatClusEntryVal = *((uint16_t*)&secBuff[thisFATEntOffset]);
+		if (fatClusEntryVal >= fat16_eoc_flag) isEOC = true;
+	}
+	else if (_FAT32 == fat->type)
+	{
+		fatClusEntryVal = (*((uint32_t*)&secBuff[thisFATEntOffset])) & 0x0fffffff;
+		if (fatClusEntryVal >= fat32_eoc_flag) isEOC = true;
+	}
+	
+	delete[] secBuff;
+
+	return isEOC ? 0 : ((fatClusEntryVal - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
+}
+
+
 /// @brief 
 /// @param data 
 /// @param dir 
 int FAT::ReadFile(char* data, uint32_t size, FATSDir* dir)
 {
-	uint32_t secOfClus = CalcFirstSerctorOfCluster(dir->fstClusHI, dir->fstClusLO);
+	uint32_t secNum = CalcSecNumOfFstClus(dir->fstClusHI, dir->fstClusLO);
 	uint16_t secSize = (dir->fileSize + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
 	
 	char* file = (char*)new char[secSize * dbr->bpb.bytsPerSec]();
 
-	ReadDisk(file, secSize, secOfClus);
+	ReadDisk(file, secSize, secNum);
 	memcpy((void*)data, (const void*)file, size);
-	
+
 	delete[] file;
 
 	return size;
@@ -301,12 +315,8 @@ int FAT::CheckDir(FATSDir* sdir)
 /// @param dirSecSize 
 FAT::FATSDir* FAT::ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir)
 {
-	const uint8_t dir_struct_size = 32;
-	const uint8_t long_name_size = 25;
-	const uint8_t short_name_size = 13;
-
 	char* secBuff = new char[dbr->bpb.bytsPerSec]();
-	char* dirName;
+	char* dirName = new char[short_name_size]();
 
 	for (uint32_t sec = 0; sec < dirSecSize; sec++)
 	{
@@ -319,14 +329,14 @@ FAT::FATSDir* FAT::ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* 
 			FATSDir* sdir;
 			
 			//Found an active long name sub-component.
-			if (((ldir->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME) && (ldir->ord != 0xE5))
+			if (((ldir->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME) && (ldir->ord != dir_free_flag))
 			{
-				uint8_t  n = ldir->ord - 0x40;
-				uint32_t allocSize = (n + 1) * dir_struct_size;
+				uint8_t  n = ldir->ord - dir_seq_flag;
+				uint32_t allocSize = (n + 1) * dir_entry_size;
 				uint8_t* allocBuff = (uint8_t*)new char[allocSize]();
 				ldir = (FATLDir*)allocBuff;
-				sdir = (FATSDir*)(allocBuff + (n * dir_struct_size));
-				dirName = (char*)new char[n * long_name_size]();
+				sdir = (FATSDir*)(allocBuff + (n * dir_entry_size));
+				char* ldirName = (char*)new char[n * long_name_size]();
 
 				uint32_t remaining = dbr->bpb.bytsPerSec - ((uint32_t)tmpBuff - (uint32_t)secBuff);
 
@@ -347,40 +357,40 @@ FAT::FATSDir* FAT::ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* 
 					tmpBuff += allocSize;
 				}
 
-				GetLongName(dirName, ldir, sdir);
+				GetLongName(ldirName, ldir, sdir);
 				
-				if (0 == strcmp(dirName, readDir))
+				if (0 == strcmp(ldirName, readDir))
 				{
 					FATSDir* dir = new FATSDir();
-					memcpy((void*)dir, (const void*)sdir, dir_struct_size);
+					*dir = *sdir;
 					delete[] secBuff;
+					delete[] ldirName;
 					delete[] allocBuff;
-					delete[] dirName;
 					return dir;
 				}
 
 				delete[] allocBuff;
+				delete[] dirName;
 			}
 			else
 			{
-				if ((ldir->ord != 0) && (ldir->ord != 0xE5))
+				if ((ldir->ord != 0) && (ldir->ord != dir_free_flag))
 				{
 					sdir = (FATSDir*)(tmpBuff);
-					dirName = (char*)new char[short_name_size]();
 
 					GetShortName(dirName, sdir);
 
 					if (0 == strcmp(dirName, readDir))
 					{
 						FATSDir* dir = new FATSDir();
-						memcpy((void*)dir, (const void*)sdir, dir_struct_size);
+						*dir = *sdir;
 						delete[] secBuff;
 						delete[] dirName;
 						return dir;
 					}
 				}
 
-				tmpBuff += dir_struct_size;
+				tmpBuff += dir_entry_size;
 			}
 		}
 	}
@@ -403,20 +413,20 @@ FAT::FATSDir* FAT::SearchDir(const char* name)
 	uint32_t dirSecNum = fat->firstRootDirSecNum;
 	uint32_t dirSecSize = fat->rootDirSectors;
 
-	FATSDir* res = NULL;
+	FATSDir* dir = NULL;
 
 	for (uint8_t i = 0; i < deep; i++)
 	{
-		res = ReadDir(dirSecNum, dirSecSize, dirs[i]);
+		dir = ReadDir(dirSecNum, dirSecSize, dirs[i]);
 
 		//bool isDirOfFile = (deep - 1) == i;
 
-		//if ( CheckDir(sdir, isDirOfFile))
+		//if ( CheckDir(dir, isDirOfFile))
 
-		if (NULL != res)
+		if (NULL != dir)
 		{
-			dirSecNum = CalcFirstSerctorOfCluster(res->fstClusHI, res->fstClusLO);
-			dirSecSize = 1;
+			dirSecNum = CalcSecNumOfFstClus(dir->fstClusHI, dir->fstClusLO);
+			dirSecSize = 2;//CalcSecNumOfNextClus(dir->fstClusHI, dir->fstClusLO);
 		}
 		else
 		{
@@ -425,7 +435,7 @@ FAT::FATSDir* FAT::SearchDir(const char* name)
 		}
 	}
 
-	return res;
+	return dir;
 }
 
 
