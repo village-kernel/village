@@ -158,12 +158,19 @@ private:
 		char     name3[4];
 	} __attribute__((packed));
 
+	union FATDir
+	{
+		FATSDir sdir;
+		FATLDir ldir;
+	} __attribute__((packed));
+
 	struct FATData
 	{
 		FATType  type;
 		uint32_t FATSz;
 		uint32_t totSec;
 		uint32_t dataSec;
+		uint32_t rootClus;
 		uint32_t rootDirSectors;
 		uint32_t countOfClusters;
 		uint32_t firstRootDirSecNum;
@@ -216,7 +223,7 @@ private:
 	const DskSzToSecPerClus dskTableFAT32[6] = {
 		{ 66600,       0  }, /* disks up to 32.5 MB, the 0 value for SecPerClusVal trips an error */
 		{ 532480,      1  }, /* disks up to  260 MB,  .5k cluster */
-		{ 16777216,     8 }, /* disks up to    8 GB,   4k cluster */
+		{ 16777216,    8  }, /* disks up to    8 GB,   4k cluster */
 		{ 33554432,    16 }, /* disks up to   16 GB,   8k cluster */
 		{ 67108864,    32 }, /* disks up to   32 GB,  16k cluster */
 		{ 0xffffffff,  64 } /* disks greater than 32GB, 32k cluster */
@@ -246,15 +253,18 @@ private:
 	uint8_t ChkSum(char* fcbName);
 	void GetShortName(char* dirName, FATSDir* dir);
 	void GetLongName(char* dirName, FATLDir* ldir, FATSDir* sdir);
-	void ShortNameLowedCase(char* name, int flag);
 	void ReadDisk(char* data, uint32_t secSize, uint32_t sector);
 	int ReadFile(char* data, uint32_t size, FATSDir* dir);
 	int CheckDir(FATSDir* sdir);
-	FATSDir* ReadDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
+	FATSDir* ReadRootDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
+	FATSDir* ReadDir(uint32_t clus, const char* readDir);
 	FATSDir* SearchDir(const char* name);
 	uint32_t FileSize(FATSDir* dir);
+	uint32_t CalcSecNumOfFstClus(uint32_t clus);
+	uint32_t CalcSecNumOfNextClus(uint32_t clus);
 	uint32_t CalcSecNumOfFstClus(uint16_t clusHI, uint16_t clusLO);
 	uint32_t CalcSecNumOfNextClus(uint16_t clusHI, uint16_t clusLO);
+	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
 	int ReadDBR();
 	int CheckFS();
 public:
