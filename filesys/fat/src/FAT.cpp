@@ -296,6 +296,18 @@ uint32_t FAT::CalcSecNumOfNextClus(uint16_t clusHI, uint16_t clusLO)
 
 
 /// @brief 
+/// @return 
+char* FAT::MoveWindow(uint32_t clus, uint32_t seek)
+{
+	uint32_t secNum = CalcSecNumOfFstClus(clus);
+
+	char* secBuff = new char[dbr->bpb.bytsPerSec * dbr->bpb.secPerClus]();
+	
+	ReadDisk(secBuff, dbr->bpb.secPerClus, secNum);
+}
+
+
+/// @brief 
 /// @param data 
 /// @param dir 
 int FAT::ReadFile(char* data, uint32_t size, FATSDir* dir)
@@ -448,7 +460,7 @@ FAT::FATSDir* FAT::ReadDir(uint32_t clus, const char* readDir)
 	char* dirName = new char[short_name_size]();
 
 	uint32_t dirSecNum = CalcSecNumOfFstClus(clus);
-	uint32_t dirSecSize = 2;
+	uint32_t dirSecSize = dbr->bpb.secPerClus;
 
 	for (uint32_t sec = 0; sec < dirSecSize; sec++)
 	{
@@ -539,7 +551,7 @@ FAT::FATSDir* FAT::ReadDir(uint32_t clus, const char* readDir)
 FAT::FATSDir* FAT::SearchDir(const char* name)
 {
 	regex.Split(name, '/');
-	char**  dirs = regex.ToArray();
+	char**  path = regex.ToArray();
 	uint8_t deep = regex.Size();
 	
 	FATSDir* dir;
@@ -549,14 +561,14 @@ FAT::FATSDir* FAT::SearchDir(const char* name)
 		if (0 == i)
 		{
 			if (_FAT16 == fat->type)
-				dir = ReadRootDir(fat->firstRootDirSecNum, fat->rootDirSectors, dirs[i]);
+				dir = ReadRootDir(fat->firstRootDirSecNum, fat->rootDirSectors, path[i]);
 			else
-				dir = ReadDir(fat->rootClus, dirs[i]);
+				dir = ReadDir(fat->rootClus, path[i]);
 		}
 		else
 		{
 			uint32_t nextClus = MergeCluster(dir->fstClusHI, dir->fstClusLO);
-			dir = ReadDir(nextClus, dirs[i]);
+			dir = ReadDir(nextClus, path[i]);
 		}
 
 		if (NULL == dir)

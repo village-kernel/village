@@ -265,6 +265,7 @@ private:
 	uint32_t CalcSecNumOfFstClus(uint16_t clusHI, uint16_t clusLO);
 	uint32_t CalcSecNumOfNextClus(uint16_t clusHI, uint16_t clusLO);
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
+	char* MoveWindow(uint32_t clus, uint32_t seek);
 	int ReadDBR();
 	int CheckFS();
 public:
