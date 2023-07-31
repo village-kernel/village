@@ -1,5 +1,5 @@
 //###########################################################################
-// FAT.h
+// FatSystem.h
 // Declarations of the functions that manage fat file system
 //
 // $Copyright: Copyright (C) village
@@ -158,10 +158,10 @@ private:
 		char     name3[4];
 	} __attribute__((packed));
 
-	union FATDir
+	union DirEntry
 	{
-		FATSDir sdir;
 		FATLDir ldir;
+		FATSDir sdir;
 	} __attribute__((packed));
 
 	struct FATData
@@ -249,23 +249,31 @@ private:
 
 	List<FATSDir> files;
 
-	//Methods
-	uint8_t ChkSum(char* fcbName);
-	void GetShortName(char* dirName, FATSDir* dir);
-	void GetLongName(char* dirName, FATLDir* ldir, FATSDir* sdir);
-	void ReadDisk(char* data, uint32_t secSize, uint32_t sector);
-	int ReadFile(char* data, uint32_t size, FATSDir* dir);
-	int CheckDir(FATSDir* sdir);
-	FATSDir* ReadRootDir(uint32_t dirSecNum, uint32_t dirSecSize, const char* readDir);
-	FATSDir* ReadDir(uint32_t clus, const char* readDir);
-	FATSDir* SearchDir(const char* name);
-	uint32_t FileSize(FATSDir* dir);
-	uint32_t CalcSecNumOfFstClus(uint32_t clus);
-	uint32_t CalcSecNumOfNextClus(uint32_t clus);
-	uint32_t CalcSecNumOfFstClus(uint16_t clusHI, uint16_t clusLO);
-	uint32_t CalcSecNumOfNextClus(uint16_t clusHI, uint16_t clusLO);
+	//Name Methods
+	uint8_t ChkSum(char* name);
+	char* GetShortName(FATSDir* dir);
+	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
+
+	//Disk IO Methods
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
-	char* MoveWindow(uint32_t clus, uint32_t seek);
+	uint32_t ClusterToSector(uint32_t clus);
+	uint32_t CalcNextCluster(uint32_t clus);
+	void ReadSector(char* data, uint32_t secSize, uint32_t sector);
+	void ReadCluster(char* dasta, uint32_t clusSize, uint32_t clus);
+
+	//Directory Methods
+	char* GetDirEntry(uint32_t clus, uint32_t index, uint32_t size);
+	int CheckDir(FATSDir* dir);
+	int ListDir(FATSDir* dir);
+	FATSDir* ReadDir(FATSDir* dir, const char* dirName);
+	FATSDir* ReadRootDir(const char* dirName);
+	FATSDir* SearchDir(const char* path);
+	
+	//File Methods
+	int ReadFile(char* data, uint32_t size, FATSDir* dir);
+	uint32_t FileSize(FATSDir* dir);
+
+	//Methods
 	int ReadDBR();
 	int CheckFS();
 public:
