@@ -12,18 +12,24 @@
 /// @param dir 
 int FAT::ReadFile(char* data, uint32_t size, FATSDir* dir)
 {
-	uint32_t cluster = MergeCluster(dir->fstClusHI, dir->fstClusLO);
-	uint32_t secNum  = ClusterToSector(cluster);
-	uint16_t secSize = (dir->fileSize + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
+	bool isDone = false;
+	uint32_t fileSize = dir->fileSize;
+	uint32_t bytsPerSec = dbr->bpb.bytsPerSec;
+	uint32_t secPerClus = dbr->bpb.secPerClus;
+	uint32_t secSize = (fileSize + (bytsPerSec - 1)) / bytsPerSec;
+	uint32_t clusSize = (secSize + (secPerClus - 1)) / secPerClus;
+	uint32_t fstCluster = MergeCluster(dir->fstClusHI, dir->fstClusLO);
+
+	char* allocBuff = (char*)new char[clusSize * secPerClus * bytsPerSec]();
 	
-	char* file = (char*)new char[secSize * dbr->bpb.bytsPerSec]();
+	if (clusSize == ReadCluster(allocBuff, clusSize, fstCluster))
+	{
+		memcpy((void*)data, (const void*)allocBuff, size);
+		isDone = true;
+	}
 
-	ReadSector(file, secSize, secNum);
-	memcpy((void*)data, (const void*)file, size);
-
-	delete[] file;
-
-	return size;
+	delete[] allocBuff;
+	return isDone ? size : 0;
 }
 
 
