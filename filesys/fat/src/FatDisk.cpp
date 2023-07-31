@@ -7,26 +7,28 @@
 #include "FatSystem.h"
 
 
-/// @brief 
+/// @brief Meger cluster
 /// @param clusHI 
 /// @param clusLO 
-/// @return 
+/// @return cluster
 uint32_t FAT::MergeCluster(uint16_t clusHI, uint16_t clusLO)
 {
 	return (uint32_t)clusHI << 16 | clusLO;
 }
 
 
-/// @brief 
-/// @param clusHI 
-/// @param clusLO 
-/// @return 
+/// @brief Cluster to sector number
+/// @param clus 
+/// @return sector number
 uint32_t FAT::ClusterToSector(uint32_t clus)
 {
 	return ((clus - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
 }
 
 
+/// @brief Calculate the next cluster
+/// @param clus 
+/// @return next cluster
 uint32_t FAT::CalcNextCluster(uint32_t clus)
 {
 	bool isEOC = false;
@@ -62,27 +64,47 @@ uint32_t FAT::CalcNextCluster(uint32_t clus)
 }
 
 
-/// @brief 
+/// @brief Read Sector
 /// @param data 
-/// @param SecSize 
+/// @param secSize 
 /// @param sector 
-void FAT::ReadSector(char* data, uint32_t secSize, uint32_t sector)
+/// @return read sector size
+uint32_t FAT::ReadSector(char* data, uint32_t secSize, uint32_t sector)
 {
 	if (NULL != disk)
 	{
 		disk->Read((uint8_t*)data, secSize, sector + startSector);
-	}	
+	}
+	return secSize;
 }
 
 
-/// @brief 
+/// @brief Read cluster
 /// @param data 
 /// @param clusSize 
 /// @param clus 
-void FAT::ReadCluster(char* data, uint32_t clusSize, uint32_t clus)
+/// @return read cluster size
+uint32_t FAT::ReadCluster(char* data, uint32_t clusSize, uint32_t clus)
 {
+	uint32_t bytsPerSec = dbr->bpb.bytsPerSec;
+	uint32_t secPerClus = dbr->bpb.secPerClus;
+
 	for (uint32_t i = 0; i < clusSize; i++)
 	{
+		uint32_t secNum = ClusterToSector(clus);
+		uint32_t offset = i * bytsPerSec * secPerClus;
 
+		if (secPerClus != ReadSector(data + offset, secPerClus, secNum))
+		{
+			return i + 1;
+		}
+
+		if (clusSize > 1)
+		{
+			clus = CalcNextCluster(clus);
+			if (0 == clus) return i + 1;
+		}
 	}
+
+	return clusSize;
 }
