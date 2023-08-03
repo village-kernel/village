@@ -263,7 +263,6 @@ private:
 	uint32_t ReadCluster(char* dasta, uint32_t clusSize, uint32_t clus);
 
 	//Directory Methods
-	char* GetDirEntry(uint32_t clus, uint32_t index, uint32_t size);
 	//int CheckDir(FATSDir* dir);
 	//int ListDir(FATSDir* dir);
 	DirEntry* ReadDir(DirEntry* entry, const char* dirName);

@@ -8,87 +8,10 @@
 #include "Debug.h"
 
 
-char* FAT::GetDirEntry(uint32_t clus, uint32_t index, uint32_t size)
-{
-	static char* secBuff = new char[dbr->bpb.bytsPerSec]();
-	static uint32_t secNum = 0;
-
-	if (0 == (index * dir_entry_size) % dbr->bpb.bytsPerSec)
-	{
-		//if (0 != (index * dir_entry_size) / dbr->bpb.bytsPerSec)
-		//{
-		//	clus = CalcNextCluster(clus);
-		//	if (0 == clus) return NULL;
-		//}
-
-		secNum = ClusterToSector(clus);
-		ReadSector(secBuff, 1, secNum++);
-	}
-
-	uint32_t remaining = dbr->bpb.bytsPerSec - (index * dir_entry_size);
-	uint32_t allocSize = size * dir_entry_size;
-	char* allocBuff = new char[allocSize]();
-	char* tmpBuff = secBuff + (index * dir_entry_size);
-
-	if (allocSize > remaining)
-	{
-		memcpy((void*)allocBuff, (const void*)tmpBuff, remaining);
-		
-		ReadSector(secBuff, 1, secNum++);
-		
-		tmpBuff = secBuff;
-		
-		uint32_t read = allocSize - remaining;
-
-		if (read) memcpy((void*)(allocBuff + remaining), (const void*)tmpBuff, read);
-	}
-	else
-	{
-		memcpy((void*)allocBuff, (const void*)tmpBuff, allocSize);
-	}
-
-	return allocBuff;
-}
-
-
-/// @brief 
-/// @param dir 
+///// @brief 
+///// @param dir 
 //int FAT::ListDir(FATSDir* dir)
 //{
-//	if ((dir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY)
-//	{
-//		char*    name = NULL;
-//		FATLDir* ldir = NULL;
-//		FATSDir* sdir = NULL;
-//		uint32_t idx  = 0;
-//		uint32_t clus = MergeCluster(dir->fstClusHI, dir->fstClusLO);
-		
-//		while (1)
-//		{
-//			ldir = (FATLDir*)GetDirEntry(clus, idx++, 1);
-
-//			if (NULL == ldir) break;
-
-//			if (ldir->ord != dir_free_flag)
-//			{
-//				if ((ldir->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
-//				{
-//					uint8_t n = ldir->ord - dir_seq_flag;
-//					ldir = (FATLDir*)GetDirEntry(clus, idx -= 1, n);
-//					sdir = (FATSDir*)GetDirEntry(clus, idx += n, 1);
-//					name = GetLongName(ldir, sdir);
-//				}
-//				else
-//				{
-//					sdir = (FATSDir*)ldir;
-//					name = GetShortName(sdir);
-//				}
-
-//				debug.Output(Debug::_Lv2, name);
-//			}
-//		}
-//	}
-
 //	return _OK;
 //}
 
@@ -124,36 +47,61 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
 {
 	char*    name = NULL;
 	uint32_t clus = (NULL == entry) ? fat->rootClus : MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
-	
+	uint32_t maxEntires = dbr->bpb.secPerClus * dbr->bpb.bytsPerSec / dir_entry_size;
+
 	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.secPerClus * dbr->bpb.bytsPerSec]();
 
-	ReadCluster((char*)dirEntires, 1, clus);
+	for (uint32_t readClus = clus; 0 != readClus; readClus = CalcNextCluster(readClus))
+	{
+		ReadCluster((char*)dirEntires, 1, clus);
 
-	for (uint32_t idx = 0; idx < 64; idx++)
-	{	
-		if (dirEntires[idx].ldir.ord != dir_free_flag)
-		{
-			if ((dirEntires[idx].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
+		for (uint32_t idx = 0; idx < maxEntires; idx++)
+		{	
+			if (dirEntires[idx].ldir.ord != dir_free_flag)
 			{
-				uint8_t n = dirEntires[idx].ldir.ord - dir_seq_flag;
-				name = GetLongName(dirEntires + idx);
-				idx += n;
-			}
-			else
-			{
-				name = GetShortName(dirEntires + idx);
-			}
+				if ((dirEntires[idx].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
+				{
+					uint8_t n = dirEntires[idx].ldir.ord - dir_seq_flag;
 
-			if (0 == strcmp(name, dirName))
-			{
-				DirEntry* found = new DirEntry();
-				*found = dirEntires[idx];
-				delete[] dirEntires;
+					DirEntry* tmpDirEntires = new DirEntry[n + 1]();
+
+					for (uint8_t ndx = 0; ndx <= n; ndx++)
+					{
+						if (idx >= maxEntires)
+						{
+							readClus = CalcNextCluster(readClus);
+							if (0 != readClus)
+							{
+								ReadCluster((char*)dirEntires, 1, readClus);
+								idx = 0;
+							}
+						}
+
+						tmpDirEntires[ndx] = dirEntires[idx++];
+					}
+
+					idx -= 1;
+
+					name = GetLongName(tmpDirEntires);
+
+					delete[] tmpDirEntires;
+				}
+				else
+				{
+					name = GetShortName(dirEntires + idx);
+				}
+
+				if (0 == strcmp(name, dirName))
+				{
+					DirEntry* found = new DirEntry();
+					*found = dirEntires[idx];
+					delete[] dirEntires;
+					delete[] name;
+					return found;
+				}
+
 				delete[] name;
-				return found;
 			}
-
-			delete[] name;
 		}
 	}
 
@@ -165,90 +113,67 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
 /// @brief 
 /// @param dirSecNum 
 /// @param dirSecSize 
-FAT::DirEntry* FAT::ReadRootDir(const char* readDir)
+FAT::DirEntry* FAT::ReadRootDir(const char* dirName)
 {
-	char* secBuff = new char[dbr->bpb.bytsPerSec]();
 	char* name = NULL;
 
-	uint32_t dirSecNum = fat->firstRootDirSecNum;
-	uint32_t dirSecSize = fat->rootDirSectors;
+	uint32_t dirRootSec = fat->firstRootDirSecNum;
+	uint32_t dirEndSec = fat->rootDirSectors + dirRootSec;
+	uint32_t maxEntires = dbr->bpb.bytsPerSec / dir_entry_size;
 
-	for (uint32_t sec = 0; sec < dirSecSize; sec++)
+	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
+
+	for (uint32_t dirSecNum = dirRootSec; dirSecNum < dirEndSec; dirSecNum++)
 	{
-		ReadSector(secBuff, 1, dirSecNum + sec);
-		char* tmpBuff = secBuff;
+		ReadSector((char*)dirEntires, 1, dirSecNum);
 
-		while (((uint32_t)tmpBuff - (uint32_t)secBuff) < dbr->bpb.bytsPerSec)
+		for (uint32_t idx = 0; idx < maxEntires; idx++)
 		{
-			FATLDir* ldir = (FATLDir*)(tmpBuff);
-			
-			//Found an active long name sub-component.
-			if (((ldir->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME) && (ldir->ord != dir_free_flag))
+			if (dirEntires[idx].ldir.ord != dir_free_flag)	
 			{
-				uint8_t  n = ldir->ord - dir_seq_flag;
-				uint32_t allocSize = (n + 1) * dir_entry_size;
-				DirEntry* allocBuff = (DirEntry*)new char[allocSize]();
-				
-				uint32_t remaining = dbr->bpb.bytsPerSec - ((uint32_t)tmpBuff - (uint32_t)secBuff);
-
-				if (allocSize > remaining)
+				if ((dirEntires[idx].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
 				{
-					memcpy((void*)allocBuff, (const void*)tmpBuff, remaining);
-					
-					sec++; ReadSector(secBuff, 1, dirSecNum + sec); tmpBuff = secBuff;
-					
-					uint32_t read = allocSize - remaining;
-					if (read) memcpy((void*)(allocBuff + remaining), (const void*)tmpBuff, read);
-					
-					tmpBuff += read;
+					uint8_t n = dirEntires[idx].ldir.ord - dir_seq_flag;
+
+					DirEntry* tmpDirEntires = new DirEntry[n + 1]();
+
+					for (uint8_t ndx = 0; ndx <= n; ndx++)
+					{
+						if ((idx >= maxEntires) && (++dirSecNum < dirEndSec))
+						{
+							ReadSector((char*)dirEntires, 1, dirSecNum);
+							idx = 0;
+						}
+
+						tmpDirEntires[ndx] = dirEntires[idx++];
+					}
+
+					idx -= 1;
+
+					name = GetLongName(tmpDirEntires);
+
+					delete[] tmpDirEntires;
 				}
 				else
 				{
-					memcpy((void*)allocBuff, (const void*)tmpBuff, allocSize);
-					tmpBuff += allocSize;
+					name = GetShortName(dirEntires + idx);
 				}
 
-				name = GetLongName(allocBuff);
-				
-				if (0 == strcmp(name, readDir))
+				if (0 == strcmp(name, dirName))
 				{
-					DirEntry* entry = new DirEntry();
-					*entry = allocBuff[n];
+					DirEntry* found = new DirEntry();
+					*found = dirEntires[idx];
+					delete[] dirEntires;
 					delete[] name;
-					delete[] secBuff;
-					delete[] allocBuff;
-					return entry;
+					return found;
 				}
 
 				delete[] name;
-				delete[] allocBuff;
-			}
-			else
-			{
-				if ((ldir->ord != 0) && (ldir->ord != dir_free_flag))
-				{
-					DirEntry* entry = (DirEntry*)(tmpBuff);
-
-					name = GetShortName(entry);
-
-					if (0 == strcmp(name, readDir))
-					{
-						DirEntry* found = new DirEntry();
-						*found = *entry;
-						delete[] name;
-						delete[] secBuff;
-						return found;
-					}
-
-					delete[] name;
-				}
-
-				tmpBuff += dir_entry_size;
 			}
 		}
 	}
 
-	delete[] secBuff;
+	delete[] dirEntires;
 	return NULL;
 }
 
