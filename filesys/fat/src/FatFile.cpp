@@ -10,15 +10,15 @@
 /// @brief 
 /// @param data 
 /// @param dir 
-int FAT::ReadFile(char* data, uint32_t size, FATSDir* dir)
+int FAT::ReadFile(char* data, uint32_t size, DirEntry* entry)
 {
 	bool isDone = false;
-	uint32_t fileSize = dir->fileSize;
+	uint32_t fileSize = entry->sdir.fileSize;
 	uint32_t bytsPerSec = dbr->bpb.bytsPerSec;
 	uint32_t secPerClus = dbr->bpb.secPerClus;
 	uint32_t secSize = (fileSize + (bytsPerSec - 1)) / bytsPerSec;
 	uint32_t clusSize = (secSize + (secPerClus - 1)) / secPerClus;
-	uint32_t fstCluster = MergeCluster(dir->fstClusHI, dir->fstClusLO);
+	uint32_t fstCluster = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
 
 	char* allocBuff = (char*)new char[clusSize * secPerClus * bytsPerSec]();
 	
@@ -36,7 +36,7 @@ int FAT::ReadFile(char* data, uint32_t size, FATSDir* dir)
 /// @brief 
 /// @param dir 
 /// @return 
-uint32_t FAT::FileSize(FATSDir* dir)
+uint32_t FAT::FileSize(DirEntry* entry)
 {
-	return dir->fileSize;
+	return entry->sdir.fileSize;
 }

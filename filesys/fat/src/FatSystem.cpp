@@ -137,10 +137,10 @@ int FAT::Unmount(const char* mount)
 /// @return 
 int FAT::Open(const char* name, int mode)
 {
-	FATSDir* dir = SearchDir(name);
-	if (NULL != dir)
+	DirEntry* entry = SearchDir(name);
+	if (NULL != entry)
 	{
-		return files.Add(dir);
+		return files.Add(entry);
 	}
 	return -1;
 }
@@ -164,8 +164,8 @@ int FAT::Write(int fd, char* data, int size, int offset)
 /// @return 
 int FAT::Read(int fd, char* data, int size, int offset)
 {
-	FATSDir* dir = files.GetItem(fd);
-	return ReadFile(data, size, dir);
+	DirEntry* entry = files.GetItem(fd);
+	return ReadFile(data, size, entry);
 }
 
 
@@ -210,8 +210,8 @@ int FAT::Remove(int fd)
 /// @return 
 int FAT::Size(int fd)
 {
-	FATSDir* dir = files.GetItem(fd);
-	return FileSize(dir);
+	DirEntry* entry = files.GetItem(fd);
+	return FileSize(entry);
 }
 
 

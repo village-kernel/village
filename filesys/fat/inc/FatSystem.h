@@ -229,6 +229,7 @@ private:
 		{ 0xffffffff,  64 } /* disks greater than 32GB, 32k cluster */
 	};
 
+
 	//Static constants
 	static const uint16_t magic = 0xaa55;
 	static const uint8_t  dir_entry_size = 32;
@@ -247,12 +248,12 @@ private:
 	Regex    regex;
 	int      startSector;
 
-	List<FATSDir> files;
+	List<DirEntry> files;
 
 	//Name Methods
 	uint8_t ChkSum(char* name);
-	char* GetShortName(FATSDir* dir);
-	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
+	char* GetShortName(DirEntry* entry);
+	char* GetLongName(DirEntry* entries);
 
 	//Disk IO Methods
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
@@ -263,15 +264,15 @@ private:
 
 	//Directory Methods
 	char* GetDirEntry(uint32_t clus, uint32_t index, uint32_t size);
-	int CheckDir(FATSDir* dir);
-	int ListDir(FATSDir* dir);
-	FATSDir* ReadDir(FATSDir* dir, const char* dirName);
-	FATSDir* ReadRootDir(const char* dirName);
-	FATSDir* SearchDir(const char* path);
+	//int CheckDir(FATSDir* dir);
+	//int ListDir(FATSDir* dir);
+	DirEntry* ReadDir(DirEntry* entry, const char* dirName);
+	DirEntry* ReadRootDir(const char* dirName);
+	DirEntry* SearchDir(const char* path);
 	
 	//File Methods
-	int ReadFile(char* data, uint32_t size, FATSDir* dir);
-	uint32_t FileSize(FATSDir* dir);
+	int ReadFile(char* data, uint32_t size, DirEntry* entry);
+	uint32_t FileSize(DirEntry* entry);
 
 	//Methods
 	int ReadDBR();
