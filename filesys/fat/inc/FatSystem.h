@@ -256,16 +256,17 @@ private:
 	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
 
 	//Disk IO Methods
+	void CalcFirstSector(DirEntry* entry, uint32_t& clus, uint32_t& sector);
 	void CalcNextSector(uint32_t& clus, uint32_t& sector);
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
 	uint32_t ClusterToSector(uint32_t clus);
 	uint32_t CalcNextCluster(uint32_t clus);
+	uint32_t ReadOneSector(char* data, uint32_t sector);
 	uint32_t ReadSector(char* data, uint32_t secSize, uint32_t sector);
-	uint32_t ReadCluster(char* dasta, uint32_t clusSize, uint32_t clus);
+	uint32_t ReadCluster(char* data, uint32_t clusSize, uint32_t clus);
 
 	//Directory Methods
 	//int CheckDir(FATSDir* dir);
-	//int ListDir(FATSDir* dir);
 	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
 	DirEntry* SearchPath(const char* path);
 	

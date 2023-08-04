@@ -10,14 +10,6 @@
 
 ///// @brief 
 ///// @param dir 
-//int FAT::ListDir(FATSDir* dir)
-//{
-//	return _OK;
-//}
-
-
-///// @brief 
-///// @param dir 
 //int FAT::CheckDir(FATSDir* dir)
 //{
 //	if ((dir->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == 0x00)
@@ -50,28 +42,19 @@ FAT::DirEntry* FAT::SearchDir(DirEntry* entry, const char* dirName)
 	uint32_t dirCluster = 0;
 	uint32_t dirSecNum  = 0;
 
-	//Calculate the dir cluster and sector
-	if (NULL == entry)
-	{
-		dirCluster = (_FAT16 == fat->type) ? 0 : fat->rootClus;
-		dirSecNum  = (_FAT16 == fat->type) ? fat->firstRootDirSecNum : 0;
-	}
-	else
-	{
-		dirCluster = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
-		dirSecNum  = ClusterToSector(dirCluster);
-	}
-
 	//Calculate max size of dir entries
 	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
 
 	//Allocate the dirEntires space
 	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
+	//Calculate the dir cluster and sector
+	CalcFirstSector(entry, dirCluster, dirSecNum);
+
 	//Search target dir
 	while (0 != dirSecNum)
 	{
-		ReadSector((char*)dirEntires, 1, dirSecNum);
+		ReadOneSector((char*)dirEntires, dirSecNum);
 
 		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
 		{
@@ -92,7 +75,7 @@ FAT::DirEntry* FAT::SearchDir(DirEntry* entry, const char* dirName)
 							CalcNextSector(dirCluster, dirSecNum);
 							if (0 != dirSecNum)
 							{
-								ReadSector((char*)dirEntires, 1, dirSecNum);
+								ReadOneSector((char*)dirEntires, dirSecNum);
 								idx = 0;
 							}
 							else

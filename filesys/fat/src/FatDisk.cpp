@@ -26,6 +26,32 @@ uint32_t FAT::ClusterToSector(uint32_t clus)
 }
 
 
+/// @brief Calc first sector
+/// @param clus 
+/// @param sector 
+void FAT::CalcFirstSector(DirEntry* entry, uint32_t& clus, uint32_t& sector)
+{
+	if (NULL == entry)
+	{
+		if (_FAT16 == fat->type)
+		{
+			clus   = 0;
+			sector = fat->firstRootDirSecNum;
+		}
+		else if (_FAT32 == fat->type)
+		{
+			clus   = fat->rootClus;
+			sector = ClusterToSector(clus);
+		}
+	}
+	else
+	{
+		clus   = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
+		sector = ClusterToSector(clus);
+	}
+}
+
+
 /// @brief Calc next sector
 /// @param clus 
 /// @param sector 
@@ -85,6 +111,21 @@ uint32_t FAT::CalcNextCluster(uint32_t clus)
 	delete[] secBuff;
 
 	return isEOC ? 0 : fatClusEntry;
+}
+
+
+/// @brief Read one sector
+/// @param data 
+/// @param secSize 
+/// @param sector 
+/// @return 
+uint32_t FAT::ReadOneSector(char* data, uint32_t sector)
+{
+	if (NULL != disk)
+	{
+		disk->Read((uint8_t*)data, 1, sector + startSector);
+	}
+	return 1;
 }
 
 
