@@ -26,6 +26,44 @@ uint32_t FAT::ClusterToSector(uint32_t clus)
 }
 
 
+/// @brief Calculate the next cluster
+/// @param clus 
+/// @return next cluster
+uint32_t FAT::CalcNextCluster(uint32_t clus)
+{
+	bool isEOC = false;
+	uint32_t fatOffset = 0;
+	uint32_t fatClusEntry = 0;
+
+	if (_FAT16 == fat->type)
+		fatOffset = clus * 2;
+	else if (_FAT32 == fat->type)
+		fatOffset = clus * 4;
+
+	uint32_t thisFATSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytsPerSec);
+	uint32_t thisFATEntOffset = fatOffset % dbr->bpb.bytsPerSec;
+
+	char* secBuff = new char[dbr->bpb.bytsPerSec]();
+	
+	ReadOneSector(secBuff, thisFATSecNum);
+
+	if (_FAT16 == fat->type)
+	{
+		fatClusEntry = *((uint16_t*)&secBuff[thisFATEntOffset]);
+		if (fatClusEntry >= fat16_eoc_flag) isEOC = true;
+	}
+	else if (_FAT32 == fat->type)
+	{
+		fatClusEntry = (*((uint32_t*)&secBuff[thisFATEntOffset])) & 0x0fffffff;
+		if (fatClusEntry >= fat32_eoc_flag) isEOC = true;
+	}
+	
+	delete[] secBuff;
+
+	return isEOC ? 0 : fatClusEntry;
+}
+
+
 /// @brief Calc first sector
 /// @param clus 
 /// @param sector 
@@ -73,44 +111,6 @@ void FAT::CalcNextSector(uint32_t& clus, uint32_t& sector)
 		}
 		else sector++;
 	}
-}
-
-
-/// @brief Calculate the next cluster
-/// @param clus 
-/// @return next cluster
-uint32_t FAT::CalcNextCluster(uint32_t clus)
-{
-	bool isEOC = false;
-	uint32_t fatOffset = 0;
-	uint32_t fatClusEntry = 0;
-
-	if (_FAT16 == fat->type)
-		fatOffset = clus * 2;
-	else if (_FAT32 == fat->type)
-		fatOffset = clus * 4;
-
-	uint32_t thisFATSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytsPerSec);
-	uint32_t thisFATEntOffset = fatOffset % dbr->bpb.bytsPerSec;
-
-	char* secBuff = new char[dbr->bpb.bytsPerSec]();
-	
-	ReadSector(secBuff, 1, thisFATSecNum);
-
-	if (_FAT16 == fat->type)
-	{
-		fatClusEntry = *((uint16_t*)&secBuff[thisFATEntOffset]);
-		if (fatClusEntry >= fat16_eoc_flag) isEOC = true;
-	}
-	else if (_FAT32 == fat->type)
-	{
-		fatClusEntry = (*((uint32_t*)&secBuff[thisFATEntOffset])) & 0x0fffffff;
-		if (fatClusEntry >= fat32_eoc_flag) isEOC = true;
-	}
-	
-	delete[] secBuff;
-
-	return isEOC ? 0 : fatClusEntry;
 }
 
 
