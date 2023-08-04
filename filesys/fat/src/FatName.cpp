@@ -27,13 +27,13 @@ uint8_t FAT::ChkSum(char* name)
 /// @param dirName 
 /// @param dir 
 /// @return 
-char* FAT::GetShortName(DirEntry* entry)
+char* FAT::GetShortName(FATSDir* sdir)
 {
 	uint8_t pos = 0;
-	char*   name = entry->sdir.name;
+	char*   name = sdir->name;
 	char*   dirName = new char[short_name_size]();
-	bool    isBodyLowedCase = (entry->sdir.NTRes & _NS_BODY) == _NS_BODY;
-	bool    isExtLowedCase  = (entry->sdir.NTRes & _NS_EXT ) == _NS_EXT;
+	bool    isBodyLowedCase = (sdir->NTRes & _NS_BODY) == _NS_BODY;
+	bool    isExtLowedCase  = (sdir->NTRes & _NS_EXT ) == _NS_EXT;
 	
 	//8.3 name body
 	for (uint8_t i = 0; i < 8; i++)
@@ -75,13 +75,11 @@ char* FAT::GetShortName(DirEntry* entry)
 /// @param dirName 
 /// @param dir 
 /// @return 
-char* FAT::GetLongName(DirEntry* entries)
+char* FAT::GetLongName(FATLDir* ldir, FATSDir* sdir)
 {
 	uint8_t pos = 0;
-	uint8_t n = entries[0].ldir.ord - 0x40;
+	uint8_t n = ldir->ord - 0x40;
 	char* dirName = new char[long_name_size * n]();
-	FATLDir* ldir = &entries[0].ldir;
-	FATSDir* sdir = &entries[n].sdir;
 	
 	//Loop for sequence of long directory entries
 	while (n--)

@@ -252,8 +252,8 @@ private:
 
 	//Name Methods
 	uint8_t ChkSum(char* name);
-	char* GetShortName(DirEntry* entry);
-	char* GetLongName(DirEntry* entries);
+	char* GetShortName(FATSDir* sdir);
+	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
 
 	//Disk IO Methods
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);

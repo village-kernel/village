@@ -63,10 +63,12 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
 				{
 					uint8_t n = dirEntires[idx].ldir.ord - dir_seq_flag;
 
-					DirEntry* tmpDirEntires = new DirEntry[n + 1]();
+					FATLDir* ldirs = new FATLDir[n]();
 
-					for (uint8_t ndx = 0; ndx <= n; ndx++)
+					for (uint8_t ndx = 0; ndx < n; ndx++)
 					{
+						ldirs[ndx] = dirEntires[idx++].ldir;
+
 						if (idx >= maxEntires)
 						{
 							readClus = CalcNextCluster(readClus);
@@ -76,19 +78,15 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
 								idx = 0;
 							}
 						}
-
-						tmpDirEntires[ndx] = dirEntires[idx++];
 					}
 
-					idx -= 1;
+					name = GetLongName(ldirs, &dirEntires[idx].sdir);
 
-					name = GetLongName(tmpDirEntires);
-
-					delete[] tmpDirEntires;
+					delete[] ldirs;
 				}
 				else
 				{
-					name = GetShortName(dirEntires + idx);
+					name = GetShortName(&dirEntires[idx].sdir);
 				}
 
 				if (0 == strcmp(name, dirName))
@@ -117,17 +115,17 @@ FAT::DirEntry* FAT::ReadRootDir(const char* dirName)
 {
 	char* name = NULL;
 
-	uint32_t dirRootSec = fat->firstRootDirSecNum;
-	uint32_t dirEndSec = fat->rootDirSectors + dirRootSec;
-	uint32_t maxEntires = dbr->bpb.bytsPerSec / dir_entry_size;
+	uint32_t dirStartSec = fat->firstRootDirSecNum;
+	uint32_t dirEndedSec = fat->rootDirSectors + dirStartSec;
+	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
 
 	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
-	for (uint32_t dirSecNum = dirRootSec; dirSecNum < dirEndSec; dirSecNum++)
+	for (uint32_t dirSecNum = dirStartSec; dirSecNum < dirEndedSec; dirSecNum++)
 	{
 		ReadSector((char*)dirEntires, 1, dirSecNum);
 
-		for (uint32_t idx = 0; idx < maxEntires; idx++)
+		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
 		{
 			if (dirEntires[idx].ldir.ord != dir_free_flag)	
 			{
@@ -135,28 +133,26 @@ FAT::DirEntry* FAT::ReadRootDir(const char* dirName)
 				{
 					uint8_t n = dirEntires[idx].ldir.ord - dir_seq_flag;
 
-					DirEntry* tmpDirEntires = new DirEntry[n + 1]();
+					FATLDir* ldirs = new FATLDir[n]();
 
-					for (uint8_t ndx = 0; ndx <= n; ndx++)
+					for (uint8_t ndx = 0; ndx < n; ndx++)
 					{
-						if ((idx >= maxEntires) && (++dirSecNum < dirEndSec))
+						ldirs[ndx] = dirEntires[idx++].ldir;
+
+						if ((idx >= maxDirEntires) && (++dirSecNum < dirEndedSec))
 						{
 							ReadSector((char*)dirEntires, 1, dirSecNum);
 							idx = 0;
 						}
-
-						tmpDirEntires[ndx] = dirEntires[idx++];
 					}
 
-					idx -= 1;
+					name = GetLongName(ldirs, &dirEntires[idx].sdir);
 
-					name = GetLongName(tmpDirEntires);
-
-					delete[] tmpDirEntires;
+					delete[] ldirs;
 				}
 				else
 				{
-					name = GetShortName(dirEntires + idx);
+					name = GetShortName(&dirEntires[idx].sdir);
 				}
 
 				if (0 == strcmp(name, dirName))
