@@ -256,6 +256,7 @@ private:
 	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
 
 	//Disk IO Methods
+	void CalcNextSector(uint32_t& clus, uint32_t& sector);
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
 	uint32_t ClusterToSector(uint32_t clus);
 	uint32_t CalcNextCluster(uint32_t clus);
@@ -265,9 +266,8 @@ private:
 	//Directory Methods
 	//int CheckDir(FATSDir* dir);
 	//int ListDir(FATSDir* dir);
-	DirEntry* ReadDir(DirEntry* entry, const char* dirName);
-	DirEntry* ReadRootDir(const char* dirName);
-	DirEntry* SearchDir(const char* path);
+	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
+	DirEntry* SearchPath(const char* path);
 	
 	//File Methods
 	int ReadFile(char* data, uint32_t size, DirEntry* entry);

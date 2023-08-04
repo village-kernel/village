@@ -40,24 +40,42 @@
 //}
 
 
-/// @brief 
-/// @param dirSecNum 
-/// @param dirSecSize 
-FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
+/// @brief Search dir
+/// @param entry 
+/// @param dirName 
+/// @return 
+FAT::DirEntry* FAT::SearchDir(DirEntry* entry, const char* dirName)
 {
-	char*    name = NULL;
-	uint32_t clus = (NULL == entry) ? fat->rootClus : MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
-	uint32_t maxEntires = dbr->bpb.secPerClus * dbr->bpb.bytsPerSec / dir_entry_size;
+	char* name = NULL;
+	uint32_t dirCluster = 0;
+	uint32_t dirSecNum  = 0;
 
-	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.secPerClus * dbr->bpb.bytsPerSec]();
-
-	for (uint32_t readClus = clus; 0 != readClus; readClus = CalcNextCluster(readClus))
+	//Calculate the dir cluster and sector
+	if (NULL == entry)
 	{
-		ReadCluster((char*)dirEntires, 1, clus);
+		dirCluster = (_FAT16 == fat->type) ? 0 : fat->rootClus;
+		dirSecNum  = (_FAT16 == fat->type) ? fat->firstRootDirSecNum : 0;
+	}
+	else
+	{
+		dirCluster = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
+		dirSecNum  = ClusterToSector(dirCluster);
+	}
 
-		for (uint32_t idx = 0; idx < maxEntires; idx++)
-		{	
-			if (dirEntires[idx].ldir.ord != dir_free_flag)
+	//Calculate max size of dir entries
+	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
+
+	//Allocate the dirEntires space
+	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
+
+	//Search target dir
+	while (0 != dirSecNum)
+	{
+		ReadSector((char*)dirEntires, 1, dirSecNum);
+
+		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
+		{
+			if (dirEntires[idx].ldir.ord != dir_free_flag)	
 			{
 				if ((dirEntires[idx].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
 				{
@@ -69,13 +87,19 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
 					{
 						ldirs[ndx] = dirEntires[idx++].ldir;
 
-						if (idx >= maxEntires)
+						if (idx >= maxDirEntires)
 						{
-							readClus = CalcNextCluster(readClus);
-							if (0 != readClus)
+							CalcNextSector(dirCluster, dirSecNum);
+							if (0 != dirSecNum)
 							{
-								ReadCluster((char*)dirEntires, 1, readClus);
+								ReadSector((char*)dirEntires, 1, dirSecNum);
 								idx = 0;
+							}
+							else
+							{
+								delete[] dirEntires;
+								delete[] ldirs;
+								return NULL;
 							}
 						}
 					}
@@ -101,6 +125,8 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
 				delete[] name;
 			}
 		}
+
+		CalcNextSector(dirCluster, dirSecNum);
 	}
 
 	delete[] dirEntires;
@@ -108,96 +134,21 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry, const char* dirName)
 }
 
 
-/// @brief 
-/// @param dirSecNum 
-/// @param dirSecSize 
-FAT::DirEntry* FAT::ReadRootDir(const char* dirName)
-{
-	char* name = NULL;
 
-	uint32_t dirStartSec = fat->firstRootDirSecNum;
-	uint32_t dirEndedSec = fat->rootDirSectors + dirStartSec;
-	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
-
-	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
-
-	for (uint32_t dirSecNum = dirStartSec; dirSecNum < dirEndedSec; dirSecNum++)
-	{
-		ReadSector((char*)dirEntires, 1, dirSecNum);
-
-		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
-		{
-			if (dirEntires[idx].ldir.ord != dir_free_flag)	
-			{
-				if ((dirEntires[idx].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
-				{
-					uint8_t n = dirEntires[idx].ldir.ord - dir_seq_flag;
-
-					FATLDir* ldirs = new FATLDir[n]();
-
-					for (uint8_t ndx = 0; ndx < n; ndx++)
-					{
-						ldirs[ndx] = dirEntires[idx++].ldir;
-
-						if ((idx >= maxDirEntires) && (++dirSecNum < dirEndedSec))
-						{
-							ReadSector((char*)dirEntires, 1, dirSecNum);
-							idx = 0;
-						}
-					}
-
-					name = GetLongName(ldirs, &dirEntires[idx].sdir);
-
-					delete[] ldirs;
-				}
-				else
-				{
-					name = GetShortName(&dirEntires[idx].sdir);
-				}
-
-				if (0 == strcmp(name, dirName))
-				{
-					DirEntry* found = new DirEntry();
-					*found = dirEntires[idx];
-					delete[] dirEntires;
-					delete[] name;
-					return found;
-				}
-
-				delete[] name;
-			}
-		}
-	}
-
-	delete[] dirEntires;
-	return NULL;
-}
-
-
-/// @brief 
+/// @brief Search path
 /// @param name 
 /// @return 
-FAT::DirEntry* FAT::SearchDir(const char* path)
+FAT::DirEntry* FAT::SearchPath(const char* path)
 {
 	regex.Split(path, '/');
 	char**  dirNames = regex.ToArray();
 	uint8_t dirIndex = regex.Size();
 	
-	DirEntry* entry;
+	DirEntry* entry = NULL;
 
 	for (uint8_t i = 0; i < dirIndex; i++)
 	{
-		if (0 == i)
-		{
-			if (_FAT16 == fat->type)
-				entry = ReadRootDir(dirNames[i]);
-			else
-				entry = ReadDir(entry, dirNames[i]);
-		}
-		else
-		{
-			entry = ReadDir(entry, dirNames[i]);
-		}
+		entry = SearchDir(entry, dirNames[i]);
 
 		if (NULL == entry)
 		{

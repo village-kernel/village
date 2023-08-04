@@ -26,6 +26,30 @@ uint32_t FAT::ClusterToSector(uint32_t clus)
 }
 
 
+/// @brief Calc next sector
+/// @param clus 
+/// @param sector 
+void FAT::CalcNextSector(uint32_t& clus, uint32_t& sector)
+{
+	//FAT16 root dir
+	if (clus < 2)
+	{
+		uint32_t dirEndedSec = fat->firstRootDirSecNum + fat->rootDirSectors;
+		sector = (++sector < dirEndedSec) ? sector : 0;
+	}
+	//FAT data dir
+	else
+	{ 
+		if ((sector - ClusterToSector(clus)) >= dbr->bpb.secPerClus)
+		{
+			clus = CalcNextCluster(clus);
+			sector = (0 != clus) ? ClusterToSector(clus) : 0;
+		}
+		else sector++;
+	}
+}
+
+
 /// @brief Calculate the next cluster
 /// @param clus 
 /// @return next cluster

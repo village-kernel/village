@@ -137,7 +137,7 @@ int FAT::Unmount(const char* mount)
 /// @return 
 int FAT::Open(const char* name, int mode)
 {
-	DirEntry* entry = SearchDir(name);
+	DirEntry* entry = SearchPath(name);
 	if (NULL != entry)
 	{
 		return files.Add(entry);
