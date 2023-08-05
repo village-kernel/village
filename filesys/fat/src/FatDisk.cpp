@@ -18,27 +18,27 @@ uint32_t FAT::MergeCluster(uint16_t clusHI, uint16_t clusLO)
 
 
 /// @brief Cluster to sector number
-/// @param clus 
+/// @param clust 
 /// @return sector number
-uint32_t FAT::ClusterToSector(uint32_t clus)
+uint32_t FAT::ClusterToSector(uint32_t clust)
 {
-	return ((clus - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
+	return ((clust - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
 }
 
 
 /// @brief Calculate the next cluster
-/// @param clus 
+/// @param clust 
 /// @return next cluster
-uint32_t FAT::CalcNextCluster(uint32_t clus)
+uint32_t FAT::CalcNextCluster(uint32_t clust)
 {
 	bool isEOC = false;
 	uint32_t fatOffset = 0;
 	uint32_t fatClusEntry = 0;
 
 	if (_FAT16 == fat->type)
-		fatOffset = clus * 2;
+		fatOffset = clust * 2;
 	else if (_FAT32 == fat->type)
-		fatOffset = clus * 4;
+		fatOffset = clust * 4;
 
 	uint32_t thisFATSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytsPerSec);
 	uint32_t thisFATEntOffset = fatOffset % dbr->bpb.bytsPerSec;
@@ -65,38 +65,38 @@ uint32_t FAT::CalcNextCluster(uint32_t clus)
 
 
 /// @brief Calc first sector
-/// @param clus 
+/// @param clust 
 /// @param sector 
-void FAT::CalcFirstSector(DirEntry* entry, uint32_t& clus, uint32_t& sector)
+void FAT::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector)
 {
 	if (NULL == entry)
 	{
 		if (_FAT16 == fat->type)
 		{
-			clus   = 0;
+			clust   = 0;
 			sector = fat->firstRootDirSecNum;
 		}
 		else if (_FAT32 == fat->type)
 		{
-			clus   = fat->rootClus;
-			sector = ClusterToSector(clus);
+			clust   = fat->rootClus;
+			sector = ClusterToSector(clust);
 		}
 	}
 	else
 	{
-		clus   = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
-		sector = ClusterToSector(clus);
+		clust   = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
+		sector = ClusterToSector(clust);
 	}
 }
 
 
 /// @brief Calc next sector
-/// @param clus 
+/// @param clust 
 /// @param sector 
-void FAT::CalcNextSector(uint32_t& clus, uint32_t& sector)
+void FAT::CalcNextSector(uint32_t& clust, uint32_t& sector)
 {
 	//FAT16 root dir
-	if (clus < 2)
+	if (clust < 2)
 	{
 		uint32_t dirEndedSec = fat->firstRootDirSecNum + fat->rootDirSectors;
 		sector = (++sector < dirEndedSec) ? sector : 0;
@@ -104,10 +104,10 @@ void FAT::CalcNextSector(uint32_t& clus, uint32_t& sector)
 	//FAT data dir
 	else
 	{ 
-		if ((++sector - ClusterToSector(clus)) >= dbr->bpb.secPerClus)
+		if ((++sector - ClusterToSector(clust)) >= dbr->bpb.secPerClus)
 		{
-			clus = CalcNextCluster(clus);
-			sector = (0 != clus) ? ClusterToSector(clus) : 0;
+			clust = CalcNextCluster(clust);
+			sector = (0 != clust) ? ClusterToSector(clust) : 0;
 		}
 	}
 }
@@ -146,16 +146,16 @@ uint32_t FAT::ReadSector(char* data, uint32_t secSize, uint32_t sector)
 /// @brief Read cluster
 /// @param data 
 /// @param clusSize 
-/// @param clus 
+/// @param clust 
 /// @return read cluster size
-uint32_t FAT::ReadCluster(char* data, uint32_t clusSize, uint32_t clus)
+uint32_t FAT::ReadCluster(char* data, uint32_t clustSize, uint32_t clust)
 {
 	uint32_t bytsPerSec = dbr->bpb.bytsPerSec;
 	uint32_t secPerClus = dbr->bpb.secPerClus;
 
-	for (uint32_t i = 0; i < clusSize; i++)
+	for (uint32_t i = 0; i < clustSize; i++)
 	{
-		uint32_t secNum = ClusterToSector(clus);
+		uint32_t secNum = ClusterToSector(clust);
 		uint32_t offset = i * bytsPerSec * secPerClus;
 
 		if (secPerClus != ReadSector(data + offset, secPerClus, secNum))
@@ -163,12 +163,12 @@ uint32_t FAT::ReadCluster(char* data, uint32_t clusSize, uint32_t clus)
 			return i + 1;
 		}
 
-		if (clusSize > 1)
+		if (clustSize > 1)
 		{
-			clus = CalcNextCluster(clus);
-			if (0 == clus) return i + 1;
+			clust = CalcNextCluster(clust);
+			if (0 == clust) return i + 1;
 		}
 	}
 
-	return clusSize;
+	return clustSize;
 }

@@ -34,6 +34,7 @@ private:
 
 	enum DIRAttr
 	{
+		_ATTR_FILE       = 0x00,
 		_ATTR_READ_ONLY  = 0x01,
 		_ATTR_HIDDEN     = 0x02,
 		_ATTR_SYSTEM     = 0x04,
@@ -162,6 +163,12 @@ private:
 	{
 		FATLDir ldir;
 		FATSDir sdir;
+
+		DirEntry(DirEntry& entry)
+		{
+			this->ldir = entry.ldir;
+			this->sdir = entry.sdir;
+		}
 	} __attribute__((packed));
 
 	struct FATData
@@ -249,6 +256,7 @@ private:
 	int      startSector;
 
 	List<DirEntry> files;
+	List<DirEntry> dirs;
 
 	//Name Methods
 	uint8_t ChkSum(char* name);
@@ -257,20 +265,24 @@ private:
 
 	//Cluster and sector Methods
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
-	uint32_t ClusterToSector(uint32_t clus);
-	uint32_t CalcNextCluster(uint32_t clus);
-	void CalcFirstSector(DirEntry* entry, uint32_t& clus, uint32_t& sector);
-	void CalcNextSector(uint32_t& clus, uint32_t& sector);
+	uint32_t ClusterToSector(uint32_t clust);
+	uint32_t CalcNextCluster(uint32_t clust);
+	void CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector);
+	void CalcNextSector(uint32_t& clust, uint32_t& sector);
 
 	//Disk IO Methods
 	uint32_t ReadOneSector(char* data, uint32_t sector);
 	uint32_t ReadSector(char* data, uint32_t secSize, uint32_t sector);
-	uint32_t ReadCluster(char* data, uint32_t clusSize, uint32_t clus);
+	uint32_t ReadCluster(char* data, uint32_t clustSize, uint32_t clust);
 
 	//Directory Methods
-	//int CheckDir(FATSDir* dir);
-	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
+	int CheckDir(DirEntry* entry, DIRAttr attr);
+	char* GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint32_t& sector);
 	DirEntry* SearchPath(const char* path);
+	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
+	DirEntry* OpenDir(const char* path);
+	DirEntry* ReadDir(DirEntry* entry);
+	void CloseDir(DirEntry* entry);
 	
 	//File Methods
 	int ReadFile(char* data, uint32_t size, DirEntry* entry);
