@@ -104,12 +104,11 @@ void FAT::CalcNextSector(uint32_t& clus, uint32_t& sector)
 	//FAT data dir
 	else
 	{ 
-		if ((sector - ClusterToSector(clus)) >= dbr->bpb.secPerClus)
+		if ((++sector - ClusterToSector(clus)) >= dbr->bpb.secPerClus)
 		{
 			clus = CalcNextCluster(clus);
 			sector = (0 != clus) ? ClusterToSector(clus) : 0;
 		}
-		else sector++;
 	}
 }
 
