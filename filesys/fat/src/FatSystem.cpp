@@ -12,9 +12,6 @@
 
 /// @brief Constructor
 FAT::FAT()
-	:disk(NULL),
-	dbr(NULL),
-	startSector(0)
 {
 }
 
@@ -30,11 +27,9 @@ int FAT::ReadDBR()
 {
 	static const uint8_t dbr_sector = 0;
 
-	dbr = new DBR();
-
 	if (NULL != dbr)
 	{
-		ReadSector((char*)dbr, 1, dbr_sector);
+		disk.ReadOneSector((char*)dbr, dbr_sector);
 		
 		if (magic == dbr->magic) return _OK;
 	}
@@ -47,8 +42,6 @@ int FAT::ReadDBR()
 /// @return 
 int FAT::CheckFS()
 {
-	fat = new FATData();
-
 	if (NULL != fat)
 	{
 		//Calc fat size
@@ -96,15 +89,12 @@ int FAT::CheckFS()
 /// @return 
 int FAT::Mount(const char* path, const char* mount, int opt, int fstSecNum)
 {
-	startSector = fstSecNum;
+	dbr = new DBR();
+	fat = new FATData();
 
-	disk = device.GetDriver(DriverID::_storage + 1);
-	
-	if (NULL == disk)
-	{
-		debug.Error("Not disk driver found");
-		return _ERR;
-	}
+	disk.Initialize(fat, dbr, fstSecNum);
+	file.Initialize(fat, dbr, fstSecNum);
+	dir.Initialize(fat, dbr, fstSecNum);
 
 	if (_ERR == ReadDBR())
 	{
@@ -117,6 +107,8 @@ int FAT::Mount(const char* path, const char* mount, int opt, int fstSecNum)
 		debug.Error("Not filesystem found");
 		return _ERR;
 	}
+
+	dir.Test();
 
 	debug.Output(Debug::_Lv2, "%s -> %s mount successful", path, mount);
 	return _OK;
@@ -137,7 +129,7 @@ int FAT::Unmount(const char* mount)
 /// @return 
 int FAT::Open(const char* name, int mode)
 {
-	DirEntry* entry = SearchPath(name);
+	DirEntry* entry = dir.SearchPath(name);
 	if (NULL != entry)
 	{
 		return files.Add(entry);
@@ -165,7 +157,7 @@ int FAT::Write(int fd, char* data, int size, int offset)
 int FAT::Read(int fd, char* data, int size, int offset)
 {
 	DirEntry* entry = files.GetItem(fd);
-	return ReadFile(data, size, entry);
+	return file.Read(data, size, entry);
 }
 
 
@@ -211,7 +203,7 @@ int FAT::Remove(int fd)
 int FAT::Size(int fd)
 {
 	DirEntry* entry = files.GetItem(fd);
-	return FileSize(entry);
+	return file.Size(entry);
 }
 
 

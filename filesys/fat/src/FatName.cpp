@@ -4,13 +4,13 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "FatSystem.h"
+#include "FatDir.h"
 
 
 /// @brief 
 /// @param name 
 /// @return 
-uint8_t FAT::ChkSum(char* name)
+uint8_t FatDir::ChkSum(char* name)
 {
 	uint8_t sum = 0;
 
@@ -27,7 +27,7 @@ uint8_t FAT::ChkSum(char* name)
 /// @param dirName 
 /// @param dir 
 /// @return 
-char* FAT::GetShortName(FATSDir* sdir)
+char* FatDir::GetShortName(FATSDir* sdir)
 {
 	uint8_t pos = 0;
 	char*   name = sdir->name;
@@ -75,7 +75,7 @@ char* FAT::GetShortName(FATSDir* sdir)
 /// @param dirName 
 /// @param dir 
 /// @return 
-char* FAT::GetLongName(FATLDir* ldir, FATSDir* sdir)
+char* FatDir::GetLongName(FATLDir* ldir, FATSDir* sdir)
 {
 	uint8_t pos = 0;
 	uint8_t n = ldir->ord - 0x40;

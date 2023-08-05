@@ -4,13 +4,26 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "FatSystem.h"
+#include "FatDir.h"
 #include "Debug.h"
+#include "Regex.h"
+
+
+/// @brief 
+/// @param fat 
+/// @param dbr 
+/// @param fstSecNum 
+void FatDir::Initialize(FATData* fat, DBR* dbr, uint32_t fstSecNum)
+{
+	this->dbr = dbr;
+	this->fat = fat;
+	disk.Initialize(fat, dbr, fstSecNum);
+}
 
 
 /// @brief 
 /// @param dir 
-int FAT::CheckDir(DirEntry* entry, DIRAttr attr)
+int FatDir::CheckDir(DirEntry* entry, DirAttr attr)
 {
 	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == attr) ? _OK : _ERR;
 }
@@ -19,8 +32,9 @@ int FAT::CheckDir(DirEntry* entry, DIRAttr attr)
 /// @brief Search path
 /// @param name 
 /// @return 
-FAT::DirEntry* FAT::SearchPath(const char* path)
+FatDir::DirEntry* FatDir::SearchPath(const char* path)
 {
+	Regex regex;
 	regex.Split(path, '/');
 	char**  dirNames = regex.ToArray();
 	uint8_t dirIndex = regex.Size();
@@ -48,7 +62,7 @@ FAT::DirEntry* FAT::SearchPath(const char* path)
 /// @param clust 
 /// @param sector 
 /// @return 
-char* FAT::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint32_t& sector)
+char* FatDir::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint32_t& sector)
 {
 	char* name = NULL;
 
@@ -66,10 +80,10 @@ char* FAT::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint32_
 
 			if (idx >= maxDirEntires)
 			{
-				CalcNextSector(clust, sector);
+				disk.CalcNextSector(clust, sector);
 				if (0 != sector)
 				{
-					ReadOneSector((char*)entries, sector);
+					disk.ReadOneSector((char*)entries, sector);
 					idx = 0;
 				}
 				else
@@ -98,11 +112,11 @@ char* FAT::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint32_
 /// @param entry 
 /// @param dirName 
 /// @return 
-FAT::DirEntry* FAT::SearchDir(DirEntry* entry, const char* dirName)
+FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dirName)
 {
 	char* name = NULL;
-	uint32_t dirCluster = 0;
-	uint32_t dirSecNum  = 0;
+	uint32_t dirClust = 0;
+	uint32_t dirSecNum = 0;
 
 	//Calculate max size of dir entries
 	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
@@ -111,18 +125,18 @@ FAT::DirEntry* FAT::SearchDir(DirEntry* entry, const char* dirName)
 	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
 	//Calculate the dir cluster and sector
-	CalcFirstSector(entry, dirCluster, dirSecNum);
+	disk.CalcFirstSector(entry, dirClust, dirSecNum);
 
 	//Search target dir
 	while (0 != dirSecNum)
 	{
-		ReadOneSector((char*)dirEntires, dirSecNum);
+		disk.ReadOneSector((char*)dirEntires, dirSecNum);
 
 		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
 		{
 			if (dirEntires[idx].ldir.ord != dir_free_flag)	
 			{
-				name = GetDirName(dirEntires, idx, dirCluster, dirSecNum);
+				name = GetDirName(dirEntires, idx, dirClust, dirSecNum);
 
 				if (0 == strcmp(name, dirName))
 				{
@@ -136,7 +150,7 @@ FAT::DirEntry* FAT::SearchDir(DirEntry* entry, const char* dirName)
 			}
 		}
 
-		CalcNextSector(dirCluster, dirSecNum);
+		disk.CalcNextSector(dirClust, dirSecNum);
 	}
 
 	delete[] dirEntires;
@@ -147,7 +161,7 @@ FAT::DirEntry* FAT::SearchDir(DirEntry* entry, const char* dirName)
 /// @brief 
 /// @param dirName 
 /// @return 
-FAT::DirEntry* FAT::OpenDir(const char* path)
+FatDir::DirEntry* FatDir::OpenDir(const char* path)
 {
 	DirEntry* dir = SearchPath(path);
 	if (NULL != dir)
@@ -161,11 +175,11 @@ FAT::DirEntry* FAT::OpenDir(const char* path)
 /// @brief 
 /// @param entry 
 /// @return 
-FAT::DirEntry* FAT::ReadDir(DirEntry* entry)
+FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
 {
 	char* name = NULL;
-	uint32_t dirCluster = 0;
-	uint32_t dirSecNum  = 0;
+	uint32_t dirClust = 0;
+	uint32_t dirSecNum = 0;
 
 	//Calculate max size of dir entries
 	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
@@ -174,18 +188,18 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry)
 	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
 	//Calculate the dir cluster and sector
-	CalcFirstSector(entry, dirCluster, dirSecNum);
+	disk.CalcFirstSector(entry, dirClust, dirSecNum);
 
 	//Search target dir
 	while (0 != dirSecNum)
 	{
-		ReadOneSector((char*)dirEntires, dirSecNum);
+		disk.ReadOneSector((char*)dirEntires, dirSecNum);
 
 		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
 		{
 			if (dirEntires[idx].ldir.ord != dir_free_flag)	
 			{
-				name = GetDirName(dirEntires, idx, dirCluster, dirSecNum);
+				name = GetDirName(dirEntires, idx, dirClust, dirSecNum);
 
 				if (0 != strcmp(name, ""))
 				{
@@ -194,7 +208,7 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry)
 			}
 		}
 
-		CalcNextSector(dirCluster, dirSecNum);
+		disk.CalcNextSector(dirClust, dirSecNum);
 	}
 
 	delete[] dirEntires;
@@ -204,7 +218,18 @@ FAT::DirEntry* FAT::ReadDir(DirEntry* entry)
 
 /// @brief 
 /// @param entry 
-void FAT::CloseDir(DirEntry* entry)
+void FatDir::CloseDir(DirEntry* entry)
 {
 
+}
+
+
+void FatDir::Test()
+{
+	ReadDir(OpenDir("libraries"));
+	
+	for (DirEntry* entry = dirs.Begin(); !dirs.IsEnd(); entry = dirs.Next())
+	{
+		debug.Output(Debug::_Lv2, dirs.GetName());
+	}
 }
