@@ -78,13 +78,13 @@ protected:
 
 	struct FAT1216
 	{
-		uint8_t drvNum;
-		uint8_t reserved1;
-		uint8_t bootSig;
+		uint8_t  drvNum;
+		uint8_t  reserved1;
+		uint8_t  bootSig;
 		uint32_t volID;
-		uint8_t volLab[11];
-		uint8_t filSysType[8];
-		uint8_t reserved[28];
+		uint8_t  volLab[11];
+		uint8_t  filSysType[8];
+		uint8_t  reserved[28];
 	} __attribute__((packed));
 
 	struct FAT32
@@ -104,7 +104,7 @@ protected:
 		uint8_t  filSysType[8];
 	} __attribute__((packed));
 
-	struct DBR
+	struct FATDBR
 	{
 		BS  bs;
 		BPB bpb;
@@ -206,8 +206,8 @@ protected:
 		{ 524288,     8  }, /* disks up to 256 MB,  4k cluster */
 		{ 1048576,    16 }, /* disks up to 512 MB,  8k cluster */
 		/* The entries after this point are not used unless FAT16 is forced */
-		{ 2097152,    32 }, /* disks up to     1 GB, 16k cluster */
-		{ 4194304,    64 }, /* disks up to     2 GB, 32k cluster */
+		{ 2097152,    32 }, /* disks up to   1 GB, 16k cluster */
+		{ 4194304,    64 }, /* disks up to   2 GB, 32k cluster */
 		{ 0xffffffff, 0  }  /* any disk greater than 2GB, 0 value for SecPerClusVal trips an error */
 	};
 
@@ -243,8 +243,9 @@ protected:
 	static const uint16_t fat16_eoc_flag = 0xfff8;
 	static const uint32_t fat32_eoc_flag = 0xffffff8;
 
-	DBR*     dbr;
+	//Members
 	FATData* fat;
+	FATDBR*  dbr;
 };
 
 #endif //!__FAT_DEFS_H__

@@ -19,7 +19,7 @@ private:
 	FatDisk disk;
 public:
 	//Methods
-	void Initialize(FATData* fat, DBR* dbr, uint32_t fstSecNum);
+	void Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum);
 	
 	//File Methods
 	int Read(char* data, uint32_t size, DirEntry* entry);

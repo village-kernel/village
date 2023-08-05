@@ -1,5 +1,5 @@
 //###########################################################################
-// FATDir.cpp
+// FatDir.cpp
 // Definitions of the functions that manage fat file system
 //
 // $Copyright: Copyright (C) village
@@ -13,7 +13,7 @@
 /// @param fat 
 /// @param dbr 
 /// @param fstSecNum 
-void FatDir::Initialize(FATData* fat, DBR* dbr, uint32_t fstSecNum)
+void FatDir::Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum)
 {
 	this->dbr = dbr;
 	this->fat = fat;

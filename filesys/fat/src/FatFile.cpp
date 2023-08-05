@@ -11,7 +11,7 @@
 /// @param fat 
 /// @param dbr 
 /// @param fstSecNum 
-void FatFile::Initialize(FATData* fat, DBR* dbr, uint32_t fstSecNum)
+void FatFile::Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum)
 {
 	this->dbr = dbr;
 	this->fat = fat;

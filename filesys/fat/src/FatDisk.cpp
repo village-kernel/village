@@ -11,7 +11,7 @@
 
 /// @brief 
 /// @param fstSecNum 
-void FatDisk::Initialize(FATData* fat, DBR* dbr, uint32_t fstSecNum)
+void FatDisk::Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum)
 {
 	this->fat = fat;
 	this->dbr = dbr;

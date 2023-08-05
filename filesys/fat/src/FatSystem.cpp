@@ -89,7 +89,7 @@ int FAT::CheckFS()
 /// @return 
 int FAT::Mount(const char* path, const char* mount, int opt, int fstSecNum)
 {
-	dbr = new DBR();
+	dbr = new FATDBR();
 	fat = new FATData();
 
 	disk.Initialize(fat, dbr, fstSecNum);
