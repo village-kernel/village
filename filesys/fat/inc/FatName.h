@@ -9,17 +9,24 @@
 
 #include "Templates.h"
 #include "FatDefs.h"
+#include "FatDisk.h"
 
 /// @brief FatName
 class FatName : FatDefs
 {
 private:
+	//Members
+	FatDisk  disk;
+
 	//Methods
 	uint8_t ChkSum(char* name);
-public:
-	//Methods
 	char* GetShortName(FATSDir* sdir);
 	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
+public:
+	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
+
+	//Methods
+	char* GetDirName(DirData* data);
 };
 
 #endif //!__FAT_NAME_H__

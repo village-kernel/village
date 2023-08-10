@@ -167,6 +167,29 @@ protected:
 		}
 	} __attribute__((packed));
 
+	struct DirData
+	{
+		DirEntry* entries;
+		char*     name;
+		uint32_t  index;
+		uint32_t  clust;
+		uint32_t  sector;
+
+		DirData() :
+			entries(NULL),
+			name(NULL),
+			index(0),
+			clust(0),
+			sector(0)
+		{}
+		
+		~DirData()
+		{
+			delete[] entries;
+			delete[] name;
+		}
+	};
+
 	struct FATData
 	{
 		FATType  type;

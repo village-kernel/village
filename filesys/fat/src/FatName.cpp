@@ -8,6 +8,18 @@
 
 
 /// @brief 
+/// @param fat 
+/// @param dbr 
+/// @param startSector 
+void FatName::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
+{
+	this->dbr = dbr;
+	this->fat = fat;
+	disk.Initialize(fat, dbr, startSector);
+}
+
+
+/// @brief 
 /// @param name 
 /// @return 
 uint8_t FatName::ChkSum(char* name)
@@ -123,4 +135,58 @@ char* FatName::GetLongName(FATLDir* ldir, FATSDir* sdir)
 	}
 
 	return dirName;
+}
+
+
+/// @brief 
+/// @param entries 
+/// @param idx 
+/// @param clust 
+/// @param sector 
+/// @return 
+char* FatName::GetDirName(DirData* data)
+{
+	DirEntry*& entries = data->entries;
+	char*&     name    = data->name;
+	uint32_t&  index   = data->index;
+	uint32_t&  clust   = data->clust;
+	uint32_t&  sector  = data->sector;
+
+	if ((entries[index].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
+	{
+		uint8_t n = entries[index].ldir.ord - dir_seq_flag;
+
+		FATLDir* ldirs = new FATLDir[n]();
+
+		for (uint8_t i = 0; i < n; i++)
+		{
+			ldirs[i] = entries[index++].ldir;
+
+			if (index >= fat->entriesPerSec)
+			{
+				disk.CalcNextSector(clust, sector);
+				if (0 != sector)
+				{
+					disk.ReadOneSector((char*)entries, sector);
+					index = 0;
+				}
+				else
+				{
+					delete[] ldirs;
+					delete data;
+					return name = NULL;
+				}
+			}
+		}
+
+		name = GetLongName(ldirs, &entries[index].sdir);
+
+		delete[] ldirs;
+	}
+	else
+	{
+		name = GetShortName(&entries[index].sdir);
+	}
+
+	return name;
 }

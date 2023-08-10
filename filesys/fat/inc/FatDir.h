@@ -19,7 +19,7 @@ class FatDir : FatDefs
 private:
 	//Members
 	FatDisk  disk;
-	FatName  fatName;
+	FatName  name;
 	List<DirEntry> dirs;
 public:
 	//Methods
@@ -27,7 +27,6 @@ public:
 
 	//Directory Methods
 	int CheckDir(DirEntry* entry, DirAttr attr);
-	char* GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint32_t& sector);
 	DirEntry* SearchPath(const char* path);
 	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
 	DirEntry* OpenDir(const char* path);

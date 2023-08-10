@@ -18,6 +18,7 @@ void FatDir::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
 	this->dbr = dbr;
 	this->fat = fat;
 	disk.Initialize(fat, dbr, startSector);
+	name.Initialize(fat, dbr, startSector);
 }
 
 
@@ -30,7 +31,7 @@ int FatDir::CheckDir(DirEntry* entry, DirAttr attr)
 
 
 /// @brief Search path
-/// @param name 
+/// @param path 
 /// @return 
 FatDir::DirEntry* FatDir::SearchPath(const char* path)
 {
@@ -56,99 +57,50 @@ FatDir::DirEntry* FatDir::SearchPath(const char* path)
 }
 
 
-/// @brief 
-/// @param entries 
-/// @param idx 
-/// @param clust 
-/// @param sector 
-/// @return 
-char* FatDir::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint32_t& sector)
-{
-	char* name = NULL;
-
-	if ((entries[idx].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
-	{
-		uint8_t n = entries[idx].ldir.ord - dir_seq_flag;
-
-		FATLDir* ldirs = new FATLDir[n]();
-
-		for (uint8_t ndx = 0; ndx < n; ndx++)
-		{
-			ldirs[ndx] = entries[idx++].ldir;
-
-			if (idx >= fat->entriesPerSec)
-			{
-				disk.CalcNextSector(clust, sector);
-				if (0 != sector)
-				{
-					disk.ReadOneSector((char*)entries, sector);
-					idx = 0;
-				}
-				else
-				{
-					delete[] entries;
-					delete[] ldirs;
-					return NULL;
-				}
-			}
-		}
-
-		name = fatName.GetLongName(ldirs, &entries[idx].sdir);
-
-		delete[] ldirs;
-	}
-	else
-	{
-		name = fatName.GetShortName(&entries[idx].sdir);
-	}
-
-	return name;
-}
-
-
 /// @brief Search dir
 /// @param entry 
-/// @param dirName 
+/// @param dir 
 /// @return 
-FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dirName)
+FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 {
-	char* name = NULL;
-	uint32_t dirClust = 0;
-	uint32_t dirSecNum = 0;
-
+	DirData*   data    = new DirData();
+	DirEntry*& entries = data->entries;
+	uint32_t&  index   = data->index;
+	uint32_t&  clust   = data->clust;
+	uint32_t&  sector  = data->sector;
+	
 	//Allocate the dirEntires space
-	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
+	entries = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
 	//Calculate the dir cluster and sector
-	disk.CalcFirstSector(entry, dirClust, dirSecNum);
+	disk.CalcFirstSector(entry, clust, sector);
 
 	//Search target dir
-	while (0 != dirSecNum)
+	while (0 != sector)
 	{
-		disk.ReadOneSector((char*)dirEntires, dirSecNum);
+		disk.ReadOneSector((char*)entries, sector);
 
-		for (uint32_t idx = 0; idx < fat->entriesPerSec; idx++)
+		for (index = 0; index < fat->entriesPerSec; index++)
 		{
-			if (dirEntires[idx].ldir.ord != dir_free_flag)	
+			if (entries[index].ldir.ord != dir_free_flag)	
 			{
-				name = GetDirName(dirEntires, idx, dirClust, dirSecNum);
+				char* dirname = name.GetDirName(data);
 
-				if (0 == strcmp(name, dirName))
+				if (0 == strcmp(dirname, dir))
 				{
-					DirEntry* found = new DirEntry(dirEntires[idx]);
-					delete[] dirEntires;
-					delete[] name;
+					DirEntry* found = new DirEntry(entries[index]);
+					delete data;
 					return found;
 				}
 
-				delete[] name;
+				delete[] dirname;
 			}
 		}
 
-		disk.CalcNextSector(dirClust, dirSecNum);
+		disk.CalcNextSector(clust, sector);
 	}
 
-	delete[] dirEntires;
+	delete data;
 	return NULL;
 }
 
@@ -172,38 +124,40 @@ FatDir::DirEntry* FatDir::OpenDir(const char* path)
 /// @return 
 FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
 {
-	char* name = NULL;
-	uint32_t dirClust = 0;
-	uint32_t dirSecNum = 0;
+	DirData*   data    = new DirData();
+	DirEntry*& entries = data->entries;
+	uint32_t&  index   = data->index;
+	uint32_t&  clust   = data->clust;
+	uint32_t&  sector  = data->sector;
 
 	//Allocate the dirEntires space
-	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
+	entries = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
 	//Calculate the dir cluster and sector
-	disk.CalcFirstSector(entry, dirClust, dirSecNum);
+	disk.CalcFirstSector(entry, clust, sector);
 
 	//Search target dir
-	while (0 != dirSecNum)
+	while (0 != sector)
 	{
-		disk.ReadOneSector((char*)dirEntires, dirSecNum);
+		disk.ReadOneSector((char*)entries, sector);
 
-		for (uint32_t idx = 0; idx < fat->entriesPerSec; idx++)
+		for (index = 0; index < fat->entriesPerSec; index++)
 		{
-			if (dirEntires[idx].ldir.ord != dir_free_flag)	
+			if (entries[index].ldir.ord != dir_free_flag)	
 			{
-				name = GetDirName(dirEntires, idx, dirClust, dirSecNum);
+				char* dirname = name.GetDirName(data);
 
-				if (0 != strcmp(name, ""))
+				if (0 != strcmp(dirname, ""))
 				{
-					dirs.InsertByName(new DirEntry(dirEntires[idx]), name);
+					dirs.InsertByName(new DirEntry(entries[index]), dirname);
 				}
 			}
 		}
 
-		disk.CalcNextSector(dirClust, dirSecNum);
+		disk.CalcNextSector(clust, sector);
 	}
 
-	delete[] dirEntires;
+	delete data;
 	return NULL;
 }
 
