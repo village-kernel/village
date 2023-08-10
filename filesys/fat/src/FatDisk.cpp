@@ -10,12 +10,14 @@
 
 
 /// @brief 
+/// @param fat 
+/// @param dbr 
 /// @param fstSecNum 
-void FatDisk::Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum)
+void FatDisk::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
 {
 	this->fat = fat;
 	this->dbr = dbr;
-	this->startSector = fstSecNum;
+	this->startSector = startSector;
 
 	disk = device.GetDriver(DriverID::_storage + 1);
 	
@@ -93,18 +95,18 @@ void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector
 	{
 		if (_FAT16 == fat->type)
 		{
-			clust   = 0;
+			clust  = 0;
 			sector = fat->firstRootDirSecNum;
 		}
 		else if (_FAT32 == fat->type)
 		{
-			clust   = fat->rootClus;
+			clust  = fat->rootClus;
 			sector = ClusterToSector(clust);
 		}
 	}
 	else
 	{
-		clust   = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
+		clust  = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
 		sector = ClusterToSector(clust);
 	}
 }

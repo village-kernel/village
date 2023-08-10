@@ -9,8 +9,9 @@
 
 #include "Templates.h"
 #include "FatDefs.h"
-
 #include "FatDisk.h"
+#include "FatName.h"
+
 
 /// @brief 
 class FatDir : FatDefs
@@ -18,15 +19,11 @@ class FatDir : FatDefs
 private:
 	//Members
 	FatDisk  disk;
+	FatName  fatName;
 	List<DirEntry> dirs;
 public:
 	//Methods
-	void Initialize(FATData* fat, DBR* dbr, uint32_t fstSecNum);
-
-	//Name Methods
-	uint8_t ChkSum(char* name);
-	char* GetShortName(FATSDir* sdir);
-	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
+	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
 
 	//Directory Methods
 	int CheckDir(DirEntry* entry, DirAttr attr);

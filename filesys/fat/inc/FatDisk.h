@@ -19,7 +19,7 @@ private:
 	int      startSector;
 public:
 	//Methods
-	void Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum);
+	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
 
 	//Cluster and sector Methods
 	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);

@@ -33,7 +33,7 @@ public:
 	//Methods
 	FAT();
 	~FAT();
-	int Mount(const char* path, const char* mount, int opt, int fstSecNum);
+	int Mount(const char* path, const char* mount, int opt, int startSector);
 	int Unmount(const char* mount);
 	int Open(const char* name, int mode);
 	int Write(int fd, char* data, int size, int offset);

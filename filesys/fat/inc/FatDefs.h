@@ -179,6 +179,7 @@ protected:
 		uint32_t firstRootDirSecNum;
 		uint32_t firstDataSector;
 		uint32_t firstSectorOfCluster;
+		uint32_t entriesPerSec;
 	};
 
 	struct DskSzToSecPerClus

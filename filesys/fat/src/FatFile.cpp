@@ -10,12 +10,12 @@
 /// @brief 
 /// @param fat 
 /// @param dbr 
-/// @param fstSecNum 
-void FatFile::Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum)
+/// @param startSector 
+void FatFile::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
 {
 	this->dbr = dbr;
 	this->fat = fat;
-	disk.Initialize(fat, dbr, fstSecNum);
+	disk.Initialize(fat, dbr, startSector);
 }
 
 

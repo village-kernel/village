@@ -12,12 +12,12 @@
 /// @brief 
 /// @param fat 
 /// @param dbr 
-/// @param fstSecNum 
-void FatDir::Initialize(FATData* fat, FATDBR* dbr, uint32_t fstSecNum)
+/// @param startSector 
+void FatDir::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
 {
 	this->dbr = dbr;
 	this->fat = fat;
-	disk.Initialize(fat, dbr, fstSecNum);
+	disk.Initialize(fat, dbr, startSector);
 }
 
 
@@ -68,8 +68,6 @@ char* FatDir::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint
 
 	if ((entries[idx].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
 	{
-		uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
-
 		uint8_t n = entries[idx].ldir.ord - dir_seq_flag;
 
 		FATLDir* ldirs = new FATLDir[n]();
@@ -78,7 +76,7 @@ char* FatDir::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint
 		{
 			ldirs[ndx] = entries[idx++].ldir;
 
-			if (idx >= maxDirEntires)
+			if (idx >= fat->entriesPerSec)
 			{
 				disk.CalcNextSector(clust, sector);
 				if (0 != sector)
@@ -95,13 +93,13 @@ char* FatDir::GetDirName(DirEntry* entries, uint32_t& idx, uint32_t& clust, uint
 			}
 		}
 
-		name = GetLongName(ldirs, &entries[idx].sdir);
+		name = fatName.GetLongName(ldirs, &entries[idx].sdir);
 
 		delete[] ldirs;
 	}
 	else
 	{
-		name = GetShortName(&entries[idx].sdir);
+		name = fatName.GetShortName(&entries[idx].sdir);
 	}
 
 	return name;
@@ -118,9 +116,6 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dirName)
 	uint32_t dirClust = 0;
 	uint32_t dirSecNum = 0;
 
-	//Calculate max size of dir entries
-	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
-
 	//Allocate the dirEntires space
 	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
@@ -132,7 +127,7 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dirName)
 	{
 		disk.ReadOneSector((char*)dirEntires, dirSecNum);
 
-		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
+		for (uint32_t idx = 0; idx < fat->entriesPerSec; idx++)
 		{
 			if (dirEntires[idx].ldir.ord != dir_free_flag)	
 			{
@@ -181,9 +176,6 @@ FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
 	uint32_t dirClust = 0;
 	uint32_t dirSecNum = 0;
 
-	//Calculate max size of dir entries
-	uint32_t maxDirEntires = dbr->bpb.bytsPerSec / dir_entry_size;
-
 	//Allocate the dirEntires space
 	DirEntry* dirEntires = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
 
@@ -195,7 +187,7 @@ FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
 	{
 		disk.ReadOneSector((char*)dirEntires, dirSecNum);
 
-		for (uint32_t idx = 0; idx < maxDirEntires; idx++)
+		for (uint32_t idx = 0; idx < fat->entriesPerSec; idx++)
 		{
 			if (dirEntires[idx].ldir.ord != dir_free_flag)	
 			{

@@ -75,8 +75,11 @@ int FAT::CheckFS()
 		else
 			fat->type = _FAT32;
 
-		//fat32 root cluster
+		//Fat32 root cluster
 		fat->rootClus = (_FAT32 == fat->type) ? dbr->fat32.rootClus : 0;
+
+		//Calc the entries per sector
+		fat->entriesPerSec = dbr->bpb.bytsPerSec / dir_entry_size;
 
 		return _OK;
 	}
@@ -87,14 +90,14 @@ int FAT::CheckFS()
 
 /// @brief FAT mount
 /// @return 
-int FAT::Mount(const char* path, const char* mount, int opt, int fstSecNum)
+int FAT::Mount(const char* path, const char* mount, int opt, int startSector)
 {
 	dbr = new FATDBR();
 	fat = new FATData();
 
-	disk.Initialize(fat, dbr, fstSecNum);
-	file.Initialize(fat, dbr, fstSecNum);
-	dir.Initialize(fat, dbr, fstSecNum);
+	disk.Initialize(fat, dbr, startSector);
+	file.Initialize(fat, dbr, startSector);
+	dir.Initialize(fat, dbr, startSector);
 
 	if (_ERR == ReadDBR())
 	{

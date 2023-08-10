@@ -1,16 +1,16 @@
 //###########################################################################
-// FATName.cpp
+// FatName.cpp
 // Definitions of the functions that manage fat file system
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "FatDir.h"
+#include "FatName.h"
 
 
 /// @brief 
 /// @param name 
 /// @return 
-uint8_t FatDir::ChkSum(char* name)
+uint8_t FatName::ChkSum(char* name)
 {
 	uint8_t sum = 0;
 
@@ -27,7 +27,7 @@ uint8_t FatDir::ChkSum(char* name)
 /// @param dirName 
 /// @param dir 
 /// @return 
-char* FatDir::GetShortName(FATSDir* sdir)
+char* FatName::GetShortName(FATSDir* sdir)
 {
 	uint8_t pos = 0;
 	char*   name = sdir->name;
@@ -75,7 +75,7 @@ char* FatDir::GetShortName(FATSDir* sdir)
 /// @param dirName 
 /// @param dir 
 /// @return 
-char* FatDir::GetLongName(FATLDir* ldir, FATSDir* sdir)
+char* FatName::GetLongName(FATLDir* ldir, FATSDir* sdir)
 {
 	uint8_t pos = 0;
 	uint8_t n = ldir->ord - 0x40;
