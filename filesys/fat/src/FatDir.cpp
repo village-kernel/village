@@ -70,7 +70,7 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 	uint32_t&  sector  = data->sector;
 	
 	//Allocate the dirEntires space
-	entries = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
+	entries = (DirEntry*)new char[dbr->bpb.bytesPerSec]();
 
 	//Calculate the dir cluster and sector
 	disk.CalcFirstSector(entry, clust, sector);
@@ -111,9 +111,13 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 FatDir::DirEntry* FatDir::OpenDir(const char* path)
 {
 	DirEntry* dir = SearchPath(path);
-	if (NULL != dir)
+	
+	if (NULL == dir) return NULL;
+	
+	if (_OK == CheckDir(dir, _ATTR_DIRECTORY))
 	{
-		if (_OK == CheckDir(dir, _ATTR_DIRECTORY)) return dir;
+		OpenDir(dir);
+		return dir;
 	}
 	return NULL;
 }
@@ -122,7 +126,7 @@ FatDir::DirEntry* FatDir::OpenDir(const char* path)
 /// @brief 
 /// @param entry 
 /// @return 
-FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
+FatDir::DirEntry* FatDir::OpenDir(DirEntry* entry)
 {
 	DirData*   data    = new DirData();
 	DirEntry*& entries = data->entries;
@@ -131,7 +135,7 @@ FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
 	uint32_t&  sector  = data->sector;
 
 	//Allocate the dirEntires space
-	entries = (DirEntry*)new char[dbr->bpb.bytsPerSec]();
+	entries = (DirEntry*)new char[dbr->bpb.bytesPerSec]();
 
 	//Calculate the dir cluster and sector
 	disk.CalcFirstSector(entry, clust, sector);
@@ -158,6 +162,15 @@ FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
 	}
 
 	delete data;
+	return NULL;
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
+{
 	return NULL;
 }
 

@@ -22,7 +22,7 @@ public:
 	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
 
 	//Cluster and sector Methods
-	uint32_t MergeCluster(uint16_t clusHI, uint16_t clusLO);
+	uint32_t MergeCluster(uint16_t clustHI, uint16_t clustLO);
 	uint32_t ClusterToSector(uint32_t clust);
 	uint32_t CalcNextCluster(uint32_t clust);
 	void CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector);

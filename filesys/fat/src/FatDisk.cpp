@@ -30,12 +30,12 @@ void FatDisk::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
 
 
 /// @brief Meger cluster
-/// @param clusHI 
-/// @param clusLO 
+/// @param clustHI 
+/// @param clustLO 
 /// @return cluster
-uint32_t FatDisk::MergeCluster(uint16_t clusHI, uint16_t clusLO)
+uint32_t FatDisk::MergeCluster(uint16_t clustHI, uint16_t clustLO)
 {
-	return (uint32_t)clusHI << 16 | clusLO;
+	return (uint32_t)clustHI << 16 | clustLO;
 }
 
 
@@ -44,7 +44,7 @@ uint32_t FatDisk::MergeCluster(uint16_t clusHI, uint16_t clusLO)
 /// @return sector number
 uint32_t FatDisk::ClusterToSector(uint32_t clust)
 {
-	return ((clust - 2) * dbr->bpb.secPerClus) + fat->firstDataSector;
+	return ((clust - 2) * dbr->bpb.secPerClust) + fat->firstDataSector;
 }
 
 
@@ -55,34 +55,34 @@ uint32_t FatDisk::CalcNextCluster(uint32_t clust)
 {
 	bool isEOC = false;
 	uint32_t fatOffset = 0;
-	uint32_t fatClusEntry = 0;
+	uint32_t fatClust = 0;
 
 	if (_FAT16 == fat->type)
 		fatOffset = clust * 2;
 	else if (_FAT32 == fat->type)
 		fatOffset = clust * 4;
 
-	uint32_t thisFATSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytsPerSec);
-	uint32_t thisFATEntOffset = fatOffset % dbr->bpb.bytsPerSec;
+	uint32_t thisFatSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytesPerSec);
+	uint32_t thisFatEntOffset = fatOffset % dbr->bpb.bytesPerSec;
 
-	char* secBuff = new char[dbr->bpb.bytsPerSec]();
+	char* secBuff = new char[dbr->bpb.bytesPerSec]();
 	
-	ReadOneSector(secBuff, thisFATSecNum);
+	ReadOneSector(secBuff, thisFatSecNum);
 
 	if (_FAT16 == fat->type)
 	{
-		fatClusEntry = *((uint16_t*)&secBuff[thisFATEntOffset]);
-		if (fatClusEntry >= fat16_eoc_flag) isEOC = true;
+		fatClust = *((uint16_t*)&secBuff[thisFatEntOffset]);
+		if (fatClust >= fat16_eoc_flag) isEOC = true;
 	}
 	else if (_FAT32 == fat->type)
 	{
-		fatClusEntry = (*((uint32_t*)&secBuff[thisFATEntOffset])) & 0x0fffffff;
-		if (fatClusEntry >= fat32_eoc_flag) isEOC = true;
+		fatClust = (*((uint32_t*)&secBuff[thisFatEntOffset])) & 0x0fffffff;
+		if (fatClust >= fat32_eoc_flag) isEOC = true;
 	}
 	
 	delete[] secBuff;
 
-	return isEOC ? 0 : fatClusEntry;
+	return isEOC ? 0 : fatClust;
 }
 
 
@@ -96,17 +96,17 @@ void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector
 		if (_FAT16 == fat->type)
 		{
 			clust  = 0;
-			sector = fat->firstRootDirSecNum;
+			sector = fat->firstRootSector;
 		}
 		else if (_FAT32 == fat->type)
 		{
-			clust  = fat->rootClus;
+			clust  = fat->rootClust;
 			sector = ClusterToSector(clust);
 		}
 	}
 	else
 	{
-		clust  = MergeCluster(entry->sdir.fstClusHI, entry->sdir.fstClusLO);
+		clust  = MergeCluster(entry->sdir.fstClustHI, entry->sdir.fstClustLO);
 		sector = ClusterToSector(clust);
 	}
 }
@@ -120,13 +120,13 @@ void FatDisk::CalcNextSector(uint32_t& clust, uint32_t& sector)
 	//FAT16 root dir
 	if (clust < 2)
 	{
-		uint32_t dirEndedSec = fat->firstRootDirSecNum + fat->rootDirSectors;
+		uint32_t dirEndedSec = fat->firstRootSector + fat->countOfRootSecs;
 		sector = (++sector < dirEndedSec) ? sector : 0;
 	}
 	//FatDisk data dir
 	else
 	{ 
-		if ((++sector - ClusterToSector(clust)) >= dbr->bpb.secPerClus)
+		if ((++sector - ClusterToSector(clust)) >= dbr->bpb.secPerClust)
 		{
 			clust = CalcNextCluster(clust);
 			sector = (0 != clust) ? ClusterToSector(clust) : 0;
@@ -172,15 +172,15 @@ uint32_t FatDisk::ReadSector(char* data, uint32_t secSize, uint32_t sector)
 /// @return read cluster size
 uint32_t FatDisk::ReadCluster(char* data, uint32_t clustSize, uint32_t clust)
 {
-	uint32_t bytsPerSec = dbr->bpb.bytsPerSec;
-	uint32_t secPerClus = dbr->bpb.secPerClus;
+	uint32_t bytesPerSec = dbr->bpb.bytesPerSec;
+	uint32_t secPerClust = dbr->bpb.secPerClust;
 
 	for (uint32_t i = 0; i < clustSize; i++)
 	{
-		uint32_t secNum = ClusterToSector(clust);
-		uint32_t offset = i * bytsPerSec * secPerClus;
+		uint32_t sector = ClusterToSector(clust);
+		uint32_t offset = i * bytesPerSec * secPerClust;
 
-		if (secPerClus != ReadSector(data + offset, secPerClus, secNum))
+		if (secPerClust != ReadSector(data + offset, secPerClust, sector))
 		{
 			return i + 1;
 		}

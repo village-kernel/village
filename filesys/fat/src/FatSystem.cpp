@@ -57,15 +57,15 @@ int FAT::CheckFS()
 			fat->totSec = dbr->bpb.totSec32;
 
 		//Calc fat12/16 root dir sector
-		fat->firstRootDirSecNum = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz);
-		fat->rootDirSectors = ((dbr->bpb.rootEntCnt * dir_entry_size) + (dbr->bpb.bytsPerSec - 1)) / dbr->bpb.bytsPerSec;
+		fat->firstRootSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz);
+		fat->countOfRootSecs = ((dbr->bpb.rootEntCnt * dir_entry_size) + (dbr->bpb.bytesPerSec - 1)) / dbr->bpb.bytesPerSec;
 		
 		//Calc fat data sector
-		fat->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) + fat->rootDirSectors;
-		fat->dataSec = fat->totSec - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) - fat->rootDirSectors);
+		fat->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) + fat->countOfRootSecs;
+		fat->dataSec = fat->totSec - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) - fat->countOfRootSecs);
 
 		//Calc counts of clusters
-		fat->countOfClusters = fat->dataSec / dbr->bpb.secPerClus;
+		fat->countOfClusters = fat->dataSec / dbr->bpb.secPerClust;
 
 		//Detected fat type
 		if (fat->countOfClusters < 4085)
@@ -76,10 +76,10 @@ int FAT::CheckFS()
 			fat->type = _FAT32;
 
 		//Fat32 root cluster
-		fat->rootClus = (_FAT32 == fat->type) ? dbr->fat32.rootClus : 0;
+		fat->rootClust = (_FAT32 == fat->type) ? dbr->fat32.rootClust : 0;
 
 		//Calc the entries per sector
-		fat->entriesPerSec = dbr->bpb.bytsPerSec / dir_entry_size;
+		fat->entriesPerSec = dbr->bpb.bytesPerSec / dir_entry_size;
 
 		return _OK;
 	}

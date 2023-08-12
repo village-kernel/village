@@ -62,8 +62,8 @@ protected:
 
 	struct BPB
 	{
-		uint16_t bytsPerSec;
-		uint8_t  secPerClus;
+		uint16_t bytesPerSec;
+		uint8_t  secPerClust;
 		uint16_t rsvdSecCnt;
 		uint8_t  numFATs;
 		uint16_t rootEntCnt;
@@ -92,7 +92,7 @@ protected:
 		uint32_t FATSz32;
 		uint16_t extFlags;
 		uint16_t FSVer;
-		uint32_t rootClus;
+		uint32_t rootClust;
 		uint16_t FSInfo;
 		uint16_t bkBootSec;
 		uint8_t  reserved[12];
@@ -136,10 +136,10 @@ protected:
 		uint16_t crtTime;
 		uint16_t crtDate;
 		uint16_t lstAccDate;
-		uint16_t fstClusHI;
+		uint16_t fstClustHI;
 		uint16_t wrtTime;
 		uint16_t wrtDate;
-		uint16_t fstClusLO;
+		uint16_t fstClustLO;
 		uint32_t fileSize;
 	} __attribute__((packed));
 
@@ -151,7 +151,7 @@ protected:
 		uint8_t  type;
 		uint8_t  chksum;
 		char     name2[12];
-		uint16_t fstClusLO;
+		uint16_t fstClustLO;
 		char     name3[4];
 	} __attribute__((packed));
 
@@ -196,12 +196,11 @@ protected:
 		uint32_t FATSz;
 		uint32_t totSec;
 		uint32_t dataSec;
-		uint32_t rootClus;
-		uint32_t rootDirSectors;
+		uint32_t rootClust;
+		uint32_t countOfRootSecs;
 		uint32_t countOfClusters;
-		uint32_t firstRootDirSecNum;
+		uint32_t firstRootSector;
 		uint32_t firstDataSector;
-		uint32_t firstSectorOfCluster;
 		uint32_t entriesPerSec;
 	};
 

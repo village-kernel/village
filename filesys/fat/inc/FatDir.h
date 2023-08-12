@@ -30,6 +30,7 @@ public:
 	DirEntry* SearchPath(const char* path);
 	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
 	DirEntry* OpenDir(const char* path);
+	DirEntry* OpenDir(DirEntry* entry);
 	DirEntry* ReadDir(DirEntry* entry);
 	void CloseDir(DirEntry* entry);
 	void Test();
