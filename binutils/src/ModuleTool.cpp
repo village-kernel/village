@@ -78,6 +78,7 @@ bool ModuleTool::Uninstall(const char* filename)
 		{
 			mod->FiniArray();
 			modules.Remove(mod);
+			delete mod;
 			debug.Output(Debug::_Lv2, "%s module uninstall successful", filename);
 			return _OK;	
 		}
