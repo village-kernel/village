@@ -53,10 +53,6 @@ menu "Bootloader"
 	source ./vk.bootloader/Kconfig
 endmenu
 
-menu "FileSystem"
-	source ./vk.filesystem/Kconfig
-endmenu
-
 menu "Hardware"
 	source ./vk.hardware/Kconfig
 endmenu
