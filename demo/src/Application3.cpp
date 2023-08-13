@@ -6,8 +6,12 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Application3.h"
+#include "DirStream.h"
+#if defined(ARCH_ARM)
 #include "ILI9488.h"
-
+#elif defined(ARCH_X86)
+#include "VGA.h"
+#endif
 
 ///Constructor
 Application3::Application3()
@@ -19,8 +23,11 @@ Application3::Application3()
 void Application3::Initialize()
 {
 	Driver* display = device.GetDriver(DriverID::_display);
-
-	gui.Initialize((ILI9488*)display);	
+#if defined(ARCH_ARM)
+	gui.Initialize((ILI9488*)display);
+#elif defined(ARCH_X86)
+	gui.Initialize((VGA*)display);
+#endif
 	gui.Printf("hello vk.kernel\r\n");
 }
 
@@ -28,28 +35,25 @@ void Application3::Initialize()
 ///Execute
 void Application3::Execute()
 {
-	const TCHAR* path[] = { "0:", "1:" };
-	
-	for (uint8_t i = 0; i < 2; i++)
-	{
-		gui.Printf("storage %s\r\n", path[i]);
+	DirStream dir;
 
-		if (f_mount(&fs, path[i], 1) == FR_OK)
+	gui.Printf("storage %s\r\n", "libraries");
+
+	if (_OK == dir.Open("libraries"))
+	{
+		int size = dir.Size();
+
+		FileDir* dirs = new FileDir[size]();
+
+		if (dir.Read(dirs, size) == size)
 		{
-			if (f_opendir(&filedir, path[i]) == FR_OK)
+			for (int i = 0; i < size; i++)
 			{
-				while(1)
-				{
-					FRESULT res = f_readdir(&filedir, &fileinfo);
-					if (res != FR_OK || fileinfo.fname[0] == 0) break;
-					
-					gui.Printf("%s\r\n", fileinfo.fname);
-				}
+				gui.Printf("%s\r\n", dirs[i].name);
 			}
-			f_closedir(&filedir);
-			f_unmount(path[i]);
 		}
-		gui.Printf("\r\n");
+
+		dir.Close();
 	}
 }
 

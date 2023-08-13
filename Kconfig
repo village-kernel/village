@@ -26,6 +26,9 @@ config APPLICATION6
 	tristate "Add application6 to project"
 	default m
 
+
+if GENERATED_APP
+
 config TAICHI
 	bool "Add taichi to project"
 	default y
@@ -42,3 +45,4 @@ config SETTINGS
 	bool "Add settings to project"
 	default y
 	
+endif

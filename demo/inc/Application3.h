@@ -9,7 +9,6 @@
 
 #include "Module.h"
 #include "GUI.h"
-#include "ff.h"
 
 ///Application
 class Application3 : public Module
@@ -17,9 +16,6 @@ class Application3 : public Module
 private:
 	//Members
 	GUI     gui;
-	FATFS   fs;
-	DIR     filedir;
-	FILINFO fileinfo;
 public:
 	//Methods
 	Application3();
