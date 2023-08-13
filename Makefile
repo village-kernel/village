@@ -82,9 +82,10 @@ objs-$(CONFIG_FATFS)                        += FatDisk.o
 objs-$(CONFIG_FATFS)                        += FatFile.o
 objs-$(CONFIG_FATFS)                        += FatName.o
 objs-$(CONFIG_FATFS)                        += FatSystem.o
-
-objs-$(CONFIG_FILESTREAM)                   += FileStream.o
 objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
+
+objs-kernel-$(CONFIG_FILESYSTEM)            += DirStream.o
+objs-kernel-$(CONFIG_FILESYSTEM)            += FileStream.o
 
 objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
 objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o

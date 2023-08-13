@@ -20,6 +20,13 @@ enum FileMode
 };
 
 
+/// @brief FileDir
+struct FileDir
+{
+	char* name;
+};
+
+
 ///Command register macro
 #define REGISTER_FS(fs, name)                                 \
 static struct _FS_##name {                                    \

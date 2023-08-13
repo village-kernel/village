@@ -10,7 +10,8 @@
 
 /// @brief Constructor
 FileStream::FileStream(const char* name, int mode)
-	:fd(0)
+	:fd(0),
+	opt(NULL)
 {
 	if (NULL != name) fd = Open(name, mode);
 }
@@ -44,6 +45,10 @@ int FileStream::Open(const char* name, int mode)
 /// @return 
 int FileStream::Write(char* data, int size, int offset)
 {
+	if (NULL != opt)
+	{
+		return opt->Write(fd, data, size, offset);
+	}
 	return 0;
 }
 
@@ -55,7 +60,6 @@ int FileStream::Write(char* data, int size, int offset)
 /// @return 
 int FileStream::Read(char* data, int size, int offset)
 {
-	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
 		return opt->Read(fd, data, size, offset);
@@ -64,20 +68,10 @@ int FileStream::Read(char* data, int size, int offset)
 }
 
 
-/// @brief FileStream seek
-/// @param offset 
-/// @return 
-int FileStream::Seek(int offset)
-{
-	return 0;
-}
-
-
 /// @brief FileStream size
 /// @return 
 int FileStream::Size()
 {
-	opt = filesystem.GetFileOpt("fat");
 	if (NULL != opt)
 	{
 		return opt->Size(fd);
@@ -88,7 +82,10 @@ int FileStream::Size()
 
 /// @brief FileStream close
 /// @return 
-int FileStream::Close()
+void FileStream::Close()
 {
-	return 0;
+	if (NULL != opt)
+	{
+		opt->Close(fd);
+	}
 }

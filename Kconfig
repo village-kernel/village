@@ -136,12 +136,6 @@ config SYNCLOCK
 	bool "Enable sync lock function"
 	 default y
 
-config FILESTREAM
-	depends on UTILITIES
-	select FATFS
-	bool "Enable file stream function"
-	default n
-
 config INIPARSER
 	depends on UTILITIES
 	select FILESTREAM

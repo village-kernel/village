@@ -29,10 +29,12 @@ FileSystem& FileSystem::Instance()
 	static FileSystem instance;
 	return instance;
 }
+EXPORT_SYMBOL(_ZN10FileSystem8InstanceEv);
 
 
 /// @brief Definitions filesystem and export
 FileSystem& filesystem = FileSystem::Instance();
+EXPORT_SYMBOL(filesystem);
 
 
 /// @brief CHS to LBA address
@@ -128,6 +130,7 @@ void FileSystem::RegisterOpt(FileOpt* fileOpt, const char* name)
 {
 	fileOpts.InsertByName(fileOpt, (char*)name);
 }
+EXPORT_SYMBOL(_ZN10FileSystem11RegisterOptEP7FileOptPKc);
 
 
 /// @brief Deregister file system
@@ -137,6 +140,7 @@ void FileSystem::DeregisterOpt(FileOpt* fileOpt, const char* name)
 {
 	fileOpts.RemoveByName(fileOpt, (char*)name);
 }
+EXPORT_SYMBOL(_ZN10FileSystem13DeregisterOptEP7FileOptPKc);
 
 
 /// @brief Get file opt
@@ -146,6 +150,7 @@ FileOpt* FileSystem::GetFileOpt(const char* name)
 {
 	return fileOpts.GetItemByName((char*)name);
 }
+EXPORT_SYMBOL(_ZN10FileSystem10GetFileOptEPKc);
 
 
 ///Register module
