@@ -80,6 +80,7 @@ bool LibraryTool::Uninstall(const char* filename)
 		{
 			library->FiniArray();
 			libraries.Remove(library);
+			delete library;
 			debug.Output(Debug::_Lv2, "%s library uninstall successful", filename);
 			return _OK;	
 		}
