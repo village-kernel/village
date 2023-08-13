@@ -11,7 +11,8 @@
 
 /// @brief Constructor
 Memory::Memory()
-	:sram_start(0),
+	:isMemReady(false),
+	sram_start(0),
 	sram_ended(0),
 	sram_used(0),
 	sbrk_heap(0),
@@ -81,6 +82,9 @@ void Memory::Initialize()
 		tail->prev = head;
 		tail->next = NULL;
 	}
+
+	//Set memory ready flag
+	isMemReady = true;
 }
 
 
@@ -113,7 +117,16 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 		if (nextEndAddr <= nextNode->map.addr)
 		{
 			//Output debug info
-			debug.Output(Debug::_Lv0, "heap alloc: addr = 0x%08lx, size = %ld\r\n", nextMapAddr, nextMapSize);
+			if (isMemReady)
+			{
+				debug.Output
+				(
+					Debug::_Lv0, 
+					"heap alloc: addr = 0x%08lx, size = %ld",
+					nextMapAddr,
+					nextMapSize
+				);
+			}
 
 			//Update the used size of sram
 			sram_used += nextMapSize;
@@ -169,7 +182,16 @@ uint32_t Memory::StackAlloc(uint32_t size)
 		if (prevEndAddr >= prevNode->map.addr)
 		{
 			//Output debug info
-			debug.Output(Debug::_Lv0, "stack alloc: addr = 0x%08lx, size = %ld\r\n", prevMapAddr, prevMapSize);
+			if (isMemReady)
+			{
+				debug.Output
+				(
+					Debug::_Lv0,
+					"stack alloc: addr = 0x%08lx, size = %ld",
+					prevMapAddr,
+					prevMapSize
+				);
+			}
 
 			//Update the used size of sram
 			sram_used += prevMapSize;
@@ -224,8 +246,16 @@ void Memory::Free(uint32_t memory, uint32_t size)
 			sram_used -= currNode->map.size;
 
 			//Output debug info
-			debug.Output(Debug::_Lv0, "free memory: addr: 0x%08lx, size: %ld\r\n",
-			currNode->map.addr, currNode->map.size);
+			if (isMemReady) 
+			{
+				debug.Output
+				(
+					Debug::_Lv0,
+					"free memory: addr: 0x%08lx, size: %ld",
+					currNode->map.addr,
+					currNode->map.size
+				);
+			}
 
 			break;
 		}
@@ -246,7 +276,14 @@ uint32_t Memory::Sbrk(int32_t incr)
 	//Protect heap from growing into the reserved MSP stack
 	if (sbrk_heap + incr > sram_start)
 	{
-		debug.Output(Debug::_Lv0, "error: out of memory.\r\n");
+		if (isMemReady)
+		{
+			debug.Output
+			(
+				Debug::_Lv0,
+				"error: out of memory.\r\n"
+			);
+		}
 		//halt on here
 		while(1) {}
 	}

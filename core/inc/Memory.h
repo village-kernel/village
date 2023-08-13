@@ -45,6 +45,7 @@ private:
 	const static uint32_t kernel_rsvd_stack = 0x3200;  //8k
 
 	//Sram parameters
+	bool isMemReady;
 	uint32_t sram_start;
 	uint32_t sram_ended;
 	uint32_t sram_used;
