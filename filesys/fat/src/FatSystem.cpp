@@ -23,6 +23,7 @@ FAT::~FAT()
 
 
 /// @brief Read DBR
+/// @return 
 int FAT::ReadDBR()
 {
 	static const uint8_t dbr_sector = 0;
@@ -38,7 +39,7 @@ int FAT::ReadDBR()
 }
 
 
-/// @brief 
+/// @brief Check fs
 /// @return 
 int FAT::CheckFS()
 {
@@ -111,8 +112,6 @@ int FAT::Mount(const char* path, const char* mount, int opt, int startSector)
 		return _ERR;
 	}
 
-	dir.Test();
-
 	debug.Output(Debug::_Lv2, "%s -> %s mount successful", path, mount);
 	return _OK;
 }
@@ -160,16 +159,103 @@ int FAT::Write(int fd, char* data, int size, int offset)
 int FAT::Read(int fd, char* data, int size, int offset)
 {
 	DirEntry* entry = files.GetItem(fd);
-	return file.Read(data, size, entry);
+	if (NULL != entry)
+	{
+		return file.Read(data, size, entry);
+	}
+	return -1;
 }
 
 
-/// @brief FAT seek
-/// @param offset 
+/// @brief FAT size
 /// @return 
-int FAT::Seek(int fd, int offset)
+int FAT::Size(int fd)
 {
+	DirEntry* entry = files.GetItem(fd);
+	if (NULL != entry)
+	{
+		return file.Size(entry);
+	}
 	return 0;
+}
+
+
+/// @brief FAT close
+/// @return 
+void FAT::Close(int fd)
+{
+	DirEntry* entry = files.GetItem(fd);
+	if (NULL != entry)
+	{
+		files.Remove(entry, fd);
+	}
+}
+
+
+/// @brief 
+/// @param dirname 
+/// @return 
+int FAT::OpenDir(const char* dirname)
+{
+	DirData* data = dir.OpenDir(dirname);
+	if (NULL != data)
+	{
+		return dirs.Add(data);
+	}
+	return -1;
+}
+
+
+/// @brief 
+/// @param fd 
+/// @param data 
+/// @return 
+int FAT::ReadDir(int fd, FileDir* dirs, int size, int offset)
+{
+	DirData* data = this->dirs.GetItem(fd);
+	
+	if (NULL != data)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			DirEntry* ent = dir.ReadDir(data);
+			if (NULL != ent)
+			{
+				dirs[i].name = ent->name;
+			}
+			else return i;
+		}
+	}
+	else return 0;
+
+	return size;
+}
+
+
+/// @brief 
+/// @param fd 
+/// @return 
+int FAT::SizeDir(int fd)
+{
+	DirData* data = dirs.GetItem(fd);
+	if (NULL != data)
+	{
+		return dir.SizeDir(data);
+	}
+	return -1;
+}
+
+
+/// @brief 
+/// @param fd 
+/// @return 
+void FAT::CloseDir(int fd)
+{
+	DirData* data = dirs.GetItem(fd);
+	if (NULL != data)
+	{
+		dirs.Remove(data, fd);
+	}
 }
 
 
@@ -196,23 +282,6 @@ int FAT::Copy(int fd, const char* from, const char* to)
 /// @brief FAT remove
 /// @return 
 int FAT::Remove(int fd)
-{
-	return 0;
-}
-
-
-/// @brief FAT size
-/// @return 
-int FAT::Size(int fd)
-{
-	DirEntry* entry = files.GetItem(fd);
-	return file.Size(entry);
-}
-
-
-/// @brief FAT close
-/// @return 
-int FAT::Close(int fd)
 {
 	return 0;
 }

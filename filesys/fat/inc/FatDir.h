@@ -20,6 +20,7 @@ private:
 	FatDisk  disk;
 	FatName  name;
 
+	//Methods
 	DirData* OpenDir(DirEntry* entry);
 public:
 	//Methods
@@ -30,11 +31,11 @@ public:
 	DirEntry* SearchPath(const char* path);
 	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
 
+	//Open API
 	DirData* OpenDir(const char* path);
 	DirEntry* ReadDir(DirData* data);
+	int SizeDir(DirData* data);
 	void CloseDir(DirData* data);
-	
-	void Test();
 };
 
 #endif //!__FAT_DIR_H__

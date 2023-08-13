@@ -147,10 +147,10 @@ char* FatName::GetLongName(FATLDir* ldir, FATSDir* sdir)
 char* FatName::GetDirName(DirData* data)
 {
 	FATEnt*&   ents   = data->ents;
-	char*&     name   = data->name;
 	uint32_t&  index  = data->index;
 	uint32_t&  clust  = data->clust;
 	uint32_t&  sector = data->sector;
+	char*      name;
 
 	if ((ents[index].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
 	{

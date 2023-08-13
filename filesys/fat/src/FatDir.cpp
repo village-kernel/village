@@ -104,23 +104,6 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 
 
 /// @brief 
-/// @param dirName 
-/// @return 
-FatDir::DirData* FatDir::OpenDir(const char* path)
-{
-	DirEntry* dir = SearchPath(path);
-	
-	if (NULL == dir) return NULL;
-	
-	if (_OK == CheckDir(dir, _ATTR_DIRECTORY))
-	{
-		return OpenDir(dir);
-	}
-	return NULL;
-}
-
-
-/// @brief 
 /// @param entry 
 /// @return 
 FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
@@ -150,7 +133,8 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 
 				if (0 != strcmp(dirname, ""))
 				{
-					data->dirs.InsertByName(new DirEntry(ents[index], dirname), dirname);
+					data->dirs.Add(new DirEntry(ents[index], dirname));
+					data->size++;
 				}
 			}
 		}
@@ -165,7 +149,24 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief Open dir
+/// @param dirName 
+/// @return 
+FatDir::DirData* FatDir::OpenDir(const char* path)
+{
+	DirEntry* dir = SearchPath(path);
+	
+	if (NULL == dir) return NULL;
+	
+	if (_OK == CheckDir(dir, _ATTR_DIRECTORY))
+	{
+		return OpenDir(dir);
+	}
+	return NULL;
+}
+
+
+/// @brief Read dir
 /// @param data 
 /// @return 
 FatDir::DirEntry* FatDir::ReadDir(DirData* data)
@@ -181,24 +182,17 @@ FatDir::DirEntry* FatDir::ReadDir(DirData* data)
 
 
 /// @brief 
+/// @param data 
+/// @return 
+int FatDir::SizeDir(DirData* data)
+{
+	return data->size;
+}
+
+
+/// @brief Close dir
 /// @param entry 
 void FatDir::CloseDir(DirData* data)
 {
 	delete data;
-}
-
-
-void FatDir::Test()
-{
-	DirData* dirp = OpenDir("libraries");
-	DirEntry* dp = NULL;
-	
-	if (dirp == NULL) return;
-
-	while ((dp = ReadDir(dirp)) != NULL)
-	{
-		debug.Output(Debug::_Lv2, dp->name);
-	}
-
-	CloseDir(dirp);
 }

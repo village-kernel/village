@@ -167,12 +167,6 @@ protected:
 		FATEnt  dir;
 		char*   name;
 
-		DirEntry(DirEntry& entry)
-		{
-			this->dir = entry.dir;
-			this->name = entry.name;
-		}
-
 		DirEntry(FATEnt dir, char* name = NULL)
 		{
 			this->dir = dir;
@@ -189,14 +183,14 @@ protected:
 	{
 		List<DirEntry> dirs;
 		FATEnt*        ents;
-		char*          name;
+		uint32_t       size;
 		uint32_t       index;
 		uint32_t       clust;
 		uint32_t       sector;
-
+		
 		DirData() :
 			ents(NULL),
-			name(NULL),
+			size(0),
 			index(0),
 			clust(0),
 			sector(0)
@@ -206,7 +200,6 @@ protected:
 		{
 			dirs.Release();
 			delete[] ents;
-			delete[] name;
 		}
 	};
 

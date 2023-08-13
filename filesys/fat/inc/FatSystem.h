@@ -25,6 +25,7 @@ private:
 	FatDir  dir;
 
 	List<DirEntry> files;
+	List<DirData>  dirs;
 
 	//Methods
 	int ReadDBR();
@@ -33,17 +34,28 @@ public:
 	//Methods
 	FAT();
 	~FAT();
+
+	//Mount
 	int Mount(const char* path, const char* mount, int opt, int startSector);
 	int Unmount(const char* mount);
+	
+	//File
 	int Open(const char* name, int mode);
 	int Write(int fd, char* data, int size, int offset);
 	int Read(int fd, char* data, int size, int offset);
-	int Seek(int fd, int offset);
+	int Size(int fd);
+	void Close(int fd);
+
+	//Dir
+	int OpenDir(const char* dirname);
+	int ReadDir(int fd, FileDir* dirs, int size, int offset);
+	int SizeDir(int fd);
+	void CloseDir(int fd);
+
+	//Operate
 	int Rename(int fd, const char* old, const char* now);
 	int Copy(int fd, const char* from, const char* to);
 	int Remove(int fd);
-	int Size(int fd);
-	int Close(int fd);
 };
 
 #endif //!__FAT_FILE_SYSTEM_H__
