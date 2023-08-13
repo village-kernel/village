@@ -65,6 +65,7 @@ void Loader::Loading(int type, const char* filename)
 
 	//Release resource
 	rc->Release();
+	delete rc;
 }
 
 
