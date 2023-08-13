@@ -26,7 +26,7 @@ void FatDir::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
 /// @param dir 
 int FatDir::CheckDir(DirEntry* entry, DirAttr attr)
 {
-	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == attr) ? _OK : _ERR;
+	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == attr) ? _OK : _ERR;
 }
 
 
@@ -63,14 +63,14 @@ FatDir::DirEntry* FatDir::SearchPath(const char* path)
 /// @return 
 FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 {
-	DirData*   data    = new DirData();
-	DirEntry*& entries = data->entries;
-	uint32_t&  index   = data->index;
-	uint32_t&  clust   = data->clust;
-	uint32_t&  sector  = data->sector;
+	DirData*   data   = new DirData();
+	FATEnt*&   ents   = data->ents;
+	uint32_t&  index  = data->index;
+	uint32_t&  clust  = data->clust;
+	uint32_t&  sector = data->sector;
 	
 	//Allocate the dirEntires space
-	entries = (DirEntry*)new char[dbr->bpb.bytesPerSec]();
+	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
 
 	//Calculate the dir cluster and sector
 	disk.CalcFirstSector(entry, clust, sector);
@@ -78,22 +78,20 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 	//Search target dir
 	while (0 != sector)
 	{
-		disk.ReadOneSector((char*)entries, sector);
+		disk.ReadOneSector((char*)ents, sector);
 
 		for (index = 0; index < fat->entriesPerSec; index++)
 		{
-			if (entries[index].ldir.ord != dir_free_flag)	
+			if (ents[index].ldir.ord != dir_free_flag)
 			{
 				char* dirname = name.GetDirName(data);
 
 				if (0 == strcmp(dirname, dir))
 				{
-					DirEntry* found = new DirEntry(entries[index]);
+					DirEntry* found = new DirEntry(ents[index], dirname);
 					delete data;
 					return found;
 				}
-
-				delete[] dirname;
 			}
 		}
 
@@ -108,7 +106,7 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 /// @brief 
 /// @param dirName 
 /// @return 
-FatDir::DirEntry* FatDir::OpenDir(const char* path)
+FatDir::DirData* FatDir::OpenDir(const char* path)
 {
 	DirEntry* dir = SearchPath(path);
 	
@@ -116,8 +114,7 @@ FatDir::DirEntry* FatDir::OpenDir(const char* path)
 	
 	if (_OK == CheckDir(dir, _ATTR_DIRECTORY))
 	{
-		OpenDir(dir);
-		return dir;
+		return OpenDir(dir);
 	}
 	return NULL;
 }
@@ -126,16 +123,16 @@ FatDir::DirEntry* FatDir::OpenDir(const char* path)
 /// @brief 
 /// @param entry 
 /// @return 
-FatDir::DirEntry* FatDir::OpenDir(DirEntry* entry)
+FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 {
-	DirData*   data    = new DirData();
-	DirEntry*& entries = data->entries;
-	uint32_t&  index   = data->index;
-	uint32_t&  clust   = data->clust;
-	uint32_t&  sector  = data->sector;
+	DirData*   data   = new DirData();
+	FATEnt*&   ents   = data->ents;
+	uint32_t&  index  = data->index;
+	uint32_t&  clust  = data->clust;
+	uint32_t&  sector = data->sector;
 
-	//Allocate the dirEntires space
-	entries = (DirEntry*)new char[dbr->bpb.bytesPerSec]();
+	//Allocate the dir entires space
+	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
 
 	//Calculate the dir cluster and sector
 	disk.CalcFirstSector(entry, clust, sector);
@@ -143,17 +140,17 @@ FatDir::DirEntry* FatDir::OpenDir(DirEntry* entry)
 	//Search target dir
 	while (0 != sector)
 	{
-		disk.ReadOneSector((char*)entries, sector);
+		disk.ReadOneSector((char*)ents, sector);
 
 		for (index = 0; index < fat->entriesPerSec; index++)
 		{
-			if (entries[index].ldir.ord != dir_free_flag)	
+			if (ents[index].ldir.ord != dir_free_flag)	
 			{
 				char* dirname = name.GetDirName(data);
 
 				if (0 != strcmp(dirname, ""))
 				{
-					dirs.InsertByName(new DirEntry(entries[index]), dirname);
+					data->dirs.InsertByName(new DirEntry(ents[index], dirname), dirname);
 				}
 			}
 		}
@@ -161,34 +158,47 @@ FatDir::DirEntry* FatDir::OpenDir(DirEntry* entry)
 		disk.CalcNextSector(clust, sector);
 	}
 
-	delete data;
-	return NULL;
+	//Set dir begin
+	data->dirs.Begin();
+
+	return data;
 }
 
 
 /// @brief 
-/// @param entry 
+/// @param data 
 /// @return 
-FatDir::DirEntry* FatDir::ReadDir(DirEntry* entry)
+FatDir::DirEntry* FatDir::ReadDir(DirData* data)
 {
+	if (false == data->dirs.IsEnd())
+	{
+		DirEntry* ent = data->dirs.Item();
+		data->dirs.Next();
+		return ent;
+	}
 	return NULL;
 }
 
 
 /// @brief 
 /// @param entry 
-void FatDir::CloseDir(DirEntry* entry)
+void FatDir::CloseDir(DirData* data)
 {
-
+	delete data;
 }
 
 
 void FatDir::Test()
 {
-	ReadDir(OpenDir("libraries"));
+	DirData* dirp = OpenDir("libraries");
+	DirEntry* dp = NULL;
 	
-	for (DirEntry* entry = dirs.Begin(); !dirs.IsEnd(); entry = dirs.Next())
+	if (dirp == NULL) return;
+
+	while ((dp = ReadDir(dirp)) != NULL)
 	{
-		debug.Output(Debug::_Lv2, dirs.GetName());
+		debug.Output(Debug::_Lv2, dp->name);
 	}
+
+	CloseDir(dirp);
 }

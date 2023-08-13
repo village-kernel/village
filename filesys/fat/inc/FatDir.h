@@ -7,7 +7,6 @@
 #ifndef __FAT_DIR_H__
 #define __FAT_DIR_H__
 
-#include "Templates.h"
 #include "FatDefs.h"
 #include "FatDisk.h"
 #include "FatName.h"
@@ -20,7 +19,8 @@ private:
 	//Members
 	FatDisk  disk;
 	FatName  name;
-	List<DirEntry> dirs;
+
+	DirData* OpenDir(DirEntry* entry);
 public:
 	//Methods
 	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
@@ -29,10 +29,11 @@ public:
 	int CheckDir(DirEntry* entry, DirAttr attr);
 	DirEntry* SearchPath(const char* path);
 	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
-	DirEntry* OpenDir(const char* path);
-	DirEntry* OpenDir(DirEntry* entry);
-	DirEntry* ReadDir(DirEntry* entry);
-	void CloseDir(DirEntry* entry);
+
+	DirData* OpenDir(const char* path);
+	DirEntry* ReadDir(DirData* data);
+	void CloseDir(DirData* data);
+	
 	void Test();
 };
 

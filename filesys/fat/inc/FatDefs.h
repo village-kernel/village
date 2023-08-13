@@ -8,6 +8,7 @@
 #define __FAT_DEFS_H__
 
 #include "Defines.h"
+#include "Templates.h"
 
 /// @brief 
 class FatDefs
@@ -155,28 +156,46 @@ protected:
 		char     name3[4];
 	} __attribute__((packed));
 
-	union DirEntry
+	union FATEnt
 	{
 		FATLDir ldir;
 		FATSDir sdir;
+	} __attribute__((packed));
+
+	struct DirEntry
+	{
+		FATEnt  dir;
+		char*   name;
 
 		DirEntry(DirEntry& entry)
 		{
-			this->ldir = entry.ldir;
-			this->sdir = entry.sdir;
+			this->dir = entry.dir;
+			this->name = entry.name;
+		}
+
+		DirEntry(FATEnt dir, char* name = NULL)
+		{
+			this->dir = dir;
+			this->name = name;
+		}
+
+		~DirEntry()
+		{
+			delete[] name;
 		}
 	} __attribute__((packed));
 
 	struct DirData
 	{
-		DirEntry* entries;
-		char*     name;
-		uint32_t  index;
-		uint32_t  clust;
-		uint32_t  sector;
+		List<DirEntry> dirs;
+		FATEnt*        ents;
+		char*          name;
+		uint32_t       index;
+		uint32_t       clust;
+		uint32_t       sector;
 
 		DirData() :
-			entries(NULL),
+			ents(NULL),
 			name(NULL),
 			index(0),
 			clust(0),
@@ -185,7 +204,8 @@ protected:
 		
 		~DirData()
 		{
-			delete[] entries;
+			dirs.Release();
+			delete[] ents;
 			delete[] name;
 		}
 	};
