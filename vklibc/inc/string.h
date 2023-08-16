@@ -21,6 +21,7 @@ char* strncpy(char* dst, const char* src, size_t len);
 char* strcat(char* s1, const char* s2);
 char* strncat(char* s1, const char* s2, size_t n);
 int strcmp(const char* s1, const char* s2);
+int strncmp(const char* s1, const char* s2, size_t n);
 size_t strlen(const char* s);
 size_t strnlen(const char* s, size_t maxlen);
 
