@@ -23,10 +23,38 @@ void FatDir::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
 
 
 /// @brief 
-/// @param dir 
-int FatDir::CheckDir(DirEntry* entry, DirAttr attr)
+/// @param entry 
+/// @return 
+bool FatDir::IsHidden(DirEntry* entry)
 {
-	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == attr) ? _OK : _ERR;
+	return ((entry->dir.sdir.attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+bool FatDir::IsFile(DirEntry* entry)
+{
+	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+bool FatDir::IsDirectory(DirEntry* entry)
+{
+	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+bool FatDir::IsVolume(DirEntry* entry)
+{
+	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
 }
 
 
@@ -42,7 +70,16 @@ FatDir::DirEntry* FatDir::SearchPath(const char* path)
 	
 	DirEntry* entry = NULL;
 
-	for (uint8_t i = 0; i < dirIndex; i++)
+	if (dirIndex <= 1)
+	{
+		entry = new DirEntry();
+		entry->dir.sdir.attr = _ATTR_DIRECTORY;
+		entry->root = true;
+		entry->name = (char*)"/";
+		return entry;
+	}
+
+	for (uint8_t i = 1; i < dirIndex; i++)
 	{
 		entry = SearchDir(entry, dirNames[i]);
 
@@ -127,14 +164,20 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 
 		for (index = 0; index < fat->entriesPerSec; index++)
 		{
-			if (ents[index].ldir.ord != dir_free_flag)	
+			if (ents[index].ldir.ord != dir_free_flag)
 			{
 				char* dirname = name.GetDirName(data);
 
 				if (0 != strcmp(dirname, ""))
 				{
-					data->dirs.Add(new DirEntry(ents[index], dirname));
-					data->size++;
+					DirEntry* found = new DirEntry(ents[index], dirname);
+
+					if (IsFile(found) || IsDirectory(found))
+					{
+						data->dirs.Add(found);
+						data->size++;
+					}
+					else delete found;
 				}
 			}
 		}
@@ -158,9 +201,11 @@ FatDir::DirData* FatDir::OpenDir(const char* path)
 	
 	if (NULL == dir) return NULL;
 	
-	if (_OK == CheckDir(dir, _ATTR_DIRECTORY))
+	if (IsDirectory(dir))
 	{
-		return OpenDir(dir);
+		DirData* found = OpenDir(dir);
+		found->path = (char*)path;
+		return found;
 	}
 	return NULL;
 }

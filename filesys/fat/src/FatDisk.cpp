@@ -91,7 +91,7 @@ uint32_t FatDisk::CalcNextCluster(uint32_t clust)
 /// @param sector 
 void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector)
 {
-	if (NULL == entry)
+	if (NULL == entry || entry->root)
 	{
 		if (_FAT16 == fat->type)
 		{

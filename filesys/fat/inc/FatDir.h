@@ -27,7 +27,10 @@ public:
 	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
 
 	//Directory Methods
-	int CheckDir(DirEntry* entry, DirAttr attr);
+	bool IsHidden(DirEntry* entry);
+	bool IsFile(DirEntry* entry);
+	bool IsDirectory(DirEntry* entry);
+	bool IsVolume(DirEntry* entry);
 	DirEntry* SearchPath(const char* path);
 	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
 

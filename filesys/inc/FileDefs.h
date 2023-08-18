@@ -20,10 +20,32 @@ enum FileMode
 };
 
 
+/// @brief FileType
+enum FileType
+{
+	_Unknown  = 0x00,
+	_File     = 0x01,
+	_Diretory = 0x02,
+	_Volume   = 0x04,
+};
+
+
+/// @brief FileAttr
+enum FileAttr
+{
+	_Visible = 0x04,
+	_Hidden  = 0x08,
+	_System  = 0x10,
+};
+
+
 /// @brief FileDir
 struct FileDir
 {
+	char* path;
 	char* name;
+	FileType type;
+	FileAttr attr;
 };
 
 

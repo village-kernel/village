@@ -30,6 +30,8 @@ private:
 	//Methods
 	int ReadDBR();
 	int CheckFS();
+	FileType GetFileType(DirEntry* entry);
+	FileAttr GetFileAttr(DirEntry* entry);
 public:
 	//Methods
 	FAT();

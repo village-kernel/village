@@ -160,17 +160,20 @@ protected:
 	{
 		FATLDir ldir;
 		FATSDir sdir;
+		FATEnt() { memset((void*)this, 0, 32); }
 	} __attribute__((packed));
 
 	struct DirEntry
 	{
 		FATEnt  dir;
+		bool    root;
 		char*   name;
 
-		DirEntry(FATEnt dir, char* name = NULL)
+		DirEntry(FATEnt dir = FATEnt(), char* name = NULL)
 		{
 			this->dir = dir;
 			this->name = name;
+			this->root = false;
 		}
 
 		~DirEntry()
@@ -183,6 +186,7 @@ protected:
 	{
 		List<DirEntry> dirs;
 		FATEnt*        ents;
+		char*          path;
 		uint32_t       size;
 		uint32_t       index;
 		uint32_t       clust;
@@ -190,6 +194,7 @@ protected:
 		
 		DirData() :
 			ents(NULL),
+			path(NULL),
 			size(0),
 			index(0),
 			clust(0),
@@ -200,6 +205,7 @@ protected:
 		{
 			dirs.Release();
 			delete[] ents;
+			delete[] path;
 		}
 	};
 

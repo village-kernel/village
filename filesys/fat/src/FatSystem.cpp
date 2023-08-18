@@ -8,6 +8,7 @@
 #include "FatSystem.h"
 #include "Kernel.h"
 #include "Debug.h"
+#include "stdio.h"
 
 
 /// @brief Constructor
@@ -206,6 +207,31 @@ int FAT::OpenDir(const char* dirname)
 }
 
 
+/// @brief Get file type
+/// @param entry 
+/// @return file type
+FileType FAT::GetFileType(DirEntry* entry)
+{
+	if (dir.IsFile(entry))
+		return FileType::_File;
+	else if (dir.IsDirectory(entry))
+		return FileType::_Diretory;
+	else if (dir.IsVolume(entry))
+		return FileType::_Volume;
+	else
+		return FileType::_Unknown;
+}
+
+
+/// @brief Get file attr
+/// @param entry 
+/// @return file attr
+FileAttr FAT::GetFileAttr(DirEntry* entry)
+{
+	return dir.IsHidden(entry) ? FileAttr::_Hidden : FileAttr::_Visible;
+}
+
+
 /// @brief 
 /// @param fd 
 /// @param data 
@@ -221,7 +247,12 @@ int FAT::ReadDir(int fd, FileDir* dirs, int size, int offset)
 			DirEntry* ent = dir.ReadDir(data);
 			if (NULL != ent)
 			{
+				char* path = new char[strlen(data->path) + strlen(ent->name) + 2]();
+				sprintf(path, "%s/%s", data->path, ent->name);
+				dirs[i].path = path;
 				dirs[i].name = ent->name;
+				dirs[i].type = GetFileType(ent);
+				dirs[i].attr = GetFileAttr(ent);
 			}
 			else return i;
 		}
