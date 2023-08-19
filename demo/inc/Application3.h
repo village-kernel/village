@@ -16,6 +16,9 @@ class Application3 : public Module
 private:
 	//Members
 	GUI     gui;
+
+	//Methods
+	void DisplayDir(const char* name);
 public:
 	//Methods
 	Application3();

@@ -13,6 +13,7 @@
 #include "VGA.h"
 #endif
 
+
 ///Constructor
 Application3::Application3()
 {
@@ -32,14 +33,13 @@ void Application3::Initialize()
 }
 
 
-///Execute
-void Application3::Execute()
+/// @brief 
+/// @param name 
+void Application3::DisplayDir(const char* name)
 {
 	DirStream dir;
 
-	gui.Printf("storage %s\r\n", "libraries");
-
-	if (_OK == dir.Open("libraries"))
+	if (_OK == dir.Open(name, FileMode::_Read))
 	{
 		int size = dir.Size();
 
@@ -49,12 +49,33 @@ void Application3::Execute()
 		{
 			for (int i = 0; i < size; i++)
 			{
-				gui.Printf("%s\r\n", dirs[i].name);
+				if ((FileAttr::_Visible == dirs[i].attr) &&
+					(0 != strcmp(dirs[i].name, ".")) &&
+					(0 != strcmp(dirs[i].name, "..")))
+				{
+					gui.Printf("%s\r\n", dirs[i].name);
+				
+					if (FileType::_Diretory == dirs[i].type)
+					{
+						DisplayDir(dirs[i].path);
+					}
+				}
 			}
 		}
 
+		delete[] dirs;
+
 		dir.Close();
 	}
+}
+
+
+///Execute
+void Application3::Execute()
+{
+	gui.Printf("storage %s\r\n", "C:/");
+
+	DisplayDir("C:/");
 }
 
 
