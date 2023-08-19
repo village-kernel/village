@@ -21,9 +21,9 @@ private:
 	FileOpt* opt;
 public:
 	//Methods
-	DirStream(const char* name = NULL);
+	DirStream(const char* name = NULL, int mode = 0);
 	~DirStream();
-	int Open(const char* name);
+	int Open(const char* name, int mode);
 	int Read(FileDir* dirs, int size, int offset = 0);
 	int Size();
 	void Close();

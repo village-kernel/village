@@ -23,15 +23,6 @@ bool FatDir::IsHidden(DirEntry* entry)
 /// @brief 
 /// @param entry 
 /// @return 
-bool FatDir::IsFile(DirEntry* entry)
-{
-	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
-}
-
-
-/// @brief 
-/// @param entry 
-/// @return 
 bool FatDir::IsDirectory(DirEntry* entry)
 {
 	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
@@ -44,6 +35,15 @@ bool FatDir::IsDirectory(DirEntry* entry)
 bool FatDir::IsVolume(DirEntry* entry)
 {
 	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+bool FatDir::IsFile(DirEntry* entry)
+{
+	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
 }
 
 
@@ -184,7 +184,7 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 /// @brief Open dir
 /// @param dirName 
 /// @return 
-FatDir::DirData* FatDir::OpenDir(const char* path)
+FatDir::DirData* FatDir::Open(const char* path, int mode)
 {
 	DirEntry* dir = SearchPath(path);
 	
@@ -203,7 +203,7 @@ FatDir::DirData* FatDir::OpenDir(const char* path)
 /// @brief Read dir
 /// @param data 
 /// @return 
-FatDir::DirEntry* FatDir::ReadDir(DirData* data)
+FatDir::DirEntry* FatDir::Read(DirData* data)
 {
 	if (false == data->dirs.IsEnd())
 	{
@@ -218,7 +218,7 @@ FatDir::DirEntry* FatDir::ReadDir(DirData* data)
 /// @brief Size dir
 /// @param data 
 /// @return 
-int FatDir::SizeDir(DirData* data)
+int FatDir::Size(DirData* data)
 {
 	return data->size;
 }
@@ -226,7 +226,7 @@ int FatDir::SizeDir(DirData* data)
 
 /// @brief Close dir
 /// @param entry 
-void FatDir::CloseDir(DirData* data)
+void FatDir::Close(DirData* data)
 {
 	delete data;
 }

@@ -9,11 +9,11 @@
 
 
 /// @brief Constructor
-DirStream::DirStream(const char* name)
+DirStream::DirStream(const char* name, int mode)
 	:fd(-1),
 	opt(NULL)
 {
-	if (NULL != name) fd = Open(name);
+	if (NULL != name) fd = Open(name, mode);
 }
 
 
@@ -27,13 +27,13 @@ DirStream::~DirStream()
 /// @param name 
 /// @param opt 
 /// @return 
-int DirStream::Open(const char* name)
+int DirStream::Open(const char* name, int mode)
 {
 	opt = filesystem.ChangeVolume(name);
 
 	if (NULL != opt)
 	{
-		fd = opt->OpenDir(name);
+		fd = opt->OpenDir(name, mode);
 	}
 	
 	return (fd != -1) ? _OK : _ERR;

@@ -200,7 +200,12 @@ int FAT::Open(const char* name, int mode)
 /// @return 
 int FAT::Write(int fd, char* data, int size, int offset)
 {
-	return 0;
+	DirEntry* entry = files.GetItem(fd);
+	if (NULL != entry)
+	{
+		return fatFile->Write(data, size, entry);
+	}
+	return -1;
 }
 
 
@@ -248,9 +253,9 @@ void FAT::Close(int fd)
 /// @brief 
 /// @param dirname 
 /// @return 
-int FAT::OpenDir(const char* dirname)
+int FAT::OpenDir(const char* name, int mode)
 {
-	DirData* data = fatDir->OpenDir(dirname);
+	DirData* data = fatDir->Open(name, mode);
 	if (NULL != data)
 	{
 		return dirs.Add(data);
@@ -296,7 +301,7 @@ int FAT::ReadDir(int fd, FileDir* dirs, int size, int offset)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			DirEntry* ent = fatDir->ReadDir(data);
+			DirEntry* ent = fatDir->Read(data);
 			if (NULL != ent)
 			{
 				char* path = new char[strlen(data->path) + strlen(ent->name) + 2]();
@@ -323,7 +328,7 @@ int FAT::SizeDir(int fd)
 	DirData* data = dirs.GetItem(fd);
 	if (NULL != data)
 	{
-		return fatDir->SizeDir(data);
+		return fatDir->Size(data);
 	}
 	return -1;
 }

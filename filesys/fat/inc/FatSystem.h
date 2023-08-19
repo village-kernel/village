@@ -48,7 +48,7 @@ public:
 	void Close(int fd);
 
 	//Dir
-	int OpenDir(const char* dirname);
+	int OpenDir(const char* name, int mode);
 	int ReadDir(int fd, FileDir* dirs, int size, int offset);
 	int SizeDir(int fd);
 	void CloseDir(int fd);

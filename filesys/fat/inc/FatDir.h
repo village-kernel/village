@@ -13,23 +13,23 @@
 /// @brief FatDir
 class FatDir : public FatDat
 {
-private:
-	//Methods
-	DirData* OpenDir(DirEntry* entry);
 public:
-	//Directory Methods
+	//Attr Methods
 	bool IsHidden(DirEntry* entry);
-	bool IsFile(DirEntry* entry);
 	bool IsDirectory(DirEntry* entry);
 	bool IsVolume(DirEntry* entry);
+	bool IsFile(DirEntry* entry);
+
+	//Directory Methods
 	DirEntry* SearchPath(const char* path);
-	DirEntry* SearchDir(DirEntry* entry, const char* dirName);
+	DirEntry* SearchDir(DirEntry* entry, const char* dir);
+	DirData* OpenDir(DirEntry* entry);
 
 	//Open API
-	DirData* OpenDir(const char* path);
-	DirEntry* ReadDir(DirData* data);
-	int SizeDir(DirData* data);
-	void CloseDir(DirData* data);
+	DirData* Open(const char* path, int mode);
+	DirEntry* Read(DirData* data);
+	int Size(DirData* data);
+	void Close(DirData* data);
 };
 
 #endif //!__FAT_DIR_H__

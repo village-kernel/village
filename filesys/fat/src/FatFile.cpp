@@ -19,6 +19,17 @@ FatDefs::DirEntry* FatFile::Open(const char* name, int mode)
 }
 
 
+/// @brief Write
+/// @param data 
+/// @param size 
+/// @param entry 
+/// @return 
+int FatFile::Write(char* data, uint32_t size, DirEntry* entry)
+{
+	return size;
+}
+
+
 /// @brief Read
 /// @param data 
 /// @param dir 
@@ -49,7 +60,7 @@ int FatFile::Read(char* data, uint32_t size, DirEntry* entry)
 /// @brief Size
 /// @param dir 
 /// @return 
-uint32_t FatFile::Size(DirEntry* entry)
+int FatFile::Size(DirEntry* entry)
 {
 	return entry->dir.sdir.fileSize;
 }
