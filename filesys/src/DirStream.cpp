@@ -10,7 +10,7 @@
 
 /// @brief Constructor
 DirStream::DirStream(const char* name)
-	:fd(0),
+	:fd(-1),
 	opt(NULL)
 {
 	if (NULL != name) fd = Open(name);
@@ -29,11 +29,13 @@ DirStream::~DirStream()
 /// @return 
 int DirStream::Open(const char* name)
 {
-	opt = filesystem.GetFileOpt("fat");
+	opt = filesystem.ChangeVolume(name);
+
 	if (NULL != opt)
 	{
 		fd = opt->OpenDir(name);
 	}
+	
 	return (fd != -1) ? _OK : _ERR;
 }
 

@@ -10,7 +10,7 @@
 
 /// @brief Constructor
 FileStream::FileStream(const char* name, int mode)
-	:fd(0),
+	:fd(-1),
 	opt(NULL)
 {
 	if (NULL != name) fd = Open(name, mode);
@@ -29,11 +29,13 @@ FileStream::~FileStream()
 /// @return 
 int FileStream::Open(const char* name, int mode)
 {
-	opt = filesystem.GetFileOpt("fat");
+	opt = filesystem.ChangeVolume(name);
+
 	if (NULL != opt)
 	{
 		fd = opt->Open(name, mode);
 	}
+
 	return (fd != -1) ? _OK : _ERR;
 }
 

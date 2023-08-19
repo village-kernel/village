@@ -11,7 +11,6 @@
 
 /// @brief Constructor
 FileSystem::FileSystem()
-	:disk(NULL)
 {
 }
 
@@ -37,70 +36,12 @@ FileSystem& filesystem = FileSystem::Instance();
 EXPORT_SYMBOL(filesystem);
 
 
-/// @brief CHS to LBA address
-/// @param path 
-/// @param mount 
-/// @param opt 
-/// @return 
-uint32_t FileSystem::CHS2LBA(uint8_t head, uint8_t sector, uint16_t cylinder)
-{
-	//LBA = (C × HPC + H) × SPT + (S − 1)
-	return (cylinder * 16 + head) * 63 + (sector - 1);
-}
-
-
-/// @brief 
-/// @param lba 
-/// @param head 
-/// @param sector 
-/// @param cylinder 
-void FileSystem::LBA2CHS(uint32_t lba, uint8_t& head, uint8_t& sector, uint16_t& cylinder)
-{
-	//C = LBA ÷ (HPC × SPT)
-	//H = (LBA ÷ SPT) mod HPC
-	//S = (LBA mod SPT) + 1
-}
-
-
-/// @brief Read MBR
-int FileSystem::ReadMBR()
-{
-	static const uint8_t mbr_sector = 0;
-	
-	mbr = new MBR();
-
-	if (NULL != mbr)
-	{
-		disk->Read((uint8_t*)mbr, 1, mbr_sector);
-		
-		if (magic == mbr->magic) return _OK;
-	}
-
-	return _ERR;
-}
-
-
 /// @brief File system initialize
 void FileSystem::Initialize()
 {
-	disk = device.GetDriver(DriverID::_storage + 1);
-
-	if (NULL == disk)
+	for (FileOpt* opt = fileOpts.Begin(); !fileOpts.IsEnd(); opt = fileOpts.Next())
 	{
-		debug.Error("Not disk driver found");
-		return;
-	}
-
-	if (_ERR == ReadMBR())
-	{
-		debug.Error("Not a valid disk");
-		return;
-	}
-
-	FileOpt* opt = GetFileOpt("fat");
-	if (NULL != opt)
-	{
-		opt->Mount("/dev/hdb", "/data", 0, mbr->dpt[0].relativeSectors);
+		opt->Setup();
 	}
 }
 
@@ -115,11 +56,44 @@ void FileSystem::Execute()
 /// @brief File system exit
 void FileSystem::Exit()
 {
-	FileOpt* opt = GetFileOpt("fat");
-	if (NULL != opt)
+	for (FileOpt* opt = fileOpts.Begin(); !fileOpts.IsEnd(); opt = fileOpts.Next())
 	{
-		opt->Unmount("/data");
+		opt->Exit();
 	}
+}
+
+
+/// @brief Get file opt
+/// @param name file opt name
+/// @return file opt
+FileOpt* FileSystem::GetFileOpt(const char* name)
+{
+	return fileOpts.GetItemByName((char*)name);
+}
+EXPORT_SYMBOL(_ZN10FileSystem10GetFileOptEPKc);
+
+
+/// @brief 
+/// @param name 
+/// @return 
+FileOpt* FileSystem::ChangeVolume(const char* name)
+{
+	if (((name[0] >= 'a' && name[0] <= 'z')  ||
+		 (name[0] >= 'A' && name[0] <= 'Z')) &&
+		  name[1] == ':')
+	{
+		return GetFileOpt("fat");
+	}
+	return NULL;
+}
+
+
+/// @brief 
+/// @param name 
+/// @return 
+FileDir* FileSystem::ChangeDirectory(const char* name)
+{
+	return NULL;
 }
 
 
@@ -141,16 +115,6 @@ void FileSystem::DeregisterOpt(FileOpt* fileOpt, const char* name)
 	fileOpts.RemoveByName(fileOpt, (char*)name);
 }
 EXPORT_SYMBOL(_ZN10FileSystem13DeregisterOptEP7FileOptPKc);
-
-
-/// @brief Get file opt
-/// @param name file opt name
-/// @return file opt
-FileOpt* FileSystem::GetFileOpt(const char* name)
-{
-	return fileOpts.GetItemByName((char*)name);
-}
-EXPORT_SYMBOL(_ZN10FileSystem10GetFileOptEPKc);
 
 
 ///Register module

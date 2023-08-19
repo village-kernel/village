@@ -20,9 +20,11 @@ public:
 	
 	//Deconstructor
 	virtual ~FileOpt() {};
+	virtual void Setup() {};
+	virtual void Exit()  {};
 
 	//Disk methods
-	virtual int Mount(const char* path, const char* mount, int opt, int fstSecNum) = 0;
+	virtual int Mount(const char* path, const char* mount, int opt)  = 0;
 	virtual int Unmount(const char* mount)                           = 0;
 
 	//File methods
