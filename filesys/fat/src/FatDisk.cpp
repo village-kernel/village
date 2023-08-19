@@ -9,26 +9,6 @@
 #include "Debug.h"
 
 
-/// @brief 
-/// @param fat 
-/// @param dbr 
-/// @param fstSecNum 
-void FatDisk::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
-{
-	this->fat = fat;
-	this->dbr = dbr;
-	this->startSector = startSector;
-
-	disk = device.GetDriver(DriverID::_storage + 1);
-	
-	if (NULL == disk)
-	{
-		debug.Error("Not disk driver found");
-		return;
-	}
-}
-
-
 /// @brief Meger cluster
 /// @param clustHI 
 /// @param clustLO 
@@ -142,9 +122,9 @@ void FatDisk::CalcNextSector(uint32_t& clust, uint32_t& sector)
 /// @return 
 uint32_t FatDisk::ReadOneSector(char* data, uint32_t sector)
 {
-	if (NULL != disk)
+	if (NULL != diskdrv)
 	{
-		disk->Read((uint8_t*)data, 1, sector + startSector);
+		diskdrv->Read((uint8_t*)data, 1, sector + fat->startSector);
 	}
 	return 1;
 }
@@ -157,9 +137,9 @@ uint32_t FatDisk::ReadOneSector(char* data, uint32_t sector)
 /// @return read sector size
 uint32_t FatDisk::ReadSector(char* data, uint32_t secSize, uint32_t sector)
 {
-	if (NULL != disk)
+	if (NULL != diskdrv)
 	{
-		disk->Read((uint8_t*)data, secSize, sector + startSector);
+		diskdrv->Read((uint8_t*)data, secSize, sector + fat->startSector);
 	}
 	return secSize;
 }

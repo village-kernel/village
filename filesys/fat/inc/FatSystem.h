@@ -11,23 +11,21 @@
 #include "FileOpt.h"
 #include "FatDefs.h"
 #include "FatDisk.h"
+#include "FatName.h"
 #include "FatFile.h"
 #include "FatDir.h"
 
 
 /// @brief FAT
-class FAT : public FileOpt, FatDefs
+class FAT : public FileOpt, FatDat
 {
 private:
 	//Members
-	FatDisk disk;
-	FatFile file;
-	FatDir  dir;
-
 	List<DirEntry> files;
 	List<DirData>  dirs;
 
 	//Methods
+	int ReadMBR();
 	int ReadDBR();
 	int CheckFS();
 	FileType GetFileType(DirEntry* entry);
@@ -36,9 +34,10 @@ public:
 	//Methods
 	FAT();
 	~FAT();
+	void Setup();
 
 	//Mount
-	int Mount(const char* path, const char* mount, int opt, int startSector);
+	int Mount(const char* path, const char* mount, int opt);
 	int Unmount(const char* mount);
 	
 	//File

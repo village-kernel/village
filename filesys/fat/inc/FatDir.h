@@ -8,24 +8,15 @@
 #define __FAT_DIR_H__
 
 #include "FatDefs.h"
-#include "FatDisk.h"
-#include "FatName.h"
 
 
-/// @brief 
-class FatDir : FatDefs
+/// @brief FatDir
+class FatDir : public FatDat
 {
 private:
-	//Members
-	FatDisk  disk;
-	FatName  name;
-
 	//Methods
 	DirData* OpenDir(DirEntry* entry);
 public:
-	//Methods
-	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
-
 	//Directory Methods
 	bool IsHidden(DirEntry* entry);
 	bool IsFile(DirEntry* entry);

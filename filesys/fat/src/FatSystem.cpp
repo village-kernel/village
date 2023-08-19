@@ -23,15 +23,80 @@ FAT::~FAT()
 }
 
 
+/// @brief Setup
+void FAT::Setup()
+{
+	diskdrv = device.GetDriver(DriverID::_storage + 1);
+	
+	if (NULL == diskdrv)
+	{
+		debug.Error("Not disk driver found");
+		return;
+	}
+
+	if (_ERR == ReadMBR())
+	{
+		debug.Error("Not a valid disk");
+		return;
+	}
+
+	if (_ERR == ReadDBR())
+	{
+		debug.Error("Not DBR found");
+		return;
+	}
+
+	if (_ERR == CheckFS())
+	{
+		debug.Error("Not filesystem found");
+		return;
+	}
+
+	fatDisk = new FatDisk();
+	fatDisk->Setup(this);
+
+	fatName = new FatName();
+	fatName->Setup(this);
+
+	fatDir = new FatDir();
+	fatDir->Setup(this);
+	
+	fatFile = new FatFile();
+	fatFile->Setup(this);
+
+	debug.Output(Debug::_Lv2, "Fat setup done");
+}
+
+
+/// @brief Read MBR
+int FAT::ReadMBR()
+{
+	static const uint8_t mbr_sector = 0;
+
+	mbr = new MBR();
+
+	if (NULL != mbr)
+	{
+		diskdrv->Read((uint8_t*)mbr, 1, mbr_sector);
+
+		if (magic == mbr->magic) return _OK;
+	}
+
+	return _ERR;
+}
+
+
 /// @brief Read DBR
 /// @return 
 int FAT::ReadDBR()
 {
-	static const uint8_t dbr_sector = 0;
+	static const uint8_t dbr_sector = 1;
+
+	dbr = new DBR();
 
 	if (NULL != dbr)
 	{
-		disk.ReadOneSector((char*)dbr, dbr_sector);
+		diskdrv->Read((uint8_t*)dbr, 1, dbr_sector);
 		
 		if (magic == dbr->magic) return _OK;
 	}
@@ -44,6 +109,8 @@ int FAT::ReadDBR()
 /// @return 
 int FAT::CheckFS()
 {
+	fat = new Info();
+
 	if (NULL != fat)
 	{
 		//Calc fat size
@@ -83,6 +150,9 @@ int FAT::CheckFS()
 		//Calc the entries per sector
 		fat->entriesPerSec = dbr->bpb.bytesPerSec / dir_entry_size;
 
+		//Calc the start sector
+		fat->startSector = mbr->dpt[0].relativeSectors;
+
 		return _OK;
 	}
 
@@ -92,28 +162,10 @@ int FAT::CheckFS()
 
 /// @brief FAT mount
 /// @return 
-int FAT::Mount(const char* path, const char* mount, int opt, int startSector)
+int FAT::Mount(const char* path, const char* mount, int opt)
 {
-	dbr = new FATDBR();
-	fat = new FATData();
-
-	disk.Initialize(fat, dbr, startSector);
-	file.Initialize(fat, dbr, startSector);
-	dir.Initialize(fat, dbr, startSector);
-
-	if (_ERR == ReadDBR())
-	{
-		debug.Error("Not DBR found");
-		return _ERR;
-	}
-
-	if (_ERR == CheckFS())
-	{
-		debug.Error("Not filesystem found");
-		return _ERR;
-	}
-
 	debug.Output(Debug::_Lv2, "%s -> %s mount successful", path, mount);
+
 	return _OK;
 }
 
@@ -132,7 +184,7 @@ int FAT::Unmount(const char* mount)
 /// @return 
 int FAT::Open(const char* name, int mode)
 {
-	DirEntry* entry = dir.SearchPath(name);
+	DirEntry* entry = fatFile->Open(name, mode);
 	if (NULL != entry)
 	{
 		return files.Add(entry);
@@ -162,7 +214,7 @@ int FAT::Read(int fd, char* data, int size, int offset)
 	DirEntry* entry = files.GetItem(fd);
 	if (NULL != entry)
 	{
-		return file.Read(data, size, entry);
+		return fatFile->Read(data, size, entry);
 	}
 	return -1;
 }
@@ -175,7 +227,7 @@ int FAT::Size(int fd)
 	DirEntry* entry = files.GetItem(fd);
 	if (NULL != entry)
 	{
-		return file.Size(entry);
+		return fatFile->Size(entry);
 	}
 	return 0;
 }
@@ -198,7 +250,7 @@ void FAT::Close(int fd)
 /// @return 
 int FAT::OpenDir(const char* dirname)
 {
-	DirData* data = dir.OpenDir(dirname);
+	DirData* data = fatDir->OpenDir(dirname);
 	if (NULL != data)
 	{
 		return dirs.Add(data);
@@ -212,11 +264,11 @@ int FAT::OpenDir(const char* dirname)
 /// @return file type
 FileType FAT::GetFileType(DirEntry* entry)
 {
-	if (dir.IsFile(entry))
+	if (fatDir->IsFile(entry))
 		return FileType::_File;
-	else if (dir.IsDirectory(entry))
+	else if (fatDir->IsDirectory(entry))
 		return FileType::_Diretory;
-	else if (dir.IsVolume(entry))
+	else if (fatDir->IsVolume(entry))
 		return FileType::_Volume;
 	else
 		return FileType::_Unknown;
@@ -228,7 +280,7 @@ FileType FAT::GetFileType(DirEntry* entry)
 /// @return file attr
 FileAttr FAT::GetFileAttr(DirEntry* entry)
 {
-	return dir.IsHidden(entry) ? FileAttr::_Hidden : FileAttr::_Visible;
+	return fatDir->IsHidden(entry) ? FileAttr::_Hidden : FileAttr::_Visible;
 }
 
 
@@ -244,7 +296,7 @@ int FAT::ReadDir(int fd, FileDir* dirs, int size, int offset)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			DirEntry* ent = dir.ReadDir(data);
+			DirEntry* ent = fatDir->ReadDir(data);
 			if (NULL != ent)
 			{
 				char* path = new char[strlen(data->path) + strlen(ent->name) + 2]();
@@ -263,7 +315,7 @@ int FAT::ReadDir(int fd, FileDir* dirs, int size, int offset)
 }
 
 
-/// @brief 
+/// @brief Size dir
 /// @param fd 
 /// @return 
 int FAT::SizeDir(int fd)
@@ -271,13 +323,13 @@ int FAT::SizeDir(int fd)
 	DirData* data = dirs.GetItem(fd);
 	if (NULL != data)
 	{
-		return dir.SizeDir(data);
+		return fatDir->SizeDir(data);
 	}
 	return -1;
 }
 
 
-/// @brief 
+/// @brief Close dir
 /// @param fd 
 /// @return 
 void FAT::CloseDir(int fd)

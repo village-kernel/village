@@ -9,6 +9,7 @@
 
 #include "Defines.h"
 #include "Templates.h"
+#include "Driver.h"
 
 /// @brief 
 class FatDefs
@@ -54,6 +55,27 @@ protected:
 		_NS_NOLFN    = 0x40,   /* Do not find LFN */
 		_NS_NONAME   = 0x80,   /* Not followed */
 	};
+
+	struct DPT
+	{
+		uint32_t bootIndicator : 8;
+		uint32_t startingHead : 8;
+		uint32_t startingSector : 6;
+		uint32_t startingCylinder: 10;
+		uint32_t sectorID : 8;
+		uint32_t endingHead : 8;
+		uint32_t endingSector : 6;
+		uint32_t endingCylinder : 10;
+		uint32_t relativeSectors;
+		uint32_t totalSectors;
+	} __attribute__((packed));
+
+	struct MBR
+	{
+		uint8_t  boot[446];
+		DPT      dpt[4];
+		uint16_t magic;
+	} __attribute__((packed));
 
 	struct BS
 	{
@@ -105,7 +127,7 @@ protected:
 		uint8_t  filSysType[8];
 	} __attribute__((packed));
 
-	struct FATDBR
+	struct DBR
 	{
 		BS  bs;
 		BPB bpb;
@@ -209,7 +231,7 @@ protected:
 		}
 	};
 
-	struct FATData
+	struct Info
 	{
 		FATType  type;
 		uint32_t FATSz;
@@ -221,6 +243,7 @@ protected:
 		uint32_t firstRootSector;
 		uint32_t firstDataSector;
 		uint32_t entriesPerSec;
+		uint32_t startSector;
 	};
 
 	struct DskSzToSecPerClus
@@ -284,10 +307,45 @@ protected:
 	static const uint16_t fat12_eoc_flag = 0xff8;
 	static const uint16_t fat16_eoc_flag = 0xfff8;
 	static const uint32_t fat32_eoc_flag = 0xffffff8;
+};
 
-	//Members
-	FATData* fat;
-	FATDBR*  dbr;
+
+/// @brief Declarations
+class FatDisk;
+class FatName;
+class FatFile;
+class FatDir;
+
+
+/// @brief FatDat
+class FatDat : public FatDefs
+{
+protected:
+	//Data Members
+	MBR*     mbr;
+	DBR*     dbr;
+	Info*    fat;
+
+	//Class Members
+	Driver*  diskdrv;
+	FatDisk* fatDisk;
+	FatName* fatName;
+	FatFile* fatFile;
+	FatDir*  fatDir;
+public:
+	//Methods
+	void Setup(FatDat* dat)
+	{
+		this->mbr = dat->mbr;
+		this->dbr = dat->dbr;
+		this->fat = dat->fat;
+
+		this->diskdrv = dat->diskdrv;
+		this->fatDisk = dat->fatDisk;
+		this->fatName = dat->fatName;
+		this->fatFile = dat->fatFile;
+		this->fatDir  = dat->fatDir;
+	}
 };
 
 #endif //!__FAT_DEFS_H__

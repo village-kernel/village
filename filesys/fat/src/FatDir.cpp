@@ -5,21 +5,10 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatDir.h"
+#include "FatDisk.h"
+#include "FatName.h"
 #include "Debug.h"
 #include "Regex.h"
-
-
-/// @brief 
-/// @param fat 
-/// @param dbr 
-/// @param startSector 
-void FatDir::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
-{
-	this->dbr = dbr;
-	this->fat = fat;
-	disk.Initialize(fat, dbr, startSector);
-	name.Initialize(fat, dbr, startSector);
-}
 
 
 /// @brief 
@@ -110,18 +99,18 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
 
 	//Calculate the dir cluster and sector
-	disk.CalcFirstSector(entry, clust, sector);
+	fatDisk->CalcFirstSector(entry, clust, sector);
 
 	//Search target dir
 	while (0 != sector)
 	{
-		disk.ReadOneSector((char*)ents, sector);
+		fatDisk->ReadOneSector((char*)ents, sector);
 
 		for (index = 0; index < fat->entriesPerSec; index++)
 		{
 			if (ents[index].ldir.ord != dir_free_flag)
 			{
-				char* dirname = name.GetDirName(data);
+				char* dirname = fatName->GetDirName(data);
 
 				if (0 == strcmp(dirname, dir))
 				{
@@ -132,7 +121,7 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 			}
 		}
 
-		disk.CalcNextSector(clust, sector);
+		fatDisk->CalcNextSector(clust, sector);
 	}
 
 	delete data;
@@ -140,7 +129,7 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 }
 
 
-/// @brief 
+/// @brief Open dir
 /// @param entry 
 /// @return 
 FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
@@ -155,18 +144,18 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
 
 	//Calculate the dir cluster and sector
-	disk.CalcFirstSector(entry, clust, sector);
+	fatDisk->CalcFirstSector(entry, clust, sector);
 
 	//Search target dir
 	while (0 != sector)
 	{
-		disk.ReadOneSector((char*)ents, sector);
+		fatDisk->ReadOneSector((char*)ents, sector);
 
 		for (index = 0; index < fat->entriesPerSec; index++)
 		{
 			if (ents[index].ldir.ord != dir_free_flag)
 			{
-				char* dirname = name.GetDirName(data);
+				char* dirname = fatName->GetDirName(data);
 
 				if (0 != strcmp(dirname, ""))
 				{
@@ -182,7 +171,7 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 			}
 		}
 
-		disk.CalcNextSector(clust, sector);
+		fatDisk->CalcNextSector(clust, sector);
 	}
 
 	//Set dir begin
@@ -226,7 +215,7 @@ FatDir::DirEntry* FatDir::ReadDir(DirData* data)
 }
 
 
-/// @brief 
+/// @brief Size dir
 /// @param data 
 /// @return 
 int FatDir::SizeDir(DirData* data)

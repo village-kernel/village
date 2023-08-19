@@ -8,19 +8,12 @@
 #define __FAT_DISk_H__
 
 #include "FatDefs.h"
-#include "Driver.h"
 
-/// @brief 
-class FatDisk : FatDefs
+
+/// @brief FatDisk
+class FatDisk : public FatDat
 {
-private:
-	//Members
-	Driver*  disk;
-	int      startSector;
 public:
-	//Methods
-	void Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector);
-
 	//Cluster and sector Methods
 	uint32_t MergeCluster(uint16_t clustHI, uint16_t clustLO);
 	uint32_t ClusterToSector(uint32_t clust);

@@ -5,21 +5,10 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatName.h"
+#include "FatDisk.h"
 
 
-/// @brief 
-/// @param fat 
-/// @param dbr 
-/// @param startSector 
-void FatName::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
-{
-	this->dbr = dbr;
-	this->fat = fat;
-	disk.Initialize(fat, dbr, startSector);
-}
-
-
-/// @brief 
+/// @brief ChkSum
 /// @param name 
 /// @return 
 uint8_t FatName::ChkSum(char* name)
@@ -83,7 +72,7 @@ char* FatName::GetShortName(FATSDir* sdir)
 }
 
 
-/// @brief 
+/// @brief Get long name
 /// @param dirName 
 /// @param dir 
 /// @return 
@@ -138,7 +127,7 @@ char* FatName::GetLongName(FATLDir* ldir, FATSDir* sdir)
 }
 
 
-/// @brief 
+/// @brief Get diretory name
 /// @param entries 
 /// @param idx 
 /// @param clust 
@@ -164,10 +153,10 @@ char* FatName::GetDirName(DirData* data)
 
 			if (index >= fat->entriesPerSec)
 			{
-				disk.CalcNextSector(clust, sector);
+				fatDisk->CalcNextSector(clust, sector);
 				if (0 != sector)
 				{
-					disk.ReadOneSector((char*)ents, sector);
+					fatDisk->ReadOneSector((char*)ents, sector);
 					index = 0;
 				}
 				else

@@ -5,23 +5,24 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatFile.h"
+#include "FatDisk.h"
+#include "FatDir.h"
 
 
-/// @brief 
-/// @param fat 
-/// @param dbr 
-/// @param startSector 
-void FatFile::Initialize(FATData* fat, FATDBR* dbr, uint32_t startSector)
+/// @brief Open
+/// @param name 
+/// @param mode 
+/// @return 
+FatDefs::DirEntry* FatFile::Open(const char* name, int mode)
 {
-	this->dbr = dbr;
-	this->fat = fat;
-	disk.Initialize(fat, dbr, startSector);
+	return fatDir->SearchPath(name);
 }
 
 
-/// @brief 
+/// @brief Read
 /// @param data 
 /// @param dir 
+/// @return 
 int FatFile::Read(char* data, uint32_t size, DirEntry* entry)
 {
 	bool isDone = false;
@@ -30,11 +31,11 @@ int FatFile::Read(char* data, uint32_t size, DirEntry* entry)
 	uint32_t secPerClust = dbr->bpb.secPerClust;
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-	uint32_t fstCluster = disk.MergeCluster(entry->dir.sdir.fstClustHI, entry->dir.sdir.fstClustLO);
+	uint32_t fstCluster = fatDisk->MergeCluster(entry->dir.sdir.fstClustHI, entry->dir.sdir.fstClustLO);
 
 	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
 	
-	if (clusSize == disk.ReadCluster(allocBuff, clusSize, fstCluster))
+	if (clusSize == fatDisk->ReadCluster(allocBuff, clusSize, fstCluster))
 	{
 		memcpy((void*)data, (const void*)allocBuff, size);
 		isDone = true;
@@ -45,7 +46,7 @@ int FatFile::Read(char* data, uint32_t size, DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief Size
 /// @param dir 
 /// @return 
 uint32_t FatFile::Size(DirEntry* entry)
