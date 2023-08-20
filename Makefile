@@ -42,10 +42,12 @@ src-$(CONFIG_CONSOLE)                       += vk.kernel/console/src
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 
-inc-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/inc
+inc-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/class/inc
+inc-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/core/inc
 inc-$(CONFIG_FATFS)                        += vk.kernel/filesys/fat/inc
 
-src-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/src
+src-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/class/src
+src-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/core/src
 src-$(CONFIG_FATFS)                        += vk.kernel/filesys/fat/src
 
 ######################################

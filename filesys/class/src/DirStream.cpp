@@ -17,7 +17,7 @@ DirStream::DirStream(const char* name, int mode)
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 DirStream::~DirStream()
 {
 }

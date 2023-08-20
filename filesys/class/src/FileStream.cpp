@@ -17,7 +17,7 @@ FileStream::FileStream(const char* name, int mode)
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 FileStream::~FileStream()
 {
 }
