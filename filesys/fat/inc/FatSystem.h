@@ -38,6 +38,7 @@ public:
 	FAT();
 	~FAT();
 	void Setup();
+	void Exit();
 
 	//Mount
 	int Mount(const char* path, const char* mount, int opt);

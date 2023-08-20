@@ -18,10 +18,12 @@ public:
 	//Constructor
 	FileOpt() {}
 	
-	//Deconstructor
+	//Destructor
 	virtual ~FileOpt() {};
-	virtual void Setup() {};
-	virtual void Exit()  {};
+
+	//Methods
+	virtual void Setup()                                             = 0;
+	virtual void Exit()                                              = 0;
 
 	//Disk methods
 	virtual int Mount(const char* path, const char* mount, int opt)  = 0;

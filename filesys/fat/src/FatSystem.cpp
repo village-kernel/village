@@ -28,7 +28,7 @@ void FAT::Setup()
 {
 	mbr     = new MBR();
 	dbr     = new DBR();
-	fat     = new Info();
+	info    = new Info();
 	
 	fatDisk = new FatDisk();
 	fatName = new FatName();
@@ -70,6 +70,20 @@ void FAT::Setup()
 }
 
 
+/// @brief FAT exit
+void FAT::Exit()
+{
+	delete mbr;
+	delete dbr;
+	delete info;
+	
+	delete fatDisk;
+	delete fatName;
+	delete fatDir;
+	delete fatFile;
+}
+
+
 /// @brief Read MBR
 int FAT::ReadMBR()
 {
@@ -107,47 +121,47 @@ int FAT::ReadDBR()
 /// @return 
 int FAT::CheckFS()
 {
-	if (NULL != fat)
+	if (NULL != info)
 	{
 		//Calc fat size
 		if (0 != dbr->bpb.FATSz16)
-			fat->FATSz = dbr->bpb.FATSz16;
+			info->fatSize = dbr->bpb.FATSz16;
 		else
-			fat->FATSz = dbr->fat32.FATSz32;
+			info->fatSize = dbr->fat32.FATSz32;
 		
 		//Calc total sectors
 		if (0 != dbr->bpb.totSec16)
-			fat->totSec = dbr->bpb.totSec16;
+			info->totalSectors = dbr->bpb.totSec16;
 		else
-			fat->totSec = dbr->bpb.totSec32;
+			info->totalSectors = dbr->bpb.totSec32;
 
 		//Calc fat12/16 root dir sector
-		fat->firstRootSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz);
-		fat->countOfRootSecs = ((dbr->bpb.rootEntCnt * dir_entry_size) + (dbr->bpb.bytesPerSec - 1)) / dbr->bpb.bytesPerSec;
+		info->firstRootSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize);
+		info->countOfRootSecs = ((dbr->bpb.rootEntCnt * dir_entry_size) + (dbr->bpb.bytesPerSec - 1)) / dbr->bpb.bytesPerSec;
 		
 		//Calc fat data sector
-		fat->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) + fat->countOfRootSecs;
-		fat->dataSec = fat->totSec - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * fat->FATSz) - fat->countOfRootSecs);
+		info->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize) + info->countOfRootSecs;
+		info->countOfDataSecs = info->totalSectors - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize) - info->countOfRootSecs);
 
 		//Calc counts of clusters
-		fat->countOfClusters = fat->dataSec / dbr->bpb.secPerClust;
+		info->countOfClusters = info->countOfDataSecs / dbr->bpb.secPerClust;
 
 		//Detected fat type
-		if (fat->countOfClusters < 4085)
-			fat->type = _FAT12;
-		else if (fat->countOfClusters < 65525)
-			fat->type = _FAT16;
+		if (info->countOfClusters < 4085)
+			info->fatType = _FAT12;
+		else if (info->countOfClusters < 65525)
+			info->fatType = _FAT16;
 		else
-			fat->type = _FAT32;
+			info->fatType = _FAT32;
 
 		//Fat32 root cluster
-		fat->rootClust = (_FAT32 == fat->type) ? dbr->fat32.rootClust : 0;
+		info->rootClust = (_FAT32 == info->fatType) ? dbr->fat32.rootClust : 0;
 
 		//Calc the entries per sector
-		fat->entriesPerSec = dbr->bpb.bytesPerSec / dir_entry_size;
+		info->entriesPerSec = dbr->bpb.bytesPerSec / dir_entry_size;
 
 		//Calc the start sector
-		fat->startSector = mbr->dpt[0].relativeSectors;
+		info->startSector = mbr->dpt[0].relativeSectors;
 
 		return _OK;
 	}

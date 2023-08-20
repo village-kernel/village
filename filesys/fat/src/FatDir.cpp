@@ -106,7 +106,7 @@ FatDir::DirEntry* FatDir::SearchDir(DirEntry* entry, const char* dir)
 	{
 		fatDisk->ReadOneSector((char*)ents, sector);
 
-		for (index = 0; index < fat->entriesPerSec; index++)
+		for (index = 0; index < info->entriesPerSec; index++)
 		{
 			if (ents[index].ldir.ord != dir_free_flag)
 			{
@@ -151,7 +151,7 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 	{
 		fatDisk->ReadOneSector((char*)ents, sector);
 
-		for (index = 0; index < fat->entriesPerSec; index++)
+		for (index = 0; index < info->entriesPerSec; index++)
 		{
 			if (ents[index].ldir.ord != dir_free_flag)
 			{

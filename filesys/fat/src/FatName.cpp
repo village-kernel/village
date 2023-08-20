@@ -151,7 +151,7 @@ char* FatName::GetDirName(DirData* data)
 		{
 			ldirs[i] = ents[index++].ldir;
 
-			if (index >= fat->entriesPerSec)
+			if (index >= info->entriesPerSec)
 			{
 				fatDisk->CalcNextSector(clust, sector);
 				if (0 != sector)

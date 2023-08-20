@@ -233,15 +233,19 @@ protected:
 
 	struct Info
 	{
-		FATType  type;
-		uint32_t FATSz;
-		uint32_t totSec;
-		uint32_t dataSec;
-		uint32_t rootClust;
-		uint32_t countOfRootSecs;
+		FATType  fatType;
+		uint32_t fatSize;
+
+		uint32_t totalSectors;
 		uint32_t countOfClusters;
+
+		uint32_t rootClust;
 		uint32_t firstRootSector;
+		uint32_t countOfRootSecs;
+
 		uint32_t firstDataSector;
+		uint32_t countOfDataSecs;
+
 		uint32_t entriesPerSec;
 		uint32_t startSector;
 	};
@@ -323,7 +327,7 @@ class FatDat : public FatDefs
 protected:
 	//Data Members
 	DBR*     dbr;
-	Info*    fat;
+	Info*    info;
 
 	//Driver Members
 	Driver*  diskdrv;
@@ -338,8 +342,8 @@ public:
 	/// @param dat 
 	void Setup(FatDat* dat)
 	{
-		this->dbr = dat->dbr;
-		this->fat = dat->fat;
+		this->dbr     = dat->dbr;
+		this->info    = dat->info;
 
 		this->diskdrv = dat->diskdrv;
 

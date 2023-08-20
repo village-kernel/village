@@ -24,7 +24,7 @@ uint32_t FatDisk::MergeCluster(uint16_t clustHI, uint16_t clustLO)
 /// @return sector number
 uint32_t FatDisk::ClusterToSector(uint32_t clust)
 {
-	return ((clust - 2) * dbr->bpb.secPerClust) + fat->firstDataSector;
+	return ((clust - 2) * dbr->bpb.secPerClust) + info->firstDataSector;
 }
 
 
@@ -37,9 +37,9 @@ uint32_t FatDisk::CalcNextCluster(uint32_t clust)
 	uint32_t fatOffset = 0;
 	uint32_t fatClust = 0;
 
-	if (_FAT16 == fat->type)
+	if (_FAT16 == info->fatType)
 		fatOffset = clust * 2;
-	else if (_FAT32 == fat->type)
+	else if (_FAT32 == info->fatType)
 		fatOffset = clust * 4;
 
 	uint32_t thisFatSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytesPerSec);
@@ -49,12 +49,12 @@ uint32_t FatDisk::CalcNextCluster(uint32_t clust)
 	
 	ReadOneSector(secBuff, thisFatSecNum);
 
-	if (_FAT16 == fat->type)
+	if (_FAT16 == info->fatType)
 	{
 		fatClust = *((uint16_t*)&secBuff[thisFatEntOffset]);
 		if (fatClust >= fat16_eoc_flag) isEOC = true;
 	}
-	else if (_FAT32 == fat->type)
+	else if (_FAT32 == info->fatType)
 	{
 		fatClust = (*((uint32_t*)&secBuff[thisFatEntOffset])) & 0x0fffffff;
 		if (fatClust >= fat32_eoc_flag) isEOC = true;
@@ -73,14 +73,14 @@ void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector
 {
 	if (NULL == entry || entry->root)
 	{
-		if (_FAT16 == fat->type)
+		if (_FAT16 == info->fatType)
 		{
 			clust  = 0;
-			sector = fat->firstRootSector;
+			sector = info->firstRootSector;
 		}
-		else if (_FAT32 == fat->type)
+		else if (_FAT32 == info->fatType)
 		{
-			clust  = fat->rootClust;
+			clust  = info->rootClust;
 			sector = ClusterToSector(clust);
 		}
 	}
@@ -100,7 +100,7 @@ void FatDisk::CalcNextSector(uint32_t& clust, uint32_t& sector)
 	//FAT16 root dir
 	if (clust < 2)
 	{
-		uint32_t dirEndedSec = fat->firstRootSector + fat->countOfRootSecs;
+		uint32_t dirEndedSec = info->firstRootSector + info->countOfRootSecs;
 		sector = (++sector < dirEndedSec) ? sector : 0;
 	}
 	//FatDisk data dir
@@ -124,7 +124,7 @@ uint32_t FatDisk::ReadOneSector(char* data, uint32_t sector)
 {
 	if (NULL != diskdrv)
 	{
-		diskdrv->Read((uint8_t*)data, 1, sector + fat->startSector);
+		diskdrv->Read((uint8_t*)data, 1, sector + info->startSector);
 	}
 	return 1;
 }
@@ -139,7 +139,7 @@ uint32_t FatDisk::ReadSector(char* data, uint32_t secSize, uint32_t sector)
 {
 	if (NULL != diskdrv)
 	{
-		diskdrv->Read((uint8_t*)data, secSize, sector + fat->startSector);
+		diskdrv->Read((uint8_t*)data, secSize, sector + info->startSector);
 	}
 	return secSize;
 }
