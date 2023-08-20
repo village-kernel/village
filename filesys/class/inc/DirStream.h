@@ -8,8 +8,7 @@
 #define __DIR_STREAM_H__
 
 #include "Module.h"
-#include "FileOpt.h"
-#include "FileDefs.h"
+#include "FileOpts.h"
 
 
 /// @brief DirStream
@@ -18,7 +17,7 @@ class DirStream
 private:
 	//Members
 	int fd;
-	FileOpt* opt;
+	FileOpts* opts;
 public:
 	//Methods
 	DirStream(const char* name = NULL, int mode = 0);

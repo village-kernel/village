@@ -8,8 +8,7 @@
 #define __FILE_STREAM_H__
 
 #include "Module.h"
-#include "FileOpt.h"
-#include "FileDefs.h"
+#include "FileOpts.h"
 
 
 /// @brief FileStream
@@ -18,7 +17,7 @@ class FileStream
 private:
 	//Members
 	int fd;
-	FileOpt* opt;
+	FileOpts* opts;
 public:
 	//Methods
 	FileStream(const char* name = NULL, int mode = 0);

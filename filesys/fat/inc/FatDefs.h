@@ -324,7 +324,7 @@ class FatDir;
 /// @brief FatDat
 class FatDat : public FatDefs
 {
-protected:
+public:
 	//Data Members
 	DBR*     dbr;
 	Info*    info;

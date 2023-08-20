@@ -11,7 +11,7 @@
 /// @brief Constructor
 FileStream::FileStream(const char* name, int mode)
 	:fd(-1),
-	opt(NULL)
+	opts(NULL)
 {
 	if (NULL != name) fd = Open(name, mode);
 }
@@ -29,11 +29,11 @@ FileStream::~FileStream()
 /// @return 
 int FileStream::Open(const char* name, int mode)
 {
-	opt = filesystem.ChangeVolume(name);
+	opts = filesystem.ChangeVolume(name);
 
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		fd = opt->Open(name, mode);
+		fd = opts->Open(name, mode);
 	}
 
 	return (fd != -1) ? _OK : _ERR;
@@ -47,9 +47,9 @@ int FileStream::Open(const char* name, int mode)
 /// @return 
 int FileStream::Write(char* data, int size, int offset)
 {
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		return opt->Write(fd, data, size, offset);
+		return opts->Write(fd, data, size, offset);
 	}
 	return 0;
 }
@@ -62,9 +62,9 @@ int FileStream::Write(char* data, int size, int offset)
 /// @return 
 int FileStream::Read(char* data, int size, int offset)
 {
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		return opt->Read(fd, data, size, offset);
+		return opts->Read(fd, data, size, offset);
 	}
 	return 0;
 }
@@ -74,9 +74,9 @@ int FileStream::Read(char* data, int size, int offset)
 /// @return 
 int FileStream::Size()
 {
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		return opt->Size(fd);
+		return opts->Size(fd);
 	}
 	return 0;
 }
@@ -86,8 +86,8 @@ int FileStream::Size()
 /// @return 
 void FileStream::Close()
 {
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		opt->Close(fd);
+		opts->Close(fd);
 	}
 }

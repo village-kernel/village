@@ -4,26 +4,23 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __FILE_SYSTEM_INTERFACE_H__
-#define __FILE_SYSTEM_INTERFACE_H__
+#ifndef __FILE_OPERATION_INTERFACE_H__
+#define __FILE_OPERATION_INTERFACE_H__
 
 #include "stdint.h"
 #include "stddef.h"
 #include "FileDefs.h"
 
-///FileOpt
-class FileOpt
+
+/// @brief FileOpts
+class FileOpts
 {
 public:
 	//Constructor
-	FileOpt() {}
+	FileOpts() {}
 	
 	//Destructor
-	virtual ~FileOpt() {};
-
-	//Methods
-	virtual void Setup()                                             = 0;
-	virtual void Exit()                                              = 0;
+	virtual ~FileOpts() {};
 
 	//Disk methods
 	virtual int Mount(const char* path, const char* mount, int opt)  = 0;
@@ -48,4 +45,4 @@ public:
 	virtual int Remove(int fd)                                       = 0;
 };
 
-#endif //!__FILE_SYSTEM_INTERFACE_H__
+#endif //!__FILE_OPERATION_INTERFACE_H__

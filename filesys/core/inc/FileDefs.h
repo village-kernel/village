@@ -52,12 +52,12 @@ struct FileDir
 ///Command register macro
 #define REGISTER_FS(fs, name)                                 \
 static struct _FS_##name {                                    \
-	FileOpt* fileOpt = fs;                                    \
+	FileSys* fileSys = fs;                                    \
 	_FS_##name() {                                            \
-		FileSystem::Instance().RegisterOpt(fileOpt, #name);   \
+		FileSystem::Instance().RegisterFS(fileSys, #name);   \
 	}                                                         \
 	~_FS_##name() {                                           \
-		FileSystem::Instance().DeregisterOpt(fileOpt, #name); \
+		FileSystem::Instance().DeregisterFS(fileSys, #name); \
 	}                                                         \
 } const _fs_##name __attribute__((used,__section__(".fs")))
 

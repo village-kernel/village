@@ -11,7 +11,7 @@
 /// @brief Constructor
 DirStream::DirStream(const char* name, int mode)
 	:fd(-1),
-	opt(NULL)
+	opts(NULL)
 {
 	if (NULL != name) fd = Open(name, mode);
 }
@@ -29,11 +29,11 @@ DirStream::~DirStream()
 /// @return 
 int DirStream::Open(const char* name, int mode)
 {
-	opt = filesystem.ChangeVolume(name);
+	opts = filesystem.ChangeVolume(name);
 
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		fd = opt->OpenDir(name, mode);
+		fd = opts->OpenDir(name, mode);
 	}
 	
 	return (fd != -1) ? _OK : _ERR;
@@ -47,9 +47,9 @@ int DirStream::Open(const char* name, int mode)
 /// @return 
 int DirStream::Read(FileDir* dirs, int size, int offset)
 {
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		return opt->ReadDir(fd, dirs, size, offset);
+		return opts->ReadDir(fd, dirs, size, offset);
 	}
 	return 0;
 }
@@ -59,9 +59,9 @@ int DirStream::Read(FileDir* dirs, int size, int offset)
 /// @return 
 int DirStream::Size()
 {
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		return opt->SizeDir(fd);
+		return opts->SizeDir(fd);
 	}
 	return 0;
 }
@@ -71,8 +71,8 @@ int DirStream::Size()
 /// @return 
 void DirStream::Close()
 {
-	if (NULL != opt)
+	if (NULL != opts)
 	{
-		opt->CloseDir(fd);
+		opts->CloseDir(fd);
 	}
 }

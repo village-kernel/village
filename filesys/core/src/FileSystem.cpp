@@ -39,9 +39,9 @@ EXPORT_SYMBOL(filesystem);
 /// @brief File system initialize
 void FileSystem::Initialize()
 {
-	for (FileOpt* opt = fileOpts.Begin(); !fileOpts.IsEnd(); opt = fileOpts.Next())
+	for (FileSys* fs = fileSys.Begin(); !fileSys.IsEnd(); fs = fileSys.Next())
 	{
-		opt->Setup();
+		fs->Setup();
 	}
 }
 
@@ -56,9 +56,9 @@ void FileSystem::Execute()
 /// @brief File system exit
 void FileSystem::Exit()
 {
-	for (FileOpt* opt = fileOpts.Begin(); !fileOpts.IsEnd(); opt = fileOpts.Next())
+	for (FileSys* fs = fileSys.Begin(); !fileSys.IsEnd(); fs = fileSys.Next())
 	{
-		opt->Exit();
+		fs->Exit();
 	}
 }
 
@@ -66,26 +66,27 @@ void FileSystem::Exit()
 /// @brief Get file opt
 /// @param name file opt name
 /// @return file opt
-FileOpt* FileSystem::GetFileOpt(const char* name)
+FileOpts* FileSystem::GetFileOpts(const char* name)
 {
 	return fileOpts.GetItemByName((char*)name);
 }
-EXPORT_SYMBOL(_ZN10FileSystem10GetFileOptEPKc);
+EXPORT_SYMBOL(_ZN10FileSystem11GetFileOptsEPKc);
 
 
 /// @brief 
 /// @param name 
 /// @return 
-FileOpt* FileSystem::ChangeVolume(const char* name)
+FileOpts* FileSystem::ChangeVolume(const char* name)
 {
 	if (((name[0] >= 'a' && name[0] <= 'z')  ||
 		 (name[0] >= 'A' && name[0] <= 'Z')) &&
 		  name[1] == ':')
 	{
-		return GetFileOpt("fat");
+		return GetFileOpts("SD");
 	}
 	return NULL;
 }
+EXPORT_SYMBOL(_ZN10FileSystem12ChangeVolumeEPKc);
 
 
 /// @brief 
@@ -95,26 +96,47 @@ FileDir* FileSystem::ChangeDirectory(const char* name)
 {
 	return NULL;
 }
+EXPORT_SYMBOL(_ZN10FileSystem15ChangeDirectoryEPKc);
 
 
 /// @brief Register file system
 /// @param fileOpt file system opt
 /// @param name file system name
-void FileSystem::RegisterOpt(FileOpt* fileOpt, const char* name)
+void FileSystem::RegisterFS(FileSys* fs, const char* name)
 {
-	fileOpts.InsertByName(fileOpt, (char*)name);
+	fileSys.InsertByName(fs, (char*)name);
 }
-EXPORT_SYMBOL(_ZN10FileSystem11RegisterOptEP7FileOptPKc);
+EXPORT_SYMBOL(_ZN10FileSystem10RegisterFSEP7FileSysPKc);
 
 
 /// @brief Deregister file system
 /// @param fileOpt file system opt
 /// @param name file system name
-void FileSystem::DeregisterOpt(FileOpt* fileOpt, const char* name)
+void FileSystem::DeregisterFS(FileSys* fs, const char* name)
 {
-	fileOpts.RemoveByName(fileOpt, (char*)name);
+	fileSys.RemoveByName(fs, (char*)name);
 }
-EXPORT_SYMBOL(_ZN10FileSystem13DeregisterOptEP7FileOptPKc);
+EXPORT_SYMBOL(_ZN10FileSystem12DeregisterFSEP7FileSysPKc);
+
+
+/// @brief Register file system
+/// @param opts file system opt
+/// @param name file system name
+void FileSystem::RegisterOpts(FileOpts* opts, const char* name)
+{
+	fileOpts.InsertByName(opts, (char*)name);
+}
+EXPORT_SYMBOL(_ZN10FileSystem12RegisterOptsEP8FileOptsPKc);
+
+
+/// @brief Deregister file system
+/// @param opts file system opt
+/// @param name file system name
+void FileSystem::DeregisterOpts(FileOpts* opts, const char* name)
+{
+	fileOpts.RemoveByName(opts, (char*)name);
+}
+EXPORT_SYMBOL(_ZN10FileSystem14DeregisterOptsEP8FileOptsPKc);
 
 
 ///Register module
