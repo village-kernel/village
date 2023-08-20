@@ -17,7 +17,7 @@ FAT::FAT()
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 FAT::~FAT()
 {
 }
@@ -26,7 +26,21 @@ FAT::~FAT()
 /// @brief Setup
 void FAT::Setup()
 {
+	mbr     = new MBR();
+	dbr     = new DBR();
+	fat     = new Info();
+	
+	fatDisk = new FatDisk();
+	fatName = new FatName();
+	fatDir  = new FatDir();
+	fatFile = new FatFile();
+
 	diskdrv = device.GetDriver(DriverID::_storage + 1);
+
+	fatDisk->Setup(this);
+	fatName->Setup(this);
+	fatDir->Setup(this);
+	fatFile->Setup(this);
 	
 	if (NULL == diskdrv)
 	{
@@ -52,18 +66,6 @@ void FAT::Setup()
 		return;
 	}
 
-	fatDisk = new FatDisk();
-	fatDisk->Setup(this);
-
-	fatName = new FatName();
-	fatName->Setup(this);
-
-	fatDir = new FatDir();
-	fatDir->Setup(this);
-	
-	fatFile = new FatFile();
-	fatFile->Setup(this);
-
 	debug.Output(Debug::_Lv2, "Fat setup done");
 }
 
@@ -72,8 +74,6 @@ void FAT::Setup()
 int FAT::ReadMBR()
 {
 	static const uint8_t mbr_sector = 0;
-
-	mbr = new MBR();
 
 	if (NULL != mbr)
 	{
@@ -92,8 +92,6 @@ int FAT::ReadDBR()
 {
 	static const uint8_t dbr_sector = 1;
 
-	dbr = new DBR();
-
 	if (NULL != dbr)
 	{
 		diskdrv->Read((uint8_t*)dbr, 1, dbr_sector);
@@ -109,8 +107,6 @@ int FAT::ReadDBR()
 /// @return 
 int FAT::CheckFS()
 {
-	fat = new Info();
-
 	if (NULL != fat)
 	{
 		//Calc fat size

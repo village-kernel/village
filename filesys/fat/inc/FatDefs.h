@@ -322,25 +322,27 @@ class FatDat : public FatDefs
 {
 protected:
 	//Data Members
-	MBR*     mbr;
 	DBR*     dbr;
 	Info*    fat;
 
-	//Class Members
+	//Driver Members
 	Driver*  diskdrv;
+
+	//Class Members
 	FatDisk* fatDisk;
 	FatName* fatName;
 	FatFile* fatFile;
 	FatDir*  fatDir;
 public:
-	//Methods
+	/// @brief Setup
+	/// @param dat 
 	void Setup(FatDat* dat)
 	{
-		this->mbr = dat->mbr;
 		this->dbr = dat->dbr;
 		this->fat = dat->fat;
 
 		this->diskdrv = dat->diskdrv;
+
 		this->fatDisk = dat->fatDisk;
 		this->fatName = dat->fatName;
 		this->fatFile = dat->fatFile;

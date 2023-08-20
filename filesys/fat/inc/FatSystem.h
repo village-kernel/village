@@ -21,6 +21,9 @@ class FAT : public FileOpt, FatDat
 {
 private:
 	//Members
+	MBR*     mbr;
+
+	//Lists
 	List<DirEntry> files;
 	List<DirData>  dirs;
 
