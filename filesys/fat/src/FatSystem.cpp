@@ -48,10 +48,9 @@ void FatSystem::Setup()
 			FatObjs* fatObjs = new FatObjs();
 			FatOpts* fatOpts = new FatOpts();
 
-			fatObjs->Create(diskdrv, mbr->dpt[i].relativeSectors);
-			fatObjs->Setup();
+			fatObjs->Setup(diskdrv, mbr->dpt[i].relativeSectors);
 
-			if (_OK == fatOpts->Detect(fatObjs))
+			if (_OK == fatOpts->Setup(fatObjs))
 			{
 				filesystem.RegisterOpts(fatOpts, "SD");
 			}

@@ -36,7 +36,8 @@ public:
 	~FatOpts();
 
 	//Methods
-	int Detect(FatObjs* dat);
+	int Setup(FatObjs* dat);
+	void Exit();
 
 	//Mount
 	int Mount(const char* path, const char* mount, int opt);

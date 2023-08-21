@@ -19,15 +19,16 @@ FatOpts::FatOpts()
 /// @brief Destructor
 FatOpts::~FatOpts()
 {
+	Exit();
 }
 
 
-/// @brief Detect
+/// @brief Setup
 /// @param dat 
 /// @return result
-int FatOpts::Detect(FatObjs* dat)
+int FatOpts::Setup(FatObjs* dat)
 {
-	Setup(dat);
+	FatObjs::Clone(dat);
 	
 	if (_ERR == ReadDBR())
 	{
@@ -42,6 +43,14 @@ int FatOpts::Detect(FatObjs* dat)
 	}
 
 	return _OK;
+}
+
+
+/// @brief Exit
+void FatOpts::Exit()
+{
+	files.Release();
+	dirs.Release();
 }
 
 
@@ -116,8 +125,6 @@ int FatOpts::CheckFS()
 /// @return 
 int FatOpts::Mount(const char* path, const char* mount, int opt)
 {
-	debug.Output(Debug::_Lv2, "%s -> %s mount successful", path, mount);
-
 	return _OK;
 }
 
@@ -202,8 +209,9 @@ void FatOpts::Close(int fd)
 }
 
 
-/// @brief 
-/// @param dirname 
+/// @brief Open directory
+/// @param name
+/// @param mode 
 /// @return 
 int FatOpts::OpenDir(const char* name, int mode)
 {
@@ -241,7 +249,7 @@ FileAttr FatOpts::GetFileAttr(DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief Read directory
 /// @param fd 
 /// @param data 
 /// @return 
@@ -325,4 +333,3 @@ int FatOpts::Remove(int fd)
 {
 	return 0;
 }
-

@@ -35,12 +35,13 @@ protected:
 	uint32_t fstSec;
 
 	//Methods
-	void Setup(FatObjs* objs);
+	void Clone(FatObjs* objs);
 public:
 	//Methods
-	void Create(Driver* diskdrv, uint32_t fstSec);
-	void Setup();
-	void Destroy();
+	FatObjs();
+	~FatObjs();
+	void Setup(Driver* diskdrv, uint32_t fstSec);
+	void Exit();
 };
 
 #endif //!__FAT_OBJS_H__
