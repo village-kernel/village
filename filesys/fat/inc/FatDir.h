@@ -7,11 +7,11 @@
 #ifndef __FAT_DIR_H__
 #define __FAT_DIR_H__
 
-#include "FatDefs.h"
+#include "FatObjs.h"
 
 
 /// @brief FatDir
-class FatDir : public FatDat
+class FatDir : public FatObjs
 {
 public:
 	//Attr Methods

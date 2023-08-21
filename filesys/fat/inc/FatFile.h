@@ -7,11 +7,11 @@
 #ifndef __FAT_FILE_H__
 #define __FAT_FILE_H__
 
-#include "FatDefs.h"
+#include "FatObjs.h"
 
 
 /// @brief FatFile
-class FatFile : public FatDat
+class FatFile : public FatObjs
 {
 public:
 	//File Methods

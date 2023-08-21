@@ -62,7 +62,7 @@ protected:
 		uint32_t startingHead : 8;
 		uint32_t startingSector : 6;
 		uint32_t startingCylinder: 10;
-		uint32_t sectorID : 8;
+		uint32_t systemID : 8;
 		uint32_t endingHead : 8;
 		uint32_t endingSector : 6;
 		uint32_t endingCylinder : 10;
@@ -247,7 +247,6 @@ protected:
 		uint32_t countOfDataSecs;
 
 		uint32_t entriesPerSec;
-		uint32_t startSector;
 	};
 
 	struct DskSzToSecPerClus
@@ -311,47 +310,6 @@ protected:
 	static const uint16_t fat12_eoc_flag = 0xff8;
 	static const uint16_t fat16_eoc_flag = 0xfff8;
 	static const uint32_t fat32_eoc_flag = 0xffffff8;
-};
-
-
-/// @brief Declarations
-class FatDisk;
-class FatName;
-class FatFile;
-class FatDir;
-
-
-/// @brief FatDat
-class FatDat : public FatDefs
-{
-public:
-	//Data Members
-	DBR*     dbr;
-	Info*    info;
-
-	//Driver Members
-	Driver*  diskdrv;
-
-	//Class Members
-	FatDisk* fatDisk;
-	FatName* fatName;
-	FatFile* fatFile;
-	FatDir*  fatDir;
-public:
-	/// @brief Setup
-	/// @param dat 
-	void Setup(FatDat* dat)
-	{
-		this->dbr     = dat->dbr;
-		this->info    = dat->info;
-
-		this->diskdrv = dat->diskdrv;
-
-		this->fatDisk = dat->fatDisk;
-		this->fatName = dat->fatName;
-		this->fatFile = dat->fatFile;
-		this->fatDir  = dat->fatDir;
-	}
 };
 
 #endif //!__FAT_DEFS_H__

@@ -11,21 +11,8 @@
 
 
 /// @brief Constructor
-FatOpts::FatOpts(FatDat* dat)
+FatOpts::FatOpts()
 {
-	Setup(dat);
-
-	if (_ERR == ReadDBR())
-	{
-		debug.Error("Not DBR found");
-		return;
-	}
-
-	if (_ERR == CheckFS())
-	{
-		debug.Error("Not filesystem found");
-		return;
-	}
 }
 
 
@@ -35,15 +22,38 @@ FatOpts::~FatOpts()
 }
 
 
+/// @brief Detect
+/// @param dat 
+/// @return result
+int FatOpts::Detect(FatObjs* dat)
+{
+	Setup(dat);
+	
+	if (_ERR == ReadDBR())
+	{
+		debug.Error("Not DBR found");
+		return _ERR;
+	}
+
+	if (_ERR == CheckFS())
+	{
+		debug.Error("Not filesystem found");
+		return _ERR;
+	}
+
+	return _OK;
+}
+
+
 /// @brief Read DBR
 /// @return 
 int FatOpts::ReadDBR()
 {
-	static const uint8_t dbr_sector = 1;
+	static const uint8_t dbr_sector = 0;
 
 	if (NULL != dbr)
 	{
-		diskdrv->Read((uint8_t*)dbr, 1, dbr_sector);
+		fatDisk->ReadOneSector((char*)dbr, dbr_sector);
 		
 		if (magic == dbr->magic) return _OK;
 	}

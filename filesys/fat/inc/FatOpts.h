@@ -10,6 +10,7 @@
 #include "Templates.h"
 #include "FileOpts.h"
 #include "FatDefs.h"
+#include "FatObjs.h"
 #include "FatDisk.h"
 #include "FatName.h"
 #include "FatFile.h"
@@ -17,7 +18,7 @@
 
 
 /// @brief FatOpts
-class FatOpts : public FileOpts, FatDat
+class FatOpts : public FileOpts, FatObjs
 {
 private:
 	//Lists
@@ -31,8 +32,11 @@ private:
 	FileAttr GetFileAttr(DirEntry* entry);
 public:
 	//Methods
-	FatOpts(FatDat* dat);
+	FatOpts();
 	~FatOpts();
+
+	//Methods
+	int Detect(FatObjs* dat);
 
 	//Mount
 	int Mount(const char* path, const char* mount, int opt);

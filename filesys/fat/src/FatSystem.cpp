@@ -35,34 +35,33 @@ void FatSystem::Setup()
 		return;
 	}
 
-	mbr = new MBR();
-
 	if (_ERR == ReadMBR())
 	{
 		debug.Error("Not a valid disk");
 		return;
 	}
 
-	fats          = new FatDat();
-	fats->dbr     = new DBR();
-	fats->info    = new Info();
+	for (uint8_t i = 0; i < 4; i++)
+	{
+		if (_OK == CheckDPT(&mbr->dpt[i]))
+		{
+			FatObjs* fatObjs = new FatObjs();
+			FatOpts* fatOpts = new FatOpts();
 
-	fats->diskdrv = diskdrv;
-	
-	fats->fatDisk = new FatDisk();
-	fats->fatName = new FatName();
-	fats->fatDir  = new FatDir();
-	fats->fatFile = new FatFile();
+			fatObjs->Create(diskdrv, mbr->dpt[i].relativeSectors);
+			fatObjs->Setup();
 
-	fats->info->startSector = mbr->dpt[0].relativeSectors;
-
-	fats->fatDisk->Setup(fats);
-	fats->fatName->Setup(fats);
-	fats->fatDir->Setup(fats);
-	fats->fatFile->Setup(fats);
-
-	FatOpts* fatOpts = new FatOpts(fats);
-	filesystem.RegisterOpts(fatOpts, "SD");
+			if (_OK == fatOpts->Detect(fatObjs))
+			{
+				filesystem.RegisterOpts(fatOpts, "SD");
+			}
+			else
+			{
+				delete fatOpts;
+				delete fatObjs;
+			}
+		}
+	}
 
 	debug.Output(Debug::_Lv2, "Fat setup done");
 }
@@ -72,7 +71,6 @@ void FatSystem::Setup()
 void FatSystem::Exit()
 {
 	delete mbr;
-	delete fats;
 }
 
 
@@ -81,6 +79,8 @@ int FatSystem::ReadMBR()
 {
 	static const uint8_t mbr_sector = 0;
 
+	mbr = new MBR();
+
 	if (NULL != mbr)
 	{
 		diskdrv->Read((uint8_t*)mbr, 1, mbr_sector);
@@ -88,6 +88,19 @@ int FatSystem::ReadMBR()
 		if (magic == mbr->magic) return _OK;
 	}
 
+	return _ERR;
+}
+
+
+/// @brief 
+/// @param dpt 
+/// @return 
+int FatSystem::CheckDPT(DPT* dpt)
+{
+	if (dpt->systemID == 11)
+	{
+		return _OK;
+	}
 	return _ERR;
 }
 

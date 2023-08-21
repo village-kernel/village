@@ -7,11 +7,11 @@
 #ifndef __FAT_DISk_H__
 #define __FAT_DISk_H__
 
-#include "FatDefs.h"
+#include "FatObjs.h"
 
 
 /// @brief FatDisk
-class FatDisk : public FatDat
+class FatDisk : public FatObjs
 {
 public:
 	//Cluster and sector Methods

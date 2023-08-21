@@ -124,7 +124,7 @@ uint32_t FatDisk::ReadOneSector(char* data, uint32_t sector)
 {
 	if (NULL != diskdrv)
 	{
-		diskdrv->Read((uint8_t*)data, 1, sector + info->startSector);
+		diskdrv->Read((uint8_t*)data, 1, sector + fstSec);
 	}
 	return 1;
 }
@@ -139,7 +139,7 @@ uint32_t FatDisk::ReadSector(char* data, uint32_t secSize, uint32_t sector)
 {
 	if (NULL != diskdrv)
 	{
-		diskdrv->Read((uint8_t*)data, secSize, sector + info->startSector);
+		diskdrv->Read((uint8_t*)data, secSize, sector + fstSec);
 	}
 	return secSize;
 }

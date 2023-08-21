@@ -19,11 +19,11 @@ class FatSystem : public FileSys, FatDefs
 private:
 	//Members
 	MBR*     mbr;
-	FatDat*  fats;
 	Driver*  diskdrv;
 
 	//Methods
 	int ReadMBR();
+	int CheckDPT(DPT* dpt);
 public:
 	//Methods
 	FatSystem();
