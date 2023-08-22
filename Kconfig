@@ -72,21 +72,46 @@ config CMD_HELP
 	bool "Add help cmd to console support list"
 	default n
 
-config CMD_LIST
+config CMD_CD
 	depends on CONSOLE
-	bool "Add some list directory cmd to console support list"
+	bool "Add cd cmd to console support list"
 	default n
 
-config CMD_RUN
+config CMD_COPY
 	depends on CONSOLE
-	select EXECUTOR
-	bool "Add run cmd to console support list"
+	bool "Add cp cmd to console support list"
+	default n
+
+config CMD_LIST
+	depends on CONSOLE
+	bool "Add ls cmd to console support list"
+	default n
+
+config CMD_MKDIR
+	depends on CONSOLE
+	bool "Add mkdir cmd to console support list"
+	default n
+
+config CMD_REMOVE
+	depends on CONSOLE
+	bool "Add rm cmd to console support list"
+	default n
+
+config CMD_TOUCH
+	depends on CONSOLE
+	bool "Add touch cmd to console support list"
 	default n
 
 config CMD_MOD
 	depends on CONSOLE
 	select MODINSTALLER
 	bool "Add insmod and rmmod cmd to console support list"
+	default n
+
+config CMD_RUN
+	depends on CONSOLE
+	select EXECUTOR
+	bool "Add run cmd to console support list"
 	default n
 
 endmenu
