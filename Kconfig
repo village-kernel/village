@@ -72,6 +72,11 @@ config CMD_HELP
 	bool "Add help cmd to console support list"
 	default n
 
+config CMD_LIST
+	depends on CONSOLE
+	bool "Add some list directory cmd to console support list"
+	default n
+
 config CMD_RUN
 	depends on CONSOLE
 	select EXECUTOR

@@ -74,6 +74,7 @@ objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
 
 objs-$(CONFIG_CMD_ABOUT)                    += CmdAbout.o
 objs-$(CONFIG_CMD_HELP)                     += CmdHelp.o
+objs-$(CONFIG_CMD_LIST)                     += CmdList.o
 objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
 objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
