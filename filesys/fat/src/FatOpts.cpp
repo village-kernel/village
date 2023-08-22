@@ -137,6 +137,23 @@ int FatOpts::Unmount(const char* mount)
 }
 
 
+/// @brief Set volume label
+/// @param name 
+/// @return 
+int FatOpts::SetVolumeLabel(const char* name)
+{
+	return fatDir->SetVolumeLabel(name);
+}
+
+
+/// @brief Get volume label
+/// @return 
+char* FatOpts::GetVolumeLabel()
+{
+	return fatDir->GetVolumeLabel();
+}
+
+
 /// @brief FAT open
 /// @param name 
 /// @param mode 

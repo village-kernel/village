@@ -13,15 +13,19 @@
 /// @brief FatName
 class FatName : public FatObjs
 {
-private:
-	//Methods
-	uint8_t ChkSum(char* name);
-	char* GetShortName(FATSDir* sdir);
-	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
-	void SetShortName(FATSDir* sdir, char* name);
-	void SetLongName(FATLDir* ldir, FATSDir* sdir, char* name);
 public:
 	//Methods
+	uint8_t ChkSum(char* name);
+
+	char* GetShortName(FATSDir* sdir);
+	void SetShortName(FATSDir* sdir, char* name);
+
+	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
+	void SetLongName(FATLDir* ldir, FATSDir* sdir, char* name);
+
+	char* GetVolumeLabel(FATSDir* sdir);
+	void SetVolumeLabel(FATSDir* sdir, char* name);
+
 	char* GetDirName(DirData* data);
 	void SetDirName(DirData* data, char* name);
 };

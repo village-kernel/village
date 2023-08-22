@@ -42,6 +42,8 @@ public:
 	//Mount
 	int Mount(const char* path, const char* mount, int opt);
 	int Unmount(const char* mount);
+	int SetVolumeLabel(const char* name);
+	char* GetVolumeLabel();
 	
 	//File
 	int Open(const char* name, int mode);

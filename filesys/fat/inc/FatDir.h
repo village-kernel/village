@@ -13,6 +13,12 @@
 /// @brief FatDir
 class FatDir : public FatObjs
 {
+private:
+	//Attr Methods
+	bool IsHidden(FATEnt* entry);
+	bool IsDirectory(FATEnt* entry);
+	bool IsVolume(FATEnt* entry);
+	bool IsFile(FATEnt* entry);
 public:
 	//Attr Methods
 	bool IsHidden(DirEntry* entry);
@@ -24,6 +30,10 @@ public:
 	DirEntry* SearchPath(const char* path);
 	DirEntry* SearchDir(DirEntry* entry, const char* dir);
 	DirData* OpenDir(DirEntry* entry);
+
+	//Volume Methods
+	int SetVolumeLabel(const char* name);
+	char* GetVolumeLabel();
 
 	//Open API
 	DirData* Open(const char* path, int mode);

@@ -305,6 +305,7 @@ protected:
 	static const uint8_t  dir_entry_size = 32;
 	static const uint8_t  long_name_size  = 25;
 	static const uint8_t  short_name_size = 13;
+	static const uint8_t  volume_label_size = 12;
 	static const uint8_t  dir_seq_flag = 0x40;
 	static const uint8_t  dir_free_flag = 0xe5;
 	static const uint16_t fat12_eoc_flag = 0xff8;

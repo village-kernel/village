@@ -72,6 +72,15 @@ char* FatName::GetShortName(FATSDir* sdir)
 }
 
 
+/// @brief Set short name
+/// @param sdir 
+/// @param name 
+void FatName::SetShortName(FATSDir* sdir, char* name)
+{
+
+}
+
+
 /// @brief Get long name
 /// @param dirName 
 /// @param dir 
@@ -127,6 +136,56 @@ char* FatName::GetLongName(FATLDir* ldir, FATSDir* sdir)
 }
 
 
+/// @brief Set long name
+/// @param ldir 
+/// @param sdir 
+/// @param name 
+void FatName::SetLongName(FATLDir* ldir, FATSDir* sdir, char* name)
+{
+
+}
+
+
+/// @brief Get volume label name
+/// @param sdir 
+/// @return 
+char* FatName::GetVolumeLabel(FATSDir* sdir)
+{
+	uint8_t pos   = 0;
+	char*   label = new char[volume_label_size]();
+
+	//Copy label name
+	for (uint8_t i = 0; i < volume_label_size - 1; i++)
+	{
+		label[pos++] = sdir->name[i];
+	}
+	
+	//String EOC
+	label[pos] = '\0';
+
+	//Remove space
+	while (pos--)
+	{
+		if (label[pos] == ' ')
+		{
+			label[pos] = '\0';
+		}
+		else break;
+	}
+
+	return label;
+}
+
+
+/// @brief Set volume label
+/// @param sdir 
+/// @param name 
+void FatName::SetVolumeLabel(FATSDir* sdir, char* name)
+{
+
+}
+
+
 /// @brief Get diretory name
 /// @param entries 
 /// @param idx 
@@ -178,4 +237,13 @@ char* FatName::GetDirName(DirData* data)
 	}
 
 	return name;
+}
+
+
+/// @brief Set dir name
+/// @param data 
+/// @param name 
+void FatName::SetDirName(DirData* data, char* name)
+{
+
 }

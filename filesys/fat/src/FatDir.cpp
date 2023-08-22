@@ -14,9 +14,27 @@
 /// @brief 
 /// @param entry 
 /// @return 
+inline bool FatDir::IsHidden(FATEnt* entry)
+{
+	return ((entry->sdir.attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
 bool FatDir::IsHidden(DirEntry* entry)
 {
-	return ((entry->dir.sdir.attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+	return IsHidden(&entry->dir);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+inline bool FatDir::IsDirectory(FATEnt* entry)
+{
+	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
 }
 
 
@@ -25,7 +43,16 @@ bool FatDir::IsHidden(DirEntry* entry)
 /// @return 
 bool FatDir::IsDirectory(DirEntry* entry)
 {
-	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
+	return IsDirectory(&entry->dir);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+inline bool FatDir::IsVolume(FATEnt* entry)
+{
+	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
 }
 
 
@@ -34,7 +61,16 @@ bool FatDir::IsDirectory(DirEntry* entry)
 /// @return 
 bool FatDir::IsVolume(DirEntry* entry)
 {
-	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
+	return IsVolume(&entry->dir);
+}
+
+
+/// @brief 
+/// @param entry 
+/// @return 
+inline bool FatDir::IsFile(FATEnt* entry)
+{
+	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
 }
 
 
@@ -43,7 +79,7 @@ bool FatDir::IsVolume(DirEntry* entry)
 /// @return 
 bool FatDir::IsFile(DirEntry* entry)
 {
-	return ((entry->dir.sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
+	return IsFile(&entry->dir);
 }
 
 
@@ -178,6 +214,41 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 	data->dirs.Begin();
 
 	return data;
+}
+
+
+/// @brief 
+/// @param name 
+/// @return 
+int FatDir::SetVolumeLabel(const char* name)
+{
+	return _OK;
+}
+
+
+/// @brief 
+/// @return 
+char* FatDir::GetVolumeLabel()
+{
+	uint32_t  clust  = 0;
+	uint32_t  sector = 0;
+
+	//Allocate the dir entires space
+	FATEnt* ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
+
+	//Calculate the dir cluster and sector
+	fatDisk->CalcFirstSector(NULL, clust, sector);
+
+	//Read ents data
+	fatDisk->ReadOneSector((char*)ents, sector);
+
+	//Get volume label
+	char* label = IsVolume(&ents[0]) ? fatName->GetVolumeLabel(&ents[0].sdir) : (char*)"NONAME";
+
+	//Free ents
+	delete[] ents;
+
+	return label;
 }
 
 
