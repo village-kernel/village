@@ -46,6 +46,7 @@ public:
 	void Error(const char* format, ...);
 	void Warn(const char* format, ...);
 	void Output(const char* format, ...);
+	void OutputRAW(const char* format, ...);
 	
 	//Singleton Instance
 	static Console& Instance();

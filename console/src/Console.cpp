@@ -221,5 +221,21 @@ void Console::Output(const char* format, ...)
 EXPORT_SYMBOL(_ZN7Console6OutputEPKcz);
 
 
+/// @brief Console output
+/// @param format 
+/// @param  
+void Console::OutputRAW(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsprintf(data, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)data);
+	mutex.Unlock();
+}
+EXPORT_SYMBOL(_ZN7Console9OutputRAWEPKcz);
+
+
 ///Register module
 REGISTER_MODULE(&Console::Instance(), ModuleID::_console, console);
