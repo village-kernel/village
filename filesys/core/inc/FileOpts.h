@@ -25,6 +25,8 @@ public:
 	//Disk methods
 	virtual int Mount(const char* path, const char* mount, int opt)  = 0;
 	virtual int Unmount(const char* mount)                           = 0;
+	virtual int SetVolumeLabel(const char* name)                     = 0;
+	virtual char* GetVolumeLabel()                                   = 0;
 
 	//File methods
 	virtual int Open(const char* name, int mode)                     = 0;

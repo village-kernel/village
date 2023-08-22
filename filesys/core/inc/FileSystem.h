@@ -20,6 +20,7 @@ private:
 	//Members
 	List<FileSys>  fileSys;
 	List<FileOpts> fileOpts;
+	char           assignLetter;
 	
 	//Methods
 	FileSystem();
@@ -33,10 +34,9 @@ public:
 	void RegisterFS(FileSys* fs, const char* name);
 	void DeregisterFS(FileSys* fs, const char* name);
 
-	void RegisterOpts(FileOpts* opts, const char* name);
-	void DeregisterOpts(FileOpts* opts, const char* name);
+	int RegisterOpts(FileOpts* opts);
+	int DeregisterOpts(FileOpts* opts);
 
-	FileOpts* GetFileOpts(const char* name);
 	FileOpts* ChangeVolume(const char* name);
 	FileDir* ChangeDirectory(const char* name);
 	
