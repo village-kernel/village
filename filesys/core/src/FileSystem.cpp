@@ -108,10 +108,10 @@ int FileSystem::DeregisterOpts(FileOpts* opts)
 EXPORT_SYMBOL(_ZN10FileSystem14DeregisterOptsEP8FileOpts);
 
 
-/// @brief Change volume
+/// @brief Get File Opts
 /// @param name 
 /// @return 
-FileOpts* FileSystem::ChangeVolume(const char* name)
+FileOpts* FileSystem::GetFileOpts(const char* name)
 {
 	if (((name[0] >= 'a' && name[0] <= 'z')  ||
 		 (name[0] >= 'A' && name[0] <= 'Z')) &&
@@ -128,17 +128,7 @@ FileOpts* FileSystem::ChangeVolume(const char* name)
 	}
 	return NULL;
 }
-EXPORT_SYMBOL(_ZN10FileSystem12ChangeVolumeEPKc);
-
-
-/// @brief 
-/// @param name 
-/// @return 
-FileDir* FileSystem::ChangeDirectory(const char* name)
-{
-	return NULL;
-}
-EXPORT_SYMBOL(_ZN10FileSystem15ChangeDirectoryEPKc);
+EXPORT_SYMBOL(_ZN10FileSystem11GetFileOptsEPKc);
 
 
 ///Register module

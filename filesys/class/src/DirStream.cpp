@@ -29,7 +29,7 @@ DirStream::~DirStream()
 /// @return 
 int DirStream::Open(const char* name, int mode)
 {
-	opts = filesystem.ChangeVolume(name);
+	opts = filesystem.GetFileOpts(name);
 
 	if (NULL != opts)
 	{

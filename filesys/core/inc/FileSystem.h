@@ -37,8 +37,7 @@ public:
 	int RegisterOpts(FileOpts* opts);
 	int DeregisterOpts(FileOpts* opts);
 
-	FileOpts* ChangeVolume(const char* name);
-	FileDir* ChangeDirectory(const char* name);
+	FileOpts* GetFileOpts(const char* name);
 	
 	//Singleton Instance
 	static FileSystem& Instance();

@@ -29,7 +29,7 @@ FileStream::~FileStream()
 /// @return 
 int FileStream::Open(const char* name, int mode)
 {
-	opts = filesystem.ChangeVolume(name);
+	opts = filesystem.GetFileOpts(name);
 
 	if (NULL != opts)
 	{
