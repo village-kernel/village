@@ -28,10 +28,10 @@ uint32_t FatDisk::ClusterToSector(uint32_t clust)
 }
 
 
-/// @brief Calculate the next cluster
+/// @brief Get the next cluster
 /// @param clust 
 /// @return next cluster
-uint32_t FatDisk::CalcNextCluster(uint32_t clust)
+uint32_t FatDisk::GetNextCluster(uint32_t clust)
 {
 	bool isEOC = false;
 	uint32_t fatOffset = 0;
@@ -63,6 +63,107 @@ uint32_t FatDisk::CalcNextCluster(uint32_t clust)
 	delete[] secBuff;
 
 	return isEOC ? 0 : fatClust;
+}
+
+
+/// @brief Set the next cluster
+/// @param clust 
+/// @return next cluster
+uint32_t FatDisk::SetNextCluster(uint32_t clust)
+{
+	uint32_t fatOffset = 0;
+	uint32_t fatMaxOffset = 0;
+	uint32_t fatClust = clust;
+
+	if (_FAT16 == info->fatType)
+	{
+		fatOffset = clust * 2;
+		fatMaxOffset = dbr->bpb.bytesPerSec / 2;
+	}	
+	else if (_FAT32 == info->fatType)
+	{
+		fatOffset = clust * 4;
+		fatMaxOffset = dbr->bpb.bytesPerSec / 4;
+	}
+
+	uint32_t thisFatSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytesPerSec);
+	uint32_t thisFatEntOffset = fatOffset % dbr->bpb.bytesPerSec;
+	uint32_t nextFatSecNum = thisFatSecNum;
+	uint32_t nextFatEntOffset = thisFatEntOffset;
+
+	char* secBuff = new char[dbr->bpb.bytesPerSec]();
+	
+	ReadOneSector(secBuff, nextFatSecNum);
+
+	while (0 != clust)
+	{
+		if (++nextFatEntOffset >= fatMaxOffset)
+		{
+			nextFatEntOffset = 0;
+
+			if (++nextFatSecNum <= info->endOfFatSector)
+			{
+				ReadOneSector(secBuff, nextFatSecNum);
+			}
+			else
+			{
+				delete[] secBuff;
+				return 0;
+			}
+		}
+		
+		if (_FAT16 == info->fatType)
+			clust = *((uint16_t*)&secBuff[nextFatEntOffset]);
+		else if (_FAT32 == info->fatType)
+			clust = (*((uint32_t*)&secBuff[nextFatEntOffset])) & 0x0fffffff;
+
+		fatClust++;
+	}
+
+	if (_FAT16 == info->fatType)
+	{
+		if (nextFatSecNum == thisFatSecNum)
+		{
+			*((uint16_t*)&secBuff[thisFatEntOffset]) = fatClust;
+			*((uint16_t*)&secBuff[nextFatEntOffset]) = fat16_eoc_flag;
+			WriteOneSector(secBuff, nextFatSecNum);
+		}
+		else
+		{
+			*((uint16_t*)&secBuff[nextFatEntOffset]) = fat16_eoc_flag;
+			WriteOneSector(secBuff, nextFatSecNum);
+
+			ReadOneSector(secBuff, thisFatSecNum);
+			*((uint16_t*)&secBuff[thisFatEntOffset]) = fatClust;
+			WriteOneSector(secBuff, thisFatSecNum);
+		}
+	}
+	else if (_FAT32 == info->fatType)
+	{
+		if (nextFatSecNum == thisFatSecNum)
+		{
+			*((uint32_t*)&secBuff[thisFatEntOffset]) &= 0xf0000000;
+			*((uint32_t*)&secBuff[thisFatEntOffset]) |= fatClust;
+			*((uint32_t*)&secBuff[nextFatEntOffset]) &= 0xf0000000;
+			*((uint32_t*)&secBuff[nextFatEntOffset]) |= fat32_eoc_flag;
+			WriteOneSector(secBuff, nextFatSecNum);
+		}
+		else
+		{
+			*((uint32_t*)&secBuff[nextFatEntOffset]) &= 0xf0000000;
+			*((uint32_t*)&secBuff[nextFatEntOffset]) |= fat32_eoc_flag;
+			WriteOneSector(secBuff, nextFatSecNum);
+
+			ReadOneSector(secBuff, thisFatSecNum);
+			*((uint32_t*)&secBuff[thisFatEntOffset]) &= 0xf0000000;
+			*((uint32_t*)&secBuff[thisFatEntOffset]) |= fatClust;
+			WriteOneSector(secBuff, thisFatSecNum);
+		}
+	}
+
+	delete[] secBuff;
+
+	return fatClust;
 }
 
 
@@ -108,7 +209,7 @@ void FatDisk::CalcNextSector(uint32_t& clust, uint32_t& sector)
 	{ 
 		if ((++sector - ClusterToSector(clust)) >= dbr->bpb.secPerClust)
 		{
-			clust = CalcNextCluster(clust);
+			clust = GetNextCluster(clust);
 			sector = (0 != clust) ? ClusterToSector(clust) : 0;
 		}
 	}
@@ -167,7 +268,67 @@ uint32_t FatDisk::ReadCluster(char* data, uint32_t clustSize, uint32_t clust)
 
 		if (clustSize > 1)
 		{
-			clust = CalcNextCluster(clust);
+			clust = GetNextCluster(clust);
+			if (0 == clust) return i + 1;
+		}
+	}
+
+	return clustSize;
+}
+
+
+/// @brief Write one sector
+/// @param data 
+/// @param sector 
+/// @return 
+uint32_t FatDisk::WriteOneSector(char* data, uint32_t sector)
+{
+	if (NULL != diskdrv)
+	{
+		diskdrv->Write((uint8_t*)data, 1, sector + fstSec);
+	}
+	return 1;
+}
+
+
+/// @brief Write sector
+/// @param data 
+/// @param secSize 
+/// @param sector 
+/// @return 
+uint32_t FatDisk::WriteSector(char* data, uint32_t secSize, uint32_t sector)
+{
+	if (NULL != diskdrv)
+	{
+		diskdrv->Write((uint8_t*)data, secSize, sector + fstSec);
+	}
+	return secSize;
+}
+
+
+/// @brief Write cluster
+/// @param data 
+/// @param clustSize 
+/// @param clust 
+/// @return 
+uint32_t FatDisk::WriteCluster(char* data, uint32_t clustSize, uint32_t clust)
+{
+	uint32_t bytesPerSec = dbr->bpb.bytesPerSec;
+	uint32_t secPerClust = dbr->bpb.secPerClust;
+
+	for (uint32_t i = 0; i < clustSize; i++)
+	{
+		uint32_t sector = ClusterToSector(clust);
+		uint32_t offset = i * bytesPerSec * secPerClust;
+
+		if (secPerClust != WriteSector(data + offset, secPerClust, sector))
+		{
+			return i + 1;
+		}
+
+		if (clustSize > 1)
+		{
+			clust = SetNextCluster(clust);
 			if (0 == clust) return i + 1;
 		}
 	}
