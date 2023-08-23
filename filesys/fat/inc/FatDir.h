@@ -32,8 +32,8 @@ public:
 	DirData* OpenDir(DirEntry* entry);
 
 	//Volume Methods
-	int SetVolumeLabel(const char* name);
 	char* GetVolumeLabel();
+	int SetVolumeLabel(const char* name);
 
 	//Open API
 	DirData* Open(const char* path, int mode);

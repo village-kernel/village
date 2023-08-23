@@ -218,15 +218,6 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 
 
 /// @brief 
-/// @param name 
-/// @return 
-int FatDir::SetVolumeLabel(const char* name)
-{
-	return _OK;
-}
-
-
-/// @brief 
 /// @return 
 char* FatDir::GetVolumeLabel()
 {
@@ -250,6 +241,41 @@ char* FatDir::GetVolumeLabel()
 
 	return label;
 }
+
+
+/// @brief 
+/// @param name 
+/// @return 
+int FatDir::SetVolumeLabel(const char* name)
+{
+	uint32_t  clust  = 0;
+	uint32_t  sector = 0;
+
+	//Allocate the dir entires space
+	FATEnt* ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
+
+	//Calculate the dir cluster and sector
+	fatDisk->CalcFirstSector(NULL, clust, sector);
+
+	//Read ents data
+	fatDisk->ReadOneSector((char*)ents, sector);
+
+	//Check is volume entry
+	if (IsVolume(&ents[0]))
+	{
+		//Set volume label
+		fatName->SetVolumeLabel(&ents[0].sdir, name);
+
+		//Update volume label to disk
+		fatDisk->WriteOneSector((char*)ents, sector);
+	}
+	 
+	//Free ents
+	delete[] ents;
+
+	return _OK;
+}
+
 
 
 /// @brief Open dir

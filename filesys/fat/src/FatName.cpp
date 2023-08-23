@@ -6,6 +6,7 @@
 //###########################################################################
 #include "FatName.h"
 #include "FatDisk.h"
+#include "string.h"
 
 
 /// @brief ChkSum
@@ -75,9 +76,9 @@ char* FatName::GetShortName(FATSDir* sdir)
 /// @brief Set short name
 /// @param sdir 
 /// @param name 
-void FatName::SetShortName(FATSDir* sdir, char* name)
+int FatName::SetShortName(FATSDir* sdir, const char* name)
 {
-
+	return _OK;
 }
 
 
@@ -140,9 +141,9 @@ char* FatName::GetLongName(FATLDir* ldir, FATSDir* sdir)
 /// @param ldir 
 /// @param sdir 
 /// @param name 
-void FatName::SetLongName(FATLDir* ldir, FATSDir* sdir, char* name)
+int FatName::SetLongName(FATLDir* ldir, FATSDir* sdir, const char* name)
 {
-
+	return _OK;
 }
 
 
@@ -152,10 +153,10 @@ void FatName::SetLongName(FATLDir* ldir, FATSDir* sdir, char* name)
 char* FatName::GetVolumeLabel(FATSDir* sdir)
 {
 	uint8_t pos   = 0;
-	char*   label = new char[volume_label_size]();
+	char*   label = new char[volume_label_size + 1]();
 
 	//Copy label name
-	for (uint8_t i = 0; i < volume_label_size - 1; i++)
+	for (uint8_t i = 0; i < volume_label_size; i++)
 	{
 		label[pos++] = sdir->name[i];
 	}
@@ -180,9 +181,27 @@ char* FatName::GetVolumeLabel(FATSDir* sdir)
 /// @brief Set volume label
 /// @param sdir 
 /// @param name 
-void FatName::SetVolumeLabel(FATSDir* sdir, char* name)
+int FatName::SetVolumeLabel(FATSDir* sdir, const char* name)
 {
+	uint8_t namelen = strlen(name);
 
+	//Check label length
+	if (namelen > volume_label_size) return _ERR;
+
+	//Copy label name
+	for (uint8_t i = 0; i < volume_label_size; i++)
+	{
+		if (i < namelen)
+		{
+			if (name[i] >= 'a' && name[i] <= 'z')
+				sdir->name[i] = name[i] - 0x20;
+			else
+				sdir->name[i] = name[i];
+		}
+		else sdir->name[i] = ' ';
+	}
+
+	return _OK;
 }
 
 
@@ -243,7 +262,7 @@ char* FatName::GetDirName(DirData* data)
 /// @brief Set dir name
 /// @param data 
 /// @param name 
-void FatName::SetDirName(DirData* data, char* name)
+int FatName::SetDirName(DirData* data, const char* name)
 {
-
+	return _OK;
 }
