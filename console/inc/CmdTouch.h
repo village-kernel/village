@@ -12,6 +12,9 @@
 ///CmdTouch
 class CmdTouch : public Cmd
 {
+private:
+	//Methods
+	void CreateFile(const char* filename);
 public:
 	//Methods
 	void Initialize();
