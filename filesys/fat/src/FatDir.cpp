@@ -11,7 +11,7 @@
 #include "Regex.h"
 
 
-/// @brief 
+/// @brief attr is hidden 
 /// @param entry 
 /// @return 
 inline bool FatDir::IsHidden(FATEnt* entry)
@@ -20,7 +20,7 @@ inline bool FatDir::IsHidden(FATEnt* entry)
 }
 
 
-/// @brief 
+/// @brief attr is hidden
 /// @param entry 
 /// @return 
 bool FatDir::IsHidden(DirEntry* entry)
@@ -29,7 +29,7 @@ bool FatDir::IsHidden(DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief attr is directory
 /// @param entry 
 /// @return 
 inline bool FatDir::IsDirectory(FATEnt* entry)
@@ -38,7 +38,7 @@ inline bool FatDir::IsDirectory(FATEnt* entry)
 }
 
 
-/// @brief 
+/// @brief attr is directory
 /// @param entry 
 /// @return 
 bool FatDir::IsDirectory(DirEntry* entry)
@@ -47,7 +47,7 @@ bool FatDir::IsDirectory(DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief attr is volume
 /// @param entry 
 /// @return 
 inline bool FatDir::IsVolume(FATEnt* entry)
@@ -56,7 +56,7 @@ inline bool FatDir::IsVolume(FATEnt* entry)
 }
 
 
-/// @brief 
+/// @brief attr is volume
 /// @param entry 
 /// @return 
 bool FatDir::IsVolume(DirEntry* entry)
@@ -65,7 +65,7 @@ bool FatDir::IsVolume(DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief attr is file
 /// @param entry 
 /// @return 
 inline bool FatDir::IsFile(FATEnt* entry)
@@ -74,7 +74,7 @@ inline bool FatDir::IsFile(FATEnt* entry)
 }
 
 
-/// @brief 
+/// @brief attr is file
 /// @param entry 
 /// @return 
 bool FatDir::IsFile(DirEntry* entry)
@@ -90,8 +90,8 @@ FatDir::DirEntry* FatDir::SearchPath(const char* path)
 {
 	Regex regex;
 	regex.Split(path, '/');
-	char**  dirNames = regex.ToArray();
-	uint8_t dirIndex = regex.Size();
+	char** dirNames = regex.ToArray();
+	int8_t dirIndex = regex.Size();
 	
 	DirEntry* entry = NULL;
 
@@ -217,7 +217,7 @@ FatDir::DirData* FatDir::OpenDir(DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief Get volume label
 /// @return 
 char* FatDir::GetVolumeLabel()
 {
@@ -243,7 +243,7 @@ char* FatDir::GetVolumeLabel()
 }
 
 
-/// @brief 
+/// @brief Set volume label
 /// @param name 
 /// @return 
 int FatDir::SetVolumeLabel(const char* name)
@@ -275,7 +275,6 @@ int FatDir::SetVolumeLabel(const char* name)
 
 	return _OK;
 }
-
 
 
 /// @brief Open dir
