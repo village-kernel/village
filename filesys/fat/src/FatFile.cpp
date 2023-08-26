@@ -6,7 +6,7 @@
 //###########################################################################
 #include "FatFile.h"
 #include "FatDisk.h"
-#include "FatDir.h"
+#include "FatEntry.h"
 
 
 /// @brief Open
@@ -15,7 +15,7 @@
 /// @return 
 FatDefs::DirEntry* FatFile::Open(const char* name, int mode)
 {
-	return fatDir->SearchPath(name);
+	return fatEntry->SearchPath(name);
 }
 
 

@@ -12,6 +12,7 @@
 /// @brief Declarations
 class FatDisk;
 class FatName;
+class FatEntry;
 class FatFile;
 class FatDir;
 
@@ -25,10 +26,11 @@ protected:
 	Info*    info;
 
 	//Class Members
-	FatDisk* fatDisk;
-	FatName* fatName;
-	FatFile* fatFile;
-	FatDir*  fatDir;
+	FatDisk*  fatDisk;
+	FatName*  fatName;
+	FatEntry* fatEntry;
+	FatFile*  fatFile;
+	FatDir*   fatDir;
 
 	//Driver Members
 	Driver*  diskdrv;

@@ -88,6 +88,7 @@ objs-$(CONFIG_CONSOLE)                      += Console.o
 
 objs-$(CONFIG_FATFS)                        += FatDir.o
 objs-$(CONFIG_FATFS)                        += FatDisk.o
+objs-$(CONFIG_FATFS)                        += FatEntry.o
 objs-$(CONFIG_FATFS)                        += FatFile.o
 objs-$(CONFIG_FATFS)                        += FatName.o
 objs-$(CONFIG_FATFS)                        += FatObjs.o

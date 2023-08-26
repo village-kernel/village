@@ -9,6 +9,7 @@
 #include "FatDisk.h"
 #include "FatName.h"
 #include "FatFile.h"
+#include "FatEntry.h"
 
 
 /// @brief Constructor
@@ -28,16 +29,17 @@ FatObjs::~FatObjs()
 /// @param objs 
 void FatObjs::Clone(FatObjs* objs)
 {
-	this->dbr     = objs->dbr;
-	this->info    = objs->info;
+	this->dbr      = objs->dbr;
+	this->info     = objs->info;
 
-	this->fatDisk = objs->fatDisk;
-	this->fatName = objs->fatName;
-	this->fatFile = objs->fatFile;
-	this->fatDir  = objs->fatDir;
+	this->fatDisk  = objs->fatDisk;
+	this->fatName  = objs->fatName;
+	this->fatEntry = objs->fatEntry;
+	this->fatFile  = objs->fatFile;
+	this->fatDir   = objs->fatDir;
 
-	this->diskdrv = objs->diskdrv;
-	this->fstSec  = objs->fstSec;
+	this->diskdrv  = objs->diskdrv;
+	this->fstSec   = objs->fstSec;
 }
 
 
@@ -46,19 +48,21 @@ void FatObjs::Clone(FatObjs* objs)
 /// @param fstSec 
 void FatObjs::Setup(Driver* diskdrv, uint32_t fstSec)
 {
-	this->diskdrv = diskdrv;
-	this->fstSec  = fstSec;
+	this->diskdrv  = diskdrv;
+	this->fstSec   = fstSec;
 
-	this->dbr     = new DBR();
-	this->info    = new Info();
+	this->dbr      = new DBR();
+	this->info     = new Info();
 
-	this->fatDisk = new FatDisk();
-	this->fatName = new FatName();
-	this->fatFile = new FatFile();
-	this->fatDir  = new FatDir();
+	this->fatDisk  = new FatDisk();
+	this->fatName  = new FatName();
+	this->fatEntry = new FatEntry();
+	this->fatFile  = new FatFile();
+	this->fatDir   = new FatDir();
 
 	fatDisk->Clone(this);
 	fatName->Clone(this);
+	fatEntry->Clone(this);
 	fatFile->Clone(this);
 	fatDir->Clone(this);
 }
@@ -72,6 +76,7 @@ void FatObjs::Exit()
 
 	delete fatDisk;
 	delete fatName;
+	delete fatEntry;
 	delete fatFile;
 	delete fatDir;
 }

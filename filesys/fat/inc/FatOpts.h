@@ -13,6 +13,7 @@
 #include "FatObjs.h"
 #include "FatDisk.h"
 #include "FatName.h"
+#include "FatEntry.h"
 #include "FatFile.h"
 #include "FatDir.h"
 

@@ -145,7 +145,7 @@ int FatOpts::Unmount(const char* mount)
 /// @return 
 int FatOpts::SetVolumeLabel(const char* name)
 {
-	return fatDir->SetVolumeLabel(name);
+	return fatEntry->SetVolumeLabel(name);
 }
 
 
@@ -153,7 +153,7 @@ int FatOpts::SetVolumeLabel(const char* name)
 /// @return 
 char* FatOpts::GetVolumeLabel()
 {
-	return fatDir->GetVolumeLabel();
+	return fatEntry->GetVolumeLabel();
 }
 
 
@@ -249,11 +249,11 @@ int FatOpts::OpenDir(const char* name, int mode)
 /// @return file type
 FileType FatOpts::GetFileType(DirEntry* entry)
 {
-	if (fatDir->IsFile(entry))
+	if (fatEntry->IsFile(entry))
 		return FileType::_File;
-	else if (fatDir->IsDirectory(entry))
+	else if (fatEntry->IsDirectory(entry))
 		return FileType::_Diretory;
-	else if (fatDir->IsVolume(entry))
+	else if (fatEntry->IsVolume(entry))
 		return FileType::_Volume;
 	else
 		return FileType::_Unknown;
@@ -265,7 +265,7 @@ FileType FatOpts::GetFileType(DirEntry* entry)
 /// @return file attr
 FileAttr FatOpts::GetFileAttr(DirEntry* entry)
 {
-	return fatDir->IsHidden(entry) ? FileAttr::_Hidden : FileAttr::_Visible;
+	return fatEntry->IsHidden(entry) ? FileAttr::_Hidden : FileAttr::_Visible;
 }
 
 
