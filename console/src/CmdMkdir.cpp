@@ -6,19 +6,37 @@
 //###########################################################################
 #include "CmdMkdir.h"
 #include "Console.h"
+#include "DirStream.h"
 
 
-///Cmd mkdir initialize
+/// @brief Cmd mkdir initialize
 void CmdMkdir::Initialize()
 {
 
 }
 
 
-///Cmd mkdir execute
+/// @brief Create directory
+/// @param dirname 
+void CmdMkdir::CreateDir(const char* dirname)
+{
+	DirStream dir;
+	dir.Open(dirname, FileMode::_CreateNew);
+	dir.Close();
+}
+
+
+/// @brief Cmd mkdir execute
+/// @param argc 
+/// @param argv 
 void CmdMkdir::Execute(int argc, char* argv[])
 {
-
+	if (argc < 1)
+	{
+		console.Output("Usage: mkdir [dirname]");
+		return;
+	}
+	CreateDir(argv[1]);
 }
 
 

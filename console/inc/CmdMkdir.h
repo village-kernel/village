@@ -12,6 +12,9 @@
 ///CmdMkdir
 class CmdMkdir : public Cmd
 {
+private:
+	//Methods
+	void CreateDir(const char* dirname);
 public:
 	//Methods
 	void Initialize();
