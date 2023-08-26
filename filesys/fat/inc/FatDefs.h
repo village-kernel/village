@@ -8,6 +8,7 @@
 #define __FAT_DEFS_H__
 
 #include "Defines.h"
+#include "FileDefs.h"
 #include "Templates.h"
 #include "Driver.h"
 
