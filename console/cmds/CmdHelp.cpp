@@ -4,22 +4,29 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "CmdHelp.h"
+#include "Cmd.h"
 #include "Console.h"
 
 
-///Cmd help initialize
-void CmdHelp::Initialize()
+/// @brief CmdHelp
+class CmdHelp : public Cmd
 {
+public:
+	/// @brief Cmd help initialize
+	void Initialize()
+	{
 
-}
+	}
 
 
-///Cmd help execute
-void CmdHelp::Execute(int argc, char* argv[])
-{
-	console.Output("help: about");
-}
+	/// @brief Cmd help execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		console.Output("help: about");
+	}
+};
 
 
 ///Register cmd

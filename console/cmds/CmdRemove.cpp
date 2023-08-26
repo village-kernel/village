@@ -4,22 +4,29 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "CmdRemove.h"
+#include "Cmd.h"
 #include "Console.h"
 
 
-///Cmd remove initialize
-void CmdRemove::Initialize()
+/// @brief CmdRemove
+class CmdRemove : public Cmd
 {
+public:
+	/// @brief Cmd remove initialize
+	void Initialize()
+	{
 
-}
+	}
 
 
-///Cmd remove execute
-void CmdRemove::Execute(int argc, char* argv[])
-{
-	
-}
+	/// @brief Cmd remove execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		
+	}
+};
 
 
 ///Register cmd

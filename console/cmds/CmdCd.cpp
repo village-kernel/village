@@ -4,22 +4,29 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "CmdCd.h"
+#include "Cmd.h"
 #include "Console.h"
 
 
-///Cmd cd initialize
-void CmdCd::Initialize()
+/// @brief CmdCd
+class CmdCd : public Cmd
 {
+public:
+	/// @brief Cmd cd initialize
+	void Initialize()
+	{
 
-}
+	}
 
 
-///Cmd cd execute
-void CmdCd::Execute(int argc, char* argv[])
-{
-	
-}
+	/// @brief Cmd cd execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		
+	}
+};
 
 
 ///Register cmd

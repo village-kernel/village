@@ -4,22 +4,29 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "CmdAbout.h"
+#include "Cmd.h"
 #include "Console.h"
 
 
-///Cmd about initialize
-void CmdAbout::Initialize()
+/// @brief CmdAbout
+class CmdAbout : public Cmd
 {
+public:
+	/// @brief Cmd about initialize
+	void Initialize()
+	{
 
-}
+	}
+	
 
-
-///Cmd about execute
-void CmdAbout::Execute(int argc, char* argv[])
-{
-	console.Output("vk.kernel 0.0.1(beta), Copyright (C) village.");
-}
+	/// @brief Cmd about execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		console.Output("vk.kernel 0.0.1(beta), Copyright (C) village.");
+	}
+};
 
 
 ///Register cmd

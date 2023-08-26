@@ -39,6 +39,7 @@ inc-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/inc
 src-$(CONFIG_SYNC)                          += vk.kernel/sync/src
 src-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/src
 src-$(CONFIG_CONSOLE)                       += vk.kernel/console/src
+src-$(CONFIG_CONSOLE)                       += vk.kernel/console/cmds
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 
