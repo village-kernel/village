@@ -27,7 +27,7 @@ public:
 	bool IsFile(DirEntry* entry);
 
 	//Directory Methods
-	DirEntry* SearchPath(const char* path);
+	DirEntry* SearchPath(const char* path, int forward = 0);
 	DirEntry* SearchDir(DirEntry* entry, const char* dir);
 	DirData* OpenDir(DirEntry* entry);
 

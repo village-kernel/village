@@ -86,12 +86,12 @@ bool FatEntry::IsFile(DirEntry* entry)
 /// @brief Search path
 /// @param path 
 /// @return 
-FatEntry::DirEntry* FatEntry::SearchPath(const char* path)
+FatEntry::DirEntry* FatEntry::SearchPath(const char* path, int forward)
 {
 	Regex regex;
 	regex.Split(path, '/');
 	char** dirNames = regex.ToArray();
-	int8_t dirIndex = regex.Size();
+	int8_t dirIndex = regex.Size() - forward;
 	
 	DirEntry* entry = NULL;
 
