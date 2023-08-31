@@ -240,7 +240,8 @@ protected:
 		uint32_t totalSectors;
 		uint32_t countOfClusters;
 
-		uint32_t endOfFatSector;
+		uint32_t startOfFatSector;
+		uint32_t endedOfFatSector;
 
 		uint32_t rootClust;
 		uint32_t firstRootSector;

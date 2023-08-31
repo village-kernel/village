@@ -89,8 +89,9 @@ int FatOpts::CheckFS()
 		else
 			info->totalSectors = dbr->bpb.totSec32;
 
-		//Calc the sector number of end of FAT
-		info->endOfFatSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize) - 1;
+		//Calc the sector number of start/ended of FAT
+		info->startOfFatSector = dbr->bpb.rsvdSecCnt;
+		info->endedOfFatSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize) - 1;
 
 		//Calc fat12/16 root dir sector
 		info->firstRootSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize);

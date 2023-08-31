@@ -74,6 +74,7 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 	uint32_t fatOffset = 0;
 	uint32_t fatMaxOffset = 0;
 	uint32_t fatClust = clust;
+	bool isAllocMode = (clust < 2) ? true : false;
 
 	if (_FAT16 == info->fatType)
 	{
@@ -92,18 +93,20 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 	uint32_t nextFatEntOffset = thisFatEntOffset;
 
 	char* secBuff = new char[dbr->bpb.bytesPerSec]();
-	
-	ReadOneSector(secBuff, nextFatSecNum);
 
-	while (0 != clust)
+	//Read sector buff
+	ReadOneSector(secBuff, thisFatSecNum);
+
+	//Search next fat clust
+	do
 	{
 		if (++nextFatEntOffset >= fatMaxOffset)
 		{
 			nextFatEntOffset = 0;
 
-			if (++nextFatSecNum <= info->endOfFatSector)
+			if (nextFatSecNum <= info->endedOfFatSector)
 			{
-				ReadOneSector(secBuff, nextFatSecNum);
+				ReadOneSector(secBuff, nextFatSecNum++);
 			}
 			else
 			{
@@ -119,12 +122,18 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 
 		fatClust++;
 	}
+	while (0 != clust);
 
+	//Set fat clust list table
 	if (_FAT16 == info->fatType)
 	{
 		if (nextFatSecNum == thisFatSecNum)
 		{
-			*((uint16_t*)&secBuff[thisFatEntOffset]) = fatClust;
+			if (false == isAllocMode)
+			{
+				*((uint16_t*)&secBuff[thisFatEntOffset]) = fatClust;
+			}
+			
 			*((uint16_t*)&secBuff[nextFatEntOffset]) = fat16_eoc_flag;
 			WriteOneSector(secBuff, nextFatSecNum);
 		}
@@ -133,17 +142,24 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 			*((uint16_t*)&secBuff[nextFatEntOffset]) = fat16_eoc_flag;
 			WriteOneSector(secBuff, nextFatSecNum);
 
-			ReadOneSector(secBuff, thisFatSecNum);
-			*((uint16_t*)&secBuff[thisFatEntOffset]) = fatClust;
-			WriteOneSector(secBuff, thisFatSecNum);
+			if (false == isAllocMode)
+			{
+				ReadOneSector(secBuff, thisFatSecNum);
+				*((uint16_t*)&secBuff[thisFatEntOffset]) = fatClust;
+				WriteOneSector(secBuff, thisFatSecNum);
+			}
 		}
 	}
 	else if (_FAT32 == info->fatType)
 	{
 		if (nextFatSecNum == thisFatSecNum)
 		{
-			*((uint32_t*)&secBuff[thisFatEntOffset]) &= 0xf0000000;
-			*((uint32_t*)&secBuff[thisFatEntOffset]) |= fatClust;
+			if (false == isAllocMode)
+			{
+				*((uint32_t*)&secBuff[thisFatEntOffset]) &= 0xf0000000;
+				*((uint32_t*)&secBuff[thisFatEntOffset]) |= fatClust;
+			}
+
 			*((uint32_t*)&secBuff[nextFatEntOffset]) &= 0xf0000000;
 			*((uint32_t*)&secBuff[nextFatEntOffset]) |= fat32_eoc_flag;
 			WriteOneSector(secBuff, nextFatSecNum);
@@ -153,10 +169,117 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 			*((uint32_t*)&secBuff[nextFatEntOffset]) &= 0xf0000000;
 			*((uint32_t*)&secBuff[nextFatEntOffset]) |= fat32_eoc_flag;
 			WriteOneSector(secBuff, nextFatSecNum);
+			
+			if (false == isAllocMode)
+			{
+				ReadOneSector(secBuff, thisFatSecNum);
+				*((uint32_t*)&secBuff[thisFatEntOffset]) &= 0xf0000000;
+				*((uint32_t*)&secBuff[thisFatEntOffset]) |= fatClust;
+				WriteOneSector(secBuff, thisFatSecNum);
+			}
+		}
+	}
+
+	delete[] secBuff;
+
+	return fatClust;
+}
+
+
+/// @brief Clear prev cluster
+/// @param clust 
+/// @return 
+uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
+{
+	uint32_t fatOffset = 0;
+	uint32_t fatMaxOffset = 0;
+	uint32_t fatClust = clust;
+
+	if (_FAT16 == info->fatType)
+	{
+		fatOffset = clust * 2;
+		fatMaxOffset = dbr->bpb.bytesPerSec / 2;
+	}	
+	else if (_FAT32 == info->fatType)
+	{
+		fatOffset = clust * 4;
+		fatMaxOffset = dbr->bpb.bytesPerSec / 4;
+	}
+
+	uint32_t thisFatSecNum = dbr->bpb.rsvdSecCnt + (fatOffset / dbr->bpb.bytesPerSec);
+	uint32_t thisFatEntOffset = fatOffset % dbr->bpb.bytesPerSec;
+	uint32_t prevFatSecNum = thisFatSecNum;
+	uint32_t prevFatEntOffset = thisFatEntOffset;
+
+	char* secBuff = new char[dbr->bpb.bytesPerSec]();
+
+	//Read sector buff
+	ReadOneSector(secBuff, thisFatSecNum);
+
+	//Search prev fat clust
+	do
+	{
+		if (--prevFatEntOffset <= 0)
+		{
+			prevFatEntOffset = fatMaxOffset;
+
+			if (prevFatSecNum >= info->startOfFatSector)
+			{
+				ReadOneSector(secBuff, prevFatSecNum--);
+			}
+			else
+			{
+				delete[] secBuff;
+				return 0;
+			}
+		}
+		
+		if (_FAT16 == info->fatType)
+			fatClust = *((uint16_t*)&secBuff[prevFatEntOffset]);
+		else if (_FAT32 == info->fatType)
+			fatClust = (*((uint32_t*)&secBuff[prevFatEntOffset])) & 0x0fffffff;
+	}
+	while (fatClust != clust);
+
+	//Set fat clust list table
+	if (_FAT16 == info->fatType)
+	{
+		if (prevFatSecNum == thisFatSecNum)
+		{
+			*((uint16_t*)&secBuff[thisFatEntOffset]) = 0;
+			*((uint16_t*)&secBuff[prevFatEntOffset]) = fat16_eoc_flag;
+			WriteOneSector(secBuff, prevFatSecNum);
+		}
+		else
+		{
+			*((uint16_t*)&secBuff[prevFatEntOffset]) = fat16_eoc_flag;
+			WriteOneSector(secBuff, prevFatSecNum);
 
 			ReadOneSector(secBuff, thisFatSecNum);
+			*((uint16_t*)&secBuff[thisFatEntOffset]) = 0;
+			WriteOneSector(secBuff, thisFatSecNum);
+		}
+	}
+	else if (_FAT32 == info->fatType)
+	{
+		if (prevFatSecNum == thisFatSecNum)
+		{
 			*((uint32_t*)&secBuff[thisFatEntOffset]) &= 0xf0000000;
-			*((uint32_t*)&secBuff[thisFatEntOffset]) |= fatClust;
+			*((uint32_t*)&secBuff[thisFatEntOffset]) |= 0;
+
+			*((uint32_t*)&secBuff[prevFatEntOffset]) &= 0xf0000000;
+			*((uint32_t*)&secBuff[prevFatEntOffset]) |= fat32_eoc_flag;
+			WriteOneSector(secBuff, prevFatSecNum);
+		}
+		else
+		{
+			*((uint32_t*)&secBuff[prevFatEntOffset]) &= 0xf0000000;
+			*((uint32_t*)&secBuff[prevFatEntOffset]) |= fat32_eoc_flag;
+			WriteOneSector(secBuff, prevFatSecNum);
+			
+			ReadOneSector(secBuff, thisFatSecNum);
+			*((uint32_t*)&secBuff[thisFatEntOffset]) &= 0xf0000000;
+			*((uint32_t*)&secBuff[thisFatEntOffset]) |= 0;
 			WriteOneSector(secBuff, thisFatSecNum);
 		}
 	}
@@ -276,7 +399,7 @@ uint32_t FatDisk::ReadCluster(char* data, uint32_t clustSize, uint32_t clust)
 	return clustSize;
 }
 
-
+ 
 /// @brief Write one sector
 /// @param data 
 /// @param sector 
@@ -334,4 +457,34 @@ uint32_t FatDisk::WriteCluster(char* data, uint32_t clustSize, uint32_t clust)
 	}
 
 	return clustSize;
+}
+
+
+/// @brief Alloc cluster
+/// @param clustSize 
+/// @return clust
+uint32_t FatDisk::AllocCluster(uint32_t clustSize)
+{
+	uint32_t clust = 0;
+	for (uint32_t i = 0; i < clustSize; i++)
+	{
+		clust = SetNextCluster(clust);
+		if (0 == clust) return 0;
+	}
+	return clust;
+}
+
+
+/// @brief Free cluster
+/// @param clustSize 
+/// @param clust 
+/// @return 
+uint32_t FatDisk::FreeCluster(uint32_t clustSize, uint32_t clust)
+{
+	for (uint32_t i = 0; i < clustSize; i++)
+	{
+		clust = ClearPrevCluster(clust);
+		if (0 == clust) return 0;
+	}
+	return clust;
 }
