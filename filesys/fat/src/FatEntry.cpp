@@ -144,7 +144,8 @@ FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
 
 		for (index = 0; index < info->entriesPerSec; index++)
 		{
-			if (ents[index].ldir.ord != dir_free_flag)
+			if ((ents[index].ldir.ord != dir_free_flag) &&
+				(ents[index].ldir.ord != 0))
 			{
 				char* dirname = fatName->GetDirName(data);
 
@@ -189,7 +190,8 @@ FatEntry::DirData* FatEntry::OpenDir(DirEntry* entry)
 
 		for (index = 0; index < info->entriesPerSec; index++)
 		{
-			if (ents[index].ldir.ord != dir_free_flag)
+			if ((ents[index].ldir.ord != dir_free_flag) &&
+				(ents[index].ldir.ord != 0))
 			{
 				char* dirname = fatName->GetDirName(data);
 
