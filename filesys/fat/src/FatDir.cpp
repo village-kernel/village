@@ -5,7 +5,26 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatDir.h"
+#include "FatDisk.h"
 #include "FatEntry.h"
+
+
+/// @brief Create dir
+/// @param path 
+/// @return 
+FatDir::DirData* FatDir::Create(const char* path)
+{
+	DirEntry* dir = fatEntry->SearchPath(path, 1);
+	
+	if (NULL == dir) return NULL;
+	
+	if (fatEntry->IsDirectory(dir))
+	{
+		return fatEntry->CreateDir(dir, fatEntry->NotDir(path));
+	}
+
+	return NULL;
+}
 
 
 /// @brief Open dir
@@ -15,7 +34,13 @@ FatDir::DirData* FatDir::Open(const char* path, int mode)
 {
 	DirEntry* dir = fatEntry->SearchPath(path);
 	
-	if (NULL == dir) return NULL;
+	if (NULL == dir)
+	{
+		if ((mode & _CreateNew) == _CreateNew)
+			return Create(path);
+		else
+			return NULL;
+	}
 	
 	if (fatEntry->IsDirectory(dir))
 	{
@@ -23,6 +48,7 @@ FatDir::DirData* FatDir::Open(const char* path, int mode)
 		found->path = (char*)path;
 		return found;
 	}
+
 	return NULL;
 }
 

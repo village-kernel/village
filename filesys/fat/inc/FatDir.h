@@ -13,6 +13,9 @@
 /// @brief FatDir
 class FatDir : public FatObjs
 {
+private:
+	//Methods
+	DirData* Create(const char* path);
 public:
 	//Methods
 	DirData* Open(const char* path, int mode);
