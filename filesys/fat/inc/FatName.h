@@ -17,17 +17,16 @@ public:
 	//Methods
 	uint8_t ChkSum(char* name);
 
-	char* GetShortName(FATSDir* sdir);
-	int SetShortName(FATSDir* sdir, const char* name);
+	char* GetShortName(FATEnt* entry);
+	int SetShortName(FATEnt* entry, const char* name);
 
-	char* GetLongName(FATLDir* ldir, FATSDir* sdir);
-	int SetLongName(FATLDir* ldir, FATSDir* sdir, const char* name);
+	char* GetLongName(FATEnt* entires);
+	int SetLongName(FATEnt* entires, const char* name);
 
-	char* GetVolumeLabel(FATSDir* sdir);
-	int SetVolumeLabel(FATSDir* sdir, const char* name);
+	char* GetVolumeLabel(FATEnt* entry);
+	int SetVolumeLabel(FATEnt* entry, const char* name);
 
-	char* GetDirName(DirData* data);
-	int SetDirName(DirData* data, const char* name);
+	void GenNumName(FATEnt* entry, int num);
 };
 
 #endif //!__FAT_NAME_H__

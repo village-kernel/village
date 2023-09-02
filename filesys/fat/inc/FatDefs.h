@@ -170,13 +170,20 @@ protected:
 	struct FATLDir
 	{
 		uint8_t  ord;
-		char     name1[10];
+		uint16_t name1[5];
 		uint8_t  attr;
 		uint8_t  type;
 		uint8_t  chksum;
-		char     name2[12];
+		uint16_t name2[6];
 		uint16_t fstClustLO;
-		char     name3[4];
+		uint16_t name3[2];
+
+		void Fill()
+		{
+			memset((void*)name1, 0xff, 10);
+			memset((void*)name2, 0xff, 12);
+			memset((void*)name3, 0xff, 4);
+		}
 	} __attribute__((packed));
 
 	union FATEnt
@@ -208,17 +215,18 @@ protected:
 	struct DirData
 	{
 		List<DirEntry> dirs;
-		FATEnt*        ents;
-		char*          path;
 		uint32_t       size;
+		char*          path;
+
+		FATEnt*        ents;
 		uint32_t       index;
 		uint32_t       clust;
 		uint32_t       sector;
 		
 		DirData() :
-			ents(NULL),
-			path(NULL),
 			size(0),
+			path(NULL),
+			ents(NULL),
 			index(0),
 			clust(0),
 			sector(0)
@@ -229,6 +237,27 @@ protected:
 			dirs.Release();
 			delete[] ents;
 			delete[] path;
+		}
+
+		bool IsEmpty()
+		{
+			return !(ents || index || clust || sector);
+		}
+
+		void Clone(DirData* data)
+		{
+			this->ents   = data->ents;
+			this->index  = data->index;
+			this->clust  = data->clust;
+			this->sector = data->sector;
+		}
+
+		void Clear()
+		{
+			this->ents   = NULL;
+			this->index  = 0;
+			this->clust  = 0;
+			this->sector = 0;
 		}
 	};
 
@@ -307,8 +336,8 @@ protected:
 	//Static constants
 	static const uint16_t magic = 0xaa55;
 	static const uint8_t  dir_entry_size = 32;
-	static const uint8_t  long_name_size  = 25;
-	static const uint8_t  short_name_size = 13;
+	static const uint8_t  long_name_size  = 13;
+	static const uint8_t  short_name_size = 11;
 	static const uint8_t  volume_label_size = 11;
 	static const uint8_t  dir_seq_flag = 0x40;
 	static const uint8_t  dir_free_flag = 0xe5;
