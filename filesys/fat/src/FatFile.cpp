@@ -9,13 +9,41 @@
 #include "FatEntry.h"
 
 
+/// @brief Create file
+/// @param path 
+/// @return 
+FatFile::DirEntry* FatFile::Create(const char* path)
+{
+	DirEntry* dir = fatEntry->SearchPath(path, 1);
+	
+	if (NULL == dir) return NULL;
+	
+	if (fatEntry->IsDirectory(dir))
+	{
+		return fatEntry->CreateFile(dir, fatEntry->NotDir(path));
+	}
+
+	return NULL;
+}
+
+
 /// @brief Open
 /// @param name 
 /// @param mode 
 /// @return 
-FatDefs::DirEntry* FatFile::Open(const char* name, int mode)
+FatFile::DirEntry* FatFile::Open(const char* name, int mode)
 {
-	return fatEntry->SearchPath(name);
+	DirEntry* dir = fatEntry->SearchPath(name);
+
+	if (NULL == dir)
+	{
+		if ((mode & _CreateNew) == _CreateNew)
+		{
+			return Create(name);
+		}
+	}
+
+	return dir;
 }
 
 

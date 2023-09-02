@@ -13,6 +13,9 @@
 /// @brief FatFile
 class FatFile : public FatObjs
 {
+private:
+	//Methods
+	DirEntry* Create(const char* path);
 public:
 	//File Methods
 	DirEntry* Open(const char* name, int mode);
