@@ -11,16 +11,16 @@
 #include "Driver.h"
 
 /// @brief Disk
-class Disk : public Driver
+class DiskDrv : public Driver
 {
 private:
 	//Members
 	uint8_t drv;
 public: 
 	//Methods
-	Disk(uint8_t drv);
-	Disk();
-	~Disk();
+	DiskDrv(uint8_t drv);
+	DiskDrv();
+	~DiskDrv();
 	int Write(uint8_t* data, uint32_t count = 0, uint32_t blk = 0);
 	int Read(uint8_t* data, uint32_t count = 0, uint32_t blk = 0);
 };

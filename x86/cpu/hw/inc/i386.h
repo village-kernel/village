@@ -239,16 +239,48 @@ extern "C" {
 #define COM_MODEM_STATUS_DCD                 COM_MODEM_STATUS_DCD_Msk
 
 /* LBA disk difines */
-#define LBA_DISK                             0x1f0
-#define LBA_DISK_DATA                        (LBA_DISK + 0)
-#define LBA_DISK_ERR                         (LBA_DISK + 1)
-#define LBA_DISK_SECTOR_CNT                  (LBA_DISK + 2)
-#define LBA_DISK_SECTOR_0_7_BITS             (LBA_DISK + 3)
-#define LBA_DISK_SECTOR_8_15_BITS            (LBA_DISK + 4)
-#define LBA_DISK_SECTOR_16_23_BITS           (LBA_DISK + 5)
-#define LBA_DISK_SECTOR_24_27_BITS           (LBA_DISK + 6)
-#define LBA_DISK_CMD                         (LBA_DISK + 7)
-#define LBA_DISK_STATUS                      (LBA_DISK + 7)
+#define ATA                                  0x1f0
+#define ATA_DATA                             (ATA + 0)
+#define ATA_ERR                              (ATA + 1)
+#define ATA_SECTOR_CNT                       (ATA + 2)
+#define ATA_SECTOR_0_7_BITS                  (ATA + 3)
+#define ATA_SECTOR_8_15_BITS                 (ATA + 4)
+#define ATA_SECTOR_16_23_BITS                (ATA + 5)
+#define ATA_MODE                             (ATA + 6)
+#define ATA_CMD                              (ATA + 7)
+#define ATA_STATUS                           (ATA + 7)
+
+#define ATA_MODE_LBA                         (0xE0)
+#define ATA_MODE_CHS                         (0xA0)
+#define ATA_MODE_DRV_Pos                     (4)
+
+#define ATA_CMD_READ                         (0x20)
+#define ATA_CMD_WRITE                        (0x30)
+
+#define ATA_STATUS_ERR_Pos                   (0)
+#define ATA_STATUS_ERR_Msk                   (0x1 << ATA_STATUS_ERR_Pos)
+#define ATA_STATUS_ERR                       ATA_STATUS_ERR_Msk
+#define ATA_STATUS_IDX_Pos                   (1)
+#define ATA_STATUS_IDX_Msk                   (0x1 << ATA_STATUS_IDX_Pos)
+#define ATA_STATUS_IDX                       ATA_STATUS_IDX_Msk
+#define ATA_STATUS_CORR_Pos                  (2)
+#define ATA_STATUS_CORR_Msk                  (0x1 << ATA_STATUS_CORR_Pos)
+#define ATA_STATUS_CORR                      ATA_STATUS_CORR_Msk
+#define ATA_STATUS_DRQ_Pos                   (3)
+#define ATA_STATUS_DRQ_Msk                   (0x1 << ATA_STATUS_DRQ_Pos)
+#define ATA_STATUS_DRQ                       ATA_STATUS_DRQ_Msk
+#define ATA_STATUS_SRV_Pos                   (4)
+#define ATA_STATUS_SRV_Msk                   (0x1 << ATA_STATUS_SRV_Pos)
+#define ATA_STATUS_SRV                       ATA_STATUS_SRV_Msk
+#define ATA_STATUS_DF_Pos                    (5)
+#define ATA_STATUS_DF_Msk                    (0x1 << ATA_STATUS_DF_Pos)
+#define ATA_STATUS_DF                        ATA_STATUS_DF_Msk
+#define ATA_STATUS_RDY_Pos                   (6)
+#define ATA_STATUS_RDY_Msk                   (0x1 << ATA_STATUS_RDY_Pos)
+#define ATA_STATUS_RDY                       ATA_STATUS_RDY_Msk
+#define ATA_STATUS_BSY_Pos                   (7)
+#define ATA_STATUS_BSY_Msk                   (0x1 << ATA_STATUS_BSY_Pos)
+#define ATA_STATUS_BSY                       ATA_STATUS_BSY_Msk
 
 /* IRQ numbers */
 #define IRQ_Division_By_Zero                 0

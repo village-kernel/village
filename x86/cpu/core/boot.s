@@ -70,7 +70,7 @@ ReadFromDisk:
 	pusha
 
 	movw $0x1f2, %dx       # 0x1f2
-	movb $0,     %al       # read one sector
+	movb $1,     %al       # read one sector
 	out  %al,    %dx
 
 	inc  %dx               # 0x1f3
