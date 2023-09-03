@@ -23,8 +23,8 @@ class FatOpts : public FileOpts, FatObjs
 {
 private:
 	//Lists
-	List<DirEntry> files;
-	List<DirData>  dirs;
+	List<DirEntry>    files;
+	List<DirEntries>  dirs;
 
 	//Methods
 	int ReadDBR();

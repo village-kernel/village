@@ -12,7 +12,7 @@
 /// @brief Create dir
 /// @param path 
 /// @return 
-FatDir::DirData* FatDir::Create(const char* path)
+FatDir::DirEntries* FatDir::Create(const char* path)
 {
 	DirEntry* dir = fatEntry->SearchPath(path, 1);
 	
@@ -20,7 +20,9 @@ FatDir::DirData* FatDir::Create(const char* path)
 	
 	if (dir->body.IsDirectory())
 	{
-		return fatEntry->CreateDir(dir, fatEntry->NotDir(path));
+		DirEntries* found = fatEntry->CreateDir(dir, fatEntry->NotDir(path));
+		found->path = (char*)path;
+		return found;
 	}
 
 	return NULL;
@@ -30,7 +32,7 @@ FatDir::DirData* FatDir::Create(const char* path)
 /// @brief Open dir
 /// @param dirName 
 /// @return 
-FatDir::DirData* FatDir::Open(const char* path, int mode)
+FatDir::DirEntries* FatDir::Open(const char* path, int mode)
 {
 	DirEntry* dir = fatEntry->SearchPath(path);
 	
@@ -44,7 +46,7 @@ FatDir::DirData* FatDir::Open(const char* path, int mode)
 	
 	if (dir->body.IsDirectory())
 	{
-		DirData* found = fatEntry->OpenDir(dir);
+		DirEntries* found = fatEntry->OpenDir(dir);
 		found->path = (char*)path;
 		return found;
 	}
@@ -56,7 +58,7 @@ FatDir::DirData* FatDir::Open(const char* path, int mode)
 /// @brief Read dir
 /// @param data 
 /// @return 
-FatDir::DirEntry* FatDir::Read(DirData* data)
+FatDir::DirEntry* FatDir::Read(DirEntries* data)
 {
 	if (false == data->dirs.IsEnd())
 	{
@@ -71,7 +73,7 @@ FatDir::DirEntry* FatDir::Read(DirData* data)
 /// @brief Size dir
 /// @param data 
 /// @return 
-int FatDir::Size(DirData* data)
+int FatDir::Size(DirEntries* data)
 {
 	return data->dirs.GetSize();
 }
@@ -79,7 +81,7 @@ int FatDir::Size(DirData* data)
 
 /// @brief Close dir
 /// @param entry 
-void FatDir::Close(DirData* data)
+void FatDir::Close(DirEntries* data)
 {
 	delete data;
 }

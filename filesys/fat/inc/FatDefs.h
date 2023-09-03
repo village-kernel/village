@@ -166,27 +166,12 @@ protected:
 		uint16_t fstClustLO;
 		uint32_t fileSize;
 
-		FATSDir() { memset((void*)this, 0, 32); }
+		FATSDir()          { memset((void*)this, 0, 32); }
+		bool IsDirectory() { return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY); }
+		bool IsVolume()    { return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID); }
+		bool IsFile()      { return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE     ); }
+		bool IsHidden()    { return ((attr &  _ATTR_HIDDEN                      ) == _ATTR_HIDDEN   ); }
 
-		bool IsHidden()
-		{
-			return ((attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
-		}
-		
-		bool IsDirectory()
-		{
-			return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
-		}
-
-		bool IsVolume()
-		{
-			return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
-		}
-
-		bool IsFile()
-		{
-			return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
-		}
 	} __attribute__((packed));
 
 	struct FATLDir
@@ -234,18 +219,31 @@ protected:
 		}
 	} __attribute__((packed));
 
-	struct DirData
+	struct DirEntries
 	{
 		List<DirEntry> dirs;
 		char*          path;
 
+		DirEntries() :
+			path(NULL)
+		{}
+
+		~DirEntries()
+		{
+			dirs.Release();
+			delete[] path;
+		}
+	};
+
+	struct DirData
+	{
+		FATSDir        body;
 		FATEnt*        ents;
 		uint32_t       index;
 		uint32_t       clust;
 		uint32_t       sector;
 		
 		DirData() :
-			path(NULL),
 			ents(NULL),
 			index(0),
 			clust(0),
@@ -254,9 +252,7 @@ protected:
 		
 		~DirData()
 		{
-			dirs.Release();
 			delete[] ents;
-			delete[] path;
 		}
 
 		bool IsEmpty()

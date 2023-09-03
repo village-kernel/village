@@ -236,7 +236,7 @@ void FatOpts::Close(int fd)
 /// @return 
 int FatOpts::OpenDir(const char* name, int mode)
 {
-	DirData* data = fatDir->Open(name, mode);
+	DirEntries* data = fatDir->Open(name, mode);
 	if (NULL != data)
 	{
 		return dirs.Add(data);
@@ -276,7 +276,7 @@ FileAttr FatOpts::GetFileAttr(DirEntry* entry)
 /// @return 
 int FatOpts::ReadDir(int fd, FileDir* dirs, int size, int offset)
 {
-	DirData* data = this->dirs.GetItem(fd);
+	DirEntries* data = this->dirs.GetItem(fd);
 	
 	if (NULL != data)
 	{
@@ -306,7 +306,7 @@ int FatOpts::ReadDir(int fd, FileDir* dirs, int size, int offset)
 /// @return 
 int FatOpts::SizeDir(int fd)
 {
-	DirData* data = dirs.GetItem(fd);
+	DirEntries* data = dirs.GetItem(fd);
 	if (NULL != data)
 	{
 		return fatDir->Size(data);
@@ -320,7 +320,7 @@ int FatOpts::SizeDir(int fd)
 /// @return 
 void FatOpts::CloseDir(int fd)
 {
-	DirData* data = dirs.GetItem(fd);
+	DirEntries* data = dirs.GetItem(fd);
 	if (NULL != data)
 	{
 		dirs.Remove(data, fd);

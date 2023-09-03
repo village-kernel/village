@@ -15,10 +15,10 @@ class FatEntry : public FatObjs
 {
 private:
 	//Entry Methods
-	int CheckConflict(DirData* data, FATEnt* entry);
+	int CheckConflict(DirEntries* entries, FATEnt* entry);
 	int SearchSpace(DirData* data, uint8_t size);
 	int WirteEntires(DirData* data, FATEnt* entries, uint8_t size);
-	int SetEntryName(DirData* data, const char* name, int attr = 0);
+	int SetEntryName(DirData* data, DirEntries* entries, const char* name, int attr = 0);
 	char* GetEntryName(DirData* data);
 public:
 	//Directory Methods
@@ -26,8 +26,8 @@ public:
 	DirEntry* SearchPath(const char* path, int forward = 0);
 	DirEntry* SearchDir(DirEntry* entry, const char* name);
 	DirEntry* CreateFile(DirEntry* entry, const char* name);
-	DirData* CreateDir(DirEntry* entry, const char* name);
-	DirData* OpenDir(DirEntry* entry);
+	DirEntries* CreateDir(DirEntry* entry, const char* name);
+	DirEntries* OpenDir(DirEntry* entry);
 
 	//Volume Methods
 	char* GetVolumeLabel();

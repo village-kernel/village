@@ -25,10 +25,10 @@ char* FatEntry::NotDir(const char* path)
 /// @param data 
 /// @param sdir 
 /// @return 
-int FatEntry::CheckConflict(DirData* data, FATEnt* entry)
+int FatEntry::CheckConflict(DirEntries* entries, FATEnt* entry)
 {
 	uint8_t count = 0;
-	for (DirEntry* dir = data->dirs.Begin(); !data->dirs.IsEnd(); dir = data->dirs.Next())
+	for (DirEntry* dir = entries->dirs.Begin(); !entries->dirs.IsEnd(); dir = entries->dirs.Next())
 	{
 		for (uint8_t i = 0; i < 11; i++)
 		{
@@ -38,7 +38,7 @@ int FatEntry::CheckConflict(DirData* data, FATEnt* entry)
 			}
 		}
 	}
-	return (data->dirs.GetSize() == count) ? _OK : _ERR;
+	return (entries->dirs.GetSize() == count) ? _OK : _ERR;
 }
 
 
@@ -128,7 +128,7 @@ int FatEntry::WirteEntires(DirData* data, FATEnt* entries, uint8_t size)
 /// @brief Set entry name
 /// @param data 
 /// @param name 
-int FatEntry::SetEntryName(DirData* data, const char* name, int attr)
+int FatEntry::SetEntryName(DirData* data, DirEntries* entries, const char* name, int attr)
 {
 	uint8_t namelen = strlen(name);
 	uint8_t dotpos = namelen;
@@ -156,7 +156,7 @@ int FatEntry::SetEntryName(DirData* data, const char* name, int attr)
 		for (uint8_t i = 1; i < 100; i++)
 		{
 			fatName->GenNumName(ents + num, i);
-			if (_OK == CheckConflict(data, ents + num)) break;
+			if (_OK == CheckConflict(entries, ents + num)) break;
 		}
 
 		ents[0].lfn.ord = num + dir_seq_flag;
@@ -318,18 +318,19 @@ FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
 FatEntry::DirEntry* FatEntry::CreateFile(DirEntry* entry, const char* name)
 {
 	//Open parent directory
-	DirData*   pare   = OpenDir(entry);
-	FATEnt*&   ents   = pare->ents;
-	uint32_t&  index  = pare->index;
-	uint32_t&  clust  = pare->clust;
-	uint32_t&  sector = pare->sector;
-	int        attr   = _ATTR_FILE;
+	DirEntries* pare   = OpenDir(entry);
+	DirData*    data   = new DirData();
+	FATEnt*&    ents   = data->ents;
+	uint32_t&   index  = data->index;
+	uint32_t&   clust  = data->clust;
+	uint32_t&   sector = data->sector;
+	int         attr   = _ATTR_FILE;
 
 	//Calculate the dir cluster and sector
 	fatDisk->CalcFirstSector(entry, clust, sector);
 
 	//Set entry name
-	if (_OK == SetEntryName(pare, name, attr))
+	if (_OK == SetEntryName(data, pare, name, attr))
 	{
 		return new DirEntry(ents[index].sfn, (char*)name);
 	}
@@ -342,19 +343,20 @@ FatEntry::DirEntry* FatEntry::CreateFile(DirEntry* entry, const char* name)
 /// @param entry 
 /// @param name 
 /// @return 
-FatEntry::DirData* FatEntry::CreateDir(DirEntry* entry, const char* name)
+FatEntry::DirEntries* FatEntry::CreateDir(DirEntry* entry, const char* name)
 {
 	//Open parent directory
-	DirData*   pare   = OpenDir(entry);
-	uint32_t&  clust  = pare->clust;
-	uint32_t&  sector = pare->sector;
-	int        attr   = _ATTR_DIRECTORY;
+	DirEntries* pare   = OpenDir(entry);
+	DirData*    data   = new DirData();
+	uint32_t&   clust  = data->clust;
+	uint32_t&   sector = data->sector;
+	int         attr   = _ATTR_DIRECTORY;
 
 	//Calculate the dir cluster and sector
 	fatDisk->CalcFirstSector(entry, clust, sector);
 
 	//Set entry name
-	if (_OK == SetEntryName(pare, name, attr))
+	if (_OK == SetEntryName(data, pare, name, attr))
 	{
 		
 	}
@@ -366,13 +368,14 @@ FatEntry::DirData* FatEntry::CreateDir(DirEntry* entry, const char* name)
 /// @brief Open dir
 /// @param entry 
 /// @return 
-FatEntry::DirData* FatEntry::OpenDir(DirEntry* entry)
+FatEntry::DirEntries* FatEntry::OpenDir(DirEntry* entry)
 {
-	DirData*   data   = new DirData();
-	FATEnt*&   ents   = data->ents;
-	uint32_t&  index  = data->index;
-	uint32_t&  clust  = data->clust;
-	uint32_t&  sector = data->sector;
+	DirEntries* entries = new DirEntries();
+	DirData*    data    = new DirData();
+	FATEnt*&    ents    = data->ents;
+	uint32_t&   index   = data->index;
+	uint32_t&   clust   = data->clust;
+	uint32_t&   sector  = data->sector;
 
 	//Allocate the dir entires space
 	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
@@ -396,7 +399,7 @@ FatEntry::DirData* FatEntry::OpenDir(DirEntry* entry)
 				{
 					if (ents[index].sfn.IsFile() || ents[index].sfn.IsDirectory())
 					{
-						data->dirs.Add(new DirEntry(ents[index].sfn, dirname));
+						entries->dirs.Add(new DirEntry(ents[index].sfn, dirname));
 					}
 				}
 			}
@@ -406,9 +409,10 @@ FatEntry::DirData* FatEntry::OpenDir(DirEntry* entry)
 	}
 
 	//Set dir begin
-	data->dirs.Begin();
+	entries->dirs.Begin();
 
-	return data;
+	delete data;
+	return entries;
 }
 
 

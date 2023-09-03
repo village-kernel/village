@@ -15,13 +15,13 @@ class FatDir : public FatObjs
 {
 private:
 	//Methods
-	DirData* Create(const char* path);
+	DirEntries* Create(const char* path);
 public:
 	//Methods
-	DirData* Open(const char* path, int mode);
-	DirEntry* Read(DirData* data);
-	int Size(DirData* data);
-	void Close(DirData* data);
+	DirEntries* Open(const char* path, int mode);
+	DirEntry* Read(DirEntries* data);
+	int Size(DirEntries* data);
+	void Close(DirEntries* data);
 };
 
 #endif //!__FAT_DIR_H__
