@@ -38,7 +38,23 @@ Exception& exception = Exception::Instance();
 /// @brief Exception initialize
 void Exception::Initialize()
 {
+	interrupt.AppendISR(IRQ_ATA_Channel1, (Method)&Exception::ATAChannel1, this);
+	interrupt.AppendISR(IRQ_ATA_Channel2, (Method)&Exception::ATAChannel2, this);
 	interrupt.AppendISR(IRQ_General_Protection_Fault, (Method)&Exception::GerneralFault, this);
+}
+
+
+/// @brief ATA channel isr
+void Exception::ATAChannel1()
+{
+
+}
+
+
+/// @brief ATA channel isr
+void Exception::ATAChannel2()
+{
+
 }
 
 

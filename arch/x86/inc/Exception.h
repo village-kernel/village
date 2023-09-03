@@ -15,6 +15,8 @@ class Exception : public Class
 {
 private:
 	//Methods
+	void ATAChannel1();
+	void ATAChannel2();
 	void GerneralFault();
 public:
 	//Methods
