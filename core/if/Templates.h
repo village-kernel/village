@@ -78,13 +78,15 @@ private:
 	Node* tail;
 	Node* iterator;
 	int   nidCounter;
+	int   size;
 public:
 	/// @brief Constructor
 	List() :
 		head(NULL),
 		tail(NULL),
 		iterator(NULL),
-		nidCounter(0)
+		nidCounter(0),
+		size(0)
 	{}
 
 	/// @brief List begin node
@@ -167,6 +169,13 @@ public:
 		return (NULL != iterator) ? iterator->name : (char*)"None";
 	}
 
+	/// @brief List get size
+	/// @return size
+	int GetSize()
+	{
+		return size;
+	}
+
 	/// @brief Add object node to list
 	/// @param obj object pointer
 	/// @return result
@@ -186,6 +195,8 @@ public:
 			tail->next->prev = tail;
 			tail = tail->next;
 		}
+
+		if (NULL != tail) size++;
 
 		return (NULL != tail) ? tail->nid : -1;
 	}
@@ -249,6 +260,8 @@ public:
 
 		nidCounter = tail->nid;
 
+		if (NULL != temp) size++;
+
 		return (NULL != temp) ? temp->nid : -1;
 	}
 
@@ -311,6 +324,8 @@ public:
 
 		nidCounter = tail->nid;
 
+		if (NULL != temp) size++;
+
 		return (NULL != temp) ? temp->nid : -1;
 	}
 
@@ -336,6 +351,7 @@ public:
 				else
 					tail = node->prev;
 
+				size--;
 				delete node;
 				delete obj;
 				return _OK;
@@ -368,6 +384,7 @@ public:
 				else
 					tail = node->prev;
 
+				size--;
 				delete node;
 				delete obj;
 				return _OK;
