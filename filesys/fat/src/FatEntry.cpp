@@ -15,7 +15,7 @@
 /// @return 
 inline bool FatEntry::IsHidden(FATEnt* entry)
 {
-	return ((entry->sdir.attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+	return ((entry->sfn.attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
 }
 
 
@@ -33,7 +33,7 @@ bool FatEntry::IsHidden(DirEntry* entry)
 /// @return 
 inline bool FatEntry::IsDirectory(FATEnt* entry)
 {
-	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
+	return ((entry->sfn.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
 }
 
 
@@ -51,7 +51,7 @@ bool FatEntry::IsDirectory(DirEntry* entry)
 /// @return 
 inline bool FatEntry::IsVolume(FATEnt* entry)
 {
-	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
+	return ((entry->sfn.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
 }
 
 
@@ -69,7 +69,7 @@ bool FatEntry::IsVolume(DirEntry* entry)
 /// @return 
 inline bool FatEntry::IsFile(FATEnt* entry)
 {
-	return ((entry->sdir.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
+	return ((entry->sfn.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
 }
 
 
@@ -104,7 +104,7 @@ int FatEntry::CheckConflict(DirData* data, FATEnt* entry)
 	{
 		for (uint8_t i = 0; i < 11; i++)
 		{
-			if (dir->dir.sdir.name[i] != entry->sdir.name[i])
+			if (dir->dir.sfn.name[i] != entry->sfn.name[i])
 			{
 				count++; break;
 			}
@@ -134,8 +134,8 @@ int FatEntry::SearchSpace(DirData* data, uint8_t size)
 
 		for (index = 0; index < info->entriesPerSec; index++)
 		{
-			if ((ents[index].ldir.ord == dir_free_flag) ||
-				(ents[index].ldir.ord == 0))
+			if ((ents[index].lfn.ord == dir_free_flag) ||
+				(ents[index].lfn.ord == 0))
 			{
 				if (record.IsEmpty())
 				{
@@ -213,28 +213,26 @@ int FatEntry::SetEntryName(DirData* data, const char* name, int attr)
 
 	//Alloc entires space
 	FATEnt* ents = new FATEnt[num + 1]();
-	FATEnt* sfn  = ents + num;
-	FATEnt* lfns = ents;
 	
 	//Set entry attr
-	sfn->sdir.attr = attr;
+	ents[num].sfn.attr = attr;
 
 	//Set short name
-	fatName->SetShortName(sfn, name);
+	fatName->SetShortName(&ents[num], name);
 
 	//Set long name
 	if (isNameLoss)
 	{
-		sfn->sdir.NTRes |= _NS_LOSS;
+		ents[num].sfn.NTRes |= _NS_LOSS;
 
 		for (uint8_t i = 1; i < 100; i++)
 		{
-			fatName->GenNumName(sfn, i);
-			if (_OK == CheckConflict(data, sfn)) break;
+			fatName->GenNumName(ents + num, i);
+			if (_OK == CheckConflict(data, ents + num)) break;
 		}
 
-		lfns[0].ldir.ord = num + dir_seq_flag;
-		fatName->SetLongName(lfns, name);
+		ents[0].lfn.ord = num + dir_seq_flag;
+		fatName->SetLongName(ents, name);
 	}
 
 	//Put to disk
@@ -263,9 +261,9 @@ char* FatEntry::GetEntryName(DirData* data)
 	char*      name   = NULL;
 
 	//Get long name
-	if ((ents[index].ldir.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
+	if ((ents[index].lfn.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
 	{
-		uint8_t n = ents[index].ldir.ord - dir_seq_flag + 1;
+		uint8_t n = ents[index].lfn.ord - dir_seq_flag + 1;
 
 		FATEnt* entires = new FATEnt[n]();
 
@@ -321,7 +319,7 @@ FatEntry::DirEntry* FatEntry::SearchPath(const char* path, int forward)
 	if (dirIndex <= 1)
 	{
 		entry = new DirEntry();
-		entry->dir.sdir.attr = _ATTR_DIRECTORY;
+		entry->dir.sfn.attr = _ATTR_DIRECTORY;
 		entry->root = true;
 		entry->name = (char*)"/";
 		return entry;
@@ -363,8 +361,8 @@ FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
 
 		for (index = 0; index < info->entriesPerSec; index++)
 		{
-			if ((ents[index].ldir.ord != dir_free_flag) &&
-				(ents[index].ldir.ord != 0))
+			if ((ents[index].lfn.ord != dir_free_flag) &&
+				(ents[index].lfn.ord != 0))
 			{
 				char* dirname = GetEntryName(data);
 
@@ -420,8 +418,6 @@ FatEntry::DirData* FatEntry::CreateDir(DirEntry* entry, const char* name)
 {
 	//Open parent directory
 	DirData*   pare   = OpenDir(entry);
-	FATEnt*&   ents   = pare->ents;
-	uint32_t&  index  = pare->index;
 	uint32_t&  clust  = pare->clust;
 	uint32_t&  sector = pare->sector;
 	int        attr   = _ATTR_DIRECTORY;
@@ -463,8 +459,8 @@ FatEntry::DirData* FatEntry::OpenDir(DirEntry* entry)
 
 		for (index = 0; index < info->entriesPerSec; index++)
 		{
-			if ((ents[index].ldir.ord != dir_free_flag) &&
-				(ents[index].ldir.ord != 0))
+			if ((ents[index].lfn.ord != dir_free_flag) &&
+				(ents[index].lfn.ord != 0))
 			{
 				char* dirname = GetEntryName(data);
 

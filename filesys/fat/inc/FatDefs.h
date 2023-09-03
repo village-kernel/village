@@ -188,8 +188,8 @@ protected:
 
 	union FATEnt
 	{
-		FATLDir ldir;
-		FATSDir sdir;
+		FATLDir lfn;
+		FATSDir sfn;
 		FATEnt() { memset((void*)this, 0, 32); }
 	} __attribute__((packed));
 

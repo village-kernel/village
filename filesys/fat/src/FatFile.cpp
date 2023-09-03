@@ -55,12 +55,12 @@ FatFile::DirEntry* FatFile::Open(const char* name, int mode)
 int FatFile::Write(char* data, uint32_t size, DirEntry* entry)
 {
 	bool isDone = false;
-	uint32_t fileSize = entry->dir.sdir.fileSize;
+	uint32_t fileSize = entry->dir.sfn.fileSize;
 	uint32_t bytesPerSec = dbr->bpb.bytesPerSec;
 	uint32_t secPerClust = dbr->bpb.secPerClust;
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-	uint32_t fstCluster = fatDisk->MergeCluster(entry->dir.sdir.fstClustHI, entry->dir.sdir.fstClustLO);
+	uint32_t fstCluster = fatDisk->MergeCluster(entry->dir.sfn.fstClustHI, entry->dir.sfn.fstClustLO);
 
 	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
 	
@@ -80,12 +80,12 @@ int FatFile::Write(char* data, uint32_t size, DirEntry* entry)
 int FatFile::Read(char* data, uint32_t size, DirEntry* entry)
 {
 	bool isDone = false;
-	uint32_t fileSize = entry->dir.sdir.fileSize;
+	uint32_t fileSize = entry->dir.sfn.fileSize;
 	uint32_t bytesPerSec = dbr->bpb.bytesPerSec;
 	uint32_t secPerClust = dbr->bpb.secPerClust;
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-	uint32_t fstCluster = fatDisk->MergeCluster(entry->dir.sdir.fstClustHI, entry->dir.sdir.fstClustLO);
+	uint32_t fstCluster = fatDisk->MergeCluster(entry->dir.sfn.fstClustHI, entry->dir.sfn.fstClustLO);
 
 	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
 	
@@ -105,5 +105,5 @@ int FatFile::Read(char* data, uint32_t size, DirEntry* entry)
 /// @return 
 int FatFile::Size(DirEntry* entry)
 {
-	return entry->dir.sdir.fileSize;
+	return entry->dir.sfn.fileSize;
 }

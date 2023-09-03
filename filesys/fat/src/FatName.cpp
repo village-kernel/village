@@ -31,10 +31,10 @@ uint8_t FatName::ChkSum(char* name)
 char* FatName::GetShortName(FATEnt* entry)
 {
 	uint8_t pos = 0;
-	char*   name = entry->sdir.name;
+	char*   name = entry->sfn.name;
 	char*   dirName = new char[short_name_size + 2]();
-	bool    isBodyLowedCase = (entry->sdir.NTRes & _NS_BODY) == _NS_BODY;
-	bool    isExtLowedCase  = (entry->sdir.NTRes & _NS_EXT ) == _NS_EXT;
+	bool    isBodyLowedCase = (entry->sfn.NTRes & _NS_BODY) == _NS_BODY;
+	bool    isExtLowedCase  = (entry->sfn.NTRes & _NS_EXT ) == _NS_EXT;
 	
 	//8.3 name body
 	for (uint8_t i = 0; i < 8; i++)
@@ -78,7 +78,7 @@ char* FatName::GetShortName(FATEnt* entry)
 int FatName::SetShortName(FATEnt* entry, const char* name)
 {
 	uint8_t pos = 0;
-	char*   dirName = entry->sdir.name;
+	char*   dirName = entry->sfn.name;
 	bool    isBodyLowedCase = true;
 	bool    isExtLowedCase  = true;
 
@@ -122,8 +122,8 @@ int FatName::SetShortName(FATEnt* entry, const char* name)
 	}
 
 	//Set NTRes
-	if (isBodyLowedCase) entry->sdir.NTRes |= _NS_BODY;
-	if (isExtLowedCase)  entry->sdir.NTRes |= _NS_EXT;
+	if (isBodyLowedCase) entry->sfn.NTRes |= _NS_BODY;
+	if (isExtLowedCase)  entry->sfn.NTRes |= _NS_EXT;
 
 	return _OK;
 }
@@ -148,13 +148,13 @@ void FatName::GenNumName(FATEnt* entry, int num)
 	numstr[i] = '~';
 
 	uint8_t pos = 8;
-	while (' ' == entry->sdir.name[--pos] && pos);
+	while (' ' == entry->sfn.name[--pos] && pos);
 	if (pos) pos = pos - (7 - i);
 
 	uint8_t size = 8 - i;
 	for (uint8_t j = 0; j < size; j++)
 	{
-		entry->sdir.name[j + pos] = numstr[i++];
+		entry->sfn.name[j + pos] = numstr[i++];
 	}
 }
 
@@ -166,17 +166,17 @@ void FatName::GenNumName(FATEnt* entry, int num)
 char* FatName::GetLongName(FATEnt* entires)
 {
 	uint8_t pos = 0;
-	uint8_t n = entires[0].ldir.ord - dir_seq_flag;
-	uint8_t chksum = ChkSum(entires[n].sdir.name);
+	uint8_t n = entires[0].lfn.ord - dir_seq_flag;
+	uint8_t chksum = ChkSum(entires[n].sfn.name);
 	char* dirName = new char[long_name_size * n + 1]();
 	
 	//Loop for sequence of long directory entries
 	while (n--)
 	{
-		FATLDir* ldir = &entires[n].ldir;
+		FATLDir* lfn = &entires[n].lfn;
 
 		//Chksum
-		if (entires[n].ldir.chksum != chksum)
+		if (entires[n].lfn.chksum != chksum)
 		{
 			delete[] dirName;
 			return NULL;
@@ -185,9 +185,9 @@ char* FatName::GetLongName(FATEnt* entires)
 		//Part 1 of long name 
 		for (uint8_t i = 0; i < 5; i++)
 		{
-			if (0xffff != ldir->name1[i])
+			if (0xffff != lfn->name1[i])
 			{
-				dirName[pos++] = (char)ldir->name1[i];
+				dirName[pos++] = (char)lfn->name1[i];
 			}
 			else break;
 		}
@@ -195,9 +195,9 @@ char* FatName::GetLongName(FATEnt* entires)
 		//Part 2 of long name 
 		for (uint8_t i = 0; i < 6; i++)
 		{
-			if (0xffff != ldir->name2[i])
+			if (0xffff != lfn->name2[i])
 			{
-				dirName[pos++] = (char)ldir->name2[i];
+				dirName[pos++] = (char)lfn->name2[i];
 			}
 			else return dirName;
 		}
@@ -205,9 +205,9 @@ char* FatName::GetLongName(FATEnt* entires)
 		//Part 3 of long name
 		for (uint8_t i = 0; i < 2; i++)
 		{
-			if (0xffff != ldir->name3[i])
+			if (0xffff != lfn->name3[i])
 			{
-				dirName[pos++] = (char)ldir->name3[i];
+				dirName[pos++] = (char)lfn->name3[i];
 			}
 			else return dirName;
 		}
@@ -218,36 +218,36 @@ char* FatName::GetLongName(FATEnt* entires)
 
 
 /// @brief Set long name
-/// @param ldir 
+/// @param lfn 
 /// @param sdir 
 /// @param name 
 int FatName::SetLongName(FATEnt* entires, const char* name)
 {
 	uint8_t pos = 0;
-	uint8_t size = entires[0].ldir.ord - dir_seq_flag;
+	uint8_t size = entires[0].lfn.ord - dir_seq_flag;
 	uint8_t n = size;
-	uint8_t chksum = ChkSum(entires[n].sdir.name);
+	uint8_t chksum = ChkSum(entires[n].sfn.name);
 
 	//Loop for sequence of long directory entries
 	while (n--)
 	{
-		FATLDir* ldir = &entires[n].ldir;
+		FATLDir* lfn = &entires[n].lfn;
 
-		if (n) ldir->ord = size - n;
-		ldir->attr = _ATTR_LONG_NAME;
-		ldir->chksum = chksum;
-		ldir->Fill();
+		if (n) lfn->ord = size - n;
+		lfn->attr = _ATTR_LONG_NAME;
+		lfn->chksum = chksum;
+		lfn->Fill();
 
 		//Part 1 of long name 
 		for (uint8_t i = 0; i < 5; i++)
 		{
 			if ('\0' != name[pos])
 			{
-				ldir->name1[i] = name[pos++];
+				lfn->name1[i] = name[pos++];
 			}
 			else
 			{
-				ldir->name1[i] = 0;
+				lfn->name1[i] = 0;
 				return _OK;
 			}
 		}
@@ -257,11 +257,11 @@ int FatName::SetLongName(FATEnt* entires, const char* name)
 		{
 			if ('\0' != name[pos])
 			{
-				ldir->name2[i] = name[pos++];
+				lfn->name2[i] = name[pos++];
 			}
 			else
 			{
-				ldir->name2[i] = 0;
+				lfn->name2[i] = 0;
 				return _OK;
 			}
 		}
@@ -271,11 +271,11 @@ int FatName::SetLongName(FATEnt* entires, const char* name)
 		{
 			if ('\0' != name[pos])
 			{
-				ldir->name3[i] = name[pos++];
+				lfn->name3[i] = name[pos++];
 			}
 			else
 			{
-				ldir->name3[i] = 0;
+				lfn->name3[i] = 0;
 				return _OK;
 			}
 		}
@@ -296,7 +296,7 @@ char* FatName::GetVolumeLabel(FATEnt* entry)
 	//Copy label name
 	for (uint8_t i = 0; i < volume_label_size; i++)
 	{
-		label[pos++] = entry->sdir.name[i];
+		label[pos++] = entry->sfn.name[i];
 	}
 	
 	//String EOC
@@ -332,11 +332,11 @@ int FatName::SetVolumeLabel(FATEnt* entry, const char* name)
 		if (i < namelen)
 		{
 			if (name[i] >= 'a' && name[i] <= 'z')
-				entry->sdir.name[i] = name[i] - 0x20;
+				entry->sfn.name[i] = name[i] - 0x20;
 			else
-				entry->sdir.name[i] = name[i];
+				entry->sfn.name[i] = name[i];
 		}
-		else entry->sdir.name[i] = ' ';
+		else entry->sfn.name[i] = ' ';
 	}
 
 	return _OK;
