@@ -21,27 +21,6 @@ char* FatEntry::NotDir(const char* path)
 }
 
 
-/// @brief Check entry
-/// @param data 
-/// @param sdir 
-/// @return 
-int FatEntry::CheckConflict(DirEntries* entries, FATEnt* entry)
-{
-	uint8_t count = 0;
-	for (DirEntry* dir = entries->dirs.Begin(); !entries->dirs.IsEnd(); dir = entries->dirs.Next())
-	{
-		for (uint8_t i = 0; i < 11; i++)
-		{
-			if (dir->body.name[i] != entry->sfn.name[i])
-			{
-				count++; break;
-			}
-		}
-	}
-	return (entries->dirs.GetSize() == count) ? _OK : _ERR;
-}
-
-
 /// @brief Search space
 /// @param data 
 /// @param size 
@@ -156,7 +135,7 @@ int FatEntry::SetEntryName(DirData* data, DirEntries* entries, const char* name,
 		for (uint8_t i = 1; i < 100; i++)
 		{
 			fatName->GenNumName(ents + num, i);
-			if (_OK == CheckConflict(entries, ents + num)) break;
+			if (_OK == entries->CheckConflict(ents + num)) break;
 		}
 
 		ents[0].lfn.ord = num + dir_seq_flag;

@@ -15,7 +15,6 @@ class FatEntry : public FatObjs
 {
 private:
 	//Entry Methods
-	int CheckConflict(DirEntries* entries, FATEnt* entry);
 	int SearchSpace(DirData* data, uint8_t size);
 	int WirteEntires(DirData* data, FATEnt* entries, uint8_t size);
 	int SetEntryName(DirData* data, DirEntries* entries, const char* name, int attr = 0);
