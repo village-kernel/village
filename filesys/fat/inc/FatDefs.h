@@ -165,6 +165,28 @@ protected:
 		uint16_t wrtDate;
 		uint16_t fstClustLO;
 		uint32_t fileSize;
+
+		FATSDir() { memset((void*)this, 0, 32); }
+
+		bool IsHidden()
+		{
+			return ((attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+		}
+		
+		bool IsDirectory()
+		{
+			return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
+		}
+
+		bool IsVolume()
+		{
+			return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
+		}
+
+		bool IsFile()
+		{
+			return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
+		}
 	} __attribute__((packed));
 
 	struct FATLDir
@@ -195,13 +217,13 @@ protected:
 
 	struct DirEntry
 	{
-		FATEnt  dir;
+		FATSDir body;
 		bool    root;
 		char*   name;
 
-		DirEntry(FATEnt dir = FATEnt(), char* name = NULL)
+		DirEntry(FATSDir body = FATSDir(), char* name = NULL)
 		{
-			this->dir = dir;
+			this->body = body;
 			this->name = name;
 			this->root = false;
 		}
@@ -215,7 +237,6 @@ protected:
 	struct DirData
 	{
 		List<DirEntry> dirs;
-		uint32_t       size;
 		char*          path;
 
 		FATEnt*        ents;
@@ -224,7 +245,6 @@ protected:
 		uint32_t       sector;
 		
 		DirData() :
-			size(0),
 			path(NULL),
 			ents(NULL),
 			index(0),

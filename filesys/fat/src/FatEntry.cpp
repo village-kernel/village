@@ -10,78 +10,6 @@
 #include "Regex.h"
 
 
-/// @brief attr is hidden 
-/// @param entry 
-/// @return 
-inline bool FatEntry::IsHidden(FATEnt* entry)
-{
-	return ((entry->sfn.attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
-}
-
-
-/// @brief attr is hidden
-/// @param entry 
-/// @return 
-bool FatEntry::IsHidden(DirEntry* entry)
-{
-	return IsHidden(&entry->dir);
-}
-
-
-/// @brief attr is directory
-/// @param entry 
-/// @return 
-inline bool FatEntry::IsDirectory(FATEnt* entry)
-{
-	return ((entry->sfn.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
-}
-
-
-/// @brief attr is directory
-/// @param entry 
-/// @return 
-bool FatEntry::IsDirectory(DirEntry* entry)
-{
-	return IsDirectory(&entry->dir);
-}
-
-
-/// @brief attr is volume
-/// @param entry 
-/// @return 
-inline bool FatEntry::IsVolume(FATEnt* entry)
-{
-	return ((entry->sfn.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
-}
-
-
-/// @brief attr is volume
-/// @param entry 
-/// @return 
-bool FatEntry::IsVolume(DirEntry* entry)
-{
-	return IsVolume(&entry->dir);
-}
-
-
-/// @brief attr is file
-/// @param entry 
-/// @return 
-inline bool FatEntry::IsFile(FATEnt* entry)
-{
-	return ((entry->sfn.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
-}
-
-
-/// @brief attr is file
-/// @param entry 
-/// @return 
-bool FatEntry::IsFile(DirEntry* entry)
-{
-	return IsFile(&entry->dir);
-}
-
-
 /// @brief Not dir
 /// @param path 
 /// @return 
@@ -104,13 +32,13 @@ int FatEntry::CheckConflict(DirData* data, FATEnt* entry)
 	{
 		for (uint8_t i = 0; i < 11; i++)
 		{
-			if (dir->dir.sfn.name[i] != entry->sfn.name[i])
+			if (dir->body.name[i] != entry->sfn.name[i])
 			{
 				count++; break;
 			}
 		}
 	}
-	return (data->size == count) ? _OK : _ERR;
+	return (data->dirs.GetSize() == count) ? _OK : _ERR;
 }
 
 
@@ -319,7 +247,7 @@ FatEntry::DirEntry* FatEntry::SearchPath(const char* path, int forward)
 	if (dirIndex <= 1)
 	{
 		entry = new DirEntry();
-		entry->dir.sfn.attr = _ATTR_DIRECTORY;
+		entry->body.attr = _ATTR_DIRECTORY;
 		entry->root = true;
 		entry->name = (char*)"/";
 		return entry;
@@ -368,7 +296,7 @@ FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
 
 				if (0 == strcmp(dirname, dir))
 				{
-					DirEntry* found = new DirEntry(ents[index], dirname);
+					DirEntry* found = new DirEntry(ents[index].sfn, dirname);
 					delete data;
 					return found;
 				}
@@ -403,7 +331,7 @@ FatEntry::DirEntry* FatEntry::CreateFile(DirEntry* entry, const char* name)
 	//Set entry name
 	if (_OK == SetEntryName(pare, name, attr))
 	{
-		return new DirEntry(ents[index], (char*)name);
+		return new DirEntry(ents[index].sfn, (char*)name);
 	}
 
 	return NULL;
@@ -466,14 +394,10 @@ FatEntry::DirData* FatEntry::OpenDir(DirEntry* entry)
 
 				if (0 != strcmp(dirname, ""))
 				{
-					DirEntry* found = new DirEntry(ents[index], dirname);
-
-					if (IsFile(found) || IsDirectory(found))
+					if (ents[index].sfn.IsFile() || ents[index].sfn.IsDirectory())
 					{
-						data->dirs.Add(found);
-						data->size++;
+						data->dirs.Add(new DirEntry(ents[index].sfn, dirname));
 					}
-					else delete found;
 				}
 			}
 		}
@@ -505,7 +429,7 @@ char* FatEntry::GetVolumeLabel()
 	fatDisk->ReadOneSector((char*)ents, sector);
 
 	//Get volume label
-	char* label = IsVolume(&ents[0]) ? fatName->GetVolumeLabel(&ents[0]) : (char*)"NONAME";
+	char* label = ents[0].sfn.IsVolume() ? fatName->GetVolumeLabel(&ents[0]) : (char*)"NONAME";
 
 	//Free ents
 	delete[] ents;
@@ -532,7 +456,7 @@ int FatEntry::SetVolumeLabel(const char* name)
 	fatDisk->ReadOneSector((char*)ents, sector);
 
 	//Check is volume entry
-	if (IsVolume(&ents[0]))
+	if (ents[0].sfn.IsVolume())
 	{
 		//Set volume label
 		fatName->SetVolumeLabel(&ents[0], name);

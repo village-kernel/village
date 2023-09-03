@@ -250,11 +250,11 @@ int FatOpts::OpenDir(const char* name, int mode)
 /// @return file type
 FileType FatOpts::GetFileType(DirEntry* entry)
 {
-	if (fatEntry->IsFile(entry))
+	if (entry->body.IsFile())
 		return FileType::_File;
-	else if (fatEntry->IsDirectory(entry))
+	else if (entry->body.IsDirectory())
 		return FileType::_Diretory;
-	else if (fatEntry->IsVolume(entry))
+	else if (entry->body.IsVolume())
 		return FileType::_Volume;
 	else
 		return FileType::_Unknown;
@@ -266,7 +266,7 @@ FileType FatOpts::GetFileType(DirEntry* entry)
 /// @return file attr
 FileAttr FatOpts::GetFileAttr(DirEntry* entry)
 {
-	return fatEntry->IsHidden(entry) ? FileAttr::_Hidden : FileAttr::_Visible;
+	return entry->body.IsHidden() ? FileAttr::_Hidden : FileAttr::_Visible;
 }
 
 

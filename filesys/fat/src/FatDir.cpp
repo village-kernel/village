@@ -18,7 +18,7 @@ FatDir::DirData* FatDir::Create(const char* path)
 	
 	if (NULL == dir) return NULL;
 	
-	if (fatEntry->IsDirectory(dir))
+	if (dir->body.IsDirectory())
 	{
 		return fatEntry->CreateDir(dir, fatEntry->NotDir(path));
 	}
@@ -42,7 +42,7 @@ FatDir::DirData* FatDir::Open(const char* path, int mode)
 			return NULL;
 	}
 	
-	if (fatEntry->IsDirectory(dir))
+	if (dir->body.IsDirectory())
 	{
 		DirData* found = fatEntry->OpenDir(dir);
 		found->path = (char*)path;
@@ -73,7 +73,7 @@ FatDir::DirEntry* FatDir::Read(DirData* data)
 /// @return 
 int FatDir::Size(DirData* data)
 {
-	return data->size;
+	return data->dirs.GetSize();
 }
 
 

@@ -310,7 +310,7 @@ void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector
 	}
 	else
 	{
-		clust  = MergeCluster(entry->dir.sfn.fstClustHI, entry->dir.sfn.fstClustLO);
+		clust  = MergeCluster(entry->body.fstClustHI, entry->body.fstClustLO);
 		sector = ClusterToSector(clust);
 	}
 }
