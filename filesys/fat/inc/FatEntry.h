@@ -10,15 +10,47 @@
 #include "FatObjs.h"
 
 
+/// @brief 
+class FatData : public FatObjs
+{
+private:
+	//Members
+	DirEntry* body;
+	FATEnt*   ents;
+
+	uint32_t  index;
+	uint32_t  clust;
+	uint32_t  sector;
+
+	//Methods
+	bool IsEmpty();
+	void Clone(FatData* data);
+	void Clear();
+public:
+	FatData(FatObjs* objs = NULL, DirEntry* entry = NULL);
+	~FatData();
+
+	//Iterator Methods
+	void Begin();
+	void Next();
+	bool IsEnd();
+	bool IsValid();
+	uint8_t GetSize();
+	FATEnt* Item();
+
+	//Methods
+	void Setup(FatObjs* objs, DirEntry* entry);
+	int FindSpace(uint32_t size);
+	uint32_t Pop(FATEnt* pop, uint32_t size = 1);
+	uint32_t Push(FATEnt* push, uint32_t size = 1);
+};
+
+
 /// @brief FatEntry
 class FatEntry : public FatObjs
 {
 private:
-	//Entry Methods
-	int SearchSpace(DirData* data, uint8_t size);
-	int WirteEntires(DirData* data, FATEnt* entries, uint8_t size);
-	int SetEntryName(DirData* data, DirEntries* entries, const char* name, int attr = 0);
-	char* GetEntryName(DirData* data);
+	FatData* CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num);
 public:
 	//Directory Methods
 	char* NotDir(const char* path);

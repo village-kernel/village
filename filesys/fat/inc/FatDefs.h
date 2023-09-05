@@ -197,7 +197,12 @@ protected:
 	{
 		FATLDir lfn;
 		FATSDir sfn;
-		FATEnt() { memset((void*)this, 0, 32); }
+		
+		FATEnt()           { memset((void*)this, 0, 32); }
+		bool IsLongName()  { return ((lfn.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME); }
+		bool IsVaild()     { return ((lfn.ord) && (lfn.ord != dir_free_flag)); }
+		uint8_t OrdSize()  { return (lfn.ord - dir_seq_flag + 1); }
+
 	} __attribute__((packed));
 
 	struct DirEntry
@@ -248,48 +253,6 @@ protected:
 				}
 			}
 			return (dirs.GetSize() == count) ? _OK : _ERR;
-		}
-	};
-
-	struct DirData
-	{
-		FATSDir        body;
-		FATEnt*        ents;
-		uint32_t       index;
-		uint32_t       clust;
-		uint32_t       sector;
-		
-		DirData() :
-			ents(NULL),
-			index(0),
-			clust(0),
-			sector(0)
-		{}
-		
-		~DirData()
-		{
-			delete[] ents;
-		}
-
-		bool IsEmpty()
-		{
-			return !(ents || index || clust || sector);
-		}
-
-		void Clone(DirData* data)
-		{
-			this->ents   = data->ents;
-			this->index  = data->index;
-			this->clust  = data->clust;
-			this->sector = data->sector;
-		}
-
-		void Clear()
-		{
-			this->ents   = NULL;
-			this->index  = 0;
-			this->clust  = 0;
-			this->sector = 0;
 		}
 	};
 

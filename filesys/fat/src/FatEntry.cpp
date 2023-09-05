@@ -10,6 +10,221 @@
 #include "Regex.h"
 
 
+/// @brief 
+FatData::FatData(FatObjs* objs, DirEntry* entry)
+	:body(NULL),
+	ents(NULL),
+	index(0),
+	clust(0),
+	sector(0)
+{
+	if (NULL != objs) Setup(objs, entry);
+}
+
+
+/// @brief 
+FatData::~FatData()
+{
+	delete[] ents;
+}
+
+
+/// @brief 
+/// @return 
+bool FatData::IsEmpty()
+{
+	return !(index || clust || sector);
+}
+
+
+/// @brief 
+/// @param data 
+void FatData::Clone(FatData* data)
+{
+	this->index  = data->index;
+	this->clust  = data->clust;
+	this->sector = data->sector;
+}
+
+
+/// @brief 
+void FatData::Clear()
+{
+	this->index  = 0;
+	this->clust  = 0;
+	this->sector = 0;
+}
+
+
+/// @brief 
+void FatData::Begin()
+{
+	this->index  = 0;
+	this->clust  = 0;
+	this->sector = 0;
+	fatDisk->CalcFirstSector(body, clust, sector);
+	fatDisk->ReadOneSector((char*)ents, sector);
+}
+
+
+/// @brief 
+void FatData::Next()
+{
+	if (++index >= info->entriesPerSec)
+	{
+		fatDisk->CalcNextSector(clust, sector);
+		if (0 != sector)
+		{
+			fatDisk->ReadOneSector((char*)ents, sector);
+			index = 0;
+		}
+		else return;
+	}
+}
+
+
+/// @brief 
+/// @return 
+FatData::FATEnt* FatData::Item()
+{
+	return ents + index;
+}
+
+
+/// @brief 
+/// @return 
+bool FatData::IsEnd()
+{
+	return 0 == sector;
+}
+
+
+/// @brief 
+/// @return 
+bool FatData::IsValid()
+{
+	return ents[index].IsVaild();
+}
+
+
+/// @brief 
+/// @return 
+uint8_t FatData::GetSize()
+{
+	return ents[index].OrdSize();
+}
+
+
+/// @brief 
+/// @param entry 
+void FatData::Setup(FatObjs* objs, DirEntry* entry)
+{
+	FatObjs::Clone(objs);
+
+	this->body = entry;
+
+	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
+	
+	fatDisk->CalcFirstSector(body, clust, sector);
+
+	fatDisk->ReadOneSector((char*)ents, sector);
+}
+
+
+/// @brief 
+/// @param size 
+/// @return 
+int FatData::FindSpace(uint32_t size)
+{
+	FatData record;
+	uint8_t count = 0;
+
+	for (Begin(); !IsEnd(); Next())
+	{
+		if (!ents[index].IsVaild())
+		{
+			if (record.IsEmpty())
+			{
+				record.Clone(this);
+			}
+			if (++count >= size)
+			{
+				this->Clone(&record);
+				return _OK;
+			}
+		}
+		else
+		{
+			count = 0;
+			record.Clear();
+		}
+	}
+
+	return _ERR;
+}
+
+
+/// @brief 
+/// @param pop 
+/// @param size 
+/// @return 
+uint32_t FatData::Pop(FATEnt* pop, uint32_t size)
+{
+	for (uint32_t i = 0; i < size; i++)
+	{
+		pop[i] = ents[index];
+
+		if (i < (size - 1)) index++;
+	
+		if (index >= info->entriesPerSec)
+		{
+			fatDisk->CalcNextSector(clust, sector);
+			if (0 != sector)
+			{
+				fatDisk->ReadOneSector((char*)ents, sector);
+				index = 0;
+			}
+			else return i;
+		}
+	}
+	return size;
+}
+
+
+/// @brief 
+/// @param push 
+/// @param size 
+/// @return 
+uint32_t FatData::Push(FATEnt* push, uint32_t size)
+{
+	fatDisk->ReadOneSector((char*)ents, sector); 
+
+	for (uint32_t i = 0; i < size; i++)
+	{
+		ents[index] = push[i];
+	
+		if (i < (size - 1)) index++;
+
+		if (index >= info->entriesPerSec)
+		{
+			fatDisk->WriteOneSector((char*)ents, sector);
+
+			fatDisk->CalcNextSector(clust, sector);
+			if (0 != sector)
+			{
+				fatDisk->ReadOneSector((char*)ents, sector);
+				index = 0;
+			}
+			else return i;
+		}
+	}
+
+	fatDisk->WriteOneSector((char*)ents, sector);
+
+	return size;
+}
+
+
 /// @brief Not dir
 /// @param path 
 /// @return 
@@ -18,196 +233,6 @@ char* FatEntry::NotDir(const char* path)
 	uint8_t pos = strlen(path);
 	char ch = 0; do { ch = path[--pos]; } while ('/' != ch && pos);
 	return (char*)path + pos + 1;
-}
-
-
-/// @brief Search space
-/// @param data 
-/// @param size 
-/// @return 
-int FatEntry::SearchSpace(DirData* data, uint8_t size)
-{
-	FATEnt*&   ents   = data->ents;
-	uint32_t&  index  = data->index;
-	uint32_t&  clust  = data->clust;
-	uint32_t&  sector = data->sector;
-
-	DirData record;
-	uint8_t count = 0;
-
-	while (0 != sector)
-	{
-		fatDisk->ReadOneSector((char*)ents, sector);
-
-		for (index = 0; index < info->entriesPerSec; index++)
-		{
-			if ((ents[index].lfn.ord == dir_free_flag) ||
-				(ents[index].lfn.ord == 0))
-			{
-				if (record.IsEmpty())
-				{
-					record.Clone(data);
-				}
-				if (++count >= size)
-				{
-					data->Clone(&record);
-					return _OK;
-				}
-			}
-			else
-			{
-				count = 0;
-				record.Clear();
-			}
-		}
-
-		fatDisk->CalcNextSector(clust, sector);
-	}
-
-	return _ERR;
-}
-
-
-/// @brief WriteEntries
-/// @param data 
-/// @param ldir 
-/// @param sdir 
-/// @param size 
-/// @return 
-int FatEntry::WirteEntires(DirData* data, FATEnt* entries, uint8_t size)
-{
-	FATEnt*&   ents   = data->ents;
-	uint32_t&  index  = data->index;
-	uint32_t&  clust  = data->clust;
-	uint32_t&  sector = data->sector;
-
-	fatDisk->ReadOneSector((char*)ents, sector);
-
-	for (uint8_t i = 0; i < size; i++)
-	{
-		ents[index] = entries[i];
-
-		if (i < (size - 1)) index++;
-
-		if (index >= info->entriesPerSec)
-		{
-			index = 0;
-			fatDisk->WriteOneSector((char*)ents, sector);
-			fatDisk->CalcNextSector(clust, sector);
-			fatDisk->ReadOneSector((char*)ents, sector);
-		}
-	}
-
-	fatDisk->WriteOneSector((char*)ents, sector);
-
-	return _OK;
-}
-
-
-/// @brief Set entry name
-/// @param data 
-/// @param name 
-int FatEntry::SetEntryName(DirData* data, DirEntries* entries, const char* name, int attr)
-{
-	uint8_t namelen = strlen(name);
-	uint8_t dotpos = namelen;
-	while ('.' != name[--dotpos] && dotpos);
-	uint8_t extlen = dotpos ? (namelen - dotpos - 1) : 0;
-	uint8_t bodylen = dotpos ? dotpos : namelen;
-	bool isNameLoss = (bodylen > 8 || extlen > 3);
-	uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
-	uint8_t num = isNameLoss ? ((namelen / (long_name_size - 1)) + mod) : 0;
-
-	//Alloc entires space
-	FATEnt* ents = new FATEnt[num + 1]();
-	
-	//Set entry attr
-	ents[num].sfn.attr = attr;
-
-	//Set short name
-	fatName->SetShortName(&ents[num], name);
-
-	//Set long name
-	if (isNameLoss)
-	{
-		ents[num].sfn.NTRes |= _NS_LOSS;
-
-		for (uint8_t i = 1; i < 100; i++)
-		{
-			fatName->GenNumName(ents + num, i);
-			if (_OK == entries->CheckConflict(ents + num)) break;
-		}
-
-		ents[0].lfn.ord = num + dir_seq_flag;
-		fatName->SetLongName(ents, name);
-	}
-
-	//Put to disk
-	if (_OK == SearchSpace(data, num + 1) && 
-		_OK == WirteEntires(data, ents, num + 1))
-	{
-		return _OK;
-	}
-
-	return _ERR;
-}
-
-
-/// @brief Get entry name
-/// @param entries 
-/// @param idx 
-/// @param clust 
-/// @param sector 
-/// @return 
-char* FatEntry::GetEntryName(DirData* data)
-{
-	FATEnt*&   ents   = data->ents;
-	uint32_t&  index  = data->index;
-	uint32_t&  clust  = data->clust;
-	uint32_t&  sector = data->sector;
-	char*      name   = NULL;
-
-	//Get long name
-	if ((ents[index].lfn.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
-	{
-		uint8_t n = ents[index].lfn.ord - dir_seq_flag + 1;
-
-		FATEnt* entires = new FATEnt[n]();
-
-		for (uint8_t i = 0; i < n; i++)
-		{
-			entires[i] = ents[index];
-
-			if (i < (n - 1)) index++;
-
-			if (index >= info->entriesPerSec)
-			{
-				fatDisk->CalcNextSector(clust, sector);
-				if (0 != sector)
-				{
-					fatDisk->ReadOneSector((char*)ents, sector);
-					index = 0;
-				}
-				else
-				{
-					delete[] entires;
-					delete data;
-					return name;
-				}
-			}
-		}
-
-		name = fatName->GetLongName(entires);
-
-		delete[] entires;
-	}
-	//Get short name
-	else
-	{
-		name = fatName->GetShortName(&ents[index]);
-	}
-
-	return name;
 }
 
 
@@ -249,44 +274,119 @@ FatEntry::DirEntry* FatEntry::SearchPath(const char* path, int forward)
 /// @return 
 FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
 {
-	DirData*   data   = new DirData();
-	FATEnt*&   ents   = data->ents;
-	uint32_t&  index  = data->index;
-	uint32_t&  clust  = data->clust;
-	uint32_t&  sector = data->sector;
-	
-	//Allocate the dirEntires space
-	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
+	FatData*  data  = new FatData(this, entry);
+	DirEntry* found = NULL;
 
-	//Calculate the dir cluster and sector
-	fatDisk->CalcFirstSector(entry, clust, sector);
-
-	//Search target dir
-	while (0 != sector)
+	for (data->Begin(); !data->IsEnd(); data->Next())
 	{
-		fatDisk->ReadOneSector((char*)ents, sector);
+		if (!data->IsValid()) continue;
+		
+		uint8_t size = data->Item()->IsLongName() ? data->GetSize() : 1;
+		FATEnt* ents = new FATEnt[size]();
+		if (data->Pop(ents, size) != size) break;
+		
+		char* dirname = NULL;
+		if (ents[0].IsLongName())
+			dirname = fatName->GetLongName(ents);
+		else
+			dirname = fatName->GetShortName(ents);
 
-		for (index = 0; index < info->entriesPerSec; index++)
+		if (0 == strcmp(dirname, dir))
 		{
-			if ((ents[index].lfn.ord != dir_free_flag) &&
-				(ents[index].lfn.ord != 0))
-			{
-				char* dirname = GetEntryName(data);
-
-				if (0 == strcmp(dirname, dir))
-				{
-					DirEntry* found = new DirEntry(ents[index].sfn, dirname);
-					delete data;
-					return found;
-				}
-			}
+			found = new DirEntry(ents[size - 1].sfn, dirname);
+			delete[] ents;
+			break;
 		}
 
-		fatDisk->CalcNextSector(clust, sector);
+		delete[] ents;
 	}
 
 	delete data;
-	return NULL;
+	return found;
+}
+
+
+/// @brief Open dir
+/// @param entry 
+/// @return 
+FatEntry::DirEntries* FatEntry::OpenDir(DirEntry* entry)
+{
+	FatData*    data    = new FatData(this, entry);
+	DirEntries* entries = new DirEntries();
+
+	for (data->Begin(); !data->IsEnd(); data->Next())
+	{
+		if (!data->IsValid()) continue;
+		
+		uint8_t size = data->Item()->IsLongName() ? data->GetSize() : 1;
+		FATEnt* ents = new FATEnt[size]();
+		if (data->Pop(ents, size) != size) break;
+		
+		char* dirname = NULL;
+		if (ents->IsLongName())
+			dirname = fatName->GetLongName(ents);
+		else
+			dirname = fatName->GetShortName(ents);
+
+		if (0 != strcmp(dirname, ""))
+		{
+			FATEnt* ent = &ents[size- 1];
+			if (ent->sfn.IsFile() || ent->sfn.IsDirectory())
+			{
+				entries->dirs.Add(new DirEntry(ent->sfn, dirname));
+			}
+		}
+
+		delete[] ents;
+	}
+
+	delete data;
+	return entries;
+}
+
+
+/// @brief 
+/// @param entry 
+/// @param ents 
+/// @param name 
+/// @return 
+FatData* FatEntry::CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num)
+{
+	DirEntries* entries = OpenDir(entry);
+	FatData*    data    = new FatData(this, entry);
+
+	//Cal the size of entries
+	uint8_t namelen = strlen(name);
+	uint8_t dotpos = namelen;
+	while ('.' != name[--dotpos] && dotpos);
+	uint8_t extlen = dotpos ? (namelen - dotpos - 1) : 0;
+	uint8_t bodylen = dotpos ? dotpos : namelen;
+	bool isNameLoss = (bodylen > 8 || extlen > 3);
+	uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
+	num = isNameLoss ? ((namelen / (long_name_size - 1)) + mod) : 0;
+
+	//Alloc entires space
+	ents = new FATEnt[num + 1]();
+
+	//Set short name
+	fatName->SetShortName(&ents[num], name);
+
+	//Set long name
+	if (isNameLoss)
+	{
+		ents[num].sfn.NTRes |= _NS_LOSS;
+
+		for (uint8_t i = 1; i < 100; i++)
+		{
+			fatName->GenNumName(ents + num, i);
+			if (_OK == entries->CheckConflict(ents + num)) break;
+		}
+
+		ents[0].lfn.ord = num + dir_seq_flag;
+		fatName->SetLongName(ents, name);
+	}
+
+	return data;
 }
 
 
@@ -296,22 +396,18 @@ FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
 /// @return 
 FatEntry::DirEntry* FatEntry::CreateFile(DirEntry* entry, const char* name)
 {
-	//Open parent directory
-	DirEntries* pare   = OpenDir(entry);
-	DirData*    data   = new DirData();
-	FATEnt*&    ents   = data->ents;
-	uint32_t&   index  = data->index;
-	uint32_t&   clust  = data->clust;
-	uint32_t&   sector = data->sector;
-	int         attr   = _ATTR_FILE;
+	uint8_t  num  = 0;
+	FATEnt*  ents = NULL;
+	FatData* data = CreateEntry(entry, name, ents, num);
 
-	//Calculate the dir cluster and sector
-	fatDisk->CalcFirstSector(entry, clust, sector);
+	//Set entry attr
+	ents[num].sfn.attr = _ATTR_FILE;
 
-	//Set entry name
-	if (_OK == SetEntryName(data, pare, name, attr))
+	//Put to disk
+	if (_OK == data->FindSpace(num + 1) && 
+		_OK == data->Push(ents, num + 1))
 	{
-		return new DirEntry(ents[index].sfn, (char*)name);
+		return new DirEntry(ents[num].sfn, (char*)name);
 	}
 
 	return NULL;
@@ -324,18 +420,16 @@ FatEntry::DirEntry* FatEntry::CreateFile(DirEntry* entry, const char* name)
 /// @return 
 FatEntry::DirEntries* FatEntry::CreateDir(DirEntry* entry, const char* name)
 {
-	//Open parent directory
-	DirEntries* pare   = OpenDir(entry);
-	DirData*    data   = new DirData();
-	uint32_t&   clust  = data->clust;
-	uint32_t&   sector = data->sector;
-	int         attr   = _ATTR_DIRECTORY;
+	uint8_t  num = 0;
+	FATEnt*  ents = NULL;
+	FatData* data = CreateEntry(entry, name, ents, num);
 
-	//Calculate the dir cluster and sector
-	fatDisk->CalcFirstSector(entry, clust, sector);
+	//Set entry attr
+	ents[num].sfn.attr = _ATTR_DIRECTORY;
 
-	//Set entry name
-	if (_OK == SetEntryName(data, pare, name, attr))
+	//Put to disk
+	if (_OK == data->FindSpace(num + 1) && 
+		_OK == data->Push(ents, num + 1))
 	{
 		
 	}
@@ -344,79 +438,23 @@ FatEntry::DirEntries* FatEntry::CreateDir(DirEntry* entry, const char* name)
 }
 
 
-/// @brief Open dir
-/// @param entry 
-/// @return 
-FatEntry::DirEntries* FatEntry::OpenDir(DirEntry* entry)
-{
-	DirEntries* entries = new DirEntries();
-	DirData*    data    = new DirData();
-	FATEnt*&    ents    = data->ents;
-	uint32_t&   index   = data->index;
-	uint32_t&   clust   = data->clust;
-	uint32_t&   sector  = data->sector;
-
-	//Allocate the dir entires space
-	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
-
-	//Calculate the dir cluster and sector
-	fatDisk->CalcFirstSector(entry, clust, sector);
-
-	//Search target dir
-	while (0 != sector)
-	{
-		fatDisk->ReadOneSector((char*)ents, sector);
-
-		for (index = 0; index < info->entriesPerSec; index++)
-		{
-			if ((ents[index].lfn.ord != dir_free_flag) &&
-				(ents[index].lfn.ord != 0))
-			{
-				char* dirname = GetEntryName(data);
-
-				if (0 != strcmp(dirname, ""))
-				{
-					if (ents[index].sfn.IsFile() || ents[index].sfn.IsDirectory())
-					{
-						entries->dirs.Add(new DirEntry(ents[index].sfn, dirname));
-					}
-				}
-			}
-		}
-
-		fatDisk->CalcNextSector(clust, sector);
-	}
-
-	//Set dir begin
-	entries->dirs.Begin();
-
-	delete data;
-	return entries;
-}
-
-
 /// @brief Get volume label
 /// @return 
 char* FatEntry::GetVolumeLabel()
 {
-	uint32_t  clust  = 0;
-	uint32_t  sector = 0;
+	FatData* data = new FatData(this, NULL);
+	FATEnt*  ent  = data->Item();
 
-	//Allocate the dir entires space
-	FATEnt* ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
+	char* label = (char*)"NONAME";
 
-	//Calculate the dir cluster and sector
-	fatDisk->CalcFirstSector(NULL, clust, sector);
+	//Check is volume entry
+	if (ent->sfn.IsVolume())
+	{
+		//Get volume label
+		label = fatName->GetVolumeLabel(ent);
+	}
 
-	//Read ents data
-	fatDisk->ReadOneSector((char*)ents, sector);
-
-	//Get volume label
-	char* label = ents[0].sfn.IsVolume() ? fatName->GetVolumeLabel(&ents[0]) : (char*)"NONAME";
-
-	//Free ents
-	delete[] ents;
-
+	delete data;
 	return label;
 }
 
@@ -426,30 +464,19 @@ char* FatEntry::GetVolumeLabel()
 /// @return 
 int FatEntry::SetVolumeLabel(const char* name)
 {
-	uint32_t  clust  = 0;
-	uint32_t  sector = 0;
-
-	//Allocate the dir entires space
-	FATEnt* ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
-
-	//Calculate the dir cluster and sector
-	fatDisk->CalcFirstSector(NULL, clust, sector);
-
-	//Read ents data
-	fatDisk->ReadOneSector((char*)ents, sector);
+	FatData* data = new FatData(this, NULL);
+	FATEnt*  ent  = data->Item();
 
 	//Check is volume entry
-	if (ents[0].sfn.IsVolume())
+	if (ent->sfn.IsVolume())
 	{
 		//Set volume label
-		fatName->SetVolumeLabel(&ents[0], name);
+		fatName->SetVolumeLabel(ent, name);
 
-		//Update volume label to disk
-		fatDisk->WriteOneSector((char*)ents, sector);
+		//Push ent to disk
+		data->Push(ent);
 	}
-	 
-	//Free ents
-	delete[] ents;
-
+	
+	delete data;
 	return _OK;
 }
