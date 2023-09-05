@@ -21,7 +21,6 @@ FatObjs::FatObjs()
 /// @brief Destructor
 FatObjs::~FatObjs()
 {
-	Exit();
 }
 
 
