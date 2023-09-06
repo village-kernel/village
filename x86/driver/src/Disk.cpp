@@ -60,6 +60,12 @@ int DiskDrv::Write(uint8_t* data, uint32_t count, uint32_t blk)
 		{
 			PortWordOut(ATA_DATA, ((uint16_t*)data)[size + cnt * 256]);
 		}
+
+		//Flush cache
+		PortByteOut(ATA_CMD, ATA_CMD_FLUSH);
+
+		//Wait
+		while (ATA_STATUS_BSY == (PortByteIn(ATA_STATUS) & ATA_STATUS_BSY_Msk)) {}
 	}
 
 	return 0;

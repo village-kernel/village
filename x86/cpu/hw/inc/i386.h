@@ -256,6 +256,7 @@ extern "C" {
 
 #define ATA_CMD_READ                         (0x20)
 #define ATA_CMD_WRITE                        (0x30)
+#define ATA_CMD_FLUSH                        (0xE7)
 
 #define ATA_STATUS_ERR_Pos                   (0)
 #define ATA_STATUS_ERR_Msk                   (0x1 << ATA_STATUS_ERR_Pos)
