@@ -9,22 +9,22 @@
 
 #include "Templates.h"
 #include "FileOpts.h"
-#include "FatObjs.h"
-#include "FatDisk.h"
+#include "FatDefs.h"
 #include "FatData.h"
 
 
 /// @brief FatOpts
-class FatOpts : public FileOpts, FatObjs
+class FatOpts : public FileOpts, FatDefs
 {
 private:
 	//Lists
 	List<DirEntry>    files;
 	List<DirEntries>  dirs;
 
+	//Members
+	FatData fatData;
+
 	//Methods
-	int ReadDBR();
-	int CheckFS();
 	FileType GetFileType(DirEntry* entry);
 	FileAttr GetFileAttr(DirEntry* entry);
 public:
@@ -33,7 +33,7 @@ public:
 	~FatOpts();
 
 	//Methods
-	int Setup(FatObjs* dat);
+	int Setup(Driver* diskdrv, uint32_t fstSec);
 	void Exit();
 
 	//Mount

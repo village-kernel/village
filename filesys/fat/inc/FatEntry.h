@@ -7,13 +7,18 @@
 #ifndef __FAT_ENTRY_H__
 #define __FAT_ENTRY_H__
 
-#include "FatObjs.h"
+#include "FatDefs.h"
+#include "FatDisk.h"
 
 
 /// @brief 
-class FatEntry : public FatObjs
+class FatEntry : public FatDefs
 {
 private:
+	//Data Members
+	Info*    info;
+	FatDisk* fatDisk;
+
 	//Members
 	DirEntry* body;
 	FATEnt*   ents;
@@ -27,7 +32,7 @@ private:
 	void Clone(FatEntry* data);
 	void Clear();
 public:
-	FatEntry(FatObjs* objs = NULL, DirEntry* entry = NULL);
+	FatEntry(FatDisk* fatDisk = NULL, Info* info = NULL, DirEntry* entry = NULL);
 	~FatEntry();
 
 	//Iterator Methods
@@ -39,7 +44,7 @@ public:
 	FATEnt* Item();
 
 	//Methods
-	void Setup(FatObjs* objs, DirEntry* entry);
+	void Setup(FatDisk* fatDisk, Info* info, DirEntry* entry);
 	int FindSpace(uint32_t size);
 	uint32_t Pop(FATEnt* pop, uint32_t size = 1);
 	uint32_t Push(FATEnt* push, uint32_t size = 1);

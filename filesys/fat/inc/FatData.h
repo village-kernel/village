@@ -7,17 +7,25 @@
 #ifndef __FAT_DATA_H__
 #define __FAT_DATA_H__
 
-#include "FatObjs.h"
+#include "FatDefs.h"
+#include "FatDisk.h"
 #include "FatEntry.h"
 #include "FatName.h"
 
 
 /// @brief FatData
-class FatData : public FatObjs
+class FatData : public FatDefs
 {
 private:
 	//Members
+	DBR*    dbr;
+	Info*   info;
+	FatDisk fatDisk;
 	FatName fatName;
+
+	//Methods
+	int ReadDBR();
+	int CheckFS();
 
 	//Directory Methods
 	char* NotDir(const char* path);
@@ -30,6 +38,9 @@ private:
 	DirEntry* CreateFile(const char* path);
 	DirEntries* CreateDir(const char* path);
 public:
+	//Methods
+	int Setup(Driver* diskdrv, uint32_t fstSec);
+
 	//File Methods
 	DirEntry* Open(const char* name, int mode);
 	int Write(char* data, uint32_t size, DirEntry* entry);

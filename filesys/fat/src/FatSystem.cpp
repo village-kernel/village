@@ -45,17 +45,15 @@ void FatSystem::Setup()
 	{
 		if (_OK == CheckDPT(&mbr->dpt[i]))
 		{
-			FatObjs* fatObjs = new FatObjs();
 			FatOpts* fatOpts = new FatOpts();
 
-			fatObjs->Setup(diskdrv, mbr->dpt[i].relativeSectors);
-
-			if (!(_OK == fatOpts->Setup(fatObjs) && 
-				 filesystem.RegisterOpts(fatOpts)))
+			if (_OK != fatOpts->Setup(diskdrv, mbr->dpt[i].relativeSectors))
 			{
 				delete fatOpts;
-				delete fatObjs;
+				continue;
 			}
+
+			filesystem.RegisterOpts(fatOpts);
 		}
 	}
 

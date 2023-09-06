@@ -1,14 +1,115 @@
 //###########################################################################
-// FatEntry.cpp
+// FatData.cpp
 // Definitions of the functions that manage fat file system
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatData.h"
-#include "FatEntry.h"
-#include "FatDisk.h"
-#include "FatName.h"
 #include "Regex.h"
+#include "Debug.h"
+
+
+/// @brief Setup
+/// @param diskdrv 
+/// @param fstSec 
+/// @return 
+int FatData::Setup(Driver* diskdrv, uint32_t fstSec)
+{
+	this->dbr      = new DBR();
+	this->info     = new Info();
+	
+	fatDisk.Setup(diskdrv, fstSec, info);
+
+	if (_ERR == ReadDBR())
+	{
+		debug.Error("Not DBR found");
+		return _ERR;
+	}
+
+	if (_ERR == CheckFS())
+	{
+		debug.Error("Not filesystem found");
+		return _ERR;
+	}
+
+	return _OK;
+}
+
+
+/// @brief Read DBR
+/// @return 
+int FatData::ReadDBR()
+{
+	static const uint8_t dbr_sector = 0;
+
+	if (NULL != dbr)
+	{
+		fatDisk.ReadOneSector((char*)dbr, dbr_sector);
+		
+		if (magic == dbr->magic) return _OK;
+	}
+
+	return _ERR;
+}
+
+
+/// @brief Check fs
+/// @return 
+int FatData::CheckFS()
+{
+	if (NULL != info)
+	{
+		//Calc fat size
+		if (0 != dbr->bpb.FATSz16)
+			info->fatSize = dbr->bpb.FATSz16;
+		else
+			info->fatSize = dbr->fat32.FATSz32;
+		
+		//Calc total sectors
+		if (0 != dbr->bpb.totSec16)
+			info->totalSectors = dbr->bpb.totSec16;
+		else
+			info->totalSectors = dbr->bpb.totSec32;
+
+		//Calc rsvd sector count
+		info->rsvdSecCnt = dbr->bpb.rsvdSecCnt;
+
+		//Calc the sector number of start/ended of FAT
+		info->startOfFatSector = dbr->bpb.rsvdSecCnt;
+		info->endedOfFatSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize) - 1;
+
+		//Calc fat12/16 root dir sector
+		info->firstRootSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize);
+		info->countOfRootSecs = ((dbr->bpb.rootEntCnt * dir_entry_size) + (dbr->bpb.bytesPerSec - 1)) / dbr->bpb.bytesPerSec;
+		
+		//Calc fat data sector
+		info->firstDataSector = dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize) + info->countOfRootSecs;
+		info->countOfDataSecs = info->totalSectors - (dbr->bpb.rsvdSecCnt + (dbr->bpb.numFATs * info->fatSize) - info->countOfRootSecs);
+
+		//Calc counts of clusters
+		info->countOfClusters = info->countOfDataSecs / dbr->bpb.secPerClust;
+
+		//Detected fat type
+		if (info->countOfClusters < 4085)
+			info->fatType = _FAT12;
+		else if (info->countOfClusters < 65525)
+			info->fatType = _FAT16;
+		else
+			info->fatType = _FAT32;
+
+		//Fat32 root cluster
+		info->rootClust = (_FAT32 == info->fatType) ? dbr->fat32.rootClust : 0;
+
+		//Calc the info data
+		info->entriesPerSec = dbr->bpb.bytesPerSec / dir_entry_size;
+		info->bytesPerSec = dbr->bpb.bytesPerSec;
+		info->secPerClust = dbr->bpb.secPerClust;
+
+		return _OK;
+	}
+
+	return _ERR;
+}
 
 
 /// @brief Not dir
@@ -60,7 +161,7 @@ FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
 /// @return 
 FatData::DirEntry* FatData::SearchDir(DirEntry* entry, const char* dir)
 {
-	FatEntry* data  = new FatEntry(this, entry);
+	FatEntry* data  = new FatEntry(&fatDisk, info, entry);
 	DirEntry* found = NULL;
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
@@ -97,7 +198,7 @@ FatData::DirEntry* FatData::SearchDir(DirEntry* entry, const char* dir)
 /// @return 
 FatData::DirEntries* FatData::OpenDir(DirEntry* entry)
 {
-	FatEntry*   data    = new FatEntry(this, entry);
+	FatEntry*   data    = new FatEntry(&fatDisk, info, entry);
 	DirEntries* entries = new DirEntries();
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
@@ -141,7 +242,7 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* entry)
 FatEntry* FatData::CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num)
 {
 	DirEntries* entries = OpenDir(entry);
-	FatEntry*   data    = new FatEntry(this, entry);
+	FatEntry*   data    = new FatEntry(&fatDisk, info, entry);
 
 	//Cal the size of entries
 	uint8_t namelen = strlen(name);
@@ -213,7 +314,7 @@ FatData::DirEntries* FatData::CreateDir(DirEntry* entry, const char* name)
 	FATEnt*   ents = NULL;
 	FatEntry* data = CreateEntry(entry, name, ents, num);
 
-	uint32_t clust = fatDisk->AllocCluster(1);
+	uint32_t clust = fatDisk.AllocCluster(1);
 
 	//Set entry attr
 	ents[num].sfn.attr = _ATTR_DIRECTORY;
@@ -236,7 +337,7 @@ FatData::DirEntries* FatData::CreateDir(DirEntry* entry, const char* name)
 		memcpy(dirs[1].sfn.name, "..         ", 11);
 
 		DirEntry* dir = new DirEntry(ents[num].sfn, (char*)name);
-		FatEntry* child = new FatEntry(this, dir);
+		FatEntry* child = new FatEntry(&fatDisk, info, dir);
 		child->Push(dirs, 2);
 		delete child;
 		delete[] dirs;
@@ -290,7 +391,7 @@ FatData::DirEntries* FatData::CreateDir(const char* path)
 /// @return 
 char* FatData::GetVolumeLabel()
 {
-	FatEntry* data = new FatEntry(this, NULL);
+	FatEntry* data = new FatEntry(&fatDisk, info, NULL);
 	FATEnt*   ent  = data->Item();
 
 	char* label = (char*)"NONAME";
@@ -312,7 +413,7 @@ char* FatData::GetVolumeLabel()
 /// @return 
 int FatData::SetVolumeLabel(const char* name)
 {
-	FatEntry* data = new FatEntry(this, NULL);
+	FatEntry* data = new FatEntry(&fatDisk, info, NULL);
 	FATEnt*   ent  = data->Item();
 
 	//Check is volume entry
@@ -360,17 +461,17 @@ int FatData::Write(char* data, uint32_t size, DirEntry* entry)
 {
 	bool isDone = false;
 	uint32_t fileSize = entry->body.fileSize;
-	uint32_t bytesPerSec = dbr->bpb.bytesPerSec;
-	uint32_t secPerClust = dbr->bpb.secPerClust;
+	uint32_t bytesPerSec = info->bytesPerSec;
+	uint32_t secPerClust = info->secPerClust;
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-	uint32_t fstCluster = fatDisk->MergeCluster(entry->body.fstClustHI, entry->body.fstClustLO);
+	uint32_t fstCluster = fatDisk.MergeCluster(entry->body.fstClustHI, entry->body.fstClustLO);
 
 	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
 	
 	memcpy((void*)allocBuff, (const void*)data, size);
 
-	if (clusSize == fatDisk->WriteCluster(allocBuff, clusSize, fstCluster)) isDone = true;
+	if (clusSize == fatDisk.WriteCluster(allocBuff, clusSize, fstCluster)) isDone = true;
 
 	delete[] allocBuff;
 	return isDone ? size : 0;
@@ -385,15 +486,15 @@ int FatData::Read(char* data, uint32_t size, DirEntry* entry)
 {
 	bool isDone = false;
 	uint32_t fileSize = entry->body.fileSize;
-	uint32_t bytesPerSec = dbr->bpb.bytesPerSec;
-	uint32_t secPerClust = dbr->bpb.secPerClust;
+	uint32_t bytesPerSec = info->bytesPerSec;
+	uint32_t secPerClust = info->secPerClust;
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-	uint32_t fstCluster = fatDisk->MergeCluster(entry->body.fstClustHI, entry->body.fstClustLO);
+	uint32_t fstCluster = fatDisk.MergeCluster(entry->body.fstClustHI, entry->body.fstClustLO);
 
 	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
 	
-	if (clusSize == fatDisk->ReadCluster(allocBuff, clusSize, fstCluster))
+	if (clusSize == fatDisk.ReadCluster(allocBuff, clusSize, fstCluster))
 	{
 		memcpy((void*)data, (const void*)allocBuff, size);
 		isDone = true;

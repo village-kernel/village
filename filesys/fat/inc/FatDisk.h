@@ -7,13 +7,23 @@
 #ifndef __FAT_DISk_H__
 #define __FAT_DISk_H__
 
-#include "FatObjs.h"
+#include "FatDefs.h"
 
 
 /// @brief FatDisk
-class FatDisk : public FatObjs
+class FatDisk : public FatDefs
 {
+private:
+	//Data Members
+	Info*    info;
+
+	//Driver Members
+	Driver*  diskdrv;
+	uint32_t fstSec;
 public:
+	//Method
+	void Setup(Driver* diskdrv, uint32_t fstSec, Info* info);
+
 	//Cluster and sector Methods
 	uint32_t MergeCluster(uint16_t clustHI, uint16_t clustLO);
 	uint32_t ClusterToSector(uint32_t clust);

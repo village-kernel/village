@@ -10,14 +10,14 @@
 
 
 /// @brief 
-FatEntry::FatEntry(FatObjs* objs, DirEntry* entry)
+FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* entry)
 	:body(NULL),
 	ents(NULL),
 	index(0),
 	clust(0),
 	sector(0)
 {
-	if (NULL != objs) Setup(objs, entry);
+	if (fatDisk && info) Setup(fatDisk, info, entry);
 }
 
 
@@ -101,13 +101,13 @@ void FatEntry::Next()
 
 /// @brief 
 /// @param entry 
-void FatEntry::Setup(FatObjs* objs, DirEntry* entry)
+void FatEntry::Setup(FatDisk* fatDisk, Info* info, DirEntry* entry)
 {
-	FatObjs::Clone(objs);
+	this->fatDisk = fatDisk;
+	this->info    = info;
+	this->body    = entry;
 
-	this->body = entry;
-
-	ents = (FATEnt*)new char[dbr->bpb.bytesPerSec]();
+	ents = (FATEnt*)new char[info->bytesPerSec]();
 	
 	fatDisk->CalcFirstSector(body, clust, sector);
 

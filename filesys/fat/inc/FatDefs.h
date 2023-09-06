@@ -261,6 +261,7 @@ protected:
 		FATType  fatType;
 		uint32_t fatSize;
 
+		uint32_t rsvdSecCnt;
 		uint32_t totalSectors;
 		uint32_t countOfClusters;
 
@@ -275,6 +276,8 @@ protected:
 		uint32_t countOfDataSecs;
 
 		uint32_t entriesPerSec;
+		uint32_t bytesPerSec;
+		uint32_t secPerClust;
 	};
 
 	struct DskSzToSecPerClus
