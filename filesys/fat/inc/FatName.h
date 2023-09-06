@@ -7,11 +7,11 @@
 #ifndef __FAT_NAME_H__
 #define __FAT_NAME_H__
 
-#include "FatObjs.h"
+#include "FatDefs.h"
 
 
 /// @brief FatName
-class FatName : public FatObjs
+class FatName : public FatDefs
 {
 public:
 	//Methods

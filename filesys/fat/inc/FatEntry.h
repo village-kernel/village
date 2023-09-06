@@ -45,24 +45,4 @@ public:
 	uint32_t Push(FATEnt* push, uint32_t size = 1);
 };
 
-
-/// @brief FatEntry
-class FatData : public FatObjs
-{
-private:
-	FatEntry* CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num);
-public:
-	//Directory Methods
-	char* NotDir(const char* path);
-	DirEntry* SearchPath(const char* path, int forward = 0);
-	DirEntry* SearchDir(DirEntry* entry, const char* name);
-	DirEntry* CreateFile(DirEntry* entry, const char* name);
-	DirEntries* CreateDir(DirEntry* entry, const char* name);
-	DirEntries* OpenDir(DirEntry* entry);
-
-	//Volume Methods
-	char* GetVolumeLabel();
-	int SetVolumeLabel(const char* name);
-};
-
 #endif //!__FAT_ENTRY_H__

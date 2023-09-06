@@ -86,10 +86,9 @@ objs-$(CONFIG_CMD_TOUCH)                    += CmdTouch.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
-objs-$(CONFIG_FATFS)                        += FatDir.o
+objs-$(CONFIG_FATFS)                        += FatData.o
 objs-$(CONFIG_FATFS)                        += FatDisk.o
 objs-$(CONFIG_FATFS)                        += FatEntry.o
-objs-$(CONFIG_FATFS)                        += FatFile.o
 objs-$(CONFIG_FATFS)                        += FatName.o
 objs-$(CONFIG_FATFS)                        += FatObjs.o
 objs-$(CONFIG_FATFS)                        += FatOpts.o

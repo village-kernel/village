@@ -164,7 +164,7 @@ char* FatOpts::GetVolumeLabel()
 /// @return 
 int FatOpts::Open(const char* name, int mode)
 {
-	DirEntry* entry = fatFile->Open(name, mode);
+	DirEntry* entry = fatData->Open(name, mode);
 	if (NULL != entry)
 	{
 		return files.Add(entry);
@@ -183,7 +183,7 @@ int FatOpts::Write(int fd, char* data, int size, int offset)
 	DirEntry* entry = files.GetItem(fd);
 	if (NULL != entry)
 	{
-		return fatFile->Write(data, size, entry);
+		return fatData->Write(data, size, entry);
 	}
 	return -1;
 }
@@ -199,7 +199,7 @@ int FatOpts::Read(int fd, char* data, int size, int offset)
 	DirEntry* entry = files.GetItem(fd);
 	if (NULL != entry)
 	{
-		return fatFile->Read(data, size, entry);
+		return fatData->Read(data, size, entry);
 	}
 	return -1;
 }
@@ -212,7 +212,7 @@ int FatOpts::Size(int fd)
 	DirEntry* entry = files.GetItem(fd);
 	if (NULL != entry)
 	{
-		return fatFile->Size(entry);
+		return fatData->Size(entry);
 	}
 	return 0;
 }
@@ -236,7 +236,7 @@ void FatOpts::Close(int fd)
 /// @return 
 int FatOpts::OpenDir(const char* name, int mode)
 {
-	DirEntries* data = fatDir->Open(name, mode);
+	DirEntries* data = fatData->OpenDir(name, mode);
 	if (NULL != data)
 	{
 		return dirs.Add(data);
@@ -282,7 +282,7 @@ int FatOpts::ReadDir(int fd, FileDir* dirs, int size, int offset)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			DirEntry* ent = fatDir->Read(data);
+			DirEntry* ent = fatData->ReadDir(data);
 			if (NULL != ent)
 			{
 				char* path = new char[strlen(data->path) + strlen(ent->name) + 2]();
@@ -309,7 +309,7 @@ int FatOpts::SizeDir(int fd)
 	DirEntries* data = dirs.GetItem(fd);
 	if (NULL != data)
 	{
-		return fatDir->Size(data);
+		return fatData->SizeDir(data);
 	}
 	return -1;
 }

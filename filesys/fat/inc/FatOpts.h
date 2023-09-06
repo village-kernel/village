@@ -9,13 +9,9 @@
 
 #include "Templates.h"
 #include "FileOpts.h"
-#include "FatDefs.h"
 #include "FatObjs.h"
 #include "FatDisk.h"
-#include "FatName.h"
-#include "FatEntry.h"
-#include "FatFile.h"
-#include "FatDir.h"
+#include "FatData.h"
 
 
 /// @brief FatOpts

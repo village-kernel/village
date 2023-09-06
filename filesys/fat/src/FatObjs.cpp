@@ -5,11 +5,10 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatObjs.h"
-#include "FatDir.h"
 #include "FatDisk.h"
 #include "FatName.h"
-#include "FatFile.h"
 #include "FatEntry.h"
+#include "FatData.h"
 
 
 /// @brief Constructor
@@ -32,10 +31,7 @@ void FatObjs::Clone(FatObjs* objs)
 	this->info     = objs->info;
 
 	this->fatDisk  = objs->fatDisk;
-	this->fatName  = objs->fatName;
 	this->fatData  = objs->fatData;
-	this->fatFile  = objs->fatFile;
-	this->fatDir   = objs->fatDir;
 
 	this->diskdrv  = objs->diskdrv;
 	this->fstSec   = objs->fstSec;
@@ -54,16 +50,10 @@ void FatObjs::Setup(Driver* diskdrv, uint32_t fstSec)
 	this->info     = new Info();
 
 	this->fatDisk  = new FatDisk();
-	this->fatName  = new FatName();
 	this->fatData  = new FatData();
-	this->fatFile  = new FatFile();
-	this->fatDir   = new FatDir();
 
 	fatDisk->Clone(this);
-	fatName->Clone(this);
 	fatData->Clone(this);
-	fatFile->Clone(this);
-	fatDir->Clone(this);
 }
 
 
@@ -72,10 +62,6 @@ void FatObjs::Exit()
 {
 	delete dbr;
 	delete info;
-
 	delete fatDisk;
-	delete fatName;
 	delete fatData;
-	delete fatFile;
-	delete fatDir;
 }

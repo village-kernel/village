@@ -13,8 +13,6 @@
 class FatDisk;
 class FatName;
 class FatData;
-class FatFile;
-class FatDir;
 
 
 /// @brief FatObjs
@@ -27,10 +25,7 @@ protected:
 
 	//Class Members
 	FatDisk*  fatDisk;
-	FatName*  fatName;
 	FatData*  fatData;
-	FatFile*  fatFile;
-	FatDir*   fatDir;
 
 	//Driver Members
 	Driver*  diskdrv;
