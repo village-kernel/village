@@ -146,7 +146,7 @@ int FatOpts::Unmount(const char* mount)
 /// @return 
 int FatOpts::SetVolumeLabel(const char* name)
 {
-	return fatEntry->SetVolumeLabel(name);
+	return fatData->SetVolumeLabel(name);
 }
 
 
@@ -154,7 +154,7 @@ int FatOpts::SetVolumeLabel(const char* name)
 /// @return 
 char* FatOpts::GetVolumeLabel()
 {
-	return fatEntry->GetVolumeLabel();
+	return fatData->GetVolumeLabel();
 }
 
 

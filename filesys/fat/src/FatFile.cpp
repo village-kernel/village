@@ -14,13 +14,13 @@
 /// @return 
 FatFile::DirEntry* FatFile::Create(const char* path)
 {
-	DirEntry* dir = fatEntry->SearchPath(path, 1);
+	DirEntry* dir = fatData->SearchPath(path, 1);
 	
 	if (NULL == dir) return NULL;
 	
 	if (dir->body.IsDirectory())
 	{
-		return fatEntry->CreateFile(dir, fatEntry->NotDir(path));
+		return fatData->CreateFile(dir, fatData->NotDir(path));
 	}
 
 	return NULL;
@@ -33,7 +33,7 @@ FatFile::DirEntry* FatFile::Create(const char* path)
 /// @return 
 FatFile::DirEntry* FatFile::Open(const char* name, int mode)
 {
-	DirEntry* dir = fatEntry->SearchPath(name);
+	DirEntry* dir = fatData->SearchPath(name);
 
 	if (NULL == dir)
 	{

@@ -11,7 +11,7 @@
 
 
 /// @brief 
-FatData::FatData(FatObjs* objs, DirEntry* entry)
+FatEntry::FatEntry(FatObjs* objs, DirEntry* entry)
 	:body(NULL),
 	ents(NULL),
 	index(0),
@@ -23,7 +23,7 @@ FatData::FatData(FatObjs* objs, DirEntry* entry)
 
 
 /// @brief 
-FatData::~FatData()
+FatEntry::~FatEntry()
 {
 	delete[] ents;
 }
@@ -31,7 +31,7 @@ FatData::~FatData()
 
 /// @brief 
 /// @param data 
-void FatData::Clone(FatData* data)
+void FatEntry::Clone(FatEntry* data)
 {
 	this->index  = data->index;
 	this->clust  = data->clust;
@@ -40,7 +40,7 @@ void FatData::Clone(FatData* data)
 
 
 /// @brief 
-void FatData::Clear()
+void FatEntry::Clear()
 {
 	this->index  = 0;
 	this->clust  = 0;
@@ -50,31 +50,31 @@ void FatData::Clear()
 
 /// @brief 
 /// @return 
-bool FatData::IsEmpty() { return !(index || clust || sector); }
+bool FatEntry::IsEmpty() { return !(index || clust || sector); }
 
 
 /// @brief 
 /// @return 
-bool FatData::IsEnd() { return 0 == sector; }
+bool FatEntry::IsEnd() { return 0 == sector; }
 
 
 /// @brief 
 /// @return 
-bool FatData::IsValid() { return ents[index].IsVaild(); }
+bool FatEntry::IsValid() { return ents[index].IsVaild(); }
 
 
 /// @brief 
 /// @return 
-uint8_t FatData::GetSize() { return ents[index].OrdSize(); }
+uint8_t FatEntry::GetSize() { return ents[index].OrdSize(); }
 
 
 /// @brief 
 /// @return 
-FatData::FATEnt* FatData::Item() { return ents + index; }
+FatEntry::FATEnt* FatEntry::Item() { return ents + index; }
 
 
 /// @brief 
-void FatData::Begin()
+void FatEntry::Begin()
 {
 	this->index  = 0;
 	this->clust  = 0;
@@ -85,7 +85,7 @@ void FatData::Begin()
 
 
 /// @brief 
-void FatData::Next()
+void FatEntry::Next()
 {
 	if (++index >= info->entriesPerSec)
 	{
@@ -102,7 +102,7 @@ void FatData::Next()
 
 /// @brief 
 /// @param entry 
-void FatData::Setup(FatObjs* objs, DirEntry* entry)
+void FatEntry::Setup(FatObjs* objs, DirEntry* entry)
 {
 	FatObjs::Clone(objs);
 
@@ -119,10 +119,10 @@ void FatData::Setup(FatObjs* objs, DirEntry* entry)
 /// @brief 
 /// @param size 
 /// @return 
-int FatData::FindSpace(uint32_t size)
+int FatEntry::FindSpace(uint32_t size)
 {
-	FatData record;
-	uint8_t count = 0;
+	FatEntry record;
+	uint8_t  count = 0;
 
 	for (Begin(); !IsEnd(); Next())
 	{
@@ -153,7 +153,7 @@ int FatData::FindSpace(uint32_t size)
 /// @param pop 
 /// @param size 
 /// @return 
-uint32_t FatData::Pop(FATEnt* pop, uint32_t size)
+uint32_t FatEntry::Pop(FATEnt* pop, uint32_t size)
 {
 	for (uint32_t i = 0; i < size; i++)
 	{
@@ -180,7 +180,7 @@ uint32_t FatData::Pop(FATEnt* pop, uint32_t size)
 /// @param push 
 /// @param size 
 /// @return 
-uint32_t FatData::Push(FATEnt* push, uint32_t size)
+uint32_t FatEntry::Push(FATEnt* push, uint32_t size)
 {
 	fatDisk->ReadOneSector((char*)ents, sector); 
 
@@ -213,7 +213,7 @@ uint32_t FatData::Push(FATEnt* push, uint32_t size)
 /// @brief Not dir
 /// @param path 
 /// @return 
-char* FatEntry::NotDir(const char* path)
+char* FatData::NotDir(const char* path)
 {
 	uint8_t pos = strlen(path);
 	char ch = 0; do { ch = path[--pos]; } while ('/' != ch && pos);
@@ -224,7 +224,7 @@ char* FatEntry::NotDir(const char* path)
 /// @brief Search path
 /// @param path 
 /// @return 
-FatEntry::DirEntry* FatEntry::SearchPath(const char* path, int forward)
+FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
 {
 	Regex regex;
 	regex.Split(path, '/');
@@ -257,9 +257,9 @@ FatEntry::DirEntry* FatEntry::SearchPath(const char* path, int forward)
 /// @param entry 
 /// @param dir 
 /// @return 
-FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
+FatData::DirEntry* FatData::SearchDir(DirEntry* entry, const char* dir)
 {
-	FatData*  data  = new FatData(this, entry);
+	FatEntry* data  = new FatEntry(this, entry);
 	DirEntry* found = NULL;
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
@@ -294,9 +294,9 @@ FatEntry::DirEntry* FatEntry::SearchDir(DirEntry* entry, const char* dir)
 /// @brief Open dir
 /// @param entry 
 /// @return 
-FatEntry::DirEntries* FatEntry::OpenDir(DirEntry* entry)
+FatData::DirEntries* FatData::OpenDir(DirEntry* entry)
 {
-	FatData*    data    = new FatData(this, entry);
+	FatEntry*   data    = new FatEntry(this, entry);
 	DirEntries* entries = new DirEntries();
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
@@ -325,6 +325,8 @@ FatEntry::DirEntries* FatEntry::OpenDir(DirEntry* entry)
 		delete[] ents;
 	}
 
+	entries->dirs.Begin();
+
 	delete data;
 	return entries;
 }
@@ -335,10 +337,10 @@ FatEntry::DirEntries* FatEntry::OpenDir(DirEntry* entry)
 /// @param ents 
 /// @param name 
 /// @return 
-FatData* FatEntry::CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num)
+FatEntry* FatData::CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num)
 {
 	DirEntries* entries = OpenDir(entry);
-	FatData*    data    = new FatData(this, entry);
+	FatEntry*   data    = new FatEntry(this, entry);
 
 	//Cal the size of entries
 	uint8_t namelen = strlen(name);
@@ -379,11 +381,11 @@ FatData* FatEntry::CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents,
 /// @param entry 
 /// @param name 
 /// @return 
-FatEntry::DirEntry* FatEntry::CreateFile(DirEntry* entry, const char* name)
+FatData::DirEntry* FatData::CreateFile(DirEntry* entry, const char* name)
 {
-	uint8_t  num  = 0;
-	FATEnt*  ents = NULL;
-	FatData* data = CreateEntry(entry, name, ents, num);
+	uint8_t   num  = 0;
+	FATEnt*   ents = NULL;
+	FatEntry* data = CreateEntry(entry, name, ents, num);
 
 	//Set entry attr
 	ents[num].sfn.attr = _ATTR_FILE;
@@ -403,11 +405,11 @@ FatEntry::DirEntry* FatEntry::CreateFile(DirEntry* entry, const char* name)
 /// @param entry 
 /// @param name 
 /// @return 
-FatEntry::DirEntries* FatEntry::CreateDir(DirEntry* entry, const char* name)
+FatData::DirEntries* FatData::CreateDir(DirEntry* entry, const char* name)
 {
-	uint8_t  num = 0;
-	FATEnt*  ents = NULL;
-	FatData* data = CreateEntry(entry, name, ents, num);
+	uint8_t   num = 0;
+	FATEnt*   ents = NULL;
+	FatEntry* data = CreateEntry(entry, name, ents, num);
 
 	uint32_t clust = fatDisk->AllocCluster(1);
 
@@ -431,9 +433,10 @@ FatEntry::DirEntries* FatEntry::CreateDir(DirEntry* entry, const char* name)
 		memcpy(dirs[1].sfn.name, "..         ", 11);
 
 		DirEntry* entry = new DirEntry(ents[num].sfn, (char*)name);
-		FatData*  child = new FatData(this, entry);
+		FatEntry* child = new FatEntry(this, entry);
 		child->Push(dirs, 2);
 		delete child;
+		delete[] dirs;
 
 		return OpenDir(entry);
 	}
@@ -444,10 +447,10 @@ FatEntry::DirEntries* FatEntry::CreateDir(DirEntry* entry, const char* name)
 
 /// @brief Get volume label
 /// @return 
-char* FatEntry::GetVolumeLabel()
+char* FatData::GetVolumeLabel()
 {
-	FatData* data = new FatData(this, NULL);
-	FATEnt*  ent  = data->Item();
+	FatEntry* data = new FatEntry(this, NULL);
+	FATEnt*   ent  = data->Item();
 
 	char* label = (char*)"NONAME";
 
@@ -466,10 +469,10 @@ char* FatEntry::GetVolumeLabel()
 /// @brief Set volume label
 /// @param name 
 /// @return 
-int FatEntry::SetVolumeLabel(const char* name)
+int FatData::SetVolumeLabel(const char* name)
 {
-	FatData* data = new FatData(this, NULL);
-	FATEnt*  ent  = data->Item();
+	FatEntry* data = new FatEntry(this, NULL);
+	FATEnt*   ent  = data->Item();
 
 	//Check is volume entry
 	if (ent->sfn.IsVolume())

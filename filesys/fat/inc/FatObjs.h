@@ -12,7 +12,7 @@
 /// @brief Declarations
 class FatDisk;
 class FatName;
-class FatEntry;
+class FatData;
 class FatFile;
 class FatDir;
 
@@ -28,7 +28,7 @@ protected:
 	//Class Members
 	FatDisk*  fatDisk;
 	FatName*  fatName;
-	FatEntry* fatEntry;
+	FatData*  fatData;
 	FatFile*  fatFile;
 	FatDir*   fatDir;
 

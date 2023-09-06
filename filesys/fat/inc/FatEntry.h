@@ -11,7 +11,7 @@
 
 
 /// @brief 
-class FatData : public FatObjs
+class FatEntry : public FatObjs
 {
 private:
 	//Members
@@ -24,11 +24,11 @@ private:
 
 	//Methods
 	bool IsEmpty();
-	void Clone(FatData* data);
+	void Clone(FatEntry* data);
 	void Clear();
 public:
-	FatData(FatObjs* objs = NULL, DirEntry* entry = NULL);
-	~FatData();
+	FatEntry(FatObjs* objs = NULL, DirEntry* entry = NULL);
+	~FatEntry();
 
 	//Iterator Methods
 	void Begin();
@@ -47,10 +47,10 @@ public:
 
 
 /// @brief FatEntry
-class FatEntry : public FatObjs
+class FatData : public FatObjs
 {
 private:
-	FatData* CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num);
+	FatEntry* CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num);
 public:
 	//Directory Methods
 	char* NotDir(const char* path);
