@@ -30,14 +30,6 @@ FatData::~FatData()
 
 
 /// @brief 
-/// @return 
-bool FatData::IsEmpty()
-{
-	return !(index || clust || sector);
-}
-
-
-/// @brief 
 /// @param data 
 void FatData::Clone(FatData* data)
 {
@@ -54,6 +46,31 @@ void FatData::Clear()
 	this->clust  = 0;
 	this->sector = 0;
 }
+
+
+/// @brief 
+/// @return 
+bool FatData::IsEmpty() { return !(index || clust || sector); }
+
+
+/// @brief 
+/// @return 
+bool FatData::IsEnd() { return 0 == sector; }
+
+
+/// @brief 
+/// @return 
+bool FatData::IsValid() { return ents[index].IsVaild(); }
+
+
+/// @brief 
+/// @return 
+uint8_t FatData::GetSize() { return ents[index].OrdSize(); }
+
+
+/// @brief 
+/// @return 
+FatData::FATEnt* FatData::Item() { return ents + index; }
 
 
 /// @brief 
@@ -80,38 +97,6 @@ void FatData::Next()
 		}
 		else return;
 	}
-}
-
-
-/// @brief 
-/// @return 
-FatData::FATEnt* FatData::Item()
-{
-	return ents + index;
-}
-
-
-/// @brief 
-/// @return 
-bool FatData::IsEnd()
-{
-	return 0 == sector;
-}
-
-
-/// @brief 
-/// @return 
-bool FatData::IsValid()
-{
-	return ents[index].IsVaild();
-}
-
-
-/// @brief 
-/// @return 
-uint8_t FatData::GetSize()
-{
-	return ents[index].OrdSize();
 }
 
 
@@ -424,14 +409,33 @@ FatEntry::DirEntries* FatEntry::CreateDir(DirEntry* entry, const char* name)
 	FATEnt*  ents = NULL;
 	FatData* data = CreateEntry(entry, name, ents, num);
 
+	uint32_t clust = fatDisk->AllocCluster(1);
+
 	//Set entry attr
 	ents[num].sfn.attr = _ATTR_DIRECTORY;
+	ents[num].sfn.fstClustHI = (clust >> 16) & 0xffff;
+	ents[num].sfn.fstClustLO = (clust >> 0)  & 0xffff;
 
 	//Put to disk
 	if (_OK == data->FindSpace(num + 1) && 
 		_OK == data->Push(ents, num + 1))
 	{
-		
+		FATEnt* dirs = new FATEnt[2]();
+		dirs[0].sfn = ents[num].sfn;
+		dirs[1].sfn = entry->body;
+
+		dirs[0].sfn.attr |= _ATTR_HIDDEN;
+		dirs[1].sfn.attr |= _ATTR_HIDDEN;
+
+		memcpy(dirs[0].sfn.name, ".          ", 11);
+		memcpy(dirs[1].sfn.name, "..         ", 11);
+
+		DirEntry* entry = new DirEntry(ents[num].sfn, (char*)name);
+		FatData*  child = new FatData(this, entry);
+		child->Push(dirs, 2);
+		delete child;
+
+		return OpenDir(entry);
 	}
 
 	return NULL;
