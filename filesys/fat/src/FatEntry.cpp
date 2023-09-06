@@ -391,8 +391,9 @@ FatData::DirEntry* FatData::CreateFile(DirEntry* entry, const char* name)
 	ents[num].sfn.attr = _ATTR_FILE;
 
 	//Put to disk
-	if (_OK == data->FindSpace(num + 1) && 
-		_OK == data->Push(ents, num + 1))
+	uint8_t size = num + 1;
+	if (_OK == data->FindSpace(size) && 
+		size == data->Push(ents, size))
 	{
 		return new DirEntry(ents[num].sfn, (char*)name);
 	}
@@ -419,8 +420,9 @@ FatData::DirEntries* FatData::CreateDir(DirEntry* entry, const char* name)
 	ents[num].sfn.fstClustLO = (clust >> 0)  & 0xffff;
 
 	//Put to disk
-	if (_OK == data->FindSpace(num + 1) && 
-		_OK == data->Push(ents, num + 1))
+	uint8_t size = num + 1;
+	if (_OK == data->FindSpace(size) && 
+		size == data->Push(ents, size))
 	{
 		FATEnt* dirs = new FATEnt[2]();
 		dirs[0].sfn = ents[num].sfn;
@@ -432,13 +434,13 @@ FatData::DirEntries* FatData::CreateDir(DirEntry* entry, const char* name)
 		memcpy(dirs[0].sfn.name, ".          ", 11);
 		memcpy(dirs[1].sfn.name, "..         ", 11);
 
-		DirEntry* entry = new DirEntry(ents[num].sfn, (char*)name);
-		FatEntry* child = new FatEntry(this, entry);
+		DirEntry* dir = new DirEntry(ents[num].sfn, (char*)name);
+		FatEntry* child = new FatEntry(this, dir);
 		child->Push(dirs, 2);
 		delete child;
 		delete[] dirs;
 
-		return OpenDir(entry);
+		return OpenDir(dir);
 	}
 
 	return NULL;
