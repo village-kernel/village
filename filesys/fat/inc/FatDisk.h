@@ -31,6 +31,7 @@ public:
 	uint32_t WriteOneSector(char* data, uint32_t sector);
 	uint32_t WriteSector(char* data, uint32_t secSize, uint32_t sector);
 	uint32_t WriteCluster(char* data, uint32_t clustSize, uint32_t clust);
+	uint32_t ClearCluster(uint32_t clust, uint32_t clustSize);
 
 	uint32_t AllocCluster(uint32_t clustSize);
 	uint32_t FreeCluster(uint32_t clustSize, uint32_t clust);
