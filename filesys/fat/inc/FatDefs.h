@@ -200,7 +200,7 @@ protected:
 		
 		FATEnt()           { memset((void*)this, 0, 32); }
 		bool IsLongName()  { return ((lfn.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME); }
-		bool IsVaild()     { return ((lfn.ord) && (lfn.ord != dir_free_flag)); }
+		bool IsValid()     { return ((lfn.ord) && (lfn.ord != dir_free_flag)); }
 		uint8_t OrdSize()  { return (lfn.ord - dir_seq_flag + 1); }
 
 	} __attribute__((packed));

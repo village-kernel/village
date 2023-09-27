@@ -9,6 +9,7 @@
 
 #include "FatDefs.h"
 #include "FatDisk.h"
+#include "FatName.h"
 
 
 /// @brief 
@@ -18,6 +19,7 @@ private:
 	//Data Members
 	Info*    info;
 	FatDisk* fatDisk;
+	FatName  fatName;
 
 	//Members
 	DirEntry* body;
@@ -39,9 +41,10 @@ public:
 	void Begin();
 	void Next();
 	bool IsEnd();
-	bool IsValid();
-	uint8_t GetSize();
+
+	//Item Methods
 	FATEnt* Item();
+	char* GetName();
 
 	//Methods
 	void Setup(FatDisk* fatDisk, Info* info, DirEntry* entry);

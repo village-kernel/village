@@ -166,26 +166,13 @@ FatData::DirEntry* FatData::SearchDir(DirEntry* entry, const char* dir)
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
 	{
-		if (!data->IsValid()) continue;
-		
-		uint8_t size = data->Item()->IsLongName() ? data->GetSize() : 1;
-		FATEnt* ents = new FATEnt[size]();
-		if (data->Pop(ents, size) != size) break;
-		
-		char* dirname = NULL;
-		if (ents[0].IsLongName())
-			dirname = fatName.GetLongName(ents);
-		else
-			dirname = fatName.GetShortName(ents);
+		char* name = data->GetName();
 
-		if (0 == strcmp(dirname, dir))
+		if (NULL != name && 0 == strcmp(name, dir))
 		{
-			found = new DirEntry(ents[size - 1].sfn, dirname);
-			delete[] ents;
+			found = new DirEntry(data->Item()->sfn, name);
 			break;
 		}
-
-		delete[] ents;
 	}
 
 	delete data;
@@ -203,28 +190,16 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* entry)
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
 	{
-		if (!data->IsValid()) continue;
-		
-		uint8_t size = data->Item()->IsLongName() ? data->GetSize() : 1;
-		FATEnt* ents = new FATEnt[size]();
-		if (data->Pop(ents, size) != size) break;
-		
-		char* dirname = NULL;
-		if (ents->IsLongName())
-			dirname = fatName.GetLongName(ents);
-		else
-			dirname = fatName.GetShortName(ents);
+		char* name = data->GetName();
 
-		if (0 != strcmp(dirname, ""))
+		if (NULL != name && 0 != strcmp(name, ""))
 		{
-			FATEnt* ent = &ents[size- 1];
+			FATEnt* ent = data->Item();
 			if (ent->sfn.IsFile() || ent->sfn.IsDirectory())
 			{
-				entries->dirs.Add(new DirEntry(ent->sfn, dirname));
+				entries->dirs.Add(new DirEntry(ent->sfn, name));
 			}
 		}
-
-		delete[] ents;
 	}
 
 	entries->dirs.Begin();

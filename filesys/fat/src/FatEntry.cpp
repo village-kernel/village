@@ -9,7 +9,7 @@
 #include "FatName.h"
 
 
-/// @brief 
+/// @brief Constructor
 FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* entry)
 	:body(NULL),
 	ents(NULL),
@@ -21,14 +21,22 @@ FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* entry)
 }
 
 
-/// @brief 
+/// @brief Destructor
 FatEntry::~FatEntry()
 {
 	delete[] ents;
 }
 
 
-/// @brief 
+/// @brief data is empty
+/// @return 
+bool FatEntry::IsEmpty()
+{
+	return !(index || clust || sector);
+}
+
+
+/// @brief low clone data
 /// @param data 
 void FatEntry::Clone(FatEntry* data)
 {
@@ -38,7 +46,7 @@ void FatEntry::Clone(FatEntry* data)
 }
 
 
-/// @brief 
+/// @brief clear data
 void FatEntry::Clear()
 {
 	this->index  = 0;
@@ -47,32 +55,7 @@ void FatEntry::Clear()
 }
 
 
-/// @brief 
-/// @return 
-bool FatEntry::IsEmpty() { return !(index || clust || sector); }
-
-
-/// @brief 
-/// @return 
-bool FatEntry::IsEnd() { return 0 == sector; }
-
-
-/// @brief 
-/// @return 
-bool FatEntry::IsValid() { return ents[index].IsVaild(); }
-
-
-/// @brief 
-/// @return 
-uint8_t FatEntry::GetSize() { return ents[index].OrdSize(); }
-
-
-/// @brief 
-/// @return 
-FatEntry::FATEnt* FatEntry::Item() { return ents + index; }
-
-
-/// @brief 
+/// @brief Iterator begin
 void FatEntry::Begin()
 {
 	this->index  = 0;
@@ -83,7 +66,7 @@ void FatEntry::Begin()
 }
 
 
-/// @brief 
+/// @brief Iterator next
 void FatEntry::Next()
 {
 	if (++index >= info->entriesPerSec)
@@ -99,7 +82,49 @@ void FatEntry::Next()
 }
 
 
-/// @brief 
+/// @brief Iterator is ended
+/// @return res
+bool FatEntry::IsEnd()
+{
+	return 0 == sector;
+}
+
+
+/// @brief Get item
+/// @return item
+FatEntry::FATEnt* FatEntry::Item()
+{
+	return ents + index;
+}
+
+
+/// @brief Get item name
+/// @return name
+char* FatEntry::GetName()
+{
+	char* name = NULL;
+
+	if (Item()->IsValid())
+	{
+		uint8_t size = Item()->IsLongName() ? Item()->OrdSize() : 1;
+		FATEnt* ents = new FATEnt[size]();
+
+		if (Pop(ents, size) == size)
+		{
+			if (ents->IsLongName())
+				name = fatName.GetLongName(ents);
+			else
+				name = fatName.GetShortName(ents);
+		}
+		
+		delete[] ents;
+	}
+
+	return name;
+}
+
+
+/// @brief Setup
 /// @param entry 
 void FatEntry::Setup(FatDisk* fatDisk, Info* info, DirEntry* entry)
 {
@@ -108,16 +133,14 @@ void FatEntry::Setup(FatDisk* fatDisk, Info* info, DirEntry* entry)
 	this->body    = entry;
 
 	ents = (FATEnt*)new char[info->bytesPerSec]();
-	
 	fatDisk->CalcFirstSector(body, clust, sector);
-
 	fatDisk->ReadOneSector((char*)ents, sector);
 }
 
 
-/// @brief 
+/// @brief Find free space
 /// @param size 
-/// @return 
+/// @return res
 int FatEntry::FindSpace(uint32_t size)
 {
 	FatEntry record;
@@ -125,7 +148,7 @@ int FatEntry::FindSpace(uint32_t size)
 
 	for (Begin(); !IsEnd(); Next())
 	{
-		if (!ents[index].IsVaild())
+		if (!ents[index].IsValid())
 		{
 			if (record.IsEmpty())
 			{
@@ -148,10 +171,10 @@ int FatEntry::FindSpace(uint32_t size)
 }
 
 
-/// @brief 
+/// @brief Pop entry
 /// @param pop 
 /// @param size 
-/// @return 
+/// @return size
 uint32_t FatEntry::Pop(FATEnt* pop, uint32_t size)
 {
 	for (uint32_t i = 0; i < size; i++)
@@ -175,10 +198,10 @@ uint32_t FatEntry::Pop(FATEnt* pop, uint32_t size)
 }
 
 
-/// @brief 
+/// @brief Push entry
 /// @param push 
 /// @param size 
-/// @return 
+/// @return size
 uint32_t FatEntry::Push(FATEnt* push, uint32_t size)
 {
 	fatDisk->ReadOneSector((char*)ents, sector); 
