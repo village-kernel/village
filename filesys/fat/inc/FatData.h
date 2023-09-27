@@ -29,6 +29,7 @@ private:
 
 	//Directory Methods
 	char* NotDir(const char* path);
+	char* GetDirName(FatEntry* data);
 	DirEntry* SearchPath(const char* path, int forward = 0);
 	DirEntry* SearchDir(DirEntry* entry, const char* name);
 	DirEntries* OpenDir(DirEntry* entry);

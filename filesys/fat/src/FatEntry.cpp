@@ -6,7 +6,6 @@
 //###########################################################################
 #include "FatEntry.h"
 #include "FatDisk.h"
-#include "FatName.h"
 
 
 /// @brief Constructor
@@ -95,32 +94,6 @@ bool FatEntry::IsEnd()
 FatEntry::FATEnt* FatEntry::Item()
 {
 	return ents + index;
-}
-
-
-/// @brief Get item name
-/// @return name
-char* FatEntry::GetName()
-{
-	char* name = NULL;
-
-	if (Item()->IsValid())
-	{
-		uint8_t size = Item()->IsLongName() ? Item()->OrdSize() : 1;
-		FATEnt* ents = new FATEnt[size]();
-
-		if (Pop(ents, size) == size)
-		{
-			if (ents->IsLongName())
-				name = fatName.GetLongName(ents);
-			else
-				name = fatName.GetShortName(ents);
-		}
-		
-		delete[] ents;
-	}
-
-	return name;
 }
 
 

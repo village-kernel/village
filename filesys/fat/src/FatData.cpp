@@ -123,6 +123,34 @@ char* FatData::NotDir(const char* path)
 }
 
 
+/// @brief Get dir name
+/// @return name
+char* FatData::GetDirName(FatEntry* data)
+{
+	char* name = NULL;
+
+	FATEnt* ent = data->Item();
+
+	if (ent->IsValid())
+	{
+		uint8_t size = ent->IsLongName() ? ent->OrdSize() : 1;
+		FATEnt* ents = new FATEnt[size]();
+
+		if (data->Pop(ents, size) == size)
+		{
+			if (ents->IsLongName())
+				name = fatName.GetLongName(ents);
+			else
+				name = fatName.GetShortName(ents);
+		}
+		
+		delete[] ents;
+	}
+
+	return name;
+}
+
+
 /// @brief Search path
 /// @param path 
 /// @return 
@@ -166,7 +194,7 @@ FatData::DirEntry* FatData::SearchDir(DirEntry* entry, const char* dir)
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
 	{
-		char* name = data->GetName();
+		char* name = GetDirName(data);
 
 		if (NULL != name && 0 == strcmp(name, dir))
 		{
@@ -190,7 +218,7 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* entry)
 
 	for (data->Begin(); !data->IsEnd(); data->Next())
 	{
-		char* name = data->GetName();
+		char* name = GetDirName(data);
 
 		if (NULL != name && 0 != strcmp(name, ""))
 		{
