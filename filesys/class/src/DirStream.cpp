@@ -23,6 +23,28 @@ DirStream::~DirStream()
 }
 
 
+/// @brief DirStream is exist
+/// @param name 
+/// @return 
+bool DirStream::IsExist(const char* name)
+{
+	opts = filesystem.GetFileOpts(name);
+
+	if (NULL != opts)
+	{
+		fd = opts->OpenDir(name, FileMode::_OpenExisting);
+	}
+	
+	if (fd != -1)
+	{
+		opts->CloseDir(fd);
+		return true;
+	}
+
+	return false;
+}
+
+
 /// @brief DirStream open
 /// @param name 
 /// @param opt 

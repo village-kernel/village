@@ -22,6 +22,7 @@ public:
 	//Methods
 	DirStream(const char* name = NULL, int mode = 0);
 	~DirStream();
+	bool IsExist(const char* name);
 	int Open(const char* name, int mode);
 	int Read(FileDir* dirs, int size, int offset = 0);
 	int Size();
