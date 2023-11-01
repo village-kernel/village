@@ -54,6 +54,9 @@ EXPORT_SYMBOL(console);
 /// @brief Console initialize
 void Console::Initialize()
 {
+	//Set default path
+	strcpy(path, "C:");
+
 	//Initialize msg mgr
 	msgMgr.Initialize();
 
@@ -72,7 +75,8 @@ void Console::Initialize()
 	}
 
 	//Output console symbol
-	msgMgr.Write((uint8_t*)"# ");
+	msgMgr.Write((uint8_t*)path);
+	msgMgr.Write((uint8_t*)" ");
 }
 
 
@@ -102,7 +106,8 @@ void Console::ExecuteCmd(CmdMsg msg)
 			regex.Split((const char*)msg.args);
 			cmd->Execute(regex.Size(), regex.ToArray());
 			regex.Clear();
-			msgMgr.Write((uint8_t*)"# ");
+			msgMgr.Write((uint8_t*)path);
+			msgMgr.Write((uint8_t*)" ");
 			return;
 		}
 	}
@@ -235,6 +240,31 @@ void Console::OutputRAW(const char* format, ...)
 	mutex.Unlock();
 }
 EXPORT_SYMBOL(_ZN7Console9OutputRAWEPKcz);
+
+
+/// @brief Console set path
+/// @param path 
+void Console::SetPath(const char* path)
+{
+	if (path_size > strlen(path))
+	{
+		strcpy(this->path, path);
+	}
+	else
+	{
+		Error("The path length exceeds the limit, th maximum length is %d.", path_size);
+	}
+}
+EXPORT_SYMBOL(_ZN7Console7SetPathEPKc);
+
+
+/// @brief Cosole get path
+/// @return path
+const char* Console::GetPath()
+{
+	return path;
+}
+EXPORT_SYMBOL(_ZN7Console7GetPathEv);
 
 
 ///Register module

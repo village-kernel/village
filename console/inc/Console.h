@@ -21,6 +21,7 @@ class Console : public Module
 private:
 	//Static constants
 	static const uint16_t buf_size = 100;
+	static const uint16_t path_size = 100;
 
 	//Members
 	List<Cmd> cmds;
@@ -28,6 +29,7 @@ private:
 	Regex     regex;
 	CmdMsgMgr msgMgr;
 	char      data[buf_size];
+	char      path[path_size];
 
 	//Methods
 	Console();
@@ -40,13 +42,17 @@ public:
 	void RegisterCmd(Cmd* cmd, char* name);
 	void DeregisterCmd(Cmd* cmd, char* name);
 
-	//Methods
+	//Output Methods
 	void Log(const char* format, ...);
 	void Info(const char* format, ...);
 	void Error(const char* format, ...);
 	void Warn(const char* format, ...);
 	void Output(const char* format, ...);
 	void OutputRAW(const char* format, ...);
+	
+	//Path Methods
+	void SetPath(const char* path);
+	const char* GetPath();
 	
 	//Singleton Instance
 	static Console& Instance();
