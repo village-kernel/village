@@ -23,6 +23,28 @@ FileStream::~FileStream()
 }
 
 
+/// @brief FileStream is exist
+/// @param name 
+/// @return 
+bool FileStream::IsExist(const char* name)
+{
+	opts = filesystem.GetFileOpts(name);
+
+	if (NULL != opts)
+	{
+		fd = opts->Open(name, FileMode::_OpenExisting);
+	}
+	
+	if (fd != -1)
+	{
+		opts->Close(fd);
+		return true;
+	}
+
+	return false;
+}
+
+
 /// @brief FileStream open
 /// @param name 
 /// @param opt 

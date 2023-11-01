@@ -22,6 +22,7 @@ public:
 	//Methods
 	FileStream(const char* name = NULL, int mode = 0);
 	~FileStream();
+	bool IsExist(const char* name);
 	int Open(const char* name, int mode);
 	int Write(char* data, int size, int offset = 0);
 	int Read(char* data, int size, int offset = 0);
