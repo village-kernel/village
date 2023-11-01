@@ -63,10 +63,10 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: ls <path>");
+			console.Output("Usage: ls [directory]");
 			return;
 		}
-		ListDirectory(argv[1]);
+		ListDirectory((argc == 1) ? console.GetPath() : argv[1]);
 	}
 };
 
