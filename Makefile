@@ -74,15 +74,10 @@ objs-$(CONFIG_ENVIRONMENT)                  += Environment.o
 objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
 
 objs-$(CONFIG_CMD_ABOUT)                    += CmdAbout.o
-objs-$(CONFIG_CMD_CD)                       += CmdCd.o
-objs-$(CONFIG_CMD_COPY)                     += CmdCopy.o
+objs-$(CONFIG_CMD_FILESYS)                  += CmdFileSys.o
 objs-$(CONFIG_CMD_HELP)                     += CmdHelp.o
-objs-$(CONFIG_CMD_LIST)                     += CmdList.o
-objs-$(CONFIG_CMD_MKDIR)                    += CmdMkdir.o
 objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
-objs-$(CONFIG_CMD_REMOVE)                   += CmdRemove.o
 objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
-objs-$(CONFIG_CMD_TOUCH)                    += CmdTouch.o
 objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
 objs-$(CONFIG_CONSOLE)                      += Console.o
 
