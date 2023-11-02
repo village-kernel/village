@@ -18,11 +18,12 @@ public:
 	Cmd() {}
 	
 	//Deconstructor
-	virtual ~Cmd() {};
+	virtual ~Cmd() {}
 
 	//Methods
-	virtual void Initialize()                    = 0;
+	virtual void Initialize() {}
 	virtual void Execute(int argc, char* argv[]) = 0;
+	virtual void Help() {}
 };
 
 #endif //!__CMD_INTERFACE_H__

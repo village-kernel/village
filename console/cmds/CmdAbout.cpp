@@ -12,13 +12,6 @@
 class CmdAbout : public Cmd
 {
 public:
-	/// @brief Cmd about initialize
-	void Initialize()
-	{
-
-	}
-	
-
 	/// @brief Cmd about execute
 	/// @param argc 
 	/// @param argv 

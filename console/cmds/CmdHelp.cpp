@@ -12,13 +12,6 @@
 class CmdHelp : public Cmd
 {
 public:
-	/// @brief Cmd help initialize
-	void Initialize()
-	{
-
-	}
-
-
 	/// @brief Cmd help execute
 	/// @param argc 
 	/// @param argv 

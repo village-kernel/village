@@ -17,13 +17,6 @@ private:
 	//Members
 	ModuleTool modules;
 public:
-	/// @brief Initialize
-	void Initialize()
-	{
-		
-	}
-
-
 	/// @brief Cmd insmod execute
 	/// @param argc 
 	/// @param argv 
@@ -49,13 +42,6 @@ private:
 	//Members
 	ModuleTool modules;
 public:
-	/// @brief Initialize
-	void Initialize()
-	{
-		
-	}
-
-
 	/// @brief Cmd rmmod execute
 	/// @param argc 
 	/// @param argv 
