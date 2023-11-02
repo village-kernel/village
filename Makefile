@@ -91,6 +91,7 @@ objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
 
 objs-kernel-$(CONFIG_FILESYSTEM)            += DirStream.o
 objs-kernel-$(CONFIG_FILESYSTEM)            += FileStream.o
+objs-kernel-$(CONFIG_FILESYSTEM)            += FileSysOpt.o
 
 objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
 objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o
