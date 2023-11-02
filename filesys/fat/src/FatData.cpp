@@ -15,8 +15,8 @@
 /// @return 
 int FatData::Setup(Driver* diskdrv, uint32_t fstSec)
 {
-	this->dbr      = new DBR();
-	this->info     = new Info();
+	this->dbr  = new DBR();
+	this->info = new Info();
 	
 	fatDisk.Setup(diskdrv, fstSec, info);
 
@@ -434,7 +434,6 @@ int FatData::SetVolumeLabel(const char* name)
 }
 
 
-
 /// @brief Open
 /// @param name 
 /// @param mode 
@@ -564,4 +563,62 @@ FatData::DirEntry* FatData::ReadDir(DirEntries* data)
 int FatData::SizeDir(DirEntries* data)
 {
 	return data->dirs.GetSize();
+}
+
+
+/// @brief Move
+/// @param from 
+/// @param to 
+/// @return 
+int FatData::Move(const char* from, const char* to)
+{
+	return _OK;
+}
+
+
+/// @brief Copy
+/// @param from 
+/// @param to 
+/// @return 
+int FatData::Copy(const char* from, const char* to)
+{
+	return _OK;
+}
+
+
+/// @brief Remove
+/// @param name 
+/// @return 
+int FatData::Remove(const char* name)
+{
+	return _OK;
+}
+
+
+/// @brief MoveDir
+/// @param from 
+/// @param to 
+/// @return 
+int FatData::MoveDir(const char* from, const char* to)
+{
+	return _OK;
+}
+
+
+/// @brief CopyDir
+/// @param from 
+/// @param to 
+/// @return 
+int FatData::CopyDir(const char* from, const char* to)
+{
+	return _OK;
+}
+
+
+/// @brief RemoveDir
+/// @param name 
+/// @return 
+int FatData::RemoveDir(const char* name)
+{
+	return _OK;
 }

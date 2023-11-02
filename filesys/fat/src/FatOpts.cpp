@@ -243,13 +243,13 @@ void FatOpts::CloseDir(int fd)
 }
 
 
-/// @brief FAT rename
+/// @brief FAT move
 /// @param old 
 /// @param now 
 /// @return 
-int FatOpts::Move(int fd, const char* from, const char* to)
+int FatOpts::Move(const char* from, const char* to)
 {
-	return 0;
+	return fatData.Move(from, to);
 }
 
 
@@ -257,15 +257,43 @@ int FatOpts::Move(int fd, const char* from, const char* to)
 /// @param from 
 /// @param to 
 /// @return 
-int FatOpts::Copy(int fd, const char* from, const char* to)
+int FatOpts::Copy(const char* from, const char* to)
 {
-	return 0;
+	return fatData.Copy(from, to);
 }
 
 
 /// @brief FAT remove
 /// @return 
-int FatOpts::Remove(int fd)
+int FatOpts::Remove(const char* name)
 {
-	return 0;
+	return fatData.Remove(name);
+}
+
+
+/// @brief FAT move dir
+/// @param old 
+/// @param now 
+/// @return 
+int FatOpts::MoveDir(const char* from, const char* to)
+{
+	return fatData.MoveDir(from, to);
+}
+
+
+/// @brief FAT copy dir
+/// @param from 
+/// @param to 
+/// @return 
+int FatOpts::CopyDir(const char* from, const char* to)
+{
+	return fatData.CopyDir(from, to);
+}
+
+
+/// @brief FAT remove dir
+/// @return 
+int FatOpts::RemoveDir(const char* name)
+{
+	return fatData.RemoveDir(name);
 }

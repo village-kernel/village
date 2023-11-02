@@ -56,9 +56,12 @@ public:
 	void CloseDir(int fd);
 
 	//Operate
-	int Move(int fd, const char* from, const char* to);
-	int Copy(int fd, const char* from, const char* to);
-	int Remove(int fd);
+	int Move(const char* from, const char* to);
+	int Copy(const char* from, const char* to);
+	int Remove(const char* name);
+	int MoveDir(const char* from, const char* to);
+	int CopyDir(const char* from, const char* to);
+	int RemoveDir(const char* name);
 };
 
 #endif //!__FAT_OPTS_H__

@@ -42,9 +42,12 @@ public:
 	virtual void CloseDir(int fd)                                    = 0;
 
 	//Opt methods
-	virtual int Move(int fd, const char* from, const char* to)       = 0;
-	virtual int Copy(int fd, const char* from, const char* to)       = 0;
-	virtual int Remove(int fd)                                       = 0;
+	virtual int Move(const char* from, const char* to)               = 0;
+	virtual int Copy(const char* from, const char* to)               = 0;
+	virtual int Remove(const char* name)                             = 0;
+	virtual int MoveDir(const char* from, const char* to)            = 0;
+	virtual int CopyDir(const char* from, const char* to)            = 0;
+	virtual int RemoveDir(const char* name)                          = 0;
 };
 
 #endif //!__FILE_OPERATION_INTERFACE_H__
