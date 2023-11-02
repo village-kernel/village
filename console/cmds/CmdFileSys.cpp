@@ -8,6 +8,7 @@
 #include "Console.h"
 #include "DirStream.h"
 #include "FileStream.h"
+#include "FileSysOpt.h"
 
 
 /// @brief CmdCd
@@ -28,13 +29,6 @@ private:
 		}
 	}
 public:
-	/// @brief Cmd cd initialize
-	void Initialize()
-	{
-
-	}
-
-
 	/// @brief Cmd cd execute
 	/// @param argc 
 	/// @param argv 
@@ -90,13 +84,6 @@ private:
 		}
 	}
 public:
-	/// @brief Cmd list initialize
-	void Initialize()
-	{
-
-	}
-
-
 	/// @brief Cmd about execute
 	/// @param argc 
 	/// @param argv 
@@ -125,13 +112,6 @@ private:
 		file.Close();
 	}
 public:
-	/// @brief Cmd touch initialize
-	void Initialize()
-	{
-
-	}
-
-
 	/// @brief Cmd touch execute
 	/// @param argc 
 	/// @param argv 
@@ -139,7 +119,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: touch [filename]");
+			console.Output("Usage: touch <filename>");
 			return;
 		}
 		CreateFile(argv[1]);
@@ -160,13 +140,6 @@ private:
 		dir.Close();
 	}
 public:
-	/// @brief Cmd mkdir initialize
-	void Initialize()
-	{
-
-	}
-
-
 	/// @brief Cmd mkdir execute
 	/// @param argc 
 	/// @param argv 
@@ -174,7 +147,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: mkdir [dirname]");
+			console.Output("Usage: mkdir <dirname>");
 			return;
 		}
 		CreateDir(argv[1]);
@@ -182,23 +155,56 @@ public:
 };
 
 
+/// @brief CmdMove
+class CmdMove : public Cmd
+{
+private:
+	/// @brief Move
+	/// @param name 
+	void Move(const char* source, const char* target)
+	{
+		FileSysOpt fileSysOpt;
+		fileSysOpt.Move(source, target);
+	}
+public:
+	/// @brief Cmd move execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		if (argc < 3)
+		{
+			console.Output("Usage: mv <source> <target>");
+			return;
+		}
+		Move(argv[1], argv[2]);
+	}
+};
+
+
 /// @brief CmdCopy
 class CmdCopy : public Cmd
 {
-public:
-	/// @brief Cmd copy initialize
-	void Initialize()
+private:
+	/// @brief Copy
+	/// @param name 
+	void Copy(const char* source, const char* target)
 	{
-
+		FileSysOpt fileSysOpt;
+		fileSysOpt.Copy(source, target);
 	}
-
-
+public:
 	/// @brief Cmd copy execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		
+		if (argc < 2)
+		{
+			console.Output("Usage: cp <source> <target>");
+			return;
+		}
+		Copy(argv[1], argv[2]);
 	}
 };
 
@@ -206,20 +212,26 @@ public:
 /// @brief CmdRemove
 class CmdRemove : public Cmd
 {
-public:
-	/// @brief Cmd remove initialize
-	void Initialize()
+private:
+	/// @brief Remove
+	/// @param name 
+	void Remove(const char* name)
 	{
-
+		FileSysOpt fileSysOpt;
+		fileSysOpt.Remove(name);
 	}
-
-
+public:
 	/// @brief Cmd remove execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		
+		if (argc < 2)
+		{
+			console.Output("Usage: rm <file/directory>");
+			return;
+		}
+		Remove(argv[1]);
 	}
 };
 
@@ -229,5 +241,6 @@ REGISTER_CMD(new CmdCd(),       cd    );
 REGISTER_CMD(new CmdList(),     ls    );
 REGISTER_CMD(new CmdTouch(),    touch );
 REGISTER_CMD(new CmdMkdir(),    mkdir );
+REGISTER_CMD(new CmdMove(),     mv    );
 REGISTER_CMD(new CmdCopy(),     cp    );
 REGISTER_CMD(new CmdRemove(),   rm    );
