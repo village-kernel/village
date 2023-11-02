@@ -247,7 +247,7 @@ void FatOpts::CloseDir(int fd)
 /// @param old 
 /// @param now 
 /// @return 
-int FatOpts::Rename(int fd, const char* old, const char* now)
+int FatOpts::Move(int fd, const char* from, const char* to)
 {
 	return 0;
 }

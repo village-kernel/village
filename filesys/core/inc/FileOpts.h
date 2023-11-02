@@ -42,7 +42,7 @@ public:
 	virtual void CloseDir(int fd)                                    = 0;
 
 	//Opt methods
-	virtual int Rename(int fd, const char* old, const char* now)     = 0;
+	virtual int Move(int fd, const char* from, const char* to)       = 0;
 	virtual int Copy(int fd, const char* from, const char* to)       = 0;
 	virtual int Remove(int fd)                                       = 0;
 };

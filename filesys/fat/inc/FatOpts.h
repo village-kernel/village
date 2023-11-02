@@ -56,7 +56,7 @@ public:
 	void CloseDir(int fd);
 
 	//Operate
-	int Rename(int fd, const char* old, const char* now);
+	int Move(int fd, const char* from, const char* to);
 	int Copy(int fd, const char* from, const char* to);
 	int Remove(int fd);
 };
