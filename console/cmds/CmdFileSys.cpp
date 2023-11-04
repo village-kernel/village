@@ -108,7 +108,10 @@ private:
 	void CreateFile(const char* filename)
 	{
 		FileStream file;
-		file.Open(filename, FileMode::_CreateNew);
+		if (_ERR == file.Open(filename, FileMode::_CreateNew))
+		{
+			console.Error("Create file %s failed.", filename);
+		}
 		file.Close();
 	}
 public:
@@ -136,7 +139,10 @@ private:
 	void CreateDir(const char* dirname)
 	{
 		DirStream dir;
-		dir.Open(dirname, FileMode::_CreateNew);
+		if (_ERR == dir.Open(dirname, FileMode::_CreateNew))
+		{
+			console.Error("Create directory %s failed.", dirname);
+		}
 		dir.Close();
 	}
 public:
