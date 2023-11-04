@@ -79,10 +79,10 @@ char* FatOpts::GetVolumeLabel()
 /// @return 
 int FatOpts::Open(const char* name, int mode)
 {
-	DirEntry* entry = fatData.Open(name, mode);
-	if (NULL != entry)
+	DirEntry* dirent = fatData.Open(name, mode);
+	if (NULL != dirent)
 	{
-		return files.Add(entry);
+		return files.Add(dirent);
 	}
 	return -1;
 }
@@ -95,10 +95,10 @@ int FatOpts::Open(const char* name, int mode)
 /// @return 
 int FatOpts::Write(int fd, char* data, int size, int offset)
 {
-	DirEntry* entry = files.GetItem(fd);
-	if (NULL != entry)
+	DirEntry* dirent = files.GetItem(fd);
+	if (NULL != dirent)
 	{
-		return fatData.Write(data, size, entry);
+		return fatData.Write(data, size, dirent);
 	}
 	return -1;
 }
@@ -111,10 +111,10 @@ int FatOpts::Write(int fd, char* data, int size, int offset)
 /// @return 
 int FatOpts::Read(int fd, char* data, int size, int offset)
 {
-	DirEntry* entry = files.GetItem(fd);
-	if (NULL != entry)
+	DirEntry* dirent = files.GetItem(fd);
+	if (NULL != dirent)
 	{
-		return fatData.Read(data, size, entry);
+		return fatData.Read(data, size, dirent);
 	}
 	return -1;
 }
@@ -124,10 +124,10 @@ int FatOpts::Read(int fd, char* data, int size, int offset)
 /// @return 
 int FatOpts::Size(int fd)
 {
-	DirEntry* entry = files.GetItem(fd);
-	if (NULL != entry)
+	DirEntry* dirent = files.GetItem(fd);
+	if (NULL != dirent)
 	{
-		return fatData.Size(entry);
+		return fatData.Size(dirent);
 	}
 	return 0;
 }
@@ -137,10 +137,10 @@ int FatOpts::Size(int fd)
 /// @return 
 void FatOpts::Close(int fd)
 {
-	DirEntry* entry = files.GetItem(fd);
-	if (NULL != entry)
+	DirEntry* dirent = files.GetItem(fd);
+	if (NULL != dirent)
 	{
-		files.Remove(entry, fd);
+		files.Remove(dirent, fd);
 	}
 }
 
@@ -151,25 +151,25 @@ void FatOpts::Close(int fd)
 /// @return 
 int FatOpts::OpenDir(const char* name, int mode)
 {
-	DirEntries* data = fatData.OpenDir(name, mode);
-	if (NULL != data)
+	DirEntries* dirents = fatData.OpenDir(name, mode);
+	if (NULL != dirents)
 	{
-		return dirs.Add(data);
+		return dirs.Add(dirents);
 	}
 	return -1;
 }
 
 
 /// @brief Get file type
-/// @param entry 
+/// @param dirent 
 /// @return file type
-FileType FatOpts::GetFileType(DirEntry* entry)
+FileType FatOpts::GetFileType(DirEntry* dirent)
 {
-	if (entry->body.IsFile())
+	if (dirent->body.IsFile())
 		return FileType::_File;
-	else if (entry->body.IsDirectory())
+	else if (dirent->body.IsDirectory())
 		return FileType::_Diretory;
-	else if (entry->body.IsVolume())
+	else if (dirent->body.IsVolume())
 		return FileType::_Volume;
 	else
 		return FileType::_Unknown;
@@ -177,35 +177,37 @@ FileType FatOpts::GetFileType(DirEntry* entry)
 
 
 /// @brief Get file attr
-/// @param entry 
+/// @param dirent 
 /// @return file attr
-FileAttr FatOpts::GetFileAttr(DirEntry* entry)
+FileAttr FatOpts::GetFileAttr(DirEntry* dirent)
 {
-	return entry->body.IsHidden() ? FileAttr::_Hidden : FileAttr::_Visible;
+	return dirent->body.IsHidden() ? FileAttr::_Hidden : FileAttr::_Visible;
 }
 
 
 /// @brief Read directory
 /// @param fd 
-/// @param data 
+/// @param dirs 
+/// @param size 
+/// @param offset 
 /// @return 
 int FatOpts::ReadDir(int fd, FileDir* dirs, int size, int offset)
 {
-	DirEntries* data = this->dirs.GetItem(fd);
+	DirEntries* dirents = this->dirs.GetItem(fd);
 	
-	if (NULL != data)
+	if (NULL != dirents)
 	{
 		for (int i = 0; i < size; i++)
 		{
-			DirEntry* ent = fatData.ReadDir(data);
-			if (NULL != ent)
+			DirEntry* dirent = fatData.ReadDir(dirents);
+			if (NULL != dirent)
 			{
-				char* path = new char[strlen(data->path) + strlen(ent->name) + 2]();
-				sprintf(path, "%s/%s", data->path, ent->name);
+				char* path = new char[strlen(dirents->path) + strlen(dirent->name) + 2]();
+				sprintf(path, "%s/%s", dirents->path, dirent->name);
 				dirs[i].path = path;
-				dirs[i].name = ent->name;
-				dirs[i].type = GetFileType(ent);
-				dirs[i].attr = GetFileAttr(ent);
+				dirs[i].name = dirent->name;
+				dirs[i].type = GetFileType(dirent);
+				dirs[i].attr = GetFileAttr(dirent);
 			}
 			else return i;
 		}
@@ -221,10 +223,10 @@ int FatOpts::ReadDir(int fd, FileDir* dirs, int size, int offset)
 /// @return 
 int FatOpts::SizeDir(int fd)
 {
-	DirEntries* data = dirs.GetItem(fd);
-	if (NULL != data)
+	DirEntries* dirents = dirs.GetItem(fd);
+	if (NULL != dirents)
 	{
-		return fatData.SizeDir(data);
+		return fatData.SizeDir(dirents);
 	}
 	return -1;
 }
@@ -235,10 +237,10 @@ int FatOpts::SizeDir(int fd)
 /// @return 
 void FatOpts::CloseDir(int fd)
 {
-	DirEntries* data = dirs.GetItem(fd);
-	if (NULL != data)
+	DirEntries* dirents = dirs.GetItem(fd);
+	if (NULL != dirents)
 	{
-		dirs.Remove(data, fd);
+		dirs.Remove(dirents, fd);
 	}
 }
 

@@ -25,8 +25,8 @@ private:
 	FatData fatData;
 
 	//Methods
-	FileType GetFileType(DirEntry* entry);
-	FileAttr GetFileAttr(DirEntry* entry);
+	FileType GetFileType(DirEntry* dirent);
+	FileAttr GetFileAttr(DirEntry* dirent);
 public:
 	//Methods
 	FatOpts();
