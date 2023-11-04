@@ -33,7 +33,7 @@ private:
 	DirEntry* SearchPath(const char* path, int forward = 0);
 	DirEntry* SearchDir(DirEntry* dirent, const char* name);
 	DirEntries* OpenDir(DirEntry* dirent);
-	FatEntry* CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& entries, uint8_t& num);
+	FatEntry* CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& unients, uint8_t& num);
 	DirEntry* CreateFile(DirEntry* dirent, const char* name);
 	DirEntries* CreateDir(DirEntry* dirent, const char* name);
 	DirEntry* CreateFile(const char* path);
@@ -50,8 +50,8 @@ public:
 
 	//Directory Methods
 	DirEntries* OpenDir(const char* path, int mode);
-	DirEntry* ReadDir(DirEntries* data);
-	int SizeDir(DirEntries* data);
+	DirEntry* ReadDir(DirEntries* dirents);
+	int SizeDir(DirEntries* dirents);
 
 	//Opts Methods
 	int Move(const char* from, const char* to);

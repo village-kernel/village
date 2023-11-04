@@ -10,8 +10,8 @@
 
 /// @brief Constructor
 FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* dirent)
-	:body(NULL),
-	ents(NULL),
+	:dirent(NULL),
+	unients(NULL),
 	index(0),
 	clust(0),
 	sector(0)
@@ -23,7 +23,7 @@ FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* dirent)
 /// @brief Destructor
 FatEntry::~FatEntry()
 {
-	delete[] ents;
+	delete[] unients;
 }
 
 
@@ -60,8 +60,8 @@ void FatEntry::Begin()
 	this->index  = 0;
 	this->clust  = 0;
 	this->sector = 0;
-	fatDisk->CalcFirstSector(body, clust, sector);
-	fatDisk->ReadOneSector((char*)ents, sector);
+	fatDisk->CalcFirstSector(dirent, clust, sector);
+	fatDisk->ReadOneSector((char*)unients, sector);
 }
 
 
@@ -73,7 +73,7 @@ void FatEntry::Next()
 		fatDisk->CalcNextSector(clust, sector);
 		if (0 != sector)
 		{
-			fatDisk->ReadOneSector((char*)ents, sector);
+			fatDisk->ReadOneSector((char*)unients, sector);
 			index = 0;
 		}
 		else return;
@@ -93,7 +93,7 @@ bool FatEntry::IsEnd()
 /// @return item
 FatEntry::UnionEntry* FatEntry::Item()
 {
-	return ents + index;
+	return unients + index;
 }
 
 
@@ -103,11 +103,11 @@ void FatEntry::Setup(FatDisk* fatDisk, Info* info, DirEntry* dirent)
 {
 	this->fatDisk = fatDisk;
 	this->info    = info;
-	this->body    = dirent;
+	this->dirent  = dirent;
 
-	ents = (UnionEntry*)new char[info->bytesPerSec]();
-	fatDisk->CalcFirstSector(body, clust, sector);
-	fatDisk->ReadOneSector((char*)ents, sector);
+	unients = (UnionEntry*)new char[info->bytesPerSec]();
+	fatDisk->CalcFirstSector(dirent, clust, sector);
+	fatDisk->ReadOneSector((char*)unients, sector);
 }
 
 
@@ -121,7 +121,7 @@ int FatEntry::FindSpace(uint32_t size)
 
 	for (Begin(); !IsEnd(); Next())
 	{
-		if (!ents[index].IsValid())
+		if (!unients[index].IsValid())
 		{
 			if (record.IsEmpty())
 			{
@@ -152,7 +152,7 @@ uint32_t FatEntry::Pop(UnionEntry* pop, uint32_t size)
 {
 	for (uint32_t i = 0; i < size; i++)
 	{
-		pop[i] = ents[index];
+		pop[i] = unients[index];
 
 		if (i < (size - 1)) index++;
 	
@@ -161,7 +161,7 @@ uint32_t FatEntry::Pop(UnionEntry* pop, uint32_t size)
 			fatDisk->CalcNextSector(clust, sector);
 			if (0 != sector)
 			{
-				fatDisk->ReadOneSector((char*)ents, sector);
+				fatDisk->ReadOneSector((char*)unients, sector);
 				index = 0;
 			}
 			else return i;
@@ -177,29 +177,29 @@ uint32_t FatEntry::Pop(UnionEntry* pop, uint32_t size)
 /// @return size
 uint32_t FatEntry::Push(UnionEntry* push, uint32_t size)
 {
-	fatDisk->ReadOneSector((char*)ents, sector); 
+	fatDisk->ReadOneSector((char*)unients, sector); 
 
 	for (uint32_t i = 0; i < size; i++)
 	{
-		ents[index] = push[i];
+		unients[index] = push[i];
 	
 		if (i < (size - 1)) index++;
 
 		if (index >= info->entriesPerSec)
 		{
-			fatDisk->WriteOneSector((char*)ents, sector);
+			fatDisk->WriteOneSector((char*)unients, sector);
 
 			fatDisk->CalcNextSector(clust, sector);
 			if (0 != sector)
 			{
-				fatDisk->ReadOneSector((char*)ents, sector);
+				fatDisk->ReadOneSector((char*)unients, sector);
 				index = 0;
 			}
 			else return i;
 		}
 	}
 
-	fatDisk->WriteOneSector((char*)ents, sector);
+	fatDisk->WriteOneSector((char*)unients, sector);
 
 	return size;
 }

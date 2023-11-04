@@ -20,8 +20,8 @@ private:
 	FatDisk* fatDisk;
 
 	//Members
-	DirEntry*   body;
-	UnionEntry* ents;
+	DirEntry*   dirent;
+	UnionEntry* unients;
 
 	uint32_t  index;
 	uint32_t  clust;

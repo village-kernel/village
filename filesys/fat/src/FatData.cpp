@@ -125,26 +125,26 @@ char* FatData::NotDir(const char* path)
 
 /// @brief Get dir name
 /// @return name
-char* FatData::GetDirName(FatEntry* data)
+char* FatData::GetDirName(FatEntry* entry)
 {
 	char* name = NULL;
 
-	UnionEntry* entry = data->Item();
+	UnionEntry* unient = entry->Item();
 
-	if (entry->IsValid())
+	if (unient->IsValid())
 	{
-		uint8_t size = entry->IsLongName() ? entry->OrdSize() : 1;
-		UnionEntry* entries = new UnionEntry[size]();
+		uint8_t size = unient->IsLongName() ? unient->OrdSize() : 1;
+		UnionEntry* unients = new UnionEntry[size]();
 
-		if (data->Pop(entries, size) == size)
+		if (entry->Pop(unients, size) == size)
 		{
-			if (entries->IsLongName())
-				name = fatName.GetLongName(entries);
+			if (unients->IsLongName())
+				name = fatName.GetLongName(unients);
 			else
-				name = fatName.GetShortName(entries);
+				name = fatName.GetShortName(unients);
 		}
 		
-		delete[] entries;
+		delete[] unients;
 	}
 
 	return name;
@@ -184,55 +184,55 @@ FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
 
 
 /// @brief Search dir
-/// @param entry 
+/// @param dirent 
 /// @param dir 
 /// @return 
 FatData::DirEntry* FatData::SearchDir(DirEntry* dirent, const char* dir)
 {
-	FatEntry* data  = new FatEntry(&fatDisk, info, dirent);
+	FatEntry* entry = new FatEntry(&fatDisk, info, dirent);
 	DirEntry* found = NULL;
 
-	for (data->Begin(); !data->IsEnd(); data->Next())
+	for (entry->Begin(); !entry->IsEnd(); entry->Next())
 	{
-		char* name = GetDirName(data);
+		char* name = GetDirName(entry);
 
 		if (NULL != name && 0 == strcmp(name, dir))
 		{
-			found = new DirEntry(*data->Item(), name);
+			found = new DirEntry(*entry->Item(), name);
 			break;
 		}
 	}
 
-	delete data;
+	delete entry;
 	return found;
 }
 
 
 /// @brief Open dir
-/// @param entry 
+/// @param dirent 
 /// @return 
 FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
 {
-	FatEntry*   data    = new FatEntry(&fatDisk, info, dirent);
+	FatEntry*   entry   = new FatEntry(&fatDisk, info, dirent);
 	DirEntries* dirents = new DirEntries();
 
-	for (data->Begin(); !data->IsEnd(); data->Next())
+	for (entry->Begin(); !entry->IsEnd(); entry->Next())
 	{
-		char* name = GetDirName(data);
+		char* name = GetDirName(entry);
 
 		if (NULL != name && 0 != strcmp(name, ""))
 		{
-			UnionEntry* entry = data->Item();
-			if (entry->IsFile() || entry->IsDirectory())
+			UnionEntry* unient = entry->Item();
+			if (unient->IsFile() || unient->IsDirectory())
 			{
-				dirents->dirs.Add(new DirEntry(*entry, name));
+				dirents->dirs.Add(new DirEntry(*unient, name));
 			}
 		}
 	}
 
 	dirents->dirs.Begin();
 
-	delete data;
+	delete entry;
 	return dirents;
 }
 
@@ -243,10 +243,10 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
 /// @param entries 
 /// @param num 
 /// @return 
-FatEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& entries, uint8_t& num)
+FatEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& unients, uint8_t& num)
 {
 	DirEntries* dirents = OpenDir(dirent);
-	FatEntry*   data    = new FatEntry(&fatDisk, info, dirent);
+	FatEntry*   entry   = new FatEntry(&fatDisk, info, dirent);
 
 	//Cal the size of entries
 	uint8_t namelen = strlen(name);
@@ -259,49 +259,49 @@ FatEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& 
 	num = isNameLoss ? ((namelen / (long_name_size - 1)) + mod) : 0;
 
 	//Alloc entires space
-	entries = new UnionEntry[num + 1]();
+	unients = new UnionEntry[num + 1]();
 
 	//Set short name
-	fatName.SetShortName(&entries[num], name);
+	fatName.SetShortName(&unients[num], name);
 
 	//Set long name
 	if (isNameLoss)
 	{
-		entries[num].sfe.NTRes |= _NS_LOSS;
+		unients[num].sfe.NTRes |= _NS_LOSS;
 
 		for (uint8_t i = 1; i < 100; i++)
 		{
-			fatName.GenNumName(entries + num, i);
-			if (_OK == dirents->CheckConflict(entries + num)) break;
+			fatName.GenNumName(unients + num, i);
+			if (_OK == dirents->CheckConflict(unients + num)) break;
 		}
 
-		entries[0].lfe.ord = num + dir_seq_flag;
-		fatName.SetLongName(entries, name);
+		unients[0].lfe.ord = num + dir_seq_flag;
+		fatName.SetLongName(unients, name);
 	}
 
-	return data;
+	return entry;
 }
 
 
 /// @brief Create file
-/// @param entry 
+/// @param dirent 
 /// @param name 
 /// @return 
 FatData::DirEntry* FatData::CreateFile(DirEntry* dirent, const char* name)
 {
 	uint8_t     num  = 0;
-	UnionEntry* entries = NULL;
-	FatEntry*   data = CreateEntry(dirent, name, entries, num);
+	UnionEntry* unients = NULL;
+	FatEntry*   entry = CreateEntry(dirent, name, unients, num);
 
 	//Set entry attr
-	entries[num].sfe.attr = _ATTR_FILE;
+	unients[num].sfe.attr = _ATTR_FILE;
 
 	//Put to disk
 	uint8_t size = num + 1;
-	if (_OK == data->FindSpace(size) && 
-		size == data->Push(entries, size))
+	if (_OK == entry->FindSpace(size) && 
+		size == entry->Push(unients, size))
 	{
-		return new DirEntry(entries[num], (char*)name);
+		return new DirEntry(unients[num], (char*)name);
 	}
 
 	return NULL;
@@ -309,44 +309,45 @@ FatData::DirEntry* FatData::CreateFile(DirEntry* dirent, const char* name)
 
 
 /// @brief Create directory
-/// @param entry 
+/// @param dirent 
 /// @param name 
 /// @return 
 FatData::DirEntries* FatData::CreateDir(DirEntry* dirent, const char* name)
 {
 	uint8_t     num = 0;
-	UnionEntry* entries = NULL;
-	FatEntry*   data = CreateEntry(dirent, name, entries, num);
+	UnionEntry* unients = NULL;
+	FatEntry*   entry = CreateEntry(dirent, name, unients, num);
 
 	uint32_t clust = fatDisk.AllocCluster(1);
 
 	//Set entry attr
-	entries[num].sfe.attr = _ATTR_DIRECTORY;
-	entries[num].sfe.fstClustHI = (clust >> 16) & 0xffff;
-	entries[num].sfe.fstClustLO = (clust >> 0)  & 0xffff;
+	unients[num].sfe.attr = _ATTR_DIRECTORY;
+	unients[num].sfe.fstClustHI = (clust >> 16) & 0xffff;
+	unients[num].sfe.fstClustLO = (clust >> 0)  & 0xffff;
 
 	//Put to disk
 	uint8_t size = num + 1;
-	if (_OK == data->FindSpace(size) && 
-		size == data->Push(entries, size))
+	if (_OK == entry->FindSpace(size) && 
+		size == entry->Push(unients, size))
 	{
-		UnionEntry* dirs = new UnionEntry[2]();
-		dirs[0].sfe = entries[num].sfe;
-		dirs[1].sfe = dirent->body.sfe;
+		UnionEntry* childUnients = new UnionEntry[2]();
+		childUnients[0].sfe = childUnients[num].sfe;
+		childUnients[1].sfe = dirent->body.sfe;
 
-		dirs[0].sfe.attr |= _ATTR_HIDDEN;
-		dirs[1].sfe.attr |= _ATTR_HIDDEN;
+		childUnients[0].sfe.attr |= _ATTR_HIDDEN;
+		childUnients[1].sfe.attr |= _ATTR_HIDDEN;
 
-		memcpy(dirs[0].sfe.name, ".          ", 11);
-		memcpy(dirs[1].sfe.name, "..         ", 11);
+		memcpy(childUnients[0].sfe.name, ".          ", 11);
+		memcpy(childUnients[1].sfe.name, "..         ", 11);
 
-		DirEntry* dir = new DirEntry(entries[num], (char*)name);
-		FatEntry* child = new FatEntry(&fatDisk, info, dir);
-		child->Push(dirs, 2);
-		delete child;
-		delete[] dirs;
+		DirEntry* childDirent = new DirEntry(childUnients[num], (char*)name);
+		FatEntry* childEntry  = new FatEntry(&fatDisk, info, childDirent);
+		childEntry->Push(childUnients, 2);
 
-		return OpenDir(dir);
+		delete childEntry;
+		delete[] childUnients;
+
+		return OpenDir(childDirent);
 	}
 
 	return NULL;
@@ -395,19 +396,19 @@ FatData::DirEntries* FatData::CreateDir(const char* path)
 /// @return 
 char* FatData::GetVolumeLabel()
 {
-	FatEntry*   data  = new FatEntry(&fatDisk, info, NULL);
-	UnionEntry* entry = data->Item();
+	FatEntry*   entry  = new FatEntry(&fatDisk, info, NULL);
+	UnionEntry* unient = entry->Item();
 
 	char* label = (char*)"NONAME";
 
 	//Check is volume entry
-	if (entry->IsVolume())
+	if (unient->IsVolume())
 	{
 		//Get volume label
-		label = fatName.GetVolumeLabel(entry);
+		label = fatName.GetVolumeLabel(unient);
 	}
 
-	delete data;
+	delete entry;
 	return label;
 }
 
@@ -417,20 +418,20 @@ char* FatData::GetVolumeLabel()
 /// @return 
 int FatData::SetVolumeLabel(const char* name)
 {
-	FatEntry*  data   = new FatEntry(&fatDisk, info, NULL);
-	UnionEntry* entry = data->Item();
+	FatEntry*   entry  = new FatEntry(&fatDisk, info, NULL);
+	UnionEntry* unient = entry->Item();
 
 	//Check is volume entry
-	if (entry->IsVolume())
+	if (unient->IsVolume())
 	{
 		//Set volume label
-		fatName.SetVolumeLabel(entry, name);
+		fatName.SetVolumeLabel(unient, name);
 
 		//Push ent to disk
-		data->Push(entry);
+		entry->Push(unient);
 	}
 	
-	delete data;
+	delete entry;
 	return _OK;
 }
 
@@ -544,26 +545,26 @@ FatData::DirEntries* FatData::OpenDir(const char* path, int mode)
 
 
 /// @brief Read dir
-/// @param data 
+/// @param dirents 
 /// @return 
-FatData::DirEntry* FatData::ReadDir(DirEntries* data)
+FatData::DirEntry* FatData::ReadDir(DirEntries* dirents)
 {
-	if (false == data->dirs.IsEnd())
+	if (false == dirents->dirs.IsEnd())
 	{
-		DirEntry* ent = data->dirs.Item();
-		data->dirs.Next();
-		return ent;
+		DirEntry* dirent = dirents->dirs.Item();
+		dirents->dirs.Next();
+		return dirent;
 	}
 	return NULL;
 }
 
 
 /// @brief Size dir
-/// @param data 
+/// @param dirents 
 /// @return 
-int FatData::SizeDir(DirEntries* data)
+int FatData::SizeDir(DirEntries* dirents)
 {
-	return data->dirs.GetSize();
+	return dirents->dirs.GetSize();
 }
 
 
