@@ -22,13 +22,13 @@ void FatDisk::Setup(Driver* diskdrv, uint32_t fstSec, Info* info)
 }
 
 
-/// @brief Meger cluster
-/// @param clustHI 
-/// @param clustLO 
-/// @return cluster
-uint32_t FatDisk::MergeCluster(uint16_t clustHI, uint16_t clustLO)
+
+/// @brief Get first clust
+/// @param sfe 
+/// @return clust
+uint32_t FatDisk::GetFirstClust(ShortEntry sfe)
 {
-	return (uint32_t)clustHI << 16 | clustLO;
+	return (uint32_t)(sfe.fstClustHI << 16) | sfe.fstClustLO;
 }
 
 
@@ -330,7 +330,7 @@ void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector
 	}
 	else
 	{
-		clust  = MergeCluster(entry->body.fstClustHI, entry->body.fstClustLO);
+		clust  = GetFirstClust(entry->body.sfe);
 		sector = ClusterToSector(clust);
 	}
 }
@@ -353,6 +353,29 @@ void FatDisk::CalcNextSector(uint32_t& clust, uint32_t& sector)
 		if ((++sector - ClusterToSector(clust)) >= info->secPerClust)
 		{
 			clust = GetNextCluster(clust);
+			sector = (0 != clust) ? ClusterToSector(clust) : 0;
+		}
+	}
+}
+
+
+/// @brief 
+/// @param clust 
+/// @param sector 
+void FatDisk::CalcPrevSector(uint32_t& clust, uint32_t& sector)
+{
+	//FAT16 root dir
+	if (clust < 2)
+	{
+		uint32_t dirStartSec = info->firstRootSector;
+		sector = (--sector >= dirStartSec) ? sector : 0;
+	}
+	//FatDisk data dir
+	else
+	{ 
+		if ((--sector - ClusterToSector(clust)) >= info->secPerClust)
+		{
+			clust = GetPrevCluster(clust);
 			sector = (0 != clust) ? ClusterToSector(clust) : 0;
 		}
 	}

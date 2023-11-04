@@ -20,8 +20,8 @@ private:
 	FatDisk* fatDisk;
 
 	//Members
-	DirEntry* body;
-	FATEnt*   ents;
+	DirEntry*   body;
+	UnionEntry* ents;
 
 	uint32_t  index;
 	uint32_t  clust;
@@ -32,20 +32,20 @@ private:
 	void Clone(FatEntry* data);
 	void Clear();
 public:
-	FatEntry(FatDisk* fatDisk = NULL, Info* info = NULL, DirEntry* entry = NULL);
+	FatEntry(FatDisk* fatDisk = NULL, Info* info = NULL, DirEntry* dirent = NULL);
 	~FatEntry();
 
 	//Iterator Methods
 	void Begin();
 	void Next();
 	bool IsEnd();
-	FATEnt* Item();
+	UnionEntry* Item();
 
 	//Methods
-	void Setup(FatDisk* fatDisk, Info* info, DirEntry* entry);
+	void Setup(FatDisk* fatDisk, Info* info, DirEntry* dirent);
 	int FindSpace(uint32_t size);
-	uint32_t Pop(FATEnt* pop, uint32_t size = 1);
-	uint32_t Push(FATEnt* push, uint32_t size = 1);
+	uint32_t Pop(UnionEntry* pop, uint32_t size = 1);
+	uint32_t Push(UnionEntry* push, uint32_t size = 1);
 };
 
 #endif //!__FAT_ENTRY_H__

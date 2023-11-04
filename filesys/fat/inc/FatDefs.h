@@ -151,7 +151,7 @@ protected:
 		uint32_t trailSig;
 	} __attribute__((packed));
 
-	struct FATSDir
+	struct ShortEntry
 	{
 		char     name[11];
 		uint8_t  attr;
@@ -166,15 +166,10 @@ protected:
 		uint16_t fstClustLO;
 		uint32_t fileSize;
 
-		FATSDir()          { memset((void*)this, 0, 32); }
-		bool IsDirectory() { return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY); }
-		bool IsVolume()    { return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID); }
-		bool IsFile()      { return ((attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE     ); }
-		bool IsHidden()    { return ((attr &  _ATTR_HIDDEN                      ) == _ATTR_HIDDEN   ); }
-
+		ShortEntry() { memset((void*)this, 0, 32); }
 	} __attribute__((packed));
 
-	struct FATLDir
+	struct LongEntry
 	{
 		uint8_t  ord;
 		uint16_t name1[5];
@@ -193,25 +188,28 @@ protected:
 		}
 	} __attribute__((packed));
 
-	union FATEnt
+	union UnionEntry
 	{
-		FATLDir lfn;
-		FATSDir sfn;
+		LongEntry  lfe;
+		ShortEntry sfe;
 		
-		FATEnt()           { memset((void*)this, 0, 32); }
-		bool IsLongName()  { return ((lfn.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME); }
-		bool IsValid()     { return ((lfn.ord) && (lfn.ord != dir_free_flag)); }
-		uint8_t OrdSize()  { return (lfn.ord - dir_seq_flag + 1); }
-
+		UnionEntry()       { memset((void*)this, 0, 32); }
+		bool IsDirectory() { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY); }
+		bool IsVolume()    { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID); }
+		bool IsFile()      { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE     ); }
+		bool IsHidden()    { return ((sfe.attr &  _ATTR_HIDDEN                      ) == _ATTR_HIDDEN   ); }
+		bool IsLongName()  { return ((lfe.attr & _ATTR_LONG_NAME_MASK               ) == _ATTR_LONG_NAME); }
+		bool IsValid()     { return ((lfe.ord) && (lfe.ord != dir_free_flag)); }
+		uint8_t OrdSize()  { return ( lfe.ord  -  dir_seq_flag + 1          ); }
 	} __attribute__((packed));
 
 	struct DirEntry
 	{
-		FATSDir body;
-		bool    root;
-		char*   name;
+		UnionEntry  body;
+		bool        root;
+		char*       name;
 
-		DirEntry(FATSDir body = FATSDir(), char* name = NULL)
+		DirEntry(UnionEntry body = UnionEntry(), char* name = NULL)
 		{
 			this->body = body;
 			this->name = name;
@@ -222,7 +220,7 @@ protected:
 		{
 			delete[] name;
 		}
-	} __attribute__((packed));
+	};
 
 	struct DirEntries
 	{
@@ -239,14 +237,14 @@ protected:
 			delete[] path;
 		}
 
-		int CheckConflict(FATEnt* entry)
+		int CheckConflict(UnionEntry* entry)
 		{
 			uint8_t count = 0;
 			for (DirEntry* dir = dirs.Begin(); !dirs.IsEnd(); dir = dirs.Next())
 			{
 				for (uint8_t i = 0; i < 11; i++)
 				{
-					if (dir->body.name[i] != entry->sfn.name[i])
+					if (dir->body.sfe.name[i] != entry->sfe.name[i])
 					{
 						count++; break;
 					}

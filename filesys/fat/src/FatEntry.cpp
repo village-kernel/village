@@ -9,14 +9,14 @@
 
 
 /// @brief Constructor
-FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* entry)
+FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* dirent)
 	:body(NULL),
 	ents(NULL),
 	index(0),
 	clust(0),
 	sector(0)
 {
-	if (fatDisk && info) Setup(fatDisk, info, entry);
+	if (fatDisk && info) Setup(fatDisk, info, dirent);
 }
 
 
@@ -91,7 +91,7 @@ bool FatEntry::IsEnd()
 
 /// @brief Get item
 /// @return item
-FatEntry::FATEnt* FatEntry::Item()
+FatEntry::UnionEntry* FatEntry::Item()
 {
 	return ents + index;
 }
@@ -99,13 +99,13 @@ FatEntry::FATEnt* FatEntry::Item()
 
 /// @brief Setup
 /// @param entry 
-void FatEntry::Setup(FatDisk* fatDisk, Info* info, DirEntry* entry)
+void FatEntry::Setup(FatDisk* fatDisk, Info* info, DirEntry* dirent)
 {
 	this->fatDisk = fatDisk;
 	this->info    = info;
-	this->body    = entry;
+	this->body    = dirent;
 
-	ents = (FATEnt*)new char[info->bytesPerSec]();
+	ents = (UnionEntry*)new char[info->bytesPerSec]();
 	fatDisk->CalcFirstSector(body, clust, sector);
 	fatDisk->ReadOneSector((char*)ents, sector);
 }
@@ -148,7 +148,7 @@ int FatEntry::FindSpace(uint32_t size)
 /// @param pop 
 /// @param size 
 /// @return size
-uint32_t FatEntry::Pop(FATEnt* pop, uint32_t size)
+uint32_t FatEntry::Pop(UnionEntry* pop, uint32_t size)
 {
 	for (uint32_t i = 0; i < size; i++)
 	{
@@ -175,7 +175,7 @@ uint32_t FatEntry::Pop(FATEnt* pop, uint32_t size)
 /// @param push 
 /// @param size 
 /// @return size
-uint32_t FatEntry::Push(FATEnt* push, uint32_t size)
+uint32_t FatEntry::Push(UnionEntry* push, uint32_t size)
 {
 	fatDisk->ReadOneSector((char*)ents, sector); 
 

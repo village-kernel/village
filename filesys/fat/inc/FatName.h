@@ -17,16 +17,16 @@ public:
 	//Methods
 	uint8_t ChkSum(char* name);
 
-	char* GetShortName(FATEnt* entry);
-	int SetShortName(FATEnt* entry, const char* name);
+	char* GetShortName(UnionEntry* entry);
+	int SetShortName(UnionEntry* entry, const char* name);
 
-	char* GetLongName(FATEnt* entires);
-	int SetLongName(FATEnt* entires, const char* name);
+	char* GetLongName(UnionEntry* entires);
+	int SetLongName(UnionEntry* entires, const char* name);
 
-	char* GetVolumeLabel(FATEnt* entry);
-	int SetVolumeLabel(FATEnt* entry, const char* name);
+	char* GetVolumeLabel(UnionEntry* entry);
+	int SetVolumeLabel(UnionEntry* entry, const char* name);
 
-	void GenNumName(FATEnt* entry, int num);
+	void GenNumName(UnionEntry* entry, int num);
 };
 
 #endif //!__FAT_NAME_H__

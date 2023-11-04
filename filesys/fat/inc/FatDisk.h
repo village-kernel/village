@@ -25,13 +25,18 @@ public:
 	void Setup(Driver* diskdrv, uint32_t fstSec, Info* info);
 
 	//Cluster and sector Methods
-	uint32_t MergeCluster(uint16_t clustHI, uint16_t clustLO);
+	uint32_t GetFirstClust(ShortEntry sfe);
 	uint32_t ClusterToSector(uint32_t clust);
+	
 	uint32_t GetNextCluster(uint32_t clust);
 	uint32_t SetNextCluster(uint32_t clust);
+
+	uint32_t GetPrevCluster(uint32_t clust);
 	uint32_t ClearPrevCluster(uint32_t clust);
+	
 	void CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector);
 	void CalcNextSector(uint32_t& clust, uint32_t& sector);
+	void CalcPrevSector(uint32_t& clust, uint32_t& sector);
 
 	//Disk IO Methods
 	uint32_t ReadOneSector(char* data, uint32_t sector);

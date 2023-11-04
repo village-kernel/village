@@ -31,11 +31,11 @@ private:
 	char* NotDir(const char* path);
 	char* GetDirName(FatEntry* data);
 	DirEntry* SearchPath(const char* path, int forward = 0);
-	DirEntry* SearchDir(DirEntry* entry, const char* name);
-	DirEntries* OpenDir(DirEntry* entry);
-	FatEntry* CreateEntry(DirEntry* entry, const char* name, FATEnt*& ents, uint8_t& num);
-	DirEntry* CreateFile(DirEntry* entry, const char* name);
-	DirEntries* CreateDir(DirEntry* entry, const char* name);
+	DirEntry* SearchDir(DirEntry* dirent, const char* name);
+	DirEntries* OpenDir(DirEntry* dirent);
+	FatEntry* CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& entries, uint8_t& num);
+	DirEntry* CreateFile(DirEntry* dirent, const char* name);
+	DirEntries* CreateDir(DirEntry* dirent, const char* name);
 	DirEntry* CreateFile(const char* path);
 	DirEntries* CreateDir(const char* path);
 public:
@@ -44,9 +44,9 @@ public:
 
 	//File Methods
 	DirEntry* Open(const char* name, int mode);
-	int Write(char* data, uint32_t size, DirEntry* entry);
-	int Read(char* data, uint32_t size, DirEntry* entry);
-	int Size(DirEntry* entry);
+	int Write(char* data, uint32_t size, DirEntry* dirent);
+	int Read(char* data, uint32_t size, DirEntry* dirent);
+	int Size(DirEntry* dirent);
 
 	//Directory Methods
 	DirEntries* OpenDir(const char* path, int mode);
