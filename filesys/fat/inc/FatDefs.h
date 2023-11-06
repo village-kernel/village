@@ -234,22 +234,6 @@ protected:
 			dirs.Release();
 			delete[] path;
 		}
-
-		int CheckConflict(UnionEntry* entry)
-		{
-			uint8_t count = 0;
-			for (DirEntry* dir = dirs.Begin(); !dirs.IsEnd(); dir = dirs.Next())
-			{
-				for (uint8_t i = 0; i < 11; i++)
-				{
-					if (dir->body.sfe.name[i] != entry->sfe.name[i])
-					{
-						count++; break;
-					}
-				}
-			}
-			return (dirs.GetSize() == count) ? _OK : _ERR;
-		}
 	};
 
 	struct Info

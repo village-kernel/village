@@ -151,6 +151,27 @@ char* FatData::GetDirName(FatEntry* entry)
 }
 
 
+/// @brief Check dir name
+/// @param dirents 
+/// @param entry 
+/// @return 
+int FatData::CheckDirName(DirEntries* dirents, UnionEntry* entry)
+{
+	uint8_t count = 0;
+	for (DirEntry* dir = dirents->dirs.Begin(); !dirents->dirs.IsEnd(); dir = dirents->dirs.Next())
+	{
+		for (uint8_t i = 0; i < 11; i++)
+		{
+			if (dir->body.sfe.name[i] != entry->sfe.name[i])
+			{
+				count++; break;
+			}
+		}
+	}
+	return (dirents->dirs.GetSize() == count) ? _OK : _ERR;
+}
+
+
 /// @brief Search path
 /// @param path 
 /// @return 
@@ -270,7 +291,7 @@ FatData::UnionEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, ui
 		for (uint8_t i = 1; i < 100; i++)
 		{
 			fatName.GenNumName(unients + num, i);
-			if (_OK == dirents->CheckConflict(unients + num)) break;
+			if (_OK == CheckDirName(dirents, unients + num)) break;
 		}
 
 		unients[0].lfe.ord = num + dir_seq_flag;
