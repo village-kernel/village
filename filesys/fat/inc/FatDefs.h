@@ -206,14 +206,12 @@ protected:
 	struct DirEntry
 	{
 		UnionEntry  body;
-		bool        root;
 		char*       name;
 
 		DirEntry(UnionEntry body = UnionEntry(), char* name = NULL)
 		{
 			this->body = body;
 			this->name = name;
-			this->root = false;
 		}
 
 		~DirEntry()

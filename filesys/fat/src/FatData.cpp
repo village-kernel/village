@@ -167,7 +167,6 @@ FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
 	{
 		dirent = new DirEntry();
 		dirent->body.sfe.attr = _ATTR_DIRECTORY;
-		dirent->root = true;
 		dirent->name = (char*)"/";
 		return dirent;
 	}
@@ -243,10 +242,9 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
 /// @param entries 
 /// @param num 
 /// @return 
-FatEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& unients, uint8_t& num)
+FatData::UnionEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, uint8_t& num)
 {
 	DirEntries* dirents = OpenDir(dirent);
-	FatEntry*   entry   = new FatEntry(&fatDisk, info, dirent);
 
 	//Cal the size of entries
 	uint8_t namelen = strlen(name);
@@ -259,7 +257,7 @@ FatEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& 
 	num = isNameLoss ? ((namelen / (long_name_size - 1)) + mod) : 0;
 
 	//Alloc entires space
-	unients = new UnionEntry[num + 1]();
+	UnionEntry* unients = new UnionEntry[num + 1]();
 
 	//Set short name
 	fatName.SetShortName(&unients[num], name);
@@ -279,7 +277,7 @@ FatEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& 
 		fatName.SetLongName(unients, name);
 	}
 
-	return entry;
+	return unients;
 }
 
 
@@ -290,8 +288,8 @@ FatEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, UnionEntry*& 
 FatData::DirEntry* FatData::CreateFile(DirEntry* dirent, const char* name)
 {
 	uint8_t     num  = 0;
-	UnionEntry* unients = NULL;
-	FatEntry*   entry = CreateEntry(dirent, name, unients, num);
+	UnionEntry* unients = CreateEntry(dirent, name, num);
+	FatEntry*   entry = new FatEntry(&fatDisk, info, dirent);
 
 	//Set entry attr
 	unients[num].sfe.attr = _ATTR_FILE;
@@ -315,8 +313,8 @@ FatData::DirEntry* FatData::CreateFile(DirEntry* dirent, const char* name)
 FatData::DirEntries* FatData::CreateDir(DirEntry* dirent, const char* name)
 {
 	uint8_t     num = 0;
-	UnionEntry* unients = NULL;
-	FatEntry*   entry = CreateEntry(dirent, name, unients, num);
+	UnionEntry* unients = CreateEntry(dirent, name, num);
+	FatEntry*   entry = new FatEntry(&fatDisk, info, dirent);
 
 	uint32_t clust = fatDisk.AllocCluster(1);
 

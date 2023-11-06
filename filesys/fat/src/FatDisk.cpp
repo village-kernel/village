@@ -315,7 +315,7 @@ uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
 /// @param sector 
 void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector)
 {
-	if (NULL == entry || entry->root)
+	if (NULL == entry || (GetFirstClust(entry->body.sfe) < 2))
 	{
 		if (_FAT16 == info->fatType)
 		{
