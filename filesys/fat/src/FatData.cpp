@@ -155,20 +155,19 @@ char* FatData::GetDirName(FatEntry* entry)
 /// @param dirents 
 /// @param entry 
 /// @return 
-int FatData::CheckDirName(DirEntries* dirents, UnionEntry* entry)
+int FatData::CheckDirName(DirEntries* dirents, UnionEntry* unient)
 {
-	uint8_t count = 0;
-	for (DirEntry* dir = dirents->list.Begin(); !dirents->list.IsEnd(); dir = dirents->list.Next())
+	uint8_t pass = 0;
+	
+	DirEntry* dirent = dirents->list.Begin();
+
+	while (!dirents->list.IsEnd())
 	{
-		for (uint8_t i = 0; i < 11; i++)
-		{
-			if (dir->body.sfe.name[i] != entry->sfe.name[i])
-			{
-				count++; break;
-			}
-		}
+		if (0 != strncmp(dirent->body.sfe.name, unient->sfe.name, 11)) pass++;
+		dirent = dirents->list.Next();
 	}
-	return (dirents->list.GetSize() == count) ? _OK : _ERR;
+	
+	return (dirents->list.GetSize() == pass) ? _OK : _ERR;
 }
 
 
