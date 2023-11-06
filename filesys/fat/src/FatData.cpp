@@ -158,7 +158,7 @@ char* FatData::GetDirName(FatEntry* entry)
 int FatData::CheckDirName(DirEntries* dirents, UnionEntry* entry)
 {
 	uint8_t count = 0;
-	for (DirEntry* dir = dirents->dirs.Begin(); !dirents->dirs.IsEnd(); dir = dirents->dirs.Next())
+	for (DirEntry* dir = dirents->list.Begin(); !dirents->list.IsEnd(); dir = dirents->list.Next())
 	{
 		for (uint8_t i = 0; i < 11; i++)
 		{
@@ -168,7 +168,7 @@ int FatData::CheckDirName(DirEntries* dirents, UnionEntry* entry)
 			}
 		}
 	}
-	return (dirents->dirs.GetSize() == count) ? _OK : _ERR;
+	return (dirents->list.GetSize() == count) ? _OK : _ERR;
 }
 
 
@@ -245,12 +245,12 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
 			UnionEntry* unient = entry->Item();
 			if (unient->IsFile() || unient->IsDirectory())
 			{
-				dirents->dirs.Add(new DirEntry(*unient, name));
+				dirents->list.Add(new DirEntry(*unient, name));
 			}
 		}
 	}
 
-	dirents->dirs.Begin();
+	dirents->list.Begin();
 
 	delete entry;
 	return dirents;
@@ -568,10 +568,10 @@ FatData::DirEntries* FatData::OpenDir(const char* path, int mode)
 /// @return 
 FatData::DirEntry* FatData::ReadDir(DirEntries* dirents)
 {
-	if (false == dirents->dirs.IsEnd())
+	if (false == dirents->list.IsEnd())
 	{
-		DirEntry* dirent = dirents->dirs.Item();
-		dirents->dirs.Next();
+		DirEntry* dirent = dirents->list.Item();
+		dirents->list.Next();
 		return dirent;
 	}
 	return NULL;
@@ -583,7 +583,7 @@ FatData::DirEntry* FatData::ReadDir(DirEntries* dirents)
 /// @return 
 int FatData::SizeDir(DirEntries* dirents)
 {
-	return dirents->dirs.GetSize();
+	return dirents->list.GetSize();
 }
 
 

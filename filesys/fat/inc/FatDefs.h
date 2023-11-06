@@ -222,7 +222,7 @@ protected:
 
 	struct DirEntries
 	{
-		List<DirEntry> dirs;
+		List<DirEntry> list;
 		char*          path;
 
 		DirEntries() :
@@ -231,7 +231,7 @@ protected:
 
 		~DirEntries()
 		{
-			dirs.Release();
+			list.Release();
 			delete[] path;
 		}
 	};
