@@ -9,6 +9,7 @@
 
 #include "FatDefs.h"
 #include "FatDisk.h"
+#include "FatName.h"
 
 
 /// @brief 
@@ -18,6 +19,7 @@ private:
 	//Data Members
 	Info*    info;
 	FatDisk* fatDisk;
+	FatName  fatName;
 
 	//Members
 	DirEntry*   dirent;
@@ -31,9 +33,6 @@ private:
 	bool IsEmpty();
 	void Clone(FatEntry* data);
 	void Clear();
-public:
-	FatEntry(FatDisk* fatDisk = NULL, Info* info = NULL, DirEntry* dirent = NULL);
-	~FatEntry();
 
 	//Iterator Methods
 	void Begin();
@@ -41,11 +40,20 @@ public:
 	bool IsEnd();
 	UnionEntry* Item();
 
-	//Methods
-	void Setup(FatDisk* fatDisk, Info* info, DirEntry* dirent);
 	int FindSpace(uint32_t size);
 	uint32_t Pop(UnionEntry* pop, uint32_t size = 1);
 	uint32_t Push(UnionEntry* push, uint32_t size = 1);
+
+	int CheckDirName(UnionEntry* unient);
+public:
+	FatEntry(FatDisk* fatDisk = NULL, Info* info = NULL, DirEntry* dirent = NULL);
+	~FatEntry();
+
+	//Methods
+	void Setup(FatDisk* fatDisk, Info* info, DirEntry* dirent);
+	DirEntry* Create(const char* name, DirAttr attr);
+	DirEntry* Read();
+	bool Write(DirEntry* dirent);
 };
 
 #endif //!__FAT_ENTRY_H__

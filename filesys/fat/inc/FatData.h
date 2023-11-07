@@ -29,14 +29,9 @@ private:
 
 	//Directory Methods
 	char* NotDir(const char* path);
-	char* GetDirName(FatEntry* data);
-	int CheckDirName(DirEntries* dirents, UnionEntry* unient);
 	DirEntry* SearchPath(const char* path, int forward = 0);
 	DirEntry* SearchDir(DirEntry* dirent, const char* name);
 	DirEntries* OpenDir(DirEntry* dirent);
-	UnionEntry* CreateEntry(DirEntry* dirent, const char* name, uint8_t& num);
-	DirEntry* CreateFile(DirEntry* dirent, const char* name);
-	DirEntries* CreateDir(DirEntry* dirent, const char* name);
 	DirEntry* CreateFile(const char* path);
 	DirEntries* CreateDir(const char* path);
 public:

@@ -205,6 +205,12 @@ protected:
 
 	struct DirEntry
 	{
+		uint32_t    clust;
+		uint32_t    sector;
+		uint32_t    index;
+		uint32_t    size;
+		UnionEntry* unients;
+		
 		UnionEntry  body;
 		char*       name;
 
@@ -217,6 +223,7 @@ protected:
 		~DirEntry()
 		{
 			delete[] name;
+			delete[] unients;
 		}
 	};
 
