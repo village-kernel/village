@@ -1,0 +1,38 @@
+# demo menu
+
+menu "demo"
+
+config DEMO
+	bool "Build demo applications"
+	default n
+
+if DEMO
+
+config APPLICATION1
+	tristate "Add application1 to project"
+	default y
+
+config APPLICATION2
+	tristate "Add application2 to project"
+	default y
+
+config APPLICATION3
+	depends on GUI
+	tristate "Add application3 to project"
+	default n
+
+config APPLICATION4
+	tristate "Add application4 to project"
+	default m
+
+config APPLICATION5
+	tristate "Add application5 to project"
+	default m
+
+config APPLICATION6
+	tristate "Add application6 to project"
+	default m
+
+endif
+
+endmenu

@@ -1,0 +1,13 @@
+# launch menu
+
+menu "launch"
+
+config LAUNCH
+	bool "Build launch application"
+	default y
+
+if LAUNCH
+
+endif
+
+endmenu

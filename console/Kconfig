@@ -1,0 +1,35 @@
+# console menu
+
+menu "console"
+
+config CONSOLE
+	bool "Build console application"
+	default n
+
+if CONSOLE
+
+config CMD_ABOUT
+	bool "Add about cmd to console support list"
+	default n
+
+config CMD_FILESYS
+	bool "Add file system cmd to console support list"
+	default n
+
+config CMD_HELP
+	bool "Add help cmd to console support list"
+	default n
+
+config CMD_MOD
+	select MODINSTALLER
+	bool "Add insmod and rmmod cmd to console support list"
+	default n
+
+config CMD_RUN
+	select EXECUTOR
+	bool "Add run cmd to console support list"
+	default n
+
+endif
+
+endmenu
