@@ -32,14 +32,11 @@ src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/s
 
 inc-$(CONFIG_SYNC)                          += vk.kernel/sync/inc
 inc-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/inc
-inc-$(CONFIG_CONSOLE)                       += vk.kernel/console/inc
 inc-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/inc
 inc-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/inc
 
 src-$(CONFIG_SYNC)                          += vk.kernel/sync/src
 src-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/src
-src-$(CONFIG_CONSOLE)                       += vk.kernel/console/src
-src-$(CONFIG_CONSOLE)                       += vk.kernel/console/cmds
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 
@@ -72,14 +69,6 @@ objs-$(CONFIG_INPUT)                        += Input.o
 objs-$(CONFIG_LOADER)                       += Loader.o
 objs-$(CONFIG_ENVIRONMENT)                  += Environment.o
 objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
-
-objs-$(CONFIG_CMD_ABOUT)                    += CmdAbout.o
-objs-$(CONFIG_CMD_FILESYS)                  += CmdFileSys.o
-objs-$(CONFIG_CMD_HELP)                     += CmdHelp.o
-objs-$(CONFIG_CMD_MOD)                      += CmdMod.o
-objs-$(CONFIG_CMD_RUN)                      += CmdRun.o
-objs-$(CONFIG_CONSOLE)                      += CmdMsgMgr.o
-objs-$(CONFIG_CONSOLE)                      += Console.o
 
 objs-$(CONFIG_FATFS)                        += FatData.o
 objs-$(CONFIG_FATFS)                        += FatDisk.o

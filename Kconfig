@@ -54,43 +54,6 @@ config VILLAGE
 
 endmenu
 
-# confg console menu
-
-menu "console"
-
-config CONSOLE
-	bool "Enable console function"
-	default n
-
-config CMD_ABOUT
-	depends on CONSOLE
-	bool "Add about cmd to console support list"
-	default n
-
-config CMD_FILESYS
-	depends on CONSOLE
-	bool "Add file system cmd to console support list"
-	default n
-
-config CMD_HELP
-	depends on CONSOLE
-	bool "Add help cmd to console support list"
-	default n
-
-config CMD_MOD
-	depends on CONSOLE
-	select MODINSTALLER
-	bool "Add insmod and rmmod cmd to console support list"
-	default n
-
-config CMD_RUN
-	depends on CONSOLE
-	select EXECUTOR
-	bool "Add run cmd to console support list"
-	default n
-
-endmenu
-
 # confg binutils menu
 
 menu "binutils"
