@@ -68,7 +68,10 @@ private:
 						(0 != strcmp(dirs[i].name, ".")) &&
 						(0 != strcmp(dirs[i].name, "..")))
 					{
-						console.OutputRAW("%s  ", dirs[i].name);
+						if (FileType::_Diretory == dirs[i].type)
+							console.OutputRAW("\033[36m%s  \033[39m", dirs[i].name);
+						else if (FileType::_File == dirs[i].type)
+							console.OutputRAW("%s  ", dirs[i].name);
 					}
 				}
 				if (size) console.OutputRAW("\r\n");
