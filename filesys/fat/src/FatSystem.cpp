@@ -57,7 +57,7 @@ void FatSystem::Setup()
 		}
 	}
 
-	debug.Output(Debug::_Lv2, "Fat setup done");
+	debug.Output(Debug::_Lv2, "FAT file system setup done");
 }
 
 
