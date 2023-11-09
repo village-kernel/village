@@ -1,6 +1,6 @@
-# 乡村内核计划：
+
 # Village内核特点:
-- ### 1.上层功能代码与底层驱动代码分离，可移植性强
+- ### 1.上层功能代码与底层驱动代码分离，可移植。
 - ### 2.支持模块化，代码模块可分离
 - ### 3.支持多线程，多任务
 
@@ -15,46 +15,77 @@
 - ## vk.build：编译输出文件夹
 
 ---
-# 环境搭建：
-## ubuntu 安装开发环境:
+# 参与village-kernel开发：
 
-- ### arm-none-eabi-gcc
-		sudo apt install arm-none-eabi-gcc
+- ## 1.系统要求
+		mac os / linux / windows
 
-- ### openocd
-		sudo apt install openocd
+- ## 2.搭建开发环境, 以mac os为例
+	## 安装vscode, git
+		安装简单，跳过
 
-## macos 安装开发环境：
-- ### brew
+	### 安装brew
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-- ### arm-none-eabi-gcc
-		brew install armmbed/formulae/arm-none-eabi-gcc
+	### 安装交叉编译工具
+		brew install i686-elf-binutils i686-elf-gcc i386-elf-gdb
 
-- ### i386-elf-gcc
-		brew install i386-elf-binutils i386-elf-gcc i386-elf-gdb
-
-- ### qemu
+	### 安装qemu模拟器
 		brew install qemu
 
-- ### openocd
-		brew install open-ocd
+- ## 3.克隆village-kernel项目
+		git clone git@github.com:village-kernel/village-kernel.git
+		cd village-kernel
+		git submodule update --init --recursive
 
-## windows 安装开发环境：
-- ### cywin：
-- ### make：
-- ### gcc:
-- ### arm-none-eabi-gcc:
-- ### openocd:
+- ## 4.使用vscode打开village-kernel项目
+		把项目目录village-kernel拉到vscode界面
+		
+		接着打开vscode终端，拷贝配置文件
+		cp vk.scripts/configs/i686.config .config
+		
+		修改配置
+		make menuconfig
+		配置交叉编译器和gdb
+		
+		编译项目
+		make
 
-### 以上工具都可以在cywin里面下载。注意：不要使用mingw64，问题太多。
+- ## 5.创建rootfs文件系统镜像
+		使用mac自带的磁盘工具
+		文件->新建映象->空白映象
+		存储为rootfs.dmg, 存放在village-kernel目录下面
+		名称: VILLAGE os
+		大小: 100MB
+		格式: MS-DOS(FAT)
+
+		创建完成之后修改rootfs.dmg修改后缀为rootfs.img 
+		(这样就可以使用vscode的hex工具打开)
+
+		在Finder中打开rootfs.dmg
+
+		切换到vscode终端, 输入make rootfs拷贝文件
+
+- ## 6.运行与调试代码
+		切换到vscode debug界面
+		选择QEMU Debug x86_64 kernel
 
 ---
 
-# 增加子模块
-	git submodule add git@xxxx.git
+# 下载源码 
+- ### 下拉项目
+		git clone git@github.com:village-kernel/village-kernel.git
+- ### 下拉子模块
+		git submodule update --init --recursive
+- ### 增加子模块（需要增加子模块时使用）
+		git submodule add git@xxxx.git
 
 # 说明
-	目前还处于开发阶段，各功能还不完善。
-	适配平台不多，目前只适配了cortex-m和i686平台，其他平台待适配。
-
+- 目前还处于开发阶段，各功能还不完善，代码还有点垃圾。
+- 驱动模块需要进行修改，目前注册驱动还不理想。
+- GUI图形界面目前还没编写，只实现了简单的显示功能。
+- 网络功能还没时间开发，目前只有自己一人，搞不过来。
+- 专用Bootloader目前还没编写。
+- FAT文件系统还在编写完善，目前只能实现读取功能，其他文件系统待开发。
+- 适配平台不多，目前只适配了cortex-m和i686平台，其他平台待适配。
+- 硬件层代码都存放在vk.hardware子模块中。
