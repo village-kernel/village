@@ -97,7 +97,8 @@ endif
 APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
 APPLDFLAGS  += -Wl,--gc-sections
 APPLDFLAGS  += -Wl,--no-warn-rwx-segment
-APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-in-shared-libs
+#APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-in-shared-libs
+APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-all
 APPLDFLAGS  += -Wl,-m,elf_i386
 #APPLDFLAGS  += -Wl,-static -pie -e main
 APPLDFLAGS  += -pie -e main
