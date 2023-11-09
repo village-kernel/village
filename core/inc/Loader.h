@@ -11,6 +11,8 @@
 #include "Templates.h"
 #include "LibraryTool.h"
 #include "ModuleTool.h"
+#include "Executor.h"
+
 
 ///Loader
 class Loader : public Module
@@ -26,6 +28,7 @@ private:
 	//Members
 	LibraryTool libraries;
 	ModuleTool  modules;
+	Executor    executor;
 
 	//Methods
 	Loader();
@@ -34,6 +37,7 @@ private:
 public:
 	//Methods
 	void Initialize();
+	void Execute();
 
 	//Singleton Instance
 	static Loader& Instance();

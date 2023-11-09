@@ -42,6 +42,14 @@ void Loader::Initialize()
 }
 
 
+/// @brief Loader execute
+void Loader::Execute()
+{
+	//Execute the first application of the village
+	executor.Run("C:/applications/console.exec");
+}
+
+
 /// @brief Loader load
 /// @param filename rc file path
 void Loader::Loading(int type, const char* filename)
