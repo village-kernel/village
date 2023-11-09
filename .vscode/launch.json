@@ -61,7 +61,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/vk.build/village-bs.elf",
             "cwd": "${workspaceFolder}",
-            "miDebuggerPath": "/Volumes/WorkSpace/crosstool/i686-village-elf/bin/i686-village-elf-gdb",
+            "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
             "preLaunchTask": "Run QEMU x86_64"
@@ -72,7 +72,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/vk.build/village-kernel.elf",
             "cwd": "${workspaceFolder}",
-            "miDebuggerPath": "/Volumes/WorkSpace/crosstool/i686-village-elf/bin/i686-village-elf-gdb",
+            "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
             "preLaunchTask": "Run QEMU x86_64"
