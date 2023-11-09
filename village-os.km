@@ -119,8 +119,8 @@
                     "created": 1684914796497,
                     "text": "vk.library",
                     "layout_mind_offset": {
-                        "x": -98.74998593289035,
-                        "y": 526.083325408813
+                        "x": -112.49998580250497,
+                        "y": 600.083323471662
                     },
                     "expandState": "expand"
                 },
@@ -145,34 +145,12 @@
             },
             {
                 "data": {
-                    "id": "csucirj6fco0",
-                    "created": 1684915004935,
-                    "text": "vk.filesystem",
-                    "layout_mind_offset": {
-                        "x": 518.0000041060978,
-                        "y": 281.49999599324354
-                    },
-                    "expandState": "expand"
-                },
-                "children": [
-                    {
-                        "data": {
-                            "id": "csucl0cl6fc0",
-                            "created": 1684915180856,
-                            "text": "fatfs"
-                        },
-                        "children": []
-                    }
-                ]
-            },
-            {
-                "data": {
                     "id": "csuc3lz94e00",
                     "created": 1684913817384,
                     "text": "vk.kernel",
                     "layout_mind_offset": {
-                        "x": -92.66665735344088,
-                        "y": 448.2500029616058
+                        "x": 539.8333332215745,
+                        "y": 348.25000445172196
                     },
                     "expandState": "expand"
                 },
@@ -182,6 +160,22 @@
                             "id": "csucndm83ww0",
                             "created": 1684915366465,
                             "text": "arch"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cux2x24r9c00",
+                            "created": 1692504910757,
+                            "text": "binutils"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cux2xas3yt40",
+                            "created": 1692504929583,
+                            "text": "bridge"
                         },
                         "children": []
                     },
@@ -197,7 +191,23 @@
                         "data": {
                             "id": "csucnk5vxuo0",
                             "created": 1684915380715,
-                            "text": "kernel"
+                            "text": "core"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cux2woqx3mw0",
+                            "created": 1692504881622,
+                            "text": "filesys"
+                        },
+                        "children": []
+                    },
+                    {
+                        "data": {
+                            "id": "cux2xkie7l40",
+                            "created": 1692504950764,
+                            "text": "sync"
                         },
                         "children": []
                     },
@@ -217,8 +227,8 @@
                     "created": 1684913853009,
                     "text": "vk.hardware",
                     "layout_mind_offset": {
-                        "x": 725.0000000000001,
-                        "y": 18.666666666666572
+                        "x": -97.49998774379509,
+                        "y": 133.66666495303315
                     },
                     "expandState": "expand"
                 },
