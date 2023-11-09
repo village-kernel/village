@@ -54,6 +54,7 @@
 - ## 5.创建rootfs文件系统镜像
 		切换到vscode终端，拷贝文件系统镜像
 		cp vk.scripts/rootfs.img rootfs.img
+		在Finder中打开rootfs.img
 		make rootfs
 
 - ## 6.运行与调试代码
