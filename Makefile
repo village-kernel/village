@@ -266,9 +266,10 @@ osImage:
 # copy to rootfs
 #######################################
 rootfs:
-	$(Q)cp $(BUILD_DIR)/applications/*.exec $(ROOTFS_DIR)/applications
-	$(Q)cp $(BUILD_DIR)/libraries/*.so      $(ROOTFS_DIR)/libraries
-	$(Q)cp $(BUILD_DIR)/modules/*.mo        $(ROOTFS_DIR)/modules
+	$(Q)mkdir -p $(ROOTFS_DIR)/applications $(ROOTFS_DIR)/libraries $(ROOTFS_DIR)/modules
+	$(Q)cp -rf $(BUILD_DIR)/applications/*.exec $(ROOTFS_DIR)/applications
+	$(Q)cp -rf $(BUILD_DIR)/libraries/*.so      $(ROOTFS_DIR)/libraries
+	$(Q)cp -rf $(BUILD_DIR)/modules/*.mo        $(ROOTFS_DIR)/modules
 	
 
 #######################################
@@ -304,6 +305,7 @@ clean-mod:
 
 clean-app:
 	$(Q)rm -rf $(APPS_DIR)
+	$(Q)rm -rf $(BUILD_DIR)/vk.application
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
