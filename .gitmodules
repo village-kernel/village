@@ -1,27 +1,27 @@
 [submodule "vk.hardware"]
 	path = vk.hardware
-	url = git@git.aicodeone.fun:village-kernel/vk.hardware.git
+	url = git@github.com:village-kernel/vk.hardware.git
 [submodule "vk.kernel"]
 	path = vk.kernel
-	url = git@git.aicodeone.fun:village-kernel/vk.kernel.git
+	url = git@github.com:village-kernel/vk.kernel.git
 [submodule "vk.gui"]
 	path = vk.gui
-	url = git@git.aicodeone.fun:village-kernel/vk.gui.git
+	url = git@github.com:village-kernel/vk.gui.git
 [submodule "vk.scripts"]
 	path = vk.scripts
-	url = git@git.aicodeone.fun:village-kernel/vk.scripts.git
+	url = git@github.com:village-kernel/vk.scripts.git
 [submodule "vk.bootloader"]
 	path = vk.bootloader
-	url = git@git.aicodeone.fun:village-kernel/vk.bootloader.git
+	url = git@github.com:village-kernel/vk.bootloader.git
 [submodule "vk.network"]
 	path = vk.network
-	url = git@git.aicodeone.fun:village-kernel/vk.network.git
+	url = git@github.com:village-kernel/vk.network.git
 [submodule "vk.library"]
 	path = vk.library
-	url = git@git.aicodeone.fun:village-kernel/vk.library.git
+	url = git@github.com:village-kernel/vk.library.git
 [submodule "vk.document"]
 	path = vk.document
-	url = git@git.aicodeone.fun:village-kernel/vk.document.git
+	url = git@github.com:village-kernel/vk.document.git
 [submodule "vk.application"]
 	path = vk.application
-	url = git@git.aicodeone.fun:village-kernel/vk.application.git
+	url = git@github.com:village-kernel/vk.application.git
