@@ -52,19 +52,9 @@
 		make
 
 - ## 5.创建rootfs文件系统镜像
-		使用mac os自带的磁盘工具
-		文件->新建映象->空白映象
-		存储为rootfs.dmg, 存放在village-kernel目录下面
-		名称: VILLAGE OS
-		大小: 100MB
-		格式: MS-DOS(FAT)
-
-		创建完成之后修改rootfs.dmg修改后缀为rootfs.img 
-		(这样就可以使用vscode的hex工具打开)
-
-		在Finder中打开rootfs.dmg
-
-		切换到vscode终端, 输入make rootfs拷贝文件
+		切换到vscode终端，拷贝文件系统镜像
+		cp vk.scripts/rootfs.img rootfs.img
+		make rootfs
 
 - ## 6.运行与调试代码
 		切换到vscode debug界面
