@@ -6,11 +6,8 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Debug.h"
+#include "Loader.h"
 #include "LibraryTool.h"
-
-
-/// @brief Initialize librarys
-List<ElfLoader> LibraryTool::libraries;
 
 
 /// @brief Constructor
@@ -32,8 +29,11 @@ bool LibraryTool::Install(const char* filename)
 {
 	bool isInstalled = false;
 
+	//Get the libraries pointer
+	List<ElfLoader>* libraries = loader.GetLibraries();
+
 	//Check the library if it has been installed
-	for (ElfLoader* library = libraries.Begin(); !libraries.IsEnd(); library = libraries.Next())
+	for (ElfLoader* library = libraries->Begin(); !libraries->IsEnd(); library = libraries->Next())
 	{
 		if (0 == strcmp(filename, library->GetFileName()))
 		{
@@ -54,7 +54,7 @@ bool LibraryTool::Install(const char* filename)
 		{
 			library->FillBssZero();
 			library->InitArray();
-			libraries.Add(library);
+			libraries->Add(library);
 			debug.Output(Debug::_Lv2, "%s library install successful", filename);
 			return _OK;
 		}
@@ -74,12 +74,16 @@ bool LibraryTool::Install(const char* filename)
 /// @return 
 bool LibraryTool::Uninstall(const char* filename)
 {
-	for (ElfLoader* library = libraries.Begin(); !libraries.IsEnd(); library = libraries.Next())
+	//Get the libraries pointer
+	List<ElfLoader>* libraries = loader.GetLibraries();
+
+	//Search library and remove it
+	for (ElfLoader* library = libraries->Begin(); !libraries->IsEnd(); library = libraries->Next())
 	{
 		if (0 == strcmp(filename, library->GetFileName()))
 		{
 			library->FiniArray();
-			libraries.Remove(library);
+			libraries->Remove(library);
 			delete library;
 			debug.Output(Debug::_Lv2, "%s library uninstall successful", filename);
 			return _OK;	
@@ -96,7 +100,11 @@ bool LibraryTool::Uninstall(const char* filename)
 /// @return symbol address
 uint32_t LibraryTool::SearchSymbol(const char* symbol)
 {
-	for (ElfLoader* lib = libraries.Begin(); !libraries.IsEnd(); lib = libraries.Next())
+	//Get the libraries pointer
+	List<ElfLoader>* libraries = loader.GetLibraries();
+
+	//Search symbol
+	for (ElfLoader* lib = libraries->Begin(); !libraries->IsEnd(); lib = libraries->Next())
 	{
 		uint32_t symAddr = lib->GetDynSymAddrByName(symbol);
 		if (0 != symAddr) return symAddr;

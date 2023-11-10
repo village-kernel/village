@@ -8,15 +8,11 @@
 #define __LIBRARY_TOOL_H__
 
 #include "Defines.h"
-#include "Templates.h"
-#include "ElfLoader.h"
+
 
 /// @brief LibraryTool
 class LibraryTool
 {
-private:
-	//Members
-	static List<ElfLoader> libraries;
 public:
 	//Methods
 	LibraryTool();
@@ -24,10 +20,6 @@ public:
 	bool Install(const char* filename);
 	bool Uninstall(const char* filename);
 	uint32_t SearchSymbol(const char* symbol);
-
-	/// @brief Get libraries
-	/// @return libraries
-	List<ElfLoader>* GetLibraries() { return &libraries; }
 };
 
 #endif //!__LIBRARY_TOOL_H__
