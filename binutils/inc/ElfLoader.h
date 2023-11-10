@@ -288,14 +288,10 @@ private:
 		uint8_t*         strtab;
 		uint8_t*         shstrtab;
 	};
-	
-	//Static constants members
-	static const uint32_t base_map_address = MAP_ADDR;
-	static uint32_t mapAddr;
-	char* filename;
-
+private:
 	//Members
-	ELF elf;
+	ELF   elf;
+	char* filename;
 
 	//Linker members
 	bool isIgnoreUnresolvedSymbols;
@@ -303,7 +299,8 @@ private:
 	//Methods
 	int LoadElf();
 	int PreParser();
-	int SegmentMapping();
+	int SetMapAddr();
+	int LoadProgram();
 	int PostParser();
 	int SharedObjs();
 	int RelEntries();

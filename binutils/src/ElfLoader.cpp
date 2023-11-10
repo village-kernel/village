@@ -12,10 +12,6 @@
 #include "string.h"
 
 
-/// @brief Initialize map address
-uint32_t ElfLoader::mapAddr = ElfLoader::base_map_address;
-
-
 /// @brief Constructor
 /// @param filename 
 ElfLoader::ElfLoader(const char* filename)
@@ -43,7 +39,8 @@ int ElfLoader::Load(const char* filename)
 
 	if (LoadElf()         != _OK) return _ERR;
 	if (PreParser()       != _OK) return _ERR;
-	if (SegmentMapping()  != _OK) return _ERR;
+	if (SetMapAddr()      != _OK) return _ERR;
+	if (LoadProgram()     != _OK) return _ERR;
 	if (PostParser()      != _OK) return _ERR;
 	if (SharedObjs()      != _OK) return _ERR;
 	if (RelEntries()      != _OK) return _ERR;
@@ -283,16 +280,39 @@ int ElfLoader::PreParser()
 }
 
 
-/// @brief Section to segment mapping
+/// @brief Set mapping address
 /// @return result
-int ElfLoader::SegmentMapping()
+int ElfLoader::SetMapAddr()
 {
-	//Set map address
 	if (_ELF_Type_Dyn == elf.header->type)
-		elf.map = mapAddr;
-	else if (_ELF_Type_Exec == elf.header->type)
-		elf.map = 0;
+	{
+		uint32_t memsize = 0;
+		for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
+		{
+			ProgramHeader program = elf.programs[i];
 
+			if (_PT_LOAD == program.type)
+			{
+				memsize = (program.vaddr + program.memSize) + (program.align - 1);
+				memsize = memsize / program.align * program.align;
+			}
+		}
+		elf.map = (uint32_t)new char[memsize]();
+	}
+	else if (_ELF_Type_Exec == elf.header->type)
+	{
+		elf.map = 0;
+	}
+
+	debug.Output(Debug::_Lv1, "%s set mapping address successful", filename);
+	return _OK;
+}
+
+
+/// @brief Load program to mapping address
+/// @return result
+int ElfLoader::LoadProgram()
+{
 	for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
 	{
 		ProgramHeader program = elf.programs[i];
@@ -306,12 +326,10 @@ int ElfLoader::SegmentMapping()
 			{
 				vaddr[size] = code[size];
 			}
-
-			if (_ELF_Type_Dyn == elf.header->type) mapAddr += 0x10000;
 		}
 	}
 
-	debug.Output(Debug::_Lv1, "%s section to segment mapping successful", filename);
+	debug.Output(Debug::_Lv1, "%s load program successful", filename);
 	return _OK;
 }
 
@@ -725,6 +743,7 @@ int ElfLoader::FiniArray()
 int ElfLoader::Exit()
 {
 	delete[] filename;
-	delete[] (uint8_t*)elf.map;
+	delete[] (char*)elf.load;
+	delete[] (char*)elf.map;
 	return _OK;
 }

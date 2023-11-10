@@ -63,11 +63,6 @@ config BINUTILS
 	bool "Enable binutils function"
 	default n
 
-config MAP_ADDR
-	depends on BINUTILS
-	hex "The elf base map address"
-	default 0x400000
-
 config ELFLOADER
 	depends on BINUTILS
 	select FILESTREAM
