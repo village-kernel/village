@@ -46,7 +46,7 @@ void Loader::Initialize()
 void Loader::Execute()
 {
 	//Execute the first application of the village
-	executor.Run("C:/applications/console.exec");
+	executor.Run("C:/applications/taichi.exec");
 }
 
 
