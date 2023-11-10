@@ -111,19 +111,19 @@ uint16_t ArchInterrupt::GetPicIsr()
 /// @param handler 
 void ArchInterrupt::SetIdtGate(int irq, uint32_t handler)
 {
-    idt[irq].lowOffset = low_16(handler);
+	idt[irq].lowOffset = low_16(handler);
 	idt[irq].highOffset = high_16(handler);
-    idt[irq].sel = kernel_code_segment;
-    idt[irq].flags = 0x8E; 
+	idt[irq].sel = kernel_code_segment;
+	idt[irq].flags = 0x8E; 
 }
 
 
 /// @brief Set idt
 void ArchInterrupt::SetIdt()
 {
-    idtReg.base = (uint32_t)&idt;
-    idtReg.limit = idt_entires * sizeof(IdtGate) - 1;
-    __asm volatile("lidtl (%0)" : : "r" (&idtReg));
+	idtReg.base = (uint32_t)&idt;
+	idtReg.limit = idt_entires * sizeof(IdtGate) - 1;
+	__asm volatile("lidtl (%0)" : : "r" (&idtReg));
 }
 
 
@@ -131,12 +131,12 @@ void ArchInterrupt::SetIdt()
 /// @param regs 
 extern "C" void IRQ_Handler(Registers regs)
 {
-    //Send an EOI to the PICs
-    if (regs.irq >= 32 && regs.irq < 40)
+	//Send an EOI to the PICs
+	if (regs.irq >= 32 && regs.irq < 40)
 		PortByteOut(PIC1_CMD, PIC_EOI); //master
 	else if (regs.irq >= 40)
 		PortByteOut(PIC2_CMD, PIC_EOI); //slave
 
-    //Handle the interrupt in a more modular way
+	//Handle the interrupt in a more modular way
 	Interrupt::Instance().Handler(regs.irq);
 }
