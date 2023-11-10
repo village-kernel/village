@@ -7,10 +7,14 @@
 #ifndef __TAICHI_H__
 #define __TAICHI_H__
 
+#include "Executor.h"
+
 ///Taichi
 class Taichi
 {
 private:
+	//Members
+	Executor executor;
 public:
 	//Methods
 	Taichi();

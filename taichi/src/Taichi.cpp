@@ -5,8 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Taichi.h"
-#include "Village.h"
-#include "Debug.h"
 
 
 /// @brief Constructor
@@ -24,15 +22,14 @@ Taichi::~Taichi()
 /// @brief Initialize
 void Taichi::Initialize()
 {
-	debug.Info("taichi init");
+
 }
 
 
 /// @brief Execute
 void Taichi::Execute()
 {
-	debug.Info("taichi execute");
-	//village.Run("C:/applications/console.exec");
+	executor.Run("C:/applications/console.exec");
 }
 
 
