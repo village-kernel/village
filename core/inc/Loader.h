@@ -11,6 +11,7 @@
 #include "Templates.h"
 #include "LibraryTool.h"
 #include "ModuleTool.h"
+#include "ElfLoader.h"
 #include "Executor.h"
 
 
@@ -26,9 +27,11 @@ private:
 	};
 
 	//Members
-	LibraryTool libraries;
-	ModuleTool  modules;
-	Executor    executor;
+	List<ElfLoader> libraries;
+	List<ElfLoader> modules;
+	LibraryTool     libraryTool;
+	ModuleTool      moduleTool;
+	Executor        executor;
 
 	//Methods
 	Loader();
@@ -38,6 +41,9 @@ public:
 	//Methods
 	void Initialize();
 	void Execute();
+
+	List<ElfLoader>* GetLibraries();
+	List<ElfLoader>* GetModules();
 
 	//Singleton Instance
 	static Loader& Instance();

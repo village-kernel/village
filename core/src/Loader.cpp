@@ -28,10 +28,12 @@ Loader& Loader::Instance()
 	static Loader instance;
 	return instance;
 }
+EXPORT_SYMBOL(_ZN6Loader8InstanceEv);
 
 
 /// @brief Definitions loader
 Loader& loader = Loader::Instance();
+EXPORT_SYMBOL(loader);
 
 
 /// @brief Loader initialize
@@ -63,11 +65,11 @@ void Loader::Loading(int type, const char* filename)
 	{
 		if (_Load_Lib == type)
 		{
-			libraries.Install(node->cmd);
+			libraryTool.Install(node->cmd);
 		}
 		else if (_Load_Mod == type)
 		{
-			modules.Install(node->cmd);
+			moduleTool.Install(node->cmd);
 		}
 	}
 
@@ -75,6 +77,25 @@ void Loader::Loading(int type, const char* filename)
 	rc->Release();
 	delete rc;
 }
+EXPORT_SYMBOL(_ZN6Loader7LoadingEiPKc);
+
+
+/// @brief Get libraries
+/// @return libraries
+List<ElfLoader>* Loader::GetLibraries()
+{
+	return &libraries;
+}
+EXPORT_SYMBOL(_ZN6Loader12GetLibrariesEv);
+
+
+/// @brief Get modules
+/// @return modules
+List<ElfLoader>* Loader::GetModules()
+{
+	return &modules;
+}
+EXPORT_SYMBOL(_ZN6Loader10GetModulesEv);
 
 
 ///Register module
