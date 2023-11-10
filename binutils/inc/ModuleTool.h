@@ -8,15 +8,11 @@
 #define __MODULE_TOOL_H__
 
 #include "Defines.h"
-#include "Templates.h"
-#include "ElfLoader.h"
+
 
 /// @brief ModuleTool
 class ModuleTool
 {
-private:
-	//Members
-	static List<ElfLoader> modules;
 public:
 	//Methods
 	ModuleTool();

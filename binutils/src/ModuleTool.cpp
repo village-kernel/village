@@ -6,11 +6,8 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Debug.h"
+#include "Loader.h"
 #include "ModuleTool.h"
-
-
-/// @brief Initialize modules
-List<ElfLoader> ModuleTool::modules;
 
 
 /// @brief Constructor
@@ -32,8 +29,11 @@ bool ModuleTool::Install(const char* filename)
 {
 	bool isInstalled = false;
 
+	//Get the libraries pointer
+	List<ElfLoader>* modules = loader.GetModules();
+
 	//Check the module if it has been installed
-	for (ElfLoader* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
+	for (ElfLoader* mod = modules->Begin(); !modules->IsEnd(); mod = modules->Next())
 	{
 		if (0 == strcmp(filename, mod->GetFileName()))
 		{
@@ -52,7 +52,7 @@ bool ModuleTool::Install(const char* filename)
 		{
 			mod->FillBssZero();
 			mod->InitArray();
-			modules.Add(mod);
+			modules->Add(mod);
 			debug.Output(Debug::_Lv2, "%s module install successful", filename);
 			return _OK;
 		}
@@ -72,12 +72,16 @@ bool ModuleTool::Install(const char* filename)
 /// @return 
 bool ModuleTool::Uninstall(const char* filename)
 {
-	for (ElfLoader* mod = modules.Begin(); !modules.IsEnd(); mod = modules.Next())
+	//Get the libraries pointer
+	List<ElfLoader>* modules = loader.GetModules();
+
+	//Search module and remove it
+	for (ElfLoader* mod = modules->Begin(); !modules->IsEnd(); mod = modules->Next())
 	{
 		if (0 == strcmp(filename, mod->GetFileName()))
 		{
 			mod->FiniArray();
-			modules.Remove(mod);
+			modules->Remove(mod);
 			delete mod;
 			debug.Output(Debug::_Lv2, "%s module uninstall successful", filename);
 			return _OK;	
