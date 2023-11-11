@@ -23,3 +23,4 @@ src-y                       += vk.library/vklibc++/src
 # objects
 ######################################
 objs-stdc++-y               += icxxabi.o
+objs-stdc++-y               += operator.o
