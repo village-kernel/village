@@ -313,25 +313,25 @@ uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
 /// @brief Calc first sector
 /// @param clust 
 /// @param sector 
-void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector)
+void FatDisk::CalcFirstSector(DirEntry* dirent)
 {
-	if (NULL == entry || (GetFirstClust(entry->body.sfe) < 2))
+	if (GetFirstClust(dirent->body.sfe) < 2)
 	{
 		if (_FAT16 == info->fatType)
 		{
-			clust  = 0;
-			sector = info->firstRootSector;
+			dirent->temp.clust  = 0;
+			dirent->temp.sector = info->firstRootSector;
 		}
 		else if (_FAT32 == info->fatType)
 		{
-			clust  = info->rootClust;
-			sector = ClusterToSector(clust);
+			dirent->temp.clust  = info->rootClust;
+			dirent->temp.sector = ClusterToSector(dirent->temp.clust);
 		}
 	}
 	else
 	{
-		clust  = GetFirstClust(entry->body.sfe);
-		sector = ClusterToSector(clust);
+		dirent->temp.clust  = GetFirstClust(dirent->body.sfe);
+		dirent->temp.sector = ClusterToSector(dirent->temp.clust);
 	}
 }
 
@@ -339,21 +339,21 @@ void FatDisk::CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector
 /// @brief Calc next sector
 /// @param clust 
 /// @param sector 
-void FatDisk::CalcNextSector(uint32_t& clust, uint32_t& sector)
+void FatDisk::CalcNextSector(DirEntry* dirent)
 {
 	//FAT16 root dir
-	if (clust < 2)
+	if (dirent->temp.clust < 2)
 	{
 		uint32_t dirEndedSec = info->firstRootSector + info->countOfRootSecs;
-		sector = (++sector < dirEndedSec) ? sector : 0;
+		dirent->temp.sector   = (++dirent->temp.sector < dirEndedSec) ? dirent->temp.sector : 0;
 	}
 	//FatDisk data dir
 	else
 	{ 
-		if ((++sector - ClusterToSector(clust)) >= info->secPerClust)
+		if ((++dirent->temp.sector - ClusterToSector(dirent->temp.clust)) >= info->secPerClust)
 		{
-			clust = GetNextCluster(clust);
-			sector = (0 != clust) ? ClusterToSector(clust) : 0;
+			dirent->temp.clust = GetNextCluster(dirent->temp.clust);
+			dirent->temp.sector = (0 != dirent->temp.clust) ? ClusterToSector(dirent->temp.clust) : 0;
 		}
 	}
 }
@@ -362,23 +362,39 @@ void FatDisk::CalcNextSector(uint32_t& clust, uint32_t& sector)
 /// @brief 
 /// @param clust 
 /// @param sector 
-void FatDisk::CalcPrevSector(uint32_t& clust, uint32_t& sector)
+void FatDisk::CalcPrevSector(DirEntry* dirent)
 {
 	//FAT16 root dir
-	if (clust < 2)
+	if (dirent->temp.clust < 2)
 	{
 		uint32_t dirStartSec = info->firstRootSector;
-		sector = (--sector >= dirStartSec) ? sector : 0;
+		dirent->temp.sector = (--dirent->temp.sector >= dirStartSec) ? dirent->temp.sector : 0;
 	}
 	//FatDisk data dir
 	else
 	{ 
-		if ((--sector - ClusterToSector(clust)) >= info->secPerClust)
+		if ((--dirent->temp.sector - ClusterToSector(dirent->temp.clust)) >= info->secPerClust)
 		{
-			clust = GetPrevCluster(clust);
-			sector = (0 != clust) ? ClusterToSector(clust) : 0;
+			dirent->temp.clust = GetPrevCluster(dirent->temp.clust);
+			dirent->temp.sector = (0 != dirent->temp.clust) ? ClusterToSector(dirent->temp.clust) : 0;
 		}
 	}
+}
+
+
+/// @brief 
+/// @param dirent 
+void FatDisk::ReadUnionEntries(DirEntry* dirent)
+{
+	ReadOneSector((char*)dirent->temp.unients, dirent->temp.sector);
+}
+
+
+/// @brief 
+/// @param dirent 
+void FatDisk::WriteUnionEntries(DirEntry* dirent)
+{
+	WriteOneSector((char*)dirent->temp.unients, dirent->temp.sector);
 }
 
 

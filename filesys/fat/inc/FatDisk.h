@@ -34,9 +34,11 @@ public:
 	uint32_t GetPrevCluster(uint32_t clust);
 	uint32_t ClearPrevCluster(uint32_t clust);
 	
-	void CalcFirstSector(DirEntry* entry, uint32_t& clust, uint32_t& sector);
-	void CalcNextSector(uint32_t& clust, uint32_t& sector);
-	void CalcPrevSector(uint32_t& clust, uint32_t& sector);
+	void CalcFirstSector(DirEntry* dirent);
+	void CalcNextSector(DirEntry* dirent);
+	void CalcPrevSector(DirEntry* dirent);
+	void ReadUnionEntries(DirEntry* dirent);
+	void WriteUnionEntries(DirEntry* dirent);
 
 	//Disk IO Methods
 	uint32_t ReadOneSector(char* data, uint32_t sector);
@@ -48,8 +50,8 @@ public:
 	uint32_t WriteCluster(char* data, uint32_t clustSize, uint32_t clust);
 	uint32_t ClearCluster(uint32_t clust, uint32_t clustSize);
 
-	uint32_t AllocCluster(uint32_t clustSize);
-	uint32_t FreeCluster(uint32_t clustSize, uint32_t clust);
+	uint32_t AllocCluster(uint32_t clustSize = 1);
+	uint32_t FreeCluster(uint32_t clustSize = 1, uint32_t clust = 0);
 };
 
 #endif //!__FAT_DISK_H__

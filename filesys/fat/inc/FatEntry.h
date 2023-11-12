@@ -21,39 +21,27 @@ private:
 	FatDisk* fatDisk;
 	FatName  fatName;
 
-	//Members
-	DirEntry*   dirent;
-	UnionEntry* unients;
-
-	uint32_t  index;
-	uint32_t  clust;
-	uint32_t  sector;
-
-	//Methods
-	bool IsEmpty();
-	void Clone(FatEntry* data);
-	void Clear();
-
 	//Iterator Methods
-	void Begin();
-	void Next();
-	bool IsEnd();
-	UnionEntry* Item();
+	bool ReadBegin(DirEntry* dirent);
+	bool ReadNext(DirEntry* dirent);
+	bool WriteNext(DirEntry* dirent);
+	bool IsEnded(DirEntry* dirent);
+	UnionEntry& Item(DirEntry* dirent);
 
-	int FindSpace(uint32_t size);
-	uint32_t Pop(UnionEntry* pop, uint32_t size = 1);
-	uint32_t Push(UnionEntry* push, uint32_t size = 1);
+	int Find(DirEntry* dirent, uint32_t size);
+	uint32_t Pop(DirEntry* dirent, EntryInfo& pop);
+	uint32_t Push(DirEntry* dirent, EntryInfo& push);
 
-	int CheckDirName(UnionEntry* unient);
+	int CheckDirName(DirEntry* dirent, UnionEntry* unient);
 public:
-	FatEntry(FatDisk* fatDisk = NULL, Info* info = NULL, DirEntry* dirent = NULL);
+	FatEntry();
 	~FatEntry();
 
 	//Methods
-	void Setup(FatDisk* fatDisk, Info* info, DirEntry* dirent);
-	DirEntry* Create(const char* name, DirAttr attr);
-	DirEntry* Read();
-	bool Write(DirEntry* dirent);
+	void Setup(FatDisk* fatDisk, Info* info);
+	DirEntry* Create(DirEntry* dirent, const char* name, DirAttr attr);
+	DirEntry* Read(DirEntry* dirent);
+	bool Update(DirEntry* dirent);
 };
 
 #endif //!__FAT_ENTRY_H__

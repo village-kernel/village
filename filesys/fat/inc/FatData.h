@@ -8,9 +8,9 @@
 #define __FAT_DATA_H__
 
 #include "FatDefs.h"
+#include "FatName.h"
 #include "FatDisk.h"
 #include "FatEntry.h"
-#include "FatName.h"
 
 
 /// @brief FatData
@@ -18,10 +18,11 @@ class FatData : public FatDefs
 {
 private:
 	//Members
-	DBR*    dbr;
-	Info*   info;
-	FatDisk fatDisk;
-	FatName fatName;
+	DBR*     dbr;
+	Info*    info;
+	FatName  fatName;
+	FatDisk  fatDisk;
+	FatEntry fatEntry;
 
 	//Methods
 	int ReadDBR();

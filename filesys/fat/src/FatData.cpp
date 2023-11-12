@@ -32,6 +32,8 @@ int FatData::Setup(Driver* diskdrv, uint32_t fstSec)
 		return _ERR;
 	}
 
+	fatEntry.Setup(&fatDisk, info);
+
 	return _OK;
 }
 
@@ -133,21 +135,19 @@ FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
 	char** dirNames = regex.ToArray();
 	int8_t dirIndex = regex.Size() - forward;
 	
-	DirEntry* dirent = NULL;
+	DirEntry* dirent = new DirEntry();
 
 	if (dirIndex <= 1)
 	{
-		dirent = new DirEntry();
 		dirent->body.sfe.attr = _ATTR_DIRECTORY;
 		dirent->name = (char*)"/";
 		return dirent;
 	}
 
-	for (uint8_t i = 1; i < dirIndex; i++)
+	for (int8_t i = 1; i < dirIndex; i++)
 	{
 		dirent = SearchDir(dirent, dirNames[i]);
-
-		if (NULL == dirent) return NULL;
+		if (NULL == dirent->name) return NULL;
 	}
 
 	return dirent;
@@ -160,10 +160,9 @@ FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
 /// @return 
 FatData::DirEntry* FatData::SearchDir(DirEntry* dirent, const char* dir)
 {
-	FatEntry* entry = new FatEntry(&fatDisk, info, dirent);
 	DirEntry* found = NULL;
 
-	while (NULL != (found = entry->Read()))
+	while (NULL != (found = fatEntry.Read(dirent)))
 	{
 		if (0 != strcmp(found->name, dir))
 			delete found;
@@ -171,7 +170,6 @@ FatData::DirEntry* FatData::SearchDir(DirEntry* dirent, const char* dir)
 			break;
 	}
 
-	delete entry;
 	return found;
 }
 
@@ -183,11 +181,10 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
 {
 	if (NULL == dirent) return NULL;
 
-	FatEntry*   entry   = new FatEntry(&fatDisk, info, dirent);
 	DirEntries* dirents = new DirEntries();
 	DirEntry*   found   = NULL;
 
-	while (NULL != (found = entry->Read()))
+	while (NULL != (found = fatEntry.Read(dirent)))
 	{
 		if (found->body.IsFile() || found->body.IsDirectory())
 			dirents->list.Add(found);
@@ -197,7 +194,6 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
 
 	dirents->list.Begin();
 
-	delete entry;
 	return dirents;
 }
 
@@ -213,7 +209,7 @@ FatData::DirEntry* FatData::CreateFile(const char* path)
 	
 	if (dirent->body.IsDirectory())
 	{
-		return FatEntry(&fatDisk, info, dirent).Create(NotDir(path), _ATTR_FILE);
+		return fatEntry.Create(dirent, NotDir(path), _ATTR_FILE);
 	}
 
 	return NULL;
@@ -231,7 +227,7 @@ FatData::DirEntries* FatData::CreateDir(const char* path)
 	
 	if (dirent->body.IsDirectory())
 	{
-		DirEntries* found = OpenDir(FatEntry(&fatDisk, info, dirent).Create(NotDir(path), _ATTR_DIRECTORY));
+		DirEntries* found = OpenDir(fatEntry.Create(dirent, NotDir(path), _ATTR_DIRECTORY));
 		found->path = (char*)path;
 		return found;
 	}
@@ -244,8 +240,7 @@ FatData::DirEntries* FatData::CreateDir(const char* path)
 /// @return 
 char* FatData::GetVolumeLabel()
 {
-	FatEntry* entry  = new FatEntry(&fatDisk, info, NULL);
-	DirEntry* dirent = entry->Read();
+	DirEntry* dirent = fatEntry.Read(new DirEntry());
 
 	char* label = (char*)"NONAME";
 
@@ -253,10 +248,9 @@ char* FatData::GetVolumeLabel()
 	if (dirent->body.IsVolume())
 	{
 		//Get volume label
-		label = fatName.GetVolumeLabel(&dirent->body);
+		label = fatName.GetVolumeLabel(dirent->self.unients);
 	}
 
-	delete entry;
 	return label;
 }
 
@@ -266,20 +260,18 @@ char* FatData::GetVolumeLabel()
 /// @return 
 int FatData::SetVolumeLabel(const char* name)
 {
-	FatEntry* entry  = new FatEntry(&fatDisk, info, NULL);
-	DirEntry* dirent = entry->Read();
+	DirEntry* dirent = fatEntry.Read(new DirEntry());
 
 	//Check is volume entry
 	if (dirent->body.IsVolume())
 	{
 		//Set volume label
-		fatName.SetVolumeLabel(&dirent->body, name);
+		fatName.SetVolumeLabel(dirent->self.unients, name);
 
 		//Push ent to disk
-		entry->Write(dirent);
+		fatEntry.Update(dirent);
 	}
 	
-	delete entry;
 	return _OK;
 }
 
@@ -442,16 +434,13 @@ int FatData::Copy(const char* from, const char* to)
 int FatData::Remove(const char* name)
 {
 	DirEntry* dirent = SearchPath(name);
-	FatEntry* entry  = new FatEntry(&fatDisk, info, dirent);
 	
-	for (uint8_t i = 0; i < dirent->size; i++)
+	for (uint8_t i = 0; i < dirent->self.size; i++)
 	{
-		dirent->unients[i].lfe.ord = dir_free_flag;
+		dirent->self.unients[i].lfe.ord = dir_free_flag;
 	}
 
-	entry->Write(dirent);
-
-	//fatDisk.FreeCluster(dirent->clust);
+	fatEntry.Update(dirent);
 
 	return _OK;
 }

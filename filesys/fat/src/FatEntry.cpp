@@ -9,134 +9,126 @@
 
 
 /// @brief Constructor
-FatEntry::FatEntry(FatDisk* fatDisk, Info* info, DirEntry* dirent)
-	:dirent(NULL),
-	unients(NULL),
-	index(0),
-	clust(0),
-	sector(0)
+FatEntry::FatEntry()
 {
-	if (fatDisk && info) Setup(fatDisk, info, dirent);
 }
 
 
 /// @brief Destructor
 FatEntry::~FatEntry()
 {
-	delete[] unients;
 }
 
 
-/// @brief data is empty
-/// @return 
-bool FatEntry::IsEmpty()
+/// @brief FatEntry setup
+/// @param fatDisk 
+/// @param info 
+void FatEntry::Setup(FatDisk* fatDisk, Info* info)
 {
-	return !(index || clust || sector);
-}
-
-
-/// @brief low clone data
-/// @param data 
-void FatEntry::Clone(FatEntry* data)
-{
-	this->index  = data->index;
-	this->clust  = data->clust;
-	this->sector = data->sector;
-}
-
-
-/// @brief clear data
-void FatEntry::Clear()
-{
-	this->index  = 0;
-	this->clust  = 0;
-	this->sector = 0;
+	this->fatDisk = fatDisk;
+	this->info    = info;
 }
 
 
 /// @brief Iterator begin
-void FatEntry::Begin()
+bool FatEntry::ReadBegin(DirEntry* dirent)
 {
-	this->index  = 0;
-	this->clust  = 0;
-	this->sector = 0;
-	fatDisk->CalcFirstSector(dirent, clust, sector);
-	fatDisk->ReadOneSector((char*)unients, sector);
+	dirent->temp.index  = 0;
+	dirent->temp.clust  = 0;
+	dirent->temp.sector = 0;
+
+	if (NULL == dirent->temp.unients)
+	{
+		dirent->temp.unients = (UnionEntry*)new char[info->bytesPerSec]();
+	}
+
+	fatDisk->CalcFirstSector(dirent);
+	fatDisk->ReadUnionEntries(dirent);
+
+	return true;
 }
 
 
 /// @brief Iterator next
-void FatEntry::Next()
+bool FatEntry::ReadNext(DirEntry* dirent)
 {
-	if (++index >= info->entriesPerSec)
+	if (++dirent->temp.index >= info->entriesPerSec)
 	{
-		fatDisk->CalcNextSector(clust, sector);
-		if (0 != sector)
+		fatDisk->CalcNextSector(dirent);
+		if (0 != dirent->temp.sector)
 		{
-			fatDisk->ReadOneSector((char*)unients, sector);
-			index = 0;
+			fatDisk->ReadUnionEntries(dirent);
+			dirent->temp.index = 0;
 		}
-		else return;
+		else return false;
 	}
+	return true;
+}
+
+
+/// @brief Iterator next
+bool FatEntry::WriteNext(DirEntry* dirent)
+{
+	if (++dirent->temp.index >= info->entriesPerSec)
+	{
+		fatDisk->WriteUnionEntries(dirent);
+
+		fatDisk->CalcNextSector(dirent);
+		if (0 != dirent->temp.sector)
+		{
+			fatDisk->ReadUnionEntries(dirent);
+			dirent->temp.index = 0;
+		}
+		else return false;
+	}
+	return true;
 }
 
 
 /// @brief Iterator is ended
 /// @return res
-bool FatEntry::IsEnd()
+bool FatEntry::IsEnded(DirEntry* dirent)
 {
-	return 0 == sector;
+	return 0 == dirent->temp.sector;
 }
 
 
 /// @brief Get item
 /// @return item
-FatEntry::UnionEntry* FatEntry::Item()
+FatEntry::UnionEntry& FatEntry::Item(DirEntry* dirent)
 {
-	return unients + index;
-}
-
-
-/// @brief Setup
-/// @param entry 
-void FatEntry::Setup(FatDisk* fatDisk, Info* info, DirEntry* dirent)
-{
-	this->fatDisk = fatDisk;
-	this->info    = info;
-	this->dirent  = dirent;
-
-	unients = (UnionEntry*)new char[info->bytesPerSec]();
-	fatDisk->CalcFirstSector(dirent, clust, sector);
-	fatDisk->ReadOneSector((char*)unients, sector);
+	return dirent->temp.unients[dirent->temp.index];
 }
 
 
 /// @brief Find free space
 /// @param size 
 /// @return res
-int FatEntry::FindSpace(uint32_t size)
+int FatEntry::Find(DirEntry* dirent, uint32_t size)
 {
-	FatEntry record;
-	uint8_t  count = 0;
+	bool      isBackup  = true;
+	uint32_t  freeCount = 0;
+	EntryInfo backup;
 
-	for (Begin(); !IsEnd(); Next())
+	for (ReadBegin(dirent); !IsEnded(dirent); ReadNext(dirent))
 	{
-		if (!unients[index].IsValid())
+		if (!Item(dirent).IsValid())
 		{
-			if (record.IsEmpty())
+			if (true == isBackup)
 			{
-				record.Clone(this);
+				backup = dirent->temp;
+				isBackup = false;
 			}
-			if (++count >= size)
+			if (++freeCount >= size)
 			{
-				this->Clone(&record);
+				dirent->temp = backup;
 				return _OK;
 			}
 		}
 		else
 		{
-			count = 0;
-			record.Clear();
+			freeCount = 0;
+			isBackup = true;
 		}
 	}
 
@@ -148,24 +140,15 @@ int FatEntry::FindSpace(uint32_t size)
 /// @param pop 
 /// @param size 
 /// @return size
-uint32_t FatEntry::Pop(UnionEntry* pop, uint32_t size)
+uint32_t FatEntry::Pop(DirEntry* dirent, EntryInfo& pop)
 {
-	for (uint32_t i = 0; i < size; i++)
+	for (uint32_t i = 0; i < pop.size; i++)
 	{
-		pop[i] = unients[index];
+		pop.unients[i] = Item(dirent);
 	
-		if (++index >= info->entriesPerSec)
-		{
-			fatDisk->CalcNextSector(clust, sector);
-			if (0 != sector)
-			{
-				fatDisk->ReadOneSector((char*)unients, sector);
-				index = 0;
-			}
-			else return i;
-		}
+		if (false == ReadNext(dirent)) return i;
 	}
-	return size;
+	return pop.size;
 }
 
 
@@ -173,31 +156,20 @@ uint32_t FatEntry::Pop(UnionEntry* pop, uint32_t size)
 /// @param push 
 /// @param size 
 /// @return size
-uint32_t FatEntry::Push(UnionEntry* push, uint32_t size)
+uint32_t FatEntry::Push(DirEntry* dirent, EntryInfo& push)
 {
-	fatDisk->ReadOneSector((char*)unients, sector);
+	fatDisk->ReadUnionEntries(dirent);
 
-	for (uint32_t i = 0; i < size; i++)
+	for (uint32_t i = 0; i < push.size; i++)
 	{
-		unients[index] = push[i];
+		Item(dirent) = push.unients[i];
 
-		if (++index >= info->entriesPerSec)
-		{
-			fatDisk->WriteOneSector((char*)unients, sector);
-
-			fatDisk->CalcNextSector(clust, sector);
-			if (0 != sector)
-			{
-				fatDisk->ReadOneSector((char*)unients, sector);
-				index = 0;
-			}
-			else return i;
-		}
+		if (false == WriteNext(dirent)) return i;
 	}
 
-	fatDisk->WriteOneSector((char*)unients, sector);
+	fatDisk->WriteUnionEntries(dirent);
 
-	return size;
+	return push.size;
 }
 
 
@@ -205,11 +177,11 @@ uint32_t FatEntry::Push(UnionEntry* push, uint32_t size)
 /// @param dirents 
 /// @param entry 
 /// @return 
-int FatEntry::CheckDirName(UnionEntry* unient)
+int FatEntry::CheckDirName(DirEntry* dirent, UnionEntry* unient)
 {
-	Begin();
+	ReadBegin(dirent);
 
-	for (DirEntry* child = Read(); NULL != child; child = Read())
+	for (DirEntry* child = Read(dirent); NULL != child; child = Read(dirent))
 	{
 		if (0 == strncmp(child->body.sfe.name, unient->sfe.name, 11))
 		{
@@ -225,7 +197,7 @@ int FatEntry::CheckDirName(UnionEntry* unient)
 /// @param name 
 /// @param attr 
 /// @return 
-FatEntry::DirEntry* FatEntry::Create(const char* name, DirAttr attr)
+FatEntry::DirEntry* FatEntry::Create(DirEntry* dirent, const char* name, DirAttr attr)
 {
 	DirEntry* child = new DirEntry();
 
@@ -239,18 +211,16 @@ FatEntry::DirEntry* FatEntry::Create(const char* name, DirAttr attr)
 	uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
 
 	//Alloc entires space
-	child->name    = (char*)name;
-	child->size    = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
-	child->unients = new UnionEntry[child->size]();
-
-	//Alloc clust
-	uint32_t childClust = fatDisk->AllocCluster(1);
+	child->name         = (char*)name;
+	child->self.size    = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
+	child->self.unients = new UnionEntry[child->self.size]();
 
 	//Set attr and clust
-	UnionEntry* unient     = &child->unients[child->size - 1];
+	uint32_t clust         = fatDisk->AllocCluster();
+	UnionEntry* unient     = &child->self.unients[child->self.size - 1];
 	unient->sfe.attr       = attr;
-	unient->sfe.fstClustHI = (childClust >> 16) & 0xffff;
-	unient->sfe.fstClustLO = (childClust >> 0)  & 0xffff;
+	unient->sfe.fstClustHI = (clust >> 16) & 0xffff;
+	unient->sfe.fstClustLO = (clust >> 0)  & 0xffff;
 
 	//Set short name
 	fatName.SetShortName(unient, name);
@@ -263,37 +233,37 @@ FatEntry::DirEntry* FatEntry::Create(const char* name, DirAttr attr)
 		for (uint8_t i = 1; i < 100; i++)
 		{
 			fatName.GenNumName(unient, i);
-			if (_OK == CheckDirName(unient)) break;
+			if (_OK == CheckDirName(dirent, unient)) break;
 		}
 
-		child->unients[0].lfe.ord = child->size + dir_seq_flag - 1;
-		fatName.SetLongName(child->unients, name);
+		child->self.unients[0].lfe.ord = child->self.size + dir_seq_flag - 1;
+		fatName.SetLongName(child->self.unients, name);
 	}
 
 	//Put to disk
-	if (_OK == FindSpace(child->size))
+	if (_OK == Find(dirent, child->self.size))
 	{
-		child->index  = index;
-		child->clust  = childClust;
-		child->sector = sector;
-		child->body   = *unient;
+		child->self.index  = dirent->temp.index;
+		child->self.clust  = dirent->temp.clust;
+		child->self.sector = dirent->temp.sector;
+		child->body        = *unient;
 		
-		if (child->size == Push(child->unients, child->size))
+		if (child->self.size == Push(dirent, child->self))
 		{
 			if ((child->body.sfe.attr & _ATTR_DIRECTORY) == _ATTR_DIRECTORY)
 			{
-				UnionEntry* childUnients = new UnionEntry[2]();
-				childUnients[0].sfe = child->body.sfe;
-				childUnients[1].sfe = dirent->body.sfe;
-
-				childUnients[0].sfe.attr |= _ATTR_HIDDEN;
-				childUnients[1].sfe.attr |= _ATTR_HIDDEN;
-
-				memcpy(childUnients[0].sfe.name, ".          ", 11);
-				memcpy(childUnients[1].sfe.name, "..         ", 11);
-
-				fatDisk->CalcFirstSector(child, clust, sector);
-				Push(childUnients, 2);
+				EntryInfo sub;
+				sub.index = 0;
+				sub.size  = 2;
+				sub.unients = new UnionEntry[sub.size]();
+				sub.unients[0].sfe = child->body.sfe;
+				sub.unients[1].sfe = dirent->body.sfe;
+				sub.unients[0].sfe.attr |= _ATTR_HIDDEN;
+				sub.unients[1].sfe.attr |= _ATTR_HIDDEN;
+				memcpy(sub.unients[0].sfe.name, ".          ", 11);
+				memcpy(sub.unients[1].sfe.name, "..         ", 11);
+				ReadBegin(child);
+				Push(child, sub);
 			}
 			return child;
 		}
@@ -306,41 +276,43 @@ FatEntry::DirEntry* FatEntry::Create(const char* name, DirAttr attr)
 
 /// @brief FatEntry read
 /// @return 
-FatEntry::DirEntry* FatEntry::Read()
+FatEntry::DirEntry* FatEntry::Read(DirEntry* dirent)
 {
-	if (IsEnd()) return NULL;
+	if (NULL == dirent->temp.unients) ReadBegin(dirent);
 
-	while (!Item()->IsValid()) { Next(); if (IsEnd()) return NULL; }
+	if (IsEnded(dirent)) return NULL;
 
-	DirEntry* child = new DirEntry();
-	child->clust    = clust;
-	child->sector   = sector;
-	child->index    = index;
-	child->size     = Item()->IsLongName() ? Item()->OrdSize() : 1;
-	child->unients  = new UnionEntry[child->size]();
+	while (!Item(dirent).IsValid()) { ReadNext(dirent); if (IsEnded(dirent)) return NULL; }
 
-	if (this->Pop(child->unients, child->size) == child->size)
+	DirEntry* child      = new DirEntry();
+	child->self.clust    = dirent->temp.clust;
+	child->self.sector   = dirent->temp.sector;
+	child->self.index    = dirent->temp.index;
+	child->self.size     = Item(dirent).IsLongName() ? Item(dirent).OrdSize() : 1;
+	child->self.unients  = new UnionEntry[child->self.size]();
+
+	if (Pop(dirent, child->self) == child->self.size)
 	{
-		if (child->unients->IsLongName())
-			child->name = fatName.GetLongName(child->unients);
+		if (child->self.unients->IsLongName())
+			child->name = fatName.GetLongName(child->self.unients);
 		else
-			child->name = fatName.GetShortName(child->unients);
+			child->name = fatName.GetShortName(child->self.unients);
 
-		child->body = child->unients[child->size - 1];
+		child->body = child->self.unients[child->self.size - 1];
 	}
 
 	return child;
 }
 
 
-/// @brief FatEntry write
+/// @brief FatEntry Update
 /// @param dirent 
 /// @return 
-bool FatEntry::Write(DirEntry* dirent)
+bool FatEntry::Update(DirEntry* dirent)
 {
-	index  = dirent->index;
-	clust  = dirent->clust;
-	sector = dirent->sector;
+	dirent->temp.index  = dirent->self.index;
+	dirent->temp.clust  = dirent->self.clust;
+	dirent->temp.sector = dirent->self.sector;
 
-	return (dirent->size == Push(dirent->unients, dirent->size));
+	return (dirent->self.size == Push(dirent, dirent->self));
 }
