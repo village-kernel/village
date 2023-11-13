@@ -263,7 +263,7 @@ protected:
 		}
 	};
 
-	struct Info
+	struct FatInfo
 	{
 		FATType  fatType;
 		uint32_t fatSize;

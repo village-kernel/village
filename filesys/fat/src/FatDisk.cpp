@@ -12,13 +12,12 @@
 /// @brief Setup
 /// @param diskdrv 
 /// @param fstSec 
-/// @param dbr 
-/// @param info 
-void FatDisk::Setup(Driver* diskdrv, uint32_t fstSec, Info* info)
+/// @param fatInfo 
+void FatDisk::Setup(Driver* diskdrv, uint32_t fstSec, FatInfo* fatInfo)
 {
 	this->diskdrv = diskdrv;
 	this->fstSec  = fstSec;
-	this->info    = info; 
+	this->fatInfo = fatInfo; 
 }
 
 
@@ -37,7 +36,7 @@ uint32_t FatDisk::GetFirstClust(ShortEntry sfe)
 /// @return sector number
 uint32_t FatDisk::ClusterToSector(uint32_t clust)
 {
-	return ((clust - 2) * info->secPerClust) + info->firstDataSector;
+	return ((clust - 2) * fatInfo->secPerClust) + fatInfo->firstDataSector;
 }
 
 
@@ -51,30 +50,30 @@ uint32_t FatDisk::GetNextCluster(uint32_t clust)
 	uint32_t fatMaxOffset = 0;
 	uint32_t fatClust = 0;
 
-	if (_FAT16 == info->fatType)
+	if (_FAT16 == fatInfo->fatType)
 	{
 		fatOffset = clust * 2;
-		fatMaxOffset = info->bytesPerSec / 2;
+		fatMaxOffset = fatInfo->bytesPerSec / 2;
 	}	
-	else if (_FAT32 == info->fatType)
+	else if (_FAT32 == fatInfo->fatType)
 	{
 		fatOffset = clust * 4;
-		fatMaxOffset = info->bytesPerSec / 4;
+		fatMaxOffset = fatInfo->bytesPerSec / 4;
 	}
 
-	uint32_t thisFatSecNum = info->rsvdSecCnt + (fatOffset / info->bytesPerSec);
+	uint32_t thisFatSecNum = fatInfo->rsvdSecCnt + (fatOffset / fatInfo->bytesPerSec);
 	uint32_t thisFatEntOffset = clust % fatMaxOffset;
 
-	char* secBuff = new char[info->bytesPerSec]();
+	char* secBuff = new char[fatInfo->bytesPerSec]();
 	
 	ReadOneSector(secBuff, thisFatSecNum);
 
-	if (_FAT16 == info->fatType)
+	if (_FAT16 == fatInfo->fatType)
 	{
 		fatClust = ((uint16_t*)secBuff)[thisFatEntOffset];
 		if (fatClust >= fat16_eoc_flag) isEOC = true;
 	}
-	else if (_FAT32 == info->fatType)
+	else if (_FAT32 == fatInfo->fatType)
 	{
 		fatClust = ((uint32_t*)secBuff)[thisFatEntOffset] & 0x0fffffff;
 		if (fatClust >= fat32_eoc_flag) isEOC = true;
@@ -96,23 +95,23 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 	uint32_t fatClust = (clust < 2) ? 2 : clust;
 	bool isAllocMode = (clust < 2) ? true : false;
 
-	if (_FAT16 == info->fatType)
+	if (_FAT16 == fatInfo->fatType)
 	{
 		fatOffset = fatClust * 2;
-		fatMaxOffset = info->bytesPerSec / 2;
+		fatMaxOffset = fatInfo->bytesPerSec / 2;
 	}	
-	else if (_FAT32 == info->fatType)
+	else if (_FAT32 == fatInfo->fatType)
 	{
 		fatOffset = fatClust * 4;
-		fatMaxOffset = info->bytesPerSec / 4;
+		fatMaxOffset = fatInfo->bytesPerSec / 4;
 	}
 
-	uint32_t thisFatSecNum = info->rsvdSecCnt + (fatOffset / info->bytesPerSec);
+	uint32_t thisFatSecNum = fatInfo->rsvdSecCnt + (fatOffset / fatInfo->bytesPerSec);
 	uint32_t thisFatEntOffset = fatClust % fatMaxOffset;
 	uint32_t nextFatSecNum = thisFatSecNum;
 	uint32_t nextFatEntOffset = thisFatEntOffset;
 
-	char* secBuff = new char[info->bytesPerSec]();
+	char* secBuff = new char[fatInfo->bytesPerSec]();
 
 	//Read sector buff
 	ReadOneSector(secBuff, thisFatSecNum);
@@ -124,7 +123,7 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 		{
 			nextFatEntOffset = 0;
 
-			if (nextFatSecNum <= info->endedOfFatSector)
+			if (nextFatSecNum <= fatInfo->endedOfFatSector)
 			{
 				ReadOneSector(secBuff, nextFatSecNum++);
 			}
@@ -135,9 +134,9 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 			}
 		}
 		
-		if (_FAT16 == info->fatType)
+		if (_FAT16 == fatInfo->fatType)
 			clust = ((uint16_t*)secBuff)[nextFatEntOffset];
-		else if (_FAT32 == info->fatType)
+		else if (_FAT32 == fatInfo->fatType)
 			clust = ((uint32_t*)secBuff)[nextFatEntOffset] & 0x0fffffff;
 
 		fatClust++;
@@ -145,7 +144,7 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 	while (0 != clust);
 
 	//Set fat clust list table
-	if (_FAT16 == info->fatType)
+	if (_FAT16 == fatInfo->fatType)
 	{
 		if (nextFatSecNum == thisFatSecNum)
 		{
@@ -170,7 +169,7 @@ uint32_t FatDisk::SetNextCluster(uint32_t clust)
 			}
 		}
 	}
-	else if (_FAT32 == info->fatType)
+	else if (_FAT32 == fatInfo->fatType)
 	{
 		if (nextFatSecNum == thisFatSecNum)
 		{
@@ -215,23 +214,23 @@ uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
 	uint32_t fatMaxOffset = 0;
 	uint32_t fatClust = clust;
 
-	if (_FAT16 == info->fatType)
+	if (_FAT16 == fatInfo->fatType)
 	{
 		fatOffset = clust * 2;
-		fatMaxOffset = info->bytesPerSec / 2;
+		fatMaxOffset = fatInfo->bytesPerSec / 2;
 	}	
-	else if (_FAT32 == info->fatType)
+	else if (_FAT32 == fatInfo->fatType)
 	{
 		fatOffset = clust * 4;
-		fatMaxOffset = info->bytesPerSec / 4;
+		fatMaxOffset = fatInfo->bytesPerSec / 4;
 	}
 
-	uint32_t thisFatSecNum = info->rsvdSecCnt + (fatOffset / info->bytesPerSec);
+	uint32_t thisFatSecNum = fatInfo->rsvdSecCnt + (fatOffset / fatInfo->bytesPerSec);
 	uint32_t thisFatEntOffset = clust % fatMaxOffset;
 	uint32_t prevFatSecNum = thisFatSecNum;
 	uint32_t prevFatEntOffset = thisFatEntOffset;
 
-	char* secBuff = new char[info->bytesPerSec]();
+	char* secBuff = new char[fatInfo->bytesPerSec]();
 
 	//Read sector buff
 	ReadOneSector(secBuff, thisFatSecNum);
@@ -243,7 +242,7 @@ uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
 		{
 			prevFatEntOffset = fatMaxOffset;
 
-			if (prevFatSecNum >= info->startOfFatSector)
+			if (prevFatSecNum >= fatInfo->startOfFatSector)
 			{
 				ReadOneSector(secBuff, prevFatSecNum--);
 			}
@@ -254,15 +253,15 @@ uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
 			}
 		}
 		
-		if (_FAT16 == info->fatType)
+		if (_FAT16 == fatInfo->fatType)
 			fatClust = ((uint16_t*)secBuff)[prevFatEntOffset];
-		else if (_FAT32 == info->fatType)
+		else if (_FAT32 == fatInfo->fatType)
 			fatClust = (((uint32_t*)secBuff)[prevFatEntOffset]) & 0x0fffffff;
 	}
 	while (fatClust != clust);
 
 	//Set fat clust list table
-	if (_FAT16 == info->fatType)
+	if (_FAT16 == fatInfo->fatType)
 	{
 		if (prevFatSecNum == thisFatSecNum)
 		{
@@ -280,7 +279,7 @@ uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
 			WriteOneSector(secBuff, thisFatSecNum);
 		}
 	}
-	else if (_FAT32 == info->fatType)
+	else if (_FAT32 == fatInfo->fatType)
 	{
 		if (prevFatSecNum == thisFatSecNum)
 		{
@@ -307,94 +306,6 @@ uint32_t FatDisk::ClearPrevCluster(uint32_t clust)
 	delete[] secBuff;
 
 	return fatClust;
-}
-
-
-/// @brief Calc first sector
-/// @param clust 
-/// @param sector 
-void FatDisk::CalcFirstSector(DirEntry* dirent)
-{
-	if (GetFirstClust(dirent->body.sfe) < 2)
-	{
-		if (_FAT16 == info->fatType)
-		{
-			dirent->temp.clust  = 0;
-			dirent->temp.sector = info->firstRootSector;
-		}
-		else if (_FAT32 == info->fatType)
-		{
-			dirent->temp.clust  = info->rootClust;
-			dirent->temp.sector = ClusterToSector(dirent->temp.clust);
-		}
-	}
-	else
-	{
-		dirent->temp.clust  = GetFirstClust(dirent->body.sfe);
-		dirent->temp.sector = ClusterToSector(dirent->temp.clust);
-	}
-}
-
-
-/// @brief Calc next sector
-/// @param clust 
-/// @param sector 
-void FatDisk::CalcNextSector(DirEntry* dirent)
-{
-	//FAT16 root dir
-	if (dirent->temp.clust < 2)
-	{
-		uint32_t dirEndedSec = info->firstRootSector + info->countOfRootSecs;
-		dirent->temp.sector   = (++dirent->temp.sector < dirEndedSec) ? dirent->temp.sector : 0;
-	}
-	//FatDisk data dir
-	else
-	{ 
-		if ((++dirent->temp.sector - ClusterToSector(dirent->temp.clust)) >= info->secPerClust)
-		{
-			dirent->temp.clust = GetNextCluster(dirent->temp.clust);
-			dirent->temp.sector = (0 != dirent->temp.clust) ? ClusterToSector(dirent->temp.clust) : 0;
-		}
-	}
-}
-
-
-/// @brief 
-/// @param clust 
-/// @param sector 
-void FatDisk::CalcPrevSector(DirEntry* dirent)
-{
-	//FAT16 root dir
-	if (dirent->temp.clust < 2)
-	{
-		uint32_t dirStartSec = info->firstRootSector;
-		dirent->temp.sector = (--dirent->temp.sector >= dirStartSec) ? dirent->temp.sector : 0;
-	}
-	//FatDisk data dir
-	else
-	{ 
-		if ((--dirent->temp.sector - ClusterToSector(dirent->temp.clust)) >= info->secPerClust)
-		{
-			dirent->temp.clust = GetPrevCluster(dirent->temp.clust);
-			dirent->temp.sector = (0 != dirent->temp.clust) ? ClusterToSector(dirent->temp.clust) : 0;
-		}
-	}
-}
-
-
-/// @brief 
-/// @param dirent 
-void FatDisk::ReadUnionEntries(DirEntry* dirent)
-{
-	ReadOneSector((char*)dirent->temp.unients, dirent->temp.sector);
-}
-
-
-/// @brief 
-/// @param dirent 
-void FatDisk::WriteUnionEntries(DirEntry* dirent)
-{
-	WriteOneSector((char*)dirent->temp.unients, dirent->temp.sector);
 }
 
 
@@ -435,8 +346,8 @@ uint32_t FatDisk::ReadSector(char* data, uint32_t secSize, uint32_t sector)
 /// @return read cluster size
 uint32_t FatDisk::ReadCluster(char* data, uint32_t clustSize, uint32_t clust)
 {
-	uint32_t bytesPerSec = info->bytesPerSec;
-	uint32_t secPerClust = info->secPerClust;
+	uint32_t bytesPerSec = fatInfo->bytesPerSec;
+	uint32_t secPerClust = fatInfo->secPerClust;
 
 	for (uint32_t i = 0; i < clustSize; i++)
 	{
@@ -495,8 +406,8 @@ uint32_t FatDisk::WriteSector(char* data, uint32_t secSize, uint32_t sector)
 /// @return 
 uint32_t FatDisk::WriteCluster(char* data, uint32_t clustSize, uint32_t clust)
 {
-	uint32_t bytesPerSec = info->bytesPerSec;
-	uint32_t secPerClust = info->secPerClust;
+	uint32_t bytesPerSec = fatInfo->bytesPerSec;
+	uint32_t secPerClust = fatInfo->secPerClust;
 
 	for (uint32_t i = 0; i < clustSize; i++)
 	{
@@ -525,8 +436,8 @@ uint32_t FatDisk::WriteCluster(char* data, uint32_t clustSize, uint32_t clust)
 /// @return 
 uint32_t FatDisk::ClearCluster(uint32_t clust, uint32_t clustSize)
 {
-	uint32_t bytesPerSec = info->bytesPerSec;
-	uint32_t secPerClust = info->secPerClust;
+	uint32_t bytesPerSec = fatInfo->bytesPerSec;
+	uint32_t secPerClust = fatInfo->secPerClust;
 
 	char* zero = new char[bytesPerSec * secPerClust]();
 	memset(zero, 0, bytesPerSec * secPerClust);

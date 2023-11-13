@@ -15,14 +15,14 @@ class FatDisk : public FatDefs
 {
 private:
 	//Data Members
-	Info*    info;
+	FatInfo* fatInfo;
 
 	//Driver Members
 	Driver*  diskdrv;
 	uint32_t fstSec;
 public:
 	//Method
-	void Setup(Driver* diskdrv, uint32_t fstSec, Info* info);
+	void Setup(Driver* diskdrv, uint32_t fstSec, FatInfo* fatInfo);
 
 	//Cluster and sector Methods
 	uint32_t GetFirstClust(ShortEntry sfe);
@@ -33,12 +33,6 @@ public:
 
 	uint32_t GetPrevCluster(uint32_t clust);
 	uint32_t ClearPrevCluster(uint32_t clust);
-	
-	void CalcFirstSector(DirEntry* dirent);
-	void CalcNextSector(DirEntry* dirent);
-	void CalcPrevSector(DirEntry* dirent);
-	void ReadUnionEntries(DirEntry* dirent);
-	void WriteUnionEntries(DirEntry* dirent);
 
 	//Disk IO Methods
 	uint32_t ReadOneSector(char* data, uint32_t sector);

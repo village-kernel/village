@@ -19,7 +19,7 @@ class FatData : public FatDefs
 private:
 	//Members
 	DBR*     dbr;
-	Info*    info;
+	FatInfo  fatInfo;
 	FatName  fatName;
 	FatDisk  fatDisk;
 	FatEntry fatEntry;
@@ -30,11 +30,15 @@ private:
 
 	//Directory Methods
 	char* NotDir(const char* path);
+	int CheckDirName(DirEntry* dirent, UnionEntry* unient);
 	DirEntry* SearchPath(const char* path, int forward = 0);
 	DirEntry* SearchDir(DirEntry* dirent, const char* name);
 	DirEntries* OpenDir(DirEntry* dirent);
 	DirEntry* CreateFile(const char* path);
 	DirEntries* CreateDir(const char* path);
+	DirEntry* CreateEntry(DirEntry* dirent, const char* name, DirAttr attr);
+	DirEntry* ReadEntry(DirEntry* dirent);
+	bool UpdateEntry(DirEntry* dirent);
 public:
 	//Methods
 	int Setup(Driver* diskdrv, uint32_t fstSec);

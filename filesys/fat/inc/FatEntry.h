@@ -9,17 +9,25 @@
 
 #include "FatDefs.h"
 #include "FatDisk.h"
-#include "FatName.h"
-
 
 /// @brief 
 class FatEntry : public FatDefs
 {
 private:
 	//Data Members
-	Info*    info;
+	FatInfo* fatInfo;
 	FatDisk* fatDisk;
-	FatName  fatName;
+
+	//Disk Methods
+	void CalcFirstSector(DirEntry* dirent);
+	void CalcNextSector(DirEntry* dirent);
+	void ReadUnionEntries(DirEntry* dirent);
+	void WriteUnionEntries(DirEntry* dirent);
+public:
+	//Methods
+	FatEntry();
+	~FatEntry();
+	void Setup(FatDisk* fatDisk, FatInfo* fatInfo);
 
 	//Iterator Methods
 	bool ReadBegin(DirEntry* dirent);
@@ -28,20 +36,10 @@ private:
 	bool IsEnded(DirEntry* dirent);
 	UnionEntry& Item(DirEntry* dirent);
 
+	//Methods
 	int Find(DirEntry* dirent, uint32_t size);
 	uint32_t Pop(DirEntry* dirent, EntryInfo& pop);
 	uint32_t Push(DirEntry* dirent, EntryInfo& push);
-
-	int CheckDirName(DirEntry* dirent, UnionEntry* unient);
-public:
-	FatEntry();
-	~FatEntry();
-
-	//Methods
-	void Setup(FatDisk* fatDisk, Info* info);
-	DirEntry* Create(DirEntry* dirent, const char* name, DirAttr attr);
-	DirEntry* Read(DirEntry* dirent);
-	bool Update(DirEntry* dirent);
 };
 
 #endif //!__FAT_ENTRY_H__
