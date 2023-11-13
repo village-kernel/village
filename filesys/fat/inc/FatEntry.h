@@ -9,37 +9,94 @@
 
 #include "FatDefs.h"
 #include "FatDisk.h"
+#include "FatName.h"
 
 /// @brief 
-class FatEntry : public FatDefs
+class DirEntry : public FatDefs
 {
-private:
-	//Data Members
+public:
+	//Structures
+	struct EntryInfo
+	{
+		uint32_t    clust;
+		uint32_t    sector;
+		uint32_t    index;
+		uint32_t    size;
+		UnionEntry* unients;
+
+		EntryInfo()
+			:clust(0),
+			sector(0),
+			index(0),
+			size(0),
+			unients(NULL)
+		{}
+
+		~EntryInfo()
+		{
+			delete[] unients;
+		}
+	};
+
+//private:
+	//Members
 	FatInfo* fatInfo;
 	FatDisk* fatDisk;
+	FatName  fatName;
+
+	//Data Members
+	EntryInfo   self;
+	EntryInfo   temp;
+	UnionEntry  body;
+	char*       name;
 
 	//Disk Methods
-	void CalcFirstSector(DirEntry* dirent);
-	void CalcNextSector(DirEntry* dirent);
-	void ReadUnionEntries(DirEntry* dirent);
-	void WriteUnionEntries(DirEntry* dirent);
+	void CalcFirstSector();
+	void CalcNextSector();
+	void ReadUnionEntries();
+	void WriteUnionEntries();
+
+	int CheckDirName(UnionEntry* unient);
 public:
 	//Methods
-	FatEntry();
-	~FatEntry();
-	void Setup(FatDisk* fatDisk, FatInfo* fatInfo);
+	DirEntry(FatDisk* fatDisk, FatInfo* fatInfo);
+	~DirEntry();
 
 	//Iterator Methods
-	bool ReadBegin(DirEntry* dirent);
-	bool ReadNext(DirEntry* dirent);
-	bool WriteNext(DirEntry* dirent);
-	bool IsEnded(DirEntry* dirent);
-	UnionEntry& Item(DirEntry* dirent);
+	bool ReadBegin();
+	bool ReadNext();
+	bool WriteNext();
+	bool IsEnded();
+	UnionEntry& Item();
 
 	//Methods
-	int Find(DirEntry* dirent, uint32_t size);
-	uint32_t Pop(DirEntry* dirent, EntryInfo& pop);
-	uint32_t Push(DirEntry* dirent, EntryInfo& push);
+	int Find(uint32_t size);
+	uint32_t Pop(EntryInfo& pop);
+	uint32_t Push(EntryInfo& push);
+	bool Update();
+	bool Remove();
+
+	DirEntry* Create(const char* name, DirAttr attr);
+	DirEntry* Read();
+};
+
+
+/// @brief 
+class DirEntries
+{
+public:
+	List<DirEntry> list;
+	char*          path;
+
+	DirEntries() :
+		path(NULL)
+	{}
+
+	~DirEntries()
+	{
+		list.Release();
+		delete[] path;
+	}
 };
 
 #endif //!__FAT_ENTRY_H__

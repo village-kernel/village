@@ -203,66 +203,6 @@ protected:
 		uint8_t OrdSize()  { return ( lfe.ord  -  dir_seq_flag + 1          ); }
 	} __attribute__((packed));
 
-	struct EntryInfo
-	{
-		uint32_t    clust;
-		uint32_t    sector;
-		uint32_t    index;
-		uint32_t    size;
-		UnionEntry* unients;
-
-		EntryInfo()
-			:clust(0),
-			sector(0),
-			index(0),
-			size(0),
-			unients(NULL)
-		{}
-
-		~EntryInfo()
-		{
-			delete[] unients;
-		}
-	};
-
-	struct DirEntry
-	{
-		EntryInfo   self;
-		EntryInfo   temp;
-		
-		UnionEntry  body;
-		char*       name;
-
-		DirEntry(UnionEntry body = UnionEntry(), char* name = NULL)
-		{
-			this->body = body;
-			this->name = name;
-		}
-
-		~DirEntry()
-		{
-			delete[] name;
-			delete[] self.unients;
-			delete[] temp.unients;
-		}
-	};
-
-	struct DirEntries
-	{
-		List<DirEntry> list;
-		char*          path;
-
-		DirEntries() :
-			path(NULL)
-		{}
-
-		~DirEntries()
-		{
-			list.Release();
-			delete[] path;
-		}
-	};
-
 	struct FatInfo
 	{
 		FATType  fatType;

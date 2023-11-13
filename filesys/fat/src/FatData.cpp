@@ -31,8 +31,6 @@ int FatData::Setup(Driver* diskdrv, uint32_t fstSec)
 		return _ERR;
 	}
 
-	fatEntry.Setup(&fatDisk, &fatInfo);
-
 	return _OK;
 }
 
@@ -122,14 +120,14 @@ char* FatData::NotDir(const char* path)
 /// @brief Search path
 /// @param path 
 /// @return 
-FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
+DirEntry* FatData::SearchPath(const char* path, int forward)
 {
 	Regex regex;
 	regex.Split(path, '/');
 	char** dirNames = regex.ToArray();
 	int8_t dirIndex = regex.Size() - forward;
 	
-	DirEntry* dirent = new DirEntry();
+	DirEntry* dirent = new DirEntry(&fatDisk, &fatInfo);
 
 	if (dirIndex <= 1)
 	{
@@ -152,11 +150,11 @@ FatData::DirEntry* FatData::SearchPath(const char* path, int forward)
 /// @param dirent 
 /// @param dir 
 /// @return 
-FatData::DirEntry* FatData::SearchDir(DirEntry* dirent, const char* dir)
+DirEntry* FatData::SearchDir(DirEntry* dirent, const char* dir)
 {
 	DirEntry* found = NULL;
 
-	while (NULL != (found = ReadEntry(dirent)))
+	while (NULL != (found = dirent->Read()))
 	{
 		if (0 != strcmp(found->name, dir))
 			delete found;
@@ -171,14 +169,14 @@ FatData::DirEntry* FatData::SearchDir(DirEntry* dirent, const char* dir)
 /// @brief Open dir
 /// @param dirent 
 /// @return 
-FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
+DirEntries* FatData::OpenDir(DirEntry* dirent)
 {
 	if (NULL == dirent) return NULL;
 
 	DirEntries* dirents = new DirEntries();
 	DirEntry*   found   = NULL;
 
-	while (NULL != (found = ReadEntry(dirent)))
+	while (NULL != (found = dirent->Read()))
 	{
 		if (found->body.IsFile() || found->body.IsDirectory())
 			dirents->list.Add(found);
@@ -195,7 +193,7 @@ FatData::DirEntries* FatData::OpenDir(DirEntry* dirent)
 /// @brief Create file
 /// @param path 
 /// @return 
-FatData::DirEntry* FatData::CreateFile(const char* path)
+DirEntry* FatData::CreateFile(const char* path)
 {
 	DirEntry* dirent = SearchPath(path, 1);
 	
@@ -203,7 +201,7 @@ FatData::DirEntry* FatData::CreateFile(const char* path)
 	
 	if (dirent->body.IsDirectory())
 	{
-		return CreateEntry(dirent, NotDir(path), _ATTR_FILE);
+		return dirent->Create(NotDir(path), _ATTR_FILE);
 	}
 
 	return NULL;
@@ -213,7 +211,7 @@ FatData::DirEntry* FatData::CreateFile(const char* path)
 /// @brief Create dir
 /// @param path 
 /// @return 
-FatData::DirEntries* FatData::CreateDir(const char* path)
+DirEntries* FatData::CreateDir(const char* path)
 {
 	DirEntry* dirent = SearchPath(path, 1);
 	
@@ -221,7 +219,7 @@ FatData::DirEntries* FatData::CreateDir(const char* path)
 	
 	if (dirent->body.IsDirectory())
 	{
-		DirEntries* found = OpenDir(CreateEntry(dirent, NotDir(path), _ATTR_DIRECTORY));
+		DirEntries* found = OpenDir(dirent->Create(NotDir(path), _ATTR_DIRECTORY));
 		found->path = (char*)path;
 		return found;
 	}
@@ -230,161 +228,12 @@ FatData::DirEntries* FatData::CreateDir(const char* path)
 }
 
 
-/// @brief Check dir name
-/// @param dirents 
-/// @param entry 
-/// @return 
-int FatData::CheckDirName(DirEntry* dirent, UnionEntry* unient)
-{
-	fatEntry.ReadBegin(dirent);
-
-	for (DirEntry* child = ReadEntry(dirent); NULL != child; child = ReadEntry(dirent))
-	{
-		if (0 == strncmp(child->body.sfe.name, unient->sfe.name, 11))
-		{
-			return _ERR;
-		}
-	}
-	
-	return _OK;
-}
-
-
-/// @brief 
-/// @param name 
-/// @param attr 
-/// @return 
-FatData::DirEntry* FatData::CreateEntry(DirEntry* dirent, const char* name, DirAttr attr)
-{
-	DirEntry* child = new DirEntry();
-
-	//Cal the size of entries
-	uint8_t namelen = strlen(name);
-	uint8_t dotpos = namelen;
-	while ('.' != name[--dotpos] && dotpos);
-	uint8_t extlen  = dotpos ? (namelen - dotpos - 1) : 0;
-	uint8_t bodylen = dotpos ? dotpos : namelen;
-	bool isNameLoss = (bodylen > 8 || extlen > 3);
-	uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
-
-	//Alloc entires space
-	child->name         = (char*)name;
-	child->self.size    = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
-	child->self.unients = new UnionEntry[child->self.size]();
-
-	//Set attr and clust
-	uint32_t clust         = fatDisk.AllocCluster();
-	UnionEntry* unient     = &child->self.unients[child->self.size - 1];
-	unient->sfe.attr       = attr;
-	unient->sfe.fstClustHI = (clust >> 16) & 0xffff;
-	unient->sfe.fstClustLO = (clust >> 0)  & 0xffff;
-
-	//Set short name
-	fatName.SetShortName(unient, name);
-
-	//Set long name
-	if (isNameLoss)
-	{
-		unient->sfe.NTRes |= _NS_LOSS;
-
-		for (uint8_t i = 1; i < 100; i++)
-		{
-			fatName.GenNumName(unient, i);
-			if (_OK == CheckDirName(dirent, unient)) break;
-		}
-
-		child->self.unients[0].lfe.ord = child->self.size + dir_seq_flag - 1;
-		fatName.SetLongName(child->self.unients, name);
-	}
-
-	//Put to disk
-	if (_OK == fatEntry.Find(dirent, child->self.size))
-	{
-		child->self.index  = dirent->temp.index;
-		child->self.clust  = dirent->temp.clust;
-		child->self.sector = dirent->temp.sector;
-		child->body        = *unient;
-		
-		if (child->self.size == fatEntry.Push(dirent, child->self))
-		{
-			if ((child->body.sfe.attr & _ATTR_DIRECTORY) == _ATTR_DIRECTORY)
-			{
-				EntryInfo sub;
-				sub.index = 0;
-				sub.size  = 2;
-				sub.unients = new UnionEntry[sub.size]();
-				sub.unients[0].sfe = child->body.sfe;
-				sub.unients[1].sfe = dirent->body.sfe;
-				sub.unients[0].sfe.attr |= _ATTR_HIDDEN;
-				sub.unients[1].sfe.attr |= _ATTR_HIDDEN;
-				memcpy(sub.unients[0].sfe.name, ".          ", 11);
-				memcpy(sub.unients[1].sfe.name, "..         ", 11);
-				fatEntry.ReadBegin(child);
-				fatEntry.Push(child, sub);
-			}
-			return child;
-		}
-	}
-
-	delete child;
-	return NULL;
-}
-
-
-/// @brief FatData read
-/// @return 
-FatData::DirEntry* FatData::ReadEntry(DirEntry* dirent)
-{
-	if (NULL == dirent->temp.unients)
-		fatEntry.ReadBegin(dirent);
-
-	if (fatEntry.IsEnded(dirent)) return NULL;
-
-	while (!fatEntry.Item(dirent).IsValid()) 
-	{
-		fatEntry.ReadNext(dirent);
-		if (fatEntry.IsEnded(dirent)) return NULL;
-	}
-
-	DirEntry* child      = new DirEntry();
-	child->self.clust    = dirent->temp.clust;
-	child->self.sector   = dirent->temp.sector;
-	child->self.index    = dirent->temp.index;
-	child->self.size     = fatEntry.Item(dirent).IsLongName() ? fatEntry.Item(dirent).OrdSize() : 1;
-	child->self.unients  = new UnionEntry[child->self.size]();
-
-	if (fatEntry.Pop(dirent, child->self) == child->self.size)
-	{
-		if (child->self.unients->IsLongName())
-			child->name = fatName.GetLongName(child->self.unients);
-		else
-			child->name = fatName.GetShortName(child->self.unients);
-
-		child->body = child->self.unients[child->self.size - 1];
-	}
-
-	return child;
-}
-
-
-/// @brief FatData Update
-/// @param dirent 
-/// @return 
-bool FatData::UpdateEntry(DirEntry* dirent)
-{
-	dirent->temp.index  = dirent->self.index;
-	dirent->temp.clust  = dirent->self.clust;
-	dirent->temp.sector = dirent->self.sector;
-
-	return (dirent->self.size == fatEntry.Push(dirent, dirent->self));
-}
-
 
 /// @brief Get volume label
 /// @return 
 char* FatData::GetVolumeLabel()
 {
-	DirEntry* dirent = ReadEntry(new DirEntry());
+	DirEntry* dirent = DirEntry(&fatDisk, &fatInfo).Read();
 
 	char* label = (char*)"NONAME";
 
@@ -404,7 +253,7 @@ char* FatData::GetVolumeLabel()
 /// @return 
 int FatData::SetVolumeLabel(const char* name)
 {
-	DirEntry* dirent = ReadEntry(new DirEntry());
+	DirEntry* dirent = DirEntry(&fatDisk, &fatInfo).Read();
 
 	//Check is volume entry
 	if (dirent->body.IsVolume())
@@ -413,7 +262,7 @@ int FatData::SetVolumeLabel(const char* name)
 		fatName.SetVolumeLabel(dirent->self.unients, name);
 
 		//Push ent to disk
-		UpdateEntry(dirent);
+		dirent->Update();
 	}
 	
 	return _OK;
@@ -424,7 +273,7 @@ int FatData::SetVolumeLabel(const char* name)
 /// @param name 
 /// @param mode 
 /// @return 
-FatData::DirEntry* FatData::Open(const char* name, int mode)
+DirEntry* FatData::Open(const char* name, int mode)
 {
 	DirEntry* dirent = SearchPath(name);
 
@@ -505,7 +354,7 @@ int FatData::Size(DirEntry* dirent)
 /// @brief Open dir
 /// @param dirName 
 /// @return 
-FatData::DirEntries* FatData::OpenDir(const char* path, int mode)
+DirEntries* FatData::OpenDir(const char* path, int mode)
 {
 	DirEntry* dirent = SearchPath(path);
 	
@@ -531,7 +380,7 @@ FatData::DirEntries* FatData::OpenDir(const char* path, int mode)
 /// @brief Read dir
 /// @param dirents 
 /// @return 
-FatData::DirEntry* FatData::ReadDir(DirEntries* dirents)
+DirEntry* FatData::ReadDir(DirEntries* dirents)
 {
 	if (false == dirents->list.IsEnd())
 	{
@@ -578,15 +427,7 @@ int FatData::Copy(const char* from, const char* to)
 int FatData::Remove(const char* name)
 {
 	DirEntry* dirent = SearchPath(name);
-	
-	for (uint8_t i = 0; i < dirent->self.size; i++)
-	{
-		dirent->self.unients[i].lfe.ord = dir_free_flag;
-	}
-
-	UpdateEntry(dirent);
-
-	return _OK;
+	return dirent->Remove();
 }
 
 
