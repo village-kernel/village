@@ -74,6 +74,7 @@ objs-$(CONFIG_FATFS)                        += FatData.o
 objs-$(CONFIG_FATFS)                        += FatDisk.o
 objs-$(CONFIG_FATFS)                        += FatEntry.o
 objs-$(CONFIG_FATFS)                        += FatName.o
+objs-$(CONFIG_FATFS)                        += FatObject.o
 objs-$(CONFIG_FATFS)                        += FatOpts.o
 objs-$(CONFIG_FATFS)                        += FatSystem.o
 objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
