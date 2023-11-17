@@ -37,8 +37,6 @@ public:
 	void Exit();
 
 	//Mount
-	int Mount(const char* path, const char* mount, int opt);
-	int Unmount(const char* mount);
 	int SetVolumeLabel(const char* name);
 	char* GetVolumeLabel();
 	
@@ -56,11 +54,7 @@ public:
 	void CloseDir(int fd);
 
 	//Operate
-	int Move(const char* from, const char* to);
-	int Copy(const char* from, const char* to);
 	int Remove(const char* name);
-	int MoveDir(const char* from, const char* to);
-	int CopyDir(const char* from, const char* to);
 	int RemoveDir(const char* name);
 };
 

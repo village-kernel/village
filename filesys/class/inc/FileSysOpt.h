@@ -14,10 +14,6 @@
 /// @brief FileSysOpt
 class FileSysOpt
 {
-private:
-	//Members
-	int fd;
-	FileOpts* opts;
 public:
 	//Methods
 	FileSysOpt();

@@ -23,8 +23,6 @@ public:
 	virtual ~FileOpts() {};
 
 	//Disk methods
-	virtual int Mount(const char* path, const char* mount, int opt)  = 0;
-	virtual int Unmount(const char* mount)                           = 0;
 	virtual int SetVolumeLabel(const char* name)                     = 0;
 	virtual char* GetVolumeLabel()                                   = 0;
 
@@ -42,11 +40,7 @@ public:
 	virtual void CloseDir(int fd)                                    = 0;
 
 	//Opt methods
-	virtual int Move(const char* from, const char* to)               = 0;
-	virtual int Copy(const char* from, const char* to)               = 0;
 	virtual int Remove(const char* name)                             = 0;
-	virtual int MoveDir(const char* from, const char* to)            = 0;
-	virtual int CopyDir(const char* from, const char* to)            = 0;
 	virtual int RemoveDir(const char* name)                          = 0;
 };
 

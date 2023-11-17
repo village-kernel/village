@@ -40,22 +40,6 @@ void FatOpts::Exit()
 }
 
 
-/// @brief FAT mount
-/// @return 
-int FatOpts::Mount(const char* path, const char* mount, int opt)
-{
-	return _OK;
-}
-
-
-/// @brief FAT unmount
-/// @return 
-int FatOpts::Unmount(const char* mount)
-{
-	return _OK;
-}
-
-
 /// @brief Set volume label
 /// @param name 
 /// @return 
@@ -245,51 +229,11 @@ void FatOpts::CloseDir(int fd)
 }
 
 
-/// @brief FAT move
-/// @param old 
-/// @param now 
-/// @return 
-int FatOpts::Move(const char* from, const char* to)
-{
-	return fatData.Move(from, to);
-}
-
-
-/// @brief FAT copy
-/// @param from 
-/// @param to 
-/// @return 
-int FatOpts::Copy(const char* from, const char* to)
-{
-	return fatData.Copy(from, to);
-}
-
-
 /// @brief FAT remove
 /// @return 
 int FatOpts::Remove(const char* name)
 {
 	return fatData.Remove(name);
-}
-
-
-/// @brief FAT move dir
-/// @param old 
-/// @param now 
-/// @return 
-int FatOpts::MoveDir(const char* from, const char* to)
-{
-	return fatData.MoveDir(from, to);
-}
-
-
-/// @brief FAT copy dir
-/// @param from 
-/// @param to 
-/// @return 
-int FatOpts::CopyDir(const char* from, const char* to)
-{
-	return fatData.CopyDir(from, to);
 }
 
 

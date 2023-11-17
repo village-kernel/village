@@ -26,13 +26,6 @@ FileSysOpt::~FileSysOpt()
 /// @return 
 int FileSysOpt::Move(const char* from, const char* to)
 {
-	FileOpts* opts = filesystem.GetFileOpts(from);
-
-	if (NULL != opts)
-	{
-		return opts->Move(from, to);
-	}
-
 	return _ERR;
 }
 
@@ -43,13 +36,6 @@ int FileSysOpt::Move(const char* from, const char* to)
 /// @return 
 int FileSysOpt::Copy(const char* from, const char* to)
 {
-	FileOpts* opts = filesystem.GetFileOpts(from);
-
-	if (NULL != opts)
-	{
-		return opts->Copy(from, to);
-	}
-
 	return _ERR;
 }
 
@@ -59,13 +45,6 @@ int FileSysOpt::Copy(const char* from, const char* to)
 /// @return 
 int FileSysOpt::Remove(const char* name)
 {
-	FileOpts* opts = filesystem.GetFileOpts(name);
-
-	if (NULL != opts)
-	{
-		return opts->Remove(name);
-	}
-
 	return _ERR;
 }
 
@@ -76,13 +55,6 @@ int FileSysOpt::Remove(const char* name)
 /// @return 
 int FileSysOpt::MoveDir(const char* from, const char* to)
 {
-	FileOpts* opts = filesystem.GetFileOpts(from);
-
-	if (NULL != opts)
-	{
-		return opts->MoveDir(from, to);
-	}
-
 	return _ERR;
 }
 
@@ -93,13 +65,6 @@ int FileSysOpt::MoveDir(const char* from, const char* to)
 /// @return 
 int FileSysOpt::CopyDir(const char* from, const char* to)
 {
-	FileOpts* opts = filesystem.GetFileOpts(from);
-
-	if (NULL != opts)
-	{
-		return opts->CopyDir(from, to);
-	}
-
 	return _ERR;
 }
 
@@ -109,12 +74,5 @@ int FileSysOpt::CopyDir(const char* from, const char* to)
 /// @return 
 int FileSysOpt::RemoveDir(const char* name)
 {
-	FileOpts* opts = filesystem.GetFileOpts(name);
-
-	if (NULL != opts)
-	{
-		return opts->RemoveDir(name);
-	}
-
 	return _ERR;
 }

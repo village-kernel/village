@@ -401,26 +401,6 @@ int FatData::SizeDir(DirEntries* dirents)
 }
 
 
-/// @brief Move
-/// @param from 
-/// @param to 
-/// @return 
-int FatData::Move(const char* from, const char* to)
-{
-	return _OK;
-}
-
-
-/// @brief Copy
-/// @param from 
-/// @param to 
-/// @return 
-int FatData::Copy(const char* from, const char* to)
-{
-	return _OK;
-}
-
-
 /// @brief Remove
 /// @param name 
 /// @return 
@@ -428,26 +408,6 @@ int FatData::Remove(const char* name)
 {
 	DirEntry* dirent = SearchPath(name);
 	return dirent->Remove();
-}
-
-
-/// @brief MoveDir
-/// @param from 
-/// @param to 
-/// @return 
-int FatData::MoveDir(const char* from, const char* to)
-{
-	return _OK;
-}
-
-
-/// @brief CopyDir
-/// @param from 
-/// @param to 
-/// @return 
-int FatData::CopyDir(const char* from, const char* to)
-{
-	return _OK;
 }
 
 

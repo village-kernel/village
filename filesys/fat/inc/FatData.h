@@ -50,11 +50,7 @@ public:
 	int SizeDir(DirEntries* dirents);
 
 	//Opts Methods
-	int Move(const char* from, const char* to);
-	int Copy(const char* from, const char* to);
 	int Remove(const char* name);
-	int MoveDir(const char* from, const char* to);
-	int CopyDir(const char* from, const char* to);
 	int RemoveDir(const char* name);
 
 	//Volume Methods
