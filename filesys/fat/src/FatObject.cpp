@@ -8,10 +8,18 @@
 
 
 /// @brief Constructor
-FatObject::FatObject(LongEntry* lfe, ShortEntry* sfe)
+FatObject::FatObject(char* raw)
+	:lfe(NULL),
+	sfe(NULL)
 {
-	this->lfe = lfe;
-	this->sfe = sfe;
+	this->sfe = (ShortEntry*)raw;
+
+	if (IsValid() && IsLongName())
+	{
+		uint8_t n = raw[0] - dir_seq_flag;
+		this->lfe = (LongEntry*)raw;
+		this->sfe = (ShortEntry*)raw + n;
+	}
 }
 
 
@@ -34,6 +42,34 @@ uint8_t FatObject::ChkSum(char* name)
 	}
 
 	return sum;
+}
+
+
+/// @brief FatObject generate number name
+/// @param num 
+void FatObject::GenNumName(int num)
+{
+	char numstr[8];
+	
+	uint8_t i = 7;
+	do
+	{
+		char ch = (num % 10) + '0';
+		numstr[i--] = ch;
+		num /= 10;
+	}
+	while(num);
+	numstr[i] = '~';
+
+	uint8_t pos = 8;
+	while (' ' == sfe->name[--pos] && pos);
+	if (pos) pos = pos - (7 - i);
+
+	uint8_t size = 8 - i;
+	for (uint8_t j = 0; j < size; j++)
+	{
+		sfe->name[j + pos] = numstr[i++];
+	}
 }
 
 
@@ -257,6 +293,60 @@ char* FatObject::GetLongName()
 }
 
 
+/// @brief FatObject set volume label
+/// @param label 
+void FatObject::SetVolumeLabel(char* label)
+{
+	uint8_t namelen = strlen(label);
+
+	//Check label length
+	if (namelen > volume_label_size) return;
+
+	//Copy label name
+	for (uint8_t i = 0; i < volume_label_size; i++)
+	{
+		if (i < namelen)
+		{
+			if (label[i] >= 'a' && label[i] <= 'z')
+				sfe->name[i] = label[i] - 0x20;
+			else
+				sfe->name[i] = label[i];
+		}
+		else sfe->name[i] = ' ';
+	}
+}
+
+
+/// @brief FatObject get volume label
+/// @return 
+char* FatObject::GetVolumeLabel()
+{
+	uint8_t pos   = 0;
+	char*   label = new char[volume_label_size + 1]();
+
+	//Copy label name
+	for (uint8_t i = 0; i < volume_label_size; i++)
+	{
+		label[pos++] = sfe->name[i];
+	}
+	
+	//String EOC
+	label[pos] = '\0';
+
+	//Remove space
+	while (pos--)
+	{
+		if (label[pos] == ' ')
+		{
+			label[pos] = '\0';
+		}
+		else break;
+	}
+
+	return label;
+}
+
+
 /// @brief FatObject set attribute
 /// @param attr 
 void FatObject::SetAttribute(uint8_t attr)
@@ -415,4 +505,52 @@ void FatObject::SetFileSize(uint32_t size)
 uint32_t FatObject::GetFileSize()
 {
 	return sfe->fileSize;
+}
+
+
+/// @brief FatObject is directory
+/// @return 
+bool FatObject::IsDirectory()
+{
+	return ((sfe->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
+}
+
+
+/// @brief FatObject is volume
+/// @return 
+bool FatObject::IsVolume()
+{
+	return ((sfe->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
+}
+
+
+/// @brief FatObject is file
+/// @return 
+bool FatObject::IsFile()
+{
+	return ((sfe->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
+}
+
+
+/// @brief FatObject is long name
+/// @return 
+bool FatObject::IsLongName()
+{
+	return ((sfe->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME);
+}
+
+
+/// @brief FatObject is hidden
+/// @return 
+bool FatObject::IsHidden()
+{
+	return ((sfe->attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+}
+
+
+/// @brief FatObject is valid
+/// @return 
+bool FatObject::IsValid()
+{
+	return ((sfe->name[0] > dir_seq_flag) && (sfe->name[0] != dir_free_flag));
 }

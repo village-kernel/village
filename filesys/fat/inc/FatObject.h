@@ -82,6 +82,7 @@ private:
 	static const uint8_t  dir_entry_size = 32;
 	static const uint8_t  long_name_size  = 13;
 	static const uint8_t  short_name_size = 11;
+	static const uint8_t  volume_label_size = 11;
 	static const uint8_t  dir_seq_flag = 0x40;
 	static const uint8_t  dir_free_flag = 0xe5;
 
@@ -93,14 +94,19 @@ private:
 	uint8_t ChkSum(char* name);
 public:
 	//Methods
-	FatObject(LongEntry* lfe, ShortEntry* sfe);
+	FatObject(char* raw);
 	~FatObject();
 	
+	void GenNumName(int num);
+
 	void SetShortName(char* name);
 	char* GetShortName();
 
 	void SetLongName(char* name);
 	char* GetLongName();
+
+	void SetVolumeLabel(char* label);
+	char* GetVolumeLabel();
 
 	void SetAttribute(uint8_t attr);
 	uint8_t GetAttribute();
@@ -128,6 +134,14 @@ public:
 	
 	void SetFileSize(uint32_t size);
 	uint32_t GetFileSize();
+
+	//Attribute Methods
+	bool IsDirectory();
+	bool IsVolume();
+	bool IsFile();
+	bool IsLongName();
+	bool IsHidden();
+	bool IsValid();
 };
 
 #endif //!__FAT_OBJECT_H__
