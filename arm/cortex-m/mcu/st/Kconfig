@@ -122,11 +122,11 @@ config MANUFACTURER_HAL_DRIVER
 	bool "Use the HAL driver provided by the manufacturer"
 
 if MANUFACTURER_HAL_DRIVER && STM32F4xx
-	source ./vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_HAL_driver/Kconfig
+	source ./vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Kconfig
 endif
 
 if MANUFACTURER_HAL_DRIVER && STM32H7xx
-	source ./vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_HAL_driver/Kconfig
+	source ./vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Kconfig
 endif
 
 endmenu
