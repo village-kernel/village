@@ -5,9 +5,21 @@ comment "This is village configure menu"
 menu "Compiler"
 comment "This is using to setting compiler tool"
 
-config CROSS_COMPILE
+config HOST_COMPILE_PREFIX
+	string "host compile prefix"
+	default ""
+
+config HOST_COMPILE_SUFFIX
+	string "host compile suffix"
+	default ""
+
+config CROSS_COMPILE_PREFIX
 	string "cross compile prefix"
-	default "arm-none-eabi-"
+	default "i686-elf-"
+
+config CROSS_COMPILE_SUFFIX
+	string "cross compile suffix"
+	default ""
 
 config OPT
 	string "optimization level"
