@@ -27,25 +27,43 @@
 # 参与village-kernel开发：
 
 - ## 1.系统要求
-		mac os / linux / windows
+		mac os / linux / windows（使用wsl子系统）
 
-- ## 2.搭建开发环境, 以mac os为例
+- ## 2.搭建开发环境, 以mac os为例 (Linux一样可以ubuntu22.04测试过)
 	## 安装vscode, git
-		安装简单，跳过
+		安装简单，跳过。安装完成之后打开vscode，安装C/C++拓展插件，调试代码需要。
 
-	### 安装brew
+	### 安装homebrew
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 	### 安装交叉编译工具
-		brew install i686-elf-binutils i686-elf-gcc i386-elf-gdb
+		brew install make gcc i686-elf-binutils i686-elf-gcc i386-elf-gdb
 
 	### 安装qemu模拟器
+		使用brew正常安装：
 		brew install qemu
 
+		如果出现too many open file错误时输入：
+		ulimit -n 4096
+
+
 - ## 3.克隆village-kernel项目
-		git clone git@github.com:village-kernel/village-kernel.git
-		cd village-kernel
-		git submodule update --init --recursive
+	- ### git配置过ssh登陆github：
+			git clone --recursive git@github.com:village-kernel/village-kernel.git
+  
+  	- ### git没配置过ssh登陆github：
+			克隆项目到本地：
+			git clone https://github.com/village-kernel/village-kernel.git
+			
+			进入到 village-kernel目录：
+			cd village-kernel
+
+			编辑 .gitmodules文件（很重要，关系到子模块能否下拉的问题）
+			手动替换 git@github.com: 为 https://github.com/ 并保存
+			
+			拉取子模块：
+			git submodule update --init --recursive
+
 
 - ## 4.使用vscode打开village-kernel项目
 		把项目目录village-kernel拉到vscode界面
@@ -55,16 +73,51 @@
 		
 		修改配置
 		make menuconfig
-		配置交叉编译器和gdb
+		进入Compiler选项
 		
+		配置宿主机编译器：
+		() host compile prefix
+		(-13) host compile suffix
+		
+		配置交叉编译器：
+		(i686-elf-) cross compile prefix
+		() cross compile suffix
+
 		编译项目
 		make
 
 - ## 5.创建rootfs文件系统镜像
-		切换到vscode终端，拷贝文件系统镜像
-		cp vk.scripts/rootfs.img rootfs.img
-		在Finder中打开rootfs.img
-		make rootfs
+	- ### Mac OS
+			切换到vscode终端，拷贝文件系统镜像
+			cp vk.scripts/rootfs.img rootfs.img
+
+			右键选中rootfs.img，在Finder中打开，双击rootfs.img文件完成挂载
+
+			修改rootfs文件系统挂载路径
+			make menuconfig
+
+			进入Compiler选项
+			(/Volumes/VILLAGE OS) rootfs path
+
+			拷贝相关文件到文件系统
+			make rootfs
+
+	- ### Linux
+			切换到vscode终端，拷贝文件系统镜像
+			cp vk.scripts/rootfs.img rootfs.img
+
+			终端挂载rootfs.img
+			sudo mount -o offset=512 rootfs.img /mnt
+
+			修改rootfs文件系统挂载路径
+			make menuconfig
+
+			进入Compiler选项
+			(/mnt) rootfs path
+
+			拷贝相关文件到文件系统
+			sudo make rootfs
+
 
 - ## 6.运行与调试代码
 		切换到vscode debug界面
