@@ -95,17 +95,28 @@ flash:
 
 
 #######################################
+# host compile tool
+#######################################
+HOST_GCC_PREFIX ?= $(CONFIG_HOST_COMPILE_PREFIX:"%"=%)
+HOST_GCC_SUFFIX ?= $(CONFIG_HOST_COMPILE_SUFFIX:"%"=%)
+HOST_CXX = $(HOST_GCC_PREFIX)g++$(HOST_GCC_SUFFIX)
+HOST_CC  = $(HOST_GCC_PREFIX)gcc$(HOST_GCC_SUFFIX)
+HOST_AS  = $(HOST_GCC_PREFIX)gcc$(HOST_GCC_SUFFIX) -x assembler-with-cpp
+
+
+#######################################
 # cross compile tool
 #######################################
-GCC_PREFIX ?= $(CONFIG_CROSS_COMPILE:"%"=%)
-CXX = $(GCC_PREFIX)g++
-CC  = $(GCC_PREFIX)gcc
-AS  = $(GCC_PREFIX)gcc -x assembler-with-cpp
-AR  = $(GCC_PREFIX)ar
-LD  = $(GCC_PREFIX)ld
-CP  = $(GCC_PREFIX)objcopy
-SZ  = $(GCC_PREFIX)size
-ST  = $(GCC_PREFIX)strip
+GCC_PREFIX ?= $(CONFIG_CROSS_COMPILE_PREFIX:"%"=%)
+GCC_SUFFIX ?= $(CONFIG_CROSS_COMPILE_SUFFIX:"%"=%)
+CXX = $(GCC_PREFIX)g++$(GCC_SUFFIX)
+CC  = $(GCC_PREFIX)gcc$(GCC_SUFFIX)
+AS  = $(GCC_PREFIX)gcc$(GCC_SUFFIX) -x assembler-with-cpp
+AR  = $(GCC_PREFIX)ar$(GCC_SUFFIX)
+LD  = $(GCC_PREFIX)ld$(GCC_SUFFIX)
+CP  = $(GCC_PREFIX)objcopy$(GCC_SUFFIX)
+SZ  = $(GCC_PREFIX)size$(GCC_SUFFIX)
+ST  = $(GCC_PREFIX)strip$(GCC_SUFFIX)
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S
 
@@ -286,10 +297,10 @@ silentoldconfig: $(Scripts)/kconfig/conf
 	$(Q)$< -s --$@ $(Kconfig)
 
 $(Scripts)/kconfig/mconf:
-	$(Q)$(MAKE) -C $(Scripts)/kconfig
+	$(Q)$(MAKE) -C $(Scripts)/kconfig HOST_CC=$(HOST_CC)
 
 $(Scripts)/kconfig/conf:
-	$(Q)$(MAKE) -C $(Scripts)/kconfig
+	$(Q)$(MAKE) -C $(Scripts)/kconfig HOST_CC=$(HOST_CC)
 
 
 #######################################
