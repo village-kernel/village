@@ -70,13 +70,11 @@ objs-$(CONFIG_LOADER)                       += Loader.o
 objs-$(CONFIG_ENVIRONMENT)                  += Environment.o
 objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
 
-objs-$(CONFIG_FATFS)                        += FatData.o
-objs-$(CONFIG_FATFS)                        += FatDisk.o
+objs-$(CONFIG_FATFS)                        += FatDiskio.o
 objs-$(CONFIG_FATFS)                        += FatEntry.o
-objs-$(CONFIG_FATFS)                        += FatName.o
 objs-$(CONFIG_FATFS)                        += FatObject.o
-objs-$(CONFIG_FATFS)                        += FatOpts.o
 objs-$(CONFIG_FATFS)                        += FatSystem.o
+objs-$(CONFIG_FATFS)                        += FatVolume.o
 objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
 
 objs-kernel-$(CONFIG_FILESYSTEM)            += DirStream.o

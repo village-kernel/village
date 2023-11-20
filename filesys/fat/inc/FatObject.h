@@ -7,7 +7,9 @@
 #ifndef __FAT_OBJECT_H__
 #define __FAT_OBJECT_H__
 
-#include "FatDefs.h"
+#include "stdint.h"
+#include "string.h"
+
 
 /// @brief FatObject
 class FatObject
@@ -39,7 +41,7 @@ public:
 		_NS_NOLFN    = 0x40,   /* Do not find LFN */
 		_NS_NONAME   = 0x80,   /* Not followed */
 	};
-private:
+
 	//Structures
 	struct LongEntry
 	{
@@ -77,63 +79,77 @@ private:
 
 		ShortEntry() { memset((void*)this, 0, 32); }
 	} __attribute__((packed));
+
+	union UnionEntry
+	{
+		LongEntry  lfe;
+		ShortEntry sfe;
+		
+		UnionEntry()       { memset((void*)this, 0, 32); }
+		bool IsDirectory() { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY); }
+		bool IsVolume()    { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID); }
+		bool IsFile()      { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE     ); }
+		bool IsHidden()    { return ((sfe.attr &  _ATTR_HIDDEN                      ) == _ATTR_HIDDEN   ); }
+		bool IsLongName()  { return ((lfe.attr & _ATTR_LONG_NAME_MASK               ) == _ATTR_LONG_NAME); }
+		bool IsValid()     { return ((lfe.ord) && (lfe.ord != dir_free_flag)); }
+		uint8_t OrdSize()  { return ( lfe.ord  -  dir_seq_flag + 1          ); }
+	} __attribute__((packed));
 private:
 	//Static constants
-	static const uint8_t  dir_entry_size = 32;
-	static const uint8_t  long_name_size  = 13;
-	static const uint8_t  short_name_size = 11;
-	static const uint8_t  volume_label_size = 11;
-	static const uint8_t  dir_seq_flag = 0x40;
-	static const uint8_t  dir_free_flag = 0xe5;
+	static const uint8_t long_name_size  = 13;
+	static const uint8_t short_name_size = 11;
+	static const uint8_t volume_label_size = 11;
+	static const uint8_t dir_seq_flag = 0x40;
+	static const uint8_t dir_free_flag = 0xe5;
 
 	//Members
 	LongEntry*  lfe;
 	ShortEntry* sfe;
 
 	//Methods
-	uint8_t ChkSum(char* name);
+	uint8_t ChkSum(const char* name);
 public:
 	//Methods
-	FatObject(char* raw);
+	FatObject(char* raw = new char[32]());
 	~FatObject();
-	
+
+	void Setup(char* raw);
+	void SetEntryFree();
+
 	void GenNumName(int num);
-
-	void SetShortName(char* name);
+	void SetShortName(const char* name);
 	char* GetShortName();
-
-	void SetLongName(char* name);
+	void SetLongName(const char* name);
 	char* GetLongName();
-
-	void SetVolumeLabel(char* label);
+	void SetVolumeLabel(const char* label);
 	char* GetVolumeLabel();
-
 	void SetAttribute(uint8_t attr);
 	uint8_t GetAttribute();
-
 	void SetNTRes(uint8_t NTRes);
 	uint8_t GetNTRes();
-
 	void SetCreateTenth(uint16_t tenth);
 	uint16_t GetCreateTenth();
 	void SetCreateTime(uint16_t time);
 	uint16_t GetCreateTime();
 	void SetCreateDate(uint16_t date);
 	uint16_t GetCreateDate();
-
 	void SetLastAccDate(uint16_t date);
 	uint16_t GetLastAccDate();
-	
 	void SetWriteTime(uint16_t time);
 	uint16_t GetWriteTime();
 	void SetWriteDate(uint16_t date);
 	uint16_t GetWriteDate();
-	
 	void SetFirstCluster(uint32_t clust);
 	uint32_t GetFirstCluster();
-	
 	void SetFileSize(uint32_t size);
 	uint32_t GetFileSize();
+public:
+	//Members
+	uint32_t    clust;
+	uint32_t    sector;
+	uint32_t    index;
+	uint32_t    size;
+	UnionEntry* ufe;
 
 	//Attribute Methods
 	bool IsDirectory();
@@ -142,6 +158,7 @@ public:
 	bool IsLongName();
 	bool IsHidden();
 	bool IsValid();
+	void Refresh();
 };
 
 #endif //!__FAT_OBJECT_H__

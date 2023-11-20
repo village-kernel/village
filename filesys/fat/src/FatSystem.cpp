@@ -6,7 +6,7 @@
 //###########################################################################
 #include "FileSystem.h"
 #include "FatSystem.h"
-#include "FatOpts.h"
+#include "FatVolume.h"
 #include "Kernel.h"
 #include "Debug.h"
 #include "stdio.h"
@@ -45,7 +45,7 @@ void FatSystem::Setup()
 	{
 		if (_OK == CheckDPT(&mbr->dpt[i]))
 		{
-			FatOpts* fatOpts = new FatOpts();
+			FatVolume* fatOpts = new FatVolume();
 
 			if (_OK != fatOpts->Setup(diskdrv, mbr->dpt[i].relativeSectors))
 			{

@@ -7,96 +7,58 @@
 #ifndef __FAT_ENTRY_H__
 #define __FAT_ENTRY_H__
 
-#include "FatDefs.h"
-#include "FatDisk.h"
-#include "FatName.h"
+#include "Templates.h"
+#include "FatObject.h"
+#include "FatDiskio.h"
 
-/// @brief 
-class DirEntry : public FatDefs
+
+/// @brief FatEntry
+class FatEntry
 {
-public:
-	//Structures
-	struct EntryInfo
-	{
-		uint32_t    clust;
-		uint32_t    sector;
-		uint32_t    index;
-		uint32_t    size;
-		UnionEntry* unients;
+private:
+	//Static constants
+	static const uint8_t entry_size = 32;
+	static const uint8_t long_name_size = 13;
+	static const uint8_t dir_seq_flag = 0x40;
 
-		EntryInfo()
-			:clust(0),
-			sector(0),
-			index(0),
-			size(0),
-			unients(NULL)
-		{}
-
-		~EntryInfo()
-		{
-			delete[] unients;
-		}
-	};
-
-//private:
 	//Members
-	FatInfo* fatInfo;
-	FatDisk* fatDisk;
-	FatName  fatName;
+	FatDiskio&       disk;
+	FatDiskio::Info& info;
 
 	//Data Members
-	EntryInfo   self;
-	EntryInfo   temp;
-	UnionEntry  body;
-	char*       name;
+	FatObject*       self;
+	FatObject*       temp;
 
 	//Disk Methods
 	void CalcFirstSector();
 	void CalcNextSector();
 	void ReadUnionEntries();
 	void WriteUnionEntries();
-
-	int CheckDirName(UnionEntry* unient);
-public:
-	//Methods
-	DirEntry(FatDisk* fatDisk, FatInfo* fatInfo);
-	~DirEntry();
-
+	
 	//Iterator Methods
 	bool ReadBegin();
 	bool ReadNext();
 	bool WriteNext();
 	bool IsEnded();
-	UnionEntry& Item();
+	FatObject::UnionEntry& Item();
+
+	int Find(uint32_t size);
+	uint32_t Pop(FatObject* pop);
+	uint32_t Push(FatObject* push);
 
 	//Methods
-	int Find(uint32_t size);
-	uint32_t Pop(EntryInfo& pop);
-	uint32_t Push(EntryInfo& push);
+	int CheckDirName(FatObject* obj);
+public:
+	//Methods
+	FatEntry(FatDiskio& disk, FatObject* object);
+	~FatEntry();
+
+	FatObject* Create(const char* name, int attr);
+	FatObject* Read();
+	uint32_t Size();
+
 	bool Update();
 	bool Remove();
-
-	DirEntry* Create(const char* name, DirAttr attr);
-	DirEntry* Read();
-};
-
-
-/// @brief 
-class DirEntries
-{
-public:
-	List<DirEntry> list;
-	char*          path;
-
-	DirEntries() :
-		path(NULL)
-	{}
-
-	~DirEntries()
-	{
-		list.Release();
-		delete[] path;
-	}
 };
 
 #endif //!__FAT_ENTRY_H__

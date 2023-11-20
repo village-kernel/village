@@ -10,9 +10,32 @@
 /// @brief Constructor
 FatObject::FatObject(char* raw)
 	:lfe(NULL),
-	sfe(NULL)
+	sfe(NULL),
+	clust(0),
+	sector(0),
+	index(0),
+	size(0),
+	ufe(NULL)
 {
+	if (NULL != raw) Setup(raw);
+}
+
+
+/// @brief Destructor
+FatObject::~FatObject()
+{
+	delete[] this->lfe;
+	delete[] this->sfe;
+}
+
+
+/// @brief FatObject setup
+/// @param raw 
+void FatObject::Setup(char* raw)
+{
+	this->lfe = (LongEntry*)raw;
 	this->sfe = (ShortEntry*)raw;
+	this->ufe = (UnionEntry*)raw;
 
 	if (IsValid() && IsLongName())
 	{
@@ -23,16 +46,27 @@ FatObject::FatObject(char* raw)
 }
 
 
-/// @brief Destructor
-FatObject::~FatObject()
+/// @brief FatObject set entry free flag
+void FatObject::SetEntryFree()
 {
+	sfe->name[0] = dir_free_flag;
+
+	if (true == IsLongName())
+	{
+		uint8_t n = lfe->ord - dir_seq_flag;
+
+		for (uint8_t i = 0; i < n; i++)
+		{
+			lfe[i].ord = dir_free_flag;
+		}
+	}
 }
 
 
 /// @brief ChkSum
 /// @param name 
 /// @return 
-uint8_t FatObject::ChkSum(char* name)
+uint8_t FatObject::ChkSum(const char* name)
 {
 	uint8_t sum = 0;
 
@@ -75,7 +109,7 @@ void FatObject::GenNumName(int num)
 
 /// @brief FatObject set short name
 /// @param name 
-void FatObject::SetShortName(char* name)
+void FatObject::SetShortName(const char* name)
 {
 	uint8_t pos = 0;
 	char*   sfn = sfe->name;
@@ -175,7 +209,7 @@ char* FatObject::GetShortName()
 
 /// @brief FatObject set long name
 /// @param name 
-void FatObject::SetLongName(char* name)
+void FatObject::SetLongName(const char* name)
 {
 	uint8_t pos = 0;
 	uint8_t size = lfe[0].ord - dir_seq_flag;
@@ -185,23 +219,21 @@ void FatObject::SetLongName(char* name)
 	//Loop for sequence of long directory entries
 	while (n--)
 	{
-		LongEntry* lfe = &lfe[n];
-
-		if (n) lfe->ord = size - n;
-		lfe->attr = _ATTR_LONG_NAME;
-		lfe->chksum = chksum;
-		lfe->Fill();
+		if (n) lfe[n].ord = size - n;
+		lfe[n].attr = _ATTR_LONG_NAME;
+		lfe[n].chksum = chksum;
+		lfe[n].Fill();
 
 		//Part 1 of long name 
 		for (uint8_t i = 0; i < 5; i++)
 		{
 			if ('\0' != name[pos])
 			{
-				lfe->name1[i] = name[pos++];
+				lfe[n].name1[i] = name[pos++];
 			}
 			else
 			{
-				lfe->name1[i] = 0;
+				lfe[n].name1[i] = 0;
 				return;
 			}
 		}
@@ -211,11 +243,11 @@ void FatObject::SetLongName(char* name)
 		{
 			if ('\0' != name[pos])
 			{
-				lfe->name2[i] = name[pos++];
+				lfe[n].name2[i] = name[pos++];
 			}
 			else
 			{
-				lfe->name2[i] = 0;
+				lfe[n].name2[i] = 0;
 				return;
 			}
 		}
@@ -225,11 +257,11 @@ void FatObject::SetLongName(char* name)
 		{
 			if ('\0' != name[pos])
 			{
-				lfe->name3[i] = name[pos++];
+				lfe[n].name3[i] = name[pos++];
 			}
 			else
 			{
-				lfe->name3[i] = 0;
+				lfe[n].name3[i] = 0;
 				return;
 			}
 		}
@@ -249,8 +281,6 @@ char* FatObject::GetLongName()
 	//Loop for sequence of long directory entries
 	while (n--)
 	{
-		LongEntry* lfe = &lfe[n];
-
 		//Chksum
 		if (lfe[n].chksum != chksum)
 		{
@@ -261,9 +291,9 @@ char* FatObject::GetLongName()
 		//Part 1 of long name 
 		for (uint8_t i = 0; i < 5; i++)
 		{
-			if (0xffff != lfe->name1[i])
+			if (0xffff != lfe[n].name1[i])
 			{
-				lfn[pos++] = (char)lfe->name1[i];
+				lfn[pos++] = (char)lfe[n].name1[i];
 			}
 			else break;
 		}
@@ -271,9 +301,9 @@ char* FatObject::GetLongName()
 		//Part 2 of long name 
 		for (uint8_t i = 0; i < 6; i++)
 		{
-			if (0xffff != lfe->name2[i])
+			if (0xffff != lfe[n].name2[i])
 			{
-				lfn[pos++] = (char)lfe->name2[i];
+				lfn[pos++] = (char)lfe[n].name2[i];
 			}
 			else return lfn;
 		}
@@ -281,9 +311,9 @@ char* FatObject::GetLongName()
 		//Part 3 of long name
 		for (uint8_t i = 0; i < 2; i++)
 		{
-			if (0xffff != lfe->name3[i])
+			if (0xffff != lfe[n].name3[i])
 			{
-				lfn[pos++] = (char)lfe->name3[i];
+				lfn[pos++] = (char)lfe[n].name3[i];
 			}
 			else return lfn;
 		}
@@ -295,7 +325,7 @@ char* FatObject::GetLongName()
 
 /// @brief FatObject set volume label
 /// @param label 
-void FatObject::SetVolumeLabel(char* label)
+void FatObject::SetVolumeLabel(const char* label)
 {
 	uint8_t namelen = strlen(label);
 
@@ -536,7 +566,7 @@ bool FatObject::IsFile()
 /// @return 
 bool FatObject::IsLongName()
 {
-	return ((sfe->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME);
+	return ((lfe->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME);
 }
 
 
@@ -553,4 +583,11 @@ bool FatObject::IsHidden()
 bool FatObject::IsValid()
 {
 	return ((sfe->name[0] > dir_seq_flag) && (sfe->name[0] != dir_free_flag));
+}
+
+
+/// @brief FatObject refresh
+void FatObject::Refresh()
+{
+	Setup((char*)ufe);
 }
