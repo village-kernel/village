@@ -10,7 +10,6 @@
 
 ///Constructor
 RcParser::RcParser(const char* filename)
-	: runcmds(NULL)
 {
 	if (NULL != filename) Load(filename);
 }
@@ -48,7 +47,6 @@ void RcParser::Decode(const char* rcString)
 {
 	const int32_t start_delimiter= -1;
 
-	RunCmdNode** nextNode = &runcmds;
 	ParserStatus status = _RecordCmd;
 	int32_t startIndex  = start_delimiter;
 	int32_t recordBytes = 0;
@@ -108,11 +106,10 @@ void RcParser::Decode(const char* rcString)
 				cmd[recordBytes] = '\0';
 
 				//Add cmd to run cmd list
-				*nextNode   = new RunCmdNode(cmd);
-				nextNode    = &(*nextNode)->next;
 				status      = _RecordCmd;
 				startIndex  = start_delimiter;
 				recordBytes = 0;
+				runcmds.Add(cmd);
 			}
 			else
 			{
@@ -127,7 +124,7 @@ void RcParser::Decode(const char* rcString)
 
 
 ///Get run commands
-RcParser::RunCmdNode* RcParser::GetRunCmds()
+List<char>& RcParser::GetRunCmds()
 {
 	return runcmds;
 }
@@ -136,9 +133,5 @@ RcParser::RunCmdNode* RcParser::GetRunCmds()
 ///Release
 void RcParser::Release()
 {
-	for (RunCmdNode* node = runcmds; NULL != node; node = node->next)
-	{
-		delete[] node->cmd;
-		delete node;
-	}
+	runcmds.Release();
 }

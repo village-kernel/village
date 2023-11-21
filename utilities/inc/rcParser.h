@@ -8,22 +8,11 @@
 #define __RC_PARSER_H__
 
 #include "Defines.h"
+#include "Templates.h"
 
 ///RcParser
 class RcParser
 {
-public:
-	//Structrues
-	struct RunCmdNode
-	{
-		const char* cmd;
-		RunCmdNode* next;
-
-		RunCmdNode(const char* cmd = NULL) :
-			cmd(cmd),
-			next(NULL)
-		{}
-	};
 private:
 	//Enumerations
 	enum ParserStatus
@@ -34,7 +23,7 @@ private:
 	};
 
 	//Members
-	RunCmdNode* runcmds;
+	List<char> runcmds;
 
 	//Methods
 	void Decode(const char* rcString);
@@ -42,7 +31,7 @@ public:
 	//Methods
 	RcParser(const char* filename = NULL);
 	int Load(const char* filename);
-	RunCmdNode* GetRunCmds();
+	List<char>& GetRunCmds();
 	void Release();
 };
 
