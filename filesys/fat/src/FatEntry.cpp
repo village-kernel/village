@@ -329,26 +329,24 @@ FatObject* FatEntry::Create(const char* name, int attr)
 /// @return 
 FatObject* FatEntry::Read()
 {
-	if (IsEnded()) return NULL;
-
-	while (!Item().IsValid())
+	for (; !IsEnded(); ReadNext())
 	{
-		ReadNext(); if (IsEnded()) return NULL;
+		if (Item().IsValid())
+		{
+			FatObject* obj = new FatObject();
+			obj->clust  = temp->clust;
+			obj->sector = temp->sector;
+			obj->index  = temp->index;
+			obj->size   = Item().IsLongName() ? Item().OrdSize() : 1;
+			obj->ufe    = new FatObject::UnionEntry[obj->size]();
+
+			if (Pop(obj) == obj->size)
+			{
+				obj->Refresh();
+				return obj;
+			}
+		}
 	}
-
-	FatObject* child = new FatObject();
-	child->clust  = temp->clust;
-	child->sector = temp->sector;
-	child->index  = temp->index;
-	child->size   = Item().IsLongName() ? Item().OrdSize() : 1;
-	child->ufe    = new FatObject::UnionEntry[child->size]();
-
-	if (Pop(child) == child->size)
-	{
-		child->Refresh();
-		return child;
-	}
-
 	return NULL;
 }
 
