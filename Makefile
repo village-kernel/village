@@ -52,13 +52,11 @@ ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
 ######################################
 -include vk.application/Makefile
 -include vk.bootloader/Makefile
--include vk.kernel/Makefile
 -include vk.gui/Makefile
--include vk.filesystem/Makefile
+-include vk.kernel/Makefile
 -include vk.network/Makefile
--include vk.library/Makefile
 -include vk.hardware/Makefile
-
+-include vk.library/Makefile
 
 
 #######################################
@@ -69,6 +67,9 @@ all:
 ifeq ($(CONFIG_GENERATED_LIB), y)
 	$(Q)$(MAKE) library
 endif
+ifeq ($(CONFIG_GENERATED_MOD), y)
+	$(Q)$(MAKE) module
+endif
 ifeq ($(CONFIG_BOOTSECTION), y)
 	$(Q)$(MAKE) bootsection
 endif
@@ -77,9 +78,6 @@ ifeq ($(CONFIG_BOOTLOADER), y)
 endif
 ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
-endif
-ifeq ($(CONFIG_GENERATED_MOD), y)
-	$(Q)$(MAKE) module
 endif
 ifeq ($(CONFIG_GENERATED_APP), y)
 	$(Q)$(MAKE) application
@@ -173,10 +171,12 @@ endif
 #######################################
 library: 
 	$(Q)mkdir -p $(LIBRARIES_DIR)
+	$(Q)echo "#prepare libraries" > $(LIBRARIES_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(libs-y), \
 		$(MAKE) $(objs-$(name)-y); \
 		$(MAKE) $(LIBRARIES_DIR)/lib$(name).a  objs="$(objs-$(name)-y)"; \
 		$(MAKE) $(LIBRARIES_DIR)/lib$(name).so objs="$(objs-$(name)-y)"; \
+		echo C:/libraries/lib$(name).so >> $(LIBRARIES_DIR)/_load_.rc; \
 	)
 
 $(LIBRARIES_DIR)/%.a: $(objs)
@@ -186,6 +186,24 @@ $(LIBRARIES_DIR)/%.a: $(objs)
 $(LIBRARIES_DIR)/%.so: $(objs)
 	$(Q)echo output $@
 	$(Q)$(LD) -shared -fPIC $^ -o $@
+
+
+#######################################
+# build the modules
+#######################################
+module:
+	$(Q)mkdir -p $(MODULES_DIR)
+	$(Q)echo "#prepare modules" > $(MODULES_DIR)/_load_.rc;
+	$(Q)$(foreach object, $(objs-m), \
+		$(MAKE) $(object); \
+		$(MAKE) $(MODULES_DIR)/$(object:.o=.mo) objs="$(object)"; \
+		echo C:/modules/$(object:.o=.mo) >> $(MODULES_DIR)/_load_.rc; \
+	)
+
+$(MODULES_DIR)/%.mo: $(objs)
+	$(Q)echo output $@
+	$(Q)$(LD) -shared -fPIC $^ -o $@
+	$(Q)$(SZ) $@
 
 
 #######################################
@@ -231,22 +249,6 @@ $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 
 
 #######################################
-# build the modules
-#######################################
-module:
-	$(Q)mkdir -p $(MODULES_DIR)
-	$(Q)$(foreach object, $(objs-m), \
-		$(MAKE) $(object); \
-		$(MAKE) $(MODULES_DIR)/$(object:.o=.mo) objs="$(object)"; \
-	)
-
-$(MODULES_DIR)/%.mo: $(objs)
-	$(Q)echo output $@
-	$(Q)$(LD) -shared -fPIC $^ -o $@
-	$(Q)$(SZ) $@
-
-
-#######################################
 # build the applications
 #######################################
 application: 
@@ -277,10 +279,9 @@ osImage:
 # copy to rootfs
 #######################################
 rootfs:
-	$(Q)mkdir -p $(ROOTFS_DIR)/applications $(ROOTFS_DIR)/libraries $(ROOTFS_DIR)/modules
-	$(Q)cp -rf $(BUILD_DIR)/applications/*.exec $(ROOTFS_DIR)/applications
-	$(Q)cp -rf $(BUILD_DIR)/libraries/*.so      $(ROOTFS_DIR)/libraries
-	$(Q)cp -rf $(BUILD_DIR)/modules/*.mo        $(ROOTFS_DIR)/modules
+	$(Q)cp -rf $(BUILD_DIR)/applications    $(ROOTFS_DIR)/
+	$(Q)cp -rf $(BUILD_DIR)/libraries       $(ROOTFS_DIR)/
+	$(Q)cp -rf $(BUILD_DIR)/modules         $(ROOTFS_DIR)/
 	
 
 #######################################
