@@ -84,7 +84,7 @@ endif
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
 KLDFLAGS  += -Wl,--no-warn-rwx-segment
-KLDFLAGS  += -Wl,-static
+KLDFLAGS  += -Wl,-static -pie
 
 # application ld flags
 ifeq ($(CONFIG_VKLIBC), y)
@@ -96,4 +96,5 @@ APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
 APPLDFLAGS  += -Wl,--gc-sections
 APPLDFLAGS  += -Wl,--no-warn-rwx-segment
 APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-all
-APPLDFLAGS  += -Wl,-static -pie -e main
+#APPLDFLAGS  += -Wl,-static -pie -e main
+APPLDFLAGS  += -pie -e main
