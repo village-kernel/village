@@ -157,13 +157,11 @@ EXPORT_SYMBOL(_ZN6Thread4ExitEv);
 
 
 /// @brief Idle task
-void Thread::IdleTask()
-{
-	while (1) 
-	{
-		__asm volatile("NOP");
-	}
-}
+#if defined(ARCH_X86)
+void Thread::IdleTask() { while (1) { __asm volatile ("hlt" ::: "memory"); }}
+#else
+void Thread::IdleTask() { while (1) { __asm volatile("NOP"); } }
+#endif
 
 
 /// @brief Thread task function handler 
