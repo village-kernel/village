@@ -56,26 +56,24 @@ void Loader::Execute()
 /// @param filename rc file path
 void Loader::Loading(int type, const char* filename)
 {
-	//Load rc file
-	RcParser* rc = new RcParser(filename);
+	RcParser* parser = new RcParser(filename);
 
-	//Load, parser and execute init array
-	RcParser::RunCmdNode* node = rc->GetRunCmds();
-	for (; NULL != node; node = node->next)
+	List<char>& runcmds = parser->GetRunCmds();
+
+	for (runcmds.End(); runcmds.IsBegin(); runcmds.Prev())
 	{
 		if (_Load_Lib == type)
 		{
-			libraryTool.Install(node->cmd);
+			libraryTool.Install(runcmds.Item());
 		}
 		else if (_Load_Mod == type)
 		{
-			moduleTool.Install(node->cmd);
+			moduleTool.Install(runcmds.Item());
 		}
 	}
 
-	//Release resource
-	rc->Release();
-	delete rc;
+	parser->Release();
+	delete parser;
 }
 EXPORT_SYMBOL(_ZN6Loader7LoadingEiPKc);
 
