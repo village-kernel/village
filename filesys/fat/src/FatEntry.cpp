@@ -359,10 +359,10 @@ uint32_t FatEntry::Size()
 
 	ReadBegin();
 
-	for (FatObject* child = Read(); NULL != child; child = Read())
+	for (FatObject* obj = Read(); NULL != obj; obj = Read())
 	{
-		if (child->IsValid()) size++;
-		delete child;
+		if (obj->IsValid()) size++; 
+		delete obj;
 	}
 
 	ReadBegin();
