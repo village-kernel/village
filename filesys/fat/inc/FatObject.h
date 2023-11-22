@@ -91,7 +91,7 @@ public:
 		bool IsFile()      { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE     ); }
 		bool IsHidden()    { return ((sfe.attr &  _ATTR_HIDDEN                      ) == _ATTR_HIDDEN   ); }
 		bool IsLongName()  { return ((lfe.attr & _ATTR_LONG_NAME_MASK               ) == _ATTR_LONG_NAME); }
-		bool IsValid()     { return ((lfe.ord) && (lfe.ord != dir_free_flag)); }
+		bool IsValid()     { return ((lfe.ord > dir_seq_flag) && (lfe.ord != dir_free_flag));              }
 		uint8_t OrdSize()  { return ( lfe.ord  -  dir_seq_flag + 1          ); }
 	} __attribute__((packed));
 private:
