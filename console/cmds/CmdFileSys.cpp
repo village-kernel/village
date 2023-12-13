@@ -64,9 +64,9 @@ private:
 			{
 				for (int i = 0; i < size; i++)
 				{
-					if ((FileAttr::_Visible == dirs[i].attr) &&
-						(0 != strcmp(dirs[i].name, ".")) &&
-						(0 != strcmp(dirs[i].name, "..")))
+					//if ((FileAttr::_Visible == dirs[i].attr) &&
+					//	(0 != strcmp(dirs[i].name, ".")) &&
+					//	(0 != strcmp(dirs[i].name, "..")))
 					{
 						if (FileType::_Diretory == dirs[i].type)
 							console.OutputRAW("\033[36m%s  \033[39m", dirs[i].name);
