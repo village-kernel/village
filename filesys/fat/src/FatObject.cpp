@@ -45,13 +45,6 @@ void FatObject::Setup(char* raw)
 }
 
 
-/// @brief FatObject resetup
-void FatObject::Resetup()
-{
-	Setup((char*)ufe);
-}
-
-
 /// @brief FatObject set entry free flag
 void FatObject::SetEntryFree()
 {
@@ -620,4 +613,15 @@ bool FatObject::UnionEntry::IsValid()
 uint8_t FatObject::UnionEntry::OrdSize()
 {
 	return (lfe.ord - dir_seq_flag + 1);
+}
+
+
+/// @brief UnionEntry alloc size
+/// @return 
+uint8_t FatObject::UnionEntry::AllocSize()
+{
+	if ((lfe.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME)
+		return (lfe.ord - dir_seq_flag + 1);
+	else
+		return 1;
 }

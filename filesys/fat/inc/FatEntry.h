@@ -43,8 +43,8 @@ private:
 	FatObject::UnionEntry& Item();
 
 	int Find(uint32_t size);
-	uint32_t Pop(FatObject* pop);
-	uint32_t Push(FatObject* push);
+	uint32_t Pop(FatObject::UnionEntry* pop, uint32_t size);
+	uint32_t Push(FatObject::UnionEntry* push, uint32_t size);
 
 	//Methods
 	int CheckDirName(FatObject* obj);

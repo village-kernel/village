@@ -94,6 +94,7 @@ public:
 		bool IsLongName();
 		bool IsValid();
 		uint8_t OrdSize();
+		uint8_t AllocSize();
 	} __attribute__((packed));
 private:
 	//Static constants
@@ -122,7 +123,6 @@ public:
 	~FatObject();
 
 	void Setup(char* raw);
-	void Resetup();
 	void SetEntryFree();
 
 	void GenNumName(int num);

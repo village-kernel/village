@@ -194,15 +194,15 @@ int FatEntry::Find(uint32_t size)
 /// @param pop 
 /// @param size 
 /// @return size
-uint32_t FatEntry::Pop(FatObject* pop)
+uint32_t FatEntry::Pop(FatObject::UnionEntry* pop, uint32_t size)
 {
-	for (uint32_t i = 0; i < pop->size; i++)
+	for (uint32_t i = 0; i < size; i++)
 	{
-		pop->ufe[i] = Item();
+		pop[i] = Item();
 	
 		if (false == ReadNext()) return i;
 	}
-	return pop->size;
+	return size;
 }
 
 
@@ -210,20 +210,20 @@ uint32_t FatEntry::Pop(FatObject* pop)
 /// @param push 
 /// @param size 
 /// @return size
-uint32_t FatEntry::Push(FatObject* push)
+uint32_t FatEntry::Push(FatObject::UnionEntry* push, uint32_t size)
 {
 	ReadUnionEntries();
 
-	for (uint32_t i = 0; i < push->size; i++)
+	for (uint32_t i = 0; i < size; i++)
 	{
-		Item() = push->ufe[i];
+		Item() = push[i];
 
 		if (false == WriteNext()) return i;
 	}
 
 	WriteUnionEntries();
 
-	return push->size;
+	return size;
 }
 
 
@@ -333,17 +333,23 @@ FatObject* FatEntry::Read()
 	{
 		if (Item().IsValid())
 		{
-			FatObject* obj = new FatObject();
-			obj->clust  = temp->clust;
-			obj->sector = temp->sector;
-			obj->index  = temp->index;
-			obj->size   = Item().IsLongName() ? Item().OrdSize() : 1;
-			obj->ufe    = new FatObject::UnionEntry[obj->size]();
+			uint32_t clust  = temp->clust;
+			uint32_t sector = temp->sector;
+			uint32_t index  = temp->index;
+			uint32_t size   = Item().AllocSize();
+			FatObject::UnionEntry* ufe = new FatObject::UnionEntry[size]();
 
-			if (Pop(obj) == obj->size)
+			if (Pop(ufe, size) == size)
 			{
-				obj->Resetup();
+				FatObject* obj = new FatObject((char*)ufe);
+				obj->clust  = clust;
+				obj->sector = sector;
+				obj->index  = index;
 				return obj;
+			}
+			else
+			{
+				delete[] ufe;
 			}
 		}
 	}
@@ -376,7 +382,7 @@ uint32_t FatEntry::Size()
 bool FatEntry::Update()
 {
 	temp[0] = self[0];
-	return (self->size == Push(self));
+	return (self->size == Push(self->ufe, self->size));
 }
 
 
