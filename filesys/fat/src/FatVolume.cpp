@@ -395,5 +395,13 @@ int FatVolume::Remove(const char* name)
 /// @return 
 int FatVolume::RemoveDir(const char* name)
 {
+	FatObject* obj = SearchPath(name);
+
+	if (NULL == obj) return _ERR;
+
+	if (false == obj->IsDirectory()) return _ERR;
+
+	FatEntry(disk, obj).Remove();
+
 	return _OK;
 }
