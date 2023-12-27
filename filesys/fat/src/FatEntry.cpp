@@ -342,7 +342,7 @@ FatObject* FatEntry::Read()
 
 			if (Pop(obj) == obj->size)
 			{
-				obj->Refresh();
+				obj->Resetup();
 				return obj;
 			}
 		}
@@ -361,8 +361,7 @@ uint32_t FatEntry::Size()
 
 	for (FatObject* obj = Read(); NULL != obj; obj = Read())
 	{
-		if (obj->IsValid()) size++; 
-		delete obj;
+		size++; delete obj;
 	}
 
 	ReadBegin();

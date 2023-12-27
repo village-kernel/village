@@ -105,7 +105,7 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 	
 	if (NULL == obj) return NULL;
 	
-	if (obj->IsDirectory())
+	if (obj->ufe->IsDirectory())
 	{
 		obj = FatEntry(disk, obj).Create(NotDir(path), attr);
 	}
@@ -121,7 +121,7 @@ int FatVolume::SetVolumeLabel(const char* name)
 {
 	FatObject* obj = FatEntry(disk, NULL).Read();
 
-	if (obj->IsVolume())
+	if (obj->ufe->IsVolume())
 	{
 		obj->SetVolumeLabel(name);
 
@@ -140,7 +140,7 @@ char* FatVolume::GetVolumeLabel()
 
 	char* label = (char*)"NONAME";
 
-	if (obj->IsVolume())
+	if (obj->ufe->IsVolume())
 	{
 		label = obj->GetVolumeLabel();
 	}
@@ -283,11 +283,11 @@ int FatVolume::OpenDir(const char* path, int mode)
 /// @return type
 FileType FatVolume::GetObjectType(FatObject* obj)
 {
-	if (obj->IsFile())
+	if (obj->ufe->IsFile())
 		return FileType::_File;
-	else if (obj->IsDirectory())
+	else if (obj->ufe->IsDirectory())
 		return FileType::_Diretory;
-	else if (obj->IsVolume())
+	else if (obj->ufe->IsVolume())
 		return FileType::_Volume;
 	else
 		return FileType::_Unknown;
@@ -299,7 +299,7 @@ FileType FatVolume::GetObjectType(FatObject* obj)
 /// @return attr
 FileAttr FatVolume::GetObjectAttr(FatObject* obj)
 {
-	return obj->IsHidden() ? FileAttr::_Hidden : FileAttr::_Visible;
+	return obj->ufe->IsHidden() ? FileAttr::_Hidden : FileAttr::_Visible;
 }
 
 
@@ -308,7 +308,7 @@ FileAttr FatVolume::GetObjectAttr(FatObject* obj)
 /// @return 
 char* FatVolume::GetObjectName(FatObject* obj)
 {
-	return obj->IsLongName() ? obj->GetLongName() : obj->GetShortName();
+	return obj->ufe->IsLongName() ? obj->GetLongName() : obj->GetShortName();
 }
 
 
@@ -382,7 +382,7 @@ int FatVolume::Remove(const char* name)
 
 	if (NULL == obj) return _ERR;
 
-	if (false == obj->IsFile()) return _ERR;
+	if (false == obj->ufe->IsFile()) return _ERR;
 
 	FatEntry(disk, obj).Remove();
 
@@ -399,7 +399,7 @@ int FatVolume::RemoveDir(const char* name)
 
 	if (NULL == obj) return _ERR;
 
-	if (false == obj->IsDirectory()) return _ERR;
+	if (false == obj->ufe->IsDirectory()) return _ERR;
 
 	FatEntry(disk, obj).Remove();
 

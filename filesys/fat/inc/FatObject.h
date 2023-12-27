@@ -45,6 +45,7 @@ public:
 	//Structures
 	struct LongEntry
 	{
+		//Members
 		uint8_t  ord;
 		uint16_t name1[5];
 		uint8_t  attr;
@@ -54,16 +55,13 @@ public:
 		uint16_t fstClustLO;
 		uint16_t name3[2];
 
-		void Fill()
-		{
-			memset((void*)name1, 0xff, 10);
-			memset((void*)name2, 0xff, 12);
-			memset((void*)name3, 0xff, 4);
-		}
+		//Methods
+		void Fill();
 	} __attribute__((packed));
 
 	struct ShortEntry
 	{
+		//Members
 		char     name[11];
 		uint8_t  attr;
 		uint8_t  NTRes;
@@ -77,22 +75,25 @@ public:
 		uint16_t fstClustLO;
 		uint32_t fileSize;
 
-		ShortEntry() { memset((void*)this, 0, 32); }
+		//Methods
+		ShortEntry();
 	} __attribute__((packed));
 
 	union UnionEntry
 	{
+		//Members
 		LongEntry  lfe;
 		ShortEntry sfe;
 		
-		UnionEntry()       { memset((void*)this, 0, 32); }
-		bool IsDirectory() { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY); }
-		bool IsVolume()    { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID); }
-		bool IsFile()      { return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE     ); }
-		bool IsHidden()    { return ((sfe.attr &  _ATTR_HIDDEN                      ) == _ATTR_HIDDEN   ); }
-		bool IsLongName()  { return ((lfe.attr & _ATTR_LONG_NAME_MASK               ) == _ATTR_LONG_NAME); }
-		bool IsValid()     { return ((lfe.ord > dir_seq_flag) && (lfe.ord != dir_free_flag));              }
-		uint8_t OrdSize()  { return ( lfe.ord  -  dir_seq_flag + 1          ); }
+		//Methods
+		UnionEntry();
+		bool IsDirectory();
+		bool IsVolume();
+		bool IsFile();
+		bool IsHidden();
+		bool IsLongName();
+		bool IsValid();
+		uint8_t OrdSize();
 	} __attribute__((packed));
 private:
 	//Static constants
@@ -102,18 +103,26 @@ private:
 	static const uint8_t dir_seq_flag = 0x40;
 	static const uint8_t dir_free_flag = 0xe5;
 
-	//Members
-	LongEntry*  lfe;
-	ShortEntry* sfe;
-
 	//Methods
 	uint8_t ChkSum(const char* name);
+public:
+	//Record members
+	uint32_t clust;
+	uint32_t sector;
+	uint32_t index;
+	uint32_t size;
+
+	//Data members
+	LongEntry*  lfe;
+	ShortEntry* sfe;
+	UnionEntry* ufe;
 public:
 	//Methods
 	FatObject(char* raw = new char[32]());
 	~FatObject();
 
 	void Setup(char* raw);
+	void Resetup();
 	void SetEntryFree();
 
 	void GenNumName(int num);
@@ -143,22 +152,6 @@ public:
 	uint32_t GetFirstCluster();
 	void SetFileSize(uint32_t size);
 	uint32_t GetFileSize();
-public:
-	//Members
-	uint32_t    clust;
-	uint32_t    sector;
-	uint32_t    index;
-	uint32_t    size;
-	UnionEntry* ufe;
-
-	//Attribute Methods
-	bool IsDirectory();
-	bool IsVolume();
-	bool IsFile();
-	bool IsLongName();
-	bool IsHidden();
-	bool IsValid();
-	void Refresh();
 };
 
 #endif //!__FAT_OBJECT_H__

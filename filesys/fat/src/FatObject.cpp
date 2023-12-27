@@ -9,12 +9,12 @@
 
 /// @brief Constructor
 FatObject::FatObject(char* raw)
-	:lfe(NULL),
-	sfe(NULL),
-	clust(0),
+	:clust(0),
 	sector(0),
 	index(0),
 	size(0),
+	lfe(NULL),
+	sfe(NULL),
 	ufe(NULL)
 {
 	if (NULL != raw) Setup(raw);
@@ -24,8 +24,7 @@ FatObject::FatObject(char* raw)
 /// @brief Destructor
 FatObject::~FatObject()
 {
-	delete[] this->lfe;
-	delete[] this->sfe;
+	delete[] this->ufe;
 }
 
 
@@ -37,7 +36,7 @@ void FatObject::Setup(char* raw)
 	this->sfe = (ShortEntry*)raw;
 	this->ufe = (UnionEntry*)raw;
 
-	if (IsValid() && IsLongName())
+	if (ufe->IsValid() && ufe->IsLongName())
 	{
 		uint8_t n = raw[0] - dir_seq_flag;
 		this->lfe = (LongEntry*)raw;
@@ -46,12 +45,19 @@ void FatObject::Setup(char* raw)
 }
 
 
+/// @brief FatObject resetup
+void FatObject::Resetup()
+{
+	Setup((char*)ufe);
+}
+
+
 /// @brief FatObject set entry free flag
 void FatObject::SetEntryFree()
 {
 	sfe->name[0] = dir_free_flag;
 
-	if (true == IsLongName())
+	if (true == ufe->IsLongName())
 	{
 		uint8_t n = lfe->ord - dir_seq_flag;
 
@@ -538,56 +544,80 @@ uint32_t FatObject::GetFileSize()
 }
 
 
-/// @brief FatObject is directory
-/// @return 
-bool FatObject::IsDirectory()
+/// @brief LongEntry fill
+void FatObject::LongEntry::Fill()
 {
-	return ((sfe->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY);
+	memset((void*)name1, 0xff, 10);
+	memset((void*)name2, 0xff, 12);
+	memset((void*)name3, 0xff, 4);
 }
 
 
-/// @brief FatObject is volume
-/// @return 
-bool FatObject::IsVolume()
+/// @brief ShortEntry constructor
+FatObject::ShortEntry::ShortEntry()
 {
-	return ((sfe->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
+	memset((void*)this, 0, 32);
 }
 
 
-/// @brief FatObject is file
-/// @return 
-bool FatObject::IsFile()
+/// @brief UnionEntry constructor
+FatObject::UnionEntry::UnionEntry()
 {
-	return ((sfe->attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
+	memset((void*)this, 0, 32);
 }
 
 
-/// @brief FatObject is long name
+/// @brief UnionEntry is directory
 /// @return 
-bool FatObject::IsLongName()
+bool FatObject::UnionEntry::IsDirectory()
 {
-	return ((lfe->attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME);
+	return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_DIRECTORY); 
 }
 
 
-/// @brief FatObject is hidden
+/// @brief UnionEntry is volume
 /// @return 
-bool FatObject::IsHidden()
+bool FatObject::UnionEntry::IsVolume()
 {
-	return ((sfe->attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+	return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_VOLUME_ID);
 }
 
 
-/// @brief FatObject is valid
+/// @brief UnionEntry is file
 /// @return 
-bool FatObject::IsValid()
+bool FatObject::UnionEntry::IsFile()
 {
-	return ((sfe->name[0] > dir_seq_flag) && (sfe->name[0] != dir_free_flag));
+	return ((sfe.attr & (_ATTR_DIRECTORY | _ATTR_VOLUME_ID)) == _ATTR_FILE);
 }
 
 
-/// @brief FatObject refresh
-void FatObject::Refresh()
+/// @brief UnionEntry is hidden
+/// @return 
+bool FatObject::UnionEntry::IsHidden()
 {
-	Setup((char*)ufe);
+	return ((sfe.attr & _ATTR_HIDDEN) == _ATTR_HIDDEN);
+}
+
+
+/// @brief UnionEntry is long name
+/// @return 
+bool FatObject::UnionEntry::IsLongName()
+{
+	return ((lfe.attr & _ATTR_LONG_NAME_MASK) == _ATTR_LONG_NAME);
+}
+
+
+/// @brief UnionEntry is valid
+/// @return 
+bool FatObject::UnionEntry::IsValid()
+{
+	return ((lfe.ord > dir_seq_flag) && (lfe.ord != dir_free_flag));
+}
+
+
+/// @brief UnionEntry ord size
+/// @return 
+uint8_t FatObject::UnionEntry::OrdSize()
+{
+	return (lfe.ord - dir_seq_flag + 1);
 }
