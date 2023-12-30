@@ -24,12 +24,12 @@ private:
 	static const uint16_t path_size = 100;
 
 	//Members
-	List<Cmd> cmds;
-	Mutex     mutex;
-	Regex     regex;
-	CmdMsgMgr msgMgr;
-	char      data[buf_size];
-	char      path[path_size];
+	List<Cmd*> cmds;
+	Mutex      mutex;
+	Regex      regex;
+	CmdMsgMgr  msgMgr;
+	char       data[buf_size];
+	char       path[path_size];
 
 	//Methods
 	Console();
