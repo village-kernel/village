@@ -23,7 +23,7 @@ private:
 	};
 
 	//Members
-	List<char> runcmds;
+	List<char*> runcmds;
 
 	//Methods
 	void Decode(const char* rcString);
@@ -31,7 +31,7 @@ public:
 	//Methods
 	RcParser(const char* filename = NULL);
 	int Load(const char* filename);
-	List<char>& GetRunCmds();
+	List<char*>& GetRunCmds();
 	void Release();
 };
 

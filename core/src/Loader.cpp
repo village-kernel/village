@@ -58,7 +58,7 @@ void Loader::Loading(int type, const char* filename)
 {
 	RcParser* parser = new RcParser(filename);
 
-	List<char>& runcmds = parser->GetRunCmds();
+	List<char*>& runcmds = parser->GetRunCmds();
 
 	for (runcmds.End(); runcmds.IsBegin(); runcmds.Prev())
 	{
@@ -80,7 +80,7 @@ EXPORT_SYMBOL(_ZN6Loader7LoadingEiPKc);
 
 /// @brief Get libraries
 /// @return libraries
-List<ElfLoader>* Loader::GetLibraries()
+List<ElfLoader*>* Loader::GetLibraries()
 {
 	return &libraries;
 }
@@ -89,7 +89,7 @@ EXPORT_SYMBOL(_ZN6Loader12GetLibrariesEv);
 
 /// @brief Get modules
 /// @return modules
-List<ElfLoader>* Loader::GetModules()
+List<ElfLoader*>* Loader::GetModules()
 {
 	return &modules;
 }

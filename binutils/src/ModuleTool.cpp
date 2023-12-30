@@ -30,7 +30,7 @@ bool ModuleTool::Install(const char* filename)
 	bool isInstalled = false;
 
 	//Get the libraries pointer
-	List<ElfLoader>* modules = loader.GetModules();
+	List<ElfLoader*>* modules = loader.GetModules();
 
 	//Check the module if it has been installed
 	for (ElfLoader* mod = modules->Begin(); !modules->IsEnd(); mod = modules->Next())
@@ -73,7 +73,7 @@ bool ModuleTool::Install(const char* filename)
 bool ModuleTool::Uninstall(const char* filename)
 {
 	//Get the libraries pointer
-	List<ElfLoader>* modules = loader.GetModules();
+	List<ElfLoader*>* modules = loader.GetModules();
 
 	//Search module and remove it
 	for (ElfLoader* mod = modules->Begin(); !modules->IsEnd(); mod = modules->Next())

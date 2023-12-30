@@ -27,7 +27,7 @@ private:
 	};
 
 	//Members
-	List<Symbol> symbols;
+	List<Symbol*> symbols;
 
 	//Methods
 	Environment();

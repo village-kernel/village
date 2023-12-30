@@ -53,7 +53,7 @@ private:
 	//Structures
 	struct Node
 	{
-		Object* obj;
+		Object  obj;
 		int     nid;
 		char*   name;
 		Node*   prev;
@@ -61,7 +61,7 @@ private:
 
 		Node
 		(
-			Object* obj  = NULL,
+			Object  obj  = NULL,
 			int     nid  = 0,
 			char*   name = NULL
 		):
@@ -91,7 +91,7 @@ public:
 
 	/// @brief List begin node
 	/// @return object pointer
-	Object* Begin()
+	Object Begin()
 	{
 		iterator = head;
 		return Item();
@@ -99,7 +99,7 @@ public:
 
 	/// @brief List next node
 	/// @return object pointer
-	Object* Next()
+	Object Next()
 	{
 		if (NULL != iterator)
 		{
@@ -110,7 +110,7 @@ public:
 
 	/// @brief List prev node
 	/// @return object pointer
-	Object* Prev()
+	Object Prev()
 	{
 		if (NULL != iterator)
 		{
@@ -121,7 +121,7 @@ public:
 
 	/// @brief List end node
 	/// @return object pointer
-	Object* End()
+	Object End()
 	{
 		iterator = tail;
 		return Item();
@@ -150,7 +150,7 @@ public:
 
 	/// @brief List item
 	/// @return object pointer
-	Object* Item()
+	Object Item()
 	{
 		return (NULL != iterator) ? iterator->obj : NULL;
 	}
@@ -179,7 +179,7 @@ public:
 	/// @brief Add object node to list
 	/// @param obj object pointer
 	/// @return result
-	int Add(Object* obj)
+	int Add(Object obj)
 	{
 		if (NULL == obj) return -1;
 
@@ -205,7 +205,7 @@ public:
 	/// @param obj object pointer
 	/// @param nid object node id
 	/// @return result
-	int Insert(Object* obj, int nid)
+	int Insert(Object obj, int nid)
 	{
 		if (NULL == obj) return -1;
 
@@ -269,7 +269,7 @@ public:
 	/// @param obj object pointer
 	/// @param nid object node id
 	/// @return result
-	int InsertByName(Object* obj, char* name)
+	int InsertByName(Object obj, char* name)
 	{
 		if (NULL == obj) return -1;
 
@@ -333,7 +333,7 @@ public:
 	/// @param obj object pointer
 	/// @param nid node id
 	/// @return result
-	int Remove(Object* obj, int nid = -1)
+	int Remove(Object obj, int nid = -1)
 	{
 		if (NULL == obj) return _ERR;
 
@@ -365,7 +365,7 @@ public:
 	/// @param obj object pointer
 	/// @param nid node id
 	/// @return result
-	int RemoveByName(Object* obj, char* name)
+	int RemoveByName(Object obj, char* name)
 	{
 		if (NULL == obj) return _ERR;
 
@@ -397,7 +397,7 @@ public:
 	/// @brief List GetItem
 	/// @param nid node id
 	/// @return object pointer
-	Object* GetItem(int nid)
+	Object GetItem(int nid)
 	{
 		for (Node* node = head; NULL != node; node = node->next)
 		{
@@ -409,7 +409,7 @@ public:
 	/// @brief List GetItemByName
 	/// @param nid node name
 	/// @return object pointer
-	Object* GetItemByName(const char* name)
+	Object GetItemByName(const char* name)
 	{
 		for (Node* node = head; NULL != node; node = node->next)
 		{

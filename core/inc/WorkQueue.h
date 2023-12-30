@@ -42,7 +42,7 @@ public:
 	};
 private:
 	//Members
-	List<Work> works;
+	List<Work*> works;
 
 	//Methods
 	WorkQueue();

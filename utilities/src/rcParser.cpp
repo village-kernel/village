@@ -124,7 +124,7 @@ void RcParser::Decode(const char* rcString)
 
 
 ///Get run commands
-List<char>& RcParser::GetRunCmds()
+List<char*>& RcParser::GetRunCmds()
 {
 	return runcmds;
 }

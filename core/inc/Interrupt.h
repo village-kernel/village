@@ -35,7 +35,7 @@ private:
 
 	//Members
 	uint8_t       warnings[ArchInterrupt::isr_num] = { 0 };
-	List<Isr>     isrTabs[ArchInterrupt::isr_num];
+	List<Isr*>    isrTabs[ArchInterrupt::isr_num];
 	ArchInterrupt archInterrupt;
 
 	//Methods

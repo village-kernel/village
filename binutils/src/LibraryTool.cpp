@@ -30,7 +30,7 @@ bool LibraryTool::Install(const char* filename)
 	bool isInstalled = false;
 
 	//Get the libraries pointer
-	List<ElfLoader>* libraries = loader.GetLibraries();
+	List<ElfLoader*>* libraries = loader.GetLibraries();
 
 	//Check the library if it has been installed
 	for (ElfLoader* library = libraries->Begin(); !libraries->IsEnd(); library = libraries->Next())
@@ -75,7 +75,7 @@ bool LibraryTool::Install(const char* filename)
 bool LibraryTool::Uninstall(const char* filename)
 {
 	//Get the libraries pointer
-	List<ElfLoader>* libraries = loader.GetLibraries();
+	List<ElfLoader*>* libraries = loader.GetLibraries();
 
 	//Search library and remove it
 	for (ElfLoader* library = libraries->Begin(); !libraries->IsEnd(); library = libraries->Next())
@@ -101,7 +101,7 @@ bool LibraryTool::Uninstall(const char* filename)
 uint32_t LibraryTool::SearchSymbol(const char* symbol)
 {
 	//Get the libraries pointer
-	List<ElfLoader>* libraries = loader.GetLibraries();
+	List<ElfLoader*>* libraries = loader.GetLibraries();
 
 	//Search symbol
 	for (ElfLoader* lib = libraries->Begin(); !libraries->IsEnd(); lib = libraries->Next())

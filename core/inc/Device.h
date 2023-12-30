@@ -16,8 +16,8 @@ class Device
 {
 private:
 	//Members
-	States       status;
-	List<Driver> drivers;
+	States        status;
+	List<Driver*> drivers;
 
 	//Methods
 	Device();

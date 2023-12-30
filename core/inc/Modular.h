@@ -16,8 +16,8 @@ class Modular : public Class
 {
 private:
 	//Members
-	States       status;
-	List<Module> modules;
+	States        status;
+	List<Module*> modules;
 
 	//Methods
 	Modular();

@@ -105,7 +105,7 @@ EXPORT_SYMBOL(_ZN9Interrupt9AppendISREiM5ClassFvPvEPS0_S1_);
 /// @return Result::_OK / Result::_ERR
 int Interrupt::RemoveISR(int irq, Function func, void* user, void* args)
 {
-	List<Isr> isrs = isrTabs[irq];
+	List<Isr*> isrs = isrTabs[irq];
 
 	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
 	{
@@ -143,7 +143,7 @@ EXPORT_SYMBOL(_ZN9Interrupt9RemoveISREiM5ClassFvPvEPS0_S1_);
 /// @return Result::_OK / Result::_ERR
 void Interrupt::ClearISR(int irq)
 {
-	List<Isr> isrs = isrTabs[irq];
+	List<Isr*> isrs = isrTabs[irq];
 
 	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
 	{
@@ -159,7 +159,7 @@ EXPORT_SYMBOL(_ZN9Interrupt8ClearISREi);
 /// @param irq irq number
 void Interrupt::Handler(int irq)
 {
-	List<Isr> isrs = interrupt.isrTabs[irq];
+	List<Isr*> isrs = interrupt.isrTabs[irq];
 	
 	if (isrs.IsEmpty())
 	{

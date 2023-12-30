@@ -27,11 +27,11 @@ private:
 	};
 
 	//Members
-	List<ElfLoader> libraries;
-	List<ElfLoader> modules;
-	LibraryTool     libraryTool;
-	ModuleTool      moduleTool;
-	Executor        executor;
+	List<ElfLoader*> libraries;
+	List<ElfLoader*> modules;
+	LibraryTool      libraryTool;
+	ModuleTool       moduleTool;
+	Executor         executor;
 
 	//Methods
 	Loader();
@@ -42,8 +42,8 @@ public:
 	void Initialize();
 	void Execute();
 
-	List<ElfLoader>* GetLibraries();
-	List<ElfLoader>* GetModules();
+	List<ElfLoader*>* GetLibraries();
+	List<ElfLoader*>* GetModules();
 
 	//Singleton Instance
 	static Loader& Instance();

@@ -49,7 +49,7 @@ private:
 	static const uint32_t psp_frame_size = sizeof(TaskContext) >> 2;
 	
 	//Members
-	List<Task> tasks;
+	List<Task*> tasks;
 
 	//Methods
 	Thread();
