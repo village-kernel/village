@@ -29,6 +29,13 @@ bool LibraryTool::Install(const char* filename)
 {
 	bool isInstalled = false;
 
+	//Check filename is valid
+	if (NULL == filename)
+	{
+		debug.Error("%s library not a valid name", filename);
+		return false;
+	}
+
 	//Get the libraries pointer
 	List<ElfLoader*>* libraries = loader.GetLibraries();
 
