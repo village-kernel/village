@@ -64,11 +64,11 @@ void Loader::Loading(int type, const char* filename)
 	{
 		if (_Load_Lib == type)
 		{
-			libraryTool.Install(runcmds.Item());
+			if (!libraryTool.Install(runcmds.Item())) break;
 		}
 		else if (_Load_Mod == type)
 		{
-			moduleTool.Install(runcmds.Item());
+			if (!moduleTool.Install(runcmds.Item())) break;
 		}
 	}
 
