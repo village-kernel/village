@@ -11,54 +11,55 @@
 #include "FatObject.h"
 #include "FatDiskio.h"
 
-
 /// @brief FatEntry
 class FatEntry
 {
 private:
-	//Static constants
-	static const uint8_t entry_size = 32;
-	static const uint8_t long_name_size = 13;
-	static const uint8_t dir_seq_flag = 0x40;
-
 	//Members
 	FatDiskio&       disk;
 	FatDiskio::Info& info;
 
-	//Data Members
-	FatObject*       self;
-	FatObject*       temp;
+	//Dirent Members
+	uint32_t          index;
+	uint32_t          clust;
+	uint32_t          sector;
+	FatUnionEntry*    unients;
+	FatObject*        self;
 
-	//Disk Methods
+	//Fatent Members
+	uint32_t          objIdx;
+	List<FatObject*>  objects;
+
+	//Members
+	void Prepare();
 	void CalcFirstSector();
 	void CalcNextSector();
 	void ReadUnionEntries();
 	void WriteUnionEntries();
-	
-	//Iterator Methods
 	bool ReadBegin();
 	bool ReadNext();
 	bool WriteNext();
-	bool IsEnded();
-	FatObject::UnionEntry& Item();
-
-	int Find(uint32_t size);
-	uint32_t Pop(FatObject::UnionEntry* pop, uint32_t size);
-	uint32_t Push(FatObject::UnionEntry* push, uint32_t size);
-
-	//Methods
-	int CheckDirName(FatObject* obj);
+	bool IsReadEnd();
+	bool Find(uint32_t size);
+	uint32_t Pop(FatUnionEntry* pop, uint32_t size);
+	uint32_t Push(FatUnionEntry* push, uint32_t size);
+	bool CheckDirName(FatObject* object);
 public:
 	//Methods
-	FatEntry(FatDiskio& disk, FatObject* object);
+	FatEntry(FatDiskio& disk, FatObject* object = NULL);
 	~FatEntry();
 
-	FatObject* Create(const char* name, int attr);
-	FatObject* Read();
-	uint32_t Size();
+	void Begin();
+	void Next();
+	bool IsEnd();
+	FatObject* Item();
+	uint32_t GetSize();
 
-	bool Update();
-	bool Remove();
+	FatObject* Create(const char* name, int attr);
+	uint32_t Write(FatObject* objs, uint32_t size);
+	uint32_t Read(FatObject* objs, uint32_t size);
+	void Remove();
+	void Update();
 };
 
 #endif //!__FAT_ENTRY_H__

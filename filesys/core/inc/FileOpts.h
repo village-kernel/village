@@ -41,7 +41,6 @@ public:
 
 	//Opt methods
 	virtual int Remove(const char* name)                             = 0;
-	virtual int RemoveDir(const char* name)                          = 0;
 };
 
 #endif //!__FILE_OPERATION_INTERFACE_H__

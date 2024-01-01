@@ -9,129 +9,148 @@
 
 #include "stdint.h"
 #include "string.h"
+#include "FileDefs.h"
+
+
+/// @brief FatDirAttr
+enum FatDirAttr
+{
+	_FAT_ATTR_FILE           = 0x00,
+	_FAT_ATTR_READ_ONLY      = 0x01,
+	_FAT_ATTR_HIDDEN         = 0x02,
+	_FAT_ATTR_SYSTEM         = 0x04,
+	_FAT_ATTR_VOLUME_ID      = 0x08,
+	_FAT_ATTR_DIRECTORY      = 0x10,
+	_FAT_ATTR_ARCHIVE        = 0x20,
+	_FAT_ATTR_LONG_NAME      = _FAT_ATTR_READ_ONLY | _FAT_ATTR_HIDDEN | _FAT_ATTR_SYSTEM | _FAT_ATTR_VOLUME_ID,
+	_FAT_ATTR_LONG_NAME_MASK = _FAT_ATTR_READ_ONLY | _FAT_ATTR_HIDDEN | _FAT_ATTR_SYSTEM | _FAT_ATTR_VOLUME_ID | _FAT_ATTR_DIRECTORY | _FAT_ATTR_ARCHIVE,
+};
+
+
+/// @brief FatNSFlag
+enum FatNSFlag
+{
+	_FAT_NS_NONE         = 0x00,
+	_FAT_NS_LOSS         = 0x01,   /* Out of 8.3 format */
+	_FAT_NS_LFN          = 0x02,   /* Force to create LFN entry */
+	_FAT_NS_LAST         = 0x04,   /* Last segment */
+	_FAT_NS_BODY         = 0x08,   /* Lower case flag (body) */
+	_FAT_NS_EXT          = 0x10,   /* Lower case flag (ext) */
+	_FAT_NS_DOT          = 0x20,   /* Dot entry */
+	_FAT_NS_NOLFN        = 0x40,   /* Do not find LFN */
+	_FAT_NS_NONAME       = 0x80,   /* Not followed */
+};
+
+
+/// @brief FatLongEntry
+struct FatLongEntry
+{
+	//Members
+	uint8_t  ord;
+	uint16_t name1[5];
+	uint8_t  attr;
+	uint8_t  type;
+	uint8_t  chksum;
+	uint16_t name2[6];
+	uint16_t fstClustLO;
+	uint16_t name3[2];
+
+	//Methods
+	FatLongEntry();
+	void Fill();
+} __attribute__((packed));
+
+
+/// @brief FatShortEntry
+struct FatShortEntry
+{
+	//Members
+	char     name[11];
+	uint8_t  attr;
+	uint8_t  NTRes;
+	uint8_t  crtTimeTenth;
+	uint16_t crtTime;
+	uint16_t crtDate;
+	uint16_t lstAccDate;
+	uint16_t fstClustHI;
+	uint16_t wrtTime;
+	uint16_t wrtDate;
+	uint16_t fstClustLO;
+	uint32_t fileSize;
+
+	//Methods
+	FatShortEntry();
+} __attribute__((packed));
+
+
+/// @brief FatUnionEntry
+union FatUnionEntry
+{
+	//static constants
+	static const uint8_t dir_seq_flag = 0x40;
+	static const uint8_t dir_free_flag = 0xe5;
+	static const uint8_t dir_valid_flag = 0x20;
+
+	//Members
+	FatLongEntry  lfe;
+	FatShortEntry sfe;
+	
+	//Methods
+	FatUnionEntry();
+	bool IsValid();
+	uint8_t GetStoreSize();
+	void SetStoreSize(uint8_t size);
+} __attribute__((packed));
 
 
 /// @brief FatObject
 class FatObject
 {
-public:
-	//Enumerates
-	enum DirAttr
-	{
-		_ATTR_FILE       = 0x00,
-		_ATTR_READ_ONLY  = 0x01,
-		_ATTR_HIDDEN     = 0x02,
-		_ATTR_SYSTEM     = 0x04,
-		_ATTR_VOLUME_ID  = 0x08,
-		_ATTR_DIRECTORY  = 0x10,
-		_ATTR_ARCHIVE    = 0x20,
-		_ATTR_LONG_NAME  = _ATTR_READ_ONLY | _ATTR_HIDDEN | _ATTR_SYSTEM | _ATTR_VOLUME_ID,
-		_ATTR_LONG_NAME_MASK = _ATTR_READ_ONLY | _ATTR_HIDDEN | _ATTR_SYSTEM | _ATTR_VOLUME_ID | _ATTR_DIRECTORY | _ATTR_ARCHIVE,
-	};
-
-	enum NSFlag
-	{
-		_NS_NONE     = 0x00,
-		_NS_LOSS     = 0x01,   /* Out of 8.3 format */
-		_NS_LFN      = 0x02,   /* Force to create LFN entry */
-		_NS_LAST     = 0x04,   /* Last segment */
-		_NS_BODY     = 0x08,   /* Lower case flag (body) */
-		_NS_EXT      = 0x10,   /* Lower case flag (ext) */
-		_NS_DOT      = 0x20,   /* Dot entry */
-		_NS_NOLFN    = 0x40,   /* Do not find LFN */
-		_NS_NONAME   = 0x80,   /* Not followed */
-	};
-
-	//Structures
-	struct LongEntry
-	{
-		//Members
-		uint8_t  ord;
-		uint16_t name1[5];
-		uint8_t  attr;
-		uint8_t  type;
-		uint8_t  chksum;
-		uint16_t name2[6];
-		uint16_t fstClustLO;
-		uint16_t name3[2];
-
-		//Methods
-		void Fill();
-	} __attribute__((packed));
-
-	struct ShortEntry
-	{
-		//Members
-		char     name[11];
-		uint8_t  attr;
-		uint8_t  NTRes;
-		uint8_t  crtTimeTenth;
-		uint16_t crtTime;
-		uint16_t crtDate;
-		uint16_t lstAccDate;
-		uint16_t fstClustHI;
-		uint16_t wrtTime;
-		uint16_t wrtDate;
-		uint16_t fstClustLO;
-		uint32_t fileSize;
-
-		//Methods
-		ShortEntry();
-	} __attribute__((packed));
-
-	union UnionEntry
-	{
-		//Members
-		LongEntry  lfe;
-		ShortEntry sfe;
-		
-		//Methods
-		UnionEntry();
-		bool IsDirectory();
-		bool IsVolume();
-		bool IsFile();
-		bool IsHidden();
-		bool IsLongName();
-		bool IsValid();
-		uint8_t OrdSize();
-		uint8_t AllocSize();
-	} __attribute__((packed));
 private:
 	//Static constants
 	static const uint8_t long_name_size  = 13;
 	static const uint8_t short_name_size = 11;
-	static const uint8_t volume_label_size = 11;
 	static const uint8_t dir_seq_flag = 0x40;
 	static const uint8_t dir_free_flag = 0xe5;
 
-	//Methods
-	uint8_t ChkSum(const char* name);
-public:
-	//Record members
+	//Members
+	uint32_t index;
 	uint32_t clust;
 	uint32_t sector;
-	uint32_t index;
-	uint32_t size;
 
-	//Data members
-	LongEntry*  lfe;
-	ShortEntry* sfe;
-	UnionEntry* ufe;
+	//Members
+	FatLongEntry*   lfe;
+	FatShortEntry*  sfe;
+	FatUnionEntry*  ufe;
+
+	//Methods
+	uint8_t ChkSum(const char* name);
 public:
 	//Methods
 	FatObject(char* raw = new char[32]());
 	~FatObject();
 
 	void Setup(char* raw);
+	void SetupByName(const char* name);
 	void SetEntryFree();
+	char* GetObjectName();
+	FileType GetObjectType();
+	FileAttr GetObjectAttr();
+	void SetUnionEntry(FatUnionEntry* ufe);
+	FatUnionEntry* GetUnionEntry();
+	void SetStoreSize(uint8_t size);
+	uint8_t GetStoreSize();
+	void SetEntryLocInfo(uint32_t index, uint32_t clust, uint32_t sector);
+	void GetEntryLocInfo(uint32_t& index, uint32_t& clust, uint32_t& sector);
 
+	bool IsLongName();
 	void GenNumName(int num);
+	void SetRawName(const char* label);
+	char* GetRawName();
 	void SetShortName(const char* name);
 	char* GetShortName();
 	void SetLongName(const char* name);
 	char* GetLongName();
-	void SetVolumeLabel(const char* label);
-	char* GetVolumeLabel();
 	void SetAttribute(uint8_t attr);
 	uint8_t GetAttribute();
 	void SetNTRes(uint8_t NTRes);

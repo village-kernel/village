@@ -11,7 +11,6 @@
 #include "FileOpts.h"
 #include "FatDiskio.h"
 #include "FatObject.h"
-#include "FatEntry.h"
 
 
 /// @brief FatVolume
@@ -20,19 +19,16 @@ class FatVolume : public FileOpts
 private:
 	//Members
 	FatDiskio        disk;
-	List<FatObject>  objs;
+	List<FatObject*> objs;
 
 	//Directory Methods
 	char* NotDir(const char* path);
 	FatObject* SearchPath(const char* path, int reserve = 0);
 	FatObject* SearchDir(FatObject* obj, const char* name);
 	FatObject* CreateDir(const char* path, int attr);
-	FileType GetObjectType(FatObject* obj);
-	FileAttr GetObjectAttr(FatObject* obj);
-	char* GetObjectName(FatObject* obj);
 public:
 	//FileOpts Methods
-	int SetVolumeLabel(const char* name);
+	int SetVolumeLabel(const char* label);
 	char* GetVolumeLabel();
 	
 	int Open(const char* name, int mode);
@@ -47,7 +43,6 @@ public:
 	void CloseDir(int fd);
 
 	int Remove(const char* name);
-	int RemoveDir(const char* name);
 public:
 	//Methods
 	FatVolume();

@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatVolume.h"
+#include "FatEntry.h"
 #include "Regex.h"
 #include "Debug.h"
 
@@ -48,17 +49,17 @@ char* FatVolume::NotDir(const char* path)
 /// @return 
 FatObject* FatVolume::SearchPath(const char* path, int reserve)
 {
+	FatObject* obj = NULL;
+
 	Regex regex;
 	regex.Split(path, '/');
 	char** names = regex.ToArray();
 	int8_t size  = regex.Size() - reserve;
 	
-	FatObject* obj = NULL;
-
 	if (size <= 1)
 	{
 		obj = new FatObject();
-		obj->SetAttribute(FatObject::_ATTR_DIRECTORY);
+		obj->SetAttribute(_FAT_ATTR_DIRECTORY);
 		obj->SetShortName("/");
 		return obj;
 	}
@@ -79,19 +80,14 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 /// @return 
 FatObject* FatVolume::SearchDir(FatObject* obj, const char* name)
 {
-	FatEntry*  entry = new FatEntry(disk, obj);
-	FatObject* found = NULL;
+	FatEntry entry(disk, obj);
 
-	while (NULL != (found = entry->Read()))
+	for (entry.Begin(); !entry.IsEnd(); entry.Next())
 	{
-		if (0 != strcmp(GetObjectName(found), name))
-			delete found;
-		else
-			break;
+		if (0 == strcmp(entry.Item()->GetObjectName(), name)) break;
 	}
 
-	delete entry;
-	return found;
+	return entry.Item();
 }
 
 
@@ -105,7 +101,7 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 	
 	if (NULL == obj) return NULL;
 	
-	if (obj->ufe->IsDirectory())
+	if (FileType::_Diretory == obj->GetObjectType())
 	{
 		obj = FatEntry(disk, obj).Create(NotDir(path), attr);
 	}
@@ -115,15 +111,15 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 
 
 /// @brief Set volume label
-/// @param name 
+/// @param label 
 /// @return 
-int FatVolume::SetVolumeLabel(const char* name)
+int FatVolume::SetVolumeLabel(const char* label)
 {
-	FatObject* obj = FatEntry(disk, NULL).Read();
+	FatObject* obj = FatEntry(disk).Item();
 
-	if (obj->ufe->IsVolume())
+	if (FileType::_Volume == obj->GetObjectType())
 	{
-		obj->SetVolumeLabel(name);
+		obj->SetRawName(label);
 
 		FatEntry(disk, obj).Update();
 	}
@@ -136,13 +132,13 @@ int FatVolume::SetVolumeLabel(const char* name)
 /// @return 
 char* FatVolume::GetVolumeLabel()
 {
-	FatObject* obj = FatEntry(disk, NULL).Read();
+	FatObject* obj = FatEntry(disk).Item();
 
 	char* label = (char*)"NONAME";
 
-	if (obj->ufe->IsVolume())
+	if (FileType::_Volume == obj->GetObjectType())
 	{
-		label = obj->GetVolumeLabel();
+		label = obj->GetRawName();
 	}
 	
 	return label;
@@ -159,7 +155,7 @@ int FatVolume::Open(const char* name, int mode)
 
 	if ((NULL == obj) && ((mode & _CreateNew) == _CreateNew))
 	{
-		obj = CreateDir(name, FatObject::_ATTR_FILE);
+		obj = CreateDir(name, _FAT_ATTR_FILE);
 	}
 
 	if (NULL == obj) return -1;
@@ -269,46 +265,12 @@ int FatVolume::OpenDir(const char* path, int mode)
 	
 	if ((NULL == obj) && ((mode & _CreateNew) == _CreateNew))
 	{
-		obj = CreateDir(path, FatObject::_ATTR_DIRECTORY);
+		obj = CreateDir(path, _FAT_ATTR_DIRECTORY);
 	}
 
 	if (NULL == obj) return -1;
 
 	return objs.Add(obj);
-}
-
-
-/// @brief Get object type
-/// @param dirent 
-/// @return type
-FileType FatVolume::GetObjectType(FatObject* obj)
-{
-	if (obj->ufe->IsFile())
-		return FileType::_File;
-	else if (obj->ufe->IsDirectory())
-		return FileType::_Diretory;
-	else if (obj->ufe->IsVolume())
-		return FileType::_Volume;
-	else
-		return FileType::_Unknown;
-}
-
-
-/// @brief Get object attr
-/// @param dirent 
-/// @return attr
-FileAttr FatVolume::GetObjectAttr(FatObject* obj)
-{
-	return obj->ufe->IsHidden() ? FileAttr::_Hidden : FileAttr::_Visible;
-}
-
-
-/// @brief Get object name
-/// @param obj 
-/// @return 
-char* FatVolume::GetObjectName(FatObject* obj)
-{
-	return obj->ufe->IsLongName() ? obj->GetLongName() : obj->GetShortName();
 }
 
 
@@ -324,27 +286,25 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 	
 	if (NULL == obj) return 0;
 
-	FatEntry* entry = new FatEntry(disk, obj);
+	int index = 0;
 
-	for (int i = 0; i < size; i++)
+	FatEntry entry(disk, obj);
+
+	for (entry.Begin(); !entry.IsEnd(); entry.Next())
 	{
-		FatObject* sub = entry->Read();
+		FatObject* sub = entry.Item();
 
-		if (NULL != sub)
+		if (index < size && NULL != sub)
 		{
-			dirs[i].name = GetObjectName(sub);
-			dirs[i].type = GetObjectType(sub);
-			dirs[i].attr = GetObjectAttr(sub);
+			dirs[index].name = sub->GetObjectName();
+			dirs[index].type = sub->GetObjectType();
+			dirs[index].attr = sub->GetObjectAttr();
+			index++;
 		}
-		else 
-		{
-			size = i;
-			break;
-		}
+		else break;
 	}
 
-	delete entry;
-	return size;
+	return index;
 }
 
 
@@ -357,7 +317,7 @@ int FatVolume::SizeDir(int fd)
 
 	if (NULL == obj) return 0;
 
-	return FatEntry(disk, obj).Size();
+	return FatEntry(disk, obj).GetSize();
 }
 
 
@@ -382,26 +342,12 @@ int FatVolume::Remove(const char* name)
 
 	if (NULL == obj) return _ERR;
 
-	if (false == obj->ufe->IsFile()) return _ERR;
-
-	FatEntry(disk, obj).Remove();
-
-	return _OK;
-}
-
-
-/// @brief RemoveDir
-/// @param name 
-/// @return 
-int FatVolume::RemoveDir(const char* name)
-{
-	FatObject* obj = SearchPath(name);
-
-	if (NULL == obj) return _ERR;
-
-	if (false == obj->ufe->IsDirectory()) return _ERR;
-
-	FatEntry(disk, obj).Remove();
-
-	return _OK;
+	if (FileType::_File     == obj->GetObjectType() ||
+		FileType::_Diretory == obj->GetObjectType())
+	{
+		FatEntry(disk, obj).Remove();
+		return _OK;
+	}
+	
+	return _ERR;
 }
