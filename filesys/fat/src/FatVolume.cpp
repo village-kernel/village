@@ -59,6 +59,7 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 	if (size <= 1)
 	{
 		obj = new FatObject();
+		obj->Setup(new FatUnionEntry());
 		obj->SetAttribute(_FAT_ATTR_DIRECTORY);
 		obj->SetShortName("/");
 		return obj;

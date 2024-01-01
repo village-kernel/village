@@ -75,15 +75,15 @@ void FatUnionEntry::SetStoreSize(uint8_t size)
 
 
 /// @brief FatObject Constructor
-FatObject::FatObject(char* raw)
+FatObject::FatObject(FatUnionEntry* ufe)
 	:index(0),
 	clust(0),
 	sector(0),
 	lfe(NULL),
 	sfe(NULL),
-	ufe(NULL)
+	ufe(ufe)
 {
-	if (NULL != raw) Setup(raw);
+	if (NULL != ufe) Setup(ufe);
 }
 
 
@@ -95,18 +95,18 @@ FatObject::~FatObject()
 
 
 /// @brief FatObject setup
-/// @param raw 
-void FatObject::Setup(char* raw)
+/// @param ufe 
+void FatObject::Setup(FatUnionEntry* ufe)
 {
-	this->lfe = (FatLongEntry*)raw;
-	this->sfe = (FatShortEntry*)raw;
-	this->ufe = (FatUnionEntry*)raw;
+	this->lfe = (FatLongEntry*)ufe;
+	this->sfe = (FatShortEntry*)ufe;
+	this->ufe = (FatUnionEntry*)ufe;
 
 	if (ufe->IsValid() && IsLongName())
 	{
-		uint8_t n = raw[0] - dir_seq_flag;
-		this->lfe = (FatLongEntry*)raw;
-		this->sfe = (FatShortEntry*)raw + n;
+		uint8_t n = lfe->ord - dir_seq_flag;
+		lfe = (FatLongEntry*)ufe;
+		sfe = (FatShortEntry*)ufe + n;
 	}
 }
 
@@ -129,7 +129,7 @@ void FatObject::SetupByName(const char* name)
 	FatUnionEntry* ufe = new FatUnionEntry[size]();
 
 	//Setup short name
-	Setup((char*)ufe);
+	Setup(ufe);
 	SetShortName(name);
 	SetStoreSize(size);
 
@@ -139,6 +139,28 @@ void FatObject::SetupByName(const char* name)
 		sfe->NTRes |= _FAT_NS_LOSS;
 		SetLongName(name);
 	}
+}
+
+
+/// @brief Setup dot entry
+/// @param obj 
+void FatObject::SetupDot(FatObject* obj)
+{
+	Setup(new FatUnionEntry());
+	SetRawName(".");
+	SetFirstCluster(obj->GetFirstCluster());
+	SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
+}
+
+
+/// @brief Setup dot dot entry
+/// @param obj 
+void FatObject::SetupDotDot(FatObject* obj)
+{
+	Setup(new FatUnionEntry());
+	SetRawName("..");
+	SetFirstCluster(obj->GetFirstCluster());
+	SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
 }
 
 
@@ -208,7 +230,7 @@ FileAttr FatObject::GetObjectAttr()
 /// @param ufe 
 void FatObject::SetUnionEntry(FatUnionEntry* ufe)
 {
-	Setup((char*)ufe);
+	Setup(ufe);
 }
 
 

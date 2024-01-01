@@ -27,7 +27,7 @@ FatEntry::FatEntry(FatDiskio& disk, FatObject* object)
 /// @brief Destructor
 FatEntry::~FatEntry()
 {
-	//delete[] unients;
+	delete[] unients;
 	//objects.Release();
 }
 
@@ -45,12 +45,12 @@ void FatEntry::Prepare()
 		{
 			uint8_t size = unients[index].GetStoreSize();
 			FatUnionEntry* ufe = new FatUnionEntry[size]();
-			FatObject* object = new FatObject((char*)ufe);
+			FatObject* object = new FatObject(ufe);
 			object->SetEntryLocInfo(index, clust, sector);
 
 			if (Pop(ufe, size) == size)
 			{
-				object->Setup((char*)ufe);
+				object->Setup(ufe);
 				objects.Add(object);
 			}
 			else delete object;
@@ -315,7 +315,7 @@ bool FatEntry::CheckDirName(FatObject* object)
 /// @return 
 FatObject* FatEntry::Create(const char* name, int attr)
 {
-	FatObject* child = new FatObject(NULL);
+	FatObject* child = new FatObject();
 	
 	//Set short name, attr and clust
 	child->SetupByName(name);
@@ -342,15 +342,11 @@ FatObject* FatEntry::Create(const char* name, int attr)
 		
 		if (Push(child->GetUnionEntry(), size) == size)
 		{
-			if ((attr & _FAT_ATTR_DIRECTORY) == _FAT_ATTR_DIRECTORY)
+			if (FileType::_Diretory == child->GetObjectType())
 			{
 				FatObject objs[2];
-				objs[0].SetRawName(".");
-				objs[1].SetRawName("..");
-				objs[0].SetFirstCluster(child->GetFirstCluster());
-				objs[1].SetFirstCluster(self->GetFirstCluster());
-				objs[0].SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
-				objs[1].SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
+				objs[0].SetupDot(child);
+				objs[1].SetupDotDot(self);
 				FatEntry(disk, child).Write(objs, 2);
 			}
 			return child;

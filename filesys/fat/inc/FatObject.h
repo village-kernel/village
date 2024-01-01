@@ -127,11 +127,14 @@ private:
 	uint8_t ChkSum(const char* name);
 public:
 	//Methods
-	FatObject(char* raw = new char[32]());
+	FatObject(FatUnionEntry* ufe = NULL);
 	~FatObject();
 
-	void Setup(char* raw);
+	void Clone(FatUnionEntry* ufe);
+	void Setup(FatUnionEntry* ufe);
 	void SetupByName(const char* name);
+	void SetupDot(FatObject* obj);
+	void SetupDotDot(FatObject* obj);
 	void SetEntryFree();
 	char* GetObjectName();
 	FileType GetObjectType();
