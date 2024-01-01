@@ -45,34 +45,12 @@ int FileSysOpt::Copy(const char* from, const char* to)
 /// @return 
 int FileSysOpt::Remove(const char* name)
 {
-	return _ERR;
-}
+	opts = filesystem.GetFileOpts(name);
+	
+	if (NULL != opts)
+	{
+		opts->Remove(name);
+	}
 
-
-/// @brief File system move
-/// @param from 
-/// @param to 
-/// @return 
-int FileSysOpt::MoveDir(const char* from, const char* to)
-{
-	return _ERR;
-}
-
-
-/// @brief File system copy
-/// @param from 
-/// @param to 
-/// @return 
-int FileSysOpt::CopyDir(const char* from, const char* to)
-{
-	return _ERR;
-}
-
-
-/// @brief File system remove
-/// @param name 
-/// @return 
-int FileSysOpt::RemoveDir(const char* name)
-{
 	return _ERR;
 }

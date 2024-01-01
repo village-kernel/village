@@ -14,6 +14,9 @@
 /// @brief FileSysOpt
 class FileSysOpt
 {
+private:
+	//Members
+	FileOpts* opts;
 public:
 	//Methods
 	FileSysOpt();
@@ -21,9 +24,6 @@ public:
 	int Move(const char* from, const char* to);
 	int Copy(const char* from, const char* to);
 	int Remove(const char* name);
-	int MoveDir(const char* from, const char* to);
-	int CopyDir(const char* from, const char* to);
-	int RemoveDir(const char* name);
 };
 
 #endif //!__FILE_SYS_OPT_H__
