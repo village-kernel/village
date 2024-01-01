@@ -148,7 +148,11 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 		}
 	}
 
-	return 0;
+	//Out of memory
+	if (isMemReady) debug.Error("out of memory.");
+
+	//Halt on here
+	while(1) {}
 }
 EXPORT_SYMBOL(_ZN6Memory9HeapAllocEm);
 
@@ -212,8 +216,11 @@ uint32_t Memory::StackAlloc(uint32_t size)
 		}
 	}
 
-	delete newNode;
-	return 0;
+	//Out of memory
+	if (isMemReady) debug.Error("out of memory.");
+
+	//Halt on here
+	while(1) {}
 }
 EXPORT_SYMBOL(_ZN6Memory10StackAllocEm);
 
