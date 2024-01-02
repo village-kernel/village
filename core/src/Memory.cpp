@@ -259,7 +259,7 @@ void Memory::Free(uint32_t memory, uint32_t size)
 				debug.Output
 				(
 					Debug::_Lv0,
-					"free memory: addr: 0x%08lx, size: %ld",
+					"free memory: addr = 0x%08lx, size = %ld",
 					currNode->map.addr,
 					currNode->map.size
 				);
