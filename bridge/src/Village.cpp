@@ -4,6 +4,7 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "Debug.h"
 #include "Kernel.h"
 #include "Village.h"
 
@@ -72,4 +73,12 @@ Driver* Village::GetDriver(uint32_t id)
 Driver* Village::GetDriverByName(const char* name)
 {
 	return device.GetDriverByName(name);
+}
+
+
+/// @brief Set debug level
+/// @param level 
+void Village::SetDebugLevel(int level)
+{
+	debug.SetDebugLevel(level);
 }

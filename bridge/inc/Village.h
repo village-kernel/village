@@ -26,6 +26,8 @@ public:
 	Driver* GetDriver(uint32_t id);
 	Driver* GetDriverByName(const char* name);
 
+	void SetDebugLevel(int level);
+
 	//Singleton Instance
 	static Village& Instance();
 };
