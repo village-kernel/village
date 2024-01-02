@@ -17,6 +17,7 @@ Regex::Regex()
 /// @brief Deconstructor
 Regex::~Regex()
 {
+	Clear();
 }
 
 
@@ -102,7 +103,7 @@ void Regex::Clear()
 {
 	for (String* node = strings; NULL != node; node = node->next)
 	{
-		delete node->str;
+		delete[] node->str;
 		delete node;
 	}
 
