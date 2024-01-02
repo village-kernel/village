@@ -13,7 +13,7 @@
 class CmdMem : public Cmd
 {
 public:
-	/// @brief Cmd about execute
+	/// @brief Cmd memeory execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
