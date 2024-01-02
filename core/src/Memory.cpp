@@ -41,6 +41,7 @@ EXPORT_SYMBOL(_ZN6Memory8InstanceEv);
 
 /// @brief Definitions memory
 Memory& memory = Memory::Instance();
+EXPORT_SYMBOL(memory);
 
 
 /// @brief Memory initialize sram parameters

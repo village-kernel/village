@@ -66,7 +66,10 @@ public:
 	uint32_t Sbrk(int32_t incr);
 	void Free(uint32_t memory, uint32_t size = 0);
 
-	//Get the used szie of sram
+	//Get the max size of sram
+	uint32_t GetSize()  { return sram_ended; }
+
+	//Get the used size of sram
 	uint32_t GetUsed() { return sram_used; }
 
 	//Singleton Instance
