@@ -12,6 +12,10 @@ config CMD_ABOUT
 	bool "Add about cmd to console support list"
 	default n
 
+config CMD_DEBUG
+	bool "Add debug system cmd to console support list"
+	default n
+
 config CMD_FILESYS
 	bool "Add file system cmd to console support list"
 	default n

@@ -24,6 +24,7 @@ src-$(CONFIG_CONSOLE)                        += vk.application/console/cmds
 # objects
 ######################################
 objs-console-$(CONFIG_CMD_ABOUT)             += CmdAbout.o
+objs-console-$(CONFIG_CMD_DEBUG)             += CmdDebug.o
 objs-console-$(CONFIG_CMD_FILESYS)           += CmdFileSys.o
 objs-console-$(CONFIG_CMD_HELP)              += CmdHelp.o
 objs-console-$(CONFIG_CMD_MEM)               += CmdMem.o
