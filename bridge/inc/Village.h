@@ -17,7 +17,12 @@ public:
 	//Methods
 	Village();
 	~Village();
+
 	void Sleep(uint32_t ticks);
+
+	uint32_t GetMemSize();
+	uint32_t GetMemUsed();
+
 	Driver* GetDriver(uint32_t id);
 	Driver* GetDriverByName(const char* name);
 

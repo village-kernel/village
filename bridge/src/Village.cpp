@@ -41,6 +41,22 @@ void Village::Sleep(uint32_t ticks)
 }
 
 
+/// @brief Get memory size
+/// @return size
+uint32_t Village::GetMemSize()
+{
+	return memory.GetSize();
+}
+
+
+/// @brief Get memory used
+/// @return used
+uint32_t Village::GetMemUsed()
+{
+	return memory.GetUsed();
+}
+
+
 /// @brief Get driver
 /// @param id 
 /// @return driver
