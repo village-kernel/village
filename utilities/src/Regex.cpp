@@ -101,10 +101,14 @@ char** Regex::ToArray()
 /// @brief release memory
 void Regex::Clear()
 {
-	for (String* node = strings; NULL != node; node = node->next)
+	String* node = strings;
+
+	while (NULL != node)
 	{
+		String* next = node->next;
 		delete[] node->str;
-		delete node;
+		delete[] node;
+		node = next;
 	}
 
 	if (NULL != array) delete[] array;
