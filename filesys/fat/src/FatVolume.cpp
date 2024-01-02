@@ -88,7 +88,7 @@ FatObject* FatVolume::SearchDir(FatObject* obj, const char* name)
 		if (0 == strcmp(entry.Item()->GetObjectName(), name)) break;
 	}
 
-	return entry.Item();
+	return new FatObject(entry.Item());
 }
 
 

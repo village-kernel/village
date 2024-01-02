@@ -75,6 +75,18 @@ void FatUnionEntry::SetStoreSize(uint8_t size)
 
 
 /// @brief FatObject Constructor
+FatObject::FatObject()
+	:index(0),
+	clust(0),
+	sector(0),
+	lfe(NULL),
+	sfe(NULL),
+	ufe(NULL)
+{
+}
+
+
+/// @brief FatObject Constructor
 FatObject::FatObject(FatUnionEntry* ufe)
 	:index(0),
 	clust(0),
@@ -87,10 +99,44 @@ FatObject::FatObject(FatUnionEntry* ufe)
 }
 
 
+/// @brief FatObject Constructor
+/// @param obj 
+FatObject::FatObject(FatObject* obj)
+	:index(0),
+	clust(0),
+	sector(0),
+	lfe(NULL),
+	sfe(NULL),
+	ufe(NULL)
+{
+	if (NULL != obj) Clone(obj);
+}
+
+
 /// @brief Destructor
 FatObject::~FatObject()
 {
 	delete[] this->ufe;
+}
+
+
+/// @brief FatObject clone
+/// @param obj 
+void FatObject::Clone(FatObject* obj)
+{
+	uint8_t        size = obj->GetStoreSize();
+	FatUnionEntry* raw  = obj->GetUnionEntry();
+
+	ufe = new FatUnionEntry[size];
+
+	for (uint8_t i = 0; i < size; i++)
+	{
+		ufe[i] = raw[i];
+	}
+
+	Setup(ufe);
+
+	obj->GetEntryLocInfo(index, clust, sector);
 }
 
 
