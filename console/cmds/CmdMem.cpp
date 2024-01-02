@@ -21,7 +21,7 @@ public:
 		uint32_t size = village.GetMemSize();
 		uint32_t used = village.GetMemUsed();
 		uint32_t per  = (uint32_t)((float)used / (float)size * 100);
-		console.Output("memory size: %d KB, memory used: %d KB, memory per: %d %", size, used, per);
+		console.Output("memory size: %d Byte, memory used: %d Byte, memory per: %d %", size, used, per);
 	}
 };
 
