@@ -20,6 +20,10 @@ config CMD_HELP
 	bool "Add help cmd to console support list"
 	default n
 
+config CMD_MEM
+	bool "Add mem cmd to console support list"
+	default n
+
 config CMD_MOD
 	select MODINSTALLER
 	bool "Add insmod and rmmod cmd to console support list"
