@@ -46,6 +46,20 @@ struct FileDir
 	char* name;
 	FileType type;
 	FileAttr attr;
+
+	FileDir()
+		:path(NULL),
+		name(NULL),
+		type(_Unknown),
+		attr(_Visible)
+	{
+	}
+
+	~FileDir()
+	{
+		delete[] path;
+		delete[] name;
+	}
 };
 
 
