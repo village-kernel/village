@@ -18,8 +18,9 @@ public:
 	Village();
 	~Village();
 
+	void Reboot();
 	void Sleep(uint32_t ticks);
-
+	
 	uint32_t GetMemSize();
 	uint32_t GetMemUsed();
 

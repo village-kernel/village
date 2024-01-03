@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Debug.h"
+#include "System.h"
 #include "Kernel.h"
 #include "Village.h"
 
@@ -32,6 +33,13 @@ Village& Village::Instance()
 
 /// @brief Definitions Village
 Village& village = Village::Instance();
+
+
+/// @brief Reboot
+void Village::Reboot()
+{
+	System::Reboot();
+}
 
 
 /// @brief Sleep
