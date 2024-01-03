@@ -29,6 +29,7 @@ objs-console-$(CONFIG_CMD_FILESYS)           += CmdFileSys.o
 objs-console-$(CONFIG_CMD_HELP)              += CmdHelp.o
 objs-console-$(CONFIG_CMD_MEM)               += CmdMem.o
 objs-console-$(CONFIG_CMD_MOD)               += CmdMod.o
+objs-console-$(CONFIG_CMD_POWER)             += CmdPower.o
 objs-console-$(CONFIG_CMD_RUN)               += CmdRun.o
 objs-console-$(CONFIG_CONSOLE)               += CmdMsgMgr.o
 objs-console-$(CONFIG_CONSOLE)               += Console.o

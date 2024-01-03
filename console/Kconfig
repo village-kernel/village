@@ -33,6 +33,10 @@ config CMD_MOD
 	bool "Add insmod and rmmod cmd to console support list"
 	default n
 
+config CMD_POWER
+	bool "Add power cmd to console support list"
+	default n
+
 config CMD_RUN
 	select EXECUTOR
 	bool "Add run cmd to console support list"
