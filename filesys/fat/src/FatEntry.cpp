@@ -27,7 +27,6 @@ FatEntry::FatEntry(FatDiskio& disk, FatObject* object)
 /// @brief Destructor
 FatEntry::~FatEntry()
 {
-	delete   self;
 	delete[] unients;
 	objects.Release();
 }
