@@ -23,7 +23,12 @@ public:
 	///Reset x86 core
 	static inline void Reboot()
 	{
+		uint64_t null_idtr = 0;
+		__asm volatile ("lidt %0; int3" :: "m" (null_idtr));
 
+		//Loop with interrupt off if it doesn't work
+		__asm volatile ("cli");
+		while (1) { __asm volatile ("hlt"); }
 	}
 
 	///Delays for a specified number of milliseconds.
