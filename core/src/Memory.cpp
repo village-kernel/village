@@ -235,6 +235,8 @@ EXPORT_SYMBOL(_ZN6Memory10StackAllocEm);
 /// @param size free byte size
 void Memory::Free(uint32_t memory, uint32_t size)
 {
+	if (0 == memory) return;
+
 	MapNode* currNode = curr;
 
 	while (NULL != currNode)
