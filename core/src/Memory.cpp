@@ -242,7 +242,7 @@ void Memory::Free(uint32_t memory, uint32_t size)
 		if ((memory >= currNode->map.addr) && 
 			(memory < (currNode->map.addr + currNode->map.size)))
 		{
-			if (0 == size)
+			if (0 == size || size_of_node == (currNode->map.size - size))
 			{
 				//Remove map node from list
 				currNode->prev->next = currNode->next;
