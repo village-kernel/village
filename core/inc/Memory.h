@@ -54,6 +54,7 @@ private:
 	//Members
 	MapNode* head;
 	MapNode* tail;
+	MapNode* curr;
 
 	//Methods
 	Memory();

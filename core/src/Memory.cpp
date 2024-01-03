@@ -17,7 +17,8 @@ Memory::Memory()
 	sram_used(0),
 	sbrk_heap(0),
 	head(NULL),
-	tail(NULL)
+	tail(NULL),
+	curr(NULL)
 {
 	Initialize();
 }
@@ -82,6 +83,8 @@ void Memory::Initialize()
 		tail->map  = Map(sram_ended - size_of_node, size_of_node);
 		tail->prev = head;
 		tail->next = NULL;
+
+		curr       = head;
 	}
 
 	//Set memory ready flag
@@ -95,8 +98,8 @@ void Memory::Initialize()
 uint32_t Memory::HeapAlloc(uint32_t size)
 {
 	MapNode* newNode  = NULL;
-	MapNode* currNode = head;
-	MapNode* nextNode = head->next;
+	MapNode* currNode = curr;
+	MapNode* nextNode = curr->next;
 	uint32_t nextMapSize = 0;
 	uint32_t nextMapAddr = 0;
 	uint32_t nextEndAddr = 0;
@@ -140,6 +143,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 			newNode->next     = nextNode;
 			currNode->next    = newNode;
 			nextNode->prev    = newNode;
+			curr              = newNode;
 			return newNode->map.addr + size_of_node;
 		}
 		else
@@ -231,7 +235,7 @@ EXPORT_SYMBOL(_ZN6Memory10StackAllocEm);
 /// @param size free byte size
 void Memory::Free(uint32_t memory, uint32_t size)
 {
-	MapNode* currNode = head;
+	MapNode* currNode = curr;
 
 	while (NULL != currNode)
 	{
@@ -249,6 +253,9 @@ void Memory::Free(uint32_t memory, uint32_t size)
 				//Reduce space
 				currNode->map.size = currNode->map.size - size;
 			}
+
+			//Update current node pointer
+			curr = (currNode->prev) ? currNode->prev : head;
 
 			//Update the used size of sram
 			sram_used -= currNode->map.size;
@@ -269,7 +276,7 @@ void Memory::Free(uint32_t memory, uint32_t size)
 		}
 		else
 		{
-			currNode = currNode->next;
+			currNode = (memory < currNode->map.addr) ? currNode->prev : currNode->next;
 		}
 	}
 }
