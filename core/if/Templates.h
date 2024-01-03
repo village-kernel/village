@@ -421,10 +421,14 @@ public:
 	/// @brief Release source
 	void Release()
 	{
-		for (Node* node = head; NULL != node; node = node->next)
+		Node* node = head;
+		
+		while (NULL != node)
 		{
+			Node* next = node->next;
 			delete node->obj;
 			delete node;
+			node = next;
 		}
 	}
 };
