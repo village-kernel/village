@@ -85,10 +85,19 @@ FatObject* FatVolume::SearchDir(FatObject* obj, const char* name)
 
 	for (entry.Begin(); !entry.IsEnd(); entry.Next())
 	{
-		if (0 == strcmp(entry.Item()->GetObjectName(), name)) break;
+		char* dirname = entry.Item()->GetObjectName();
+
+		int isSame = strcmp(dirname, name);
+
+		delete dirname; 
+		
+		if (0 == isSame) break;
 	}
 
-	return new FatObject(entry.Item());
+	FatObject* res = new FatObject(entry.Item());
+
+	delete obj;
+	return res;
 }
 
 
