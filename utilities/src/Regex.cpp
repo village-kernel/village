@@ -9,7 +9,8 @@
 
 /// @brief Constructor
 Regex::Regex()
-	:array(NULL)
+	:strings(NULL),
+	array(NULL)
 {
 }
 
@@ -70,6 +71,8 @@ Regex::String* Regex::Split(const char* s, const char split)
 /// @return size
 int Regex::Size()
 {
+	if (NULL == strings) return 0;
+
 	int size = 0;
 
 	for (String* node = strings; NULL != node; node = node->next)
@@ -85,13 +88,15 @@ int Regex::Size()
 /// @return array
 char** Regex::ToArray()
 {
-	int i = 0;
-	
+	if (NULL == strings) return NULL;
+
+	int index = 0;
+
 	array = new char*[Size()]();
 
 	for (String* node = strings; NULL != node; node = node->next)
 	{
-		array[i++] = (char*)node->str;
+		array[index++] = (char*)node->str;
 	}
 
 	return array;
