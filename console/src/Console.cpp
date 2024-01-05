@@ -53,7 +53,7 @@ Console& console = Console::Instance();
 void Console::Initialize()
 {
 	//Set default path
-	strcpy(path, "C:");
+	strcpy(path, "/");
 
 	//Initialize msg mgr
 	msgMgr.Initialize();
@@ -67,14 +67,14 @@ void Console::Initialize()
 	//Output welcome message
 	uint8_t sizeofstr = sizeof(vk_welcome) / sizeof(char*);
 	for (uint8_t i = 0; i < sizeofstr; i++)
-	{	
+	{
 		msgMgr.Write((uint8_t*)vk_welcome[i]);
 		msgMgr.Write((uint8_t*)"\r\n");
 	}
 
 	//Output console symbol
 	msgMgr.Write((uint8_t*)path);
-	msgMgr.Write((uint8_t*)" ");
+	msgMgr.Write((uint8_t*)" # ");
 }
 
 
@@ -100,12 +100,12 @@ void Console::ExecuteCmd(CmdMsg msg)
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
 		if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
-		{		
+		{
 			regex.Split((const char*)msg.args);
 			cmd->Execute(regex.Size(), regex.ToArray());
 			regex.Clear();
 			msgMgr.Write((uint8_t*)path);
-			msgMgr.Write((uint8_t*)" ");
+			msgMgr.Write((uint8_t*)" # ");
 			return;
 		}
 	}
@@ -242,7 +242,7 @@ void Console::SetPath(const char* path)
 	}
 	else
 	{
-		Error("The path length exceeds the limit, th maximum length is %d.", path_size);
+		Error("The path length exceeds the limit, the maximum length is %d.", path_size);
 	}
 }
 
