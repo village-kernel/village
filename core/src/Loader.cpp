@@ -39,8 +39,8 @@ EXPORT_SYMBOL(loader);
 /// @brief Loader initialize
 void Loader::Initialize()
 {
-	Loading(_Load_Lib, "C:/libraries/_load_.rc");
-	Loading(_Load_Mod, "C:/modules/_load_.rc");
+	Loading(_Load_Lib, "/libraries/_load_.rc");
+	Loading(_Load_Mod, "/modules/_load_.rc");
 }
 
 
@@ -48,7 +48,7 @@ void Loader::Initialize()
 void Loader::Execute()
 {
 	//Execute the first application of the village
-	executor.Run("C:/applications/taichi.exec");
+	executor.Run("/applications/taichi.exec");
 }
 
 
