@@ -8,8 +8,8 @@
 ######################################
 # paths
 ######################################
-inc-y += vk.hardware/x86/driver/inc
-src-y += vk.hardware/x86/driver/src
+inc-y += vk.hardware/x86/bios/driver/inc
+src-y += vk.hardware/x86/bios/driver/src
 
 ######################################
 # objects
