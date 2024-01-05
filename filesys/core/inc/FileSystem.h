@@ -18,9 +18,9 @@ class FileSystem : public Module
 {
 private:
 	//Members
-	List<FileSys*>  fileSys;
-	List<FileOpts*> fileOpts;
-	char            assignLetter;
+	List<FileSys*>   fileSys;
+	List<FileOpts*>  fileOpts;
+	List<MountNode*> mounts;
 	
 	//Methods
 	FileSystem();

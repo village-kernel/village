@@ -11,7 +11,6 @@
 
 /// @brief Constructor
 FileSystem::FileSystem()
-	:assignLetter('C')
 {
 }
 
@@ -44,6 +43,9 @@ void FileSystem::Initialize()
 	{
 		fs->Setup();
 	}
+
+	//Mount root node "/"
+	mounts.Add(new MountNode((char*)"/", (char*)"/media/VILLAGE OS", 0755));
 }
 
 
@@ -89,11 +91,12 @@ EXPORT_SYMBOL(_ZN10FileSystem12DeregisterFSEP7FileSysPKc);
 /// @param name file system name
 int FileSystem::RegisterOpts(FileOpts* opts)
 {
-	if (assignLetter >= 'A' && assignLetter < 'Z')
-	{
-		return fileOpts.Insert(opts, assignLetter++);
-	}
-	return 0;
+	char* prefix = (char*)"/media/";
+	char* label  = opts->GetVolumeLabel();
+	char* name   = new char[strlen(prefix) + strlen(label) + 1]();
+	strcat(name, prefix);
+	strcat(name, label);
+	return fileOpts.InsertByName(opts, name);
 }
 EXPORT_SYMBOL(_ZN10FileSystem12RegisterOptsEP8FileOpts);
 
@@ -113,18 +116,12 @@ EXPORT_SYMBOL(_ZN10FileSystem14DeregisterOptsEP8FileOpts);
 /// @return 
 FileOpts* FileSystem::GetFileOpts(const char* name)
 {
-	if (((name[0] >= 'a' && name[0] <= 'z')  ||
-		 (name[0] >= 'A' && name[0] <= 'Z')) &&
-		  name[1] == ':')
+	for (MountNode* mount = mounts.Begin(); !mounts.IsEnd(); mount = mounts.Next())
 	{
-		char letter = 0;
-
-		if (name[0] >= 'a' && name[0] <= 'z')
-			letter = name[0] - 0x20;
-		else
-			letter = name[0];
-
-		return fileOpts.GetItem(letter);
+		if (0 == strncmp(mount->target, name, strlen(mount->target)))
+		{
+			return fileOpts.GetItemByName(mount->source);
+		}
 	}
 	return NULL;
 }

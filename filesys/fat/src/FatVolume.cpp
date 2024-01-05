@@ -56,16 +56,13 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 	char** names = regex.ToArray();
 	int8_t size  = regex.Size() - reserve;
 	
-	if (size <= 1)
+	if (0 == size)
 	{
-		obj = new FatObject();
-		obj->Setup(new FatUnionEntry());
+		obj = new FatObject(new FatUnionEntry());
 		obj->SetAttribute(_FAT_ATTR_DIRECTORY);
-		obj->SetShortName("/");
-		return obj;
 	}
 
-	for (int8_t i = 1; i < size; i++)
+	for (int8_t i = 0; i < size; i++)
 	{
 		obj = SearchDir(obj, names[i]);
 		if (NULL == obj) return NULL;
@@ -91,13 +88,15 @@ FatObject* FatVolume::SearchDir(FatObject* obj, const char* name)
 
 		delete dirname; 
 		
-		if (0 == isSame) break;
+		if (0 == isSame)
+		{
+			delete obj;
+			return new FatObject(entry.Item());
+		}
 	}
 
-	FatObject* res = new FatObject(entry.Item());
-
 	delete obj;
-	return res;
+	return NULL;
 }
 
 
