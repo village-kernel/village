@@ -176,7 +176,7 @@ library:
 		$(MAKE) $(objs-$(name)-y); \
 		$(MAKE) $(LIBRARIES_DIR)/lib$(name).a  objs="$(objs-$(name)-y)"; \
 		$(MAKE) $(LIBRARIES_DIR)/lib$(name).so objs="$(objs-$(name)-y)"; \
-		echo C:/libraries/lib$(name).so >> $(LIBRARIES_DIR)/_load_.rc; \
+		echo /libraries/lib$(name).so >> $(LIBRARIES_DIR)/_load_.rc; \
 	)
 
 $(LIBRARIES_DIR)/%.a: $(objs)
@@ -197,7 +197,7 @@ module:
 	$(Q)$(foreach object, $(objs-m), \
 		$(MAKE) $(object); \
 		$(MAKE) $(MODULES_DIR)/$(object:.o=.mo) objs="$(object)"; \
-		echo C:/modules/$(object:.o=.mo) >> $(MODULES_DIR)/_load_.rc; \
+		echo /modules/$(object:.o=.mo) >> $(MODULES_DIR)/_load_.rc; \
 	)
 
 $(MODULES_DIR)/%.mo: $(objs)
