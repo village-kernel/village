@@ -5,7 +5,6 @@
 # $Copyright: Copyright (C) village
 ############################################################################
 
--include vk.application/demo/Makefile
 -include vk.application/taichi/Makefile
 -include vk.application/console/Makefile
 -include vk.application/launch/Makefile
