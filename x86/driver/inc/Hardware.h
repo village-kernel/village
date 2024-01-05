@@ -1,14 +1,14 @@
 //###########################################################################
-// HalHeaders.h
+// Hardware.h
 // Header file for HAL classes
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __HAL_HEADERS_H__
-#define __HAL_HEADERS_H__
+#ifndef __HARDWARE_H__
+#define __HARDWARE_H__
 
 #include "stdint.h"
 #include "stdio.h"
 #include "i386.h"
 
-#endif
+#endif //!__HARDWARE_H__
