@@ -13,13 +13,13 @@ libs-y                       += hw
 ######################################
 # paths
 ######################################
-inc-y                        += vk.hardware/x86/cpu/gcc
-inc-y                        += vk.hardware/x86/cpu/core
-inc-y                        += vk.hardware/x86/cpu/hw/inc
+inc-y                        += vk.hardware/x86/bios/cpu/gcc
+inc-y                        += vk.hardware/x86/bios/cpu/core
+inc-y                        += vk.hardware/x86/bios/cpu/hw/inc
 
-src-y                        += vk.hardware/x86/cpu/gcc
-src-y                        += vk.hardware/x86/cpu/core
-src-y                        += vk.hardware/x86/cpu/hw/src
+src-y                        += vk.hardware/x86/bios/cpu/gcc
+src-y                        += vk.hardware/x86/bios/cpu/core
+src-y                        += vk.hardware/x86/bios/cpu/hw/src
 
 ######################################
 # objects
@@ -46,9 +46,9 @@ MCU  := -m32
 DEFS := -DARCH_X86
 
 # link script
-LDSCRIPT-BS     := -T vk.hardware/x86/cpu/lds/bs.ld
-LDSCRIPT-BL     := -T vk.hardware/x86/cpu/lds/bl.ld
-LDSCRIPT-KERNEL := -T vk.hardware/x86/cpu/lds/kernel.ld
+LDSCRIPT-BS     := -T vk.hardware/x86/bios/cpu/lds/bs.ld
+LDSCRIPT-BL     := -T vk.hardware/x86/bios/cpu/lds/bl.ld
+LDSCRIPT-KERNEL := -T vk.hardware/x86/bios/cpu/lds/kernel.ld
 
 
 #######################################
