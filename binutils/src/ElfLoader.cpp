@@ -389,7 +389,7 @@ int ElfLoader::SharedObjs()
 		if (_DT_NEEDED == dynamic.tag)
 		{
 			//Gets the shared object path
-			const char* prefix = "C:/libraries/";
+			const char* prefix = "/libraries/";
 			const char* name = GetDynamicString(dynamic.val);
 			char* path = new char[strlen(prefix) + strlen(name) + 1]();
 			strcat(path, prefix);
