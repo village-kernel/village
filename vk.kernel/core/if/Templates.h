@@ -179,19 +179,19 @@ public:
 	/// @brief Add object node to list
 	/// @param obj object pointer
 	/// @return result
-	int Add(Object obj)
+	int Add(Object obj, char* name = NULL)
 	{
 		if (NULL == obj) return -1;
 
 		if (NULL == head)
 		{
 			nidCounter = 0;
-			head = new Node(obj, nidCounter++);
+			head = new Node(obj, nidCounter++, name);
 			tail = head;
 		}
 		else
 		{
-			tail->next = new Node(obj, nidCounter++);
+			tail->next = new Node(obj, nidCounter++, name);
 			tail->next->prev = tail;
 			tail = tail->next;
 		}
@@ -205,7 +205,7 @@ public:
 	/// @param obj object pointer
 	/// @param nid object node id
 	/// @return result
-	int Insert(Object obj, int nid)
+	int Insert(Object obj, int nid, char* name = NULL)
 	{
 		if (NULL == obj) return -1;
 
@@ -213,7 +213,7 @@ public:
 
 		if (NULL == head)
 		{
-			temp = new Node(obj, nid);
+			temp = new Node(obj, nid, name);
 			head = temp;
 			tail = head;
 		}
@@ -221,14 +221,14 @@ public:
 		{
 			if (nid > tail->nid)
 			{
-				temp = new Node(obj, nid);
+				temp = new Node(obj, nid, name);
 				temp->prev = tail;
 				tail->next = temp;
 				tail = tail->next;
 			}
 			else if (nid < head->nid)
 			{
-				temp = new Node(obj, nid);
+				temp = new Node(obj, nid, name);
 				temp->next = head;
 				head->prev = temp;
 				head = head->prev;
@@ -242,7 +242,7 @@ public:
 				{
 					if (nid < nextNode->nid)
 					{
-						temp = new Node(obj, nid);
+						temp = new Node(obj, nid, name);
 						temp->prev = prevNode;
 						temp->next = nextNode;
 						prevNode->next = temp;
