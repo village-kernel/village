@@ -22,6 +22,4 @@
 [submodule "vk.document"]
 	path = vk.document
 	url = git@github.com:village-kernel/vk.document.git
-[submodule "vk.application"]
-	path = vk.application
-	url = git@github.com:village-kernel/vk.application.git
+
