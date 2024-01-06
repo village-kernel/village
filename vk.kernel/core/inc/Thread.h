@@ -27,7 +27,7 @@ public:
 		Blocked,
 		Exited,
 	};
-private:
+
 	//Structures
 	struct Task 
 	{
@@ -43,7 +43,7 @@ private:
 			psp(0)
 		{}
 	};
-
+private:
 	//Static constants
 	static const uint32_t task_stack_size = TASK_STACK;
 	static const uint32_t psp_frame_size = sizeof(TaskContext) >> 2;
@@ -60,10 +60,11 @@ public:
 	///Methods
 	void Initialize();
 	void Execute();
-	int CreateTask(Function function, void* user = NULL, void* args = NULL);
-	int CreateTask(Method method, Class *user, void* args = NULL);
+	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL);
+	int CreateTask(const char* name, Method method, Class *user, void* args = NULL);
 	int DeleteTask(int pid);
 	int WaitForTask(int pid);
+	List<Task*> GetTasks();
 	void Sleep(uint32_t ticks);
 	void Exit();
 
@@ -71,7 +72,7 @@ public:
 	void SaveTaskPSP(uint32_t psp);
 	uint32_t GetTaskPSP();
 	void SelectNextTask();
-
+	
 	//Singleton Instance
 	static Thread& Instance();
 };

@@ -42,7 +42,7 @@ EXPORT_SYMBOL(thread);
 void Thread::Initialize()
 {
 	//Frist task should be idle task and the pid is 0
-	CreateTask((Method)&Thread::IdleTask, this);
+	CreateTask("IdleTask", (Method)&Thread::IdleTask, this);
 
 	//Set first node
 	tasks.Begin();
@@ -61,7 +61,7 @@ void Thread::Execute()
 /// @param user task execute uesr
 /// @param args task execute args
 /// @return pid
-int Thread::CreateTask(Function function, void* user, void* args)
+int Thread::CreateTask(const char* name, Function function, void* user, void* args)
 {
 	//Create a new task and allocate stack space
 	Task* task = new Task(memory.StackAlloc(task_stack_size));
@@ -80,9 +80,9 @@ int Thread::CreateTask(Function function, void* user, void* args)
 		(uint32_t)args
 	);
 
-	return tasks.Add(task);
+	return tasks.Add(task, (char*)name);
 }
-EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPFvPvS0_ES0_S0_);
+EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPKcPFvPvS2_ES2_S2_);
 
 
 /// @brief Create new task for cpp
@@ -90,11 +90,11 @@ EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPFvPvS0_ES0_S0_);
 /// @param user task execute class
 /// @param args task execute args
 /// @return pid
-int Thread::CreateTask(Method method, Class *user, void* args)
+int Thread::CreateTask(const char* name, Method method, Class *user, void* args)
 {
-	return CreateTask(union_cast<Function>(method), (void*)user, args);
+	return CreateTask(name, union_cast<Function>(method), (void*)user, args);
 }
-EXPORT_SYMBOL(_ZN6Thread10CreateTaskEM5ClassFvPvEPS0_S1_);
+EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPKcM5ClassFvPvEPS2_S3_);
 
 
 /// @brief Thread delete task
@@ -127,6 +127,15 @@ int Thread::WaitForTask(int pid)
 	return _ERR;
 }
 EXPORT_SYMBOL(_ZN6Thread11WaitForTaskEi);
+
+
+/// @brief Get tasks
+/// @return 
+List<Thread::Task*> Thread::GetTasks()
+{
+	return tasks;
+}
+EXPORT_SYMBOL(_ZN6Thread8GetTasksEv);
 
 
 /// @brief Thread sleep

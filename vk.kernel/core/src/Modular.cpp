@@ -67,7 +67,7 @@ void Modular::Execute()
 	status = _StartExecute;
 	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		module->SetPid(thread.CreateTask((Method)&Modular::ModuleHandler, this, (void*)module));
+		module->SetPid(thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
 	}
 	status = _EndedExecute;
 }
@@ -102,7 +102,7 @@ void Modular::RegisterInRuntime(Module* module)
 	if (status >= _EndedUpdateParms)
 		module->UpdateParams();
 	if (status >= _EndedExecute)
-		module->SetPid(thread.CreateTask((Method)&Modular::ModuleHandler, this, (void*)module));
+		module->SetPid(thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
 }
 
 
