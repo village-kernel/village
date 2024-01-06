@@ -1,0 +1,42 @@
+comment "This is using to configure GUI"
+
+# config GUI
+
+config GUI
+	bool "Enable GUI support"
+	default n
+
+# config wedget
+
+menu "Wedget"
+	depends on GUI 
+
+config BUTTON
+	bool "Enable button support"
+	default y
+
+config FRAME
+	bool "Enable frame support"
+	default y
+
+config LISTBOX
+	bool "Enable list box support"
+	default y
+
+config MENU
+	bool "Enable menu support"
+	default y
+
+config MSGBOX
+	bool "Enable message box support"
+	default y
+
+config TOOLBAR
+	bool "Enable tool bar support"
+	default y
+
+config WINDOW
+	bool "Enable window support"
+	default y
+
+endmenu
