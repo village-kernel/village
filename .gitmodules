@@ -1,6 +1,3 @@
-[submodule "vk.hardware"]
-	path = vk.hardware
-	url = git@github.com:village-kernel/vk.hardware.git
 [submodule "vk.kernel"]
 	path = vk.kernel
 	url = git@github.com:village-kernel/vk.kernel.git
