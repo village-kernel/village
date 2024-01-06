@@ -1,0 +1,13 @@
+# taichi menu
+
+menu "taichi"
+
+config TAICHI
+	bool "Build taichi application"
+	default y
+
+if TAICHI
+
+endif
+
+endmenu

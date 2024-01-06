@@ -1,0 +1,13 @@
+comment "This is using to configure application"
+
+if GENERATED_APP
+
+source ./vk.application/taichi/Kconfig
+
+source ./vk.application/console/Kconfig
+
+source ./vk.application/launch/Kconfig
+
+source ./vk.application/settings/Kconfig
+
+endif

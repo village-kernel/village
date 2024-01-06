@@ -1,0 +1,13 @@
+# settings menu
+
+menu "settings"
+
+config SETTINGS
+	bool "Build settings application"
+	default y
+
+if SETTINGS
+
+endif
+
+endmenu
