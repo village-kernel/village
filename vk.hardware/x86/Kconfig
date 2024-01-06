@@ -1,0 +1,22 @@
+comment "Configure Support Function"
+
+choice
+	prompt "Boot fireware"
+	depends on X86
+	default BIOS
+
+	config BIOS
+		bool "bios"
+
+	config UEFI
+		bool "uefi"
+
+endchoice
+
+if BIOS
+	source ./vk.hardware/x86/bios/Kconfig
+endif
+
+if UEFI
+	source ./vk.hardware/x86/uefi/Kconfig
+endif

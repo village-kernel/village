@@ -1,0 +1,21 @@
+comment "Select CPU Architecture"
+
+choice
+	prompt "Architecture"
+	default ARM
+
+	config ARM
+		bool "arm"
+
+	config X86
+		bool "x86"
+		select BOOTSECTION
+endchoice
+
+if ARM
+	source ./vk.hardware/arm/Kconfig
+endif
+
+if X86
+	source ./vk.hardware/x86/Kconfig
+endif

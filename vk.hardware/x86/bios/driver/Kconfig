@@ -1,0 +1,24 @@
+# Config driver menu
+menu "Generic Device Driver"
+
+config SERIAL
+	tristate "Enable serial support"
+	default n
+
+config VGA
+	tristate "Enable VGA support"
+	default n
+
+config DISK
+	tristate "Enable LBA disk support"
+	default n
+
+config KEYBOARD
+	tristate "Enable key board input support"
+	default n
+
+config MOUSE
+	tristate "Enable mouse input support"
+	default n
+	
+endmenu
