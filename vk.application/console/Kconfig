@@ -42,6 +42,10 @@ config CMD_RUN
 	bool "Add run cmd to console support list"
 	default n
 
+config CMD_TASKER
+	bool "Add tasker cmd to console support list"
+	default n
+
 endif
 
 endmenu
