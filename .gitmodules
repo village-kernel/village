@@ -1,6 +1,3 @@
-[submodule "vk.kernel"]
-	path = vk.kernel
-	url = git@github.com:village-kernel/vk.kernel.git
 [submodule "vk.scripts"]
 	path = vk.scripts
 	url = git@github.com:village-kernel/vk.scripts.git
