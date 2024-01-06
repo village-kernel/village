@@ -10,9 +10,6 @@
 [submodule "vk.scripts"]
 	path = vk.scripts
 	url = git@github.com:village-kernel/vk.scripts.git
-[submodule "vk.bootloader"]
-	path = vk.bootloader
-	url = git@github.com:village-kernel/vk.bootloader.git
 [submodule "vk.network"]
 	path = vk.network
 	url = git@github.com:village-kernel/vk.network.git
