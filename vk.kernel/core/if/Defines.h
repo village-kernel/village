@@ -64,6 +64,7 @@ enum States
 static struct _Drv_##name {                                       \
 	Driver* driver = drv;                                         \
 	_Drv_##name() {                                               \
+		driver->SetName((char*)#name);                            \
 		Device::Instance().RegisterDriver(driver, id);            \
 	}                                                             \
 	~_Drv_##name() {                                              \
@@ -77,6 +78,7 @@ static struct _Drv_##name {                                       \
 static struct _Mod_##name {                                       \
 	Module* module = mod;                                         \
 	_Mod_##name() {                                               \
+		module->SetName((char*)#name);                            \
 		Modular::Instance().RegisterModule(module, id);           \
 	}                                                             \
 	~_Mod_##name() {                                              \
