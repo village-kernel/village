@@ -20,12 +20,12 @@ inc-y                                       += vk.kernel/core/inc
 src-y                                       += vk.kernel
 src-y                                       += vk.kernel/core/src
 
-inc-$(CONFIG_X86)                           += vk.kernel/arch/x86/inc
+inc-$(CONFIG_X86)                           += vk.kernel/arch/x86/bios/inc
 inc-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/inc
 inc-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/inc/stm32f4xx
 inc-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/inc/stm32h7xx
 
-src-$(CONFIG_X86)                           += vk.kernel/arch/x86/src
+src-$(CONFIG_X86)                           += vk.kernel/arch/x86/bios/src
 src-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/src
 src-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32f4xx
 src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32h7xx
