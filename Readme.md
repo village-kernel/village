@@ -48,21 +48,11 @@
 
 
 - ## 3.克隆village-kernel项目
-	- ### git配置过ssh登陆github：
-			git clone --recursive git@github.com:village-kernel/village-kernel.git
+	- ### ssh方式：
+			git clone git@github.com:village-kernel/village-kernel.git
   
-  	- ### git没配置过ssh登陆github：
-			克隆项目到本地：
+  	- ### https方式：
 			git clone https://github.com/village-kernel/village-kernel.git
-			
-			进入到 village-kernel目录：
-			cd village-kernel
-
-			编辑 .gitmodules文件（很重要，关系到子模块能否下拉的问题）
-			手动替换 git@github.com: 为 https://github.com/ 并保存
-			
-			拉取子模块：
-			git submodule update --init --recursive
 
 
 - ## 4.使用vscode打开village-kernel项目
@@ -123,15 +113,6 @@
 		切换到vscode debug界面
 		选择QEMU Debug x86_64 kernel
 
----
-
-# 下载源码 
-- ### 下拉项目
-		git clone git@github.com:village-kernel/village-kernel.git
-- ### 下拉子模块
-		git submodule update --init --recursive
-- ### 增加子模块（需要增加子模块时使用）
-		git submodule add git@xxxx.git
 
 # 说明
 - 目前还处于开发阶段，各功能还不完善，代码还有点垃圾。
