@@ -6,6 +6,7 @@
 //###########################################################################
 #include "Cmd.h"
 #include "Console.h"
+#include "Village.h"
 
 
 /// @brief CmdAbout
@@ -17,7 +18,11 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		console.Output("vk.kernel 0.0.1(beta), Copyright (C) village.");
+		console.Output("build date      : %s", village.GetBuildDate());
+		console.Output("build time      : %s", village.GetBuildTime());
+		console.Output("build version   : %s", village.GetBuildVersion());
+		console.Output("build gitcommit : %s", village.GetBuildGitCommit());
+		console.Output("village kernel Copyright (C) village.");
 	}
 };
 
