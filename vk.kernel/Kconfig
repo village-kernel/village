@@ -1,0 +1,167 @@
+comment "This is using to configure kernel"
+
+config KERNEL
+	bool "Enable building kernel"
+	default y
+
+if KERNEL
+
+# config kernel menu
+
+menu "kernel"
+
+config TASK_STACK
+	int "The size of thread task stack"
+	default 1024
+
+config MODULE
+	bool "Enable loadable module support"
+	select FATFS
+	select ELFPARSER
+	select ENVIRONMENT
+
+config LOADER
+	depends on MODULE
+	bool "Enable loader support"
+	default n
+
+config ENVIRONMENT
+	bool "Build the environment of Loadable module"
+	default n
+
+config WORKQUEUE
+	bool "Enable workqueue support"
+	default y
+
+config INPUT
+	bool "Enable input event support"
+	default y
+
+endmenu
+
+#config bridge
+
+menu "bridge"
+
+config BRIDGE
+	bool "Enable the bridge from kernel to user"
+	default n
+
+config VILLAGE
+	depends on BRIDGE
+	bool "Enable k2u the village kernel api"
+	default n
+
+endmenu
+
+# confg binutils menu
+
+menu "binutils"
+
+config BINUTILS
+	select FILESTREAM
+	bool "Enable binutils function"
+	default n
+
+config ELFLOADER
+	depends on BINUTILS
+	select FILESTREAM
+	bool "Enable elf load function"
+	default n
+
+config LIBTOOL
+	depends on BINUTILS
+	bool "Enable library tool function"
+	default n
+
+config MODTOOL
+	depends on BINUTILS
+	bool "Enable module tool function"
+	default n
+
+config EXECUTOR
+	depends on BINUTILS
+	bool "Enable execute program function"
+	default n
+
+endmenu
+
+# config utilities menu
+
+menu "utilities"
+
+config UTILITIES
+	bool "Enable utilities support"
+	default n
+
+config SYNCLOCK
+	depends on UTILITIES
+	bool "Enable sync lock function"
+	 default y
+
+config INIPARSER
+	depends on UTILITIES
+	select FILESTREAM
+	bool "Enable ini file parser function"
+	default n
+
+config PINPARSER
+	depends on UTILITIES
+	select FATFS
+	bool "Enable pin parser function"
+	default n
+
+config RCPARSER
+	depends on UTILITIES
+	select FILESTREAM
+	bool "Enable resource script parser function"
+	default n
+
+config REGEX
+	depends on UTILITIES
+	bool "Enable regex function"
+	default n
+
+endmenu
+
+# config file system
+
+menu "filesystem"
+
+config FILESYSTEM
+	bool "Enable file system"
+	default n
+
+config FATFS
+	depends on FILESYSTEM
+	bool "Add fat file system in support list"
+	default n
+
+endmenu
+
+# cofing synchronizes menu
+
+menu "synchronizes"
+
+config SYNC
+	bool "Enable synchronizes function"
+	default y
+
+config MUTEX
+	depends on SYNC
+	bool "Enable mutex lock support"
+	default y
+
+config SPINLOCK
+	depends on SYNC
+	bool "Enable spin lock support"
+	default y
+
+config SEMAPHORE
+	depends on SYNC
+	bool "Enable semaphore support"
+	default y
+
+endmenu
+
+endif
