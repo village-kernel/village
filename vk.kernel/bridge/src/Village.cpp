@@ -50,6 +50,14 @@ void Village::Sleep(uint32_t ticks)
 }
 
 
+/// @brief Get tasks
+/// @return tasks
+List<Thread::Task*> Village::GetTasks()
+{
+	return thread.GetTasks();
+}
+
+
 /// @brief Get memory size
 /// @return size
 uint32_t Village::GetMemSize()
