@@ -9,6 +9,9 @@
 
 #include "Defines.h"
 #include "Driver.h"
+#include "Thread.h"
+#include "Templates.h"
+
 
 /// @brief Village
 class Village
@@ -20,6 +23,7 @@ public:
 
 	void Reboot();
 	void Sleep(uint32_t ticks);
+	List<Thread::Task*> GetTasks();
 	
 	uint32_t GetMemSize();
 	uint32_t GetMemUsed();
