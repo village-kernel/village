@@ -1,0 +1,11 @@
+comment "This is using to configure bootloader"
+
+# bootloader
+config BOOTLOADER
+	bool "Enable bootloader function"
+	default n
+
+config ENCRYPT_FIRMWARE
+	bool "Encrypt firmware"
+	default n
+
