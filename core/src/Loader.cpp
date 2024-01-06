@@ -60,7 +60,7 @@ void Loader::Loading(int type, const char* filename)
 
 	List<char*>& runcmds = parser->GetRunCmds();
 
-	for (runcmds.End(); runcmds.IsBegin(); runcmds.Prev())
+	for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
 	{
 		if (_Load_Lib == type)
 		{
