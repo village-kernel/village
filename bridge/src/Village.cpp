@@ -90,3 +90,35 @@ void Village::SetDebugLevel(int level)
 {
 	debug.SetDebugLevel(level);
 }
+
+
+/// @brief Get build date
+/// @return date string
+const char* Village::GetBuildDate()
+{
+	return __DATE__;
+}
+
+
+/// @brief Get build time
+/// @return 
+const char* Village::GetBuildTime()
+{
+	return  __TIME__;
+}
+
+
+/// @brief Get build version
+/// @return version string
+const char* Village::GetBuildVersion()
+{
+	return BUILD_VER;
+}
+
+
+/// @brief Get build git commit
+/// @return git commit
+const char* Village::GetBuildGitCommit()
+{
+	return GIT_COMMIT;
+}

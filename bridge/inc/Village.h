@@ -29,6 +29,11 @@ public:
 
 	void SetDebugLevel(int level);
 
+	const char* GetBuildDate();
+	const char* GetBuildTime();
+	const char* GetBuildVersion();
+	const char* GetBuildGitCommit();
+
 	//Singleton Instance
 	static Village& Instance();
 };
