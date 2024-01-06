@@ -1,9 +1,14 @@
 ###########################################################################
 # Makefile
-# The Top Makefile of village-target project
+# The Top Makefile of village-kernel project
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+VERSION = 0.0.2
+
+######################################
+# include config
+######################################
 -include .config
 
 ######################################
@@ -137,6 +142,18 @@ endif
 ifneq ($(CONFIG_ENVIRONMENT), y)
 CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
 endif
+
+
+#######################################
+# build version flags
+#######################################
+GIT_SHA = $(shell git rev-parse HEAD)
+ifneq ($(GIT_SHA), )
+CXXFLAGS += -DGIT_COMMIT='"$(GIT_SHA)"'
+else
+CXXFLAGS += -DGIT_COMMIT='"unknown"'
+endif
+CXXFLAGS += -DBUILD_VER='"V$(VERSION)"'
 
 
 #######################################
