@@ -13,6 +13,9 @@
 ///Driver
 class Driver : public Class
 {
+private:
+	//Members
+	char* name;   //driver name
 public:
 	//Constructor
 	Driver()  {}
@@ -26,6 +29,8 @@ public:
 	virtual void Execute()          {}
 	virtual void FailSafe(int arg)  {}
 	virtual void Exit()             {}
+	virtual void SetName(char* name){ this->name = name; }
+	virtual char* GetName()         { return this->name; }
 
 	//IO ctrl methods
 	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
