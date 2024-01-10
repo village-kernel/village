@@ -105,7 +105,7 @@ void Device::DeregisterInRuntime(Driver* driver)
 /// @param id driver id
 void Device::RegisterDriver(Driver* driver, uint32_t id)
 {
-	drivers.Insert(driver, id);
+	drivers.Insert(driver, id, driver->GetName());
 	RegisterInRuntime(driver);
 }
 EXPORT_SYMBOL(_ZN6Device14RegisterDriverEP6Driverm);
