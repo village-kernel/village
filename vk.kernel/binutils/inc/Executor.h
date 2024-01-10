@@ -9,15 +9,24 @@
 
 #include "Templates.h"
 #include "ElfLoader.h"
+#include "Regex.h"
 
 
 ///Executor
 class Executor : public Class
 {
+public:
+	//Enumerations
+	enum Behavior
+	{
+		_Foreground = 0,
+		_Background = 1,
+	};
 private:
 	//Members
-	int argc;
-	char** argv;
+	int       argc;
+	char**    argv;
+	Regex     regex;
 	ElfLoader elf;
 
 	//Methods
@@ -26,7 +35,8 @@ public:
 	//Methods
 	Executor();
 	~Executor();
-	int Run(const char* path, int argc = 0, char* argv[] = NULL);
+	int Run(Behavior behavior, const char* args);
+	int Run(Behavior behavior, const char* path, int argc, char* argv[]);
 };
 
 #endif //!__EXECUTOR_H__

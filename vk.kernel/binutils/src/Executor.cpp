@@ -17,6 +17,24 @@ Executor::Executor()
 /// @brief Deconstructor
 Executor::~Executor()
 {
+	regex.Clear();
+}
+
+
+/// @brief Executor Initialize
+/// @param args run args
+/// @return result
+int Executor::Run(Behavior behavior, const char* args)
+{
+	//Split args
+	regex.Split(args);
+
+	//Set argc and argv
+	int    argc = regex.Size();
+	char** argv = regex.ToArray();
+
+	//Run with argc and argv
+	return Run(behavior, argv[0], argc, argv);
 }
 
 
@@ -24,7 +42,7 @@ Executor::~Executor()
 /// @param path elf file path
 /// @param argv running argv
 /// @return result
-int Executor::Run(const char* path, int argc, char* argv[])
+int Executor::Run(Behavior behavior, const char* path, int argc, char* argv[])
 {
 	//Set argc and argv
 	this->argc = argc;
@@ -37,7 +55,7 @@ int Executor::Run(const char* path, int argc, char* argv[])
 	int pid = thread.CreateTask(path, (Method)&Executor::Sandbox, this);
 
 	//Wait for task done
-	return thread.WaitForTask(pid);
+	return (behavior == _Foreground) ? thread.WaitForTask(pid) : true;
 }
 
 

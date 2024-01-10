@@ -29,7 +29,7 @@ void Taichi::Initialize()
 /// @brief Execute
 void Taichi::Execute()
 {
-	executor.Run("/applications/console.exec");
+	executor.Run(Executor::_Foreground, "/applications/console.exec");
 }
 
 

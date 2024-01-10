@@ -25,7 +25,7 @@ public:
 			console.Output("Usage: run <program> [arg1] [arg2] [...]");
 			return;
 		}
-		executor.Run(argv[1], argc, argv);
+		executor.Run(Executor::_Foreground, argv[1], argc, argv);
 	}
 };
 
