@@ -22,9 +22,9 @@ CmdMsgMgr::CmdMsgMgr()
 
 
 ///CmdMsgMgr initialize
-void CmdMsgMgr::Initialize()
+void CmdMsgMgr::Initialize(const char* driver)
 {
-	transceiver = village.GetDriver(DriverID::_serial);
+	transceiver = village.GetDriverByName(driver);
 	if (NULL != transceiver) transceiver->Initialize();
 }
 

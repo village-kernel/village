@@ -16,7 +16,7 @@
 
 
 ///Console
-class Console : public Module
+class Console
 {
 private:
 	//Static constants
@@ -37,7 +37,7 @@ private:
 	void ExecuteCmd(CmdMsg msg);
 public:
 	//Methods
-	void Initialize();
+	void Initialize(const char* driver);
 	void Execute();
 	void RegisterCmd(Cmd* cmd, char* name);
 	void DeregisterCmd(Cmd* cmd, char* name);

@@ -50,13 +50,13 @@ Console& console = Console::Instance();
 
 
 /// @brief Console initialize
-void Console::Initialize()
+void Console::Initialize(const char* driver)
 {
 	//Set default path
 	strcpy(path, "/");
 
 	//Initialize msg mgr
-	msgMgr.Initialize();
+	msgMgr.Initialize(driver);
 
 	//Initialize cmds
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
@@ -256,9 +256,16 @@ const char* Console::GetPath()
 
 
 /// @brief main
-extern "C" int main(void)
+extern "C" int main(int argc, char* argv[])
 {
-	console.Initialize();
-	console.Execute();
-	return 0;
+	if (argc < 2)
+	{
+		return _ERR;
+	}
+	else
+	{
+		console.Initialize(argv[1]);
+		console.Execute();
+		return _OK;
+	}
 }

@@ -58,7 +58,7 @@ private:
 public:
 	//Methods
 	CmdMsgMgr();
-	void Initialize();
+	void Initialize(const char* driver);
 	bool Execute();
 	void Write(uint8_t* txMsg, uint16_t size = 0);
 
