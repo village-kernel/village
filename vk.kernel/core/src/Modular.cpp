@@ -123,7 +123,7 @@ void Modular::DeregisterInRuntime(Module* module)
 /// @param id module id
 void Modular::RegisterModule(Module* module, uint32_t id)
 {
-	modules.Insert(module, id);
+	modules.Insert(module, id, module->GetName());
 	RegisterInRuntime(module);
 }
 EXPORT_SYMBOL(_ZN7Modular14RegisterModuleEP6Modulem);
