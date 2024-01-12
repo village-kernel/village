@@ -13,12 +13,13 @@
 class Launch
 {
 private:
-	GUI     gui;
+	//Members
+	GUI gui;
 public:
 	//Methods
 	Launch();
 	~Launch();
-	void Initialize();
+	void Initialize(const char* driver);
 	void Execute();
 };
 
