@@ -11,7 +11,7 @@
 
 
 /// @brief VGA
-class VGA : public Driver, public LcdDriver
+class VGA : public LcdDriver
 {
 private:
 	/// @brief VGA write reg
@@ -88,5 +88,48 @@ public:
 };
 
 
+/// @brief VGADrv
+class VGADrv : public Driver
+{
+private:
+	//Members
+	VGA* vga;
+public:
+	/// @brief Constructor
+	VGADrv()
+	{
+		vga = new VGA;
+	}
+
+
+	/// @brief Destructor
+	~VGADrv()
+	{
+		delete vga;
+	}
+
+
+	/// @brief 
+	void Initialize()
+	{		
+		vga->Initialize();
+	}
+
+
+	/// @brief IOCtrl
+	/// @param cmd 
+	/// @param data 
+	/// @return 
+	int IOCtrl(uint8_t cmd, void* data)
+	{
+		LcdDriver** lcd = (LcdDriver**)data;
+
+		*lcd = vga;
+
+		return 0;
+	}
+};
+
+
 ///Register driver
-REGISTER_DRIVER(new VGA(), DriverID::_display, vga);
+REGISTER_DRIVER(new VGADrv(), DriverID::_display, display);
