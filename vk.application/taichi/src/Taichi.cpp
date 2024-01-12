@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Taichi.h"
+#include "Executor.h"
 
 
 /// @brief Constructor
@@ -29,12 +30,18 @@ void Taichi::Initialize()
 /// @brief Execute
 void Taichi::Execute()
 {
-	executor.Run(Executor::_Foreground, "/applications/console.exec serial");
+	Executor* launch = new Executor();
+	launch->Run(Executor::_Background, "/applications/launch.exec display");
+
+	Executor* console = new Executor();
+	console->Run(Executor::_Background, "/applications/console.exec serial");
+
+	while (1) {}
 }
 
 
 /// @brief main
-extern "C" int main(void)
+int main(void)
 {
 	Taichi taichi;
 	taichi.Initialize();
