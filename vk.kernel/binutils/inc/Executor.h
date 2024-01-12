@@ -24,6 +24,7 @@ public:
 	};
 private:
 	//Members
+	int       pid;
 	int       argc;
 	char**    argv;
 	Regex     regex;
@@ -37,6 +38,7 @@ public:
 	~Executor();
 	int Run(Behavior behavior, const char* args);
 	int Run(Behavior behavior, const char* path, int argc, char* argv[]);
+	int Wait();
 };
 
 #endif //!__EXECUTOR_H__
