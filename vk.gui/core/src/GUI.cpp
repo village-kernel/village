@@ -7,6 +7,7 @@
 #include "GUI.h"
 #include "stdarg.h"
 #include "stdio.h"
+#include "Village.h"
 
 
 ///Constructor
@@ -16,9 +17,16 @@ GUI::GUI()
 
 
 ///Intialize
-void GUI::Initialize(LcdDriver* lcd)
+void GUI::Initialize(const char* driver)
 {
-	this->disp.Initialize(lcd);
+	Driver* lcdDriver = village.GetDriverByName(driver);
+
+	if (NULL != lcdDriver)
+	{
+		LcdDriver* lcd = NULL;
+		lcdDriver->IOCtrl(0, (void*)&lcd);
+		disp.Initialize(lcd);
+	}
 }
 
 

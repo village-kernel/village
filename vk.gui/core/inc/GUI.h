@@ -20,13 +20,11 @@ private:
 	//Members
 	Mutex   lock;
 	char    data[buf_size];
-public:
-	//Members
 	Display disp;
-
+public:
 	//Methods
 	GUI();
-	void Initialize(LcdDriver* lcd);
+	void Initialize(const char* driver);
 	void Printf(const char* format, ...);
 };
 
