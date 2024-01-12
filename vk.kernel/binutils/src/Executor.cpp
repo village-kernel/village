@@ -10,6 +10,9 @@
 
 /// @brief Constructor
 Executor::Executor()
+	:pid(0),
+	argc(0),
+	argv(NULL)
 {
 }
 
@@ -23,7 +26,7 @@ Executor::~Executor()
 
 /// @brief Executor Initialize
 /// @param args run args
-/// @return result
+/// @return pid
 int Executor::Run(Behavior behavior, const char* args)
 {
 	//Split args
@@ -41,7 +44,7 @@ int Executor::Run(Behavior behavior, const char* args)
 /// @brief Executor Initialize
 /// @param path elf file path
 /// @param argv running argv
-/// @return result
+/// @return pid
 int Executor::Run(Behavior behavior, const char* path, int argc, char* argv[])
 {
 	//Set argc and argv
@@ -52,10 +55,20 @@ int Executor::Run(Behavior behavior, const char* path, int argc, char* argv[])
 	if (elf.Load(path) != Result::_OK) return _ERR;
 	
 	//Create a sandboxed thread to run the app
-	int pid = thread.CreateTask(path, (Method)&Executor::Sandbox, this);
+	pid = thread.CreateTask(path, (Method)&Executor::Sandbox, this);
 
 	//Wait for task done
-	return (behavior == _Foreground) ? thread.WaitForTask(pid) : true;
+	if (behavior == _Foreground) thread.WaitForTask(pid);
+
+	return pid;
+}
+
+
+/// @brief Executor wait
+/// @return result
+int Executor::Wait()
+{
+	return thread.WaitForTask(pid);
 }
 
 
