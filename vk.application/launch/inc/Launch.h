@@ -19,7 +19,7 @@ public:
 	//Methods
 	Launch();
 	~Launch();
-	void Initialize(const char* driver);
+	void Initialize(const char* drvname);
 	void Execute();
 };
 

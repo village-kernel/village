@@ -21,16 +21,45 @@ Launch::~Launch()
 
 
 /// @brief Initialize
-void Launch::Initialize(const char* driver)
+void Launch::Initialize(const char* drvname)
 {
-	gui.Initialize(driver);
+	gui.Initialize(drvname);
+
+	Window* mainwin = (Window*)gui.CreateMainWindow();
+
+	Toolbar* toolbar = (Toolbar*)mainwin->CreateWedget(Wedget::_Toolbar);
+	toolbar->SetLocation(0, 0, 320, 20);
+
+	Label* label = (Label*)toolbar->CreateWedget(Wedget::_Label);
+	label->SetLocation(0, 0, 80, 20);
+	label->SetLabel((char*)"menu");
+
+	Tabbar* tabbar = (Tabbar*)mainwin->CreateWedget(Wedget::_Tabbar);
+	tabbar->SetLocation(90, 160, 130, 40);
+
+	Button* button1 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button1->SetLocation(10, 10, 20, 20);
+	button1->SetText((char*)"A");
+
+	Button* button2 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button2->SetLocation(40, 10, 20, 20);
+	button2->SetText((char*)"B");
+
+	Button* button3 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button3->SetLocation(70, 10, 20, 20);
+	button3->SetText((char*)"C");
+
+	Button* button4 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button4->SetLocation(100, 10, 20, 20);
+	button4->SetText((char*)"D");
+
+	mainwin->Show();
 }
 
 
 /// @brief Execute
 void Launch::Execute()
 {
-	gui.Printf("hello launch");
 	while (1) {}
 }
 
