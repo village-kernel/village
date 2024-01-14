@@ -19,6 +19,10 @@ config FRAME
 	bool "Enable frame support"
 	default y
 
+config LABEL
+	bool "Enable label support"
+	default y
+
 config LISTBOX
 	bool "Enable list box support"
 	default y
@@ -29,6 +33,14 @@ config MENU
 
 config MSGBOX
 	bool "Enable message box support"
+	default y
+
+config TABBAR
+	bool "Enable tab bar support"
+	default y
+
+config TEXTBOX
+	bool "Enable text box support"
 	default y
 
 config TOOLBAR

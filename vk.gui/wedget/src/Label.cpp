@@ -1,25 +1,32 @@
 //###########################################################################
-// Window.cpp
-// Definitions of the functions that manage window
+// Label.cpp
+// Definitions of the functions that manage label
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Window.h"
-#include "Display.h"
+#include "Label.h"
 
 
 /// @brief 
-void Window::Initialize()
+void Label::Initialize()
 {
 
 }
 
 
-/// @brief Initialize
-void Window::Show()
+/// @brief 
+void Label::Show()
 {
 	int locX = GetLocX();
 	int locY = GetLocY();
-	display->DrawRectangle(locX, locY, width - 1, height - 1);
+	display->ShowString(locX, locY, (uint8_t*)label);
 	Wedget::Show();
+}
+
+
+/// @brief 
+/// @param label 
+void Label::SetLabel(char* label)
+{
+	this->label = label;
 }

@@ -5,39 +5,56 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "GUI.h"
-#include "stdarg.h"
-#include "stdio.h"
+#include "Window.h"
 #include "Village.h"
 
 
-///Constructor
+/// @brief Constructor
 GUI::GUI()
+	:lcdDriver(NULL),
+	display(NULL),
+	mainwin(NULL)
 {
 }
 
 
-///Intialize
-void GUI::Initialize(const char* driver)
+/// @brief Destructor
+GUI::~GUI()
 {
-	Driver* lcdDriver = village.GetDriverByName(driver);
+	delete lcdDriver;
+	delete display;
+	delete mainwin;
+}
 
+
+/// @brief Intialize
+/// @param drvname 
+void GUI::Initialize(const char* drvname)
+{
+	//Get the universal driver by driver name
+	Driver* driver = village.GetDriverByName(drvname);
+
+	//Get the specified lcd driver by driver ioctrl 
+	if (NULL != driver)
+	{
+		driver->IOCtrl(0, (void*)&lcdDriver);
+	}
+
+	//Initialize display
 	if (NULL != lcdDriver)
 	{
-		LcdDriver* lcd = NULL;
-		lcdDriver->IOCtrl(0, (void*)&lcd);
-		disp.Initialize(lcd);
+		display = new Display();
+		display->Initialize(lcdDriver);
 	}
 }
 
 
-///Display Printf
-void GUI::Printf(const char* format, ...)
+/// @brief Create main window
+/// @return 
+Wedget* GUI::CreateMainWindow()
 {
-	lock.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsprintf(data, format, arg);
-	va_end(arg);
-	disp.ShowString((uint8_t*)data);
-	lock.Unlock();
+	mainwin = new Window();
+	mainwin->SetDisplay(display);
+	mainwin->SetLocation(0, 0, lcdDriver->device.width, lcdDriver->device.height);
+	return mainwin;
 }

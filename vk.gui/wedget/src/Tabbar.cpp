@@ -1,25 +1,24 @@
 //###########################################################################
-// Window.cpp
-// Definitions of the functions that manage window
+// Tabbar.cpp
+// Definitions of the functions that manage tab bar
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Window.h"
-#include "Display.h"
+#include "Tabbar.h"
 
 
 /// @brief 
-void Window::Initialize()
+void Tabbar::Initialize()
 {
 
 }
 
 
-/// @brief Initialize
-void Window::Show()
+/// @brief 
+void Tabbar::Show()
 {
 	int locX = GetLocX();
 	int locY = GetLocY();
-	display->DrawRectangle(locX, locY, width - 1, height - 1);
+	display->DrawRectangle(locX, locY, locX + width, locY + height);
 	Wedget::Show();
 }

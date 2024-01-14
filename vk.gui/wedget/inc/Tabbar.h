@@ -1,16 +1,16 @@
 //###########################################################################
-// Window.h
-// Declarations of the functions that manage window
+// Tabbar.h
+// Declarations of the functions that manage tab bar
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_WINDOW_H__
-#define __VK_WINDOW_H__
+#ifndef __VK_TAB_BAR_H__
+#define __VK_TAB_BAR_H__
 
 #include "Wedget.h"
 
-///Window
-class Window : public Wedget
+///Tabbar
+class Tabbar : public Wedget
 {
 public:
 	//Methods
@@ -18,4 +18,4 @@ public:
 	void Show();
 };
 
-#endif //!__VK_WINDOW_H__
+#endif //!__VK_TAB_BAR_H__

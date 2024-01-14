@@ -9,6 +9,7 @@
 
 #include "ASCIIFont.h"
 #include "LcdDriver.h"
+#include "Mutex.h"
 
 ///Display
 class Display
@@ -78,6 +79,7 @@ public:
 	};
 private:
 	//Static constants
+	static const uint16_t buf_size = 100;
 	static const uint16_t defStrokeColor = Color8::Black;
 	static const uint16_t defBackgroundColor = Color8::White;
 	//static const uint16_t defStrokeColor = Color16::Black;
@@ -85,9 +87,12 @@ private:
 
 	//Members
 	LcdDriver* lcd;
+	Mutex      lock;
+	char       data[buf_size];
 public:
 	//Methods
 	Display();
+	~Display();
 	void Initialize(LcdDriver* lcd);
 	void DrawPoint(uint16_t x, uint16_t y, uint16_t color = defStrokeColor);
 	uint16_t ReadPoint(uint16_t x, uint16_t y);
@@ -99,6 +104,9 @@ public:
 	void ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
 	void ShowString(uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
 	void ShowPicture(uint8_t *picture, uint16_t x = 0, uint16_t y = 0, uint16_t width = 0, uint16_t height = 0);
+	
+	//Methods
+	void Printf(const char* format, ...);
 };
 
 #endif //!__DISPLAY_H__

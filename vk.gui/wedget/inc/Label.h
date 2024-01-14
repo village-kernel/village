@@ -1,21 +1,25 @@
 //###########################################################################
-// Window.h
-// Declarations of the functions that manage window
+// Label.h
+// Declarations of the functions that manage label
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_WINDOW_H__
-#define __VK_WINDOW_H__
+#ifndef __VK_LABEL_H__
+#define __VK_LABEL_H__
 
 #include "Wedget.h"
 
-///Window
-class Window : public Wedget
+///Label
+class Label : public Wedget
 {
+private:
+	//Memebers
+	char* label;
 public:
 	//Methods
 	void Initialize();
 	void Show();
+	void SetLabel(char* label);
 };
 
-#endif //!__VK_WINDOW_H__
+#endif //!__VK_LABEL_H__

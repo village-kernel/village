@@ -8,24 +8,22 @@
 #define __GUI_H__
 
 #include "Display.h"
-#include "Mutex.h"
+#include "Wedgets.h"
 
 ///GUI
 class GUI
 {
 private:
-	//Static constants
-	static const uint16_t buf_size = 100;
-
 	//Members
-	Mutex   lock;
-	char    data[buf_size];
-	Display disp;
+	LcdDriver*  lcdDriver;
+	Display*    display;
+	Wedget*     mainwin;
 public:
 	//Methods
 	GUI();
-	void Initialize(const char* driver);
-	void Printf(const char* format, ...);
+	~GUI();
+	void Initialize(const char* drvname);
+	Wedget* CreateMainWindow();
 };
 
 #endif //!__GUI_H__

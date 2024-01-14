@@ -5,11 +5,20 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Display.h"
+#include "stdarg.h"
+#include "stdio.h"
 
 
-///Constructor
+/// @brief Constructor
 Display::Display()
 {
+}
+
+
+/// @brief Destrucotr
+Display::~Display()
+{
+	
 }
 
 
@@ -21,28 +30,40 @@ void Display::Initialize(LcdDriver* lcd)
 }
 
 
-///Display draw point
+/// @brief Display draw point
+/// @param x 
+/// @param y 
+/// @param color 
 void Display::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 {
 	lcd->DrawPoint(x, y, color);
 }
 
 
-///Display read point
+/// @brief Display read point
+/// @param x 
+/// @param y 
+/// @return 
 uint16_t Display::ReadPoint(uint16_t x, uint16_t y)
 {
 	return lcd->ReadPoint(x, y);
 }
 
 
-///Display clear
+/// @brief Display clear
+/// @param color 
 void Display::Clear(uint16_t color)
 {
 	lcd->Clear(color);
 }
 
 
-///Display draw line
+/// @brief Display draw line
+/// @param x0 
+/// @param y0 
+/// @param x1 
+/// @param y1 
+/// @param color 
 void Display::DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
 	int xError = 0, yError = 0, distance = 0;
@@ -109,7 +130,12 @@ void Display::DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint1
 }
 
 
-///Display draw rectangle
+/// @brief Display draw rectangle
+/// @param x0 
+/// @param y0 
+/// @param x1 
+/// @param y1 
+/// @param color 
 void Display::DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
 	DrawLine(x0, y0, x1, y0);
@@ -119,7 +145,11 @@ void Display::DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, 
 }
 
 
-///Display draw circle
+/// @brief Display draw circle
+/// @param x 
+/// @param y 
+/// @param r 
+/// @param color 
 void Display::DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color)
 {
 	int xOffset = 0;
@@ -151,7 +181,13 @@ void Display::DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color)
 }
 
 
-///Display show char
+/// @brief Display show char
+/// @param x 
+/// @param y 
+/// @param charVal 
+/// @param fontSize 
+/// @param mode 
+/// @param color 
 void Display::ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSize, DisplayMode mode, uint16_t color)
 {
 	const uint16_t PointMask = 0x0001;
@@ -194,7 +230,13 @@ void Display::ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSiz
 }
 
 
-///Display show string
+/// @brief Display show string
+/// @param x 
+/// @param y 
+/// @param str 
+/// @param fontSize 
+/// @param mode 
+/// @param color 
 void Display::ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize, DisplayMode mode, uint16_t color)
 {
 	uint16_t xOffset = x;
@@ -217,7 +259,11 @@ void Display::ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize
 }
 
 
-///Display show string without x and y
+/// @brief Display show string without x and y
+/// @param str 
+/// @param fontSize 
+/// @param mode 
+/// @param color 
 void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint16_t color)
 {
 	static uint16_t xOffset = 0;
@@ -267,7 +313,12 @@ void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint
 }
 
 
-///Display show picture
+/// @brief Display show picture
+/// @param picture 
+/// @param x 
+/// @param y 
+/// @param width 
+/// @param height 
 void Display::ShowPicture(uint8_t *picture, uint16_t x, uint16_t y, uint16_t width, uint16_t height)
 {
 	if (width == 0 || height == 0)
@@ -288,4 +339,19 @@ void Display::ShowPicture(uint8_t *picture, uint16_t x, uint16_t y, uint16_t wid
 			picture += 2;
 		}
 	}
+}
+
+
+/// @brief Printf
+/// @param format 
+/// @param  
+void Display::Printf(const char* format, ...)
+{
+	lock.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsprintf(data, format, arg);
+	va_end(arg);
+	ShowString((uint8_t*)data);
+	lock.Unlock();
 }

@@ -12,7 +12,10 @@
 ///Toolbar
 class Toolbar : public Wedget
 {
-
+public:
+	//Methods
+	void Initialize();
+	void Show();
 };
 
 #endif //!__VK_TOOL_BAR_H__

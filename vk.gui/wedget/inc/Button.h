@@ -12,7 +12,16 @@
 ///Button
 class Button : public Wedget
 {
-
+private:
+	//Members
+	char* text;
+public:
+	//Methods
+	Button();
+	~Button();
+	void Initialize();
+	void Show();
+	void SetText(char* text);
 };
 
 #endif //!__VK_BUTTON_H__
