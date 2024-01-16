@@ -132,10 +132,11 @@ void ArchInterrupt::SetIdt()
 extern "C" void IRQ_Handler(Registers regs)
 {
 	//Send an EOI to the PICs
-	if (regs.irq >= 32 && regs.irq < 40)
-		PortByteOut(PIC1_CMD, PIC_EOI); //master
-	else if (regs.irq >= 40)
-		PortByteOut(PIC2_CMD, PIC_EOI); //slave
+	if (regs.irq >= 32 && regs.irq <= 47)
+	{
+		if (regs.irq >= 40) PortByteOut(PIC2_CMD, PIC_EOI); //slave
+		if (regs.irq >= 32) PortByteOut(PIC1_CMD, PIC_EOI); //master
+	}
 
 	//Handle the interrupt in a more modular way
 	Interrupt::Instance().Handler(regs.irq);
