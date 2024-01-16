@@ -114,6 +114,7 @@ g_pfnVectors:
 	.long	Mouse_Controller_Handler
 	.long	Math_Coprocessor_Handler
 	.long	ATA_Channel1_Handler
+	.long	ATA_Channel2_Handler
 
     
 /*******************************************************************************
@@ -373,19 +374,19 @@ X86_Assembly_ACPI_Handler:
 	push $41
 	jmp Stub_Handler
 
-Mouse_Controller_Handler:
+Reserved_EX_11_Handler:
 	cli
 	push $10
 	push $42
 	jmp Stub_Handler
 
-Reserved_EX_11_Handler:
+Reserved_EX_12_Handler:
 	cli
 	push $11
 	push $43
 	jmp Stub_Handler
 
-Reserved_EX_12_Handler:
+Mouse_Controller_Handler:
 	cli
 	push $12
 	push $44
