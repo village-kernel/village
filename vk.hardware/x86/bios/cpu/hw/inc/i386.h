@@ -283,6 +283,90 @@ extern "C" {
 #define ATA_STATUS_BSY_Msk                   (0x1 << ATA_STATUS_BSY_Pos)
 #define ATA_STATUS_BSY                       ATA_STATUS_BSY_Msk
 
+/* PS/2 Controller IO Ports */
+#define PS2_READ_DATA                        0x60
+#define PS2_WRITE_DATA                       0x60
+#define PS2_READ_STATUS                      0x64
+#define PS2_WRITE_COMMAND                    0x64
+
+#define PS2_CMD_READ_BYTE_0                  0x20
+#define PS2_CMD_READ_BYTE_1                  0x21
+// ...
+#define PS2_CMD_WRITE_NEXT_BYTE_0            0x60
+#define PS2_CMD_WRITE_NEXT_BYTE_1            0x61
+// ....
+#define PS2_CMD_DIS_SEC_PS2_PORT             0xA7
+#define PS2_CMD_ENA_SEC_PS2_PORT             0xA8
+#define PS2_CMD_TEST_SEC_PS2_PORT            0xA9
+#define PS2_CMD_TEST_PS2_CTL                 0xAA
+#define PS2_CMD_TEST_FIRST_PS2_PORT          0xAB
+#define PS2_CMD_DIAGNOSTIC                   0xAC
+#define PS2_CMD_DIS_FIRST_PS2_PORT           0xAD
+#define PS2_CMD_ENA_FIRST_PS2_PORT           0XAE
+#define PS2_CMD_READ_CTL_INPUT_PORT          0XC0
+#define PS2_CMD_COPY_BIT03_TO_BIT47          0XC1
+#define PS2_CMD_COPY_BIT47_TO_BIT47          0XC2
+#define PS2_CMD_READ_CTL_OUTPUT_PORT         0XD0
+#define PS2_CMD_WR_CTL_OUTPUT_PORT           0XD1
+#define PS2_CMD_WR_CTL_FST_OUTPUT_BUFF       0XD2
+#define PS2_CMD_WR_CTL_SEC_OUTPUT_BUFF       0XD3
+#define PS2_CMD_WR_CTL_SEC_INPUT_BUFF        0XD4
+
+#define PS2_MOUSE_CMD_SCALING_1_1            0xE6
+#define PS2_MOUSE_CMD_SCALING_2_1            0xE7
+#define PS2_MOUSE_CMD_SET_RESOLUTION         0xE8
+#define PS2_MOUSE_CMD_STATUS_REQ             0xE9
+#define PS2_MOUSE_CMD_SET_STREAM_MODE        0xEA
+#define PS2_MOUSE_CMD_READ_DATA              0xEB
+#define PS2_MOUSE_CMD_RESET_WRAP_MODE        0xEC
+#define PS2_MOUSE_CMD_SET_WRAP_MODE          0xEE
+#define PS2_MOUSE_CMD_SET_REMOTE_MODE        0xF0
+#define PS2_MOUSE_CMD_GET_DEVICE_ID          0xF2
+#define PS2_MOUSE_CMD_SET_SAMPLE_RATE        0xF3
+#define PS2_MOUSE_CMD_ENA_DATA_REPORTING     0xF4
+#define PS2_MOUSE_CMD_DIS_DATA_REPORTING     0xF5
+#define PS2_MOUSE_CMD_SET_DEFAULTS           0xF6
+#define PS2_MOUSE_CMD_RESEND                 0xFE
+#define PS2_MOUSE_CMD_RESET                  0xFF
+
+#define PS2_STATUS_OUTPUT_BUFFER_Pos         (0)
+#define PS2_STATUS_OUTPUT_BUFFER_Msk         (0x1 << PS2_STATUS_OUTPUT_BUFFER_Pos)
+#define PS2_STATUS_OUTPUT_BUFFER             PS2_STATUS_OUTPUT_BUFFER_Msk
+#define PS2_STATUS_INPUT_BUFFER_Pos          (1)
+#define PS2_STATUS_INPUT_BUFFER_Msk          (0x1 << PS2_STATUS_INPUT_BUFFER_Pos)
+#define PS2_STATUS_INPUT_BUFFER              PS2_STATUS_INPUT_BUFFER_Msk
+#define PS2_STATUS_SYSTEM_FLAG_Pos           (2)
+#define PS2_STATUS_SYSTEM_FLAG_Msk           (0x1 << PS2_STATUS_SYSTEM_FLAG_Pos)
+#define PS2_STATUS_SYSTEM_FLAG               PS2_STATUS_SYSTEM_FLAG_Msk
+#define PS2_STATUS_INPUT_BUFFER_DIR_Pos      (3)
+#define PS2_STATUS_INPUT_BUFFER_DIR_Msk      (0x1 << PS2_STATUS_INPUT_BUFFER_DIR_Pos)
+#define PS2_STATUS_INPUT_BUFFER_DIR          PS2_STATUS_INPUT_BUFFER_DIR_Msk
+#define PS2_STATUS_TIMEOUT_ERR_Pos           (6)
+#define PS2_STATUS_TIMEOUT_ERR_Msk           (0x1 << PS2_STATUS_TIMEOUT_ERR_Pos)
+#define PS2_STATUS_TIMEOUT_ERR               PS2_STATUS_TIMEOUT_ERR_Msk
+#define PS2_STATUS_PARITY_ERR_Pos            (7)
+#define PS2_STATUS_PARITY_ERR_Msk            (0x1 << PS2_STATUS_PARITY_ERR_Pos)
+#define PS2_STATUS_PARITY_ERR                PS2_STATUS_PARITY_ERR_Msk
+
+#define PS2_CTL_FIRST_PORT_INT_Pos           (0)
+#define PS2_CTL_FIRST_PORT_INT_Msk           (0x1 << PS2_CTL_FIRST_PORT_INT_Pos)
+#define PS2_CTL_FIRST_PORT_INT               PS2_CTL_FIRST_PORT_INT_Msk
+#define PS2_CTL_SECOND_PORT_INT_Pos          (1)
+#define PS2_CTL_SECOND_PORT_INT_Msk          (0x1 << PS2_CTL_SECOND_PORT_INT_Pos)
+#define PS2_CTL_SECOND_PORT_INT              PS2_CTL_SECOND_PORT_INT_Msk
+#define PS2_CTL_SYSTEM_FLAG_Pos              (2)
+#define PS2_CTL_SYSTEM_FLAG_Msk              (0x1 << PS2_CTL_SYSTEM_FLAG_Pos)
+#define PS2_CTL_SYSTEM_FLAG                  PS2_CTL_SYSTEM_FLAG_Msk
+#define PS2_CTL_FRIST_PORT_CLK_Pos           (4)
+#define PS2_CTL_FRIST_PORT_CLK_Msk           (0x1 << PS2_CTL_FRIST_PORT_CLK_Pos)
+#define PS2_CTL_FRIST_PORT_CLK               PS2_CTL_FRIST_PORT_CLK_Msk
+#define PS2_CTL_SECOND_PORT_CLK_Pos          (5)
+#define PS2_CTL_SECOND_PORT_CLK_Msk          (0x1 << PS2_CTL_SECOND_PORT_CLK_Pos)
+#define PS2_CTL_SECOND_PORT_CLK              PS2_CTL_SECOND_PORT_CLK_Msk
+#define PS2_CTL_FRIST_PORT_TRANS_Pos         (6)
+#define PS2_CTL_FRIST_PORT_TRANS_Msk         (0x1 << PS2_CTL_FRIST_PORT_TRANS_Pos)
+#define PS2_CTL_FRIST_PORT_TRANS             PS2_CTL_FRIST_PORT_TRANS_Msk
+
 /* IRQ numbers */
 #define IRQ_Division_By_Zero                 0
 #define IRQ_Debug                            1
