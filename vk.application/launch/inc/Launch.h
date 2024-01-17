@@ -8,13 +8,18 @@
 #define __LAUNCH_H__
 
 #include "GUI.h"
+#include "Village.h"
 
 ///Lanuch
 class Launch
 {
 private:
 	//Members
-	GUI gui;
+	GUI     gui;
+	Window* mainwin;
+	
+	//Methods
+	void Movement(Input::InputMove* inputMove);
 public:
 	//Methods
 	Launch();

@@ -10,6 +10,7 @@
 
 /// @brief Constructor
 Launch::Launch()
+	:mainwin(NULL)
 {
 }
 
@@ -25,7 +26,7 @@ void Launch::Initialize(const char* drvname)
 {
 	gui.Initialize(drvname);
 
-	Window* mainwin = (Window*)gui.CreateMainWindow();
+	mainwin = (Window*)gui.CreateMainWindow();
 
 	Toolbar* toolbar = (Toolbar*)mainwin->CreateWedget(Wedget::_Toolbar);
 	toolbar->SetLocation(0, 0, 320, 20);
@@ -53,6 +54,17 @@ void Launch::Initialize(const char* drvname)
 	button4->SetLocation(100, 10, 20, 20);
 	button4->SetText((char*)"D");
 
+	mainwin->Show();
+
+	village.AttachInputMovement(union_cast<Function>(&Launch::Movement), (void*)this);
+}
+
+
+/// @brief Movement
+/// @param inputMove 
+void Launch::Movement(Input::InputMove* inputMove)
+{
+	mainwin->Update(inputMove->axisX, inputMove->axisY, inputMove->axisZ);
 	mainwin->Show();
 }
 
