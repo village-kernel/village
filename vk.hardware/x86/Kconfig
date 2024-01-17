@@ -8,15 +8,8 @@ choice
 	config BIOS
 		bool "bios"
 
-	config UEFI
-		bool "uefi"
-
 endchoice
 
 if BIOS
 	source ./vk.hardware/x86/bios/Kconfig
-endif
-
-if UEFI
-	source ./vk.hardware/x86/uefi/Kconfig
 endif
