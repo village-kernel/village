@@ -19,6 +19,7 @@ public:
 	enum WedgetID
 	{
 		_Button = 1,
+		_Cursor,
 		_Frame,
 		_Label,
 		_ListBox,

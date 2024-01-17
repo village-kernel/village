@@ -55,6 +55,7 @@ Wedget* GUI::CreateMainWindow()
 {
 	mainwin = new Window();
 	mainwin->SetDisplay(display);
+	mainwin->Initialize();
 	mainwin->SetLocation(0, 0, lcdDriver->device.width, lcdDriver->device.height);
 	return mainwin;
 }

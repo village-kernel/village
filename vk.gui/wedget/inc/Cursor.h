@@ -1,29 +1,25 @@
 //###########################################################################
-// Window.h
-// Declarations of the functions that manage window
+// Cursor.h
+// Declarations of the functions that manage cursor
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_WINDOW_H__
-#define __VK_WINDOW_H__
+#ifndef __VK_CURSOR_H__
+#define __VK_CURSOR_H__
 
 #include "Wedget.h"
 
-///Window
-class Window : public Wedget
+/// @brief Cursor
+class Cursor : public Wedget
 {
 private:
-	//Members
 	int locX;
 	int locY;
-	int locZ;
-	Wedget* cursor;
 public:
 	//Methods
-	Window();
+	Cursor();
 	void Initialize();
-	void Update(int axisX, int axisY, int axisZ);
 	void Show();
 };
 
-#endif //!__VK_WINDOW_H__
+#endif //!__VK_CURSOR_H__

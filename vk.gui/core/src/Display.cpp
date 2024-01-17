@@ -113,7 +113,7 @@ void Display::DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint1
 
 	for (uint16_t point = 0; point <= distance + 1; point++)
 	{
-		DrawPoint(pointX, pointY);
+		DrawPoint(pointX, pointY, color);
 		xError += xDelta;
 		yError += yDelta;
 		if (xError > distance)
@@ -138,10 +138,10 @@ void Display::DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint1
 /// @param color 
 void Display::DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
 {
-	DrawLine(x0, y0, x1, y0);
-	DrawLine(x0, y0, x0, y1);
-	DrawLine(x0, y1, x1, y1);
-	DrawLine(x1, y0, x1, y1);
+	DrawLine(x0, y0, x1, y0, color);
+	DrawLine(x0, y0, x0, y1, color);
+	DrawLine(x0, y1, x1, y1, color);
+	DrawLine(x1, y0, x1, y1, color);
 }
 
 
@@ -158,14 +158,14 @@ void Display::DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color)
 
 	while (xOffset <= yOffset)
 	{
-		DrawPoint(x + xOffset, y - yOffset);             //5
-		DrawPoint(x + yOffset, y - xOffset);             //0
-		DrawPoint(x + yOffset, y + xOffset);             //4
-		DrawPoint(x + xOffset, y + yOffset);             //6
-		DrawPoint(x - xOffset, y + yOffset);             //1
-		DrawPoint(x - yOffset, y + xOffset);             //3
-		DrawPoint(x - xOffset, y - yOffset);             //2
-		DrawPoint(x - yOffset, y - xOffset);             //7
+		DrawPoint(x + xOffset, y - yOffset, color);             //5
+		DrawPoint(x + yOffset, y - xOffset, color);             //0
+		DrawPoint(x + yOffset, y + xOffset, color);             //4
+		DrawPoint(x + xOffset, y + yOffset, color);             //6
+		DrawPoint(x - xOffset, y + yOffset, color);             //1
+		DrawPoint(x - yOffset, y + xOffset, color);             //3
+		DrawPoint(x - xOffset, y - yOffset, color);             //2
+		DrawPoint(x - yOffset, y - xOffset, color);             //7
 		xOffset++;
 		
 		if (nextPoint < 0)

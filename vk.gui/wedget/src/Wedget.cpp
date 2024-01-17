@@ -41,6 +41,9 @@ Wedget* Wedget::CreateWedget(Wedget::WedgetID id)
 		case _Button:
 			wedget = new Button();
 			break;
+		case _Cursor:
+			wedget = new Cursor();
+			break;
 		case _Frame:
 			wedget = new Frame();
 			break;
