@@ -10,6 +10,7 @@
 #include "Defines.h"
 #include "Driver.h"
 #include "Thread.h"
+#include "Input.h"
 #include "Templates.h"
 
 
@@ -30,6 +31,12 @@ public:
 
 	Driver* GetDriver(uint32_t id);
 	Driver* GetDriverByName(const char* name);
+
+	void AttachInputEvent(Function func, void* user = NULL);
+	void DetachInputEvent(Function func, void* user = NULL);
+
+	void AttachInputMovement(Function func, void* user = NULL);
+	void DetachInputMovement(Function func, void* user = NULL);
 
 	void SetDebugLevel(int level);
 

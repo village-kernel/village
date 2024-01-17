@@ -92,6 +92,42 @@ Driver* Village::GetDriverByName(const char* name)
 }
 
 
+/// @brief Attach input event
+/// @param func 
+/// @param user 
+void Village::AttachInputEvent(Function func, void* user)
+{
+	input.AttachEvent(func, user);
+}
+
+
+/// @brief Detach input event
+/// @param func 
+/// @param user 
+void Village::DetachInputEvent(Function func, void* user)
+{
+	input.DetachEvent(func, user);
+}
+
+
+/// @brief Attach input movement
+/// @param func 
+/// @param user 
+void Village::AttachInputMovement(Function func, void* user)
+{
+	input.AttachMovement(func, user);
+}
+
+
+/// @brief Detach input movement
+/// @param func 
+/// @param user 
+void Village::DetachInputMovement(Function func, void* user)
+{
+	input.AttachMovement(func, user);
+}
+
+
 /// @brief Set debug level
 /// @param level 
 void Village::SetDebugLevel(int level)
