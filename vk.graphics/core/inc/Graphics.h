@@ -1,17 +1,17 @@
 //###########################################################################
-// GUI.h
-// Declarations of the functions that manage GUI
+// Graphics.h
+// Declarations of the functions that manage Graphics
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __GUI_H__
-#define __GUI_H__
+#ifndef __GRAPHICS_H__
+#define __GRAPHICS_H__
 
 #include "Display.h"
 #include "Wedgets.h"
 
-///GUI
-class GUI
+/// @brief Graphics
+class Graphics
 {
 private:
 	//Members
@@ -20,10 +20,10 @@ private:
 	Wedget*     mainwin;
 public:
 	//Methods
-	GUI();
-	~GUI();
+	Graphics();
+	~Graphics();
 	void Initialize(const char* drvname);
 	Wedget* CreateMainWindow();
 };
 
-#endif //!__GUI_H__
+#endif //!__GRAPHICS_H__

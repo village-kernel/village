@@ -1,16 +1,16 @@
 //###########################################################################
-// GUI.cpp
-// Definitions of the functions that manage GUI
+// Graphics.cpp
+// Definitions of the functions that manage graphics
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "GUI.h"
+#include "Graphics.h"
 #include "Window.h"
 #include "Village.h"
 
 
 /// @brief Constructor
-GUI::GUI()
+Graphics::Graphics()
 	:lcdDriver(NULL),
 	display(NULL),
 	mainwin(NULL)
@@ -19,7 +19,7 @@ GUI::GUI()
 
 
 /// @brief Destructor
-GUI::~GUI()
+Graphics::~Graphics()
 {
 	delete lcdDriver;
 	delete display;
@@ -29,7 +29,7 @@ GUI::~GUI()
 
 /// @brief Intialize
 /// @param drvname 
-void GUI::Initialize(const char* drvname)
+void Graphics::Initialize(const char* drvname)
 {
 	//Get the universal driver by driver name
 	Driver* driver = village.GetDriverByName(drvname);
@@ -51,7 +51,7 @@ void GUI::Initialize(const char* drvname)
 
 /// @brief Create main window
 /// @return 
-Wedget* GUI::CreateMainWindow()
+Wedget* Graphics::CreateMainWindow()
 {
 	mainwin = new Window();
 	mainwin->SetDisplay(display);

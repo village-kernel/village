@@ -24,19 +24,19 @@ Launch::~Launch()
 /// @brief Initialize
 void Launch::Initialize(const char* drvname)
 {
-	gui.Initialize(drvname);
+	graphics.Initialize(drvname);
 
-	mainwin = (Window*)gui.CreateMainWindow();
+	mainwin = (Window*)graphics.CreateMainWindow();
 
 	Toolbar* toolbar = (Toolbar*)mainwin->CreateWedget(Wedget::_Toolbar);
-	toolbar->SetLocation(0, 0, 320, 20);
+	toolbar->SetLocation(0, 0, 1024, 20);
 
 	Label* label = (Label*)toolbar->CreateWedget(Wedget::_Label);
 	label->SetLocation(0, 0, 80, 20);
 	label->SetLabel((char*)"menu");
 
 	Tabbar* tabbar = (Tabbar*)mainwin->CreateWedget(Wedget::_Tabbar);
-	tabbar->SetLocation(90, 160, 130, 40);
+	tabbar->SetLocation(412, 728, 130, 40);
 
 	Button* button1 = (Button*)tabbar->CreateWedget(Wedget::_Button);
 	button1->SetLocation(10, 10, 20, 20);
@@ -64,8 +64,11 @@ void Launch::Initialize(const char* drvname)
 /// @param inputMove 
 void Launch::Movement(Input::InputMove* inputMove)
 {
-	mainwin->Update(inputMove->axisX, inputMove->axisY, inputMove->axisZ);
-	mainwin->Show();
+	if (NULL != mainwin)
+	{
+		mainwin->Update(inputMove->axisX, inputMove->axisY, inputMove->axisZ);
+		mainwin->Show();
+	}
 }
 
 

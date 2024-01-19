@@ -28,4 +28,4 @@ objs-launch-$(CONFIG_LAUNCH)         += Launch.o
 ######################################
 # libraries
 ######################################
-libs-launch-$(CONFIG_LAUNCH)         += kernel gui
+libs-launch-$(CONFIG_LAUNCH)         += kernel graphics

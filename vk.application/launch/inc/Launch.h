@@ -7,7 +7,7 @@
 #ifndef __LAUNCH_H__
 #define __LAUNCH_H__
 
-#include "GUI.h"
+#include "Graphics.h"
 #include "Village.h"
 
 ///Lanuch
@@ -15,8 +15,8 @@ class Launch
 {
 private:
 	//Members
-	GUI     gui;
-	Window* mainwin;
+	Graphics graphics;
+	Window*  mainwin;
 	
 	//Methods
 	void Movement(Input::InputMove* inputMove);

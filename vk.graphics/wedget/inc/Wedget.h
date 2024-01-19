@@ -30,6 +30,11 @@ public:
 		_Toolbar,
 		_Window,
 	};
+
+	enum Alignment
+	{
+		
+	};
 protected:
 	//Display driver
 	Display* display;
