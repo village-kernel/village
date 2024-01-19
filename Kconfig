@@ -65,6 +65,10 @@ menu "Bootloader"
 	source ./vk.bootloader/Kconfig
 endmenu
 
+menu "Graphics"
+	source ./vk.graphics/Kconfig
+endmenu
+
 menu "Hardware"
 	source ./vk.hardware/Kconfig
 endmenu
@@ -79,8 +83,4 @@ endmenu
 
 menu "Kernel"
 	source ./vk.kernel/Kconfig
-endmenu
-
-menu "GUI"
-	source ./vk.gui/Kconfig
 endmenu

@@ -57,7 +57,7 @@ ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
 ######################################
 -include vk.application/Makefile
 -include vk.bootloader/Makefile
--include vk.gui/Makefile
+-include vk.graphics/Makefile
 -include vk.kernel/Makefile
 -include vk.network/Makefile
 -include vk.hardware/Makefile
