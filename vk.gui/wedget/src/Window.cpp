@@ -41,7 +41,7 @@ void Window::Update(int axisX, int axisY, int axisZ)
 	if (locY < 0) locY = 0;
 	else if (locY > (height - 5)) locY = (height - 5);
 
-	cursor->SetLocation(locX, 195 - locY, 5, 5);
+	cursor->SetLocation(locX, (height - 5) - locY, 5, 5);
 }
 
 
