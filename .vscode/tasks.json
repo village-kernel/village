@@ -19,7 +19,7 @@
 			"detail": "Flash firmware"
 		},
 		{
-			"label": "Run QEMU x86_64",
+			"label": "Run QEMU x86 bios",
 			"type":"shell",
 			"isBackground":true,
 			"dependsOn": ["Build"],

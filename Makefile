@@ -75,9 +75,6 @@ endif
 ifeq ($(CONFIG_GENERATED_MOD), y)
 	$(Q)$(MAKE) module
 endif
-ifeq ($(CONFIG_BOOTSECTION), y)
-	$(Q)$(MAKE) bootsection
-endif
 ifeq ($(CONFIG_BOOTLOADER), y)
 	$(Q)$(MAKE) bootloader
 endif
@@ -90,11 +87,6 @@ endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
 endif
-
-
-# flash firmware
-flash:
-	openocd $(FLASH_CFG) -c "program $(BUILD_DIR)/village-kernel.bin verify reset exit 0x08000000"
 
 
 #######################################
@@ -202,7 +194,7 @@ $(LIBRARIES_DIR)/%.a: $(objs)
 
 $(LIBRARIES_DIR)/%.so: $(objs)
 	$(Q)echo output $@
-	$(Q)$(LD) -shared -fPIC $^ -o $@
+	$(Q)$(LD) $(MCUEM) -shared -fPIC $^ -o $@
 
 
 #######################################
@@ -224,30 +216,16 @@ $(MODULES_DIR)/%.mo: $(objs)
 
 
 #######################################
-# build the bootsection
-#######################################
-bootsection: $(objs-bs-y)
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bs.elf
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bs.hex
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bs.bin
-
-$(BUILD_DIR)/$(TARGET)-bs.elf: $(objs-bs-y)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(BSLDFLAGS) $^ -o $@
-	$(Q)$(SZ) $@
-
-
-#######################################
 # build the bootloader
 #######################################
 bootloader: $(objs-bl-y)
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bl.elf
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bl.hex
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-bl.bin
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
 
-$(BUILD_DIR)/$(TARGET)-bl.elf: $(objs-bl-y)
+$(BUILD_DIR)/$(TARGET)-boot.elf: $(objs-bl-y)
 	$(Q)echo output $@
-	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@
 	$(Q)$(SZ) $@
 
 
@@ -287,8 +265,7 @@ $(APPS_DIR)/%.exec: $(objs)
 osImage:
 	$(Q)echo generated village kernel image
 	$(Q)dd if=/dev/zero                       of=$(BUILD_DIR)/village-os.img bs=512 count=2880
-	$(Q)dd if=$(BUILD_DIR)/village-bs.bin     of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
-#	$(Q)dd if=$(BUILD_DIR)/village-bl.bin     of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
+	$(Q)dd if=$(BUILD_DIR)/village-boot.bin   of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
 	$(Q)dd if=$(BUILD_DIR)/village-kernel.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
 
 

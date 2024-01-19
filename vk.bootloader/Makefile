@@ -5,13 +5,10 @@
 # $Copyright: Copyright (C) village
 ############################################################################
 
-######################################
-# paths
-######################################
-inc-$(CONFIG_BOOTLOADER) += vk.bootloader/bootloader/inc
-src-$(CONFIG_BOOTLOADER) += vk.bootloader/bootloader/src
+ifeq ($(CONFIG_X86BIOS), y)
+-include vk.bootloader/x86bios/Makefile
+endif
 
-######################################
-# objects
-######################################
-objs-bl-$(CONFIG_BOOTLOADER) += Bootloader.o
+ifeq ($(CONFIG_X64UEFI), y)
+-include vk.bootloader/x64uefi/Makefile
+endif
