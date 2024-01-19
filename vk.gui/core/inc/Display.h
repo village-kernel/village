@@ -16,55 +16,30 @@ class Display
 {
 public:
 	//Enums
-	enum Color8
+	enum Color16
 	{
-		White      = 0x1F,
-		Black      = 0x10,	  
-		Blue       = 0x1F,  
-		Bred       = 0X1F,
-		Gred       = 0XE0,
-		Gblue      = 0XFF,
-		Red        = 0x00,
-		Magenta    = 0x1F,
-		Green      = 0xE0,
-		Cyan       = 0xFF,
-		Yellow     = 0xE0,
-		Brown      = 0X40,
-		Brred      = 0X07,
-		Gray       = 0X30,
-		Darkblue   = 0XCF,
-		Lightblue  = 0X7C, 
-		Grayblue   = 0X58,
-		Lightgreen = 0X1F,
-		Lgray      = 0X18,
-		Lgrayblue  = 0X51,
-		Lbblue     = 0X12,
+		White      = 0xFFFF,
+		Black      = 0x0000,	  
+		Blue       = 0x001F,  
+		Bred       = 0XF81F,
+		Gred       = 0XFFE0,
+		Gblue      = 0X07FF,
+		Red        = 0xF800,
+		Magenta    = 0xF81F,
+		Green      = 0x07E0,
+		Cyan       = 0x7FFF,
+		Yellow     = 0xFFE0,
+		Brown      = 0XBC40,
+		Brred      = 0XFC07,
+		Gray       = 0X8430,
+		Darkblue   = 0X01CF,
+		Lightblue  = 0X7D7C, 
+		Grayblue   = 0X5458,
+		Lightgreen = 0X841F,
+		Lgray      = 0XC618,
+		Lgrayblue  = 0XA651,
+		Lbblue     = 0X2B12,
 	};
-
-	//enum Color16
-	//{
-	//	White      = 0xFFFF,
-	//	Black      = 0x0000,	  
-	//	Blue       = 0x001F,  
-	//	Bred       = 0XF81F,
-	//	Gred       = 0XFFE0,
-	//	Gblue      = 0X07FF,
-	//	Red        = 0xF800,
-	//	Magenta    = 0xF81F,
-	//	Green      = 0x07E0,
-	//	Cyan       = 0x7FFF,
-	//	Yellow     = 0xFFE0,
-	//	Brown      = 0XBC40,
-	//	Brred      = 0XFC07,
-	//	Gray       = 0X8430,
-	//	Darkblue   = 0X01CF,
-	//	Lightblue  = 0X7D7C, 
-	//	Grayblue   = 0X5458,
-	//	Lightgreen = 0X841F,
-	//	Lgray      = 0XC618,
-	//	Lgrayblue  = 0XA651,
-	//	Lbblue     = 0X2B12,
-	//};
 
 	enum FontSize
 	{
@@ -80,10 +55,8 @@ public:
 private:
 	//Static constants
 	static const uint16_t buf_size = 100;
-	static const uint16_t defStrokeColor = Color8::Black;
-	static const uint16_t defBackgroundColor = Color8::White;
-	//static const uint16_t defStrokeColor = Color16::Black;
-	//static const uint16_t defBackgroundColor = Color16::White;
+	static const uint16_t defStrokeColor = Color16::Black;
+	static const uint16_t defBackgroundColor = Color16::White;
 
 	//Members
 	LcdDriver* lcd;

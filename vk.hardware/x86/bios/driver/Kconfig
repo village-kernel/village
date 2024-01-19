@@ -5,6 +5,10 @@ config SERIAL
 	tristate "Enable serial support"
 	default n
 
+config BOCHSVBE
+	tristate "Enable Bochs VBE support"
+	default n
+
 config VGA
 	tristate "Enable VGA support"
 	default n
