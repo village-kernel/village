@@ -40,13 +40,13 @@ src-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/src
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
 src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 
-inc-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/class/inc
-inc-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/core/inc
-inc-$(CONFIG_FATFS)                        += vk.kernel/filesys/fat/inc
+inc-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/inc
+inc-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/inc
+inc-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/inc
 
-src-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/class/src
-src-$(CONFIG_FILESYSTEM)                   += vk.kernel/filesys/core/src
-src-$(CONFIG_FATFS)                        += vk.kernel/filesys/fat/src
+src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/src
+src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/src
+src-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/src
 
 ######################################
 # objects
