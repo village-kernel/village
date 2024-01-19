@@ -416,6 +416,8 @@ uint8_t PortByteIn(uint16_t port);
 void PortByteOut(uint16_t port, uint8_t data);
 uint16_t PortWordIn(uint16_t port);
 void PortWordOut(uint16_t port, uint16_t data);
+uint32_t PortLongIn(uint32_t port);
+void PortLongOut(uint32_t port, uint32_t data);
 
 #ifdef __cplusplus
 }

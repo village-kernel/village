@@ -57,3 +57,23 @@ void PortWordOut(uint16_t port, uint16_t data)
 {
     __asm__ volatile("out %%ax, %%dx" : : "a" (data), "d" (port));
 }
+
+
+/// @brief  Read a long word from the specified port
+/// @param port 
+/// @return result
+uint32_t PortLongIn(uint32_t port)
+{
+    uint32_t result;
+    __asm__("inl %%edx, %%eax" : "=a" (result) : "d" (port));
+    return result;
+}
+
+
+/// @brief Write a long word to the specified port
+/// @param port 
+/// @param data 
+void PortLongOut(uint32_t port, uint32_t data)
+{
+    __asm__ volatile("outl %%eax, %%edx" : : "a" (data), "d" (port));
+}
