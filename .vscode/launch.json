@@ -56,18 +56,18 @@
             "preLaunchTask": "Build"
         },
         {
-            "name": "QEMU Debug x86_64 boot",
+            "name": "QEMU Debug x86 bios boot",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/vk.build/village-bs.elf",
+            "program": "${workspaceFolder}/vk.build/village-boot.elf",
             "cwd": "${workspaceFolder}",
             "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
-            "preLaunchTask": "Run QEMU x86_64"
+            "preLaunchTask": "Run QEMU x86 bios"
         },
         {
-            "name": "QEMU Debug x86_64 kernel",
+            "name": "QEMU Debug x86 bios kernel",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/vk.build/village-kernel.elf",
@@ -75,7 +75,7 @@
             "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
-            "preLaunchTask": "Run QEMU x86_64"
+            "preLaunchTask": "Run QEMU x86 bios"
         }
     ]
 }

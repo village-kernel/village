@@ -12,10 +12,47 @@ choice
 		select BOOTSECTION
 endchoice
 
+comment "Configure Support Function"
+
+## ARM
 if ARM
-	source ./vk.hardware/arm/Kconfig
+
+choice
+	prompt "ARM Series"
+	depends on ARM
+	default CORTEX_M
+
+	config CORTEX_A
+		bool "cortex-A"
+
+	config CORTEX_R
+		bool "cortex-R"
+
+	config CORTEX_M
+		bool "cortex-M"
+endchoice
+
+if CORTEX_M
+	source ./vk.hardware/arm/cortex-m/Kconfig
 endif
 
+endif
+
+## X86
 if X86
-	source ./vk.hardware/x86/Kconfig
+
+choice
+	prompt "Boot fireware"
+	depends on X86
+	default BIOS
+
+	config BIOS
+		bool "bios"
+
+endchoice
+
+if BIOS
+	source ./vk.hardware/x86/bios/Kconfig
+endif
+
 endif

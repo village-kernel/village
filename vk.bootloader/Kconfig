@@ -1,11 +1,29 @@
-comment "This is using to configure bootloader"
-
 # bootloader
 config BOOTLOADER
 	bool "Enable bootloader function"
 	default n
 
-config ENCRYPT_FIRMWARE
-	bool "Encrypt firmware"
-	default n
+if BOOTLOADER
 
+comment "Select bootloader"
+
+choice
+	prompt "bootloader"
+	default X86BIOS
+
+	config X86BIOS
+		bool "x86 bios boot"
+
+	config X64UEFI
+		bool "x64 uefi boot"
+endchoice
+
+if X86BIOS
+	source ./vk.bootloader/x86bios/Kconfig
+endif
+
+if X64UEFI
+	source ./vk.bootloader/x64uefi/Kconfig
+endif
+
+endif
