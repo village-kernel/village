@@ -9,7 +9,7 @@
 #include "Kernel.h"
 #include "Hardware.h"
 #include "WorkQueue.h"
-
+#include "PS2Controller.cpp"
 
 /// @brief Mouse
 class Mouse : public Driver
@@ -49,44 +49,19 @@ private:
 	bool isLeftBtnPressed;
 	bool isRightBtnPressed;
 	bool isMiddleBtnPressed;
+	//Controller members
+	PS2Controller ps2;
 	//Work
 	WorkQueue::Work* work;
 private:
-	/// @brief PS2 write cmd
-	/// @param cmd 
-	void PS2WriteCmd(uint8_t cmd)
-	{
-		while (PortByteIn(PS2_READ_STATUS) & PS2_STATUS_INPUT_BUFFER) {}
-		PortByteOut(PS2_WRITE_COMMAND, cmd);
-	}
-
-
-	/// @brief PS2 write data
-	/// @param data 
-	void PS2WriteData(uint8_t data)
-	{
-		while (PortByteIn(PS2_READ_STATUS) & PS2_STATUS_INPUT_BUFFER) {}
-		PortByteOut(PS2_WRITE_DATA, data);
-	}
-
-
-	/// @brief PS2 read data
-	/// @return data
-	uint8_t PS2ReadData()
-	{
-		while (!(PortByteIn(PS2_READ_STATUS) & PS2_STATUS_OUTPUT_BUFFER)) {}
-		return PortByteIn(PS2_READ_DATA);
-	}
-
-
 	/// @brief Mouse write data
 	/// @param data 
 	/// @return ack
 	uint8_t MouseWriteData(uint8_t data)
 	{
-		PS2WriteCmd(PS2_CMD_WR_CTL_SEC_INPUT_BUFF);
-		PS2WriteData(data);
-		return PS2ReadData();
+		ps2.WriteCmd(PS2_CMD_WR_CTL_SEC_INPUT_BUFF);
+		ps2.WriteData(data);
+		return ps2.ReadData();
 	}
 
 
@@ -94,7 +69,7 @@ private:
 	/// @return data
 	uint8_t MouseReadData()
 	{
-		return PS2ReadData();
+		return ps2.ReadData();
 	}
 
 
@@ -103,19 +78,19 @@ private:
 	bool ConfigureMouse()
 	{
 		//Read config
-		PS2WriteCmd(PS2_CMD_READ_BYTE_0);
-		config = PS2ReadData();
+		ps2.WriteCmd(PS2_CMD_READ_BYTE_0);
+		config = ps2.ReadData();
 		
 		//Set irq12 and ps2 clk enable flag
 		config |=  (PS2_CTL_SECOND_PORT_INT);
 		config &= ~(PS2_CTL_SECOND_PORT_CLK);
 
 		//Enable irq12
-		PS2WriteCmd(PS2_CMD_WRITE_NEXT_BYTE_0);
-		PS2WriteData(config);
+		ps2.WriteCmd(PS2_CMD_WRITE_NEXT_BYTE_0);
+		ps2.WriteData(config);
 
 		//Enable second ps2 port
-		PS2WriteCmd(PS2_CMD_ENA_SEC_PS2_PORT);
+		ps2.WriteCmd(PS2_CMD_ENA_SEC_PS2_PORT);
 
 		//Restore to defaults
 		MouseWriteData(PS2_MOUSE_CMD_SET_DEFAULTS);
@@ -269,4 +244,4 @@ public:
 
 
 //Register driver
-REGISTER_DRIVER(new Mouse(), DriverID::_miscdev + 1, mouse);
+REGISTER_DRIVER(new Mouse(), DriverID::_miscdev + 1, ps2mouse);

@@ -69,4 +69,4 @@ public:
 
 
 //Register driver
-REGISTER_DRIVER(new KeyBoard(), DriverID::_miscdev, keyboard);
+REGISTER_DRIVER(new KeyBoard(), DriverID::_miscdev, ps2keyboard);
