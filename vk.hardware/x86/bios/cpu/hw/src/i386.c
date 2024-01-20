@@ -21,7 +21,7 @@ uint8_t PortByteIn(uint16_t port)
      *
      * Inputs and outputs are separated by colons
      */
-    __asm__("in %%dx, %%al" : "=a" (result) : "d" (port));
+    __asm__("inb %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
 }
 
@@ -35,7 +35,7 @@ void PortByteOut(uint16_t port, uint8_t data)
      * However we see a comma since there are two variables in the input area
      * and none in the 'return' area
      */
-    __asm__ volatile("out %%al, %%dx" : : "a" (data), "d" (port));
+    __asm__ volatile("outb %%al, %%dx" : : "a" (data), "d" (port));
 }
 
 
@@ -45,7 +45,7 @@ void PortByteOut(uint16_t port, uint8_t data)
 uint16_t PortWordIn(uint16_t port)
 {
     uint16_t result;
-    __asm__("in %%dx, %%ax" : "=a" (result) : "d" (port));
+    __asm__("inw %%dx, %%ax" : "=a" (result) : "d" (port));
     return result;
 }
 
@@ -55,7 +55,7 @@ uint16_t PortWordIn(uint16_t port)
 /// @param data 
 void PortWordOut(uint16_t port, uint16_t data)
 {
-    __asm__ volatile("out %%ax, %%dx" : : "a" (data), "d" (port));
+    __asm__ volatile("outw %%ax, %%dx" : : "a" (data), "d" (port));
 }
 
 
