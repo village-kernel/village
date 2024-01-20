@@ -105,18 +105,16 @@ EXPORT_SYMBOL(_ZN9Interrupt9AppendISREiM5ClassFvPvEPS0_S1_);
 /// @return Result::_OK / Result::_ERR
 int Interrupt::RemoveISR(int irq, Function func, void* user, void* args)
 {
-	List<Isr*> isrs = isrTabs[irq];
+	List<Isr*>* isrs = &isrTabs[irq];
 
-	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
+	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
 	{
 		if ((irq  == isr->irq ) &&
 			(func == isr->func) &&
 			(user == isr->user) &&
 			(args == isr->args))
 		{
-			Result res = (Result)isrs.Remove(isr, isrs.GetNid());
-			if (_OK == res) isrTabs[irq] = isrs;
-			return res;
+			return (Result)isrs->Remove(isr, isrs->GetNid());
 		}
 	}
 
@@ -143,14 +141,12 @@ EXPORT_SYMBOL(_ZN9Interrupt9RemoveISREiM5ClassFvPvEPS0_S1_);
 /// @return Result::_OK / Result::_ERR
 void Interrupt::ClearISR(int irq)
 {
-	List<Isr*> isrs = isrTabs[irq];
+	List<Isr*>* isrs = &isrTabs[irq];
 
-	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
+	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
 	{
-		isrs.Remove(isr, isrs.GetNid());
+		isrs->Remove(isr, isrs->GetNid());
 	}
-
-	isrTabs[irq] = isrs;
 }
 EXPORT_SYMBOL(_ZN9Interrupt8ClearISREi);
 
@@ -159,9 +155,9 @@ EXPORT_SYMBOL(_ZN9Interrupt8ClearISREi);
 /// @param irq irq number
 void Interrupt::Handler(int irq)
 {
-	List<Isr*> isrs = interrupt.isrTabs[irq];
+	List<Isr*>* isrs = &interrupt.isrTabs[irq];
 	
-	if (isrs.IsEmpty())
+	if (isrs->IsEmpty())
 	{
 		if (++warnings[irq] >= warning_times)
 		{
@@ -176,7 +172,7 @@ void Interrupt::Handler(int irq)
 		warnings[irq] = 0;
 	}
 
-	for (Isr* isr = isrs.Begin(); !isrs.IsEnd(); isr = isrs.Next())
+	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
 	{
 		(isr->func)(isr->user, isr->args);
 	}
