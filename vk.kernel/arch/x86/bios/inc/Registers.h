@@ -62,7 +62,7 @@ struct Registers
 		psp(0),
 		ss(0)
 	{}
-};
+} __attribute__((packed));
 
 struct TaskContext
 {
@@ -97,6 +97,6 @@ struct TaskContext
 		arg2(arg2),
 		arg3(arg3)
 	{}
-};
+} __attribute__((packed));
 
 #endif //!__REGISTERS_X86_H__
