@@ -8,8 +8,7 @@
 #include "Kernel.h"
 #include "Driver.h"
 #include "LcdDriver.h"
-
-#include "PCIController.cpp"
+#include "PCIController.h"
 
 #define VBE_DISPI_IOPORT_INDEX       (0x01CE)
 #define VBE_DISPI_IOPORT_DATA        (0x01CF)

@@ -6,6 +6,7 @@ config SERIAL
 	default n
 
 config BOCHSVBE
+	select HAL_PCI_CONTROLLER
 	tristate "Enable Bochs VBE support"
 	default n
 
@@ -18,6 +19,7 @@ config PS2KEYBOARD
 	default n
 
 config PS2MOUSE
+	select HAL_PS2_CONTROLLER
 	tristate "Enable ps2 mouse input support"
 	default n
 	

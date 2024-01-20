@@ -9,7 +9,7 @@
 #include "Kernel.h"
 #include "Hardware.h"
 #include "WorkQueue.h"
-#include "PS2Controller.cpp"
+#include "PS2Controller.h"
 
 /// @brief Mouse
 class Mouse : public Driver

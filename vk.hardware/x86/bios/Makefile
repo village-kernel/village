@@ -6,4 +6,5 @@
 ############################################################################
 
 -include vk.hardware/x86/bios/cpu/Makefile
+-include vk.hardware/x86/bios/hal/Makefile
 -include vk.hardware/x86/bios/driver/Makefile
