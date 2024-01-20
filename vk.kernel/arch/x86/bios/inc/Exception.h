@@ -15,9 +15,25 @@ class Exception : public Class
 {
 private:
 	//Methods
-	void ATAChannel1();
-	void ATAChannel2();
-	void GerneralFault();
+	void DivisionByZeroHandler();
+	void DebugHandler();
+	void NonMaskableInterruptHandler();
+	void BreakpointHandler();
+	void IntoDetectedOverflowHandler();
+	void OutOfBoundsHandler();
+	void InvalidOpcodeHandler();
+	void NoCoprocessorHandler();
+	void DouleFaultHandler();
+	void CoprocessorSegmentOverrunHandler();
+	void BadTSSHandler();
+	void SegmentNotPresentHandler();
+	void StackFaultHandler();
+	void GeneralProtectionFaultHandler();
+	void PageFaultHandler();
+	void UnknownInterruptHandler();
+	void CoprocessorFaultHandler();
+	void AlignmentCheckHandler();
+	void MachineCheckHandler();
 public:
 	//Methods
 	Exception();
