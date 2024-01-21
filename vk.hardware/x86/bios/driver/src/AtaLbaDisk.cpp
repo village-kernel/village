@@ -29,6 +29,17 @@ public:
 	}
 	
 
+	/// @brief Initialize
+	void Initialize()
+	{
+		//Stop device from sending interrupts
+		if (0 == drv)
+			PortByteOut(ATA_PRIMARY_PORT_CTRL, ATA_CTRL_nIEN);
+		else if (1 == drv)
+			PortByteOut(ATA_SECOND_PORT_CTRL, ATA_CTRL_nIEN);
+	}
+
+
 	/// @brief Write data
 	/// @param data 
 	/// @param count 

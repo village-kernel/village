@@ -283,6 +283,12 @@ extern "C" {
 #define ATA_STATUS_BSY_Msk                   (0x1 << ATA_STATUS_BSY_Pos)
 #define ATA_STATUS_BSY                       ATA_STATUS_BSY_Msk
 
+#define ATA_PRIMARY_PORT_CTRL                (0x3F6)
+#define ATA_SECOND_PORT_CTRL                 (0x3F7)
+
+#define ATA_CTRL_nIEN                        (0x01 << 1)
+
+
 /* PS/2 Controller IO Ports */
 #define PS2_READ_DATA                        0x60
 #define PS2_WRITE_DATA                       0x60
