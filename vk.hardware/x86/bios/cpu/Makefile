@@ -40,7 +40,7 @@ objs-y                           += isr.o
 # arch
 ######################################
 # MCU
-MCU   := -m32
+MCU   := -m32 -mno-sse
 
 # MCU EM
 MCUEM := -melf_i386
