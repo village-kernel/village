@@ -30,11 +30,13 @@ src-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/src
 src-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32f4xx
 src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32h7xx
 
+inc-$(CONFIG_SUBSYS)                        += vk.kernel/subsys/inc
 inc-$(CONFIG_SYNC)                          += vk.kernel/sync/inc
 inc-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/inc
 inc-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/inc
 inc-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/inc
 
+src-$(CONFIG_SUBSYS)                        += vk.kernel/subsys/src
 src-$(CONFIG_SYNC)                          += vk.kernel/sync/src
 src-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/src
 src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
@@ -67,8 +69,8 @@ objs-y                                      += System.o
 
 objs-$(CONFIG_INPUT)                        += Input.o
 objs-$(CONFIG_LOADER)                       += Loader.o
-objs-$(CONFIG_ENVIRONMENT)                  += Environment.o
 objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
+objs-$(CONFIG_ENVIRONMENT)                  += Environment.o
 
 objs-$(CONFIG_FATFS)                        += FatDiskio.o
 objs-$(CONFIG_FATFS)                        += FatEntry.o
