@@ -30,7 +30,7 @@ public:
 	Driver* GetDriverByName(const char* name);
 
 	Module* GetModule(uint32_t id);
-	Module* GetModuleByName(const char* name);
+	Module* GetModule(const char* name);
 
 	void AttachInput(InputObserver* observer);
 	void ReadInputEvent(uint8_t& keycode, int& status);

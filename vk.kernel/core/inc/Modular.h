@@ -34,7 +34,7 @@ public:
 	void RegisterModule(Module* module, uint32_t id = 0);
 	void DeregisterModule(Module* module, uint32_t id = 0);
 	Module* GetModule(uint32_t id);
-	Module* GetModuleByName(const char* name);
+	Module* GetModule(const char* name);
 };
 
 #endif // !__MODULAR_H__

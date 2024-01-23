@@ -26,7 +26,7 @@ FatSystem::~FatSystem()
 /// @brief Setup
 void FatSystem::Setup()
 {
-	FileSystem* filesys = (FileSystem*)Kernel::modular.GetModuleByName("fileSystem");
+	FileSystem* filesys = (FileSystem*)Kernel::modular.GetModule("fileSystem");
 	if (NULL == filesys)
 	{
 		Kernel::debug.Error("file system feature not support");

@@ -89,9 +89,9 @@ Module* Village::GetModule(uint32_t id)
 /// @brief Get module by name
 /// @param name 
 /// @return module
-Module* Village::GetModuleByName(const char* name)
+Module* Village::GetModule(const char* name)
 {
-	return Kernel::modular.GetModuleByName(name);
+	return Kernel::modular.GetModule(name);
 }
 
 
@@ -99,7 +99,7 @@ Module* Village::GetModuleByName(const char* name)
 /// @param observer 
 void Village::AttachInput(InputObserver* observer)
 {
-	Input* input = (Input*)Kernel::modular.GetModuleByName("input");
+	Input* input = (Input*)Kernel::modular.GetModule("input");
 	if (NULL == input)
 	{
 		Kernel::debug.Error("loader feature not support");
@@ -114,7 +114,7 @@ void Village::AttachInput(InputObserver* observer)
 /// @param status 
 void Village::ReadInputEvent(uint8_t& keycode, int& status)
 {
-	Input* input = (Input*)Kernel::modular.GetModuleByName("input");
+	Input* input = (Input*)Kernel::modular.GetModule("input");
 	if (NULL == input)
 	{
 		Kernel::debug.Error("loader feature not support");
@@ -130,7 +130,7 @@ void Village::ReadInputEvent(uint8_t& keycode, int& status)
 /// @param axisZ 
 void Village::ReadInputMovement(int& axisX, int& axisY, int& axisZ)
 {
-	Input* input = (Input*)Kernel::modular.GetModuleByName("input");
+	Input* input = (Input*)Kernel::modular.GetModule("input");
 	if (NULL == input)
 	{
 		Kernel::debug.Error("loader feature not support");

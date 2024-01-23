@@ -137,8 +137,8 @@ EXPORT_SYMBOL(_ZN7Modular9GetModuleEm);
 /// @brief Get the module object by name
 /// @param name module name
 /// @return driver
-Module* Modular::GetModuleByName(const char* name)
+Module* Modular::GetModule(const char* name)
 {
 	return modules.GetItemByName(name);
 }
-EXPORT_SYMBOL(_ZN7Modular15GetModuleByNameEPKc);
+EXPORT_SYMBOL(_ZN7Modular9GetModuleEPKc);
