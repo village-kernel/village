@@ -8,11 +8,16 @@
 #define __LIBRARY_TOOL_H__
 
 #include "Defines.h"
+#include "Templates.h"
+#include "ElfLoader.h"
 
 
 /// @brief LibraryTool
 class LibraryTool
 {
+private:
+	//Methods
+	List<ElfLoader*>* GetLibraries();
 public:
 	//Methods
 	LibraryTool();
