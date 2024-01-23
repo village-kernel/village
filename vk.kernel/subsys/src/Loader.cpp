@@ -33,7 +33,7 @@ void Loader::Initialize()
 void Loader::Execute()
 {
 	//Execute the first application of the village
-	executor.Run(Executor::_Foreground, "/applications/taichi.exec");
+	executor.Run(Executor::_Background, "/applications/taichi.exec");
 }
 
 
