@@ -11,6 +11,7 @@
 #include "WorkQueue.h"
 #include "PS2Controller.h"
 
+
 /// @brief Mouse
 class Mouse : public Driver
 {
@@ -52,6 +53,8 @@ private:
 	//Controller members
 	PS2Controller ps2;
 	//Work
+	Input* input;
+	WorkQueue* workQueue;
 	WorkQueue::Work* work;
 private:
 	/// @brief Mouse write data
@@ -152,7 +155,7 @@ private:
 			if (++count >= mouseid)
 			{
 				count = 0;
-				workQueue.Schedule(work);
+				workQueue->Schedule(work);
 			}
 		}
 	}
@@ -165,43 +168,46 @@ private:
 		if (packet.leftBtn && !isLeftBtnPressed)
 		{
 			isLeftBtnPressed = true;
-			input.ReportEvent(0xf1, 1);
+			input->ReportEvent(0xf1, 1);
 		}
 		else if (!packet.leftBtn && isLeftBtnPressed)
 		{
 			isLeftBtnPressed = false;
-			input.ReportEvent(0xf1, 0);
+			input->ReportEvent(0xf1, 0);
 		}
 
 		//Report right button
 		if (packet.rightBtn && !isRightBtnPressed)
 		{
 			isRightBtnPressed = true;
-			input.ReportEvent(0xf2, 1);
+			input->ReportEvent(0xf2, 1);
 		}
 		else if (!packet.rightBtn && isRightBtnPressed)
 		{
 			isRightBtnPressed = false;
-			input.ReportEvent(0xf2, 0);
+			input->ReportEvent(0xf2, 0);
 		}
 
 		//Report middle button
 		if (packet.middleBtn && !isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = true;
-			input.ReportEvent(0xf3, 1);
+			input->ReportEvent(0xf3, 1);
 		}
 		else if (!packet.middleBtn && isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = false;
-			input.ReportEvent(0xf3, 0);
+			input->ReportEvent(0xf3, 0);
 		}
 
 		//Report axis x, y, z movement value
 		int axisX = (int16_t)packet.x - (packet.xSignBit ? 0x100 : 0);
 		int axisY = (int16_t)packet.y - (packet.ySignBit ? 0x100 : 0);
 		int axisZ = (int8_t)packet.z;
-		input.ReportMovement(axisX, axisY, axisZ);
+		input->ReportMovement(axisX, axisY, axisZ);
+
+		//Notify
+		input->Notify();
 	}
 public:
 	/// @brief Constructor
@@ -211,7 +217,10 @@ public:
 		mouseid(0),
 		isLeftBtnPressed(false),
 		isRightBtnPressed(false),
-		isMiddleBtnPressed(false)
+		isMiddleBtnPressed(false),
+		input(NULL),
+		workQueue(NULL),
+		work(NULL)
 	{
 	}
 
@@ -225,9 +234,27 @@ public:
 	/// @brief Mouse initialize
 	void Initialize()
 	{
+		//Get the input module
+		input = (Input*)Kernel::modular.GetModuleByName("input");
+		if (NULL == input)
+		{
+			Kernel::debug.Error("input feature not support");
+			return;
+		}
+
+		//Get the work queue module
+		workQueue = (WorkQueue*)Kernel::modular.GetModuleByName("workQueue");
+		if (NULL == workQueue)
+		{
+			Kernel::debug.Error("work queue feature not support");
+			return;
+		}
+
+		//Create work
+		work = workQueue->Create((Method)&Mouse::ReportHandler, this);
+
 		//Set interrupt service
-		interrupt.SetISR(IRQ_Mouse_Controller, (Method)&Mouse::InputHandler, this);
-		work = workQueue.Create((Method)&Mouse::ReportHandler, this);
+		Kernel::interrupt.SetISR(IRQ_Mouse_Controller, (Method)&Mouse::InputHandler, this);
 
 		//Config
 		ConfigureMouse();
@@ -237,8 +264,8 @@ public:
 	/// @brief Mouse exit
 	void Exit()
 	{
-		interrupt.RemoveISR(IRQ_Mouse_Controller, (Method)(&Mouse::InputHandler), this);
-		workQueue.Delete(work);
+		Kernel::interrupt.RemoveISR(IRQ_Mouse_Controller, (Method)(&Mouse::InputHandler), this);
+		workQueue->Delete(work);
 	}
 };
 
