@@ -5,9 +5,8 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Exception.h"
-#include "Interrupt.h"
+#include "Kernel.h"
 #include "HalHeaders.h"
-#include "Debug.h"
 
 
 /// @brief Constructor
@@ -20,19 +19,6 @@ Exception::Exception()
 Exception::~Exception()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Exception instance
-Exception& Exception::Instance()
-{
-	static Exception instance;
-	return instance;
-}
-
-
-/// @brief Definitions exception
-Exception& exception = Exception::Instance();
 
 
 /// @brief Exception initialize
@@ -56,15 +42,15 @@ extern "C" void stacked_info(unsigned int * hardfault_args)
 	volatile uint32_t stacked_pc  = ((uint32_t)hardfault_args[6]);
 	volatile uint32_t stacked_psr = ((uint32_t)hardfault_args[7]);
 
-	debug.Output(Debug::_Lv5, "Hard_Fault_Handler:");
-	debug.Output(Debug::_Lv5, "r0:   0x%08lx", stacked_r0);
-	debug.Output(Debug::_Lv5, "r1:   0x%08lx", stacked_r1);
-	debug.Output(Debug::_Lv5, "r2:   0x%08lx", stacked_r2);
-	debug.Output(Debug::_Lv5, "r3:   0x%08lx", stacked_r3);
-	debug.Output(Debug::_Lv5, "r12:  0x%08lx", stacked_r12);
-	debug.Output(Debug::_Lv5, "lr:   0x%08lx", stacked_lr);
-	debug.Output(Debug::_Lv5, "pc:   0x%08lx", stacked_pc);
-	debug.Output(Debug::_Lv5, "xpsr: 0x%08lx", stacked_psr);
+	Kernel::debug.Output(Debug::_Lv5, "Hard_Fault_Handler:");
+	Kernel::debug.Output(Debug::_Lv5, "r0:   0x%08lx", stacked_r0);
+	Kernel::debug.Output(Debug::_Lv5, "r1:   0x%08lx", stacked_r1);
+	Kernel::debug.Output(Debug::_Lv5, "r2:   0x%08lx", stacked_r2);
+	Kernel::debug.Output(Debug::_Lv5, "r3:   0x%08lx", stacked_r3);
+	Kernel::debug.Output(Debug::_Lv5, "r12:  0x%08lx", stacked_r12);
+	Kernel::debug.Output(Debug::_Lv5, "lr:   0x%08lx", stacked_lr);
+	Kernel::debug.Output(Debug::_Lv5, "pc:   0x%08lx", stacked_pc);
+	Kernel::debug.Output(Debug::_Lv5, "xpsr: 0x%08lx", stacked_psr);
 
 	while (1);
 }
