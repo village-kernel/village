@@ -205,9 +205,6 @@ private:
 		int axisY = (int16_t)packet.y - (packet.ySignBit ? 0x100 : 0);
 		int axisZ = (int8_t)packet.z;
 		input->ReportMovement(axisX, axisY, axisZ);
-
-		//Notify
-		input->Notify();
 	}
 public:
 	/// @brief Constructor
