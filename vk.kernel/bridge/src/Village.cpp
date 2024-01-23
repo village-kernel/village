@@ -95,9 +95,10 @@ Module* Village::GetModule(const char* name)
 }
 
 
-/// @brief 
-/// @param observer 
-void Village::AttachInput(InputObserver* observer)
+/// @brief Attach input
+/// @param method 
+/// @param user 
+void Village::AttachInput(Input::Type type, Method method, Class *user)
 {
 	Input* input = (Input*)Kernel::modular.GetModule("input");
 	if (NULL == input)
@@ -105,14 +106,14 @@ void Village::AttachInput(InputObserver* observer)
 		Kernel::debug.Error("loader feature not support");
 		return;
 	}
-	input->Attach(observer);
+	input->Attach(type, method, user);
 }
 
 
-/// @brief 
-/// @param keycode 
-/// @param status 
-void Village::ReadInputEvent(uint8_t& keycode, int& status)
+/// @brief Detach input
+/// @param method 
+/// @param user 
+void Village::DetachInput(Input::Type type, Method method, Class *user)
 {
 	Input* input = (Input*)Kernel::modular.GetModule("input");
 	if (NULL == input)
@@ -120,23 +121,7 @@ void Village::ReadInputEvent(uint8_t& keycode, int& status)
 		Kernel::debug.Error("loader feature not support");
 		return;
 	}
-	input->ReadEvent(keycode, status);
-}
-
-
-/// @brief 
-/// @param axisX 
-/// @param axisY 
-/// @param axisZ 
-void Village::ReadInputMovement(int& axisX, int& axisY, int& axisZ)
-{
-	Input* input = (Input*)Kernel::modular.GetModule("input");
-	if (NULL == input)
-	{
-		Kernel::debug.Error("loader feature not support");
-		return;
-	}
-	input->ReadMovement(axisX, axisY, axisZ);
+	input->Detach(type, method, user);
 }
 
 
