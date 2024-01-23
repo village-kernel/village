@@ -32,9 +32,8 @@ public:
 	Module* GetModule(uint32_t id);
 	Module* GetModule(const char* name);
 
-	void AttachInput(InputObserver* observer);
-	void ReadInputEvent(uint8_t& keycode, int& status);
-	void ReadInputMovement(int& axisX, int& axisY, int& axisZ);
+	void AttachInput(Input::Type type, Method method, Class *user);
+	void DetachInput(Input::Type type, Method method, Class *user);
 
 	void SetDebugLevel(int level);
 
