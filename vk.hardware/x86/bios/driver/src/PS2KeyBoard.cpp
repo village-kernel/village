@@ -64,7 +64,7 @@ public:
 	void Initialize()
 	{
 		//Get the input module
-		input = (Input*)Kernel::modular.GetModuleByName("input");
+		input = (Input*)Kernel::modular.GetModule("input");
 		if (NULL == input)
 		{
 			Kernel::debug.Error("input feature not support");
@@ -72,7 +72,7 @@ public:
 		}
 
 		//Get the work queue module
-		workQueue = (WorkQueue*)Kernel::modular.GetModuleByName("workQueue");
+		workQueue = (WorkQueue*)Kernel::modular.GetModule("workQueue");
 		if (NULL == workQueue)
 		{
 			Kernel::debug.Error("work queue feature not support");

@@ -25,7 +25,7 @@ LibraryTool::~LibraryTool()
 List<ElfLoader*>* LibraryTool::GetLibraries()
 {
 	//Get the loader module
-	Loader* loader = (Loader*)Kernel::modular.GetModuleByName("loader");
+	Loader* loader = (Loader*)Kernel::modular.GetModule("loader");
 	if (NULL == loader)
 	{
 		Kernel::debug.Error("loader feature not support");

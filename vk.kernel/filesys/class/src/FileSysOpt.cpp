@@ -11,7 +11,7 @@
 /// @brief Constructor
 FileSysOpt::FileSysOpt()
 {
-	filesys = (FileSystem*)Kernel::modular.GetModuleByName("fileSystem");
+	filesys = (FileSystem*)Kernel::modular.GetModule("fileSystem");
 	if (NULL == filesys)
 	{
 		Kernel::debug.Error("file system feature not support");
