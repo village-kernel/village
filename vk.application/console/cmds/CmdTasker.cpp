@@ -12,6 +12,8 @@
 /// @brief CmdTasker
 class CmdTasker : public Cmd
 {
+private:
+	Village village;
 public:
 	/// @brief Cmd tasker execute
 	/// @param argc 

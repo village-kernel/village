@@ -12,6 +12,9 @@
 /// @brief CmdMem
 class CmdMem : public Cmd
 {
+private:
+	//Members
+	Village village;
 public:
 	/// @brief Cmd memeory execute
 	/// @param argc 

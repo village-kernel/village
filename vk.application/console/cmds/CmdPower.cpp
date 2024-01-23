@@ -12,6 +12,9 @@
 /// @brief CmdReboot
 class CmdReboot : public Cmd
 {
+private:
+	//Members
+	Village village;
 public:
 	/// @brief Cmd reboot execute
 	/// @param argc 
