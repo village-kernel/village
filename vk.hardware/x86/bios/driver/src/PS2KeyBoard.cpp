@@ -39,9 +39,6 @@ private:
 			input->ReportEvent(keycode, 1);
 		else if (keycode >= 0x39 && keycode <= 0x39 + 0x80)
 			input->ReportEvent(keycode - 0x80, 0);
-
-		//Notify
-		input->Notify();
 	}
 public:
 	/// @brief Constructor
