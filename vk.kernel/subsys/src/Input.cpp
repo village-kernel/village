@@ -20,20 +20,6 @@ Input::~Input()
 }
 
 
-/// @brief Input initialize
-void Input::Initialize()
-{
-
-}
-
-
-/// @brief Input execute
-void Input::Execute()
-{
-	while (1) {}
-}
-
-
 /// @brief Input base attach
 /// @param observer 
 /// @param func 

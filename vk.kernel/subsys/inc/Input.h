@@ -72,9 +72,6 @@ public:
 	//Methods
 	Input();
 	~Input();
-	void Initialize();
-	void Execute();
-
 	void Attach(Type type, Method method, Class* user);
 	void Attach(Type type, Function func, void* user = NULL);
 	void Detach(Type type, Method method, Class* user);
