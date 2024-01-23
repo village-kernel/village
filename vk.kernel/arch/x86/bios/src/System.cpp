@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "System.h"
-#include "Interrupt.h"
+#include "Kernel.h"
 
 
 ///Initialize static members
@@ -16,7 +16,7 @@ uint32_t System::sysTicks = 0;
 void System::Initialize(void)
 {
 	//Set interrupt handler
-	interrupt.SetISR(IRQ_Systick, union_cast<Function>(&System::SysTickCounter));
+	Kernel::interrupt.SetISR(IRQ_Systick, union_cast<Function>(&System::SysTickCounter));
 }
 
 
