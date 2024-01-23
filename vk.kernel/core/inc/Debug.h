@@ -36,23 +36,17 @@ private:
 	uint8_t   debugLevel;
 
 	//Methods
-	Debug();
-	~Debug();
 	void Write(const char* data);
 public:
 	//Methods
+	Debug();
+	~Debug();
 	void Log(const char* format, ...);
 	void Info(const char* format, ...);
 	void Error(const char* format, ...);
 	void Warn(const char* format, ...);
 	void Output(int level, const char* format, ...);
 	void SetDebugLevel(int level);
-	
-	//Singleton Instance
-	static Debug& Instance();
 };
-
-///Declarations Debug reference
-extern Debug& debug;
 
 #endif //!__DEBUG_H__
