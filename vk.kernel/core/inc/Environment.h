@@ -28,21 +28,13 @@ private:
 
 	//Members
 	List<Symbol*> symbols;
-
+public:
 	//Methods
 	Environment();
 	~Environment();
-public:
-	//Methods
 	void ExportSymbol(uint32_t symAddr, const char* name);
 	void UnexportSymbol(const char* name);
 	uint32_t SearchSymbol(const char* name);
-
-	//Singleton Instance
-	static Environment& Instance();
 };
-
-///Declarations environment reference
-extern Environment& environment;
 
 #endif //!__ENVIRONMENT_H__
