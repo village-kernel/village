@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "DirStream.h"
-#include "FileSystem.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -13,6 +13,12 @@ DirStream::DirStream(const char* name, int mode)
 	:fd(-1),
 	opts(NULL)
 {
+	filesys = (FileSystem*)Kernel::modular.GetModuleByName("fileSystem");
+	if (NULL == filesys)
+	{
+		Kernel::debug.Error("file system feature not support");
+		return;
+	}
 	if (NULL != name) fd = Open(name, mode);
 }
 
@@ -28,7 +34,10 @@ DirStream::~DirStream()
 /// @return 
 bool DirStream::IsExist(const char* name)
 {
-	opts = filesystem.GetFileOpts(name);
+	if (NULL != filesys)
+	{
+		opts = filesys->GetFileOpts(name);
+	}
 
 	if (NULL != opts)
 	{
@@ -51,7 +60,10 @@ bool DirStream::IsExist(const char* name)
 /// @return 
 int DirStream::Open(const char* name, int mode)
 {
-	opts = filesystem.GetFileOpts(name);
+	if (NULL != filesys)
+	{
+		opts = filesys->GetFileOpts(name);
+	}
 
 	if (NULL != opts)
 	{
