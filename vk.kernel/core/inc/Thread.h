@@ -52,12 +52,12 @@ private:
 	List<Task*> tasks;
 
 	//Methods
-	Thread();
-	~Thread();
 	void IdleTask();
 	void TaskHandler(Function function, void* user = NULL, void* args = NULL);
 public:
 	///Methods
+	Thread();
+	~Thread();
 	void Initialize();
 	void Execute();
 	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL);
@@ -72,12 +72,6 @@ public:
 	void SaveTaskPSP(uint32_t psp);
 	uint32_t GetTaskPSP();
 	void SelectNextTask();
-	
-	//Singleton Instance
-	static Thread& Instance();
 };
-
-///Declarations thread reference
-extern Thread& thread;
 
 #endif // !__THREAD_H__
