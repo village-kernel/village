@@ -5,9 +5,8 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Exception.h"
-#include "Interrupt.h"
 #include "Hardware.h"
-#include "Debug.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -22,48 +21,35 @@ Exception::~Exception()
 }
 
 
-/// @brief Singleton Instance
-/// @return Exception instance
-Exception& Exception::Instance()
-{
-	static Exception instance;
-	return instance;
-}
-
-
-/// @brief Definitions exception
-Exception& exception = Exception::Instance();
-
-
 /// @brief Exception initialize
 void Exception::Initialize()
 {
-	interrupt.AppendISR(IRQ_Division_By_Zero,            (Method)&Exception::DivisionByZeroHandler,            this);
-	interrupt.AppendISR(IRQ_Debug,                       (Method)&Exception::DebugHandler,                     this);
-	interrupt.AppendISR(IRQ_Non_Maskable_Interrupt,      (Method)&Exception::NonMaskableInterruptHandler,      this);
-	interrupt.AppendISR(IRQ_Breakpoint,                  (Method)&Exception::BreakpointHandler,                this);
-	interrupt.AppendISR(IRQ_Into_Detected_Overflow,      (Method)&Exception::IntoDetectedOverflowHandler,      this);
-	interrupt.AppendISR(IRQ_Out_Of_Bounds,               (Method)&Exception::OutOfBoundsHandler,               this);
-	interrupt.AppendISR(IRQ_Invalid_Opcode,              (Method)&Exception::InvalidOpcodeHandler,             this);
-	interrupt.AppendISR(IRQ_No_Coprocessor,              (Method)&Exception::NoCoprocessorHandler,             this);
-	interrupt.AppendISR(IRQ_Doule_Fault,                 (Method)&Exception::DouleFaultHandler,                this);
-	interrupt.AppendISR(IRQ_Coprocessor_Segment_Overrun, (Method)&Exception::CoprocessorSegmentOverrunHandler, this);
-	interrupt.AppendISR(IRQ_Bad_TSS,                     (Method)&Exception::BadTSSHandler,                    this);
-	interrupt.AppendISR(IRQ_Segment_Not_Present,         (Method)&Exception::SegmentNotPresentHandler,         this);
-	interrupt.AppendISR(IRQ_Stack_Fault,                 (Method)&Exception::StackFaultHandler,                this);
-	interrupt.AppendISR(IRQ_General_Protection_Fault,    (Method)&Exception::GeneralProtectionFaultHandler,    this);
-	interrupt.AppendISR(IRQ_Page_Fault,                  (Method)&Exception::PageFaultHandler,                 this);
-	interrupt.AppendISR(IRQ_Unknown_Interrupt,           (Method)&Exception::UnknownInterruptHandler,          this);
-	interrupt.AppendISR(IRQ_Coprocessor_Fault,           (Method)&Exception::CoprocessorFaultHandler,          this);
-	interrupt.AppendISR(IRQ_Alignment_Check,             (Method)&Exception::AlignmentCheckHandler,            this);
-	interrupt.AppendISR(IRQ_Machine_Check,               (Method)&Exception::MachineCheckHandler,              this);
+	Kernel::interrupt.AppendISR(IRQ_Division_By_Zero,            (Method)&Exception::DivisionByZeroHandler,            this);
+	Kernel::interrupt.AppendISR(IRQ_Debug,                       (Method)&Exception::DebugHandler,                     this);
+	Kernel::interrupt.AppendISR(IRQ_Non_Maskable_Interrupt,      (Method)&Exception::NonMaskableInterruptHandler,      this);
+	Kernel::interrupt.AppendISR(IRQ_Breakpoint,                  (Method)&Exception::BreakpointHandler,                this);
+	Kernel::interrupt.AppendISR(IRQ_Into_Detected_Overflow,      (Method)&Exception::IntoDetectedOverflowHandler,      this);
+	Kernel::interrupt.AppendISR(IRQ_Out_Of_Bounds,               (Method)&Exception::OutOfBoundsHandler,               this);
+	Kernel::interrupt.AppendISR(IRQ_Invalid_Opcode,              (Method)&Exception::InvalidOpcodeHandler,             this);
+	Kernel::interrupt.AppendISR(IRQ_No_Coprocessor,              (Method)&Exception::NoCoprocessorHandler,             this);
+	Kernel::interrupt.AppendISR(IRQ_Doule_Fault,                 (Method)&Exception::DouleFaultHandler,                this);
+	Kernel::interrupt.AppendISR(IRQ_Coprocessor_Segment_Overrun, (Method)&Exception::CoprocessorSegmentOverrunHandler, this);
+	Kernel::interrupt.AppendISR(IRQ_Bad_TSS,                     (Method)&Exception::BadTSSHandler,                    this);
+	Kernel::interrupt.AppendISR(IRQ_Segment_Not_Present,         (Method)&Exception::SegmentNotPresentHandler,         this);
+	Kernel::interrupt.AppendISR(IRQ_Stack_Fault,                 (Method)&Exception::StackFaultHandler,                this);
+	Kernel::interrupt.AppendISR(IRQ_General_Protection_Fault,    (Method)&Exception::GeneralProtectionFaultHandler,    this);
+	Kernel::interrupt.AppendISR(IRQ_Page_Fault,                  (Method)&Exception::PageFaultHandler,                 this);
+	Kernel::interrupt.AppendISR(IRQ_Unknown_Interrupt,           (Method)&Exception::UnknownInterruptHandler,          this);
+	Kernel::interrupt.AppendISR(IRQ_Coprocessor_Fault,           (Method)&Exception::CoprocessorFaultHandler,          this);
+	Kernel::interrupt.AppendISR(IRQ_Alignment_Check,             (Method)&Exception::AlignmentCheckHandler,            this);
+	Kernel::interrupt.AppendISR(IRQ_Machine_Check,               (Method)&Exception::MachineCheckHandler,              this);
 }
 
 
 /// @brief DivisionByZeroHandler
 void Exception::DivisionByZeroHandler()
 {
-	debug.Error("Division By Zero");
+	Kernel::debug.Error("Division By Zero");
 	while(1) {}
 }
 
@@ -71,7 +57,7 @@ void Exception::DivisionByZeroHandler()
 /// @brief DebugHandler
 void Exception::DebugHandler()
 {
-	debug.Error("Debug");
+	Kernel::debug.Error("Debug");
 	while(1) {}
 }
 
@@ -79,7 +65,7 @@ void Exception::DebugHandler()
 /// @brief NonMaskableInterruptHandler
 void Exception::NonMaskableInterruptHandler()
 {
-	debug.Error("Non Maskable Interrupt");
+	Kernel::debug.Error("Non Maskable Interrupt");
 	while(1) {}
 }
 
@@ -87,7 +73,7 @@ void Exception::NonMaskableInterruptHandler()
 /// @brief BreakpointHandler
 void Exception::BreakpointHandler()
 {
-	debug.Error("Breakpoint");
+	Kernel::debug.Error("Breakpoint");
 	while(1) {}
 }
 
@@ -95,7 +81,7 @@ void Exception::BreakpointHandler()
 /// @brief IntoDetectedOverflowHandler
 void Exception::IntoDetectedOverflowHandler()
 {
-	debug.Error("Into Detected Overflow");
+	Kernel::debug.Error("Into Detected Overflow");
 	while(1) {}
 }
 
@@ -103,7 +89,7 @@ void Exception::IntoDetectedOverflowHandler()
 /// @brief OutOfBoundsHandler
 void Exception::OutOfBoundsHandler()
 {
-	debug.Error("Out Of Bounds");
+	Kernel::debug.Error("Out Of Bounds");
 	while(1) {}
 }
 
@@ -111,7 +97,7 @@ void Exception::OutOfBoundsHandler()
 /// @brief InvalidOpcodeHandler
 void Exception::InvalidOpcodeHandler()
 {
-	debug.Error("Invalid Opcode");
+	Kernel::debug.Error("Invalid Opcode");
 	while(1) {}
 }
 
@@ -119,7 +105,7 @@ void Exception::InvalidOpcodeHandler()
 /// @brief NoCoprocessorHandler
 void Exception::NoCoprocessorHandler()
 {
-	debug.Error("No Coprocessor");
+	Kernel::debug.Error("No Coprocessor");
 	while(1) {}
 }
 
@@ -127,7 +113,7 @@ void Exception::NoCoprocessorHandler()
 /// @brief DouleFaultHandler
 void Exception::DouleFaultHandler()
 {
-	debug.Error("Doule Fault");
+	Kernel::debug.Error("Doule Fault");
 	while(1) {}
 }
 
@@ -135,7 +121,7 @@ void Exception::DouleFaultHandler()
 /// @brief CoprocessorSegmentOverrunHandler
 void Exception::CoprocessorSegmentOverrunHandler()
 {
-	debug.Error("Coprocessor Segment Overrun");
+	Kernel::debug.Error("Coprocessor Segment Overrun");
 	while(1) {}
 }
 
@@ -143,7 +129,7 @@ void Exception::CoprocessorSegmentOverrunHandler()
 /// @brief BadTSSHandler
 void Exception::BadTSSHandler()
 {
-	debug.Error("Bad TSS");
+	Kernel::debug.Error("Bad TSS");
 	while(1) {}
 }
 
@@ -151,7 +137,7 @@ void Exception::BadTSSHandler()
 /// @brief SegmentNotPresentHandler
 void Exception::SegmentNotPresentHandler()
 {
-	debug.Error("Segment Not Present");
+	Kernel::debug.Error("Segment Not Present");
 	while(1) {}
 }
 
@@ -159,7 +145,7 @@ void Exception::SegmentNotPresentHandler()
 /// @brief StackFaultHandler
 void Exception::StackFaultHandler()
 {
-	debug.Error("Stack Fault");
+	Kernel::debug.Error("Stack Fault");
 	while(1) {}
 }
 
@@ -167,7 +153,7 @@ void Exception::StackFaultHandler()
 /// @brief GeneralProtectionFaultHandler
 void Exception::GeneralProtectionFaultHandler()
 {
-	debug.Error("General Protection Fault");
+	Kernel::debug.Error("General Protection Fault");
 	while(1) {}
 }
 
@@ -175,7 +161,7 @@ void Exception::GeneralProtectionFaultHandler()
 /// @brief PageFaultHandler
 void Exception::PageFaultHandler()
 {
-	debug.Error("Page Fault");
+	Kernel::debug.Error("Page Fault");
 	while(1) {}
 }
 
@@ -183,7 +169,7 @@ void Exception::PageFaultHandler()
 /// @brief UnknownInterruptHandler
 void Exception::UnknownInterruptHandler()
 {
-	debug.Error("Unknown Interrupt");
+	Kernel::debug.Error("Unknown Interrupt");
 	while(1) {}
 }
 
@@ -191,7 +177,7 @@ void Exception::UnknownInterruptHandler()
 /// @brief CoprocessorFaultHandler
 void Exception::CoprocessorFaultHandler()
 {
-	debug.Error("Coprocessor Fault");
+	Kernel::debug.Error("Coprocessor Fault");
 	while(1) {}
 }
 
@@ -199,7 +185,7 @@ void Exception::CoprocessorFaultHandler()
 /// @brief AlignmentCheckHandler
 void Exception::AlignmentCheckHandler()
 {
-	debug.Error("Alignment Check");
+	Kernel::debug.Error("Alignment Check");
 	while(1) {}
 }
 
@@ -207,6 +193,6 @@ void Exception::AlignmentCheckHandler()
 /// @brief MachineCheckHandler
 void Exception::MachineCheckHandler()
 {
-	debug.Error("Machine Check");
+	Kernel::debug.Error("Machine Check");
 	while(1) {}
 }
