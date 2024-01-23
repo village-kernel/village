@@ -5,8 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Modular.h"
-#include "Thread.h"
-#include "Environment.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -20,21 +19,6 @@ Modular::Modular()
 Modular::~Modular()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Modular instance
-Modular& Modular::Instance()
-{
-	static Modular instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN7Modular8InstanceEv);
-
-
-/// @brief Definitions modular
-Modular& modular = Modular::Instance();
-EXPORT_SYMBOL(modular);
 
 
 /// @brief Execute module object->Initialize
@@ -67,7 +51,7 @@ void Modular::Execute()
 	status = _StartExecute;
 	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 	{
-		module->SetPid(thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
+		module->SetPid(Kernel::thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
 	}
 	status = _EndedExecute;
 }
@@ -78,7 +62,7 @@ void Modular::Execute()
 void Modular::ModuleHandler(Module* module)
 {
 	module->Execute();
-	modular.DeregisterModule(module);
+	DeregisterModule(module);
 }
 
 
@@ -102,7 +86,7 @@ void Modular::RegisterInRuntime(Module* module)
 	if (status >= _EndedUpdateParms)
 		module->UpdateParams();
 	if (status >= _EndedExecute)
-		module->SetPid(thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
+		module->SetPid(Kernel::thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
 }
 
 
@@ -113,7 +97,7 @@ void Modular::DeregisterInRuntime(Module* module)
 	if (status >= _EndedExecute)
 	{
 		module->Exit();
-		thread.DeleteTask(module->GetPid());
+		Kernel::thread.DeleteTask(module->GetPid());
 	}
 }
 
@@ -138,3 +122,23 @@ void Modular::DeregisterModule(Module* module, uint32_t id)
 	modules.Remove(module, id);
 }
 EXPORT_SYMBOL(_ZN7Modular16DeregisterModuleEP6Modulem);
+
+
+/// @brief Get the module object
+/// @param id module id
+/// @return module
+Module* Modular::GetModule(uint32_t id)
+{
+	return modules.GetItem(id);
+}
+EXPORT_SYMBOL(_ZN7Modular9GetModuleEm);
+
+
+/// @brief Get the module object by name
+/// @param name module name
+/// @return driver
+Module* Modular::GetModuleByName(const char* name)
+{
+	return modules.GetItemByName(name);
+}
+EXPORT_SYMBOL(_ZN7Modular15GetModuleByNameEPKc);
