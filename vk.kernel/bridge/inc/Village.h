@@ -27,7 +27,7 @@ public:
 	uint32_t GetMemUsed();
 
 	Driver* GetDriver(uint32_t id);
-	Driver* GetDriverByName(const char* name);
+	Driver* GetDriver(const char* name);
 
 	Module* GetModule(uint32_t id);
 	Module* GetModule(const char* name);
