@@ -13,7 +13,7 @@
 
 
 ///Lanuch
-class Launch : public InputObserver
+class Launch : public Class
 {
 private:
 	//Members
@@ -24,13 +24,15 @@ private:
 	int axisX;
 	int axisY;
 	int axisZ;
+
+	//Methods
+	void UpdateInput(Input::InputMove* input);
 public:
 	//Methods
 	Launch();
 	~Launch();
 	void Initialize(const char* drvname);
 	void Execute();
-	void Update();
 };
 
 #endif //!__LAUNCH_H__

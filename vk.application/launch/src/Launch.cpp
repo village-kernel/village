@@ -59,17 +59,17 @@ void Launch::Initialize(const char* drvname)
 
 	mainwin->Show();
 
-	village.AttachInput(this);
+	//Attach input
+	village.AttachInput(Input::_MoveMent, (Method)&Launch::UpdateInput, this);
 }
 
 
 /// @brief Update
-void Launch::Update()
+void Launch::UpdateInput(Input::InputMove* input)
 {
 	if (NULL != mainwin)
 	{
-		village.ReadInputMovement(axisX, axisY, axisZ);
-		mainwin->Update(axisX, axisY, axisZ);
+		mainwin->Update(input->axisX, input->axisY, input->axisZ);
 		mainwin->Show();
 	}
 }
