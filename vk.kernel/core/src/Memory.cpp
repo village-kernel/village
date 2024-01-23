@@ -5,8 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Memory.h"
-#include "Debug.h"
-#include "Environment.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -24,25 +23,10 @@ Memory::Memory()
 }
 
 
-/// @brief Fini constructor
+/// @brief Destructor
 Memory::~Memory()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Memory instance
-Memory& Memory::Instance()
-{
-	static Memory instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN6Memory8InstanceEv);
-
-
-/// @brief Definitions memory
-Memory& memory = Memory::Instance();
-EXPORT_SYMBOL(memory);
 
 
 /// @brief Memory initialize sram parameters
@@ -123,7 +107,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 			//Output debug info
 			if (isMemReady)
 			{
-				debug.Output
+				Kernel::debug.Output
 				(
 					Debug::_Lv0, 
 					"heap alloc: addr = 0x%08lx, size = %ld",
@@ -154,7 +138,7 @@ uint32_t Memory::HeapAlloc(uint32_t size)
 	}
 
 	//Out of memory
-	if (isMemReady) debug.Error("out of memory.");
+	if (isMemReady) Kernel::debug.Error("out of memory.");
 
 	//Halt on here
 	while(1) {}
@@ -193,7 +177,7 @@ uint32_t Memory::StackAlloc(uint32_t size)
 			//Output debug info
 			if (isMemReady)
 			{
-				debug.Output
+				Kernel::debug.Output
 				(
 					Debug::_Lv0,
 					"stack alloc: addr = 0x%08lx, size = %ld",
@@ -222,7 +206,7 @@ uint32_t Memory::StackAlloc(uint32_t size)
 	}
 
 	//Out of memory
-	if (isMemReady) debug.Error("out of memory.");
+	if (isMemReady) Kernel::debug.Error("out of memory.");
 
 	//Halt on here
 	while(1) {}
@@ -265,7 +249,7 @@ void Memory::Free(uint32_t memory, uint32_t size)
 			//Output debug info
 			if (isMemReady) 
 			{
-				debug.Output
+				Kernel::debug.Output
 				(
 					Debug::_Lv0,
 					"free memory: addr = 0x%08lx, size = %ld",
@@ -285,51 +269,12 @@ void Memory::Free(uint32_t memory, uint32_t size)
 EXPORT_SYMBOL(_ZN6Memory4FreeEmm);
 
 
-/// @brief Memory sbrk
-/// @param incr increase byte size
-/// @return address
-uint32_t Memory::Sbrk(int32_t incr)
-{
-	//Protect heap from growing into the reserved MSP stack
-	if (sbrk_heap + incr > sram_start)
-	{
-		if (isMemReady)
-		{
-			debug.Output
-			(
-				Debug::_Lv0,
-				"error: out of memory.\r\n"
-			);
-		}
-		//halt on here
-		while(1) {}
-	}
-
-	//Calculate sbrk heap end
-	sbrk_heap += incr;
-
-	//updata the used siez of sram
-	sram_used += incr;
-
-	return (sbrk_heap - incr);
-}
-
-
-/// @brief Override _sbrk
-/// @param incr increase byte size
-/// @return address
-extern "C" void* _sbrk(ptrdiff_t incr)
-{
-	return (void*)Memory::Instance().Sbrk((int32_t)incr);
-}
-
-
 /// @brief Memory new method
 /// @param size byte size
 /// @return address
 void* New(uint32_t size)
 {
-	return (void*)Memory::Instance().HeapAlloc((uint32_t)size);
+	return (void*)Kernel::memory.HeapAlloc((uint32_t)size);
 }
 EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znwm);
 EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znam);
@@ -341,7 +286,7 @@ EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znaj);
 /// @param ptr address
 void Delete(void* ptr)
 {
-	Memory::Instance().Free((uint32_t)ptr);
+	Kernel::memory.Free((uint32_t)ptr);
 }
 EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdaPv);
 EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdlPv);
@@ -352,7 +297,7 @@ EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdlPv);
 /// @param size byte size
 void DeleteSize(void* ptr, uint32_t size)
 {
-	Memory::Instance().Free((uint32_t)ptr, size);
+	Kernel::memory.Free((uint32_t)ptr, size);
 }
 EXPORT_SYMBOL_ALIAS(_Z10DeleteSizePvm, _ZdaPvm);
 EXPORT_SYMBOL_ALIAS(_Z10DeleteSizePvm, _ZdlPvm);
