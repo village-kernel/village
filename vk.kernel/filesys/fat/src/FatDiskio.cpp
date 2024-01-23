@@ -6,7 +6,6 @@
 //###########################################################################
 #include "FatDiskio.h"
 #include "Kernel.h"
-#include "Debug.h"
 
 
 /// @brief Setup
@@ -19,7 +18,7 @@ int FatDiskio::Setup(Driver* diskdrv, uint32_t fstSec)
 
 	if (_ERR == CheckFileSystem())
 	{
-		debug.Error("Not filesystem found");
+		Kernel::debug.Error("Not filesystem found");
 		return _ERR;
 	}
 	return _OK;
