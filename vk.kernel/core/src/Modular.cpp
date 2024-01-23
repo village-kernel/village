@@ -62,7 +62,6 @@ void Modular::Execute()
 void Modular::ModuleHandler(Module* module)
 {
 	module->Execute();
-	DeregisterModule(module);
 }
 
 
