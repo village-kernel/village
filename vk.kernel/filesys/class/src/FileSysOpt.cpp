@@ -5,12 +5,18 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FileSysOpt.h"
-#include "FileSystem.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
 FileSysOpt::FileSysOpt()
 {
+	filesys = (FileSystem*)Kernel::modular.GetModuleByName("fileSystem");
+	if (NULL == filesys)
+	{
+		Kernel::debug.Error("file system feature not support");
+		return;
+	}
 }
 
 
@@ -45,7 +51,10 @@ int FileSysOpt::Copy(const char* from, const char* to)
 /// @return 
 int FileSysOpt::Remove(const char* name)
 {
-	opts = filesystem.GetFileOpts(name);
+	if (NULL != filesys)
+	{
+		opts = filesys->GetFileOpts(name);
+	}
 	
 	if (NULL != opts)
 	{

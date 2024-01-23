@@ -26,8 +26,14 @@ FatSystem::~FatSystem()
 /// @brief Setup
 void FatSystem::Setup()
 {
-	diskdrv = Kernel::device.GetDriver(DriverID::_storage + 1);
+	FileSystem* filesys = (FileSystem*)Kernel::modular.GetModuleByName("fileSystem");
+	if (NULL == filesys)
+	{
+		Kernel::debug.Error("file system feature not support");
+		return;
+	}
 
+	diskdrv = Kernel::device.GetDriver(DriverID::_storage + 1);
 	if (NULL == diskdrv)
 	{
 		Kernel::debug.Error("Not disk driver found");
@@ -52,7 +58,7 @@ void FatSystem::Setup()
 				continue;
 			}
 
-			filesystem.RegisterOpts(fatOpts);
+			filesys->RegisterOpts(fatOpts);
 		}
 	}
 

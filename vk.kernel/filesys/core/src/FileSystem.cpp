@@ -4,9 +4,8 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
 #include "FileSystem.h"
-#include "Debug.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -19,21 +18,6 @@ FileSystem::FileSystem()
 FileSystem::~FileSystem()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return FileSystem instance
-FileSystem& FileSystem::Instance()
-{
-	static FileSystem instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN10FileSystem8InstanceEv);
-
-
-/// @brief Definitions filesystem and export
-FileSystem& filesystem = FileSystem::Instance();
-EXPORT_SYMBOL(filesystem);
 
 
 /// @brief File system initialize
@@ -129,4 +113,4 @@ EXPORT_SYMBOL(_ZN10FileSystem11GetFileOptsEPKc);
 
 
 ///Register module
-REGISTER_MODULE(&FileSystem::Instance(), ModuleID::_fileSystem, fileSystem);
+REGISTER_MODULE(new FileSystem(), ModuleID::_fileSystem, fileSystem);
