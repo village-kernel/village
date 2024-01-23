@@ -5,9 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Interrupt.h"
-#include "ArchInterrupt.h"
-#include "Environment.h"
-#include "Debug.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -20,21 +18,6 @@ Interrupt::Interrupt()
 Interrupt::~Interrupt()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Interrupt instance
-Interrupt& Interrupt::Instance()
-{
-	static Interrupt instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN9Interrupt8InstanceEv);
-
-
-/// @brief Definitions interrupt and export
-Interrupt& interrupt = Interrupt::Instance();
-EXPORT_SYMBOL(interrupt);
 
 
 /// @brief Interrupt initialize
@@ -155,16 +138,16 @@ EXPORT_SYMBOL(_ZN9Interrupt8ClearISREi);
 /// @param irq irq number
 void Interrupt::Handler(int irq)
 {
-	List<Isr*>* isrs = &interrupt.isrTabs[irq];
+	List<Isr*>* isrs = &isrTabs[irq];
 	
 	if (isrs->IsEmpty())
 	{
 		if (++warnings[irq] >= warning_times)
 		{
-			debug.Error("IRQ %d no being handled correctly, system will halt on here", irq);
+			Kernel::debug.Error("IRQ %d no being handled correctly, system will halt on here", irq);
 			while(1) {}
 		}
-		debug.Warn("IRQ %d has no interrupt service function", irq);
+		Kernel::debug.Warn("IRQ %d has no interrupt service function", irq);
 		return;
 	}
 	else
