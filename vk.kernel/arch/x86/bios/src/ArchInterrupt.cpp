@@ -5,9 +5,9 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "ArchInterrupt.h"
-#include "Interrupt.h"
 #include "Registers.h"
 #include "Hardware.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -139,5 +139,5 @@ extern "C" void IRQ_Handler(Registers regs)
 	}
 
 	//Handle the interrupt in a more modular way
-	Interrupt::Instance().Handler(regs.irq);
+	Kernel::interrupt.Handler(regs.irq);
 }
