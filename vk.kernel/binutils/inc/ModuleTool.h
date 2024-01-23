@@ -15,14 +15,11 @@
 /// @brief ModuleTool
 class ModuleTool
 {
-private:
-	//Methods
-	List<ElfLoader*>* GetModules();
 public:
 	//Methods
 	ModuleTool();
 	~ModuleTool();
-	bool Initialize();
+	List<ElfLoader*>* GetModules();
 	bool Install(const char* filename);
 	bool Uninstall(const char* filename);
 };
