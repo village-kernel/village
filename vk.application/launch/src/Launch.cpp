@@ -10,10 +10,7 @@
 
 /// @brief Constructor
 Launch::Launch()
-	:mainwin(NULL),
-	axisX(0),
-	axisY(0),
-	axisZ(0)
+	:mainwin(NULL)
 {
 }
 

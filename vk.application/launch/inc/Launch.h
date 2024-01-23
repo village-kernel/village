@@ -21,10 +21,6 @@ private:
 	Window*  mainwin;
 	Village  village;
 
-	int axisX;
-	int axisY;
-	int axisZ;
-
 	//Methods
 	void UpdateInput(Input::InputMove* input);
 public:
