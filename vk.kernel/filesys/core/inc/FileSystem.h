@@ -26,7 +26,6 @@ public:
 	FileSystem();
 	~FileSystem();
 	void Initialize();
-	void Execute();
 	void Exit();
 
 	void RegisterFS(FileSys* fs, const char* name);
