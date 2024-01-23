@@ -17,7 +17,7 @@ int printf(char const* format, ...)
 	int n;
 
 	va_start(ap, format);
-	n = vsprintf(buf, format, ap);
+	n = vsnprintf(buf, 512, format, ap);
 	va_end(ap);
 
 	puts(buf);
