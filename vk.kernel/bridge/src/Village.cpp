@@ -4,9 +4,7 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Debug.h"
 #include "System.h"
-#include "Kernel.h"
 #include "Village.h"
 
 
@@ -16,23 +14,10 @@ Village::Village()
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 Village::~Village()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Village instance
-Village& Village::Instance()
-{
-	static Village instance;
-	return instance;
-}
-
-
-/// @brief Definitions Village
-Village& village = Village::Instance();
 
 
 /// @brief Reboot
@@ -46,7 +31,7 @@ void Village::Reboot()
 /// @param ticks 
 void Village::Sleep(uint32_t ticks)
 {
-	thread.Sleep(ticks);
+	Kernel::thread.Sleep(ticks);
 }
 
 
@@ -54,7 +39,7 @@ void Village::Sleep(uint32_t ticks)
 /// @return tasks
 List<Thread::Task*> Village::GetTasks()
 {
-	return thread.GetTasks();
+	return Kernel::thread.GetTasks();
 }
 
 
@@ -62,7 +47,7 @@ List<Thread::Task*> Village::GetTasks()
 /// @return size
 uint32_t Village::GetMemSize()
 {
-	return memory.GetSize();
+	return Kernel::memory.GetSize();
 }
 
 
@@ -70,7 +55,7 @@ uint32_t Village::GetMemSize()
 /// @return used
 uint32_t Village::GetMemUsed()
 {
-	return memory.GetUsed();
+	return Kernel::memory.GetUsed();
 }
 
 
@@ -79,7 +64,7 @@ uint32_t Village::GetMemUsed()
 /// @return driver
 Driver* Village::GetDriver(uint32_t id)
 {
-	return device.GetDriver(id);
+	return Kernel::device.GetDriver(id);
 }
 
 
@@ -88,43 +73,70 @@ Driver* Village::GetDriver(uint32_t id)
 /// @return drvier
 Driver* Village::GetDriverByName(const char* name)
 {
-	return device.GetDriverByName(name);
+	return Kernel::device.GetDriverByName(name);
 }
 
 
-/// @brief Attach input event
-/// @param func 
-/// @param user 
-void Village::AttachInputEvent(Function func, void* user)
+/// @brief Get module
+/// @param id 
+/// @return module
+Module* Village::GetModule(uint32_t id)
 {
-	input.AttachEvent(func, user);
+	return Kernel::modular.GetModule(id);
 }
 
 
-/// @brief Detach input event
-/// @param func 
-/// @param user 
-void Village::DetachInputEvent(Function func, void* user)
+/// @brief Get module by name
+/// @param name 
+/// @return module
+Module* Village::GetModuleByName(const char* name)
 {
-	input.DetachEvent(func, user);
+	return Kernel::modular.GetModuleByName(name);
 }
 
 
-/// @brief Attach input movement
-/// @param func 
-/// @param user 
-void Village::AttachInputMovement(Function func, void* user)
+/// @brief 
+/// @param observer 
+void Village::AttachInput(InputObserver* observer)
 {
-	input.AttachMovement(func, user);
+	Input* input = (Input*)Kernel::modular.GetModuleByName("input");
+	if (NULL == input)
+	{
+		Kernel::debug.Error("loader feature not support");
+		return;
+	}
+	input->Attach(observer);
 }
 
 
-/// @brief Detach input movement
-/// @param func 
-/// @param user 
-void Village::DetachInputMovement(Function func, void* user)
+/// @brief 
+/// @param keycode 
+/// @param status 
+void Village::ReadInputEvent(uint8_t& keycode, int& status)
 {
-	input.AttachMovement(func, user);
+	Input* input = (Input*)Kernel::modular.GetModuleByName("input");
+	if (NULL == input)
+	{
+		Kernel::debug.Error("loader feature not support");
+		return;
+	}
+	input->ReadEvent(keycode, status);
+}
+
+
+/// @brief 
+/// @param axisX 
+/// @param axisY 
+/// @param axisZ 
+void Village::ReadInputMovement(int& axisX, int& axisY, int& axisZ)
+{
+	Input* input = (Input*)Kernel::modular.GetModuleByName("input");
+	if (NULL == input)
+	{
+		Kernel::debug.Error("loader feature not support");
+		return;
+	}
+	input->ReadMovement(axisX, axisY, axisZ);
 }
 
 
@@ -132,7 +144,7 @@ void Village::DetachInputMovement(Function func, void* user)
 /// @param level 
 void Village::SetDebugLevel(int level)
 {
-	debug.SetDebugLevel(level);
+	Kernel::debug.SetDebugLevel(level);
 }
 
 

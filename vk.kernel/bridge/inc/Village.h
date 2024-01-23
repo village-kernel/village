@@ -7,11 +7,8 @@
 #ifndef __VILLAGE_H__
 #define __VILLAGE_H__
 
-#include "Defines.h"
-#include "Driver.h"
-#include "Thread.h"
+#include "Kernel.h"
 #include "Input.h"
-#include "Templates.h"
 
 
 /// @brief Village
@@ -32,11 +29,12 @@ public:
 	Driver* GetDriver(uint32_t id);
 	Driver* GetDriverByName(const char* name);
 
-	void AttachInputEvent(Function func, void* user = NULL);
-	void DetachInputEvent(Function func, void* user = NULL);
+	Module* GetModule(uint32_t id);
+	Module* GetModuleByName(const char* name);
 
-	void AttachInputMovement(Function func, void* user = NULL);
-	void DetachInputMovement(Function func, void* user = NULL);
+	void AttachInput(InputObserver* observer);
+	void ReadInputEvent(uint8_t& keycode, int& status);
+	void ReadInputMovement(int& axisX, int& axisY, int& axisZ);
 
 	void SetDebugLevel(int level);
 
@@ -44,12 +42,6 @@ public:
 	const char* GetBuildTime();
 	const char* GetBuildVersion();
 	const char* GetBuildGitCommit();
-
-	//Singleton Instance
-	static Village& Instance();
 };
-
-///Declarations Village reference
-extern Village& village;
 
 #endif //!__VILLAGE_H__
