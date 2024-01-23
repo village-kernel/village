@@ -8,8 +8,7 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "Debug.h"
-#include "Device.h"
-#include "Environment.h"
+#include "Kernel.h"
 
 
 /// @brief Debug constructor
@@ -25,21 +24,6 @@ Debug::~Debug()
 }
 
 
-/// @brief Singleton Instance
-/// @return Debug instance
-Debug& Debug::Instance()
-{
-	static Debug instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN5Debug8InstanceEv);
-
-
-/// @brief Definitions debug and export
-Debug& debug = Debug::Instance();
-EXPORT_SYMBOL(debug);
-
-
 /// @brief Write
 /// @param data 
 void Debug::Write(const char* data)
@@ -47,7 +31,7 @@ void Debug::Write(const char* data)
 	//Get transceiver driver and initialize
 	if (NULL == transceiver)
 	{
-		transceiver = device.GetDriver(DriverID::_serial);
+		transceiver = Kernel::device.GetDriver(DriverID::_serial);
 		if (NULL != transceiver) transceiver->Initialize();
 	}
 	

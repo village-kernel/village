@@ -55,16 +55,13 @@ private:
 	MapNode* head;
 	MapNode* tail;
 	MapNode* curr;
-
+public:
 	//Methods
 	Memory();
 	~Memory();
-public:
-	//Methods
 	void Initialize();
 	uint32_t HeapAlloc(uint32_t size);
 	uint32_t StackAlloc(uint32_t size);
-	uint32_t Sbrk(int32_t incr);
 	void Free(uint32_t memory, uint32_t size = 0);
 
 	//Get the max size of sram
@@ -72,12 +69,6 @@ public:
 
 	//Get the used size of sram
 	uint32_t GetUsed() { return sram_used; }
-
-	//Singleton Instance
-	static Memory& Instance();
 };
-
-///Declarations memory reference
-extern Memory& memory;
 
 #endif //!__MEMORY_H__

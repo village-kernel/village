@@ -65,10 +65,10 @@ static struct _Drv_##name {                                       \
 	Driver* driver = drv;                                         \
 	_Drv_##name() {                                               \
 		driver->SetName((char*)#name);                            \
-		Device::Instance().RegisterDriver(driver, id);            \
+		Kernel::device.RegisterDriver(driver, id);                \
 	}                                                             \
 	~_Drv_##name() {                                              \
-		Device::Instance().DeregisterDriver(driver, id);          \
+		Kernel::device.DeregisterDriver(driver, id);              \
 	}                                                             \
 } const _drv_##name __attribute__((used,__section__(".drivers")))
 
@@ -79,10 +79,10 @@ static struct _Mod_##name {                                       \
 	Module* module = mod;                                         \
 	_Mod_##name() {                                               \
 		module->SetName((char*)#name);                            \
-		Modular::Instance().RegisterModule(module, id);           \
+		Kernel::modular.RegisterModule(module, id);               \
 	}                                                             \
 	~_Mod_##name() {                                              \
-		Modular::Instance().DeregisterModule(module, id);         \
+		Kernel::modular.DeregisterModule(module, id);             \
 	}                                                             \
 } const _mod_##name __attribute__((used,__section__(".modules")))
 
@@ -94,9 +94,6 @@ static struct _Mod_##name {                                       \
 
 	///Export symbol marco
 	#define EXPORT_SYMBOL(symbol)              /*export symbol*/
-
-	///Search symbol marco
-	#define SEARCH_SYMBOL(symbol)              (0)
 #else
 	///Get method address
 #if defined(ARCH_X86)
@@ -110,20 +107,16 @@ static struct _Mod_##name {                                       \
 	static struct _Sym_##name {                                                       \
 		_Sym_##name() {                                                               \
 			uint32_t symAddr = 0; marco_cast(symbol, symAddr);                        \
-			Environment::Instance().ExportSymbol(symAddr, #name);                     \
+			Kernel::environment.ExportSymbol(symAddr, #name);                         \
 		}                                                                             \
 		~_Sym_##name() {                                                              \
-			Environment::Instance().UnexportSymbol(#name);                            \
+			Kernel::environment.UnexportSymbol(#name);                                \
 		}                                                                             \
 	} const _sym_##name __attribute__((used,__section__(".symbols")))
 
 
 	///Export symbol marco
 	#define EXPORT_SYMBOL(symbol)          EXPORT_SYMBOL_ALIAS(symbol, symbol) 
-
-
-	///Search symbol marco
-	#define SEARCH_SYMBOL(symbol)          Environment::Instance().SearchSymbol(symbol)
 #endif
 
 

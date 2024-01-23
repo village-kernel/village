@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Scheduler.h"
-#include "Thread.h"
+#include "Kernel.h"
 #include "System.h"
 
 
@@ -20,19 +20,6 @@ Scheduler::Scheduler()
 Scheduler::~Scheduler()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Scheduler instance
-Scheduler& Scheduler::Instance()
-{
-	static Scheduler instance;
-	return instance;
-}
-
-
-/// @brief Definitions scheduler
-Scheduler& scheduler = Scheduler::Instance();
 
 
 /// @brief Scheduler initialize
@@ -66,7 +53,7 @@ void Scheduler::Execute()
 	isStartSchedule = true;
 
 	//Execute thread
-	thread.Execute();
+	Kernel::thread.Execute();
 }
 
 
@@ -121,7 +108,7 @@ extern "C"
 	/// @param psp process stack pointer
 	void saveTaskPSP(uint32_t psp)
 	{
-		thread.SaveTaskPSP(psp);
+		Kernel::thread.SaveTaskPSP(psp);
 	}
 
 
@@ -129,7 +116,7 @@ extern "C"
 	/// @return process stack pointer
 	uint32_t getTaskPSP()
 	{
-		return thread.GetTaskPSP();
+		return Kernel::thread.GetTaskPSP();
 	}
 
 
@@ -150,7 +137,7 @@ extern "C"
 		__asm volatile("bl saveTaskPSP");
 
 		//Select next task
-		thread.SelectNextTask();
+		Kernel::thread.SelectNextTask();
 
 		//Get its past psp value, return psp is in R0
 		__asm volatile("bl getTaskPSP"); 
@@ -172,7 +159,7 @@ extern "C"
 	void SysTick_Handler(void)
 	{
 		System::SysTickCounter();
-		scheduler.Rescheduler(Scheduler::Privileged);
+		Kernel::scheduler.Rescheduler(Scheduler::Privileged);
 	}
 
 
@@ -180,7 +167,7 @@ extern "C"
 	/// @param sp stack pointer
 	void taskOperator(uint32_t* sp)
 	{
-		scheduler.TaskOperator(sp);
+		Kernel::scheduler.TaskOperator(sp);
 	}
 
 

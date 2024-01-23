@@ -6,9 +6,7 @@
 //###########################################################################
 #include "Thread.h"
 #include "System.h"
-#include "Memory.h"
-#include "Scheduler.h"
-#include "Environment.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -21,21 +19,6 @@ Thread::Thread()
 Thread::~Thread()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Thread instance
-Thread& Thread::Instance()
-{
-	static Thread instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN6Thread8InstanceEv);
-
-
-/// @brief Definitions thread and export
-Thread& thread = Thread::Instance();
-EXPORT_SYMBOL(thread);
 
 
 /// @brief Thread Initialize
@@ -64,7 +47,7 @@ void Thread::Execute()
 int Thread::CreateTask(const char* name, Function function, void* user, void* args)
 {
 	//Create a new task and allocate stack space
-	Task* task = new Task(memory.StackAlloc(task_stack_size));
+	Task* task = new Task(Kernel::memory.StackAlloc(task_stack_size));
 	
 	//Check whether stack allocation is successful
 	if (NULL == task && 0 == task->stack) return -1;
@@ -103,7 +86,7 @@ EXPORT_SYMBOL(_ZN6Thread10CreateTaskEPKcM5ClassFvPvEPS2_S3_);
 int Thread::DeleteTask(int pid)
 {
 	Task* task = tasks.GetItem(pid);
-	memory.Free(task->stack);
+	Kernel::memory.Free(task->stack);
 	return tasks.Remove(task, pid);
 }
 EXPORT_SYMBOL(_ZN6Thread10DeleteTaskEi);
@@ -146,7 +129,7 @@ void Thread::Sleep(uint32_t ticks)
 	{
 		tasks.Item()->state = TaskState::Suspend;
 		tasks.Item()->ticks = System::GetSysClkCounts() + ticks;
-		scheduler.Rescheduler(Scheduler::Unprivileged);
+		Kernel::scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
 EXPORT_SYMBOL(_ZN6Thread5SleepEm);
@@ -159,7 +142,7 @@ void Thread::Exit()
 	{
 		tasks.Item()->state = TaskState::Exited;
 		DeleteTask(tasks.GetNid());
-		scheduler.Rescheduler(Scheduler::Unprivileged);
+		Kernel::scheduler.Rescheduler(Scheduler::Unprivileged);
 	}
 }
 EXPORT_SYMBOL(_ZN6Thread4ExitEv);
@@ -182,7 +165,7 @@ void Thread::TaskHandler(Function function, void* user, void* args)
 	{
 		(function)(user, args);
 	}
-	thread.Exit();
+	Kernel::thread.Exit();
 }
 
 

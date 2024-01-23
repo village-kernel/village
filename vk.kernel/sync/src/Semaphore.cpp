@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Semaphore.h"
-#include "Thread.h"
+#include "Kernel.h"
 
 
 /// @brief Semaphore constructor
@@ -28,7 +28,7 @@ Semaphore::~Semaphore()
 void Semaphore::Down()
 {
 	if (counter >= 0) counter--; 
-	while(0 > counter) { thread.Sleep(ticks); }
+	while(0 > counter) { Kernel::thread.Sleep(ticks); }
 }
 
 

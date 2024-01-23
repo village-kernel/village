@@ -5,8 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Scheduler.h"
-#include "Interrupt.h"
-#include "Thread.h"
+#include "Kernel.h"
 #include "System.h"
 
 
@@ -23,26 +22,13 @@ Scheduler::~Scheduler()
 }
 
 
-/// @brief Singleton Instance
-/// @return Scheduler instance
-Scheduler& Scheduler::Instance()
-{
-	static Scheduler instance;
-	return instance;
-}
-
-
-/// @brief Definitions scheduler
-Scheduler& scheduler = Scheduler::Instance();
-
-
 /// @brief Scheduler initialize
 void Scheduler::Initialize()
 {
 	//Set the PendSV interrupt handler
-	interrupt.SetISR(IRQ_PendSV, union_cast<Function>(&Scheduler::PendSVHandler), (char*)this);
+	Kernel::interrupt.SetISR(IRQ_PendSV, union_cast<Function>(&Scheduler::PendSVHandler), (char*)this);
 	//Append the systick interrupt handler
-	interrupt.AppendISR(IRQ_Systick, union_cast<Function>(&Scheduler::SysTickHandler), (char*)this);
+	Kernel::interrupt.AppendISR(IRQ_Systick, union_cast<Function>(&Scheduler::SysTickHandler), (char*)this);
 }
 
 
@@ -53,7 +39,7 @@ void Scheduler::Execute()
 	isStartSchedule = false;
 
 	//Get frist task psp
-	uint32_t psp = thread.GetTaskPSP();
+	uint32_t psp = Kernel::thread.GetTaskPSP();
 
 	//Set frist task esp
 	__asm volatile("movl %0, %%esp" : "=r"(psp));
@@ -65,7 +51,7 @@ void Scheduler::Execute()
 	__asm volatile("sti");
 
 	//Execute thread
-	thread.Execute();
+	Kernel::thread.Execute();
 }
 
 
@@ -93,13 +79,13 @@ void __attribute__((naked)) Scheduler::PendSVHandler()
 	__asm volatile("movl %%esp, %0" : "=r"(psp));
 
 	//Save old task psp
-	thread.SaveTaskPSP(psp);
+	Kernel::thread.SaveTaskPSP(psp);
 
 	//Select next task
-	thread.SelectNextTask();
+	Kernel::thread.SelectNextTask();
 
 	//Get new task psp
-	psp = thread.GetTaskPSP();
+	psp = Kernel::thread.GetTaskPSP();
 
 	//Set new task esp
 	__asm volatile("movl %0, %%esp" : "=r"(psp));
@@ -117,5 +103,5 @@ void __attribute__((naked)) Scheduler::PendSVHandler()
 /// @brief SysTick handler
 void Scheduler::SysTickHandler()
 {
-	scheduler.Rescheduler(Scheduler::Privileged);
+	Rescheduler(Scheduler::Privileged);
 }

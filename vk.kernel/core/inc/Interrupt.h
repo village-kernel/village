@@ -37,12 +37,10 @@ private:
 	uint8_t       warnings[ArchInterrupt::isr_num] = { 0 };
 	List<Isr*>    isrTabs[ArchInterrupt::isr_num];
 	ArchInterrupt archInterrupt;
-
+public:
 	//Methods
 	Interrupt();
 	~Interrupt();
-public:
-	//Methods
 	void Initialize();
 	int SetISR(int irq, Function func, void* user = NULL, void* args = NULL);
 	int SetISR(int irq, Method method, Class* user, void* args = NULL);
@@ -54,12 +52,7 @@ public:
 
 	//Interrupt handler
 	void Handler(int irq);
-
-	//Singleton Instance
-	static Interrupt& Instance();
 };
 
-///Declarations interrupt reference
-extern Interrupt& interrupt;
 
 #endif //!__INTERRUPT_H__

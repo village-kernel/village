@@ -11,7 +11,7 @@
 #include "Templates.h"
 
 
-///Modular
+/// @brief Modular
 class Modular : public Class
 {
 private:
@@ -20,25 +20,21 @@ private:
 	List<Module*> modules;
 
 	//Methods
-	Modular();
-	~Modular();
 	void RegisterInRuntime(Module* module);
 	void DeregisterInRuntime(Module* module);
 	void ModuleHandler(Module* module);
 public:
 	//Methods
+	Modular();
+	~Modular();
 	void Initialize();
 	void UpdateParams();
 	void Execute();
 	void FailSafe(int arg);
 	void RegisterModule(Module* module, uint32_t id = 0);
 	void DeregisterModule(Module* module, uint32_t id = 0);
-
-	//Singleton Instance
-	static Modular& Instance();
+	Module* GetModule(uint32_t id);
+	Module* GetModule(const char* name);
 };
-
-///Declarations modular reference
-extern Modular& modular;
 
 #endif // !__MODULAR_H__

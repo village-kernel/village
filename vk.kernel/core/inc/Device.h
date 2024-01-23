@@ -11,7 +11,7 @@
 #include "Templates.h"
 
 
-///Devic
+/// @brief Devic
 class Device
 {
 private:
@@ -20,12 +20,12 @@ private:
 	List<Driver*> drivers;
 
 	//Methods
-	Device();
-	~Device();
 	void RegisterInRuntime(Driver* driver);
 	void DeregisterInRuntime(Driver* driver);
 public:
 	//Methods
+	Device();
+	~Device();
 	void Initialize();
 	void UpdateParams();
 	void Execute();
@@ -33,13 +33,7 @@ public:
 	void RegisterDriver(Driver* driver, uint32_t id);
 	void DeregisterDriver(Driver* driver, uint32_t id);
 	Driver* GetDriver(uint32_t id);
-	Driver* GetDriverByName(const char* name);
-
-	//Singleton Instance
-	static Device& Instance();
+	Driver* GetDriver(const char* name);
 };
-
-///Declarations device reference
-extern Device& device;
 
 #endif // !__DEVICE_H__

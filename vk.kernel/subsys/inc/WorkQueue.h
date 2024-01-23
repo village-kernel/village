@@ -43,24 +43,16 @@ public:
 private:
 	//Members
 	List<Work*> works;
-
+public:
 	//Methods
 	WorkQueue();
 	~WorkQueue();
-public:
-	//Methods
 	void Initialize();
 	void Execute();
 	Work* Create(Function func, void* user = NULL, void* args = NULL, uint32_t ticks = 0);
 	Work* Create(Method method, Class* user, void* args = NULL, uint32_t ticks = 0);
 	int Delete(Work* work);
 	int Schedule(Work* work);
-
-	//Singleton Instance
-	static WorkQueue& Instance();
 };
-
-///Declarations work queue reference
-extern WorkQueue& workQueue;
 
 #endif // !__WORK_QUEUE_H__

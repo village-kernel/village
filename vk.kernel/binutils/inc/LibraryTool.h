@@ -8,6 +8,8 @@
 #define __LIBRARY_TOOL_H__
 
 #include "Defines.h"
+#include "Templates.h"
+#include "ElfLoader.h"
 
 
 /// @brief LibraryTool
@@ -17,6 +19,7 @@ public:
 	//Methods
 	LibraryTool();
 	~LibraryTool();
+	List<ElfLoader*>* GetLibraries();
 	bool Install(const char* filename);
 	bool Uninstall(const char* filename);
 	uint32_t SearchSymbol(const char* symbol);

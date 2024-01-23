@@ -21,21 +21,6 @@ Loader::~Loader()
 }
 
 
-/// @brief Singleton Instance
-/// @return Loader instance
-Loader& Loader::Instance()
-{
-	static Loader instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN6Loader8InstanceEv);
-
-
-/// @brief Definitions loader
-Loader& loader = Loader::Instance();
-EXPORT_SYMBOL(loader);
-
-
 /// @brief Loader initialize
 void Loader::Initialize()
 {
@@ -48,7 +33,7 @@ void Loader::Initialize()
 void Loader::Execute()
 {
 	//Execute the first application of the village
-	executor.Run(Executor::_Foreground, "/applications/taichi.exec");
+	executor.Run(Executor::_Background, "/applications/taichi.exec");
 }
 
 
@@ -97,4 +82,4 @@ EXPORT_SYMBOL(_ZN6Loader10GetModulesEv);
 
 
 ///Register module
-REGISTER_MODULE(&Loader::Instance(), ModuleID::_loader, loader);
+REGISTER_MODULE(new Loader(), ModuleID::_loader, loader);

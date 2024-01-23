@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Device.h"
-#include "Environment.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -19,21 +19,6 @@ Device::Device()
 Device::~Device()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Device instance
-Device& Device::Instance()
-{
-	static Device instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN6Device8InstanceEv);
-
-
-/// @brief Definitions device
-Device& device = Device::Instance();
-EXPORT_SYMBOL(device);
 
 
 /// @brief Execute device object->Initialize
@@ -135,8 +120,8 @@ EXPORT_SYMBOL(_ZN6Device9GetDriverEm);
 /// @brief Get the driver object by name
 /// @param name driver name
 /// @return driver
-Driver* Device::GetDriverByName(const char* name)
+Driver* Device::GetDriver(const char* name)
 {
 	return drivers.GetItemByName(name);
 }
-EXPORT_SYMBOL(_ZN6Device15GetDriverByNameEPKc);
+EXPORT_SYMBOL(_ZN6Device9GetDriverEPKc);
