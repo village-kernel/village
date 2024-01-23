@@ -23,24 +23,16 @@ public:
 private:
 	//Members
 	bool isStartSchedule;
-
+public:
 	//Methods
 	Scheduler();
 	~Scheduler();
-public:
-	//Methods
 	void Initialize();
 	void Execute();
 	void Rescheduler(Access access);
 
 	//Needed called by SVC_Handler
 	void TaskOperator(uint32_t* SP);
-
-	//Static methods
-	static Scheduler& Instance();
 };
-
-///Declarations scheduler reference
-extern Scheduler& scheduler;
 
 #endif // !__SCHEDULER_H__

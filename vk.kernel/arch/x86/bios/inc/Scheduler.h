@@ -25,24 +25,18 @@ private:
 	bool isStartSchedule;
 
 	//Methods
-	Scheduler();
-	~Scheduler();
 	void PendSVHandler();
 	void SysTickHandler();
 public:
 	//Methods
+	Scheduler();
+	~Scheduler();
 	void Initialize();
 	void Execute();
 	void Rescheduler(Access access);
 
 	//Needed called by SVC_Handler
 	void TaskOperator(uint32_t* SP);
-
-	//Static methods
-	static Scheduler& Instance();
 };
-
-///Declarations scheduler reference
-extern Scheduler& scheduler;
 
 #endif // !__SCHEDULER_H__
