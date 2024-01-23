@@ -9,23 +9,28 @@
 
 #include "Graphics.h"
 #include "Village.h"
+#include "Input.h"
+
 
 ///Lanuch
-class Launch
+class Launch : public InputObserver
 {
 private:
 	//Members
 	Graphics graphics;
 	Window*  mainwin;
-	
-	//Methods
-	void Movement(Input::InputMove* inputMove);
+	Village  village;
+
+	int axisX;
+	int axisY;
+	int axisZ;
 public:
 	//Methods
 	Launch();
 	~Launch();
 	void Initialize(const char* drvname);
 	void Execute();
+	void Update();
 };
 
 #endif //!__LAUNCH_H__

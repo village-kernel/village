@@ -10,7 +10,10 @@
 
 /// @brief Constructor
 Launch::Launch()
-	:mainwin(NULL)
+	:mainwin(NULL),
+	axisX(0),
+	axisY(0),
+	axisZ(0)
 {
 }
 
@@ -56,17 +59,17 @@ void Launch::Initialize(const char* drvname)
 
 	mainwin->Show();
 
-	village.AttachInputMovement(union_cast<Function>(&Launch::Movement), (void*)this);
+	village.AttachInput(this);
 }
 
 
-/// @brief Movement
-/// @param inputMove 
-void Launch::Movement(Input::InputMove* inputMove)
+/// @brief Update
+void Launch::Update()
 {
 	if (NULL != mainwin)
 	{
-		mainwin->Update(inputMove->axisX, inputMove->axisY, inputMove->axisZ);
+		village.ReadInputMovement(axisX, axisY, axisZ);
+		mainwin->Update(axisX, axisY, axisZ);
 		mainwin->Show();
 	}
 }
