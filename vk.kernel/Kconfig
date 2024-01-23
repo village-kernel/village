@@ -20,21 +20,9 @@ config MODULE
 	select ELFPARSER
 	select ENVIRONMENT
 
-config LOADER
-	depends on MODULE
-	bool "Enable loader support"
-	default n
-
 config ENVIRONMENT
+	depends on MODULE
 	bool "Build the environment of Loadable module"
-	default n
-
-config WORKQUEUE
-	bool "Enable workqueue support"
-	default y
-
-config INPUT
-	bool "Enable input event support"
 	default y
 
 endmenu
@@ -83,6 +71,32 @@ config EXECUTOR
 	depends on BINUTILS
 	bool "Enable execute program function"
 	default n
+
+endmenu
+
+#config subsystem
+
+menu "subsystem"
+
+config SUBSYS
+	depends on MODULE
+	bool "Enable sub system support"
+	default n
+
+config LOADER
+	depends on SUBSYS
+	bool "Enable loader support"
+	default y
+
+config INPUT
+	depends on SUBSYS
+	bool "Enable input support"
+	default y
+
+config WORKQUEUE
+	depends on SUBSYS
+	bool "Enable workqueue support"
+	default y
 
 endmenu
 

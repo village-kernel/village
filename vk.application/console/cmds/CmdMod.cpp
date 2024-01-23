@@ -10,6 +10,36 @@
 #include "string.h"
 
 
+/// @brief CmdListMod
+class CmdListMod : public Cmd
+{
+private:
+	//Members
+	ModuleTool modules;
+public:
+	/// @brief Cmd rmmod execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		if (argc < 1)
+		{
+			console.Output("Usage: lsmod");
+			return;
+		}
+
+		List<ElfLoader*>* mods = modules.GetModules();
+		if (NULL != mods)
+		{
+			for (mods->Begin(); !mods->IsEnd(); mods->Next())
+			{
+				console.Output("name %s", mods->Item()->GetFileName());
+			}
+		}
+	}
+};
+
+
 /// @brief CmdInsMod
 class CmdInsMod : public Cmd
 {
@@ -61,5 +91,6 @@ public:
 
 
 ///Register cmd
+REGISTER_CMD(new CmdListMod(), lsmod);
 REGISTER_CMD(new CmdInsMod(), insmod);
 REGISTER_CMD(new CmdRmMod(), rmmod);

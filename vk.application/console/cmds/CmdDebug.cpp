@@ -12,6 +12,9 @@
 /// @brief CmdDebug
 class CmdDebug : public Cmd
 {
+private:
+	//Members
+	Village village;
 public:
 	/// @brief Cmd debug execute
 	/// @param argc 

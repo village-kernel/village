@@ -24,7 +24,7 @@ CmdMsgMgr::CmdMsgMgr()
 ///CmdMsgMgr initialize
 void CmdMsgMgr::Initialize(const char* driver)
 {
-	transceiver = village.GetDriverByName(driver);
+	transceiver = Village().GetDriver(driver);
 	if (NULL != transceiver) transceiver->Initialize();
 }
 

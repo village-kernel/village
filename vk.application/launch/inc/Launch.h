@@ -9,17 +9,20 @@
 
 #include "Graphics.h"
 #include "Village.h"
+#include "Input.h"
+
 
 ///Lanuch
-class Launch
+class Launch : public Class
 {
 private:
 	//Members
 	Graphics graphics;
 	Window*  mainwin;
-	
+	Village  village;
+
 	//Methods
-	void Movement(Input::InputMove* inputMove);
+	void UpdateInput(Input::InputMove* input);
 public:
 	//Methods
 	Launch();

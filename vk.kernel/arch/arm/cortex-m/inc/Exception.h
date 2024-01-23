@@ -18,12 +18,6 @@ public:
 	Exception();
 	~Exception();
 	void Initialize();
-
-	//Static methods
-	static Exception& Instance();
 };
-
-///Declarations exception reference
-extern Exception& exception;
 
 #endif //!__EXCEPTION_H__

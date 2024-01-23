@@ -8,7 +8,6 @@
 #include "FatSystem.h"
 #include "FatVolume.h"
 #include "Kernel.h"
-#include "Debug.h"
 #include "stdio.h"
 
 
@@ -27,17 +26,23 @@ FatSystem::~FatSystem()
 /// @brief Setup
 void FatSystem::Setup()
 {
-	diskdrv = device.GetDriver(DriverID::_storage + 1);
+	FileSystem* filesys = (FileSystem*)Kernel::modular.GetModule("fileSystem");
+	if (NULL == filesys)
+	{
+		Kernel::debug.Error("file system feature not support");
+		return;
+	}
 
+	diskdrv = Kernel::device.GetDriver(DriverID::_storage + 1);
 	if (NULL == diskdrv)
 	{
-		debug.Error("Not disk driver found");
+		Kernel::debug.Error("Not disk driver found");
 		return;
 	}
 
 	if (_ERR == ReadMBR())
 	{
-		debug.Error("Not a valid disk");
+		Kernel::debug.Error("Not a valid disk");
 		return;
 	}
 
@@ -53,11 +58,11 @@ void FatSystem::Setup()
 				continue;
 			}
 
-			filesystem.RegisterOpts(fatOpts);
+			filesys->RegisterOpts(fatOpts);
 		}
 	}
 
-	debug.Output(Debug::_Lv2, "Initialize FAT file system successful");
+	Kernel::debug.Output(Debug::_Lv2, "Initialize FAT file system successful");
 }
 
 

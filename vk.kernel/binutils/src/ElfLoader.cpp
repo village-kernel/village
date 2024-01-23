@@ -6,9 +6,8 @@
 //###########################################################################
 #include "ElfLoader.h"
 #include "FileStream.h"
-#include "Environment.h"
 #include "LibraryTool.h"
-#include "Debug.h"
+#include "Kernel.h"
 #include "string.h"
 
 
@@ -45,7 +44,7 @@ int ElfLoader::Load(const char* filename)
 	if (SharedObjs()      != _OK) return _ERR;
 	if (RelEntries()      != _OK) return _ERR;
 	
-	debug.Output(Debug::_Lv2, "%s load done", filename);
+	Kernel::debug.Output(Debug::_Lv2, "%s load done", filename);
 	return _OK;
 }
 
@@ -64,7 +63,7 @@ int ElfLoader::LoadElf()
 
 		if (elf.load && (file.Read((char*)elf.load, size) == size))
 		{
-			debug.Output(Debug::_Lv1, "%s elf file load successful", filename);
+			Kernel::debug.Output(Debug::_Lv1, "%s elf file load successful", filename);
 			file.Close();
 			return _OK;
 		}
@@ -72,7 +71,7 @@ int ElfLoader::LoadElf()
 		file.Close();
 	}
 
-	debug.Error("%s elf file load failed", filename);
+	Kernel::debug.Error("%s elf file load failed", filename);
 	return _ERR;
 }
 
@@ -240,7 +239,7 @@ int ElfLoader::PreParser()
 	if ((elf.header->type    != _ELF_Type_Dyn) &&
 		(elf.header->type    != _ELF_Type_Exec))
 	{
-		debug.Error("%s is not executable", filename);
+		Kernel::debug.Error("%s is not executable", filename);
 		return _ERR;
 	}
 
@@ -275,7 +274,7 @@ int ElfLoader::PreParser()
 		}
 	}
 
-	debug.Output(Debug::_Lv1, "%s pre parser successful", filename);
+	Kernel::debug.Output(Debug::_Lv1, "%s pre parser successful", filename);
 	return _OK;
 }
 
@@ -304,7 +303,7 @@ int ElfLoader::SetMapAddr()
 		elf.map = 0;
 	}
 
-	debug.Output(Debug::_Lv1, "%s set mapping address successful", filename);
+	Kernel::debug.Output(Debug::_Lv1, "%s set mapping address successful", filename);
 	return _OK;
 }
 
@@ -329,7 +328,7 @@ int ElfLoader::LoadProgram()
 		}
 	}
 
-	debug.Output(Debug::_Lv1, "%s load program successful", filename);
+	Kernel::debug.Output(Debug::_Lv1, "%s load program successful", filename);
 	return _OK;
 }
 
@@ -372,7 +371,7 @@ int ElfLoader::PostParser()
 		}
 	}
 
-	debug.Output(Debug::_Lv1, "%s post parser successful", filename);
+	Kernel::debug.Output(Debug::_Lv1, "%s post parser successful", filename);
 	return _OK;
 }
 
@@ -396,9 +395,9 @@ int ElfLoader::SharedObjs()
 			strcat(path, name);
 
 			//Load shared object lib
-			if (_OK != LibraryTool().Install(path))
+			if (false == LibraryTool().Install(path))
 			{
-				debug.Error("%s load shared object %s failed", filename, path);
+				Kernel::debug.Error("%s load shared object %s failed", filename, path);
 				delete[] path;
 				return _ERR;
 			}
@@ -452,7 +451,7 @@ int ElfLoader::RelEntries()
 				if (0 == symAddr && symEntry.shndx) symAddr = GetDynSymAddrByName(symName);
 
 				//Get the address of undefined symbol entry
-				if (0 == symAddr) symAddr = SEARCH_SYMBOL(symName);
+				if (0 == symAddr) symAddr = Kernel::environment.SearchSymbol(symName);
 
 				//Searching for symbol entry in shared objects
 				if (0 == symAddr) symAddr = LibraryTool().SearchSymbol(symName);
@@ -462,12 +461,12 @@ int ElfLoader::RelEntries()
 				{
 					if (true == isIgnoreUnresolvedSymbols)
 					{
-						debug.Warn("%s relocation symbols ignore, symbol %s not found", filename, symName);
+						Kernel::debug.Warn("%s relocation symbols ignore, symbol %s not found", filename, symName);
 						continue;
 					}
 					else
 					{
-						debug.Error("%s relocation symbols failed, symbol %s not found", filename, symName);
+						Kernel::debug.Error("%s relocation symbols failed, symbol %s not found", filename, symName);
 						return _ERR;
 					}
 				}
@@ -476,13 +475,13 @@ int ElfLoader::RelEntries()
 				RelSymCall(relAddr, symAddr, relEntry.type);
 
 				//Output debug message
-				debug.Output(Debug::_Lv0, "%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
+				Kernel::debug.Output(Debug::_Lv0, "%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
 					filename, symName, relAddr, symAddr);
 			}
 		}
 	}
 
-	debug.Output(Debug::_Lv1, "%s relocation entries successful", filename);
+	Kernel::debug.Output(Debug::_Lv1, "%s relocation entries successful", filename);
 	return _OK;
 }
 
@@ -706,7 +705,7 @@ int ElfLoader::Execute(const char* symbol, int argc, char* argv[])
 			return _OK;
 		}
 	}
-	debug.Error("%s %s not found", filename, symbol);
+	Kernel::debug.Error("%s %s not found", filename, symbol);
 	return _ERR;
 }
 

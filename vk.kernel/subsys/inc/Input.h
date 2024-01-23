@@ -14,6 +14,14 @@
 class Input : public Module
 {
 public:
+	//Enumerations
+	enum Type
+	{
+		_Event = 0,
+		_MoveMent,
+		_AllType,
+	};
+
 	//Structures
 	struct InputEvent
 	{
@@ -52,35 +60,24 @@ private:
 	};
 
 	//Members
-	List<Observer*> eventObservers;
-	List<Observer*> moveObservers;
+	List<Observer*> observers[_AllType];
 	InputEvent      inputEvent;
 	InputMove       inputMove;
 
 	//Methods
-	Input();
-	~Input();
-	void NotifyEvent();
-	void NotifyMovement();
+	void Attach(List<Observer*>& observer, Function func, void* user = NULL);
+	void Detach(List<Observer*>& observer, Function func, void* user = NULL);
+	void Notify(List<Observer*>& observer, void* argv);
 public:
 	//Methods
-	void Initialize();
-	void Execute();
-
-	void AttachEvent(Function func, void* user = NULL);
-	void DetachEvent(Function func, void* user = NULL);
-
-	void AttachMovement(Function func, void* user = NULL);
-	void DetachMovement(Function func, void* user = NULL);
-
+	Input();
+	~Input();
+	void Attach(Type type, Method method, Class* user);
+	void Attach(Type type, Function func, void* user = NULL);
+	void Detach(Type type, Method method, Class* user);
+	void Detach(Type type, Function func, void* user = NULL);
 	void ReportEvent(uint8_t keycode, int status);
 	void ReportMovement(int axisX, int axisY, int axisZ);
-
-	//Singleton Instance
-	static Input& Instance();
 };
-
-///Declarations input reference
-extern Input& input;
 
 #endif //!__INPUT_H__

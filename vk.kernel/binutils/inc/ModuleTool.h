@@ -8,6 +8,8 @@
 #define __MODULE_TOOL_H__
 
 #include "Defines.h"
+#include "Templates.h"
+#include "ElfLoader.h"
 
 
 /// @brief ModuleTool
@@ -17,6 +19,7 @@ public:
 	//Methods
 	ModuleTool();
 	~ModuleTool();
+	List<ElfLoader*>* GetModules();
 	bool Install(const char* filename);
 	bool Uninstall(const char* filename);
 };

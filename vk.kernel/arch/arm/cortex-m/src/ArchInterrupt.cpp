@@ -5,8 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "ArchInterrupt.h"
-#include "Interrupt.h"
-#include "Environment.h"
+#include "Kernel.h"
 #include "System.h"
 
 /// @brief Declarations
@@ -51,7 +50,7 @@ void ArchInterrupt::Initialize()
 		//Change the origin handler into isr table
 		if (vectors[i] != (uint32_t)&(Default_Handler) + 1)
 		{
-			interrupt.SetISR(i, (Function)vectors[i], NULL, NULL);
+			Kernel::interrupt.SetISR(i, (Function)vectors[i], NULL, NULL);
 		}
 
 		vectors[i] = (uint32_t)&Stub_Handler;
@@ -66,7 +65,7 @@ void ArchInterrupt::Initialize()
 /// @param irq 
 extern "C" void IRQ_Handler(uint32_t irq)
 {
-	Interrupt::Instance().Handler(irq - ArchInterrupt::rsvd_isr_size);
+	Kernel::interrupt.Handler(irq - ArchInterrupt::rsvd_isr_size);
 }
 
 

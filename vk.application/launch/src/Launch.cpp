@@ -56,17 +56,17 @@ void Launch::Initialize(const char* drvname)
 
 	mainwin->Show();
 
-	village.AttachInputMovement(union_cast<Function>(&Launch::Movement), (void*)this);
+	//Attach input
+	village.AttachInput(Input::_MoveMent, (Method)&Launch::UpdateInput, this);
 }
 
 
-/// @brief Movement
-/// @param inputMove 
-void Launch::Movement(Input::InputMove* inputMove)
+/// @brief Update
+void Launch::UpdateInput(Input::InputMove* input)
 {
 	if (NULL != mainwin)
 	{
-		mainwin->Update(inputMove->axisX, inputMove->axisY, inputMove->axisZ);
+		mainwin->Update(input->axisX, input->axisY, input->axisZ);
 		mainwin->Show();
 	}
 }

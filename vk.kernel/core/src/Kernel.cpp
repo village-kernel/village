@@ -7,8 +7,59 @@
 #include "Kernel.h"
 
 
-/// @brief Clear isReady flag
-volatile bool Kernel::isReady = false;
+/// @brief debug
+Debug Kernel::debug;
+
+/// @brief memory
+Memory Kernel::memory;
+
+/// @brief interrupt
+Interrupt Kernel::interrupt;
+
+/// @brief exception
+Exception Kernel::exception;
+
+/// @brief environment
+Environment Kernel::environment;
+
+/// @brief thread
+Thread Kernel::thread;
+
+/// @brief scheduler
+Scheduler Kernel::scheduler;
+
+/// @brief device
+Device Kernel::device;
+
+/// @brief modular
+Modular Kernel::modular;
+
+/// @brief Exprot debug symbol
+EXPORT_SYMBOL(_ZN6Kernel5debugE);
+
+/// @brief Exprot memory symbol
+EXPORT_SYMBOL(_ZN6Kernel6memoryE);
+
+/// @brief Exprot interrupt symbol
+EXPORT_SYMBOL(_ZN6Kernel9interruptE);
+
+/// @brief Exprot exception symbol
+EXPORT_SYMBOL(_ZN6Kernel9exceptionE);
+
+/// @brief Exprot environment symbol
+EXPORT_SYMBOL(_ZN6Kernel11environmentE);
+
+/// @brief Exprot thread symbol
+EXPORT_SYMBOL(_ZN6Kernel6threadE);
+
+/// @brief Exprot scheduler symbol
+EXPORT_SYMBOL(_ZN6Kernel9schedulerE);
+
+/// @brief Exprot device symbol
+EXPORT_SYMBOL(_ZN6Kernel6deviceE);
+
+/// @brief Exprot modular symbol
+EXPORT_SYMBOL(_ZN6Kernel7modularE);
 
 
 /// @brief Kernel constructor
@@ -26,8 +77,6 @@ Kernel::~Kernel()
 /// @brief Kernel Execute
 void Kernel::Initialize()
 {
-	isReady = false;
-
 	//Initialize memory
 	memory.Initialize();
 
@@ -48,16 +97,12 @@ void Kernel::Initialize()
 
 	//Initialize modular
 	modular.Initialize();
-
-	isReady = true;
 }
 
 
 /// @brief Kernel update params
 void Kernel::UpdateParams()
 {
-	if (!isReady) return;
-
 	device.UpdateParams();
 	modular.UpdateParams();
 }
@@ -84,8 +129,6 @@ void Kernel::Execute()
 /// @param arg fail arg
 void Kernel::FailSafe(int arg)
 {
-	if (!isReady) return;
-
 	device.FailSafe(arg);
 	modular.FailSafe(arg);
 }

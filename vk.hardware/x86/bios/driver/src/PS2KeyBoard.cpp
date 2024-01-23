@@ -5,7 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Input.h"
-#include "Driver.h"
 #include "Kernel.h"
 #include "Hardware.h"
 #include "WorkQueue.h"
@@ -17,6 +16,8 @@ class KeyBoard : public Driver
 private:
 	//Members
 	uint8_t keycode;
+	Input* input;
+	WorkQueue* workQueue;
 	WorkQueue::Work* work;
 private:
 	/// @brief Interrupt handler
@@ -25,7 +26,7 @@ private:
 		if (PortByteIn(PS2_READ_STATUS) & PS2_STATUS_OUTPUT_BUFFER)
 		{
 			keycode = PortByteIn(PS2_READ_DATA);
-			workQueue.Schedule(work);
+			workQueue->Schedule(work);
 		}
 	}
 
@@ -33,19 +34,24 @@ private:
 	/// @brief Report handler
 	void ReportHandler()
 	{
+		//Report keycode and status
 		if (keycode >= 0 && keycode <= 0x39)
-			input.ReportEvent(keycode, 1);
+			input->ReportEvent(keycode, 1);
 		else if (keycode >= 0x39 && keycode <= 0x39 + 0x80)
-			input.ReportEvent(keycode - 0x80, 0);
+			input->ReportEvent(keycode - 0x80, 0);
 	}
 public:
 	/// @brief Constructor
 	KeyBoard()
+		:keycode(0),
+		input(NULL),
+		workQueue(NULL),
+		work(NULL)
 	{
 	}
 
 
-	/// @brief Deconstructor
+	/// @brief Destructor
 	~KeyBoard()
 	{
 	}
@@ -54,16 +60,35 @@ public:
 	/// @brief KeyBoard Initialize
 	void Initialize()
 	{
-		interrupt.SetISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
-		work = workQueue.Create((Method)&KeyBoard::ReportHandler, this);
+		//Get the input module
+		input = (Input*)Kernel::modular.GetModule("input");
+		if (NULL == input)
+		{
+			Kernel::debug.Error("input feature not support");
+			return;
+		}
+
+		//Get the work queue module
+		workQueue = (WorkQueue*)Kernel::modular.GetModule("workQueue");
+		if (NULL == workQueue)
+		{
+			Kernel::debug.Error("work queue feature not support");
+			return;
+		}
+
+		//Create work
+		work = workQueue->Create((Method)&KeyBoard::ReportHandler, this);
+
+		//Set interrupt
+		Kernel::interrupt.SetISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
 	}
 
 
 	/// @brief KeyBoard Exit
 	void Exit()
 	{
-		interrupt.RemoveISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
-		workQueue.Delete(work);
+		Kernel::interrupt.RemoveISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
+		workQueue->Delete(work);
 	}
 };
 

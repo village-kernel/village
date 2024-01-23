@@ -12,6 +12,9 @@
 /// @brief CmdAbout
 class CmdAbout : public Cmd
 {
+private:
+	//Members
+	Village village;
 public:
 	/// @brief Cmd about execute
 	/// @param argc 

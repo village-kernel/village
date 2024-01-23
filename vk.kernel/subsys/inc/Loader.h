@@ -15,7 +15,7 @@
 #include "Executor.h"
 
 
-///Loader
+/// @brief Loader
 class Loader : public Module
 {
 private:
@@ -34,22 +34,16 @@ private:
 	Executor         executor;
 
 	//Methods
-	Loader();
-	~Loader();
 	void Loading(int type, const char* filename);
 public:
 	//Methods
+	Loader();
+	~Loader();
 	void Initialize();
 	void Execute();
 
 	List<ElfLoader*>* GetLibraries();
 	List<ElfLoader*>* GetModules();
-
-	//Singleton Instance
-	static Loader& Instance();
 };
-
-///Declarations loader reference
-extern Loader& loader;
 
 #endif //!__LOADER_H__
