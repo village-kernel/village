@@ -4,9 +4,8 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
 #include "WorkQueue.h"
-#include "Environment.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -15,25 +14,10 @@ WorkQueue::WorkQueue()
 }
 
 
-/// @brief Fini constructor
+/// @brief Destructor
 WorkQueue::~WorkQueue()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return WorkQueue instance
-WorkQueue& WorkQueue::Instance()
-{
-	static WorkQueue instance;
-	return instance;
-}
-EXPORT_SYMBOL(_ZN9WorkQueue8InstanceEv);
-
-
-/// @brief Definitions workQueue
-WorkQueue& workQueue = WorkQueue::Instance();
-EXPORT_SYMBOL(workQueue);
 
 
 /// @brief WorkQueue initialize
@@ -53,7 +37,7 @@ void WorkQueue::Execute()
 			if (_Waked == work->state)
 			{
 				work->state = _Running;
-				if (work->ticks) thread.Sleep(work->ticks);
+				if (work->ticks) Kernel::thread.Sleep(work->ticks);
 				(work->func)(work->user, work->args);
 				work->state = _Finish;
 			}
@@ -120,4 +104,4 @@ EXPORT_SYMBOL(_ZN9WorkQueue8ScheduleEPNS_4WorkE);
 
 
 ///Register module
-REGISTER_MODULE(&WorkQueue::Instance(), ModuleID::_workQueue, workQueue);
+REGISTER_MODULE(new WorkQueue(), ModuleID::_workQueue, workQueue);
