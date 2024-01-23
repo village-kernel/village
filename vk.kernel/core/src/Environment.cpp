@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Environment.h"
+#include "Kernel.h"
 #include "string.h"
 
 
@@ -18,21 +19,6 @@ Environment::Environment()
 Environment::~Environment()
 {
 }
-
-
-/// @brief Singleton Instance
-/// @return Environment instance
-Environment& Environment::Instance()
-{
-	static Environment instance;
-	return instance;	
-}
-EXPORT_SYMBOL(_ZN11Environment8InstanceEv);
-
-
-/// @brief Definitions environment
-Environment& environment = Environment::Instance();
-EXPORT_SYMBOL(environment);
 
 
 /// @brief Export symbol
