@@ -71,9 +71,9 @@ Driver* Village::GetDriver(uint32_t id)
 /// @brief Get driver by name
 /// @param name 
 /// @return drvier
-Driver* Village::GetDriverByName(const char* name)
+Driver* Village::GetDriver(const char* name)
 {
-	return Kernel::device.GetDriverByName(name);
+	return Kernel::device.GetDriver(name);
 }
 
 

@@ -32,7 +32,7 @@ Graphics::~Graphics()
 void Graphics::Initialize(const char* drvname)
 {
 	//Get the universal driver by driver name
-	Driver* driver = Village().GetDriverByName(drvname);
+	Driver* driver = Village().GetDriver(drvname);
 
 	//Get the specified lcd driver by driver ioctrl 
 	if (NULL != driver)

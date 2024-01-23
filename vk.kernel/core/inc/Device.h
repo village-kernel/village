@@ -33,7 +33,7 @@ public:
 	void RegisterDriver(Driver* driver, uint32_t id);
 	void DeregisterDriver(Driver* driver, uint32_t id);
 	Driver* GetDriver(uint32_t id);
-	Driver* GetDriverByName(const char* name);
+	Driver* GetDriver(const char* name);
 };
 
 #endif // !__DEVICE_H__
