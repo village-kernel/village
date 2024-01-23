@@ -33,13 +33,6 @@ void FileSystem::Initialize()
 }
 
 
-/// @brief File system execute
-void FileSystem::Execute()
-{
-	while (1) {}
-}
-
-
 /// @brief File system exit
 void FileSystem::Exit()
 {
