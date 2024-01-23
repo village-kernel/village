@@ -37,8 +37,8 @@ void HAL_Delay(uint32_t Delay)
 ///USB storage init
 static int8_t STORAGE_Init_FS(uint8_t lun)
 {
-	storage[0] = device.GetDriver(DriverID::_storage + 0);
-	storage[1] = device.GetDriver(DriverID::_storage + 1);
+	storage[0] = Kernel::device.GetDriver(DriverID::_storage + 0);
+	storage[1] = Kernel::device.GetDriver(DriverID::_storage + 1);
 	return (USBD_OK);
 }
 
