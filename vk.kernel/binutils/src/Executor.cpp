@@ -55,10 +55,10 @@ int Executor::Run(Behavior behavior, const char* path, int argc, char* argv[])
 	if (elf.Load(path) != Result::_OK) return _ERR;
 	
 	//Create a sandboxed thread to run the app
-	pid = thread.CreateTask(path, (Method)&Executor::Sandbox, this);
+	pid = Kernel::thread.CreateTask(path, (Method)&Executor::Sandbox, this);
 
 	//Wait for task done
-	if (behavior == _Foreground) thread.WaitForTask(pid);
+	if (behavior == _Foreground) Kernel::thread.WaitForTask(pid);
 
 	return pid;
 }
@@ -68,7 +68,7 @@ int Executor::Run(Behavior behavior, const char* path, int argc, char* argv[])
 /// @return result
 int Executor::Wait()
 {
-	return thread.WaitForTask(pid);
+	return Kernel::thread.WaitForTask(pid);
 }
 
 

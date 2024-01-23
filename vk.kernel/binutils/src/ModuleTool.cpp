@@ -4,10 +4,9 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
-#include "Debug.h"
-#include "Loader.h"
 #include "ModuleTool.h"
+#include "Kernel.h"
+#include "Loader.h"
 
 
 /// @brief Constructor
@@ -16,9 +15,32 @@ ModuleTool::ModuleTool()
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 ModuleTool::~ModuleTool()
 {
+}
+
+
+/// @brief Module tool get modules
+List<ElfLoader*>* ModuleTool::GetModules()
+{
+	//Get the loader module
+	Loader* loader = (Loader*)Kernel::modular.GetModuleByName("loader");
+	if (NULL == loader)
+	{
+		Kernel::debug.Error("loader feature not support");
+		return NULL;
+	}
+
+	//Get the modules pointer
+	List<ElfLoader*>* modules = loader->GetModules();
+	if (NULL == modules)
+	{
+		Kernel::debug.Error("get modules address failed");
+		return NULL;
+	}
+
+	return modules;
 }
 
 
@@ -32,12 +54,13 @@ bool ModuleTool::Install(const char* filename)
 	//Check filename is valid
 	if (NULL == filename)
 	{
-		debug.Error("%s module not a valid name", filename);
+		Kernel::debug.Error("%s module not a valid name", filename);
 		return false;
 	}
 
-	//Get the libraries pointer
-	List<ElfLoader*>* modules = loader.GetModules();
+	//Get the modules pointer
+	List<ElfLoader*>* modules = GetModules();
+	if (NULL == modules) return false;
 
 	//Check the module if it has been installed
 	for (ElfLoader* mod = modules->Begin(); !modules->IsEnd(); mod = modules->Next())
@@ -45,7 +68,7 @@ bool ModuleTool::Install(const char* filename)
 		if (0 == strcmp(filename, mod->GetFileName()))
 		{
 			isInstalled = true;
-			debug.Output(Debug::_Lv2, "%s module has already been installed", filename);
+			Kernel::debug.Output(Debug::_Lv2, "%s module has already been installed", filename);
 			break;
 		}
 	}
@@ -60,17 +83,16 @@ bool ModuleTool::Install(const char* filename)
 			mod->FillBssZero();
 			mod->InitArray();
 			modules->Add(mod);
-			debug.Output(Debug::_Lv2, "%s module install successful", filename);
-			return _OK;
+			Kernel::debug.Output(Debug::_Lv2, "%s module install successful", filename);
 		}
 		else
 		{
-			debug.Error("%s module install failed", filename);
-			return _ERR;
+			Kernel::debug.Error("%s module install failed", filename);
+			return false;
 		}
 	}
 
-	return _OK;
+	return true;
 }
 
 
@@ -79,8 +101,16 @@ bool ModuleTool::Install(const char* filename)
 /// @return 
 bool ModuleTool::Uninstall(const char* filename)
 {
-	//Get the libraries pointer
-	List<ElfLoader*>* modules = loader.GetModules();
+	//Check filename is valid
+	if (NULL == filename)
+	{
+		Kernel::debug.Error("%s module not a valid name", filename);
+		return false;
+	}
+
+	//Get the modules pointer
+	List<ElfLoader*>* modules = GetModules();
+	if (NULL == modules) return false;
 
 	//Search module and remove it
 	for (ElfLoader* mod = modules->Begin(); !modules->IsEnd(); mod = modules->Next())
@@ -90,11 +120,11 @@ bool ModuleTool::Uninstall(const char* filename)
 			mod->FiniArray();
 			modules->Remove(mod);
 			delete mod;
-			debug.Output(Debug::_Lv2, "%s module uninstall successful", filename);
-			return _OK;	
+			Kernel::debug.Output(Debug::_Lv2, "%s module uninstall successful", filename);
+			return true;	
 		}
 	}
 
-	debug.Error("%s module not found", filename);
-	return _ERR;
+	Kernel::debug.Error("%s module not found", filename);
+	return false;
 }

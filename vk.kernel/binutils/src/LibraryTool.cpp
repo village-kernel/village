@@ -4,10 +4,9 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
-#include "Debug.h"
-#include "Loader.h"
 #include "LibraryTool.h"
+#include "Kernel.h"
+#include "Loader.h"
 
 
 /// @brief Constructor
@@ -16,9 +15,32 @@ LibraryTool::LibraryTool()
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 LibraryTool::~LibraryTool()
 {
+}
+
+
+/// @brief Library tool Get libraries
+List<ElfLoader*>* LibraryTool::GetLibraries()
+{
+	//Get the loader module
+	Loader* loader = (Loader*)Kernel::modular.GetModuleByName("loader");
+	if (NULL == loader)
+	{
+		Kernel::debug.Error("loader feature not support");
+		return NULL;
+	}
+
+	//Get the libraries pointer
+	List<ElfLoader*>* libraries = loader->GetLibraries();
+	if (NULL == libraries)
+	{
+		Kernel::debug.Error("get libraries address failed");
+		return NULL;
+	}
+
+	return libraries;
 }
 
 
@@ -32,12 +54,13 @@ bool LibraryTool::Install(const char* filename)
 	//Check filename is valid
 	if (NULL == filename)
 	{
-		debug.Error("%s library not a valid name", filename);
+		Kernel::debug.Error("%s library not a valid name", filename);
 		return false;
 	}
 
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = loader.GetLibraries();
+	List<ElfLoader*>* libraries = GetLibraries();
+	if (NULL == libraries) return false;
 
 	//Check the library if it has been installed
 	for (ElfLoader* library = libraries->Begin(); !libraries->IsEnd(); library = libraries->Next())
@@ -45,7 +68,7 @@ bool LibraryTool::Install(const char* filename)
 		if (0 == strcmp(filename, library->GetFileName()))
 		{
 			isInstalled = true;
-			debug.Output(Debug::_Lv2, "%s library has already been installed", filename);
+			Kernel::debug.Output(Debug::_Lv2, "%s library has already been installed", filename);
 			break;
 		}
 	}
@@ -62,17 +85,16 @@ bool LibraryTool::Install(const char* filename)
 			library->FillBssZero();
 			library->InitArray();
 			libraries->Add(library);
-			debug.Output(Debug::_Lv2, "%s library install successful", filename);
-			return _OK;
+			Kernel::debug.Output(Debug::_Lv2, "%s library install successful", filename);
 		}
 		else
 		{
-			debug.Error("%s library install failed", filename);
-			return _ERR;
+			Kernel::debug.Error("%s library install failed", filename);
+			return false;
 		}
 	}
 
-	return _OK;
+	return true;
 }
 
 
@@ -81,8 +103,16 @@ bool LibraryTool::Install(const char* filename)
 /// @return 
 bool LibraryTool::Uninstall(const char* filename)
 {
+	//Check filename is valid
+	if (NULL == filename)
+	{
+		Kernel::debug.Error("%s library not a valid name", filename);
+		return false;
+	}
+
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = loader.GetLibraries();
+	List<ElfLoader*>* libraries = GetLibraries();
+	if (NULL == libraries) return false;
 
 	//Search library and remove it
 	for (ElfLoader* library = libraries->Begin(); !libraries->IsEnd(); library = libraries->Next())
@@ -92,13 +122,13 @@ bool LibraryTool::Uninstall(const char* filename)
 			library->FiniArray();
 			libraries->Remove(library);
 			delete library;
-			debug.Output(Debug::_Lv2, "%s library uninstall successful", filename);
-			return _OK;	
+			Kernel::debug.Output(Debug::_Lv2, "%s library uninstall successful", filename);
+			return true;	
 		}
 	}
 
-	debug.Error("%s library not found", filename);
-	return _ERR;
+	Kernel::debug.Error("%s library not found", filename);
+	return false;
 }
 
 
@@ -107,8 +137,16 @@ bool LibraryTool::Uninstall(const char* filename)
 /// @return symbol address
 uint32_t LibraryTool::SearchSymbol(const char* symbol)
 {
+	//Check symbol is valid
+	if (NULL == symbol)
+	{
+		Kernel::debug.Error("%s symbol not a valid name", symbol);
+		return 0;
+	}
+
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = loader.GetLibraries();
+	List<ElfLoader*>* libraries = GetLibraries();
+	if (NULL == libraries) return false;
 
 	//Search symbol
 	for (ElfLoader* lib = libraries->Begin(); !libraries->IsEnd(); lib = libraries->Next())
@@ -116,5 +154,6 @@ uint32_t LibraryTool::SearchSymbol(const char* symbol)
 		uint32_t symAddr = lib->GetDynSymAddrByName(symbol);
 		if (0 != symAddr) return symAddr;
 	}
+
 	return 0;
 }
