@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Mutex.h"
-#include "Thread.h"
+#include "Kernel.h"
 
 
 /// @brief Mutex constructor
@@ -25,7 +25,7 @@ Mutex::~Mutex()
 /// @brief Mutex lock
 void Mutex::Lock()
 {
-	while (true == lock) { thread.Sleep(ticks); }
+	while (true == lock) { Kernel::thread.Sleep(ticks); }
 	lock = !lock;
 }
 
