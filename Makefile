@@ -75,11 +75,11 @@ endif
 ifeq ($(CONFIG_GENERATED_MOD), y)
 	$(Q)$(MAKE) module
 endif
-ifeq ($(CONFIG_BOOTLOADER), y)
-	$(Q)$(MAKE) bootloader
-endif
 ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
+endif
+ifeq ($(CONFIG_BOOTLOADER), y)
+	$(Q)$(MAKE) bootloader
 endif
 ifeq ($(CONFIG_GENERATED_APP), y)
 	$(Q)$(MAKE) application
@@ -119,9 +119,9 @@ BIN = $(CP) -O binary -S
 #######################################
 # setting build environment
 #######################################
-INCLUDES  = $(addprefix -I, $(inc-y) $(inc-m))
-VPATH     = $(addprefix $(BUILD_DIR)/, $(src-y) $(src-m)) $(LIBRARIES_DIR) $(src-y) $(src-m)
-LIBS      = -L$(LIBRARIES_DIR) $(addprefix -l, $(libs-y))
+INCLUDES  += $(addprefix -I, $(inc) $(inc-y) $(inc-m))
+VPATH     += $(addprefix $(BUILD_DIR)/, $(src) $(src-y) $(src-m)) $(LIBRARIES_DIR) $(src) $(src-y) $(src-m)
+LIBS      += -L$(LIBRARIES_DIR) $(addprefix -l, $(libs-y))
 
 
 #######################################
@@ -216,20 +216,6 @@ $(MODULES_DIR)/%.mo: $(objs)
 
 
 #######################################
-# build the bootloader
-#######################################
-bootloader: $(objs-bl-y)
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
-
-$(BUILD_DIR)/$(TARGET)-boot.elf: $(objs-bl-y)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@
-	$(Q)$(SZ) $@
-
-
-#######################################
 # build the kernel
 #######################################
 kernel: $(objs-y)
@@ -244,13 +230,40 @@ $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 
 
 #######################################
+# build the bootloader
+#######################################
+bootloader:
+	$(Q)$(MAKE) $(objs-boot-y) \
+		inc="$(inc-boot-y)" \
+		src="$(src-boot-y)";
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf \
+		inc="$(inc-boot-y)" \
+		src="$(src-boot-y)" \
+		objs="$(objs-boot-y)" \
+		libs="$(libs-boot-y)";
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
+
+$(BUILD_DIR)/$(TARGET)-boot.elf: $(objs)
+	$(Q)echo output $@
+	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@ -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
+	$(Q)$(SZ) $@
+
+
+#######################################
 # build the applications
 #######################################
 application: 
 	$(Q)mkdir -p $(APPS_DIR)
 	$(Q)$(foreach name, $(apps-y), \
-		$(MAKE) $(objs-$(name)-y); \
-		$(MAKE) $(APPS_DIR)/$(name).exec objs="$(objs-$(name)-y)" libs="$(libs-$(name)-y)"; \
+		$(MAKE) $(objs-$(name)-y) \
+		inc="$(inc-$(name)-y)" \
+		src="$(src-$(name)-y)"; \
+		$(MAKE) $(APPS_DIR)/$(name).exec \
+		objs="$(objs-$(name)-y)" \
+		libs="$(libs-$(name)-y)" \
+		inc="$(inc-$(name)-y)" \
+		src="$(src-$(name)-y)"; \
 	)
 
 $(APPS_DIR)/%.exec: $(objs)

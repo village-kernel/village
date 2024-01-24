@@ -14,9 +14,9 @@ apps-$(CONFIG_TAICHI)                += taichi
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_TAICHI)                 += vk.application/taichi/inc
+inc-taichi-$(CONFIG_TAICHI)          += vk.application/taichi/inc
 
-src-$(CONFIG_TAICHI)                 += vk.application/taichi/src
+src-taichi-$(CONFIG_TAICHI)          += vk.application/taichi/src
 
 
 ######################################

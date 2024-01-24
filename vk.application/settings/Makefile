@@ -14,9 +14,9 @@ apps-$(CONFIG_SETTINGS)              += settings
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_SETTINGS)               += vk.application/settings/inc
+inc-settings-$(CONFIG_SETTINGS)      += vk.application/settings/inc
 
-src-$(CONFIG_SETTINGS)               += vk.application/settings/src
+src-settings-$(CONFIG_SETTINGS)      += vk.application/settings/src
 
 
 ######################################

@@ -14,9 +14,9 @@ apps-$(CONFIG_LAUNCH)                += launch
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_LAUNCH)                 += vk.application/launch/inc
+inc-launch-$(CONFIG_LAUNCH)          += vk.application/launch/inc
 
-src-$(CONFIG_LAUNCH)                 += vk.application/launch/src
+src-launch-$(CONFIG_LAUNCH)          += vk.application/launch/src
 
 
 ######################################

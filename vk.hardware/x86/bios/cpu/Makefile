@@ -64,7 +64,7 @@ CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit -fno-thread
 
 # boot loader ld flags
 BLDFLAGS  += $(LDSCRIPT-BOOT) -ffreestanding -nostdlib
-BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-bl.map,--cref
+BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
 BLDFLAGS  += -Wl,--no-warn-rwx-segment
 BLDFLAGS  += -Wl,-m,elf_i386
 

@@ -14,10 +14,10 @@ apps-$(CONFIG_CONSOLE)                       += console
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_CONSOLE)                        += vk.application/console/inc
+inc-console-$(CONFIG_CONSOLE)                += vk.application/console/inc
 
-src-$(CONFIG_CONSOLE)                        += vk.application/console/src
-src-$(CONFIG_CONSOLE)                        += vk.application/console/cmds
+src-console-$(CONFIG_CONSOLE)                += vk.application/console/src
+src-console-$(CONFIG_CONSOLE)                += vk.application/console/cmds
 
 
 ######################################
