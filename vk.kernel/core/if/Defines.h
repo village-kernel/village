@@ -25,7 +25,7 @@ enum DriverID
 {
 	_serial              = 1,
 	_storage             = 21,
-	_drvLoader           = 41,
+	_timer               = 41,
 	_display             = 61,
 	_network             = 81,
 	_usbdev              = 101,
