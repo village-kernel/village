@@ -16,16 +16,34 @@ class CmdRun : public Cmd
 private:
 	//Members
 	Executor executor;
+	Executor::Behavior behavior;
 public:
-	///Cmd Run execute
+	/// @brief Constructor
+	CmdRun() :behavior(Executor::_Foreground) {}
+
+	/// @brief Cmd Run execute
 	void Execute(int argc, char* argv[])
 	{
+		int i = 0;
+
 		if (argc < 2)
 		{
-			console.Output("Usage: run <program> [arg1] [arg2] [...]");
+			console.Output("Usage: run [-b] <program> [arg1] [arg2] [...]");
 			return;
 		}
-		executor.Run(Executor::_Foreground, argv[1], argc, argv);
+
+		behavior = Executor::_Foreground;
+
+		for (i = 1; i < argc; i++)
+		{
+			if (0 == strcmp(argv[i], "-b"))
+			{
+				behavior = Executor::_Background;
+				break;
+			}
+		}
+
+		executor.Run(behavior, argv[i + 1], argc, argv);
 	}
 };
 
