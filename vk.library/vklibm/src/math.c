@@ -1,19 +1,7 @@
 //###########################################################################
-// string.c
-// Header file for string classes
+// math.cpp
+// Source file for math classes
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "stdlib.h"
-
-
-int atexit(void (*function)(void))
-{
-	return 0;
-}
-
-
-int rand(void)
-{
-	return 0;
-}
+#include "math.h"

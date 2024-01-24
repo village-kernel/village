@@ -14,6 +14,7 @@ extern "C" {
 #include "stddef.h"
 
 void* memcpy(void* dst, const void* src, size_t len);
+void* memmove(void* dst, const void* src, size_t len);
 void* memset(void* b, int c, size_t len);
 
 char* strcpy(char* dst, const char* src);

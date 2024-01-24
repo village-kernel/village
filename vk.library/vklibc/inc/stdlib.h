@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 int atexit(void (*function)(void));
+int rand(void);
 
 #ifdef __cplusplus
 }
