@@ -10,6 +10,10 @@ config BOCHSVBE
 	tristate "Enable Bochs VBE support"
 	default n
 
+config GENERALTIMER
+	tristate "Enable general timer support"
+	default n
+
 config PS2KEYBOARD
 	tristate "Enable ps2 key board input support"
 	default n

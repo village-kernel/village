@@ -31,7 +31,7 @@ void Debug::Write(const char* data)
 	//Get transceiver driver and initialize
 	if (NULL == transceiver)
 	{
-		transceiver = Kernel::device.GetDriver(DriverID::_serial);
+		transceiver = Kernel::device.GetDriver("serial0");
 		if (NULL != transceiver) transceiver->Initialize();
 	}
 	

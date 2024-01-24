@@ -1,8 +1,6 @@
 //###########################################################################
-// Serial.cpp
-// Provides a simple interface to transmit and receive bytes via the USART 
-// module. DMA is used to minimize CPU usage. All buffers are managed 
-// by the class internally.
+// SerialPort.cpp
+// Definitions of the functions that manage serial port
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -12,8 +10,8 @@
 #include "Hardware.h"
 
 
-///Serial
-class Serial : public Driver
+/// @brief SerialPort
+class SerialPort : public Driver
 {
 public:
 	//Enumerations
@@ -41,57 +39,51 @@ public:
 	};
 private:
 	//Members
-	volatile uint32_t port;
+	uint32_t port;
+	uint32_t COMX[8] = {COM1, COM2, COM3, COM4, COM5, COM6, COM7 };
 private:
 	///Check if the send register is empty
 	bool IsTxRegisterEmpty()
 	{
-		return (bool)(PortByteIn(port + COM_LINE_STATUS_Pos) & COM_LINE_STATUS_THRE);
+		return (bool)(PortByteIn(COMX[port] + COM_LINE_STATUS_Pos) & COM_LINE_STATUS_THRE);
 	}
 	
 
 	///Check if the read date register not empty
 	bool IsReadDataRegNotEmpty()
 	{
-		return (bool)(PortByteIn(port + COM_LINE_STATUS_Pos) & COM_LINE_STATUS_DR);
+		return (bool)(PortByteIn(COMX[port] + COM_LINE_STATUS_Pos) & COM_LINE_STATUS_DR);
 	}
 public:
+	/// @brief Constructor
+	/// @param port 
+	SerialPort(uint32_t port = 0)
+		:port(0)
+	{
+		if (port >= 0 && port <= 7) this->port = port;
+	}
+
+
 	/// @brief Initializes internal buffers
 	void Initialize()
 	{
-		uint8_t channel = 0;
-
-		//Select serial port
-		switch (channel)
-		{
-			case 0: port = COM1; break;
-			case 1: port = COM2; break;
-			case 2: port = COM3; break;
-			case 3: port = COM4; break;
-			case 4: port = COM5; break;
-			case 5: port = COM6; break;
-			case 6: port = COM7; break;
-			case 7: port = COM8; break;
-			default: port = COM1; break;
-		}
-
 		//Setup serial
-		PortByteOut(port + 1, 0x00);    // Disable all interrupts
-		PortByteOut(port + 3, 0x80);    // Enable DLAB (set baud rate divisor)
-		PortByteOut(port + 0, 0x00);    // Set divisor to 0 (lo byte) 115200 baud
-		PortByteOut(port + 1, 0x00);    //                  (hi byte)
-		PortByteOut(port + 3, 0x03);    // 8 bits, no parity, one stop bit
-		PortByteOut(port + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
-		PortByteOut(port + 4, 0x0B);    // IRQs enabled, RTS/DSR set
-		PortByteOut(port + 4, 0x1E);    // Set in loopback mode, test the serial chip
-		PortByteOut(port + 0, 0xAE);    // Test serial chip (send byte 0xAE and check if serial returns same byte)
+		PortByteOut(COMX[port] + 1, 0x00);    // Disable all interrupts
+		PortByteOut(COMX[port] + 3, 0x80);    // Enable DLAB (set baud rate divisor)
+		PortByteOut(COMX[port] + 0, 0x00);    // Set divisor to 0 (lo byte) 115200 baud
+		PortByteOut(COMX[port] + 1, 0x00);    //                  (hi byte)
+		PortByteOut(COMX[port] + 3, 0x03);    // 8 bits, no parity, one stop bit
+		PortByteOut(COMX[port] + 2, 0xC7);    // Enable FIFO, clear them, with 14-byte threshold
+		PortByteOut(COMX[port] + 4, 0x0B);    // IRQs enabled, RTS/DSR set
+		PortByteOut(COMX[port] + 4, 0x1E);    // Set in loopback mode, test the serial chip
+		PortByteOut(COMX[port] + 0, 0xAE);    // Test serial chip (send byte 0xAE and check if serial returns same byte)
 
 		//Check if serial is faulty (i.e: not same byte as sent)
-		if(PortByteIn(port + 0) != 0xAE) return;
+		if(PortByteIn(COMX[port] + 0) != 0xAE) return;
 
 		//If serial is not faulty set it in normal operation mode
 		//(not-loopback with IRQs enabled and OUT#1 and OUT#2 bits enabled)
-		PortByteOut(port + 4, 0x0F);
+		PortByteOut(COMX[port] + 4, 0x0F);
 	}
 
 
@@ -115,7 +107,7 @@ public:
 		{
 			if (IsTxRegisterEmpty())
 			{
-				PortByteOut(port, *data++);
+				PortByteOut(COMX[port], *data++);
 				size--;
 			}
 		}
@@ -135,7 +127,7 @@ public:
 
 		while (IsReadDataRegNotEmpty())
 		{
-			*data++ = PortByteIn(port);
+			*data++ = PortByteIn(COMX[port]);
 			if (++count >= size) break;
 		}
 
@@ -145,4 +137,11 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new Serial(), DriverID::_serial, serial);
+REGISTER_DRIVER(new SerialPort(0), DriverID::_serial + 0, serial0);
+REGISTER_DRIVER(new SerialPort(1), DriverID::_serial + 1, serial1);
+REGISTER_DRIVER(new SerialPort(2), DriverID::_serial + 2, serial2);
+REGISTER_DRIVER(new SerialPort(3), DriverID::_serial + 3, serial3);
+REGISTER_DRIVER(new SerialPort(4), DriverID::_serial + 4, serial4);
+REGISTER_DRIVER(new SerialPort(5), DriverID::_serial + 5, serial5);
+REGISTER_DRIVER(new SerialPort(6), DriverID::_serial + 6, serial6);
+REGISTER_DRIVER(new SerialPort(7), DriverID::_serial + 7, serial7);

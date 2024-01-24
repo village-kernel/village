@@ -1,5 +1,5 @@
 //###########################################################################
-// Disk.cpp
+// AtaLbaDisk.cpp
 // Definitions of the functions that manage lba disk
 //
 // $Copyright: Copyright (C) village
@@ -10,21 +10,21 @@
 
 
 /// @brief Disk
-class DiskDrv : public Driver
+class AtaLbaDisk : public Driver
 {
 private:
 	//Members
 	uint8_t drv;
 public: 
 	/// @brief Constructor
-	DiskDrv(uint8_t drv = 0)
+	AtaLbaDisk(uint8_t drv = 0)
 		:drv(drv)
 	{
 	}
 
 
-	/// @brief Deconstructor
-	~DiskDrv()
+	/// @brief Decstructor
+	~AtaLbaDisk()
 	{
 	}
 	
@@ -124,5 +124,5 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new DiskDrv(0), DriverID::_storage + 0, hda);
-REGISTER_DRIVER(new DiskDrv(1), DriverID::_storage + 1, hdb);
+REGISTER_DRIVER(new AtaLbaDisk(0), DriverID::_storage + 0, hda);
+REGISTER_DRIVER(new AtaLbaDisk(1), DriverID::_storage + 1, hdb);

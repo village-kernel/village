@@ -31,10 +31,10 @@ void Taichi::Initialize()
 void Taichi::Execute()
 {
 	Executor* launch = new Executor();
-	launch->Run(Executor::_Background, "/applications/launch.exec display");
+	launch->Run(Executor::_Background, "/applications/launch.exec display0");
 
 	Executor* console = new Executor();
-	console->Run(Executor::_Background, "/applications/console.exec serial");
+	console->Run(Executor::_Background, "/applications/console.exec serial0");
 
 	while (1) {}
 }
