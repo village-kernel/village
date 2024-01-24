@@ -8,7 +8,7 @@
 #define __DISPLAY_H__
 
 #include "ASCIIFont.h"
-#include "LcdDriver.h"
+#include "Driver.h"
 #include "Mutex.h"
 
 ///Display
@@ -54,29 +54,29 @@ public:
 	};
 private:
 	//Static constants
-	static const uint16_t buf_size = 100;
-	static const uint16_t defStrokeColor = Color16::Black;
-	static const uint16_t defBackgroundColor = Color16::White;
+	static const uint32_t buf_size = 100;
+	static const uint32_t defStrokeColor = Color16::Black;
+	static const uint32_t defBackgroundColor = Color16::White;
 
 	//Members
-	LcdDriver* lcd;
+	FBDriver*  fbdev;
 	Mutex      lock;
 	char       data[buf_size];
 public:
 	//Methods
 	Display();
 	~Display();
-	void Initialize(LcdDriver* lcd);
-	void DrawPoint(uint16_t x, uint16_t y, uint16_t color = defStrokeColor);
-	uint16_t ReadPoint(uint16_t x, uint16_t y);
-	void Clear(uint16_t color = defBackgroundColor);
-	void DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color = defStrokeColor);
-	void DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color = defStrokeColor);
-	void DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color = defStrokeColor);
-	void ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
-	void ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
-	void ShowString(uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint16_t color = defStrokeColor);
-	void ShowPicture(uint8_t *picture, uint16_t x = 0, uint16_t y = 0, uint16_t width = 0, uint16_t height = 0);
+	void Initialize(FBDriver* fbdev);
+	void DrawPoint(uint32_t x, uint32_t y, uint32_t color = defStrokeColor);
+	uint32_t ReadPoint(uint32_t x, uint32_t y);
+	void Clear(uint32_t color = defBackgroundColor);
+	void DrawLine(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color = defStrokeColor);
+	void DrawRectangle(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color = defStrokeColor);
+	void DrawCircle(uint32_t x, uint32_t y, uint32_t r, uint32_t color = defStrokeColor);
+	void ShowChar(uint32_t x, uint32_t y, uint8_t charVal, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint32_t color = defStrokeColor);
+	void ShowString(uint32_t x, uint32_t y, uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint32_t color = defStrokeColor);
+	void ShowString(uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint32_t color = defStrokeColor);
+	void ShowPicture(uint8_t *picture, uint32_t x = 0, uint32_t y = 0, uint32_t width = 0, uint32_t height = 0);
 	
 	//Methods
 	void Printf(const char* format, ...);

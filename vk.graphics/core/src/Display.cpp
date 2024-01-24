@@ -23,9 +23,9 @@ Display::~Display()
 
 
 ///Display Initialize
-void Display::Initialize(LcdDriver* lcd)
+void Display::Initialize(FBDriver* fbdev)
 {
-	this->lcd = lcd;
+	this->fbdev = fbdev;
 	Clear();
 }
 
@@ -34,9 +34,9 @@ void Display::Initialize(LcdDriver* lcd)
 /// @param x 
 /// @param y 
 /// @param color 
-void Display::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
+void Display::DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 {
-	lcd->DrawPoint(x, y, color);
+	fbdev->DrawPoint(x, y, color);
 }
 
 
@@ -44,17 +44,17 @@ void Display::DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 /// @param x 
 /// @param y 
 /// @return 
-uint16_t Display::ReadPoint(uint16_t x, uint16_t y)
+uint32_t Display::ReadPoint(uint32_t x, uint32_t y)
 {
-	return lcd->ReadPoint(x, y);
+	return fbdev->ReadPoint(x, y);
 }
 
 
 /// @brief Display clear
 /// @param color 
-void Display::Clear(uint16_t color)
+void Display::Clear(uint32_t color)
 {
-	lcd->Clear(color);
+	fbdev->Clear(color);
 }
 
 
@@ -64,15 +64,15 @@ void Display::Clear(uint16_t color)
 /// @param x1 
 /// @param y1 
 /// @param color 
-void Display::DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
+void Display::DrawLine(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color)
 {
-	int xError = 0, yError = 0, distance = 0;
-	int xIncrease = 0, yIncrease = 0;
+	int32_t xError = 0, yError = 0, distance = 0;
+	int32_t xIncrease = 0, yIncrease = 0;
 	
-	int xDelta = x1 - x0;
-	int yDelta = y1 - y0;
-	int pointX = x0;
-	int pointY = y0;
+	int32_t xDelta = x1 - x0;
+	int32_t yDelta = y1 - y0;
+	int32_t pointX = x0;
+	int32_t pointY = y0;
 	
 	if (xDelta > 0)
 	{
@@ -111,7 +111,7 @@ void Display::DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint1
 		distance = yDelta;
 	}
 
-	for (uint16_t point = 0; point <= distance + 1; point++)
+	for (uint32_t point = 0; point <= (uint32_t)(distance + 1); point++)
 	{
 		DrawPoint(pointX, pointY, color);
 		xError += xDelta;
@@ -136,7 +136,7 @@ void Display::DrawLine(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint1
 /// @param x1 
 /// @param y1 
 /// @param color 
-void Display::DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color)
+void Display::DrawRectangle(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color)
 {
 	DrawLine(x0, y0, x1, y0, color);
 	DrawLine(x0, y0, x0, y1, color);
@@ -150,7 +150,7 @@ void Display::DrawRectangle(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, 
 /// @param y 
 /// @param r 
 /// @param color 
-void Display::DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color)
+void Display::DrawCircle(uint32_t x, uint32_t y, uint32_t r, uint32_t color)
 {
 	int xOffset = 0;
 	int yOffset = r;
@@ -188,7 +188,7 @@ void Display::DrawCircle(uint16_t x, uint16_t y, uint16_t r, uint16_t color)
 /// @param fontSize 
 /// @param mode 
 /// @param color 
-void Display::ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSize, DisplayMode mode, uint16_t color)
+void Display::ShowChar(uint32_t x, uint32_t y, uint8_t charVal, FontSize fontSize, DisplayMode mode, uint32_t color)
 {
 	const uint16_t PointMask = 0x0001;
 
@@ -222,10 +222,10 @@ void Display::ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSiz
 
 			charLine >>= 1;
 				
-			if ((x + col) >= lcd->device.width) return;
+			if ((x + col) >= fbdev->device.width) return;
 		}
 
-		if ((y + row) >= lcd->device.height) return;
+		if ((y + row) >= fbdev->device.height) return;
 	}
 }
 
@@ -237,10 +237,10 @@ void Display::ShowChar(uint16_t x, uint16_t y, uint8_t charVal, FontSize fontSiz
 /// @param fontSize 
 /// @param mode 
 /// @param color 
-void Display::ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize, DisplayMode mode, uint16_t color)
+void Display::ShowString(uint32_t x, uint32_t y, uint8_t* str, FontSize fontSize, DisplayMode mode, uint32_t color)
 {
-	uint16_t xOffset = x;
-	uint16_t yOffset = y;
+	uint32_t xOffset = x;
+	uint32_t yOffset = y;
 
 	while ((*str <= '~') && (*str >= ' '))
 	{
@@ -248,7 +248,7 @@ void Display::ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize
 
 		xOffset += fontSize >> 1;
 
-		if (xOffset > lcd->device.width)
+		if (xOffset > fbdev->device.width)
 		{
 			xOffset = 0;
 			yOffset += fontSize;
@@ -264,37 +264,37 @@ void Display::ShowString(uint16_t x, uint16_t y, uint8_t* str, FontSize fontSize
 /// @param fontSize 
 /// @param mode 
 /// @param color 
-void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint16_t color)
+void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint32_t color)
 {
-	static uint16_t xOffset = 0;
-	static uint16_t yOffset = 0;
+	static uint32_t xOffset = 0;
+	static uint32_t yOffset = 0;
 
 	while ('\0' != *str)
 	{
-		if ((xOffset + (fontSize >> 1) > lcd->device.width) || ('\n' == *str))
+		if ((xOffset + (fontSize >> 1) > fbdev->device.width) || ('\n' == *str))
 		{
 			xOffset = 0;
 			yOffset += fontSize;
 		}
 
-		if (yOffset + fontSize > lcd->device.height)
+		if (yOffset + fontSize > fbdev->device.height)
 		{
-			uint16_t y0 = (yOffset + fontSize) - lcd->device.height;
-			for (uint16_t y = y0; y < lcd->device.height; y++)
+			uint32_t y0 = (yOffset + fontSize) - fbdev->device.height;
+			for (uint32_t y = y0; y < fbdev->device.height; y++)
 			{
-				for (uint16_t x = 0; x < lcd->device.width; x++)
+				for (uint32_t x = 0; x < fbdev->device.width; x++)
 				{
-					uint16_t color = ReadPoint(x, y);
+					uint32_t color = ReadPoint(x, y);
 					DrawPoint(x, y - y0, color);
 				}
 			}
 
 			xOffset = 0;
-			yOffset = lcd->device.height - fontSize;
+			yOffset = fbdev->device.height - fontSize;
 			
-			for (uint16_t y = yOffset; y < lcd->device.height; y++)
+			for (uint32_t y = yOffset; y < fbdev->device.height; y++)
 			{
-				for (uint16_t x = 0; x < lcd->device.width; x++)
+				for (uint32_t x = 0; x < fbdev->device.width; x++)
 				{
 					DrawPoint(x, y, defBackgroundColor);
 				}
@@ -319,7 +319,7 @@ void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint
 /// @param y 
 /// @param width 
 /// @param height 
-void Display::ShowPicture(uint8_t *picture, uint16_t x, uint16_t y, uint16_t width, uint16_t height)
+void Display::ShowPicture(uint8_t *picture, uint32_t x, uint32_t y, uint32_t width, uint32_t height)
 {
 	if (width == 0 || height == 0)
 	{
@@ -328,11 +328,11 @@ void Display::ShowPicture(uint8_t *picture, uint16_t x, uint16_t y, uint16_t wid
 		picture += 8;
 	}
 
-	for (uint16_t yOffset = 0; yOffset < height; yOffset++)
+	for (uint32_t yOffset = 0; yOffset < height; yOffset++)
 	{
-		for (uint16_t xOffset = 0; xOffset < width; xOffset++)
+		for (uint32_t xOffset = 0; xOffset < width; xOffset++)
 		{
-			if (x + xOffset < lcd->device.width && y + yOffset < lcd->device.height)
+			if (x + xOffset < fbdev->device.width && y + yOffset < fbdev->device.height)
 			{
 				DrawPoint(x + xOffset, y + yOffset, (*picture << 8) + *(picture + 1));
 			}
