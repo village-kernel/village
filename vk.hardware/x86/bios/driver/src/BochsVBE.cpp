@@ -177,17 +177,29 @@ public:
 	}
 
 
-	/// @brief BochsVBE clear
+	/// @brief BochsVBE fill area
+	/// @param x0 
+	/// @param y0 
+	/// @param x1 
+	/// @param y1 
 	/// @param color 
-	void Clear(uint32_t color = 0)
+	void Fill(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color)
 	{
-		for (uint32_t y = 0; y < device.height; y++)
+		for (uint32_t y = y0; y <= y1; y++)
 		{
-			for (uint32_t x = 0; x < device.width; x++)
+			for (uint32_t x = x0; x <= x1; x++)
 			{
 				DrawPoint(x, y, color);
 			}
 		}
+	}
+
+
+	/// @brief BochsVBE clear
+	/// @param color 
+	void Clear(uint32_t color = 0)
+	{
+		Fill(0, 0, device.width, device.height, color);
 	}
 };
 
