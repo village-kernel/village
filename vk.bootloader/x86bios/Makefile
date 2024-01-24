@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of vk.aplication
+# The Makefile of x86bios boot
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,9 +8,18 @@
 ######################################
 # paths
 ######################################
-src-$(CONFIG_X86BIOS)     += vk.bootloader/x86bios
+inc-boot-$(CONFIG_X86BIOS)          += 
+
+src-boot-$(CONFIG_X86BIOS)          += vk.bootloader/x86bios
+
 
 ######################################
 # objects
 ######################################
-objs-bl-$(CONFIG_X86BIOS) += boot.o
+objs-boot-$(CONFIG_X86BIOS)         += boot.o
+
+
+######################################
+# libraries
+######################################
+libs-boot-$(CONFIG_X86BIOS)         += 
