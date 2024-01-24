@@ -67,10 +67,18 @@ private:
 		):
 			obj(obj),
 			nid(nid),
-			name(name),
+			name(NULL),
 			prev(NULL),
 			next(NULL)
-		{}
+		{
+			if (NULL != name)
+			{
+				this->name = new char[strlen(name) + 1]();
+				strcpy(this->name, name);
+			}
+		}
+
+		~Node() { if (NULL != name) delete[] this->name; }
 	};
 
 	//Members
