@@ -15,7 +15,7 @@
 
 
 ///ILI9488
-class ILI9488 : public Driver, public LcdDriver
+class ILI9488 : public Driver, public FBDriver
 {
 public:
 	struct Config

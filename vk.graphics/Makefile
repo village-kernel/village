@@ -14,10 +14,10 @@ libs-$(CONFIG_GUI)                      += graphics
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_GUI)                       += vk.graphics/core/if
 inc-$(CONFIG_GUI)                       += vk.graphics/core/inc
 inc-$(CONFIG_GUI)                       += vk.graphics/font/inc
 inc-$(CONFIG_GUI)                       += vk.graphics/wedget/inc
+
 src-$(CONFIG_GUI)                       += vk.graphics/core/src
 src-$(CONFIG_GUI)                       += vk.graphics/wedget/src
 

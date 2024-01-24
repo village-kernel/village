@@ -11,7 +11,7 @@
 
 /// @brief Constructor
 Graphics::Graphics()
-	:lcdDriver(NULL),
+	:fbdev(NULL),
 	display(NULL),
 	mainwin(NULL)
 {
@@ -21,7 +21,7 @@ Graphics::Graphics()
 /// @brief Destructor
 Graphics::~Graphics()
 {
-	delete lcdDriver;
+	delete fbdev;
 	delete display;
 	delete mainwin;
 }
@@ -37,14 +37,14 @@ void Graphics::Initialize(const char* drvname)
 	//Get the specified lcd driver by driver ioctrl 
 	if (NULL != driver)
 	{
-		driver->IOCtrl(0, (void*)&lcdDriver);
+		driver->IOCtrl(0, (void*)&fbdev);
 	}
 
 	//Initialize display
-	if (NULL != lcdDriver)
+	if (NULL != fbdev)
 	{
 		display = new Display();
-		display->Initialize(lcdDriver);
+		display->Initialize(fbdev);
 	}
 }
 
@@ -56,6 +56,6 @@ Wedget* Graphics::CreateMainWindow()
 	mainwin = new Window();
 	mainwin->SetDisplay(display);
 	mainwin->Initialize();
-	mainwin->SetLocation(0, 0, lcdDriver->device.width, lcdDriver->device.height);
+	mainwin->SetLocation(0, 0, fbdev->device.width, fbdev->device.height);
 	return mainwin;
 }

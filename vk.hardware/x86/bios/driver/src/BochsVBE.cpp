@@ -7,7 +7,6 @@
 #include "Hardware.h"
 #include "Kernel.h"
 #include "Driver.h"
-#include "LcdDriver.h"
 #include "PCIController.h"
 
 #define VBE_DISPI_IOPORT_INDEX       (0x01CE)
@@ -45,7 +44,7 @@
 
 
 /// @brief BochsVBE
-class BochsVBE : public LcdDriver
+class BochsVBE : public FBDriver
 {
 private:
 	//Members
@@ -160,7 +159,7 @@ public:
 	/// @param x 
 	/// @param y 
 	/// @param color 
-	void DrawPoint(uint16_t x, uint16_t y, uint16_t color)
+	void DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 	{
 		uint32_t reg = (uint32_t)x + (uint32_t)y * device.width;
 		WriteData(reg, color);
@@ -171,20 +170,20 @@ public:
 	/// @param x 
 	/// @param y 
 	/// @return 
-	uint16_t ReadPoint(uint16_t x, uint16_t y)
+	uint32_t ReadPoint(uint32_t x, uint32_t y)
 	{
-		uint32_t reg = (uint32_t)x + (uint32_t)y * device.width;
+		uint32_t reg = x + y * device.width;
 		return ReadData(reg);
 	}
 
 
 	/// @brief BochsVBE clear
 	/// @param color 
-	void Clear(uint16_t color = 0)
+	void Clear(uint32_t color = 0)
 	{
-		for (uint16_t y = 0; y < device.height; y++)
+		for (uint32_t y = 0; y < device.height; y++)
 		{
-			for (uint16_t x = 0; x < device.width; x++)
+			for (uint32_t x = 0; x < device.width; x++)
 			{
 				DrawPoint(x, y, color);
 			}
@@ -227,9 +226,9 @@ public:
 	/// @return 
 	int IOCtrl(uint8_t cmd, void* data)
 	{
-		LcdDriver** lcd = (LcdDriver**)data;
+		FBDriver** fbdev = (FBDriver**)data;
 
-		*lcd = bochsVBE;
+		*fbdev = bochsVBE;
 
 		return 0;
 	}
