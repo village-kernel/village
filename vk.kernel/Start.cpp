@@ -10,7 +10,7 @@
 
 
 ///Main entry function
-int main(void)
+int main(int argc, char* argv[])
 {
 	System::Initialize();
 	System::ConfigureMPU();
