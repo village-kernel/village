@@ -75,7 +75,7 @@ void __fini_array(void)
 
 /// @brief _start
 /// @param  
-void __attribute__((naked, noreturn))_start(int argc, char* argv[])
+void _start(int argc, char* argv[])
 {
 	__init_data_bss();
 
