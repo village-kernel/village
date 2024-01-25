@@ -135,6 +135,10 @@ ifneq ($(CONFIG_ENVIRONMENT), y)
 CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
 endif
 
+ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
+APPLDFLAGS += -Wl,-static
+endif
+
 
 #######################################
 # build version flags
