@@ -69,10 +69,11 @@ BLDFLAGS  += -Wl,--no-warn-rwx-segment
 BLDFLAGS  += -Wl,-m,elf_i386
 
 # kernel ld flags
+KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL)
 ifeq ($(CONFIG_VKLIBC), y)
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL) -ffreestanding -nostdlib
+KLDFLAGS  += -ffreestanding -nostdlib
 else
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL) -specs=nosys.specs -lc -lm -lnosys
+KLDFLAGS  += -specs=nosys.specs -lc -lm -lnosys
 endif
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
