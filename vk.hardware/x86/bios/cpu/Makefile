@@ -26,14 +26,13 @@ src-y                            += vk.hardware/x86/bios/cpu/hw/src
 ######################################
 # objects
 ######################################
+objs-y                           += crt0_kernel.o
+
 ifneq ($(CONFIG_VKLIBC), y)
 objs-hw-y                        += syscalls.o
 objs-hw-y                        += sysmem.o
 endif
 objs-hw-y                        += i386.o
-
-objs-y                           += crt0.o
-objs-y                           += isr.o
 
 
 ######################################
