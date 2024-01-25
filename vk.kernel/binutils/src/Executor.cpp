@@ -75,9 +75,6 @@ int Executor::Wait()
 /// @brief Executor execute app
 void Executor::Sandbox()
 {
-	elf.FillBssZero();
-	elf.InitArray();
 	elf.Execute(NULL, argc, argv);
-	elf.FiniArray();
 	elf.Exit();
 }
