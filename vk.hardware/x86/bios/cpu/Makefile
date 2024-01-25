@@ -48,6 +48,7 @@ MCUEM := -melf_i386
 DEFS  := -DARCH_X86
 
 # link script
+LDSCRIPT-APP    := -T vk.hardware/x86/bios/cpu/lds/app.ld
 LDSCRIPT-BOOT   := -T vk.hardware/x86/bios/cpu/lds/boot.ld
 LDSCRIPT-KERNEL := -T vk.hardware/x86/bios/cpu/lds/kernel.ld
 
@@ -81,14 +82,15 @@ KLDFLAGS  += -Wl,-m,elf_i386
 KLDFLAGS  += -Wl,-static -pie
 
 # application ld flags
+APPLDFLAGS  += $(MCU) $(LDSCRIPT-APP)
 ifeq ($(CONFIG_VKLIBC), y)
-APPLDFLAGS  += $(MCU) -ffreestanding -nostdlib
+APPLDFLAGS  += -ffreestanding -nostdlib
 else
-APPLDFLAGS  += $(MCU) -specs=nosys.specs -lc -lm -lnosys
+APPLDFLAGS  += -specs=nosys.specs -lc -lm -lnosys
 endif
 APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
 APPLDFLAGS  += -Wl,--gc-sections
 APPLDFLAGS  += -Wl,--no-warn-rwx-segment
 APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-in-shared-libs
 APPLDFLAGS  += -Wl,-m,elf_i386
-APPLDFLAGS  += -pie -e main
+APPLDFLAGS  += -pie

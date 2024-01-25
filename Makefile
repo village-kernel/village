@@ -257,14 +257,14 @@ $(BUILD_DIR)/$(TARGET)-boot.elf: $(objs)
 #######################################
 # build the applications
 #######################################
-application: 
+application: crt0_app.o
 	$(Q)mkdir -p $(APPS_DIR)
 	$(Q)$(foreach name, $(apps-y), \
 		$(MAKE) $(objs-$(name)-y) \
 		inc="$(inc-$(name)-y)" \
 		src="$(src-$(name)-y)"; \
 		$(MAKE) $(APPS_DIR)/$(name).exec \
-		objs="$(objs-$(name)-y)" \
+		objs="crt0_app.o $(objs-$(name)-y)" \
 		libs="$(libs-$(name)-y)" \
 		inc="$(inc-$(name)-y)" \
 		src="$(src-$(name)-y)"; \
