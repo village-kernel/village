@@ -24,7 +24,6 @@ Loader::~Loader()
 /// @brief Loader initialize
 void Loader::Initialize()
 {
-	Loading(_Load_Lib, "/libraries/_load_.rc");
 	Loading(_Load_Mod, "/modules/_load_.rc");
 }
 
