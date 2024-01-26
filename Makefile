@@ -274,6 +274,14 @@ $(APPS_DIR)/%.exec: $(objs)
 	$(Q)echo output $@
 	$(Q)$(CXX) $(APPLDFLAGS) $^ -o $@ -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
 	$(Q)$(SZ) $@
+ifeq ($(CONFIG_CREATE_APP_HEX_FILE), y)
+	$(Q)echo output $(@:.exec=.hex)
+	$(Q)$(HEX) $@ $(@:.exec=.hex)
+endif
+ifeq ($(CONFIG_CREATE_APP_BIN_FILE), y)
+	$(Q)echo output $(@:.exec=.bin)
+	$(Q)$(BIN) $@ $(@:.exec=.bin)
+endif
 
 
 #######################################
