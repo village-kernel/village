@@ -10,7 +10,7 @@
 #include "Defines.h"
 
 
-///ElfLoader
+/// @brief ElfLoader
 class ElfLoader
 {
 private:
