@@ -43,7 +43,9 @@ public:
 			}
 		}
 
-		elfExecutor.Run(behavior, argv[i + 1], argc, argv);
+		char* path = (i != argc) ? argv[i] : argv[1];
+
+		elfExecutor.Run(behavior, path, argc, argv);
 	}
 };
 
