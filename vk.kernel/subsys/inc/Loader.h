@@ -11,8 +11,7 @@
 #include "Templates.h"
 #include "LibraryTool.h"
 #include "ModuleTool.h"
-#include "ElfLoader.h"
-#include "Executor.h"
+#include "ElfExecutor.h"
 
 
 /// @brief Loader
@@ -31,7 +30,7 @@ private:
 	List<ElfLoader*> modules;
 	LibraryTool      libraryTool;
 	ModuleTool       moduleTool;
-	Executor         executor;
+	ElfExecutor      executor;
 
 	//Methods
 	void Loading(int type, const char* filename);
