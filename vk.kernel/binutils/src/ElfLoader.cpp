@@ -161,7 +161,7 @@ inline uint32_t ElfLoader::GetDynSymAddr(uint32_t index)
 /// @brief Get symbol addr by name
 /// @param name 
 /// @return address
-inline uint32_t ElfLoader::GetSymbolAddrByName(const char* name)
+uint32_t ElfLoader::GetSymbolAddrByName(const char* name)
 {
 	for (uint32_t i = 0; i < elf.symtabNum; i++)
 	{
@@ -177,7 +177,7 @@ inline uint32_t ElfLoader::GetSymbolAddrByName(const char* name)
 /// @brief Get dynamic symbol addr by name
 /// @param name 
 /// @return address
-inline uint32_t ElfLoader::GetDynSymAddrByName(const char* name)
+uint32_t ElfLoader::GetDynSymAddrByName(const char* name)
 {
 	for (uint32_t i = 0; i < elf.dynsymNum; i++)
 	{
@@ -446,9 +446,12 @@ int ElfLoader::RelEntries()
 
 				//Get the address of symbol entry when the relocation entry type is relative
 				if (_R_TYPE_RELATIVE == relEntry.type) symAddr = elf.map;
+
+				//Get the address of symbol entry when the relocation entry type is copy
+				if (_R_TYPE_COPY == relEntry.type) symAddr = LibraryTool().SearchSymbol(symName);
 				
 				//Get the address of object symbol entry
-				if (0 == symAddr && symEntry.shndx) symAddr = GetDynSymAddrByName(symName);
+				if (0 == symAddr && symEntry.shndx) symAddr = elf.map + symEntry.value;
 
 				//Get the address of undefined symbol entry
 				if (0 == symAddr) symAddr = Kernel::environment.SearchSymbol(symName);
@@ -472,7 +475,7 @@ int ElfLoader::RelEntries()
 				}
 
 				//Relocation symbol entry
-				RelSymCall(relAddr, symAddr, relEntry.type);
+				RelSymCall(relAddr, symAddr, relEntry.type, symEntry.size);
 
 				//Output debug message
 				Kernel::debug.Output(Debug::_Lv0, "%s rel name %s, relAddr 0x%lx, symAddr 0x%lx", 
@@ -493,61 +496,82 @@ int ElfLoader::RelEntries()
 /// @param symAddr 
 /// @param type 
 /// @return result
-int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
+int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size)
 {
+	uint32_t A = *((uint32_t*)relAddr);
+	uint32_t B = elf.map;
+	uint32_t G = 0;     //
+	uint32_t GOT = 0;   //
+	uint32_t L = 0;     //
+	uint32_t Z = 0;     //
+	uint32_t P = relAddr;
+	uint32_t S = symAddr;
+	uint32_t* relVal = (uint32_t*)relAddr;
+
 	switch (type)
 	{
 		case _R_386_32:
-			*((uint32_t*)relAddr) += symAddr;
+			*relVal = S + A;
 			break;
 
 		case _R_386_PC32:
-			*((uint32_t*)relAddr) += (symAddr - relAddr);
+			*relVal = S + A - P;
 			break;
 
 		case _R_386_GOT32:
+			*relVal = G + A;
 			break;
 
 		case _R_386_PLT32:
+			*relVal = L + A - P;
 			break;
 
 		case _R_386_COPY:
+			memcpy(relVal, (const void*)S, size);
 			break;
 
 		case _R_386_GLOB_DAT:
-			*((uint32_t*)relAddr) = symAddr;
+			*relVal = S;
 			break;
 
 		case _R_386_JMP_SLOT:
-			*((uint32_t*)relAddr) = symAddr;
+			*relVal = S;
 			break;
 
 		case _R_386_RELATIVE:
-			*((uint32_t*)relAddr) += symAddr;
+			*relVal = B + A;
 			break;
 		
 		case _R_386_GOTOFF:
+			*relVal = S + A - GOT;
 			break;
 		
 		case _R_386_GOTPC:
+			*relVal = GOT + A - P;
 			break;
 
 		case _R_386_32PLT:
+			*relVal = L + A;
 			break;
 
 		case _R_386_16:
+			*relVal = S + A;
 			break;
 
 		case _R_386_PC16:
+			*relVal = S + A - P;
 			break;
 
 		case _R_386_8:
+			*relVal = S + A;
 			break;
 
 		case _R_386_PC8:
+			*relVal = S + A - P;
 			break;
 
 		case _R_386_SIZE32:
+			*relVal = Z + A;
 			break;
 
 		default: return 0;
@@ -562,7 +586,7 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
 /// @param symAddr 
 /// @param type 
 /// @return address
-int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, int type)
+int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size)
 {
 	switch (type)
 	{
