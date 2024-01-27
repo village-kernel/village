@@ -1,15 +1,15 @@
 //###########################################################################
-// Executor.cpp
-// Definitions of the functions that manage executor
+// BaseExecutor.cpp
+// Definitions of the functions that manage base executor
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Kernel.h"
-#include "Executor.h"
+#include "BaseExecutor.h"
 
 
 /// @brief Constructor
-Executor::Executor()
+BaseExecutor::BaseExecutor()
 	:pid(0),
 	argc(0),
 	argv(NULL)
@@ -17,17 +17,17 @@ Executor::Executor()
 }
 
 
-/// @brief Deconstructor
-Executor::~Executor()
+/// @brief Destructor
+BaseExecutor::~BaseExecutor()
 {
 	regex.Clear();
 }
 
 
-/// @brief Executor Initialize
+/// @brief BaseExecutor Initialize
 /// @param args run args
 /// @return pid
-int Executor::Run(Behavior behavior, const char* args)
+int BaseExecutor::Run(Behavior behavior, const char* args)
 {
 	//Split args
 	regex.Split(args);
@@ -41,21 +41,19 @@ int Executor::Run(Behavior behavior, const char* args)
 }
 
 
-/// @brief Executor Initialize
-/// @param path elf file path
+/// @brief BaseExecutor Initialize
+/// @param path file path
+/// @param argc running argc
 /// @param argv running argv
 /// @return pid
-int Executor::Run(Behavior behavior, const char* path, int argc, char* argv[])
+int BaseExecutor::Run(Behavior behavior, const char* path, int argc, char* argv[])
 {
 	//Set argc and argv
 	this->argc = argc;
 	this->argv = argv;
 
-	//Load, parser and execute elf file
-	if (elf.Load(path) != Result::_OK) return _ERR;
-	
-	//Create a sandboxed thread to run the app
-	pid = Kernel::thread.CreateTask(path, (Method)&Executor::Sandbox, this);
+	//Load, parser file and create task
+	if ((pid = Execute(path)) == 0) return _ERR;
 
 	//Wait for task done
 	if (behavior == _Foreground) Kernel::thread.WaitForTask(pid);
@@ -64,17 +62,9 @@ int Executor::Run(Behavior behavior, const char* path, int argc, char* argv[])
 }
 
 
-/// @brief Executor wait
+/// @brief BaseExecutor wait
 /// @return result
-int Executor::Wait()
+int BaseExecutor::Wait()
 {
 	return Kernel::thread.WaitForTask(pid);
-}
-
-
-/// @brief Executor execute app
-void Executor::Sandbox()
-{
-	elf.Execute(NULL, argc, argv);
-	elf.Exit();
 }
