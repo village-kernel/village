@@ -89,8 +89,11 @@ objs-kernel-$(CONFIG_SEMAPHORE)             += Semaphore.o
 
 objs-kernel-$(CONFIG_VILLAGE)               += Village.o
 
+objs-kernel-$(CONFIG_BINUTILS)              += BaseExecutor.o
+objs-kernel-$(CONFIG_BINLOADER)             += BinLoader.o
+objs-kernel-$(CONFIG_BINEXECUTOR)           += BinExecutor.o
 objs-kernel-$(CONFIG_ELFLOADER)             += ElfLoader.o
-objs-kernel-$(CONFIG_EXECUTOR)              += Executor.o
+objs-kernel-$(CONFIG_ELFEXECUTOR)           += ElfExecutor.o
 objs-kernel-$(CONFIG_LIBTOOL)               += LibraryTool.o
 objs-kernel-$(CONFIG_MODTOOL)               += ModuleTool.o
 
