@@ -6,7 +6,7 @@
 //###########################################################################
 #include "Cmd.h"
 #include "Console.h"
-#include "Executor.h"
+#include "ElfExecutor.h"
 #include "string.h"
 
 
@@ -15,11 +15,11 @@ class CmdRun : public Cmd
 {
 private:
 	//Members
-	Executor executor;
-	Executor::Behavior behavior;
+	ElfExecutor elfExecutor;
+	ElfExecutor::Behavior behavior;
 public:
 	/// @brief Constructor
-	CmdRun() :behavior(Executor::_Foreground) {}
+	CmdRun() :behavior(ElfExecutor::_Foreground) {}
 
 	/// @brief Cmd Run execute
 	void Execute(int argc, char* argv[])
@@ -32,18 +32,18 @@ public:
 			return;
 		}
 
-		behavior = Executor::_Foreground;
+		behavior = ElfExecutor::_Foreground;
 
 		for (i = 1; i < argc; i++)
 		{
 			if (0 == strcmp(argv[i], "-b"))
 			{
-				behavior = Executor::_Background;
+				behavior = ElfExecutor::_Background;
 				break;
 			}
 		}
 
-		executor.Run(behavior, argv[i + 1], argc, argv);
+		elfExecutor.Run(behavior, argv[i + 1], argc, argv);
 	}
 };
 
