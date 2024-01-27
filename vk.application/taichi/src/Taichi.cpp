@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Taichi.h"
-#include "Executor.h"
+#include "ElfExecutor.h"
 
 
 /// @brief Constructor
@@ -30,11 +30,11 @@ void Taichi::Initialize()
 /// @brief Execute
 void Taichi::Execute()
 {
-	Executor* launch = new Executor();
-	launch->Run(Executor::_Background, "/applications/launch.exec display0");
+	ElfExecutor* launch = new ElfExecutor();
+	launch->Run(ElfExecutor::_Background, "/applications/launch.exec display0");
 
-	Executor* console = new Executor();
-	console->Run(Executor::_Background, "/applications/console.exec serial0");
+	ElfExecutor* console = new ElfExecutor();
+	console->Run(ElfExecutor::_Background, "/applications/console.exec serial0");
 
 	while (1) {}
 }
