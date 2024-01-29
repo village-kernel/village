@@ -236,13 +236,15 @@ public:
 	/// @param cmd 
 	/// @param data 
 	/// @return 
-	int IOCtrl(uint8_t cmd, void* data)
+	void* IOCtrl(uint8_t cmd, ...)
 	{
-		FBDriver** fbdev = (FBDriver**)data;
-
-		*fbdev = bochsVBE;
-
-		return 0;
+		switch (cmd)
+		{
+			case 0:
+				return (void*)bochsVBE;
+			default:
+				return NULL;
+		}
 	}
 };
 
