@@ -30,7 +30,7 @@ Console::Console()
 }
 
 
-/// @brief Console deconstructor
+/// @brief Console destructor
 Console::~Console()
 {
 }
