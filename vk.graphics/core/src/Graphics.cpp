@@ -37,7 +37,7 @@ void Graphics::Initialize(const char* drvname)
 	//Get the specified lcd driver by driver ioctrl 
 	if (NULL != driver)
 	{
-		driver->IOCtrl(0, (void*)&fbdev);
+		fbdev = (FBDriver*)driver->IOCtrl(0);
 	}
 
 	//Initialize display
