@@ -71,18 +71,6 @@ private:
 		}
 	}
 public:
-	/// @brief Constructor
-	Input()
-	{
-	}
-
-
-	/// @brief Destructor
-	~Input()
-	{
-	}
-
-
 	/// @brief Input attach
 	/// @param method 
 	/// @param user 
