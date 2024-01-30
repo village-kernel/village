@@ -22,7 +22,7 @@ private:
 	Village  village;
 
 	//Methods
-	void UpdateInput(Input::InputMove* input);
+	void UpdateInput(Input::Movement* input);
 public:
 	//Methods
 	Launch();
