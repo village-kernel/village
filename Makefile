@@ -135,6 +135,10 @@ ifneq ($(CONFIG_ENVIRONMENT), y)
 CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
 endif
 
+ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
+APPLDFLAGS += -Wl,-static
+endif
+
 
 #######################################
 # build version flags
@@ -253,14 +257,14 @@ $(BUILD_DIR)/$(TARGET)-boot.elf: $(objs)
 #######################################
 # build the applications
 #######################################
-application: 
+application: crt0_app.o
 	$(Q)mkdir -p $(APPS_DIR)
 	$(Q)$(foreach name, $(apps-y), \
 		$(MAKE) $(objs-$(name)-y) \
 		inc="$(inc-$(name)-y)" \
 		src="$(src-$(name)-y)"; \
 		$(MAKE) $(APPS_DIR)/$(name).exec \
-		objs="$(objs-$(name)-y)" \
+		objs="crt0_app.o $(objs-$(name)-y)" \
 		libs="$(libs-$(name)-y)" \
 		inc="$(inc-$(name)-y)" \
 		src="$(src-$(name)-y)"; \
@@ -270,6 +274,14 @@ $(APPS_DIR)/%.exec: $(objs)
 	$(Q)echo output $@
 	$(Q)$(CXX) $(APPLDFLAGS) $^ -o $@ -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
 	$(Q)$(SZ) $@
+ifeq ($(CONFIG_CREATE_APP_HEX_FILE), y)
+	$(Q)echo output $(@:.exec=.hex)
+	$(Q)$(HEX) $@ $(@:.exec=.hex)
+endif
+ifeq ($(CONFIG_CREATE_APP_BIN_FILE), y)
+	$(Q)echo output $(@:.exec=.bin)
+	$(Q)$(BIN) $@ $(@:.exec=.bin)
+endif
 
 
 #######################################

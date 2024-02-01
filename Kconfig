@@ -47,6 +47,21 @@ config GENERATED_APP
 	bool "generated apps"
 	default y
 
+config GENERATED_STATIC_APP
+	depends on GENERATED_APP
+	bool "build with static"
+	default n
+
+config CREATE_APP_HEX_FILE
+	depends on GENERATED_STATIC_APP
+	bool "create *.hex file"
+	default n
+
+config CREATE_APP_BIN_FILE
+	depends on GENERATED_STATIC_APP
+	bool "create *.bin file"
+	default n
+
 config GENERATED_IMG
 	bool "generated os image"
 	default n

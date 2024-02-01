@@ -24,7 +24,6 @@ Loader::~Loader()
 /// @brief Loader initialize
 void Loader::Initialize()
 {
-	Loading(_Load_Lib, "/libraries/_load_.rc");
 	Loading(_Load_Mod, "/modules/_load_.rc");
 }
 
@@ -33,7 +32,7 @@ void Loader::Initialize()
 void Loader::Execute()
 {
 	//Execute the first application of the village
-	executor.Run(Executor::_Background, "/applications/taichi.exec");
+	executor.Run(ElfExecutor::_Background, "/applications/taichi.exec");
 }
 
 
