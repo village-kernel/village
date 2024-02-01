@@ -51,10 +51,28 @@ config BINUTILS
 	bool "Enable binutils function"
 	default n
 
+config BINLOADER
+	depends on BINUTILS
+	select FILESTREAM
+	bool "Enable *.bin file load function"
+	default n
+
+config BINEXECUTOR
+	depends on BINUTILS
+	select BINLOADER
+	bool "Enable execute *.bin file function"
+	default n
+
 config ELFLOADER
 	depends on BINUTILS
 	select FILESTREAM
-	bool "Enable elf load function"
+	bool "Enable *.elf file load function"
+	default n
+
+config ELFEXECUTOR
+	depends on BINUTILS
+	select ELFLOADER
+	bool "Enable execute *.elf file function"
 	default n
 
 config LIBTOOL
@@ -65,11 +83,6 @@ config LIBTOOL
 config MODTOOL
 	depends on BINUTILS
 	bool "Enable module tool function"
-	default n
-
-config EXECUTOR
-	depends on BINUTILS
-	bool "Enable execute program function"
 	default n
 
 endmenu

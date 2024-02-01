@@ -10,7 +10,7 @@
 #include "Defines.h"
 
 
-///ElfLoader
+/// @brief ElfLoader
 class ElfLoader
 {
 private:
@@ -61,6 +61,7 @@ private:
 		_R_386_GOT32      = 3,
 		_R_386_PLT32      = 4,
 		_R_386_COPY       = 5,
+		_R_TYPE_COPY      = _R_386_COPY,
 		_R_386_GLOB_DAT   = 6,
 		_R_386_JMP_SLOT   = 7,
 		_R_386_RELATIVE   = 8,
@@ -80,6 +81,10 @@ private:
 		_R_ARM_NONE       = 0,
 		_R_ARM_ABS32      = 2,
 		_R_ARM_THM_CALL   = 10,
+		_R_ARM_COPY       = 20,
+		_R_TYPE_COPY      = _R_ARM_COPY,
+		_R_ARM_GLOB_DAT   = 21,
+		_R_ARM_JUMP_SLOT  = 22,
 		_R_ARM_RELATIVE   = 23,
 		_R_TYPE_RELATIVE  = _R_ARM_RELATIVE,
 		_R_ARM_THM_JUMP24 = 30,
@@ -304,9 +309,9 @@ private:
 	int PostParser();
 	int SharedObjs();
 	int RelEntries();
-	int RelSymCall(uint32_t relAddr, uint32_t symAddr, int type);
+	int RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
 #if defined(ARCH_ARM)
-	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type);
+	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
 #endif
 public:
 	//Methods
