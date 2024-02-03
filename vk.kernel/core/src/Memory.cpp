@@ -340,6 +340,7 @@ EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znwm);
 EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znam);
 EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znwj);
 EXPORT_SYMBOL_ALIAS(_Z3Newm, _Znaj);
+EXPORT_SYMBOL_ALIAS(_Z3Newm, malloc);
 
 
 /// @brief Memory delete method
@@ -350,6 +351,7 @@ void Delete(void* ptr)
 }
 EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdaPv);
 EXPORT_SYMBOL_ALIAS(_Z6DeletePv, _ZdlPv);
+EXPORT_SYMBOL_ALIAS(_Z6DeletePv, free);
 
 
 /// @brief Memory delete method
