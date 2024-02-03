@@ -5,6 +5,12 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 
+/// @brief setup kernel
+/// @param kernel 
+/// @return 
+void setup(void* kernel);
+
+
 /// @brief program entry main
 /// @param argc 
 /// @param argv 
@@ -69,13 +75,15 @@ void __fini_array(void)
 /// @brief _start
 /// @param argc 
 /// @param argv 
-void _start(int argc, char* argv[])
+void _start(void* kernel, int argc, char* argv[])
 {
 	__fill_bss_zero();
 
 	__preinit_arrary();
 
 	__init_array();
+
+	setup(kernel);
 
 	main(argc, argv);
 
