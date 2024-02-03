@@ -71,6 +71,12 @@ private:
 		}
 	}
 public:
+	/// @brief Initialize
+	void Initialize()
+	{
+
+	}
+
 	/// @brief Input attach
 	/// @param method 
 	/// @param user 
@@ -133,4 +139,4 @@ public:
 
 
 ///Register module
-REGISTER_MODULE(new ConcreteInput(), ModuleID::_input, input);
+REGISTER_MODULE(ConcreteInput, ModuleID::_input, input);
