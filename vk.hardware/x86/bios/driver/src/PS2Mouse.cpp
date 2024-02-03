@@ -54,6 +54,7 @@ private:
 	PS2Controller ps2;
 	//Work
 	Input* input;
+	Interrupt* interrupt;
 	WorkQueue* workQueue;
 	WorkQueue::Work* work;
 private:
@@ -216,6 +217,7 @@ public:
 		isRightBtnPressed(false),
 		isMiddleBtnPressed(false),
 		input(NULL),
+		interrupt(NULL),
 		workQueue(NULL),
 		work(NULL)
 	{
@@ -232,18 +234,26 @@ public:
 	void Initialize()
 	{
 		//Get the input module
-		input = (Input*)Kernel::modular.GetModule("input");
+		input = (Input*)kernel->modular->GetModule("input");
 		if (NULL == input)
 		{
-			Kernel::debug.Error("input feature not support");
+			kernel->debug->Error("input feature not support");
+			return;
+		}
+
+		//Get the interrupt module
+		interrupt = (Interrupt*)kernel->modular->GetModule("interrupt");
+		if (NULL == interrupt)
+		{
+			kernel->debug->Error("interrupt feature not support");
 			return;
 		}
 
 		//Get the work queue module
-		workQueue = (WorkQueue*)Kernel::modular.GetModule("workQueue");
+		workQueue = (WorkQueue*)kernel->modular->GetModule("workQueue");
 		if (NULL == workQueue)
 		{
-			Kernel::debug.Error("work queue feature not support");
+			kernel->debug->Error("work queue feature not support");
 			return;
 		}
 
@@ -251,7 +261,7 @@ public:
 		work = workQueue->Create((Method)&Mouse::ReportHandler, this);
 
 		//Set interrupt service
-		Kernel::interrupt.SetISR(IRQ_Mouse_Controller, (Method)&Mouse::InputHandler, this);
+		interrupt->SetISR(IRQ_Mouse_Controller, (Method)&Mouse::InputHandler, this);
 
 		//Config
 		ConfigureMouse();
@@ -261,11 +271,11 @@ public:
 	/// @brief Mouse exit
 	void Exit()
 	{
-		Kernel::interrupt.RemoveISR(IRQ_Mouse_Controller, (Method)(&Mouse::InputHandler), this);
+		interrupt->RemoveISR(IRQ_Mouse_Controller, (Method)(&Mouse::InputHandler), this);
 		workQueue->Delete(work);
 	}
 };
 
 
 //Register driver
-REGISTER_DRIVER(new Mouse(), DriverID::_miscdev + 1, ps2mouse);
+REGISTER_DRIVER(Mouse, DriverID::_miscdev + 1, ps2mouse);

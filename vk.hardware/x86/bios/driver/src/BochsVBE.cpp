@@ -214,7 +214,6 @@ public:
 	/// @brief Constructor
 	BochsVBEDrv()
 	{
-		bochsVBE = new BochsVBE;
 	}
 
 
@@ -227,8 +226,19 @@ public:
 
 	/// @brief 
 	void Initialize()
-	{		
-		bochsVBE->Initialize();
+	{
+		if (NULL == bochsVBE)
+		{
+			bochsVBE = new BochsVBE;
+			bochsVBE->Initialize();
+		}
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
 	}
 
 
@@ -250,4 +260,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new BochsVBEDrv(), DriverID::_display, display0);
+REGISTER_DRIVER(BochsVBEDrv, DriverID::_display, display0);
