@@ -5,3 +5,9 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "math.h"
+
+int abs(int data)
+{
+	if (data < 0) return -data;
+	return data;
+}
