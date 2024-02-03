@@ -17,3 +17,15 @@ int rand(void)
 {
 	return 0;
 }
+
+
+void* malloc(size_t size)
+{
+	return 0;
+}
+
+
+void free(void* ptr)
+{
+
+}
