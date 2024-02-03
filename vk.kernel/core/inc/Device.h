@@ -7,33 +7,19 @@
 #ifndef __DEVICE_H__
 #define __DEVICE_H__
 
+#include "Module.h"
 #include "Driver.h"
-#include "Templates.h"
 
 
 /// @brief Devic
-class Device
+class Device : public Module
 {
-private:
-	//Members
-	States        status;
-	List<Driver*> drivers;
-
-	//Methods
-	void RegisterInRuntime(Driver* driver);
-	void DeregisterInRuntime(Driver* driver);
 public:
 	//Methods
-	Device();
-	~Device();
-	void Initialize();
-	void UpdateParams();
-	void Execute();
-	void FailSafe(int arg);
-	void RegisterDriver(Driver* driver, uint32_t id);
-	void DeregisterDriver(Driver* driver, uint32_t id);
-	Driver* GetDriver(uint32_t id);
-	Driver* GetDriver(const char* name);
+	virtual void RegisterDriver(Driver* driver, uint32_t id) = 0;
+	virtual void DeregisterDriver(Driver* driver, uint32_t id) = 0;
+	virtual Driver* GetDriver(uint32_t id) = 0;
+	virtual Driver* GetDriver(const char* name) = 0;
 };
 
 #endif // !__DEVICE_H__
