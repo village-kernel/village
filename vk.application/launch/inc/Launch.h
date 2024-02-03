@@ -8,7 +8,6 @@
 #define __LAUNCH_H__
 
 #include "Graphics.h"
-#include "Village.h"
 #include "Input.h"
 
 
@@ -19,7 +18,6 @@ private:
 	//Members
 	Graphics graphics;
 	Window*  mainwin;
-	Village  village;
 
 	//Methods
 	void UpdateInput(Input::Movement* input);
