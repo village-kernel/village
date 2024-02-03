@@ -5,103 +5,122 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Scheduler.h"
+#include "Interrupt.h"
+#include "Thread.h"
 #include "Kernel.h"
 #include "System.h"
 
 
-/// @brief Constructor
-Scheduler::Scheduler()
-	:isStartSchedule(false)
+/// @brief ConcreteScheduler
+class ConcreteScheduler : public Scheduler
 {
-}
+private:
+	//Members
+	Interrupt* interrupt;
+	bool       isStartSchedule;
+public:
+	/// @brief Constructor
+	ConcreteScheduler()
+		:interrupt(NULL),
+		isStartSchedule(false)
+	{
+	}
 
 
-/// @brief Fini constructor
-Scheduler::~Scheduler()
-{
-}
+	/// @brief Destructor
+	~ConcreteScheduler()
+	{
+	}
 
 
-/// @brief Scheduler initialize
-void Scheduler::Initialize()
-{
-	//Set the PendSV interrupt handler
-	Kernel::interrupt.SetISR(IRQ_PendSV, union_cast<Function>(&Scheduler::PendSVHandler), (char*)this);
-	//Append the systick interrupt handler
-	Kernel::interrupt.AppendISR(IRQ_Systick, union_cast<Function>(&Scheduler::SysTickHandler), (char*)this);
-}
+	/// @brief Scheduler initialize
+	void Initialize()
+	{
+		//Gets the interrupt pointer
+		interrupt = (Interrupt*)kernel->modular->GetModule(ModuleID::_interrupt);
+
+		//Set the PendSV interrupt handler
+		interrupt->SetISR(IRQ_PendSV, (Method)&ConcreteScheduler::PendSVHandler, this);
+
+		//Append the systick interrupt handler
+		interrupt->AppendISR(IRQ_Systick, (Method)&ConcreteScheduler::SysTickHandler, this);
+	}
 
 
-/// @brief Start scheduler
-void Scheduler::Execute()
-{
-	//Clear start schedule flag
-	isStartSchedule = false;
+	/// @brief Start scheduler
+	void StartScheduler()
+	{
+		//Clear start schedule flag
+		isStartSchedule = false;
 
-	//Get frist task psp
-	uint32_t psp = Kernel::thread.GetTaskPSP();
+		//Get frist task psp
+		uint32_t psp = kernel->thread->GetTaskPSP();
 
-	//Set frist task esp
-	__asm volatile("movl %0, %%esp" : "=r"(psp));
+		//Set frist task esp
+		__asm volatile("movl %0, %%esp" : "=r"(psp));
 
-	//Set start schedule flag
-	isStartSchedule = true;
+		//Set start schedule flag
+		isStartSchedule = true;
 
-	//Set interrupt flag
-	__asm volatile("sti");
+		//Set interrupt flag
+		__asm volatile("sti");
 
-	//Execute thread
-	Kernel::thread.Execute();
-}
-
-
-/// @brief Rescheduler task
-/// @param access scheduler access
-void Scheduler::Rescheduler(Scheduler::Access access)
-{
-	if (false == isStartSchedule) return;
-
-	// trigger PendSV directly
-	__asm volatile("int $31");
-}
+		//Execute thread idle task
+		kernel->thread->IdleTask();
+	}
 
 
-/// @brief PendSV handler
-void __attribute__((naked)) Scheduler::PendSVHandler()
-{
-	uint32_t psp = 0;
+	/// @brief Rescheduler task
+	/// @param access scheduler access
+	void Rescheduler(Scheduler::Access access)
+	{
+		if (false == isStartSchedule) return;
 
-	//Push old task registers
-	__asm volatile("pushl %ebp");
-	__asm volatile("pushl %ebx");
-	__asm volatile("pushl %esi");
-	__asm volatile("pushl %edi");
-	__asm volatile("movl %%esp, %0" : "=r"(psp));
+		//Trigger PendSV directly
+		__asm volatile("int $31");
+	}
+private:
+	/// @brief PendSV handler
+	void __attribute__((naked)) PendSVHandler()
+	{
+		uint32_t psp = 0;
 
-	//Save old task psp
-	Kernel::thread.SaveTaskPSP(psp);
+		//Push old task registers
+		__asm volatile("pushl %ebp");
+		__asm volatile("pushl %ebx");
+		__asm volatile("pushl %esi");
+		__asm volatile("pushl %edi");
+		__asm volatile("movl %%esp, %0" : "=r"(psp));
 
-	//Select next task
-	Kernel::thread.SelectNextTask();
+		//Save old task psp
+		kernel->thread->SaveTaskPSP(psp);
 
-	//Get new task psp
-	psp = Kernel::thread.GetTaskPSP();
+		//Select next task
+		kernel->thread->SelectNextTask();
 
-	//Set new task esp
-	__asm volatile("movl %0, %%esp" : "=r"(psp));
+		//Get new task psp
+		psp = kernel->thread->GetTaskPSP();
 
-	//Pop new task registers
-	__asm volatile("popl %edi");
-	__asm volatile("popl %esi");
-	__asm volatile("popl %ebx");
-	__asm volatile("popl %ebp");
-	__asm volatile("sti");
-	__asm volatile("ret");
-}
+		//Set new task esp
+		__asm volatile("movl %0, %%esp" : "=r"(psp));
+
+		//Pop new task registers
+		__asm volatile("popl %edi");
+		__asm volatile("popl %esi");
+		__asm volatile("popl %ebx");
+		__asm volatile("popl %ebp");
+		__asm volatile("sti");
+		__asm volatile("ret");
+	}
 
 
-/// @brief SysTick handler
-void Scheduler::SysTickHandler()
-{
-	Rescheduler(Scheduler::Privileged);
-}
+	/// @brief SysTick handler
+	void SysTickHandler()
+	{
+		Rescheduler(Scheduler::Privileged);
+	}
+};
+
+
+///Register module
+REGISTER_MODULE(ConcreteScheduler, ModuleID::_scheduler, scheduler);
