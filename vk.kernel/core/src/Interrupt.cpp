@@ -40,6 +40,7 @@ private:
 public:
 	/// @brief Constructor
 	ConcreteInterrupt()
+		:debug(NULL)
 	{
 	}
 
