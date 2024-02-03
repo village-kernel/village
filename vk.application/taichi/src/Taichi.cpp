@@ -4,6 +4,7 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "Kernel.h"
 #include "Taichi.h"
 #include "ElfExecutor.h"
 
@@ -37,6 +38,19 @@ void Taichi::Execute()
 	console->Run(ElfExecutor::_Background, "/applications/console.exec serial0");
 
 	while (1) {}
+}
+
+
+/// @brief Kernel
+Kernel* kernel;
+
+
+/// @brief setup
+/// @param kernel 
+/// @return 
+extern "C" void setup(void* knl)
+{
+	kernel = (Kernel*)knl;
 }
 
 
