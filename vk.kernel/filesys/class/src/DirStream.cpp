@@ -13,10 +13,10 @@ DirStream::DirStream(const char* name, int mode)
 	:fd(-1),
 	opts(NULL)
 {
-	filesys = (FileSystem*)Kernel::modular.GetModule("fileSystem");
+	filesys = (FileSystem*)kernel->modular->GetModule("fileSystem");
 	if (NULL == filesys)
 	{
-		Kernel::debug.Error("file system feature not support");
+		kernel->debug->Error("file system feature not support");
 		return;
 	}
 	if (NULL != name) fd = Open(name, mode);
