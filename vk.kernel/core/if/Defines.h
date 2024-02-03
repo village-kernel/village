@@ -104,19 +104,19 @@ struct SymbolInfo
 
 
 ///Driver register macro
-#define REGISTER_DRIVER(drv, id, name)                       \
-static drv name;                                             \
-static const DriverInfo                                      \
-__drv_##name __attribute__((used,__section__(".drivers"))) = \
-{id, (char*)#name, &name}
+#define REGISTER_DRIVER(drv, id, name)                                                     \
+static struct _Drv_##name {                                                                \
+	uint32_t drvId; char* drvName; Driver* driver;                                         \
+	_Drv_##name() { drvId = id; drvName = (char*)#name; static drv name; driver = &name; } \
+} const _drv_##name __attribute__((used,__section__(".drivers")))
 
 
 ///Module register macro
-#define REGISTER_MODULE(mod, id, name)                       \
-static mod name;                                             \
-static const ModuleInfo                                      \
-__mod_##name __attribute__((used,__section__(".modules"))) = \
-{id, (char*)#name, &name}
+#define REGISTER_MODULE(mod, id, name)                                                     \
+static struct _Mod_##name {                                                                \
+	uint32_t modId; char* modName; Module* module;                                         \
+	_Mod_##name() { modId = id; modName = (char*)#name; static mod name; module = &name; } \
+} const _mod_##name __attribute__((used,__section__(".modules")))
 
 
 ///Environment marco
