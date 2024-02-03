@@ -104,6 +104,34 @@ SECTIONS
 		 __bss_end__ = _ebss;
 	} > RAM
 
+	.drivers :
+	{
+		PROVIDE_HIDDEN (__drivers_start = .);
+		KEEP(*(.drivers*))
+		PROVIDE_HIDDEN (__drivers_end = .);
+	} > RAM
+
+	.modules :
+	{
+		PROVIDE_HIDDEN (__modules_start = .);
+		KEEP(*(.modules*))
+		PROVIDE_HIDDEN (__modules_end = .);
+	} > RAM
+
+	.symbols :
+	{
+		PROVIDE_HIDDEN (__symbols_start = .);
+		KEEP(*(.symbols*))
+		PROVIDE_HIDDEN (__symbols_end = .);
+	} > RAM
+
+	.filesys :
+	{
+		PROVIDE_HIDDEN (__filesys_start = .);
+		KEEP(*(.filesys*))
+		PROVIDE_HIDDEN (__filesys_end = .);
+	} > RAM
+
 	._user_heap_stack :
 	{
 		. = ALIGN(4);
