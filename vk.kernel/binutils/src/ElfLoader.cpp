@@ -621,7 +621,7 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint
 /// @param symAddr 
 /// @param type 
 /// @return result
-int ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, int type)
+int ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type)
 {
 	uint16_t upper = ((uint16_t *)relAddr)[0];
 	uint16_t lower = ((uint16_t *)relAddr)[1];

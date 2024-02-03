@@ -312,7 +312,7 @@ private:
 	int RelEntries();
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
 #if defined(ARCH_ARM)
-	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
+	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type);
 #endif
 public:
 	//Methods
