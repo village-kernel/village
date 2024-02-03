@@ -25,10 +25,10 @@ LibraryTool::~LibraryTool()
 List<ElfLoader*>* LibraryTool::GetLibraries()
 {
 	//Get the loader module
-	Loader* loader = (Loader*)Kernel::modular.GetModule("loader");
+	Loader* loader = (Loader*)kernel->modular->GetModule("loader");
 	if (NULL == loader)
 	{
-		Kernel::debug.Error("loader feature not support");
+		kernel->debug->Error("loader feature not support");
 		return NULL;
 	}
 
@@ -36,7 +36,7 @@ List<ElfLoader*>* LibraryTool::GetLibraries()
 	List<ElfLoader*>* libraries = loader->GetLibraries();
 	if (NULL == libraries)
 	{
-		Kernel::debug.Error("get libraries address failed");
+		kernel->debug->Error("get libraries address failed");
 		return NULL;
 	}
 
@@ -54,7 +54,7 @@ bool LibraryTool::Install(const char* filename)
 	//Check filename is valid
 	if (NULL == filename)
 	{
-		Kernel::debug.Error("%s library not a valid name", filename);
+		kernel->debug->Error("%s library not a valid name", filename);
 		return false;
 	}
 
@@ -68,7 +68,7 @@ bool LibraryTool::Install(const char* filename)
 		if (0 == strcmp(filename, library->GetFileName()))
 		{
 			isInstalled = true;
-			Kernel::debug.Output(Debug::_Lv2, "%s library has already been installed", filename);
+			kernel->debug->Output(Debug::_Lv2, "%s library has already been installed", filename);
 			break;
 		}
 	}
@@ -85,11 +85,11 @@ bool LibraryTool::Install(const char* filename)
 			library->FillBssZero();
 			library->InitArray();
 			libraries->Add(library);
-			Kernel::debug.Output(Debug::_Lv2, "%s library install successful", filename);
+			kernel->debug->Output(Debug::_Lv2, "%s library install successful", filename);
 		}
 		else
 		{
-			Kernel::debug.Error("%s library install failed", filename);
+			kernel->debug->Error("%s library install failed", filename);
 			return false;
 		}
 	}
@@ -106,7 +106,7 @@ bool LibraryTool::Uninstall(const char* filename)
 	//Check filename is valid
 	if (NULL == filename)
 	{
-		Kernel::debug.Error("%s library not a valid name", filename);
+		kernel->debug->Error("%s library not a valid name", filename);
 		return false;
 	}
 
@@ -122,12 +122,12 @@ bool LibraryTool::Uninstall(const char* filename)
 			library->FiniArray();
 			libraries->Remove(library);
 			delete library;
-			Kernel::debug.Output(Debug::_Lv2, "%s library uninstall successful", filename);
+			kernel->debug->Output(Debug::_Lv2, "%s library uninstall successful", filename);
 			return true;	
 		}
 	}
 
-	Kernel::debug.Error("%s library not found", filename);
+	kernel->debug->Error("%s library not found", filename);
 	return false;
 }
 
@@ -140,7 +140,7 @@ uint32_t LibraryTool::SearchSymbol(const char* symbol)
 	//Check symbol is valid
 	if (NULL == symbol)
 	{
-		Kernel::debug.Error("%s symbol not a valid name", symbol);
+		kernel->debug->Error("%s symbol not a valid name", symbol);
 		return 0;
 	}
 
