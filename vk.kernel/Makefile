@@ -50,6 +50,7 @@ src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/src
 src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/src
 src-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/src
 
+
 ######################################
 # objects
 ######################################
@@ -86,8 +87,6 @@ objs-kernel-$(CONFIG_FILESYSTEM)            += FileSysOpt.o
 objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
 objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o
 objs-kernel-$(CONFIG_SEMAPHORE)             += Semaphore.o
-
-objs-kernel-$(CONFIG_VILLAGE)               += Village.o
 
 objs-kernel-$(CONFIG_BINUTILS)              += BaseExecutor.o
 objs-kernel-$(CONFIG_BINLOADER)             += BinLoader.o
