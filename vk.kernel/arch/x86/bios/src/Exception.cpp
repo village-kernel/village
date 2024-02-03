@@ -7,8 +7,6 @@
 #include "Exception.h"
 #include "Hardware.h"
 #include "Kernel.h"
-#include "Debug.h"
-#include "Interrupt.h"
 
 
 /// @brief ConcreteException
