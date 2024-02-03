@@ -27,21 +27,6 @@ config ENVIRONMENT
 
 endmenu
 
-#config bridge
-
-menu "bridge"
-
-config BRIDGE
-	bool "Enable the bridge from kernel to user"
-	default n
-
-config VILLAGE
-	depends on BRIDGE
-	bool "Enable k2u the village kernel api"
-	default n
-
-endmenu
-
 # confg binutils menu
 
 menu "binutils"
