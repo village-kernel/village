@@ -6,25 +6,22 @@
 //###########################################################################
 #include "Cmd.h"
 #include "Console.h"
-#include "Village.h"
+#include "Kernel.h"
 
 
 /// @brief CmdAbout
 class CmdAbout : public Cmd
 {
-private:
-	//Members
-	Village village;
 public:
 	/// @brief Cmd about execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		console.Output("build date      : %s", village.GetBuildDate());
-		console.Output("build time      : %s", village.GetBuildTime());
-		console.Output("build version   : %s", village.GetBuildVersion());
-		console.Output("build gitcommit : %s", village.GetBuildGitCommit());
+		console.Output("build date      : %s", kernel->GetBuildDate());
+		console.Output("build time      : %s", kernel->GetBuildTime());
+		console.Output("build version   : %s", kernel->GetBuildVersion());
+		console.Output("build gitcommit : %s", kernel->GetBuildGitCommit());
 		console.Output("village kernel Copyright (C) village.");
 	}
 };

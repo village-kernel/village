@@ -6,7 +6,7 @@
 // $Copyright: Copyright (C) village
 //############################################################################
 #include "CmdMsgMgr.h"
-#include "Village.h"
+#include "Kernel.h"
 #include "string.h"
 
 
@@ -24,8 +24,7 @@ CmdMsgMgr::CmdMsgMgr()
 ///CmdMsgMgr initialize
 void CmdMsgMgr::Initialize(const char* driver)
 {
-	transceiver = Village().GetDriver(driver);
-	if (NULL != transceiver) transceiver->Initialize();
+	transceiver = kernel->device->GetDriver(driver);
 }
 
 

@@ -6,15 +6,12 @@
 //###########################################################################
 #include "Cmd.h"
 #include "Console.h"
-#include "Village.h"
+#include "Kernel.h"
 
 
 /// @brief CmdDebug
 class CmdDebug : public Cmd
 {
-private:
-	//Members
-	Village village;
 public:
 	/// @brief Cmd debug execute
 	/// @param argc 
@@ -26,7 +23,7 @@ public:
 			console.Output("Usage: debug [level]");
 			return;
 		}
-		village.SetDebugLevel(argv[1][0] - '0');
+		kernel->debug->SetDebugLevel(argv[1][0] - '0');
 	}
 };
 
