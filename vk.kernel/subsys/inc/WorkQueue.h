@@ -9,7 +9,8 @@
 
 #include "Module.h"
 
-///WorkQueue
+
+/// @brief WorkQueue
 class WorkQueue : public Module
 {
 public:

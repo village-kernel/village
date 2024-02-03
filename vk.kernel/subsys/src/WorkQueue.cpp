@@ -14,12 +14,20 @@ class ConcreteWorkQueue : public WorkQueue
 {
 private:
 	//Members
+	Thread*     thread;
 	List<Work*> works;
 public:
+	/// @brief Constructor
+	ConcreteWorkQueue()
+		:thread(NULL)
+	{
+	}
+
+
 	/// @brief WorkQueue initialize
 	void Initialize()
 	{
-
+		thread = (Thread*)kernel->modular->GetModule("thread");
 	}
 
 
@@ -33,7 +41,7 @@ public:
 				if (_Waked == work->state)
 				{
 					work->state = _Running;
-					if (work->ticks) Kernel::thread.Sleep(work->ticks);
+					if (work->ticks) thread->Sleep(work->ticks);
 					(work->func)(work->user, work->args);
 					work->state = _Finish;
 				}
@@ -97,4 +105,4 @@ public:
 
 
 ///Register module
-REGISTER_MODULE(new ConcreteWorkQueue(), ModuleID::_workQueue, workQueue);
+REGISTER_MODULE(ConcreteWorkQueue, ModuleID::_workQueue, workQueue);
