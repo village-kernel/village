@@ -5,21 +5,15 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "System.h"
 #include "Kernel.h"
 
 
-///Main entry function
+/// @brief Main entry function
 int main(int argc, char* argv[])
 {
-	System::Initialize();
-	System::ConfigureMPU();
-	System::ConfigurePower();
-	System::ConfigureClock();
-
-	Kernel::Initialize();
-	Kernel::UpdateParams();
-	Kernel::Execute();
-
+	kernel->Initialize();
+	kernel->UpdateParams();
+	kernel->Execute();
+	kernel->Exit();
 	return _ERR;
 }
