@@ -82,4 +82,4 @@ public:
 
 
 ///Register module
-REGISTER_MODULE(new ConcreteLoader(), ModuleID::_loader, loader);
+REGISTER_MODULE(ConcreteLoader, ModuleID::_loader, loader);
