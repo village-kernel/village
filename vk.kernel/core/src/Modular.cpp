@@ -6,138 +6,179 @@
 //###########################################################################
 #include "Modular.h"
 #include "Kernel.h"
+#include "Templates.h"
 
 
-/// @brief Constructor
-Modular::Modular()
-	:status(_NoneStates)
+/// @brief ConcreteModular
+class ConcreteModular : public Modular
 {
-}
-
-
-/// @brief Fini constructor
-Modular::~Modular()
-{
-}
-
-
-/// @brief Execute module object->Initialize
-void Modular::Initialize()
-{
-	status = _StartInitialize;
-	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+private:
+	//Members
+	States        status;
+	List<Module*> modules;
+private:
+	/// @brief Register in runtime
+	/// @param module 
+	void RegisterInRuntime(Module* module)
 	{
-		module->Initialize();
+		if (status >= _EndedInitialize)
+			module->Initialize();
+		if (status >= _EndedUpdateParms)
+			module->UpdateParams();
+		if (status >= _EndedExecute)
+			module->SetPid(kernel->thread->CreateTask(module->GetName(), (Method)&ConcreteModular::ModuleHandler, this, (void*)module));
 	}
-	status = _EndedInitialize;
-}
 
 
-/// @brief Execute module object->UpdateParams
-void Modular::UpdateParams()
-{
-	status = _StartUpdateParams;
-	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+	/// @brief Deregister in runtime
+	/// @param module 
+	void DeregisterInRuntime(Module* module)
 	{
-		module->UpdateParams();
+		if (status >= _EndedExecute)
+		{
+			module->Exit();
+			kernel->thread->DeleteTask(module->GetPid());
+		}
 	}
-	status = _EndedUpdateParms;
-}
 
-
-/// @brief Create task threads for each module
-void Modular::Execute()
-{
-	status = _StartExecute;
-	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+	
+	/// @brief Modular execute handler
+	/// @param module module pointer
+	void ModuleHandler(Module* module)
 	{
-		module->SetPid(Kernel::thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
+		module->Execute();
 	}
-	status = _EndedExecute;
-}
 
-
-/// @brief Modular execute handler
-/// @param module module pointer
-void Modular::ModuleHandler(Module* module)
-{
-	module->Execute();
-}
-
-
-/// @brief Execute module object->FailSafe
-/// @param arg fail arg
-void Modular::FailSafe(int arg)
-{
-	for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+	
+	/// @brief Register modules
+	void RegisterModules()
 	{
-		module->FailSafe(arg);
+		extern ModuleInfo __modules_start;
+		extern ModuleInfo __modules_end;
+
+		uint32_t count = &__modules_end - &__modules_start;
+		ModuleInfo* modules = &__modules_start;
+
+		for (uint32_t i = 0; i < count; i++)
+		{
+			if (ModuleID::_modular != modules[i].id)
+			{
+				modules[i].module->SetName(modules[i].name);
+				RegisterModule(modules[i].module, modules[i].id);
+			}
+		}
 	}
-}
-
-
-/// @brief Register in runtime
-/// @param module 
-void Modular::RegisterInRuntime(Module* module)
-{
-	if (status >= _EndedInitialize)
-		module->Initialize();
-	if (status >= _EndedUpdateParms)
-		module->UpdateParams();
-	if (status >= _EndedExecute)
-		module->SetPid(Kernel::thread.CreateTask(module->GetName(), (Method)&Modular::ModuleHandler, this, (void*)module));
-}
-
-
-/// @brief Deregister in runtime
-/// @param module 
-void Modular::DeregisterInRuntime(Module* module)
-{
-	if (status >= _EndedExecute)
+public:
+	/// @brief Constructor
+	ConcreteModular()
+		:status(_NoneStates)
 	{
-		module->Exit();
-		Kernel::thread.DeleteTask(module->GetPid());
 	}
-}
 
 
-/// @brief Register module object
-/// @param module module pointer
-/// @param id module id
-void Modular::RegisterModule(Module* module, uint32_t id)
-{
-	modules.Insert(module, id, module->GetName());
-	RegisterInRuntime(module);
-}
-EXPORT_SYMBOL(_ZN7Modular14RegisterModuleEP6Modulem);
+	/// @brief Destructor
+	~ConcreteModular()
+	{
+	}
 
 
-/// @brief Deregister module object
-/// @param module module pointer
-/// @param id module id
-void Modular::DeregisterModule(Module* module, uint32_t id)
-{
-	DeregisterInRuntime(module);
-	modules.Remove(module, id);
-}
-EXPORT_SYMBOL(_ZN7Modular16DeregisterModuleEP6Modulem);
+	/// @brief Execute module object->Initialize
+	void Initialize()
+	{
+		RegisterModules();
+		
+		status = _StartInitialize;
+		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+		{
+			module->Initialize();
+		}
+		status = _EndedInitialize;
+	}
 
 
-/// @brief Get the module object
-/// @param id module id
-/// @return module
-Module* Modular::GetModule(uint32_t id)
-{
-	return modules.GetItem(id);
-}
-EXPORT_SYMBOL(_ZN7Modular9GetModuleEm);
+	/// @brief Execute module object->UpdateParams
+	void UpdateParams()
+	{
+		status = _StartUpdateParams;
+		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+		{
+			module->UpdateParams();
+		}
+		status = _EndedUpdateParms;
+	}
 
 
-/// @brief Get the module object by name
-/// @param name module name
-/// @return driver
-Module* Modular::GetModule(const char* name)
-{
-	return modules.GetItemByName(name);
-}
-EXPORT_SYMBOL(_ZN7Modular9GetModuleEPKc);
+	/// @brief Create task threads for each module
+	void Execute()
+	{
+		status = _StartExecute;
+		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+		{
+			module->SetPid(kernel->thread->CreateTask(module->GetName(), (Method)&ConcreteModular::ModuleHandler, this, (void*)module));
+		}
+		status = _EndedExecute;
+	}
+
+
+	/// @brief Execute module object->FailSafe
+	/// @param arg fail arg
+	void FailSafe(int arg)
+	{
+		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+		{
+			module->FailSafe(arg);
+		}
+	}
+
+
+	/// @brief Execute module object->Exit
+	void Exit()
+	{
+		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+		{
+			module->Exit();
+		}
+	}
+
+
+	/// @brief Register module object
+	/// @param module module pointer
+	/// @param id module id
+	void RegisterModule(Module* module, uint32_t id)
+	{
+		modules.Insert(module, id, module->GetName());
+		RegisterInRuntime(module);
+	}
+
+
+	/// @brief Deregister module object
+	/// @param module module pointer
+	/// @param id module id
+	void DeregisterModule(Module* module, uint32_t id)
+	{
+		DeregisterInRuntime(module);
+		modules.Remove(module, id);
+	}
+
+
+	/// @brief Get the module object
+	/// @param id module id
+	/// @return module
+	Module* GetModule(uint32_t id)
+	{
+		return modules.GetItem(id);
+	}
+
+
+	/// @brief Get the module object by name
+	/// @param name module name
+	/// @return driver
+	Module* GetModule(const char* name)
+	{
+		return modules.GetItemByName(name);
+	}
+}; 
+
+
+///Register module
+REGISTER_MODULE(ConcreteModular, ModuleID::_modular, modular);
