@@ -10,10 +10,12 @@
 #include "Hardware.h"
 #include "Module.h"
 
+
 /// @brief System
 class System : public Module
 {
 public:
+	virtual void SysTickCounter() = 0;
 	virtual uint32_t GetSysClkCounts() = 0;
 	virtual void DelayMs(uint32_t millis) = 0;
 	virtual void EnableIRQ() = 0;

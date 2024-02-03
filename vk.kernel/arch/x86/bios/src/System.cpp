@@ -6,7 +6,7 @@
 //###########################################################################
 #include "System.h"
 #include "Kernel.h"
-#include "Interrupt.h"
+#include "Hardware.h"
 
 
 /// @brief ConcreteSystem
