@@ -1,5 +1,0 @@
-# config network menu
-
-config USB
-	bool "Enable USB support"
-	default n
