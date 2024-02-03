@@ -91,11 +91,11 @@ struct FileSysInfo
 
 
 ///Filesys register macro
-#define REGISTER_FS(fs, name)                               \
-static const fs name;                                       \
-static const FileSysInfo                                    \
-__fs_##name __attribute__((used,__section__(".filesys"))) = \
-{(char*)#name, (FileSys*)&name}
+#define REGISTER_FS(fs, name)                                                \
+static struct _FS_##name {                                                   \
+	char* fsname; FileSys* filesys;                                          \
+	_FS_##name() { fsname = (char*)#name; static fs name; filesys = &name; } \
+} const _fs_##name __attribute__((used,__section__(".filesys")))
 
 
 #endif //!__FILE_DEFINES_H__
