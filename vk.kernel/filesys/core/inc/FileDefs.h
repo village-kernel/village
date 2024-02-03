@@ -78,20 +78,24 @@ struct MountNode
 };
 
 
-///Command register macro
-#define REGISTER_FS(fs, name)                                 \
-static struct _FS_##name {                                    \
-	_FS_##name() {                                            \
-		FileSystem* filesys = (FileSystem*)Kernel::modular.GetModule("fileSystem");              \
-		if (NULL == filesys) { Kernel::debug.Error("file system feature not support"); return; } \
-		filesys->RegisterFS(fs, #name);                       \
-	}                                                         \
-	~_FS_##name() {                                           \
-		FileSystem* filesys = (FileSystem*)Kernel::modular.GetModule("fileSystem");              \
-		if (NULL == filesys) { Kernel::debug.Error("file system feature not support"); return; } \
-		filesys->DeregisterFS(fs, #name);                     \
-	}                                                         \
-} const _fs_##name __attribute__((used,__section__(".fs")))
+/// @brief FileSys
+class FileSys;
+
+
+/// @brief FileSysInfo
+struct FileSysInfo
+{
+	char*     name;
+	FileSys*  fs;
+};
+
+
+///Filesys register macro
+#define REGISTER_FS(fs, name)                               \
+static const fs name;                                       \
+static const FileSysInfo                                    \
+__fs_##name __attribute__((used,__section__(".filesys"))) = \
+{(char*)#name, (FileSys*)&name}
 
 
 #endif //!__FILE_DEFINES_H__
