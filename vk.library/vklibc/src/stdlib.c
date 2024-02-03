@@ -19,13 +19,13 @@ int rand(void)
 }
 
 
-void* malloc(size_t size)
+__attribute__((weak)) void* malloc(size_t size)
 {
 	return 0;
 }
 
 
-void free(void* ptr)
+__attribute__((weak)) void free(void* ptr)
 {
 
 }
