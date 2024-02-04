@@ -122,6 +122,34 @@ SECTIONS
 		PROVIDE(__bss_end__ = _ebss);
 	} > SRAM
 
+	.drivers :
+	{
+		PROVIDE_HIDDEN (__drivers_start = .);
+		KEEP(*(.drivers*))
+		PROVIDE_HIDDEN (__drivers_end = .);
+	} > SRAM
+
+	.modules :
+	{
+		PROVIDE_HIDDEN (__modules_start = .);
+		KEEP(*(.modules*))
+		PROVIDE_HIDDEN (__modules_end = .);
+	} > SRAM
+
+	.symbols :
+	{
+		PROVIDE_HIDDEN (__symbols_start = .);
+		KEEP(*(.symbols*))
+		PROVIDE_HIDDEN (__symbols_end = .);
+	} > SRAM
+
+	.filesys :
+	{
+		PROVIDE_HIDDEN (__filesys_start = .);
+		KEEP(*(.filesys*))
+		PROVIDE_HIDDEN (__filesys_end = .);
+	} > SRAM
+
 	/* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
 	._user_heap_stack :
 	{
