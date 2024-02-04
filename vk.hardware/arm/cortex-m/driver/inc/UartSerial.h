@@ -57,6 +57,7 @@ public:
 	void Initialize();
 	void UpdataParams();
 	void Execute();
+	void Exit();
 	int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
 	int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
 };
