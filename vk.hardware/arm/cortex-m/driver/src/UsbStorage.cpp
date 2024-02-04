@@ -30,15 +30,15 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 ///Override HAL_Delay()
 void HAL_Delay(uint32_t Delay)
 {
-	System::DelayMs(Delay);
+	kernel->system->DelayMs(Delay);
 }
 
 
 ///USB storage init
 static int8_t STORAGE_Init_FS(uint8_t lun)
 {
-	storage[0] = Kernel::device.GetDriver(DriverID::_storage + 0);
-	storage[1] = Kernel::device.GetDriver(DriverID::_storage + 1);
+	storage[0] = kernel->device->GetDriver(DriverID::_storage + 0);
+	storage[1] = kernel->device->GetDriver(DriverID::_storage + 1);
 	return (USBD_OK);
 }
 
@@ -160,6 +160,15 @@ void UsbStorage::Initialize()
 
 	//Start usbd
 	USBD_Start(&hUsbDeviceFS);
+
+	while(1) {}
+}
+
+
+/// @brief Exit
+void UsbStorage::Exit()
+{
+
 }
 
 
@@ -178,4 +187,4 @@ void UsbStorage::Unmount()
 
 
 ///Register driver
-REGISTER_DRIVER(new UsbStorage(), DriverID::_usbdev + 0, usbStorage);
+REGISTER_DRIVER(UsbStorage, DriverID::_usbdev + 0, usbStorage);

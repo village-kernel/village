@@ -20,6 +20,7 @@ private:
 public:
 	//Methods
 	void Initialize();
+	void Exit();
 };
 
 #endif // !__USB_STORAGE_H__
