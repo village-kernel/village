@@ -29,6 +29,7 @@ src-$(CONFIG_USBSTORAGE) +=	vk.hardware/arm/cortex-m/mcu/st/STM32_USB_Device_Lib
 ######################################
 # objects
 ######################################
+objs-y                       += libcinit.o
 objs-hw-y                    += syscalls.o
 objs-hw-y                    += sysmem.o
 
