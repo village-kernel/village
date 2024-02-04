@@ -55,8 +55,7 @@ public:
 			fs->Setup();
 		}
 
-		//Mount root node "/"
-		mounts.Add(new MountNode((char*)"/", (char*)"/media/VILLAGE OS", 0755));
+		MountSystemNode();
 	}
 
 
@@ -67,6 +66,24 @@ public:
 		{
 			fs->Exit();
 		}
+	}
+
+
+	/// @brief Mount node
+	void MountSystemNode()
+	{
+		//Mount root node "/"
+		for (fileSys.Begin(); !fileSys.IsEnd(); fileSys.Next())
+		{
+			char* fsname = fileSys.GetName();
+
+			if (0 == strcmp(fsname, "/media/VILLAGE OS"))
+			{
+				mounts.Add(new MountNode((char*)"/", (char*)fsname, 0755));
+				return;
+			}
+		}
+		kernel->debug->Output(Debug::_Lv2, "Mount system node failed, '/media/VILLAGE OS' not found");
 	}
 
 
