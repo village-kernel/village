@@ -38,6 +38,13 @@ void SpiFlash::Initialize()
 }
 
 
+/// @brief Exit
+void SpiFlash::Exit()
+{
+
+}
+
+
 ///Init config
 inline void SpiFlash::InitConfig()
 {
@@ -367,4 +374,4 @@ int SpiFlash::IOCtrl(uint8_t cmd, void* data)
 
 
 ///Register driver
-REGISTER_DRIVER(new SpiFlash(), DriverID::_storage + 0, spiFlash);
+REGISTER_DRIVER(SpiFlash, DriverID::_storage + 1, spiFlash);
