@@ -23,22 +23,41 @@ private:
 	//Members
 	Driver*   transceiver;
 	Mutex     mutex;
-	char      data[buf_size];
+	char      data[buf_size] = { 0 };
+	char      txBuffer[buf_size] = { 0 };
+	uint16_t  txBufPos;
 	uint8_t   debugLevel;
 private:
 	/// @brief Write
 	/// @param data 
 	void Write(const char* data)
 	{
-		if (NULL != transceiver)
+		if (NULL == transceiver) return;
+
+		//Calculate the string length
+		int size = strlen((const char*)data);
+
+		//Copy msg data into txBuffer
+		for (int i = 0; i < size; i++)
 		{
-			 while (0 == transceiver->Write((uint8_t*)data, strlen(data))) {}
+			txBuffer[txBufPos++] = data[i];
+
+			//The txBuffer is full, block here until the data is sent
+			if (txBufPos >= buf_size)
+			{
+				while (!transceiver->Write((uint8_t*)txBuffer, txBufPos)) {}
+				txBufPos = 0;
+			}
 		}
+
+		//Sent data when txbuffer not empty
+		if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) txBufPos = 0;
 	}
 public:
 	/// @brief Constructor
 	ConcreteDebug()
-		:debugLevel(_Lv2)
+		:txBufPos(0),
+		debugLevel(_Lv2)
 	{
 	}
 
@@ -55,6 +74,15 @@ public:
 		//Get transceiver driver and initialize
 		transceiver = kernel->device->GetDriver("serial0");
 		if (NULL != transceiver) transceiver->Initialize();
+	}
+
+
+	/// @brief Execute
+	void Execute()
+	{
+		//Sent data when txbuffer not empty
+		//Reset txBufPos when sent data successfully
+		if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) txBufPos = 0;
 	}
 
 
