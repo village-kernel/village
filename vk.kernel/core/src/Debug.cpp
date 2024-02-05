@@ -77,12 +77,18 @@ public:
 	}
 
 
-	/// @brief Execute
+	/// @brief Sent data when txbuffer not empty
+	/// @brief Reset txBufPos when sent data successfully
 	void Execute()
 	{
-		//Sent data when txbuffer not empty
-		//Reset txBufPos when sent data successfully
-		if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) txBufPos = 0;
+		while (1)
+		{
+			if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) 
+			{
+				txBufPos = 0;
+			}
+			kernel->thread->Sleep(100);
+		}
 	}
 
 
