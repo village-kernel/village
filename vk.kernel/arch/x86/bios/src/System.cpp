@@ -30,7 +30,7 @@ public:
 		Interrupt* interrupt = (Interrupt*)kernel->modular->GetModule(ModuleID::_interrupt);
 
 		//Set interrupt handler
-		interrupt->SetISR(IRQ_Systick, (Method)&ConcreteSystem::SysTickCounter, this);
+		interrupt->SetISR(IRQ_Systick, (Method)&ConcreteSystem::SysTickHandler, this);
 
 		//Configure clock
 		ConfigureClock();
@@ -56,41 +56,12 @@ public:
 	}
 
 
-	/// @brief Get system clock count
-	/// @return 
-	uint32_t GetSysClkCounts()
-	{
-		return sysTicks;
-	}
-
-
-	/// @brief System clock counter
-	void SysTickCounter()
-	{
-		sysTicks++;
-	}
-
-
 	///Delays for a specified number of milliseconds.
 	void DelayMs(uint32_t millis)
 	{
 		uint32_t delayStart = sysTicks;
 		uint32_t delayCycles = millis;
 		while ((sysTicks - delayStart) < delayCycles);
-	}
-
-
-	/// @brief Enables IRQ interrupts
-	void EnableIRQ()
-	{
-		__asm volatile("sti");
-	}
-
-
-	/// @brief Disables IRQ interrupts
-	void DisableIRQ()
-	{
-		__asm volatile("cli");
 	}
 
 
@@ -104,6 +75,27 @@ public:
 		__asm volatile ("cli");
 		while (1) { __asm volatile ("hlt"); }
 	}
+
+
+	/// @brief Enables IRQ interrupts
+	void EnableIRQ() { __asm volatile("sti"); }
+
+
+	/// @brief Disables IRQ interrupts
+	void DisableIRQ() { __asm volatile("cli"); }
+
+
+	/// @brief Get system clock count
+	/// @return 
+	uint32_t GetSysClkCounts() { return sysTicks; }
+
+
+	/// @brief System clock counter
+	void SysTickCounter() { sysTicks++; }
+	
+private:
+	/// @brief System clock handler
+	void SysTickHandler() { sysTicks++; }
 };
 
 
