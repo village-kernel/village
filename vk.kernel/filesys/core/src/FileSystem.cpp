@@ -73,13 +73,12 @@ public:
 	void MountSystemNode()
 	{
 		//Mount root node "/"
-		for (fileSys.Begin(); !fileSys.IsEnd(); fileSys.Next())
+		for (fileOpts.Begin(); !fileOpts.IsEnd(); fileOpts.Next())
 		{
-			char* fsname = fileSys.GetName();
-
-			if (0 == strcmp(fsname, "/media/VILLAGE OS"))
+			char* volumelab = fileOpts.GetName();
+			if (0 == strcmp(volumelab, "/media/VILLAGE OS"))
 			{
-				mounts.Add(new MountNode((char*)"/", (char*)fsname, 0755));
+				mounts.Add(new MountNode((char*)"/", volumelab, 0755));
 				return;
 			}
 		}
