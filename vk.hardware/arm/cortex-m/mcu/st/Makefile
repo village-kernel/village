@@ -21,6 +21,7 @@ inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/arm/cortex-m/mcu/st/STM32_USB_Device_Lib
 inc-$(CONFIG_USBSTORAGE) +=	vk.hardware/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Inc
 
 src-y                    +=	vk.hardware/arm/cortex-m/mcu/st/GCC
+src-y                    +=	vk.hardware/arm/cortex-m/mcu/st/CORE
 src-$(CONFIG_USBSTORAGE) +=	vk.hardware/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Src
 src-$(CONFIG_USBSTORAGE) +=	vk.hardware/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Src
 src-$(CONFIG_USBSTORAGE) +=	vk.hardware/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Src
@@ -54,6 +55,12 @@ else ifeq ($(CONFIG_STM32H7xx), y)
 endif
 
 
+######################################
+# link script
+######################################
+LDSCRIPT-APP    := -T vk.hardware/arm/cortex-m/mcu/st/LinkerScripts/app.ld
+
+
 #######################################
 # compiler flags
 #######################################
@@ -77,10 +84,11 @@ BLDFLAGS  += -Wl,--no-warn-rwx-segment
 BLDFLAGS  += -Wl,-static 
 
 # kernel ld flags
+KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y)
 ifeq ($(CONFIG_VKLIBC), y)
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y) -ffreestanding -nostdlib
+KLDFLAGS  += -ffreestanding -nostdlib
 else
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y) -specs=nano.specs -lc -lm -lnosys
+KLDFLAGS  += -specs=nosys.specs -lc -lm -lnosys
 endif
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
@@ -88,14 +96,14 @@ KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-static -pie
 
 # application ld flags
+APPLDFLAGS  += $(MCU) $(LDSCRIPT-APP)
 ifeq ($(CONFIG_VKLIBC), y)
-APPLDFLAGS  += $(MCU) -ffreestanding -nostdlib
+APPLDFLAGS  += -ffreestanding -nostdlib
 else
-APPLDFLAGS  += $(MCU) -specs=nano.specs -lc -lm -lnosys
+APPLDFLAGS  += -specs=nosys.specs -lc -lm -lnosys
 endif
 APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
 APPLDFLAGS  += -Wl,--gc-sections
 APPLDFLAGS  += -Wl,--no-warn-rwx-segment
 APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-all
-#APPLDFLAGS  += -Wl,-static -pie -e main
-APPLDFLAGS  += -pie -e main
+APPLDFLAGS  += -pie
