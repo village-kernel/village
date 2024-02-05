@@ -160,8 +160,6 @@ void UsbStorage::Initialize()
 
 	//Start usbd
 	USBD_Start(&hUsbDeviceFS);
-
-	while(1) {}
 }
 
 
