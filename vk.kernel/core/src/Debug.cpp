@@ -8,142 +8,193 @@
 #include "stdarg.h"
 #include "stdio.h"
 #include "Debug.h"
+#include "Driver.h"
+#include "Mutex.h"
 #include "Kernel.h"
 
 
-/// @brief Debug constructor
-Debug::Debug()
-	:debugLevel(_Lv2)
+/// @brief ConcreteDebug
+class ConcreteDebug : public Debug
 {
-}
+private:
+	//Static constants
+	static const uint16_t buf_size = 100;
 
-
-/// @brief Debug deconstructor
-Debug::~Debug()
-{
-}
-
-
-/// @brief Write
-/// @param data 
-void Debug::Write(const char* data)
-{
-	//Get transceiver driver and initialize
-	if (NULL == transceiver)
+	//Members
+	Driver*   transceiver;
+	Mutex     mutex;
+	char      data[buf_size] = { 0 };
+	char      txBuffer[buf_size] = { 0 };
+	uint16_t  txBufPos;
+	uint8_t   debugLevel;
+private:
+	/// @brief Write
+	/// @param data 
+	void Write(const char* data)
 	{
-		transceiver = Kernel::device.GetDriver("serial0");
+		if (NULL == transceiver) return;
+
+		//Calculate the string length
+		int size = strlen((const char*)data);
+
+		//Copy msg data into txBuffer
+		for (int i = 0; i < size; i++)
+		{
+			txBuffer[txBufPos++] = data[i];
+
+			//The txBuffer is full, block here until the data is sent
+			if (txBufPos >= buf_size)
+			{
+				while (!transceiver->Write((uint8_t*)txBuffer, txBufPos)) {}
+				txBufPos = 0;
+			}
+		}
+
+		//Sent data when txbuffer not empty
+		if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) txBufPos = 0;
+	}
+public:
+	/// @brief Constructor
+	ConcreteDebug()
+		:txBufPos(0),
+		debugLevel(_Lv2)
+	{
+	}
+
+
+	/// @brief Destructor
+	~ConcreteDebug()
+	{
+	}
+
+
+	/// @brief Initialize
+	void Initialize()
+	{
+		//Get transceiver driver and initialize
+		transceiver = kernel->device->GetDriver("serial0");
 		if (NULL != transceiver) transceiver->Initialize();
 	}
-	
-	//Sent data
-	if (NULL != transceiver) while (0 == transceiver->Write((uint8_t*)data, strlen(data))) {}
-}
 
 
-/// @brief Debug log
-/// @param format 
-/// @param  
-void Debug::Log(const char* format, ...)
-{
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsprintf(data, format, arg);
-	va_end(arg);
-	Write("Log: ");
-	Write(data);
-	Write("\r\n");
-	mutex.Unlock();
-}
-EXPORT_SYMBOL(_ZN5Debug3LogEPKcz);
+	/// @brief Sent data when txbuffer not empty
+	/// @brief Reset txBufPos when sent data successfully
+	void Execute()
+	{
+		while (1)
+		{
+			if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) 
+			{
+				txBufPos = 0;
+			}
+			kernel->thread->Sleep(100);
+		}
+	}
 
 
-/// @brief Debug info
-/// @param format 
-/// @param  
-void Debug::Info(const char* format, ...)
-{
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsprintf(data, format, arg);
-	va_end(arg);
-	Write("\033[36mInfo: ");
-	Write(data);
-	Write("\r\n\033[39m");
-	mutex.Unlock();
-}
-EXPORT_SYMBOL(_ZN5Debug4InfoEPKcz);
-
-
-/// @brief Debug error
-/// @param format 
-/// @param  
-void Debug::Error(const char* format, ...)
-{
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsprintf(data, format, arg);
-	va_end(arg);
-	Write("\033[31mError: ");
-	Write(data);
-	Write("\r\n\033[39m");
-	mutex.Unlock();
-}
-EXPORT_SYMBOL(_ZN5Debug5ErrorEPKcz);
-
-
-/// @brief Debug warn
-/// @param format 
-/// @param  
-void Debug::Warn(const char* format, ...)
-{
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsprintf(data, format, arg);
-	va_end(arg);
-	Write("\033[33mWarning: ");
-	Write(data);
-	Write("\r\n\033[39m");
-	mutex.Unlock();
-}
-EXPORT_SYMBOL(_ZN5Debug4WarnEPKcz);
-
-
-/// @brief Debug output
-/// @param format 
-/// @param  
-void Debug::Output(int level, const char* format, ...)
-{
-	if (level >= debugLevel)
+	/// @brief Debug log
+	/// @param format 
+	/// @param  
+	void Log(const char* format, ...)
 	{
 		mutex.Lock();
 		va_list arg;
 		va_start(arg, format);
 		vsprintf(data, format, arg);
 		va_end(arg);
-		Write("\033[36mDebug: ");
+		Write("Log: ");
+		Write(data);
+		Write("\r\n");
+		mutex.Unlock();
+	}
+
+
+	/// @brief Debug info
+	/// @param format 
+	/// @param  
+	void Info(const char* format, ...)
+	{
+		mutex.Lock();
+		va_list arg;
+		va_start(arg, format);
+		vsprintf(data, format, arg);
+		va_end(arg);
+		Write("\033[36mInfo: ");
 		Write(data);
 		Write("\r\n\033[39m");
 		mutex.Unlock();
 	}
-}
-EXPORT_SYMBOL(_ZN5Debug6OutputEiPKcz);
 
 
-/// @brief Debug set debug level
-/// @param level 
-void Debug::SetDebugLevel(int level)
-{
-	if (level >= _Lv0 && level <= _Lv5)
+	/// @brief Debug error
+	/// @param format 
+	/// @param  
+	void Error(const char* format, ...)
 	{
-		debugLevel = level;
+		mutex.Lock();
+		va_list arg;
+		va_start(arg, format);
+		vsprintf(data, format, arg);
+		va_end(arg);
+		Write("\033[31mError: ");
+		Write(data);
+		Write("\r\n\033[39m");
+		mutex.Unlock();
 	}
-	else
+
+
+	/// @brief Debug warn
+	/// @param format 
+	/// @param  
+	void Warn(const char* format, ...)
 	{
-		Error("The level %d out of debug level", level);
+		mutex.Lock();
+		va_list arg;
+		va_start(arg, format);
+		vsprintf(data, format, arg);
+		va_end(arg);
+		Write("\033[33mWarning: ");
+		Write(data);
+		Write("\r\n\033[39m");
+		mutex.Unlock();
 	}
-}
-EXPORT_SYMBOL(_ZN5Debug13SetDebugLevelEi);
+
+
+	/// @brief Debug output
+	/// @param format 
+	/// @param  
+	void Output(int level, const char* format, ...)
+	{
+		if (level >= debugLevel)
+		{
+			mutex.Lock();
+			va_list arg;
+			va_start(arg, format);
+			vsprintf(data, format, arg);
+			va_end(arg);
+			Write("\033[36mDebug: ");
+			Write(data);
+			Write("\r\n\033[39m");
+			mutex.Unlock();
+		}
+	}
+
+
+	/// @brief Debug set debug level
+	/// @param level 
+	void SetDebugLevel(int level)
+	{
+		if (level >= _Lv0 && level <= _Lv5)
+		{
+			debugLevel = level;
+		}
+		else
+		{
+			Error("The level %d out of debug level", level);
+		}
+	}
+};
+
+
+///Register module
+REGISTER_MODULE(ConcreteDebug, ModuleID::_debug, debug);

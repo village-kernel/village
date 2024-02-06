@@ -34,6 +34,13 @@ void SdCard::Initialize()
 }
 
 
+/// @brief Exit
+void SdCard::Exit()
+{
+
+}
+
+
 ///Init config
 inline void SdCard::InitConfig()
 {
@@ -510,4 +517,4 @@ int SdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 
 
 ///Register driver
-REGISTER_DRIVER(new SdCard(), DriverID::_storage + 1, sdcard);
+REGISTER_DRIVER(SdCard, DriverID::_storage + 0, sdcard);

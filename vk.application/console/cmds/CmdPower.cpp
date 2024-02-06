@@ -6,22 +6,19 @@
 //###########################################################################
 #include "Cmd.h"
 #include "Console.h"
-#include "Village.h"
+#include "Kernel.h"
 
 
 /// @brief CmdReboot
 class CmdReboot : public Cmd
 {
-private:
-	//Members
-	Village village;
 public:
 	/// @brief Cmd reboot execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		village.Reboot();
+		kernel->system->Reboot();
 	}
 };
 

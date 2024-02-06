@@ -24,11 +24,11 @@ public:
 	virtual ~Driver() {}
 
 	//Methods
-	virtual void Initialize()       {}
+	virtual void Initialize()       = 0;
 	virtual void UpdateParams()     {}
 	virtual void Execute()          {}
 	virtual void FailSafe(int arg)  {}
-	virtual void Exit()             {}
+	virtual void Exit()             = 0;
 	virtual void SetName(char* name){ this->name = name; }
 	virtual char* GetName()         { return this->name; }
 

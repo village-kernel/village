@@ -12,8 +12,12 @@
 extern "C" {
 #endif
 
+#include "stddef.h"
+
 int atexit(void (*function)(void));
 int rand(void);
+void* malloc(size_t size);
+void free(void* ptr);
 
 #ifdef __cplusplus
 }

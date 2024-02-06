@@ -1,28 +1,20 @@
-OUTPUT_FORMAT("elf32-i386", "elf32-i386","elf32-i386")
-OUTPUT_ARCH(i386)
+/* Script for -pie */
 ENTRY(_start)
-
-_estack = 0x2000000;
-_Min_Heap_Size  = 0x400;
-_Min_Stack_Size = 0x800;
-
-MEMORY
-{
-	RAM  (xrw)    : ORIGIN = 0x100000, LENGTH = 10M
-}
 
 SECTIONS
 {
-	_sivector = LOADADDR(.isr_vector);
+	PROVIDE (__executable_start = SEGMENT_START("text-segment", 0)); . = SEGMENT_START("text-segment", 0) + SIZEOF_HEADERS;
 
-	.isr_vector :
+	_sivector = LOADADDR(.entry_vector);
+
+	.entry_vector :
 	{
 		. = ALIGN(4);
 		_svector = .;
-		KEEP(*(.isr_vector))
+		KEEP(*(.entry_vector))
 		. = ALIGN(4);
 		_evector = .;
-	} > RAM
+	}
 
 	.text :
 	{
@@ -35,22 +27,23 @@ SECTIONS
 
 		. = ALIGN(4);
 		 _etext = .; 
-	} > RAM
+	}
 
 	.rodata :
 	{
 		. = ALIGN(4);
 		*(.rodata)
 		*(.rodata*)
+		*(.gnu.linkonce.r.*)
 		. = ALIGN(4);
-	} > RAM
+	}
 
-	.x86.extab : { *(.gcc_except_table.*  .got.plt ) } > RAM
+	.x86.extab : { *(.gcc_except_table.*  .got.plt ) }
 	.x86 : {
 		__exidx_start = .;
 		*(.x86.extab*)
 		__exidx_end = .;
-	} > RAM
+	}
 
 	.preinit_array :
 	{
@@ -58,7 +51,7 @@ SECTIONS
 		KEEP (*(SORT(.preinit_array.*)))
 		KEEP (*(.preinit_array*))
 		PROVIDE_HIDDEN (__preinit_array_end = .);
-	} > RAM
+	}
 
 	.init_array :
 	{
@@ -67,7 +60,7 @@ SECTIONS
 		KEEP (*(.init_array*))
 		KEEP (*(.ctors*))
 		PROVIDE_HIDDEN (__init_array_end = .);
-	} > RAM
+	}
 
 	.fini_array :
 	{
@@ -76,7 +69,7 @@ SECTIONS
 		KEEP (*(.fini_array*))
 		KEEP (*(.dtors*))
 		PROVIDE_HIDDEN (__fini_array_end = .);
-	} > RAM
+	}
 
 	_sidata = LOADADDR(.data);
 
@@ -84,63 +77,24 @@ SECTIONS
 	{
 		. = ALIGN(4);
 		_sdata = .;  
-		*(.data)
-		*(.data*)
+		*(.data .data.* .gnu.linkonce.d.*)
 		. = ALIGN(4);
 		_edata = .; 
-	} > RAM
+	}
 
 	.bss :
 	{
 		. = ALIGN(4);
 		_sbss = .; 
 		__bss_start__ = _sbss;
-		*(.bss)
-		*(.bss*)
+		*(.dynbss)
+		*(.bss .bss.* .gnu.linkonce.b.*)
 		*(COMMON)
 
 		. = ALIGN(4);
 		_ebss = .; 
 		 __bss_end__ = _ebss;
-	} > RAM
-
-	.drivers :
-	{
-		PROVIDE_HIDDEN (__drivers_start = .);
-		KEEP(*(.drivers*))
-		PROVIDE_HIDDEN (__drivers_end = .);
-	} > RAM
-
-	.modules :
-	{
-		PROVIDE_HIDDEN (__modules_start = .);
-		KEEP(*(.modules*))
-		PROVIDE_HIDDEN (__modules_end = .);
-	} > RAM
-
-	.symbols :
-	{
-		PROVIDE_HIDDEN (__symbols_start = .);
-		KEEP(*(.symbols*))
-		PROVIDE_HIDDEN (__symbols_end = .);
-	} > RAM
-
-	.filesys :
-	{
-		PROVIDE_HIDDEN (__filesys_start = .);
-		KEEP(*(.filesys*))
-		PROVIDE_HIDDEN (__filesys_end = .);
-	} > RAM
-
-	._user_heap_stack :
-	{
-		. = ALIGN(4);
-		PROVIDE ( end = . );
-		PROVIDE ( _end = . );
-		. = . + _Min_Heap_Size;
-		. = . + _Min_Stack_Size;
-		. = ALIGN(4);
-	} > RAM
+	}
 
 	/*/DISCARD/ :
 	{

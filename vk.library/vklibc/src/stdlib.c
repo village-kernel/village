@@ -17,3 +17,15 @@ int rand(void)
 {
 	return 0;
 }
+
+
+__attribute__((weak)) void* malloc(size_t size)
+{
+	return 0;
+}
+
+
+__attribute__((weak)) void free(void* ptr)
+{
+
+}

@@ -17,7 +17,7 @@ private:
 	uint8_t drv;
 public: 
 	/// @brief Constructor
-	AtaLbaDisk(uint8_t drv = 0)
+	AtaLbaDisk(uint8_t drv = 1)
 		:drv(drv)
 	{
 	}
@@ -33,10 +33,15 @@ public:
 	void Initialize()
 	{
 		//Stop device from sending interrupts
-		if (0 == drv)
-			PortByteOut(ATA_PRIMARY_PORT_CTRL, ATA_CTRL_nIEN);
-		else if (1 == drv)
-			PortByteOut(ATA_SECOND_PORT_CTRL, ATA_CTRL_nIEN);
+		PortByteOut(ATA_PRIMARY_PORT_CTRL, ATA_CTRL_nIEN);
+		PortByteOut(ATA_SECOND_PORT_CTRL, ATA_CTRL_nIEN);
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
 	}
 
 
@@ -124,5 +129,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new AtaLbaDisk(0), DriverID::_storage + 0, hda);
-REGISTER_DRIVER(new AtaLbaDisk(1), DriverID::_storage + 1, hdb);
+REGISTER_DRIVER(AtaLbaDisk, DriverID::_storage, hdb);

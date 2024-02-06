@@ -133,15 +133,15 @@ public:
 
 		return count;
 	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
+	}
 };
 
 
 ///Register driver
-REGISTER_DRIVER(new SerialPort(0), DriverID::_serial + 0, serial0);
-REGISTER_DRIVER(new SerialPort(1), DriverID::_serial + 1, serial1);
-REGISTER_DRIVER(new SerialPort(2), DriverID::_serial + 2, serial2);
-REGISTER_DRIVER(new SerialPort(3), DriverID::_serial + 3, serial3);
-REGISTER_DRIVER(new SerialPort(4), DriverID::_serial + 4, serial4);
-REGISTER_DRIVER(new SerialPort(5), DriverID::_serial + 5, serial5);
-REGISTER_DRIVER(new SerialPort(6), DriverID::_serial + 6, serial6);
-REGISTER_DRIVER(new SerialPort(7), DriverID::_serial + 7, serial7);
+REGISTER_DRIVER(SerialPort, DriverID::_serial + 0, serial0);

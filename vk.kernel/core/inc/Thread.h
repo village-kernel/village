@@ -7,7 +7,7 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "Defines.h"
+#include "Module.h"
 #include "Registers.h"
 #include "Templates.h"
 
@@ -15,8 +15,8 @@
 #define TASK_STACK      1024
 #endif
 
-///Thread
-class Thread : public Class
+/// @brief Thread
+class Thread : public Module
 {
 public:
 	//Enumerations
@@ -43,35 +43,21 @@ public:
 			psp(0)
 		{}
 	};
-private:
-	//Static constants
-	static const uint32_t task_stack_size = TASK_STACK;
-	static const uint32_t psp_frame_size = sizeof(TaskContext) >> 2;
-	
-	//Members
-	List<Task*> tasks;
-
-	//Methods
-	void IdleTask();
-	void TaskHandler(Function function, void* user = NULL, void* args = NULL);
 public:
 	///Methods
-	Thread();
-	~Thread();
-	void Initialize();
-	void Execute();
-	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL);
-	int CreateTask(const char* name, Method method, Class *user, void* args = NULL);
-	int DeleteTask(int pid);
-	int WaitForTask(int pid);
-	List<Task*> GetTasks();
-	void Sleep(uint32_t ticks);
-	void Exit();
+	virtual int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL) = 0;
+	virtual int CreateTask(const char* name, Method method, Class *user, void* args = NULL) = 0;
+	virtual int DeleteTask(int pid) = 0;
+	virtual int WaitForTask(int pid) = 0;
+	virtual List<Task*> GetTasks() = 0;
+	virtual void Sleep(uint32_t ticks) = 0;
+	virtual void Exit() = 0;
 
 	//Scheduler Methods
-	void SaveTaskPSP(uint32_t psp);
-	uint32_t GetTaskPSP();
-	void SelectNextTask();
+	virtual void SaveTaskPSP(uint32_t psp) = 0;
+	virtual uint32_t GetTaskPSP() = 0;
+	virtual void SelectNextTask() = 0;
+	virtual void IdleTask() = 0;
 };
 
 #endif // !__THREAD_H__

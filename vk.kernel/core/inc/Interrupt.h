@@ -7,52 +7,23 @@
 #ifndef __INTERRUPT_H__
 #define __INTERRUPT_H__
 
+#include "Module.h"
 #include "Templates.h"
-#include "ArchInterrupt.h"
+
 
 /// @brief Interrupt
-class Interrupt
+class Interrupt : public Module
 {
-private:
-	//Structures
-	struct Isr
-	{
-		int32_t     irq;
-		Function    func;
-		void*       user;
-		void*       args;
-
-		Isr(int32_t irq = 0, Function func = NULL, void* user = NULL, void* args = NULL)
-			:irq(irq),
-			func(func),
-			user(user),
-			args(args)
-		{}
-	};
-
-	//Static constants
-	static const uint32_t warning_times = 10;
-
-	//Members
-	uint8_t       warnings[ArchInterrupt::isr_num] = { 0 };
-	List<Isr*>    isrTabs[ArchInterrupt::isr_num];
-	ArchInterrupt archInterrupt;
 public:
 	//Methods
-	Interrupt();
-	~Interrupt();
-	void Initialize();
-	int SetISR(int irq, Function func, void* user = NULL, void* args = NULL);
-	int SetISR(int irq, Method method, Class* user, void* args = NULL);
-	int AppendISR(int irq, Function func, void* user = NULL, void* args = NULL);
-	int AppendISR(int irq, Method method, Class* user, void* args = NULL);
-	int RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL);
-	int RemoveISR(int irq, Method method, Class* user, void* args = NULL);
-	void ClearISR(int irq);
-
-	//Interrupt handler
-	void Handler(int irq);
+	virtual int SetISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
+	virtual int SetISR(int irq, Method method, Class* user, void* args = NULL) = 0;
+	virtual int AppendISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
+	virtual int AppendISR(int irq, Method method, Class* user, void* args = NULL) = 0;
+	virtual int RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
+	virtual int RemoveISR(int irq, Method method, Class* user, void* args = NULL) = 0;
+	virtual void ClearISR(int irq) = 0;
+	virtual void Handler(int irq) = 0;
 };
-
 
 #endif //!__INTERRUPT_H__

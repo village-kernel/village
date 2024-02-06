@@ -8,76 +8,53 @@
 #define __INPUT_H__
 
 #include "Module.h"
-#include "Templates.h"
+
 
 /// @brief Input
 class Input : public Module
 {
 public:
-	//Enumerations
+	//Input type
 	enum Type
 	{
 		_Event = 0,
-		_MoveMent,
+		_Movement,
 		_AllType,
 	};
 
-	//Structures
-	struct InputEvent
+	//Input event
+	struct Event
 	{
-		uint8_t keycode;
-		int     status;
+		int keycode;
+		int status;
 
-		InputEvent()
+		Event()
 			:keycode(0),
 			status(0)
 		{}
 	};
 
-	struct InputMove
+	//Input movement
+	struct Movement
 	{
 		int axisX;
 		int axisY;
 		int axisZ;
 
-		InputMove()
+		Movement()
 			:axisX(0),
 			axisY(0),
 			axisZ(0)
 		{}
 	};
-private:
-	//Structures
-	struct Observer
-	{
-		Function    func;
-		void*       user;
-
-		Observer(Function func = NULL, void* user = NULL)
-			:func(func),
-			user(user)
-		{}
-	};
-
-	//Members
-	List<Observer*> observers[_AllType];
-	InputEvent      inputEvent;
-	InputMove       inputMove;
-
-	//Methods
-	void Attach(List<Observer*>& observer, Function func, void* user = NULL);
-	void Detach(List<Observer*>& observer, Function func, void* user = NULL);
-	void Notify(List<Observer*>& observer, void* argv);
 public:
 	//Methods
-	Input();
-	~Input();
-	void Attach(Type type, Method method, Class* user);
-	void Attach(Type type, Function func, void* user = NULL);
-	void Detach(Type type, Method method, Class* user);
-	void Detach(Type type, Function func, void* user = NULL);
-	void ReportEvent(uint8_t keycode, int status);
-	void ReportMovement(int axisX, int axisY, int axisZ);
+	virtual void Attach(Type type, Method method, Class* user) = 0;
+	virtual void Attach(Type type, Function func, void* user = NULL) = 0;
+	virtual void Detach(Type type, Method method, Class* user) = 0;
+	virtual void Detach(Type type, Function func, void* user = NULL) = 0;
+	virtual void ReportEvent(int keycode, int status) = 0;
+	virtual void ReportMovement(int axisX, int axisY, int axisZ) = 0;
 };
 
 #endif //!__INPUT_H__

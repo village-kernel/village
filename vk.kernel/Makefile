@@ -22,8 +22,6 @@ src-y                                       += vk.kernel/core/src
 
 inc-$(CONFIG_X86)                           += vk.kernel/arch/x86/bios/inc
 inc-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/inc
-inc-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/inc/stm32f4xx
-inc-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/inc/stm32h7xx
 
 src-$(CONFIG_X86)                           += vk.kernel/arch/x86/bios/src
 src-$(CONFIG_CORTEX_M)                      += vk.kernel/arch/arm/cortex-m/src
@@ -49,6 +47,7 @@ inc-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/inc
 src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/src
 src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/src
 src-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/src
+
 
 ######################################
 # objects
@@ -86,8 +85,6 @@ objs-kernel-$(CONFIG_FILESYSTEM)            += FileSysOpt.o
 objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
 objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o
 objs-kernel-$(CONFIG_SEMAPHORE)             += Semaphore.o
-
-objs-kernel-$(CONFIG_VILLAGE)               += Village.o
 
 objs-kernel-$(CONFIG_BINUTILS)              += BaseExecutor.o
 objs-kernel-$(CONFIG_BINLOADER)             += BinLoader.o

@@ -30,7 +30,7 @@ Console::Console()
 }
 
 
-/// @brief Console deconstructor
+/// @brief Console destructor
 Console::~Console()
 {
 }
@@ -252,6 +252,19 @@ void Console::SetPath(const char* path)
 const char* Console::GetPath()
 {
 	return path;
+}
+
+
+/// @brief Kernel
+Kernel* kernel;
+
+
+/// @brief setup
+/// @param kernel 
+/// @return 
+extern "C" void setup(void* knl)
+{
+	kernel = (Kernel*)knl;
 }
 
 

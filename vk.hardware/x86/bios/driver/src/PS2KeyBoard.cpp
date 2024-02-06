@@ -17,6 +17,7 @@ private:
 	//Members
 	uint8_t keycode;
 	Input* input;
+	Interrupt* interrupt;
 	WorkQueue* workQueue;
 	WorkQueue::Work* work;
 private:
@@ -45,6 +46,7 @@ public:
 	KeyBoard()
 		:keycode(0),
 		input(NULL),
+		interrupt(NULL),
 		workQueue(NULL),
 		work(NULL)
 	{
@@ -61,18 +63,26 @@ public:
 	void Initialize()
 	{
 		//Get the input module
-		input = (Input*)Kernel::modular.GetModule("input");
+		input = (Input*)kernel->modular->GetModule("input");
 		if (NULL == input)
 		{
-			Kernel::debug.Error("input feature not support");
+			kernel->debug->Error("input feature not support");
+			return;
+		}
+
+		//Get the interrupt module
+		interrupt = (Interrupt*)kernel->modular->GetModule("interrupt");
+		if (NULL == interrupt)
+		{
+			kernel->debug->Error("interrupt feature not support");
 			return;
 		}
 
 		//Get the work queue module
-		workQueue = (WorkQueue*)Kernel::modular.GetModule("workQueue");
+		workQueue = (WorkQueue*)kernel->modular->GetModule("workQueue");
 		if (NULL == workQueue)
 		{
-			Kernel::debug.Error("work queue feature not support");
+			kernel->debug->Error("work queue feature not support");
 			return;
 		}
 
@@ -80,18 +90,18 @@ public:
 		work = workQueue->Create((Method)&KeyBoard::ReportHandler, this);
 
 		//Set interrupt
-		Kernel::interrupt.SetISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
+		interrupt->SetISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
 	}
 
 
 	/// @brief KeyBoard Exit
 	void Exit()
 	{
-		Kernel::interrupt.RemoveISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
+		interrupt->RemoveISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
 		workQueue->Delete(work);
 	}
 };
 
 
 //Register driver
-REGISTER_DRIVER(new KeyBoard(), DriverID::_miscdev, ps2keyboard);
+REGISTER_DRIVER(KeyBoard, DriverID::_miscdev, ps2keyboard);

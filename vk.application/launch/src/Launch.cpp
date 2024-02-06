@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Launch.h"
-#include "Village.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -57,12 +57,16 @@ void Launch::Initialize(const char* drvname)
 	mainwin->Show();
 
 	//Attach input
-	village.AttachInput(Input::_MoveMent, (Method)&Launch::UpdateInput, this);
+	Input* input = (Input*)kernel->modular->GetModule("input");
+	if (NULL != input)
+	{
+		input->Attach(Input::_Movement, (Method)&Launch::UpdateInput, this);
+	}
 }
 
 
 /// @brief Update
-void Launch::UpdateInput(Input::InputMove* input)
+void Launch::UpdateInput(Input::Movement* input)
 {
 	if (NULL != mainwin)
 	{
@@ -76,6 +80,19 @@ void Launch::UpdateInput(Input::InputMove* input)
 void Launch::Execute()
 {
 	while (1) {}
+}
+
+
+/// @brief Kernel
+Kernel* kernel;
+
+
+/// @brief setup
+/// @param kernel 
+/// @return 
+extern "C" void setup(void* knl)
+{
+	kernel = (Kernel*)knl;
 }
 
 

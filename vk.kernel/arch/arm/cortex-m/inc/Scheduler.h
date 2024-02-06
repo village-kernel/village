@@ -7,11 +7,11 @@
 #ifndef __SCHEDULER_H__
 #define __SCHEDULER_H__
 
-#include "stdint.h"
-#include "stddef.h"
+#include "Module.h"
 
-///Scheduler
-class Scheduler
+
+/// @brief Scheduler
+class Scheduler : public Module
 {
 public:
 	//Enumerations
@@ -20,19 +20,10 @@ public:
 		Unprivileged = 0,
 		Privileged = 1,
 	};
-private:
-	//Members
-	bool isStartSchedule;
 public:
 	//Methods
-	Scheduler();
-	~Scheduler();
-	void Initialize();
-	void Execute();
-	void Rescheduler(Access access);
-
-	//Needed called by SVC_Handler
-	void TaskOperator(uint32_t* SP);
+	virtual void StartScheduler() = 0;
+	virtual void Rescheduler(Access access) = 0;
 };
 
 #endif // !__SCHEDULER_H__
