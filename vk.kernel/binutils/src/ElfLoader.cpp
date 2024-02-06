@@ -381,7 +381,7 @@ int ElfLoader::PostParser()
 int ElfLoader::SharedObjs()
 {
 	//Handler dynamic source
-	for (uint32_t i = 0; i < elf.dynsecNum; i++)
+	for (int i = elf.dynsecNum - 1; i >= 0; i--)
 	{
 		DynamicHeader dynamic = elf.dynamics[i];
 
