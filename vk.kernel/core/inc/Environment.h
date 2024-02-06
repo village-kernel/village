@@ -7,34 +7,17 @@
 #ifndef __ENVIRONMENT_H__
 #define __ENVIRONMENT_H__
 
-#include "Templates.h"
+#include "Module.h"
 
 
-///Environment
-class Environment
+/// @brief Environment
+class Environment : public Module
 {
-private:
-	//Structures
-	struct Symbol
-	{
-		const char* name;
-		uint32_t    addr;
-
-		Symbol(const char* name, uint32_t addr):
-			name(name),
-			addr(addr)
-		{}
-	};
-
-	//Members
-	List<Symbol*> symbols;
 public:
 	//Methods
-	Environment();
-	~Environment();
-	void ExportSymbol(uint32_t symAddr, const char* name);
-	void UnexportSymbol(const char* name);
-	uint32_t SearchSymbol(const char* name);
+	virtual void ExportSymbol(uint32_t symAddr, const char* name) = 0;
+	virtual void UnexportSymbol(const char* name) = 0;
+	virtual uint32_t SearchSymbol(const char* name) = 0;
 };
 
 #endif //!__ENVIRONMENT_H__

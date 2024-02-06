@@ -9,40 +9,24 @@
 
 #include "Module.h"
 #include "Templates.h"
-#include "LibraryTool.h"
-#include "ModuleTool.h"
 #include "ElfExecutor.h"
 
 
 /// @brief Loader
 class Loader : public Module
 {
-private:
+public:
 	//Enumerations
 	enum LoadType
 	{
 		_Load_Lib = 0,
 		_Load_Mod,
 	};
-
-	//Members
-	List<ElfLoader*> libraries;
-	List<ElfLoader*> modules;
-	LibraryTool      libraryTool;
-	ModuleTool       moduleTool;
-	ElfExecutor      executor;
-
-	//Methods
-	void Loading(int type, const char* filename);
 public:
 	//Methods
-	Loader();
-	~Loader();
-	void Initialize();
-	void Execute();
-
-	List<ElfLoader*>* GetLibraries();
-	List<ElfLoader*>* GetModules();
+	virtual void Loading(int type, const char* filename) = 0;
+	virtual List<ElfLoader*>* GetLibraries() = 0;
+	virtual List<ElfLoader*>* GetModules() = 0;
 };
 
 #endif //!__LOADER_H__

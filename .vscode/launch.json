@@ -16,7 +16,7 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_svd/STM32F407.svd",
             "swoConfig": {
                 "enabled": true,
                 "cpuFrequency": 168000000,
@@ -43,7 +43,7 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/vk.hardware/BSP/ST/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_svd/STM32F407.svd",
             "swoConfig": {
                 "enabled": true,
                 "cpuFrequency": 168000000,

@@ -6,7 +6,7 @@
 //###########################################################################
 #include "Graphics.h"
 #include "Window.h"
-#include "Village.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -32,7 +32,7 @@ Graphics::~Graphics()
 void Graphics::Initialize(const char* drvname)
 {
 	//Get the universal driver by driver name
-	Driver* driver = Village().GetDriver(drvname);
+	Driver* driver = kernel->device->GetDriver(drvname);
 
 	//Get the specified lcd driver by driver ioctrl 
 	if (NULL != driver)

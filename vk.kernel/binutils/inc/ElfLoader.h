@@ -16,7 +16,8 @@ class ElfLoader
 private:
 	//Type define
 	typedef void(*Function)();
-	typedef void(*Entry)(int argc, char* argv[]);
+	typedef void(*StartEntry)(void* kernel, int argc, char* argv[]);
+	typedef void(*FuncEntry)(int argc, char* argv[]);
 
 	//Enumerations
 	enum ELFClass
@@ -311,7 +312,7 @@ private:
 	int RelEntries();
 	int RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
 #if defined(ARCH_ARM)
-	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
+	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type);
 #endif
 public:
 	//Methods

@@ -5,123 +5,152 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Device.h"
+#include "Driver.h"
 #include "Kernel.h"
+#include "Templates.h"
 
 
-/// @brief Constructor
-Device::Device()
-	:status(_NoneStates)
+/// @brief ConcreteDevice
+class ConcreteDevice : public Device
 {
-}
-
-
-/// @brief Fini constructor
-Device::~Device()
-{
-}
-
-
-/// @brief Execute device object->Initialize
-void Device::Initialize()
-{
-	status = _StartInitialize;
-	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
+private:
+	//Members
+	States        status;
+	List<Driver*> drivers;
+private:
+	/// @brief Register drivers
+	void RegisterDrivers()
 	{
-		driver->Initialize();
+		extern DriverInfo __drivers_start;
+		extern DriverInfo __drivers_end;
+
+		uint32_t count = &__drivers_end - &__drivers_start;
+		DriverInfo* drivers = &__drivers_start;
+
+		for (uint32_t i = 0; i < count; i++)
+		{
+			drivers[i].driver->SetName(drivers[i].name);
+			RegisterDriver(drivers[i].driver, drivers[i].id);
+		}
 	}
-	status = _EndedInitialize;
-}
 
 
-/// @brief Execute device object->UpdateParams
-void Device::UpdateParams()
-{
-	status = _StartUpdateParams;
-	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
+	/// @brief Register in runtime
+	/// @param module 
+	void RegisterInRuntime(Driver* driver)
 	{
-		driver->UpdateParams();
+		if (status >= _EndedInitialize)
+			driver->Initialize();
+		if (status >= _EndedUpdateParms)
+			driver->UpdateParams();
 	}
-	status = _EndedUpdateParms;
-}
 
 
-/// @brief Device execute
-void Device::Execute()
-{
-	status = _StartExecute;
-	status = _EndedExecute;
-}
-
-
-/// @brief Execute device object->FailSafe
-void Device::FailSafe(int arg)
-{
-	for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
+	/// @brief Deregister in runtime
+	/// @param driver 
+	void DeregisterInRuntime(Driver* driver)
 	{
-		driver->FailSafe(arg);
+		if (status >= _EndedExecute)
+		{
+			driver->Exit();
+		}
 	}
-}
-
-
-/// @brief Register in runtime
-/// @param module 
-void Device::RegisterInRuntime(Driver* driver)
-{
-	if (status >= _EndedInitialize)
-		driver->Initialize();
-	if (status >= _EndedUpdateParms)
-		driver->UpdateParams();
-}
-
-
-/// @brief Deregister in runtime
-/// @param driver 
-void Device::DeregisterInRuntime(Driver* driver)
-{
-	if (status >= _EndedExecute)
+public:
+	/// @brief Constructor
+	ConcreteDevice()
+		:status(_NoneStates)
 	{
-		driver->Exit();
 	}
-}
 
 
-/// @brief Register driver object
-/// @param driver driver pointer
-/// @param id driver id
-void Device::RegisterDriver(Driver* driver, uint32_t id)
-{
-	drivers.Insert(driver, id, driver->GetName());
-	RegisterInRuntime(driver);
-}
-EXPORT_SYMBOL(_ZN6Device14RegisterDriverEP6Driverm);
+	/// @brief Destructor
+	~ConcreteDevice()
+	{
+	}
 
 
-/// @brief Deregister driver object
-/// @param driver driver pointer
-/// @param id driver id
-void Device::DeregisterDriver(Driver* driver, uint32_t id)
-{
-	DeregisterInRuntime(driver);
-	drivers.Remove(driver, id);
-}
-EXPORT_SYMBOL(_ZN6Device16DeregisterDriverEP6Driverm);
+	/// @brief Execute device object->Initialize
+	void Initialize()
+	{
+		RegisterDrivers();
+
+		status = _StartInitialize;
+		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
+		{
+			driver->Initialize();
+		}
+		status = _EndedInitialize;
+	}
 
 
-/// @brief Get the driver object
-/// @param id driver id
-/// @return driver
-Driver* Device::GetDriver(uint32_t id)
-{
-	return drivers.GetItem(id);
-}
-EXPORT_SYMBOL(_ZN6Device9GetDriverEm);
+	/// @brief Execute device object->UpdateParams
+	void UpdateParams()
+	{
+		status = _StartUpdateParams;
+		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
+		{
+			driver->UpdateParams();
+		}
+		status = _EndedUpdateParms;
+	}
 
 
-/// @brief Get the driver object by name
-/// @param name driver name
-/// @return driver
-Driver* Device::GetDriver(const char* name)
-{
-	return drivers.GetItemByName(name);
-}
-EXPORT_SYMBOL(_ZN6Device9GetDriverEPKc);
+	/// @brief Device execute
+	void Execute()
+	{
+		status = _StartExecute;
+		status = _EndedExecute;
+	}
+
+
+	/// @brief Execute device object->FailSafe
+	void FailSafe(int arg)
+	{
+		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
+		{
+			driver->FailSafe(arg);
+		}
+	}
+
+
+	/// @brief Register driver object
+	/// @param driver driver pointer
+	/// @param id driver id
+	void RegisterDriver(Driver* driver, uint32_t id)
+	{
+		drivers.Insert(driver, id, driver->GetName());
+		RegisterInRuntime(driver);
+	}
+	
+
+	/// @brief Deregister driver object
+	/// @param driver driver pointer
+	/// @param id driver id
+	void DeregisterDriver(Driver* driver, uint32_t id)
+	{
+		DeregisterInRuntime(driver);
+		drivers.Remove(driver, id);
+	}
+
+
+	/// @brief Get the driver object
+	/// @param id driver id
+	/// @return driver
+	Driver* GetDriver(uint32_t id)
+	{
+		return drivers.GetItem(id);
+	}
+
+
+	/// @brief Get the driver object by name
+	/// @param name driver name
+	/// @return driver
+	Driver* GetDriver(const char* name)
+	{
+		return drivers.GetItemByName(name);
+	}
+};
+
+
+///Register module
+REGISTER_MODULE(ConcreteDevice, ModuleID::_device, device);

@@ -56,7 +56,7 @@ int BaseExecutor::Run(Behavior behavior, const char* path, int argc, char* argv[
 	if ((pid = Execute(path)) == 0) return _ERR;
 
 	//Wait for task done
-	if (behavior == _Foreground) Kernel::thread.WaitForTask(pid);
+	if (behavior == _Foreground) kernel->thread->WaitForTask(pid);
 
 	return pid;
 }
@@ -66,5 +66,5 @@ int BaseExecutor::Run(Behavior behavior, const char* path, int argc, char* argv[
 /// @return result
 int BaseExecutor::Wait()
 {
-	return Kernel::thread.WaitForTask(pid);
+	return kernel->thread->WaitForTask(pid);
 }

@@ -25,10 +25,10 @@ ModuleTool::~ModuleTool()
 List<ElfLoader*>* ModuleTool::GetModules()
 {
 	//Get the loader module
-	Loader* loader = (Loader*)Kernel::modular.GetModule("loader");
+	Loader* loader = (Loader*)kernel->modular->GetModule("loader");
 	if (NULL == loader)
 	{
-		Kernel::debug.Error("loader feature not support");
+		kernel->debug->Error("loader feature not support");
 		return NULL;
 	}
 
@@ -36,7 +36,7 @@ List<ElfLoader*>* ModuleTool::GetModules()
 	List<ElfLoader*>* modules = loader->GetModules();
 	if (NULL == modules)
 	{
-		Kernel::debug.Error("get modules address failed");
+		kernel->debug->Error("get modules address failed");
 		return NULL;
 	}
 
@@ -54,7 +54,7 @@ bool ModuleTool::Install(const char* filename)
 	//Check filename is valid
 	if (NULL == filename)
 	{
-		Kernel::debug.Error("%s module not a valid name", filename);
+		kernel->debug->Error("%s module not a valid name", filename);
 		return false;
 	}
 
@@ -68,7 +68,7 @@ bool ModuleTool::Install(const char* filename)
 		if (0 == strcmp(filename, mod->GetFileName()))
 		{
 			isInstalled = true;
-			Kernel::debug.Output(Debug::_Lv2, "%s module has already been installed", filename);
+			kernel->debug->Output(Debug::_Lv2, "%s module has already been installed", filename);
 			break;
 		}
 	}
@@ -83,11 +83,11 @@ bool ModuleTool::Install(const char* filename)
 			mod->FillBssZero();
 			mod->InitArray();
 			modules->Add(mod);
-			Kernel::debug.Output(Debug::_Lv2, "%s module install successful", filename);
+			kernel->debug->Output(Debug::_Lv2, "%s module install successful", filename);
 		}
 		else
 		{
-			Kernel::debug.Error("%s module install failed", filename);
+			kernel->debug->Error("%s module install failed", filename);
 			return false;
 		}
 	}
@@ -104,7 +104,7 @@ bool ModuleTool::Uninstall(const char* filename)
 	//Check filename is valid
 	if (NULL == filename)
 	{
-		Kernel::debug.Error("%s module not a valid name", filename);
+		kernel->debug->Error("%s module not a valid name", filename);
 		return false;
 	}
 
@@ -120,11 +120,11 @@ bool ModuleTool::Uninstall(const char* filename)
 			mod->FiniArray();
 			modules->Remove(mod);
 			delete mod;
-			Kernel::debug.Output(Debug::_Lv2, "%s module uninstall successful", filename);
+			kernel->debug->Output(Debug::_Lv2, "%s module uninstall successful", filename);
 			return true;	
 		}
 	}
 
-	Kernel::debug.Error("%s module not found", filename);
+	kernel->debug->Error("%s module not found", filename);
 	return false;
 }

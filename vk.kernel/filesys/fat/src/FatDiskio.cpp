@@ -18,7 +18,7 @@ int FatDiskio::Setup(Driver* diskdrv, uint32_t fstSec)
 
 	if (_ERR == CheckFileSystem())
 	{
-		Kernel::debug.Error("Not filesystem found");
+		kernel->debug->Error("Not filesystem found");
 		return _ERR;
 	}
 	return _OK;

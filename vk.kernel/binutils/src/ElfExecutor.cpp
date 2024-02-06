@@ -17,7 +17,7 @@ int ElfExecutor::Execute(const char* path)
 	if (elf.Load(path) != Result::_OK) return 0;
 
 	//Create a sandboxed thread to run the app
-	return Kernel::thread.CreateTask(path, (Method)&ElfExecutor::Sandbox, this);
+	return kernel->thread->CreateTask(path, (Method)&ElfExecutor::Sandbox, this);
 }
 
 

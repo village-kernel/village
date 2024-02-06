@@ -92,10 +92,6 @@ menu "Library"
 	source ./vk.library/Kconfig
 endmenu
 
-menu "Network"
-	source ./vk.network/Kconfig
-endmenu
-
 menu "Kernel"
 	source ./vk.kernel/Kconfig
 endmenu

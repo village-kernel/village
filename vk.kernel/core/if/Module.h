@@ -10,7 +10,7 @@
 #include "Defines.h"
 #include "Templates.h"
 
-///Module
+/// @brief Module
 class Module : public Class
 {
 private:
@@ -25,7 +25,7 @@ public:
 	virtual ~Module() {}
 
 	//Methods
-	virtual void Initialize()       {}
+	virtual void Initialize()       = 0;
 	virtual void UpdateParams()     {}
 	virtual void Execute()          {}
 	virtual void FailSafe(int arg)  {}
