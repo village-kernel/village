@@ -79,11 +79,11 @@ void _start(void* kernel, int argc, char* argv[])
 {
 	__fill_bss_zero();
 
+	setup(kernel);
+
 	__preinit_arrary();
 
 	__init_array();
-
-	setup(kernel);
 
 	main(argc, argv);
 
