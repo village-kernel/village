@@ -13,8 +13,10 @@
                 "limitSymbolsToIncludedHeaders": false,
                 "databaseFilename": ""
             },
-            "cStandard": "c23",
-            "cppStandard": "c++23"
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "compilerPath": "",
+            "intelliSenseMode": "gcc-arm"
         }
     ],
     "version": 4
