@@ -534,15 +534,13 @@ public:
 	/// @param cmd 
 	/// @param data 
 	/// @return 
-	void* IOCtrl(uint8_t cmd, ...)
+	int IOCtrl(uint8_t cmd, void* data)
 	{
-		switch (cmd)
-		{
-			case 0:
-				return (void*)ili9488;
-			default:
-				return NULL;
-		}
+		FBDriver** fbdev = (FBDriver**)data;
+		
+		*fbdev = ili9488;
+
+		return 0;
 	}
 };
 
