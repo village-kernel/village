@@ -14,7 +14,15 @@ extern "C" {
 #include "stddef.h"
 #include "stdarg.h"
 
-int abs(int data);
+#ifndef PI
+  #define PI               3.14159265358979f
+#endif
+
+double sqrt(double i);
+double cos(double angle);
+double sin(double angle);
+double floor(double x);
+double ceil(double x);
 
 #ifdef __cplusplus
 }
