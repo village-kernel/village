@@ -77,3 +77,12 @@ extern "C" void free(void* ptr)
 {
 	kernel->memory->Free((uint32_t)ptr);
 }
+
+
+/// @brief rand
+/// @param  
+/// @return 
+extern "C" int rand(void)
+{
+	return kernel->system->GetSysClkCounts();
+}

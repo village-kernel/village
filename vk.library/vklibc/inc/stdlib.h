@@ -15,9 +15,12 @@ extern "C" {
 #include "stddef.h"
 
 int atexit(void (*function)(void));
-int rand(void);
 void* malloc(size_t size);
 void free(void* ptr);
+
+int rand(void);
+int abs(int i);
+long labs(long i);
 
 #ifdef __cplusplus
 }

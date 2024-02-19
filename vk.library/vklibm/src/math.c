@@ -6,8 +6,47 @@
 //###########################################################################
 #include "math.h"
 
-int abs(int data)
+
+/// @brief 
+/// @param i 
+/// @return 
+double sqrt(double i)
 {
-	if (data < 0) return -data;
-	return data;
+	return 0;
+}
+
+
+/// @brief 
+/// @param angle 
+/// @return 
+double cos(double angle)
+{
+	return 0;
+}
+
+
+/// @brief 
+/// @param angle 
+/// @return 
+double sin(double angle)
+{
+	return 0;
+}
+
+
+/// @brief 
+/// @param i 
+/// @return 
+double floor(double x)
+{
+	return 0;
+}
+
+
+/// @brief 
+/// @param x 
+/// @return 
+double ceil(double x)
+{
+	return 0;
 }
