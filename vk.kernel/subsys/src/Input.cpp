@@ -71,11 +71,19 @@ private:
 		}
 	}
 public:
-	/// @brief Initialize
-	void Initialize()
+	/// @brief Setup
+	void Setup()
 	{
 
 	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
+	}
+
 
 	/// @brief Input attach
 	/// @param method 

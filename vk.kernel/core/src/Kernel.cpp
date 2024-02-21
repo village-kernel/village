@@ -88,42 +88,24 @@ public:
 	}
 
 
-	/// @brief Initialize
-	void Initialize()
+	/// @brief Kernel Setup
+	void Setup()
 	{
 		if (GetModules())
 		{
-			modular->Initialize();
+			modular->Setup();
 		}
-	}
-
-
-	/// @brief Kernel update params
-	void UpdateParams()
-	{
-		modular->UpdateParams();
 	}
 
 
 	/// @brief Kernel execute
 	void Execute()
 	{
-		//Execute modular
-		modular->Execute();
-
 		//Start scheduler
 		scheduler->StartScheduler();
 
 		//Should not go to here
 		while (1) {}
-	}
-
-
-	/// @brief Kernel FailSafe
-	/// @param arg fail arg
-	void FailSafe(int arg)
-	{
-		modular->FailSafe(arg);
 	}
 
 

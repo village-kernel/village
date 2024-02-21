@@ -28,8 +28,8 @@ public:
 	{}
 
 
-	/// @brief Configure the SysTick timer
-	void Initialize()
+	/// @brief System Setup
+	void Setup()
 	{
 		//Config clock
 		ConfigCoreDebug();
@@ -37,6 +37,13 @@ public:
 		ConfigurePower()
 		ConfigSysTick();
 		ConfigureForHsi();
+	}
+
+
+	/// @brief System Exit
+	void Exit()
+	{
+
 	}
 
 

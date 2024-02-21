@@ -33,8 +33,8 @@ public:
 	}
 
 
-	/// @brief Scheduler initialize
-	void Initialize()
+	/// @brief Scheduler Setup
+	void Setup()
 	{
 		//Gets the interrupt pointer
 		interrupt = (Interrupt*)kernel->modular->GetModule(ModuleID::_interrupt);
@@ -44,6 +44,13 @@ public:
 
 		//Append the systick interrupt handler
 		interrupt->AppendISR(IRQ_Systick, (Method)&ConcreteScheduler::SysTickHandler, this);
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
 	}
 
 

@@ -23,8 +23,8 @@ public:
 	}
 
 
-	/// @brief Configure the SysTick timer
-	void Initialize()
+	/// @brief System Setup
+	void Setup()
 	{
 		//Gets the interrupt pointer
 		Interrupt* interrupt = (Interrupt*)kernel->modular->GetModule(ModuleID::_interrupt);
@@ -34,6 +34,13 @@ public:
 
 		//Configure clock
 		ConfigureClock();
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
 	}
 
 

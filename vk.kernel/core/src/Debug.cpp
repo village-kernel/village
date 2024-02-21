@@ -43,15 +43,23 @@ private:
 			txBuffer[txBufPos++] = data[i];
 
 			//The txBuffer is full, block here until the data is sent
-			if (txBufPos >= buf_size)
-			{
-				while (!transceiver->Write((uint8_t*)txBuffer, txBufPos)) {}
-				txBufPos = 0;
-			}
+			if (txBufPos >= buf_size) Sending();
 		}
 
-		//Sent data when txbuffer not empty
-		if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) txBufPos = 0;
+		//Sending msg
+		Sending();
+	}
+
+
+	/// @brief Sent data when txbuffer not empty
+	/// @brief Reset txBufPos when sent data successfully
+	void Sending()
+	{
+		if (txBufPos)
+		{
+			while (!transceiver->Write((uint8_t*)txBuffer, txBufPos)) {}
+			txBufPos = 0;
+		}
 	}
 public:
 	/// @brief Constructor
@@ -68,27 +76,19 @@ public:
 	}
 
 
-	/// @brief Initialize
-	void Initialize()
+	/// @brief Setup
+	void Setup()
 	{
 		//Get transceiver driver and initialize
 		transceiver = kernel->device->GetDriver("serial0");
-		if (NULL != transceiver) transceiver->Initialize();
+		if (NULL != transceiver) transceiver->Open();
 	}
 
 
-	/// @brief Sent data when txbuffer not empty
-	/// @brief Reset txBufPos when sent data successfully
-	void Execute()
+	/// @brief Exit
+	void Exit()
 	{
-		while (1)
-		{
-			if (txBufPos && transceiver->Write((uint8_t*)txBuffer, txBufPos)) 
-			{
-				txBufPos = 0;
-			}
-			kernel->thread->Sleep(100);
-		}
+		transceiver->Close();
 	}
 
 

@@ -24,8 +24,8 @@ public:
 		SCB->VTOR = vector;
 	}
 public:
-	/// @brief Interrupt initialize
-	void Initialize()
+	/// @brief Interrupt Setup
+	void Setup()
 	{
 		//Symbol defined in the linker script
 		extern void *_sivector, *_svector, *_evector;
@@ -56,6 +56,13 @@ public:
 
 		//Relocation isr vecotr table
 		ConfigVectorTable((uint32_t)&_svector);
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
 	}
 };
 

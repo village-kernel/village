@@ -28,13 +28,20 @@ public:
 	{}
 
 
-	/// @brief Configure the SysTick timer
-	void Initialize()
+	/// @brief System Setup
+	void Setup()
 	{
 		//Config clock
 		ConfigCoreDebug();
 		ConfigSysTick();
 		ConfigureForXtal();
+	}
+
+
+	/// @brief System Exit
+	void Exit()
+	{
+
 	}
 
 

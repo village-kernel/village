@@ -51,10 +51,8 @@ public:
 	}
 
 	/// @brief Kernel Methods
-	virtual void Initialize() = 0;
-	virtual void UpdateParams() = 0;
+	virtual void Setup() = 0;
 	virtual void Execute() = 0;
-	virtual void FailSafe(int arg) = 0;
 	virtual void Exit() = 0;
 
 	/// @brief Kernel build info 

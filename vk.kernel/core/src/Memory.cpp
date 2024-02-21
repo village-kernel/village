@@ -67,7 +67,7 @@ public:
 		tail(NULL),
 		curr(NULL)
 	{
-		Initialize();
+		Setup();
 	}
 
 
@@ -77,8 +77,8 @@ public:
 	}
 
 
-	/// @brief Memory initialize sram parameters
-	void Initialize()
+	/// @brief Memory setup sram parameters
+	void Setup()
 	{
 		//Clear memory ready flag
 		isMemReady = false;
@@ -124,6 +124,13 @@ public:
 
 		//Set memory ready flag
 		isMemReady = true;
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		
 	}
 
 

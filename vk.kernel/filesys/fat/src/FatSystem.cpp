@@ -34,7 +34,7 @@ void FatSystem::Setup()
 	}
 
 	diskdrv = kernel->device->GetDriver(DriverID::_storage);
-	if (NULL == diskdrv)
+	if (NULL == diskdrv || _ERR == diskdrv->Open())
 	{
 		kernel->debug->Error("Not disk driver found");
 		return;
@@ -70,6 +70,7 @@ void FatSystem::Setup()
 void FatSystem::Exit()
 {
 	delete mbr;
+	diskdrv->Close();
 }
 
 

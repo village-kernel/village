@@ -35,7 +35,7 @@ private:
 		{
 			(function)(user, args);
 		}
-		Exit();
+		TaskExit();
 	}
 public:
 	/// @brief Constructor
@@ -53,8 +53,8 @@ public:
 	}
 
 
-	/// @brief Thread Initialize
-	void Initialize()
+	/// @brief Thread setup
+	void Setup()
 	{
 		//Gets the memory pointer
 		memory = (Memory*)kernel->modular->GetModule(ModuleID::_memory);
@@ -70,6 +70,13 @@ public:
 
 		//Set first node
 		tasks.Begin();
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		tasks.Release();
 	}
 
 
@@ -164,7 +171,7 @@ public:
 
 
 	/// @brief Thread Exit
-	void Exit()
+	void TaskExit()
 	{
 		if(tasks.GetNid() > 0)
 		{

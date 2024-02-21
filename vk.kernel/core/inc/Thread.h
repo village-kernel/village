@@ -51,7 +51,7 @@ public:
 	virtual int WaitForTask(int pid) = 0;
 	virtual List<Task*> GetTasks() = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
-	virtual void Exit() = 0;
+	virtual void TaskExit() = 0;
 
 	//Scheduler Methods
 	virtual void SaveTaskPSP(uint32_t psp) = 0;

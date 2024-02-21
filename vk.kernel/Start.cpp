@@ -11,8 +11,7 @@
 /// @brief Main entry function
 int main(int argc, char* argv[])
 {
-	kernel->Initialize();
-	kernel->UpdateParams();
+	kernel->Setup();
 	kernel->Execute();
 	kernel->Exit();
 	return _ERR;

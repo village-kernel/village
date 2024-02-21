@@ -32,10 +32,17 @@ public:
 	}
 
 
-	/// @brief Scheduler initialize
-	void Initialize()
+	/// @brief Scheduler Setup
+	void Setup()
 	{
 		
+	}
+
+
+	/// @brief Scheduler Exit
+	void Exit()
+	{
+
 	}
 
 

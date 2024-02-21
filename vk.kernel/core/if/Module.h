@@ -25,15 +25,14 @@ public:
 	virtual ~Module() {}
 
 	//Methods
-	virtual void Initialize()       = 0;
-	virtual void UpdateParams()     {}
-	virtual void Execute()          {}
-	virtual void FailSafe(int arg)  {}
-	virtual void Exit()             {}
-	virtual void SetPid(int pid)    { this->pid = pid; }
-	virtual int  GetPid()           { return this->pid; }
-	virtual void SetName(char* name){ this->name = name; }
-	virtual char* GetName()         { return this->name; }
+	void SetPid(int pid)      { this->pid = pid; }
+	int  GetPid()             { return this->pid; }
+	void SetName(char* name)  { this->name = name; }
+	char* GetName()           { return this->name; }
+
+	//Methods
+	virtual void Setup() = 0;
+	virtual void Exit()  = 0;
 };
 
 #endif // !__MODULE_INTERFACE_H__
