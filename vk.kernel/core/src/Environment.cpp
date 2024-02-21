@@ -50,17 +50,23 @@ public:
 	}
 
 
-	/// @brief Fini constructor
+	/// @brief destructor
 	~ConcreteEnvironment()
 	{
 	}
 
 
-	/// @brief Initialize
-	/// @param kernel 
-	void Initialize()
+	/// @brief Setup
+	void Setup()
 	{
 		ExportSymbols();
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		symbols.Release();
 	}
 
 

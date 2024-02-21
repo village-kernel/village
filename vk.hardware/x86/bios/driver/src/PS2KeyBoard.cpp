@@ -59,15 +59,15 @@ public:
 	}
 
 
-	/// @brief KeyBoard Initialize
-	void Initialize()
+	/// @brief KeyBoard open
+	int Open()
 	{
 		//Get the input module
 		input = (Input*)kernel->modular->GetModule("input");
 		if (NULL == input)
 		{
 			kernel->debug->Error("input feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Get the interrupt module
@@ -75,7 +75,7 @@ public:
 		if (NULL == interrupt)
 		{
 			kernel->debug->Error("interrupt feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Get the work queue module
@@ -83,7 +83,7 @@ public:
 		if (NULL == workQueue)
 		{
 			kernel->debug->Error("work queue feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Create work
@@ -91,11 +91,13 @@ public:
 
 		//Set interrupt
 		interrupt->SetISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
+
+		return _OK;
 	}
 
 
-	/// @brief KeyBoard Exit
-	void Exit()
+	/// @brief KeyBoard close
+	void Close()
 	{
 		interrupt->RemoveISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
 		workQueue->Delete(work);

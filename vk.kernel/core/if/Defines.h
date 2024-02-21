@@ -56,19 +56,6 @@ enum ModuleID
 };
 
 
-/// @brief Module states
-enum States
-{
-	_NoneStates = 0,
-	_StartInitialize,
-	_EndedInitialize,
-	_StartUpdateParams,
-	_EndedUpdateParms,
-	_StartExecute,
-	_EndedExecute,
-};
-
-
 /// @brief driver
 class Driver;
 

@@ -15,7 +15,6 @@ class ConcreteDevice : public Device
 {
 private:
 	//Members
-	States        status;
 	List<Driver*> drivers;
 private:
 	/// @brief Register drivers
@@ -33,32 +32,9 @@ private:
 			RegisterDriver(drivers[i].driver, drivers[i].id);
 		}
 	}
-
-
-	/// @brief Register in runtime
-	/// @param module 
-	void RegisterInRuntime(Driver* driver)
-	{
-		if (status >= _EndedInitialize)
-			driver->Initialize();
-		if (status >= _EndedUpdateParms)
-			driver->UpdateParams();
-	}
-
-
-	/// @brief Deregister in runtime
-	/// @param driver 
-	void DeregisterInRuntime(Driver* driver)
-	{
-		if (status >= _EndedExecute)
-		{
-			driver->Exit();
-		}
-	}
 public:
 	/// @brief Constructor
 	ConcreteDevice()
-		:status(_NoneStates)
 	{
 	}
 
@@ -69,47 +45,17 @@ public:
 	}
 
 
-	/// @brief Execute device object->Initialize
-	void Initialize()
+	/// @brief Execute device object->Setup
+	void Setup()
 	{
 		RegisterDrivers();
-
-		status = _StartInitialize;
-		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
-		{
-			driver->Initialize();
-		}
-		status = _EndedInitialize;
 	}
 
 
-	/// @brief Execute device object->UpdateParams
-	void UpdateParams()
+	/// @brief Device Exit
+	void Exit()
 	{
-		status = _StartUpdateParams;
-		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
-		{
-			driver->UpdateParams();
-		}
-		status = _EndedUpdateParms;
-	}
-
-
-	/// @brief Device execute
-	void Execute()
-	{
-		status = _StartExecute;
-		status = _EndedExecute;
-	}
-
-
-	/// @brief Execute device object->FailSafe
-	void FailSafe(int arg)
-	{
-		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
-		{
-			driver->FailSafe(arg);
-		}
+		drivers.Release();
 	}
 
 
@@ -119,7 +65,6 @@ public:
 	void RegisterDriver(Driver* driver, uint32_t id)
 	{
 		drivers.Insert(driver, id, driver->GetName());
-		RegisterInRuntime(driver);
 	}
 	
 
@@ -128,7 +73,6 @@ public:
 	/// @param id driver id
 	void DeregisterDriver(Driver* driver, uint32_t id)
 	{
-		DeregisterInRuntime(driver);
 		drivers.Remove(driver, id);
 	}
 

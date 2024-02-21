@@ -45,8 +45,8 @@ public:
 	}
 
 
-	/// @brief File system initialize
-	void Initialize()
+	/// @brief File system setup
+	void Setup()
 	{
 		RegisterFileSyss();
 

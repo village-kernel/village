@@ -11,7 +11,7 @@
 
 
 ///Sd card initialize
-void SdCard::Initialize()
+int SdCard::Open()
 {
 	//Init config
 	InitConfig();
@@ -31,11 +31,13 @@ void SdCard::Initialize()
 
 	//Initialize sd card
 	SdCardInit();
+
+	return _OK;
 }
 
 
-/// @brief Exit
-void SdCard::Exit()
+/// @brief Close
+void SdCard::Close()
 {
 
 }

@@ -19,8 +19,8 @@ private:
 	void Unmount();
 public:
 	//Methods
-	void Initialize();
-	void Exit();
+	int Open();
+	void Close();
 };
 
 #endif // !__USB_STORAGE_H__

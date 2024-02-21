@@ -230,15 +230,15 @@ public:
 	}
 
 
-	/// @brief Mouse initialize
-	void Initialize()
+	/// @brief Mouse open
+	int Open()
 	{
 		//Get the input module
 		input = (Input*)kernel->modular->GetModule("input");
 		if (NULL == input)
 		{
 			kernel->debug->Error("input feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Get the interrupt module
@@ -246,7 +246,7 @@ public:
 		if (NULL == interrupt)
 		{
 			kernel->debug->Error("interrupt feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Get the work queue module
@@ -254,7 +254,7 @@ public:
 		if (NULL == workQueue)
 		{
 			kernel->debug->Error("work queue feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Create work
@@ -265,11 +265,13 @@ public:
 
 		//Config
 		ConfigureMouse();
+
+		return _OK;
 	}
 
 
-	/// @brief Mouse exit
-	void Exit()
+	/// @brief Mouse close
+	void Close()
 	{
 		interrupt->RemoveISR(IRQ_Mouse_Controller, (Method)(&Mouse::InputHandler), this);
 		workQueue->Delete(work);

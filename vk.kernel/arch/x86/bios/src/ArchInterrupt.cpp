@@ -108,8 +108,8 @@ private:
 		PortByteOut(PIC2_DATA, a2);
 	}
 public:
-	/// @brief ArchInterrupt initialize
-	void Initialize()
+	/// @brief ArchInterrupt Setup
+	void Setup()
 	{
 		//Symbol defined in the linker script
 		extern void (*_svector [])(void);
@@ -130,6 +130,13 @@ public:
 
 		//Set IDT
 		SetIdt();
+	}
+
+
+	/// @brief ArchInterrupt Exit
+	void Exit()
+	{
+
 	}
 
 

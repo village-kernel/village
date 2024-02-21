@@ -16,21 +16,7 @@ private:
 	//Members
 	Thread*     thread;
 	List<Work*> works;
-public:
-	/// @brief Constructor
-	ConcreteWorkQueue()
-		:thread(NULL)
-	{
-	}
-
-
-	/// @brief WorkQueue initialize
-	void Initialize()
-	{
-		thread = (Thread*)kernel->modular->GetModule("thread");
-	}
-
-
+private:
 	/// @brief WorkQueue execute
 	void Execute()
 	{
@@ -47,6 +33,30 @@ public:
 				}
 			}
 		}
+	}
+public:
+	/// @brief Constructor
+	ConcreteWorkQueue()
+		:thread(NULL)
+	{
+	}
+
+
+	/// @brief WorkQueue setup
+	void Setup()
+	{
+		//Gets the thread pointer
+		thread = (Thread*)kernel->modular->GetModule("thread");
+
+		//Create work queue task
+		thread->CreateTask(this->GetName(), (Method)&ConcreteWorkQueue::Execute, this);
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		works.Release();
 	}
 
 

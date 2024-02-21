@@ -513,18 +513,20 @@ public:
 
 
 	/// @brief 
-	void Initialize()
+	int Open()
 	{
 		if (NULL == ili9488)
 		{
 			ili9488 = new ILI9488();
 			ili9488->Initialize();
+			return _OK;
 		}
+		return _ERR;
 	}
 
 
-	/// @brief Exit
-	void Exit()
+	/// @brief close
+	void Close()
 	{
 
 	}
