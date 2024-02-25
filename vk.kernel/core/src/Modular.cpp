@@ -109,7 +109,7 @@ public:
 	void DeregisterModule(Module* module)
 	{
 		DeregisterInRuntime(module);
-		modules.Remove(module, module->GetID());
+		modules.Remove(module);
 	}
 
 
