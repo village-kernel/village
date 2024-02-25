@@ -30,7 +30,7 @@ private:
 		{
 			drivers[i].driver->SetID(drivers[i].id);
 			drivers[i].driver->SetName(drivers[i].name);
-			RegisterDriver(drivers[i].driver, drivers[i].id);
+			RegisterDriver(drivers[i].driver);
 		}
 	}
 public:
@@ -46,7 +46,7 @@ public:
 	}
 
 
-	/// @brief Execute device object->Setup
+	/// @brief Device Setup
 	void Setup()
 	{
 		RegisterDrivers();
@@ -62,19 +62,17 @@ public:
 
 	/// @brief Register driver object
 	/// @param driver driver pointer
-	/// @param id driver id
-	void RegisterDriver(Driver* driver, uint32_t id)
+	void RegisterDriver(Driver* driver)
 	{
-		drivers.Insert(driver, id, driver->GetName());
+		drivers.Insert(driver, driver->GetID(), driver->GetName());
 	}
 	
 
 	/// @brief Deregister driver object
 	/// @param driver driver pointer
-	/// @param id driver id
-	void DeregisterDriver(Driver* driver, uint32_t id)
+	void DeregisterDriver(Driver* driver)
 	{
-		drivers.Remove(driver, id);
+		drivers.Remove(driver, driver->GetID());
 	}
 
 
