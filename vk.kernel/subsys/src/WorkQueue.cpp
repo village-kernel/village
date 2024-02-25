@@ -5,8 +5,9 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "WorkQueue.h"
-#include "Templates.h"
 #include "Kernel.h"
+#include "List.h"
+#include "Cast.h"
 
 
 /// @brief ConcreteWorkQueue

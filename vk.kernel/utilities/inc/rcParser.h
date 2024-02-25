@@ -8,7 +8,7 @@
 #define __RC_PARSER_H__
 
 #include "Defines.h"
-#include "Templates.h"
+#include "List.h"
 
 ///RcParser
 class RcParser

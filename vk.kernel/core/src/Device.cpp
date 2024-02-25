@@ -7,7 +7,7 @@
 #include "Device.h"
 #include "Driver.h"
 #include "Kernel.h"
-#include "Templates.h"
+#include "List.h"
 
 
 /// @brief ConcreteDevice
@@ -28,6 +28,7 @@ private:
 
 		for (uint32_t i = 0; i < count; i++)
 		{
+			drivers[i].driver->SetID(drivers[i].id);
 			drivers[i].driver->SetName(drivers[i].name);
 			RegisterDriver(drivers[i].driver, drivers[i].id);
 		}
