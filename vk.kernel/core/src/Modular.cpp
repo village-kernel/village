@@ -46,7 +46,7 @@ private:
 		{
 			modules[i].module->SetID(modules[i].id);
 			modules[i].module->SetName(modules[i].name);
-			RegisterModule(modules[i].module, modules[i].id);
+			RegisterModule(modules[i].module);
 		}
 	}
 public:
@@ -97,21 +97,19 @@ public:
 
 	/// @brief Register module object
 	/// @param module module pointer
-	/// @param id module id
-	void RegisterModule(Module* module, uint32_t id)
+	void RegisterModule(Module* module)
 	{
-		modules.Insert(module, id, module->GetName());
+		modules.Insert(module, module->GetID(), module->GetName());
 		RegisterInRuntime(module);
 	}
 
 
 	/// @brief Deregister module object
 	/// @param module module pointer
-	/// @param id module id
-	void DeregisterModule(Module* module, uint32_t id)
+	void DeregisterModule(Module* module)
 	{
 		DeregisterInRuntime(module);
-		modules.Remove(module, id);
+		modules.Remove(module, module->GetID());
 	}
 
 
