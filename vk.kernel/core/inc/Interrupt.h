@@ -8,7 +8,6 @@
 #define __INTERRUPT_H__
 
 #include "Module.h"
-#include "Templates.h"
 
 
 /// @brief Interrupt

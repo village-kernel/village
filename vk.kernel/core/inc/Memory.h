@@ -9,6 +9,7 @@
 
 #include "Module.h"
 
+
 /// @brief Memory
 class Memory : public Module
 {

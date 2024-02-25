@@ -7,7 +7,7 @@
 #ifndef __FAT_ENTRY_H__
 #define __FAT_ENTRY_H__
 
-#include "Templates.h"
+#include "List.h"
 #include "FatObject.h"
 #include "FatDiskio.h"
 

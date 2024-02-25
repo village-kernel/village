@@ -8,6 +8,7 @@
 #include "ArchInterrupt.h"
 #include "Kernel.h"
 #include "Debug.h"
+#include "Cast.h"
 
 
 /// @brief ConcreteInterrupt

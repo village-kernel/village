@@ -8,27 +8,18 @@
 #define __DRIVER_INTERFACE_H__
 
 #include "Defines.h"
-#include "Templates.h"
+#include "Class.h"
+
 
 /// @brief Driver
-class Driver : public Class
+class Driver : public Base, public Class
 {
-private:
-	//Members
-	int   id;     //driver id
-	char* name;   //driver name
 public:
 	//Constructor
-	Driver(): id(-1), name((char*)"Unknown") {}
+	Driver() {}
 
 	//Destructor
 	virtual ~Driver() {}
-
-	//Methods
-	void SetID(int id)         { this->id = id; }
-	int  GetID()               { return this->id; }
-	void SetName(char* name)   { this->name = name; }
-	char* GetName()            { return this->name; }
 
 	//Opts methods
 	virtual int Open() = 0;

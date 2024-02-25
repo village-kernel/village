@@ -6,7 +6,7 @@
 //###########################################################################
 #include "Modular.h"
 #include "Kernel.h"
-#include "Templates.h"
+#include "List.h"
 
 
 /// @brief ConcreteModular
@@ -44,11 +44,9 @@ private:
 
 		for (uint32_t i = 0; i < count; i++)
 		{
-			if (ModuleID::_modular != modules[i].id)
-			{
-				modules[i].module->SetName(modules[i].name);
-				RegisterModule(modules[i].module, modules[i].id);
-			}
+			modules[i].module->SetID(modules[i].id);
+			modules[i].module->SetName(modules[i].name);
+			RegisterModule(modules[i].module, modules[i].id);
 		}
 	}
 public:
@@ -74,7 +72,10 @@ public:
 		
 		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 		{
-			module->Setup();
+			if (ModuleID::_modular != module->GetID())
+			{
+				module->Setup();
+			}
 		}
 
 		isRuntime = true;
@@ -86,7 +87,10 @@ public:
 	{
 		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
 		{
-			module->Exit();
+			if (ModuleID::_modular != module->GetID())
+			{
+				module->Exit();
+			}
 		}
 	}
 
