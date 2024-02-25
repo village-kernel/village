@@ -72,7 +72,7 @@ public:
 	/// @param driver driver pointer
 	void DeregisterDriver(Driver* driver)
 	{
-		drivers.Remove(driver, driver->GetID());
+		drivers.Remove(driver);
 	}
 
 
