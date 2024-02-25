@@ -16,8 +16,8 @@ class Device : public Module
 {
 public:
 	//Methods
-	virtual void RegisterDriver(Driver* driver, uint32_t id) = 0;
-	virtual void DeregisterDriver(Driver* driver, uint32_t id) = 0;
+	virtual void RegisterDriver(Driver* driver) = 0;
+	virtual void DeregisterDriver(Driver* driver) = 0;
 	virtual Driver* GetDriver(uint32_t id) = 0;
 	virtual Driver* GetDriver(const char* name) = 0;
 };
