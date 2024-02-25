@@ -52,7 +52,7 @@ public:
 
 	/// @brief Kernel Methods
 	virtual void Setup() = 0;
-	virtual void Execute() = 0;
+	virtual void Start() = 0;
 	virtual void Exit() = 0;
 
 	/// @brief Kernel build info 

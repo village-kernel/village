@@ -33,47 +33,47 @@ private:
 	}
 
 
-	/// @brief 
+	/// @brief Init modules
 	/// @return 
-	bool GetModules()
+	uint32_t InitModules()
 	{
 		//Gets the debug pointer
 		debug = (Debug*)GetModule(ModuleID::_debug);
-		if (NULL == debug) return false;
+		if (NULL == debug) return ModuleID::_debug;
 
 		//Gets the memory pointer
 		memory = (Memory*)GetModule(ModuleID::_memory);
-		if (NULL == memory) { debug->Error("Gets the memory module failed!"); return false;} 
+		if (NULL == memory) return ModuleID::_memory;
 
 		//Gets the system pointer
 		system = (System*)GetModule(ModuleID::_system);
-		if (NULL == system) { debug->Error("Gets the system module failed!"); return false;} 
+		if (NULL == system) return ModuleID::_system;
 
 		//Gets the interrupt pointer
 		interrupt = (Interrupt*)GetModule(ModuleID::_interrupt);
-		if (NULL == interrupt) { debug->Error("Gets the interrupt module failed!"); return false;} 
+		if (NULL == interrupt) return ModuleID::_interrupt;
 
 		//Gets the environment pointer
 		environment = (Environment*)GetModule(ModuleID::_environment);
-		if (NULL == environment) { debug->Error("Gets the environment module failed!"); return false;} 
+		if (NULL == environment) return ModuleID::_environment;
 
 		//Gets the thread pointer
 		thread = (Thread*)GetModule(ModuleID::_thread);
-		if (NULL == thread) { debug->Error("Gets the thread module failed!"); return false;} 
+		if (NULL == thread) return ModuleID::_thread;
 		
 		//Gets the scheduler pointer
 		scheduler = (Scheduler*)GetModule(ModuleID::_scheduler);
-		if (NULL == scheduler) { debug->Error("Gets the scheduler module failed!"); return false; }
+		if (NULL == scheduler) return ModuleID::_scheduler;
 
 		//Gets the device pointer
 		device = (Device*)GetModule(ModuleID::_device);
-		if (NULL == device) { debug->Error("Gets the device module failed!"); return false; }
+		if (NULL == device) return ModuleID::_device;
 
 		//Gets the modular pointer
 		modular = (Modular*)GetModule(ModuleID::_modular);
-		if (NULL == modular) { debug->Error("Gets the modular module failed!"); return false; }
+		if (NULL == modular) return ModuleID::_modular;
 
-		return true;
+		return 0;
 	}
 public:
 	/// @brief Constructor
@@ -91,18 +91,18 @@ public:
 	/// @brief Kernel Setup
 	void Setup()
 	{
-		if (GetModules())
+		if (0 == InitModules())
 		{
 			modular->Setup();
 		}
 	}
 
 
-	/// @brief Kernel execute
-	void Execute()
+	/// @brief Kernel start
+	void Start()
 	{
 		//Start scheduler
-		scheduler->StartScheduler();
+		scheduler->Start();
 
 		//Should not go to here
 		while (1) {}

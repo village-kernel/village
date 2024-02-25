@@ -37,7 +37,7 @@ enum DriverID
 /// @brief Module id defines
 enum ModuleID
 {
-	_system = 0,
+	_system = 1,
 	_device,
 	_modular,
 	_debug,
@@ -52,7 +52,7 @@ enum ModuleID
 	_input,
 	_workQueue,
 	_loader,
-	_application = 101,
+	_application,
 };
 
 
