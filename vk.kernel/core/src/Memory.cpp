@@ -80,6 +80,8 @@ public:
 	/// @brief Memory setup sram parameters
 	void Setup()
 	{
+		if (isMemReady) return;
+
 		//Clear memory ready flag
 		isMemReady = false;
 
@@ -324,7 +326,7 @@ public:
 	}
 
 	/// @brief Get the max size of sram
-	uint32_t GetSize()  { return sram_ended; }
+	uint32_t GetSize() { return sram_ended; }
 
 	/// @brief Get the used size of sram
 	uint32_t GetUsed() { return sram_used; }
