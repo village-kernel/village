@@ -165,7 +165,7 @@ public:
 		{
 			tasks.Item()->state = TaskState::Suspend;
 			tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
-			scheduler->Rescheduler(Scheduler::Unprivileged);
+			scheduler->Sched(Scheduler::Unprivileged);
 		}
 	}
 
@@ -177,7 +177,7 @@ public:
 		{
 			tasks.Item()->state = TaskState::Exited;
 			DeleteTask(tasks.GetNid());
-			scheduler->Rescheduler(Scheduler::Unprivileged);
+			scheduler->Sched(Scheduler::Unprivileged);
 		}
 	}
 

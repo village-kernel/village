@@ -22,8 +22,8 @@ public:
 	};
 public:
 	//Methods
-	virtual void StartScheduler() = 0;
-	virtual void Rescheduler(Access access) = 0;
+	virtual void Start() = 0;
+	virtual void Sched(Access access) = 0;
 };
 
 #endif // !__SCHEDULER_H__

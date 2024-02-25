@@ -9,10 +9,13 @@
 
 
 /// @brief Main entry function
+/// @param argc 
+/// @param argv 
+/// @return 
 int main(int argc, char* argv[])
 {
 	kernel->Setup();
-	kernel->Execute();
+	kernel->Start();
 	kernel->Exit();
 	return _ERR;
 }
