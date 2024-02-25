@@ -15,8 +15,8 @@ class Modular : public Module
 {
 public:
 	//Methods
-	virtual void RegisterModule(Module* module, uint32_t id = 0) = 0;
-	virtual void DeregisterModule(Module* module, uint32_t id = 0) = 0;
+	virtual void RegisterModule(Module* module) = 0;
+	virtual void DeregisterModule(Module* module) = 0;
 	virtual Module* GetModule(uint32_t id) = 0;
 	virtual Module* GetModule(const char* name) = 0;
 };
