@@ -41,19 +41,6 @@ void Taichi::Execute()
 }
 
 
-/// @brief Kernel
-Kernel* kernel;
-
-
-/// @brief setup
-/// @param kernel 
-/// @return 
-extern "C" void setup(void* knl)
-{
-	kernel = (Kernel*)knl;
-}
-
-
 /// @brief main
 int main(void)
 {
