@@ -156,7 +156,7 @@ private:
 			if (++count >= mouseid)
 			{
 				count = 0;
-				workQueue->Schedule(work);
+				workQueue->Sched(work);
 			}
 		}
 	}

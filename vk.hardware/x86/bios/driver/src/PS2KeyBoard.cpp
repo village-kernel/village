@@ -27,7 +27,7 @@ private:
 		if (PortByteIn(PS2_READ_STATUS) & PS2_STATUS_OUTPUT_BUFFER)
 		{
 			keycode = PortByteIn(PS2_READ_DATA);
-			workQueue->Schedule(work);
+			workQueue->Sched(work);
 		}
 	}
 
