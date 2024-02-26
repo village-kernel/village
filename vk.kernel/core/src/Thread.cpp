@@ -90,7 +90,7 @@ public:
 	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL)
 	{
 		//Create a new task and allocate stack space
-		Task* task = new Task(memory->StackAlloc(task_stack_size));
+		Task* task = new Task(memory->StackAlloc(task_stack_size), (char*)name);
 		
 		//Check whether stack allocation is successful
 		if (NULL == task && 0 == task->stack) return -1;
@@ -106,7 +106,11 @@ public:
 			(uint32_t)args
 		);
 
-		return tasks.Add(task, (char*)name);
+		//Add task into tasks list
+		task->pid = tasks.Add(task);
+
+		//return task pid
+		return task->pid;
 	}
 
 
