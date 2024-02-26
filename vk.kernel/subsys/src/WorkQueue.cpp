@@ -103,7 +103,7 @@ public:
 	/// @brief WorkQueue schedule
 	/// @param work workqueue work
 	/// @return result
-	int Schedule(Work* work)
+	int Sched(Work* work)
 	{
 		if (NULL != work)
 		{
