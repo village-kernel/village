@@ -47,7 +47,7 @@ public:
 	void Setup()
 	{
 		//Gets the thread pointer
-		thread = (Thread*)kernel->modular->GetModule("thread");
+		thread = (Thread*)kernel->modular->GetModule(ModuleID::_thread);
 
 		//Create work queue task
 		thread->CreateTask(this->GetName(), (Method)&ConcreteWorkQueue::Execute, this);
