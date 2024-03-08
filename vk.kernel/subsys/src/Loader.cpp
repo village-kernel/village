@@ -34,6 +34,9 @@ public:
 	/// @brief Loader setup
 	void Setup()
 	{
+		//Loading libraries
+		Loading(_Load_Lib, "/libraries/_load_.rc");
+
 		//Loading modules
 		Loading(_Load_Mod, "/modules/_load_.rc");
 
