@@ -21,7 +21,7 @@ uint8_t PortByteIn(uint16_t port)
      *
      * Inputs and outputs are separated by colons
      */
-    __asm__("inb %%dx, %%al" : "=a" (result) : "d" (port));
+    __asm__ volatile("inb %%dx, %%al" : "=a" (result) : "d" (port));
     return result;
 }
 
@@ -45,7 +45,7 @@ void PortByteOut(uint16_t port, uint8_t data)
 uint16_t PortWordIn(uint16_t port)
 {
     uint16_t result;
-    __asm__("inw %%dx, %%ax" : "=a" (result) : "d" (port));
+    __asm__ volatile("inw %%dx, %%ax" : "=a" (result) : "d" (port));
     return result;
 }
 
@@ -65,7 +65,7 @@ void PortWordOut(uint16_t port, uint16_t data)
 uint32_t PortLongIn(uint32_t port)
 {
     uint32_t result;
-    __asm__("inl %%edx, %%eax" : "=a" (result) : "d" (port));
+    __asm__ volatile("inl %%edx, %%eax" : "=a" (result) : "d" (port));
     return result;
 }
 
