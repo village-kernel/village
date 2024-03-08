@@ -9,7 +9,6 @@
 
 #include "CmdMsgMgr.h"
 #include "CmdDefs.h"
-#include "Module.h"
 #include "Mutex.h"
 #include "Regex.h"
 #include "Cmd.h"
