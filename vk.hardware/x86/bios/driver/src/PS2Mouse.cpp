@@ -81,6 +81,9 @@ private:
 	/// @return result
 	bool ConfigureMouse()
 	{
+		//Disable irq
+		kernel->system->DisableIRQ();
+
 		//Read config
 		ps2.WriteCmd(PS2_CMD_READ_BYTE_0);
 		config = ps2.ReadData();
@@ -141,6 +144,9 @@ private:
 
 		//Enable mouse
 		ack = MouseWriteData(PS2_MOUSE_CMD_ENA_DATA_REPORTING);
+
+		//Enable irq
+		kernel->system->EnableIRQ();
 
 		return (0xfa == ack);
 	}
