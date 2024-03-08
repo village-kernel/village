@@ -8,34 +8,25 @@
 #define __DRIVER_INTERFACE_H__
 
 #include "Defines.h"
-#include "Templates.h"
+#include "Class.h"
+
 
 /// @brief Driver
-class Driver : public Class
+class Driver : public Base, public Class
 {
-private:
-	//Members
-	char* name;   //driver name
 public:
 	//Constructor
-	Driver()  {}
+	Driver() {}
 
 	//Destructor
 	virtual ~Driver() {}
 
-	//Methods
-	virtual void Initialize()       = 0;
-	virtual void UpdateParams()     {}
-	virtual void Execute()          {}
-	virtual void FailSafe(int arg)  {}
-	virtual void Exit()             = 0;
-	virtual void SetName(char* name){ this->name = name; }
-	virtual char* GetName()         { return this->name; }
-
-	//IO ctrl methods
+	//Opts methods
+	virtual int Open() = 0;
 	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
 	virtual int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0)  { return 0; }
 	virtual int IOCtrl(uint8_t cmd, void* data) { return 0; }
+	virtual void Close() = 0;
 };
 
 

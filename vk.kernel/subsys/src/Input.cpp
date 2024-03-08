@@ -6,7 +6,8 @@
 //###########################################################################
 #include "Input.h"
 #include "Kernel.h"
-#include "Templates.h"
+#include "List.h"
+#include "Cast.h"
 
 
 /// @brief ConcreteInput
@@ -71,11 +72,19 @@ private:
 		}
 	}
 public:
-	/// @brief Initialize
-	void Initialize()
+	/// @brief Setup
+	void Setup()
 	{
 
 	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+
+	}
+
 
 	/// @brief Input attach
 	/// @param method 

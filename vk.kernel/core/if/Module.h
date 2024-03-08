@@ -8,32 +8,22 @@
 #define __MODULE_INTERFACE_H__
 
 #include "Defines.h"
-#include "Templates.h"
+#include "Class.h"
+
 
 /// @brief Module
-class Module : public Class
+class Module : public Base, public Class
 {
-private:
-	//Members
-	int   pid;    //Process thread id
-	char* name;   //Process thread name
 public:
 	//Constructor
-	Module(): pid(-1), name((char*)"Unknown") {}
+	Module() { }
 
-	//Deconstructor
-	virtual ~Module() {}
+	//Destructor
+	virtual ~Module() { }
 
 	//Methods
-	virtual void Initialize()       = 0;
-	virtual void UpdateParams()     {}
-	virtual void Execute()          {}
-	virtual void FailSafe(int arg)  {}
-	virtual void Exit()             {}
-	virtual void SetPid(int pid)    { this->pid = pid; }
-	virtual int  GetPid()           { return this->pid; }
-	virtual void SetName(char* name){ this->name = name; }
-	virtual char* GetName()         { return this->name; }
+	virtual void Setup() = 0;
+	virtual void Exit()  = 0;
 };
 
 #endif // !__MODULE_INTERFACE_H__

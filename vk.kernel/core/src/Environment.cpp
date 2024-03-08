@@ -5,9 +5,9 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Environment.h"
-#include "Templates.h"
 #include "Kernel.h"
 #include "string.h"
+#include "List.h"
 
 
 /// @brief ConcreteEnviroment
@@ -50,17 +50,23 @@ public:
 	}
 
 
-	/// @brief Fini constructor
+	/// @brief destructor
 	~ConcreteEnvironment()
 	{
 	}
 
 
-	/// @brief Initialize
-	/// @param kernel 
-	void Initialize()
+	/// @brief Setup
+	void Setup()
 	{
 		ExportSymbols();
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		symbols.Release();
 	}
 
 

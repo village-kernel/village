@@ -9,11 +9,13 @@
 
 #include "Module.h"
 #include "Registers.h"
-#include "Templates.h"
+#include "List.h"
+
 
 #ifndef TASK_STACK
 #define TASK_STACK      1024
 #endif
+
 
 /// @brief Thread
 class Thread : public Module
@@ -31,16 +33,20 @@ public:
 	//Structures
 	struct Task 
 	{
-		TaskState        state;
-		uint32_t         stack;
-		uint32_t         ticks;
+		char*            name;
+		uint32_t         pid;
 		uint32_t         psp;
-
-		Task(uint32_t stack = 0)
-			:state(TaskState::Suspend),
-			stack(stack),
+		uint32_t         ticks;
+		uint32_t         stack;
+		TaskState        state;
+		
+		Task(uint32_t stack = 0, char* name = NULL)
+			:name(name),
+			pid(-1),
+			psp(0),
 			ticks(0),
-			psp(0)
+			stack(stack),
+			state(TaskState::Suspend)
 		{}
 	};
 public:
@@ -51,7 +57,7 @@ public:
 	virtual int WaitForTask(int pid) = 0;
 	virtual List<Task*> GetTasks() = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
-	virtual void Exit() = 0;
+	virtual void TaskExit() = 0;
 
 	//Scheduler Methods
 	virtual void SaveTaskPSP(uint32_t psp) = 0;

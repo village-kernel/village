@@ -10,6 +10,8 @@
 #include "Memory.h"
 #include "System.h"
 #include "Scheduler.h"
+#include "Cast.h"
+#include "List.h"
 
 
 /// @brief ConcreteThread
@@ -35,7 +37,7 @@ private:
 		{
 			(function)(user, args);
 		}
-		Exit();
+		TaskExit();
 	}
 public:
 	/// @brief Constructor
@@ -53,8 +55,8 @@ public:
 	}
 
 
-	/// @brief Thread Initialize
-	void Initialize()
+	/// @brief Thread setup
+	void Setup()
 	{
 		//Gets the memory pointer
 		memory = (Memory*)kernel->modular->GetModule(ModuleID::_memory);
@@ -73,6 +75,13 @@ public:
 	}
 
 
+	/// @brief Exit
+	void Exit()
+	{
+		tasks.Release();
+	}
+
+
 	/// @brief Create new task
 	/// @param function task execute function
 	/// @param user task execute uesr
@@ -81,7 +90,7 @@ public:
 	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL)
 	{
 		//Create a new task and allocate stack space
-		Task* task = new Task(memory->StackAlloc(task_stack_size));
+		Task* task = new Task(memory->StackAlloc(task_stack_size), (char*)name);
 		
 		//Check whether stack allocation is successful
 		if (NULL == task && 0 == task->stack) return -1;
@@ -97,7 +106,11 @@ public:
 			(uint32_t)args
 		);
 
-		return tasks.Add(task, (char*)name);
+		//Add task into tasks list
+		task->pid = tasks.Add(task);
+
+		//return task pid
+		return task->pid;
 	}
 
 
@@ -158,19 +171,19 @@ public:
 		{
 			tasks.Item()->state = TaskState::Suspend;
 			tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
-			scheduler->Rescheduler(Scheduler::Unprivileged);
+			scheduler->Sched(Scheduler::Unprivileged);
 		}
 	}
 
 
 	/// @brief Thread Exit
-	void Exit()
+	void TaskExit()
 	{
 		if(tasks.GetNid() > 0)
 		{
 			tasks.Item()->state = TaskState::Exited;
 			DeleteTask(tasks.GetNid());
-			scheduler->Rescheduler(Scheduler::Unprivileged);
+			scheduler->Sched(Scheduler::Unprivileged);
 		}
 	}
 

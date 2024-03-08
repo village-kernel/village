@@ -5,8 +5,9 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "WorkQueue.h"
-#include "Templates.h"
 #include "Kernel.h"
+#include "List.h"
+#include "Cast.h"
 
 
 /// @brief ConcreteWorkQueue
@@ -16,21 +17,7 @@ private:
 	//Members
 	Thread*     thread;
 	List<Work*> works;
-public:
-	/// @brief Constructor
-	ConcreteWorkQueue()
-		:thread(NULL)
-	{
-	}
-
-
-	/// @brief WorkQueue initialize
-	void Initialize()
-	{
-		thread = (Thread*)kernel->modular->GetModule("thread");
-	}
-
-
+private:
 	/// @brief WorkQueue execute
 	void Execute()
 	{
@@ -47,6 +34,30 @@ public:
 				}
 			}
 		}
+	}
+public:
+	/// @brief Constructor
+	ConcreteWorkQueue()
+		:thread(NULL)
+	{
+	}
+
+
+	/// @brief WorkQueue setup
+	void Setup()
+	{
+		//Gets the thread pointer
+		thread = (Thread*)kernel->modular->GetModule(ModuleID::_thread);
+
+		//Create work queue task
+		thread->CreateTask(this->GetName(), (Method)&ConcreteWorkQueue::Execute, this);
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		works.Release();
 	}
 
 
@@ -92,7 +103,7 @@ public:
 	/// @brief WorkQueue schedule
 	/// @param work workqueue work
 	/// @return result
-	int Schedule(Work* work)
+	int Sched(Work* work)
 	{
 		if (NULL != work)
 		{

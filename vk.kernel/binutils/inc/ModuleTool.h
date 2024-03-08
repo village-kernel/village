@@ -8,8 +8,8 @@
 #define __MODULE_TOOL_H__
 
 #include "Defines.h"
-#include "Templates.h"
 #include "ElfLoader.h"
+#include "List.h"
 
 
 /// @brief ModuleTool
