@@ -18,7 +18,7 @@ public:
 	//Constructor
 	Module() { }
 
-	//Deconstructor
+	//Destructor
 	virtual ~Module() { }
 
 	//Methods
