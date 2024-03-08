@@ -25,7 +25,7 @@ public:
 	//Methods
 	Launch();
 	~Launch();
-	void Initialize(const char* drvname);
+	void Initialize(const char* screen, const char* keyboard, const char* mouse);
 	void Execute();
 };
 

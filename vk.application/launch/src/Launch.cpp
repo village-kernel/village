@@ -22,9 +22,9 @@ Launch::~Launch()
 
 
 /// @brief Initialize
-void Launch::Initialize(const char* drvname)
+void Launch::Initialize(const char* screen, const char* keyboard, const char* mouse)
 {
-	graphics.Initialize(drvname);
+	graphics.Initialize(screen, keyboard, mouse);
 
 	mainwin = (Window*)graphics.CreateMainWindow();
 
@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		Launch launch;
-		launch.Initialize(argv[1]);
+		launch.Initialize(argv[1], argv[2], argv[3]);
 		launch.Execute();
 		return _OK;
 	}

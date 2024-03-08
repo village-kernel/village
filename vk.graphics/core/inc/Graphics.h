@@ -22,7 +22,7 @@ public:
 	//Methods
 	Graphics();
 	~Graphics();
-	void Initialize(const char* drvname);
+	void Initialize(const char* screen, const char* keyboard, const char* mouse);
 	Wedget* CreateMainWindow();
 };
 
