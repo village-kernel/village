@@ -38,7 +38,6 @@ bool CmdMsgMgr::Execute()
 	if (txBufPos && transceiver->Write(txBuffer, txBufPos)) txBufPos = 0;
 
 	//Received data and decode
-	transceiver->Execute();
 	return HandleInputData();
 }
 

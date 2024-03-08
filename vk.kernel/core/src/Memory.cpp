@@ -67,7 +67,7 @@ public:
 		tail(NULL),
 		curr(NULL)
 	{
-		Initialize();
+		Setup();
 	}
 
 
@@ -77,9 +77,11 @@ public:
 	}
 
 
-	/// @brief Memory initialize sram parameters
-	void Initialize()
+	/// @brief Memory setup sram parameters
+	void Setup()
 	{
+		if (isMemReady) return;
+
 		//Clear memory ready flag
 		isMemReady = false;
 
@@ -124,6 +126,13 @@ public:
 
 		//Set memory ready flag
 		isMemReady = true;
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		
 	}
 
 
@@ -317,7 +326,7 @@ public:
 	}
 
 	/// @brief Get the max size of sram
-	uint32_t GetSize()  { return sram_ended; }
+	uint32_t GetSize() { return sram_ended; }
 
 	/// @brief Get the used size of sram
 	uint32_t GetUsed() { return sram_used; }

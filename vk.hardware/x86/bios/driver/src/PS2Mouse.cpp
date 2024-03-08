@@ -81,6 +81,9 @@ private:
 	/// @return result
 	bool ConfigureMouse()
 	{
+		//Disable irq
+		kernel->system->DisableIRQ();
+
 		//Read config
 		ps2.WriteCmd(PS2_CMD_READ_BYTE_0);
 		config = ps2.ReadData();
@@ -142,6 +145,9 @@ private:
 		//Enable mouse
 		ack = MouseWriteData(PS2_MOUSE_CMD_ENA_DATA_REPORTING);
 
+		//Enable irq
+		kernel->system->EnableIRQ();
+
 		return (0xfa == ack);
 	}
 
@@ -156,7 +162,7 @@ private:
 			if (++count >= mouseid)
 			{
 				count = 0;
-				workQueue->Schedule(work);
+				workQueue->Sched(work);
 			}
 		}
 	}
@@ -230,15 +236,15 @@ public:
 	}
 
 
-	/// @brief Mouse initialize
-	void Initialize()
+	/// @brief Mouse open
+	int Open()
 	{
 		//Get the input module
 		input = (Input*)kernel->modular->GetModule("input");
 		if (NULL == input)
 		{
 			kernel->debug->Error("input feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Get the interrupt module
@@ -246,7 +252,7 @@ public:
 		if (NULL == interrupt)
 		{
 			kernel->debug->Error("interrupt feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Get the work queue module
@@ -254,7 +260,7 @@ public:
 		if (NULL == workQueue)
 		{
 			kernel->debug->Error("work queue feature not support");
-			return;
+			return _ERR;
 		}
 
 		//Create work
@@ -265,11 +271,13 @@ public:
 
 		//Config
 		ConfigureMouse();
+
+		return _OK;
 	}
 
 
-	/// @brief Mouse exit
-	void Exit()
+	/// @brief Mouse close
+	void Close()
 	{
 		interrupt->RemoveISR(IRQ_Mouse_Controller, (Method)(&Mouse::InputHandler), this);
 		workQueue->Delete(work);

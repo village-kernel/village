@@ -8,6 +8,8 @@
 #include "ArchInterrupt.h"
 #include "Kernel.h"
 #include "Debug.h"
+#include "List.h"
+#include "Cast.h"
 
 
 /// @brief ConcreteInterrupt
@@ -51,10 +53,20 @@ public:
 	}
 
 
-	/// @brief Interrupt initialize
-	void Initialize()
+	/// @brief Interrupt Setup
+	void Setup()
 	{
 		debug = (Debug*)kernel->modular->GetModule(ModuleID::_debug);
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		for (uint32_t i = 0; i < ArchInterrupt::isr_num; i++)
+		{
+			isrTabs[i].Release();
+		}
 	}
 
 

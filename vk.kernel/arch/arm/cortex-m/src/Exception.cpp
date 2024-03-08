@@ -13,10 +13,17 @@
 class ConcreteException : public Exception
 {
 public:
-	/// @brief Exception initialize
-	void Initialize()
+	/// @brief Exception Setup
+	void Setup()
 	{
 		
+	}
+
+
+	/// @brief Exception Exit
+	void Exit()
+	{
+
 	}
 };
 

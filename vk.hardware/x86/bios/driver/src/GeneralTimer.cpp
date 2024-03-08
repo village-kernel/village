@@ -26,8 +26,8 @@ public:
 	}
 
 
-	/// @brief Initialize
-	void Initialize()
+	/// @brief Open
+	int Open()
 	{
 		//uint32_t freq = 1000; //1000hz, 1ms
 		//uint32_t divider = 1193182 / freq;
@@ -37,6 +37,13 @@ public:
 		//PortByteOut(TIMERX[timer], 0x36); //Command port
 		//PortByteOut(TIMERX[timer], low);
 		//PortByteOut(TIMERX[timer], high);
+	}
+
+
+	/// @brief Close
+	void Close()
+	{
+
 	}
 };
 

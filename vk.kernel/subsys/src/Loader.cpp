@@ -7,10 +7,10 @@
 #include "Loader.h"
 #include "Kernel.h"
 #include "rcParser.h"
-#include "Templates.h"
 #include "LibraryTool.h"
 #include "ModuleTool.h"
 #include "ElfExecutor.h"
+#include "List.h"
 
 
 /// @brief ConcreteLoader
@@ -23,19 +23,33 @@ private:
 	LibraryTool      libraryTool;
 	ModuleTool       moduleTool;
 	ElfExecutor      executor;
-public:
-	/// @brief Loader initialize
-	void Initialize()
-	{
-		Loading(_Load_Mod, "/modules/_load_.rc");
-	}
-
-
+private:
 	/// @brief Loader execute
 	void Execute()
 	{
 		//Execute the first application of the village
 		executor.Run(ElfExecutor::_Background, "/applications/taichi.exec");
+	}
+public:
+	/// @brief Loader setup
+	void Setup()
+	{
+		//Loading libraries
+		Loading(_Load_Lib, "/libraries/_load_.rc");
+
+		//Loading modules
+		Loading(_Load_Mod, "/modules/_load_.rc");
+
+		//Create task
+		kernel->thread->CreateTask(this->GetName(), (Method)&ConcreteLoader::Execute, this);
+	}
+
+
+	/// @brief Exit
+	void Exit()
+	{
+		libraries.Release();
+		modules.Release();
 	}
 
 

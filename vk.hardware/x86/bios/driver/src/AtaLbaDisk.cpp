@@ -9,7 +9,7 @@
 #include "Hardware.h"
 
 
-/// @brief Disk
+/// @brief AtaLbaDisk
 class AtaLbaDisk : public Driver
 {
 private:
@@ -27,19 +27,20 @@ public:
 	~AtaLbaDisk()
 	{
 	}
-	
 
-	/// @brief Initialize
-	void Initialize()
+
+	/// @brief open
+	int Open()
 	{
 		//Stop device from sending interrupts
 		PortByteOut(ATA_PRIMARY_PORT_CTRL, ATA_CTRL_nIEN);
 		PortByteOut(ATA_SECOND_PORT_CTRL, ATA_CTRL_nIEN);
+		return _OK;
 	}
 
 
-	/// @brief Exit
-	void Exit()
+	/// @brief close
+	void Close()
 	{
 
 	}

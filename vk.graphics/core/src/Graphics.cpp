@@ -29,15 +29,16 @@ Graphics::~Graphics()
 
 /// @brief Intialize
 /// @param drvname 
-void Graphics::Initialize(const char* drvname)
+void Graphics::Initialize(const char* screen, const char* keyboard, const char* mouse)
 {
 	//Get the universal driver by driver name
-	Driver* driver = kernel->device->GetDriver(drvname);
+	Driver* screendrv = kernel->device->GetDriver(screen);
 
 	//Get the specified lcd driver by driver ioctrl 
-	if (NULL != driver)
+	if (NULL != screendrv)
 	{
-		driver->IOCtrl(0, (void*)&fbdev);
+		screendrv->Open();
+		screendrv->IOCtrl(0, (void*)&fbdev);
 	}
 
 	//Initialize display
@@ -45,6 +46,24 @@ void Graphics::Initialize(const char* drvname)
 	{
 		display = new Display();
 		display->Initialize(fbdev);
+	}
+
+	//Get the universal driver by driver name
+	Driver* keyboarddrv = kernel->device->GetDriver(keyboard);
+
+	//Initialize keyboard
+	if (NULL != keyboarddrv)
+	{
+		keyboarddrv->Open();
+	}
+
+	//Get the universal driver by driver name
+	Driver* mousedrv = kernel->device->GetDriver(mouse);
+
+	//Initialize keyboard
+	if (NULL != mousedrv)
+	{
+		mousedrv->Open();
 	}
 }
 

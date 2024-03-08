@@ -7,7 +7,7 @@
 #include "Device.h"
 #include "Driver.h"
 #include "Kernel.h"
-#include "Templates.h"
+#include "List.h"
 
 
 /// @brief ConcreteDevice
@@ -15,7 +15,6 @@ class ConcreteDevice : public Device
 {
 private:
 	//Members
-	States        status;
 	List<Driver*> drivers;
 private:
 	/// @brief Register drivers
@@ -29,36 +28,14 @@ private:
 
 		for (uint32_t i = 0; i < count; i++)
 		{
+			drivers[i].driver->SetID(drivers[i].id);
 			drivers[i].driver->SetName(drivers[i].name);
-			RegisterDriver(drivers[i].driver, drivers[i].id);
-		}
-	}
-
-
-	/// @brief Register in runtime
-	/// @param module 
-	void RegisterInRuntime(Driver* driver)
-	{
-		if (status >= _EndedInitialize)
-			driver->Initialize();
-		if (status >= _EndedUpdateParms)
-			driver->UpdateParams();
-	}
-
-
-	/// @brief Deregister in runtime
-	/// @param driver 
-	void DeregisterInRuntime(Driver* driver)
-	{
-		if (status >= _EndedExecute)
-		{
-			driver->Exit();
+			RegisterDriver(drivers[i].driver);
 		}
 	}
 public:
 	/// @brief Constructor
 	ConcreteDevice()
-		:status(_NoneStates)
 	{
 	}
 
@@ -69,67 +46,33 @@ public:
 	}
 
 
-	/// @brief Execute device object->Initialize
-	void Initialize()
+	/// @brief Device Setup
+	void Setup()
 	{
 		RegisterDrivers();
-
-		status = _StartInitialize;
-		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
-		{
-			driver->Initialize();
-		}
-		status = _EndedInitialize;
 	}
 
 
-	/// @brief Execute device object->UpdateParams
-	void UpdateParams()
+	/// @brief Device Exit
+	void Exit()
 	{
-		status = _StartUpdateParams;
-		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
-		{
-			driver->UpdateParams();
-		}
-		status = _EndedUpdateParms;
-	}
-
-
-	/// @brief Device execute
-	void Execute()
-	{
-		status = _StartExecute;
-		status = _EndedExecute;
-	}
-
-
-	/// @brief Execute device object->FailSafe
-	void FailSafe(int arg)
-	{
-		for (Driver* driver = drivers.Begin(); !drivers.IsEnd(); driver = drivers.Next())
-		{
-			driver->FailSafe(arg);
-		}
+		drivers.Release();
 	}
 
 
 	/// @brief Register driver object
 	/// @param driver driver pointer
-	/// @param id driver id
-	void RegisterDriver(Driver* driver, uint32_t id)
+	void RegisterDriver(Driver* driver)
 	{
-		drivers.Insert(driver, id, driver->GetName());
-		RegisterInRuntime(driver);
+		drivers.Insert(driver, driver->GetID(), driver->GetName());
 	}
 	
 
 	/// @brief Deregister driver object
 	/// @param driver driver pointer
-	/// @param id driver id
-	void DeregisterDriver(Driver* driver, uint32_t id)
+	void DeregisterDriver(Driver* driver)
 	{
-		DeregisterInRuntime(driver);
-		drivers.Remove(driver, id);
+		drivers.Remove(driver);
 	}
 
 

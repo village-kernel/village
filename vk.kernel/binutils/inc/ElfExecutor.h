@@ -9,6 +9,7 @@
 
 #include "BaseExecutor.h"
 #include "ElfLoader.h"
+#include "Class.h"
 
 
 /// @brief ElfExecutor

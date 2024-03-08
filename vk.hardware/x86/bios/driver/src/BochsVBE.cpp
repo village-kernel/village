@@ -224,19 +224,20 @@ public:
 	}
 
 
-	/// @brief 
-	void Initialize()
+	/// @brief Open
+	int Open()
 	{
 		if (NULL == bochsVBE)
 		{
 			bochsVBE = new BochsVBE;
 			bochsVBE->Initialize();
 		}
+		return _OK;
 	}
 
 
-	/// @brief Exit
-	void Exit()
+	/// @brief Close
+	void Close()
 	{
 
 	}

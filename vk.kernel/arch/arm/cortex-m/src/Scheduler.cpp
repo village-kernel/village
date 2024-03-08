@@ -32,15 +32,22 @@ public:
 	}
 
 
-	/// @brief Scheduler initialize
-	void Initialize()
+	/// @brief Scheduler Setup
+	void Setup()
 	{
 		
 	}
 
 
+	/// @brief Scheduler Exit
+	void Exit()
+	{
+
+	}
+
+
 	/// @brief Start scheduler
-	void StartScheduler()
+	void Start()
 	{
 		//Clear start schedule flag
 		isStartSchedule = false;
@@ -71,7 +78,7 @@ public:
 
 	/// @brief Rescheduler task
 	/// @param access scheduler access
-	void Rescheduler(Scheduler::Access access)
+	void Sched(Scheduler::Access access)
 	{
 		if (false == isStartSchedule) return;
 
@@ -100,7 +107,7 @@ extern "C"
 	void SysTick_Handler(void)
 	{
 		kernel->system->SysTickCounter();
-		kernel->scheduler->Rescheduler(Scheduler::Privileged);
+		kernel->scheduler->Sched(Scheduler::Privileged);
 	}
 
 

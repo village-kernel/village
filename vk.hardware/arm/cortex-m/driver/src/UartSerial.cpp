@@ -81,24 +81,6 @@ void UartSerial::InitConfig()
 }
 
 
-///Updata parameters
-void UartSerial::UpdataParams()
-{
-	usart.Disable();
-	usart.SetBaudRate(config.usartBaudrate);
-	usart.Enable();
-}
-
-
-///Updates contents of the RX buffer and sends out out data from the TX buffer if needed.
-///This function should be called periodically, however it is not time senstive.
-void UartSerial::Execute()
-{
-	usart.CheckError();
-	rxFifo.Update();
-}
-
-
 ///Copy the sent data to the send buffer to avoid accidentally modifying the sent data.
 inline void UartSerial::CopyTxData(uint8_t* txData, uint16_t length)
 {
@@ -135,6 +117,10 @@ int UartSerial::Write(uint8_t* data, uint32_t size, uint32_t offset)
 int UartSerial::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	uint32_t readSize = 0;
+
+	usart.CheckError();
+
+	rxFifo.Update();
 
 	while (rxFifo.Length())
 	{

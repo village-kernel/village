@@ -15,7 +15,7 @@ bool SpiFlash::flashError = false;
 
 
 ///Initializes the spi flase module
-void SpiFlash::Initialize()
+int SpiFlash::Open()
 {
 	//Init config
 	InitConfig();
@@ -35,11 +35,13 @@ void SpiFlash::Initialize()
 
 	//Check if the device id is correct
 	if (GetDeviceID() != DeviceID) flashError = true;
+
+	return flashError ? _ERR : _OK;
 }
 
 
-/// @brief Exit
-void SpiFlash::Exit()
+/// @brief Close
+void SpiFlash::Close()
 {
 
 }

@@ -1,47 +1,16 @@
 //###########################################################################
-// Templates.h
-// Declarations of the templates
+// List.h
+// Declarations of the list
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __TEMPLATES_H__
-#define __TEMPLATES_H__
+#ifndef __LIST_H__
+#define __LIST_H__
 
 #include "stdint.h"
 #include "stddef.h"
 #include "string.h"
 #include "Defines.h"
-
-/// @brief Get method address
-/// @tparam dst_type 
-/// @tparam src_type 
-/// @param src 
-/// @return addr 
-template<typename dst_type, typename src_type>
-dst_type pointer_cast(src_type src)
-{
-	return *static_cast<dst_type*>(static_cast<void*>(&src));
-}
-
-
-/// @brief Get method address
-/// @tparam dst_type 
-/// @tparam src_type 
-/// @param src 
-/// @return addr 
-template<typename dst_type, typename src_type>
-dst_type union_cast(src_type src)
-{
-	union{ src_type s; dst_type d; } u;
-	u.s = src;
-	return u.d;
-}
-
-
-/// @brief Class end point
-class Class {};
-typedef void (Class::*Method)(void*);
-typedef void (*Function)(void*, void*);
 
 
 /// @brief List class template 
@@ -441,4 +410,4 @@ public:
 	}
 };
  
-#endif //!__TEMPLATES_H__
+#endif //!__LIST_H__

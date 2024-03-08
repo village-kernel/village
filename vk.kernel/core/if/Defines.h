@@ -37,7 +37,7 @@ enum DriverID
 /// @brief Module id defines
 enum ModuleID
 {
-	_system = 0,
+	_system = 1,
 	_device,
 	_modular,
 	_debug,
@@ -52,20 +52,7 @@ enum ModuleID
 	_input,
 	_workQueue,
 	_loader,
-	_application = 101,
-};
-
-
-/// @brief Module states
-enum States
-{
-	_NoneStates = 0,
-	_StartInitialize,
-	_EndedInitialize,
-	_StartUpdateParams,
-	_EndedUpdateParms,
-	_StartExecute,
-	_EndedExecute,
+	_application,
 };
 
 
@@ -103,21 +90,37 @@ struct SymbolInfo
 };
 
 
-///Driver register macro
-#define REGISTER_DRIVER(drv, id, name)                                                     \
-static struct _Drv_##name {                                                                \
-	uint32_t drvId; char* drvName; Driver* driver;                                         \
-	_Drv_##name() { drvId = id; drvName = (char*)#name; static drv name; driver = &name; } \
-} const _drv_##name __attribute__((used,__section__(".drivers")))
+#ifdef BUILD_IN_MODULE
+	///Driver register macro
+	#define REGISTER_DRIVER(drv, id, name)                                                     \
+	static struct _Drv_##name {                                                                \
+		_Drv_##name() { static drv name; name.SetID(id); name.SetName((char*)#name);           \
+		kernel->device->RegisterDriver(&name); }                                               \
+	} const _drv_##name __attribute__((used,__section__(".drivers")))
 
 
-///Module register macro
-#define REGISTER_MODULE(mod, id, name)                                                     \
-static struct _Mod_##name {                                                                \
-	uint32_t modId; char* modName; Module* module;                                         \
-	_Mod_##name() { modId = id; modName = (char*)#name; static mod name; module = &name; } \
-} const _mod_##name __attribute__((used,__section__(".modules")))
+	///Module register macro
+	#define REGISTER_MODULE(mod, id, name)                                                     \
+	static struct _Mod_##name {                                                                \
+		_Mod_##name() { static mod name; name.SetID(id); name.SetName((char*)#name);           \
+		kernel->modular->RegisterModule(&name); }                                              \
+	} const _mod_##name __attribute__((used,__section__(".modules")))
+#else
+	///Driver register macro
+	#define REGISTER_DRIVER(drv, id, name)                                                     \
+	static struct _Drv_##name {                                                                \
+		uint32_t drvId; char* drvName; Driver* driver;                                         \
+		_Drv_##name() { static drv name; drvId = id; drvName = (char*)#name; driver = &name; } \
+	} const _drv_##name __attribute__((used,__section__(".drivers")))
 
+
+	///Module register macro
+	#define REGISTER_MODULE(mod, id, name)                                                     \
+	static struct _Mod_##name {                                                                \
+		uint32_t modId; char* modName; Module* module;                                         \
+		_Mod_##name() { static mod name; modId = id; modName = (char*)#name; module = &name; } \
+	} const _mod_##name __attribute__((used,__section__(".modules")))
+#endif
 
 ///Environment marco
 #ifdef KBUILD_NO_ENVIRONNEMNT
@@ -134,12 +137,21 @@ static struct _Mod_##name {                                                     
 	#define marco_cast(src, addr)  __asm volatile("ldr %0, ="#src : "=r"(addr))
 #endif
 
+#ifdef BUILD_IN_MODULE
+	///Export symbol marco
+	#define EXPORT_SYMBOL_ALIAS(symbol, name)                                  \
+	static struct _Sym_##name {                                                \
+		_Sym_##name() { uint32_t symAddr; marco_cast(symbol, symAddr);         \
+		kernel->environment->ExportSymbol(symAddr, (char*)#name); }            \
+	} const _sym_##name __attribute__((used,__section__(".symbols")))
+#else
 	///Export symbol marco
 	#define EXPORT_SYMBOL_ALIAS(symbol, name)                                  \
 	static struct _Sym_##name {                                                \
 		char* symName; uint32_t symAddr;                                       \
 		_Sym_##name() { symName = (char*)#name; marco_cast(symbol, symAddr); } \
 	} const _sym_##name __attribute__((used,__section__(".symbols")))
+#endif
 
 	///Export symbol marco
 	#define EXPORT_SYMBOL(symbol)          EXPORT_SYMBOL_ALIAS(symbol, symbol) 

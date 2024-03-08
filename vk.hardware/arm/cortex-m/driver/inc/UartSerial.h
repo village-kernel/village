@@ -54,12 +54,10 @@ private:
 	void CopyTxData(uint8_t* txData, uint16_t length);
 public:
 	//Methods
-	void Initialize();
-	void UpdataParams();
-	void Execute();
-	void Exit();
+	int Open();
 	int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
 	int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
+	void Close();
 };
 
 #endif // !__UART_SERIAL_H__

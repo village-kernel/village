@@ -182,8 +182,8 @@ public:
 	}
 
 
-	/// @brief Exception initialize
-	void Initialize()
+	/// @brief Exception Setup
+	void Setup()
 	{
 		//Gets the debug pointer
 		debug = (Debug*)kernel->modular->GetModule(ModuleID::_debug);
@@ -211,6 +211,13 @@ public:
 		interrupt->AppendISR(IRQ_Coprocessor_Fault,           (Method)&ConcreteException::CoprocessorFaultHandler,          this);
 		interrupt->AppendISR(IRQ_Alignment_Check,             (Method)&ConcreteException::AlignmentCheckHandler,            this);
 		interrupt->AppendISR(IRQ_Machine_Check,               (Method)&ConcreteException::MachineCheckHandler,              this);
+	}
+
+
+	/// @brief Exception Exit
+	void Exit()
+	{
+
 	}
 };
 

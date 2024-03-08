@@ -9,6 +9,7 @@
 
 #include "BaseExecutor.h"
 #include "BinLoader.h"
+#include "Class.h"
 
 
 /// @brief BinExecutor
