@@ -56,7 +56,7 @@ public:
 	/// @brief Interrupt Setup
 	void Setup()
 	{
-		debug = (Debug*)kernel->modular->GetModule(ModuleID::_debug);
+		debug = (Debug*)kernel->feature->GetComponent(ComponentID::_debug);
 	}
 
 
@@ -199,5 +199,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteInterrupt, ModuleID::_interrupt, interrupt);
+///Register component
+REGISTER_COMPONENT(ConcreteInterrupt, ComponentID::_interrupt, interrupt);

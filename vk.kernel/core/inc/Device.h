@@ -7,12 +7,12 @@
 #ifndef __DEVICE_H__
 #define __DEVICE_H__
 
-#include "Module.h"
+#include "Component.h"
 #include "Driver.h"
 
 
 /// @brief Devic
-class Device : public Module
+class Device : public Component
 {
 public:
 	//Methods

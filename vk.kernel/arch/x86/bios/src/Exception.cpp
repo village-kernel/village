@@ -186,10 +186,10 @@ public:
 	void Setup()
 	{
 		//Gets the debug pointer
-		debug = (Debug*)kernel->modular->GetModule(ModuleID::_debug);
+		debug = (Debug*)kernel->feature->GetComponent(ComponentID::_debug);
 
 		//Gets the interrupt pointer
-		interrupt = (Interrupt*)kernel->modular->GetModule(ModuleID::_interrupt);
+		interrupt = (Interrupt*)kernel->feature->GetComponent(ComponentID::_interrupt);
 
 		//Set interrupt service
 		interrupt->AppendISR(IRQ_Division_By_Zero,            (Method)&ConcreteException::DivisionByZeroHandler,            this);
@@ -222,5 +222,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteException, ModuleID::_exception, exception);
+///Register component
+REGISTER_COMPONENT(ConcreteException, ComponentID::_exception, exception);

@@ -26,7 +26,7 @@ FatSystem::~FatSystem()
 /// @brief Setup
 void FatSystem::Setup()
 {
-	FileSystem* filesys = (FileSystem*)kernel->modular->GetModule(ModuleID::_fileSystem);
+	FileSystem* filesys = (FileSystem*)kernel->feature->GetComponent(ComponentID::_fileSystem);
 	if (NULL == filesys)
 	{
 		kernel->debug->Error("file system feature not support");

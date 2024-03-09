@@ -196,5 +196,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteDebug, ModuleID::_debug, debug);
+///Register component
+REGISTER_COMPONENT(ConcreteDebug, ComponentID::_debug, debug);

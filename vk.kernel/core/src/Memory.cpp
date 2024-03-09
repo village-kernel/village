@@ -333,5 +333,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteMemory, ModuleID::_memory, memory);
+///Register component
+REGISTER_COMPONENT(ConcreteMemory, ComponentID::_memory, memory);

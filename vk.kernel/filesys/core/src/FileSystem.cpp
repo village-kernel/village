@@ -144,5 +144,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteFileSystem, ModuleID::_fileSystem, fileSystem);
+///Register component
+REGISTER_COMPONENT(ConcreteFileSystem, ComponentID::_fileSystem, fileSystem);

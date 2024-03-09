@@ -7,11 +7,11 @@
 #ifndef __INTERRUPT_H__
 #define __INTERRUPT_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief Interrupt
-class Interrupt : public Module
+class Interrupt : public Component
 {
 public:
 	//Methods

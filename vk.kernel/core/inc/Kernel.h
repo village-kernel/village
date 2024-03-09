@@ -15,7 +15,7 @@
 #include "Scheduler.h"
 #include "Symbol.h"
 #include "Device.h"
-#include "Modular.h"
+#include "Feature.h"
 
 
 /// @brief Kernel
@@ -31,7 +31,7 @@ public:
 	Scheduler*   scheduler;
 	Symbol*      symbol;
 	Device*      device;
-	Modular*     modular;
+	Feature*     feature;
 public:
 	/// @brief constructor
 	Kernel()
@@ -42,7 +42,7 @@ public:
 		scheduler(NULL),
 		symbol(NULL),
 		device(NULL),
-		modular(NULL)
+		feature(NULL)
 	{}
 
 	/// @brief Destructor

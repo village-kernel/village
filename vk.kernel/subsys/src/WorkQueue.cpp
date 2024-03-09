@@ -47,7 +47,7 @@ public:
 	void Setup()
 	{
 		//Gets the thread pointer
-		thread = (Thread*)kernel->modular->GetModule(ModuleID::_thread);
+		thread = (Thread*)kernel->feature->GetComponent(ComponentID::_thread);
 
 		//Create work queue task
 		thread->CreateTask(this->GetName(), (Method)&ConcreteWorkQueue::Execute, this);
@@ -115,5 +115,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteWorkQueue, ModuleID::_workQueue, workQueue);
+///Register component
+REGISTER_COMPONENT(ConcreteWorkQueue, ComponentID::_workQueue, workQueue);
