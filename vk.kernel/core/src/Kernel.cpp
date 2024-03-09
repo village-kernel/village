@@ -53,9 +53,6 @@ private:
 		interrupt = (Interrupt*)GetModule(ModuleID::_interrupt);
 		if (NULL == interrupt) return ModuleID::_interrupt;
 
-		//Gets the environment pointer
-		environment = (Environment*)GetModule(ModuleID::_environment);
-		if (NULL == environment) return ModuleID::_environment;
 
 		//Gets the thread pointer
 		thread = (Thread*)GetModule(ModuleID::_thread);
@@ -64,6 +61,10 @@ private:
 		//Gets the scheduler pointer
 		scheduler = (Scheduler*)GetModule(ModuleID::_scheduler);
 		if (NULL == scheduler) return ModuleID::_scheduler;
+
+		//Gets the symbol pointer
+		symbol = (Symbol*)GetModule(ModuleID::_symbol);
+		if (NULL == symbol) return ModuleID::_symbol;
 
 		//Gets the device pointer
 		device = (Device*)GetModule(ModuleID::_device);

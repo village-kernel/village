@@ -11,9 +11,9 @@
 #include "Debug.h"
 #include "Memory.h"
 #include "Interrupt.h"
-#include "Environment.h"
 #include "Thread.h"
 #include "Scheduler.h"
+#include "Symbol.h"
 #include "Device.h"
 #include "Modular.h"
 
@@ -27,9 +27,9 @@ public:
 	Debug*       debug;
 	Memory*      memory;
 	Interrupt*   interrupt;
-	Environment* environment;
 	Thread*      thread;
 	Scheduler*   scheduler;
+	Symbol*      symbol;
 	Device*      device;
 	Modular*     modular;
 public:
@@ -38,9 +38,9 @@ public:
 		:debug(NULL),
 		memory(NULL),
 		interrupt(NULL),
-		environment(NULL),
 		thread(NULL),
 		scheduler(NULL),
+		symbol(NULL),
 		device(NULL),
 		modular(NULL)
 	{}

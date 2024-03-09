@@ -1,17 +1,17 @@
 //###########################################################################
-// Environment.cpp
+// Symbol.cpp
 // Definitions of the functions that manage symbol object
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Environment.h"
+#include "Symbol.h"
 #include "Kernel.h"
 #include "string.h"
 #include "List.h"
 
 
-/// @brief ConcreteEnviroment
-class ConcreteEnvironment : public Environment
+/// @brief ConcreteSymbol
+class ConcreteSymbol : public Symbol
 {
 private:
 	//Structures
@@ -40,18 +40,18 @@ private:
 
 		for (uint32_t i = 0; i < count; i++)
 		{
-			ExportSymbol(symbols[i].addr, symbols[i].name);
+			Export(symbols[i].addr, symbols[i].name);
 		}
 	}
 public:
 	/// @brief Constructor
-	ConcreteEnvironment()
+	ConcreteSymbol()
 	{
 	}
 
 
-	/// @brief destructor
-	~ConcreteEnvironment()
+	/// @brief Destructor
+	~ConcreteSymbol()
 	{
 	}
 
@@ -73,7 +73,7 @@ public:
 	/// @brief Export symbol
 	/// @param symAddr symbol address
 	/// @param name symbol name
-	void ExportSymbol(uint32_t symAddr, const char* name)
+	void Export(uint32_t symAddr, const char* name)
 	{
 		symbols.Add(new Symbol(name, symAddr));
 	}
@@ -81,7 +81,7 @@ public:
 
 	/// @brief Unexport symbol
 	/// @param name symbol name
-	void UnexportSymbol(const char* name)
+	void Unexport(const char* name)
 	{
 		for (Symbol* symbol = symbols.Begin(); !symbols.IsEnd(); symbol = symbols.Next())
 		{
@@ -96,7 +96,7 @@ public:
 	/// @brief Search symbol by name and return addr
 	/// @param name symbol name
 	/// @return symbol address
-	uint32_t SearchSymbol(const char* name)
+	uint32_t Search(const char* name)
 	{
 		for (Symbol* symbol = symbols.Begin(); !symbols.IsEnd(); symbol = symbols.Next())
 		{
@@ -111,4 +111,4 @@ public:
 
 
 ///Register module
-REGISTER_MODULE(ConcreteEnvironment, ModuleID::_environment, environment);
+REGISTER_MODULE(ConcreteSymbol, ModuleID::_symbol, symbol);
