@@ -45,7 +45,7 @@ enum ModuleID
 	_archInterrupt,
 	_interrupt,
 	_exception,
-	_environment,
+	_symbol,
 	_thread,
 	_scheduler,
 	_fileSystem,
@@ -142,7 +142,7 @@ struct SymbolInfo
 	#define EXPORT_SYMBOL_ALIAS(symbol, name)                                  \
 	static struct _Sym_##name {                                                \
 		_Sym_##name() { uint32_t symAddr; marco_cast(symbol, symAddr);         \
-		kernel->environment->ExportSymbol(symAddr, (char*)#name); }            \
+		kernel->symbol->Export(symAddr, (char*)#name); }                       \
 	} const _sym_##name __attribute__((used,__section__(".symbols")))
 #else
 	///Export symbol marco

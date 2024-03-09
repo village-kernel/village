@@ -69,7 +69,7 @@ objs-y                                      += System.o
 objs-$(CONFIG_INPUT)                        += Input.o
 objs-$(CONFIG_LOADER)                       += Loader.o
 objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
-objs-$(CONFIG_ENVIRONMENT)                  += Environment.o
+objs-$(CONFIG_ENVIRONMENT)                  += Symbol.o
 
 objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
 objs-$(CONFIG_FATFS)                        += FatDiskio.o

@@ -454,7 +454,7 @@ int ElfLoader::RelEntries()
 				if (0 == symAddr && symEntry.shndx) symAddr = elf.map + symEntry.value;
 
 				//Get the address of undefined symbol entry
-				if (0 == symAddr) symAddr = kernel->environment->SearchSymbol(symName);
+				if (0 == symAddr) symAddr = kernel->symbol->Search(symName);
 
 				//Searching for symbol entry in shared objects
 				if (0 == symAddr) symAddr = LibraryTool().SearchSymbol(symName);
