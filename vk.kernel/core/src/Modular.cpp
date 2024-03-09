@@ -70,8 +70,10 @@ public:
 
 		RegisterModules();
 		
-		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+		for (modules.Begin(); !modules.IsEnd(); modules.Next())
 		{
+			Module* module = modules.Item();
+
 			if (ModuleID::_modular != module->GetID())
 			{
 				module->Setup();
@@ -85,8 +87,10 @@ public:
 	/// @brief Execute module object->Exit
 	void Exit()
 	{
-		for (Module* module = modules.Begin(); !modules.IsEnd(); module = modules.Next())
+		for (modules.Begin(); !modules.IsEnd(); modules.Next())
 		{
+			Module* module = modules.Item();
+
 			if (ModuleID::_modular != module->GetID())
 			{
 				module->Exit();
