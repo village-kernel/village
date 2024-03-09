@@ -13,7 +13,7 @@ FileStream::FileStream(const char* name, int mode)
 	:fd(-1),
 	opts(NULL)
 {
-	filesys = (FileSystem*)kernel->modular->GetModule("fileSystem");
+	filesys = (FileSystem*)kernel->feature->GetComponent("fileSystem");
 	if (NULL == filesys)
 	{
 		kernel->debug->Error("file system feature not support");

@@ -28,9 +28,9 @@ private:
 
 		for (uint32_t i = 0; i < count; i++)
 		{
-			drivers[i].driver->SetID(drivers[i].id);
-			drivers[i].driver->SetName(drivers[i].name);
-			RegisterDriver(drivers[i].driver);
+			drivers[i].body->SetID(drivers[i].id);
+			drivers[i].body->SetName(drivers[i].name);
+			RegisterDriver(drivers[i].body);
 		}
 	}
 public:
@@ -95,5 +95,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteDevice, ModuleID::_device, device);
+///Register component
+REGISTER_COMPONENT(ConcreteDevice, ComponentID::_device, device);

@@ -35,11 +35,11 @@ enum DriverID
 
 
 /// @brief Module id defines
-enum ModuleID
+enum ComponentID
 {
 	_system = 1,
 	_device,
-	_modular,
+	_feature,
 	_debug,
 	_memory,
 	_archInterrupt,
@@ -60,8 +60,8 @@ enum ModuleID
 class Driver;
 
 
-/// @brief module
-class Module;
+/// @brief component
+class Component;
 
 
 /// @brief DriverInfo
@@ -69,16 +69,16 @@ struct DriverInfo
 {
 	uint32_t  id;
 	char*     name;
-	Driver*   driver;
+	Driver*   body;
 };
 
 
-/// @brief ModuleInfo
-struct ModuleInfo
+/// @brief ComponentInfo
+struct ComponentInfo
 {
-	uint32_t  id;
-	char*     name;
-	Module*   module;
+	uint32_t   id;
+	char*      name;
+	Component* body;
 };
 
 
@@ -99,27 +99,27 @@ struct SymbolInfo
 	} const _drv_##name __attribute__((used,__section__(".drivers")))
 
 
-	///Module register macro
-	#define REGISTER_MODULE(mod, id, name)                                                     \
-	static struct _Mod_##name {                                                                \
-		_Mod_##name() { static mod name; name.SetID(id); name.SetName((char*)#name);           \
-		kernel->modular->RegisterModule(&name); }                                              \
-	} const _mod_##name __attribute__((used,__section__(".modules")))
+	///Component register macro
+	#define REGISTER_COMPONENT(cmp, id, name)                                                  \
+	static struct _Cmp_##name {                                                                \
+		_Cmp_##name() { static cmp name; name.SetID(id); name.SetName((char*)#name);           \
+		kernel->feature->RegisterComponent(&name); }                                           \
+	} const _cmp_##name __attribute__((used,__section__(".components")))
 #else
 	///Driver register macro
 	#define REGISTER_DRIVER(drv, id, name)                                                     \
 	static struct _Drv_##name {                                                                \
-		uint32_t drvId; char* drvName; Driver* driver;                                         \
-		_Drv_##name() { static drv name; drvId = id; drvName = (char*)#name; driver = &name; } \
+		uint32_t drvId; char* drvName; Driver* body;                                           \
+		_Drv_##name() { static drv name; drvId = id; drvName = (char*)#name; body = &name; }   \
 	} const _drv_##name __attribute__((used,__section__(".drivers")))
 
 
-	///Module register macro
-	#define REGISTER_MODULE(mod, id, name)                                                     \
-	static struct _Mod_##name {                                                                \
-		uint32_t modId; char* modName; Module* module;                                         \
-		_Mod_##name() { static mod name; modId = id; modName = (char*)#name; module = &name; } \
-	} const _mod_##name __attribute__((used,__section__(".modules")))
+	///Component register macro
+	#define REGISTER_COMPONENT(cmp, id, name)                                                  \
+	static struct _Cmp_##name {                                                                \
+		uint32_t cmpId; char* cmpName; Component* body;                                        \
+		_Cmp_##name() { static cmp name; cmpId = id; cmpName = (char*)#name; body = &name; }   \
+	} const _cmp_##name __attribute__((used,__section__(".components")))
 #endif
 
 ///Environment marco

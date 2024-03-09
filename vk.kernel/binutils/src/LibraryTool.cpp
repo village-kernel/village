@@ -25,7 +25,7 @@ LibraryTool::~LibraryTool()
 List<ElfLoader*>* LibraryTool::GetLibraries()
 {
 	//Get the loader module
-	Loader* loader = (Loader*)kernel->modular->GetModule("loader");
+	Loader* loader = (Loader*)kernel->feature->GetComponent("loader");
 	if (NULL == loader)
 	{
 		kernel->debug->Error("loader feature not support");

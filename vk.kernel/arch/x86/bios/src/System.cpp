@@ -27,7 +27,7 @@ public:
 	void Setup()
 	{
 		//Gets the interrupt pointer
-		Interrupt* interrupt = (Interrupt*)kernel->modular->GetModule(ModuleID::_interrupt);
+		Interrupt* interrupt = (Interrupt*)kernel->feature->GetComponent(ComponentID::_interrupt);
 
 		//Set interrupt handler
 		interrupt->SetISR(IRQ_Systick, (Method)&ConcreteSystem::SysTickHandler, this);
@@ -106,5 +106,5 @@ private:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteSystem, ModuleID::_system, system);
+///Register component
+REGISTER_COMPONENT(ConcreteSystem, ComponentID::_system, system);

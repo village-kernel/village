@@ -7,11 +7,11 @@
 #ifndef __EXCEPTION_H__
 #define __EXCEPTION_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief Exception
-class Exception : public Module
+class Exception : public Component
 {
 
 };

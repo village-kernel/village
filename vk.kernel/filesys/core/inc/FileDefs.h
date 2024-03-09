@@ -92,11 +92,11 @@ struct FileSysInfo
 
 #ifdef BUILD_IN_MODULE
 	///Filesys register macro
-	#define REGISTER_FS(fs, name)                                                    \
-	static struct _FS_##name {                                                       \
-		_FS_##name() { static fs name;                                               \
-		FileSystem* filesys = (FileSystem*)kernel->modular->GetModule("fileSystem"); \
-		if (NULL != filesys) filesys->RegisterFS(&name, (char*)#name); }             \
+	#define REGISTER_FS(fs, name)                                                       \
+	static struct _FS_##name {                                                          \
+		_FS_##name() { static fs name;                                                  \
+		FileSystem* filesys = (FileSystem*)kernel->feature->GetComponent("fileSystem"); \
+		if (NULL != filesys) filesys->RegisterFS(&name, (char*)#name); }                \
 	} const _fs_##name __attribute__((used,__section__(".filesys")))
 #else
 	///Filesys register macro

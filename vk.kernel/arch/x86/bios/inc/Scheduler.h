@@ -7,11 +7,11 @@
 #ifndef __SCHEDULER_H__
 #define __SCHEDULER_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief Scheduler
-class Scheduler : public Module
+class Scheduler : public Component
 {
 public:
 	//Enumerations

@@ -185,5 +185,5 @@ extern "C" void IRQ_Handler(Registers regs)
 }
 
 
-///Register module
-REGISTER_MODULE(ConcreteArchInterrupt, ModuleID::_archInterrupt, archInterrupt);
+///Register component
+REGISTER_COMPONENT(ConcreteArchInterrupt, ComponentID::_archInterrupt, archInterrupt);

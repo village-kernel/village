@@ -7,7 +7,7 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "Module.h"
+#include "Component.h"
 #include "Registers.h"
 #include "List.h"
 
@@ -18,7 +18,7 @@
 
 
 /// @brief Thread
-class Thread : public Module
+class Thread : public Component
 {
 public:
 	//Enumerations

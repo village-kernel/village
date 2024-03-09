@@ -465,8 +465,8 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteSystem, ModuleID::_system, system);
+///Register component
+REGISTER_COMPONENT(ConcreteSystem, ComponentID::_system, system);
 
 
 /// @brief SysTick handler

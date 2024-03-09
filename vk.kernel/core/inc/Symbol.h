@@ -7,11 +7,11 @@
 #ifndef __SYMBOL_H__
 #define __SYMBOL_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief Symbol
-class Symbol : public Module
+class Symbol : public Component
 {
 public:
 	//Methods

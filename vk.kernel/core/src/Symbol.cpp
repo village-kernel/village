@@ -114,5 +114,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteSymbol, ModuleID::_symbol, symbol);
+///Register component
+REGISTER_COMPONENT(ConcreteSymbol, ComponentID::_symbol, symbol);

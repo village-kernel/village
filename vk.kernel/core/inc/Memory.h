@@ -7,11 +7,11 @@
 #ifndef __MEMORY_H__
 #define __MEMORY_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief Memory
-class Memory : public Module
+class Memory : public Component
 {
 public:
 	//Methods

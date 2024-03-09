@@ -96,8 +96,8 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteScheduler, ModuleID::_scheduler, scheduler);
+///Register component
+REGISTER_COMPONENT(ConcreteScheduler, ComponentID::_scheduler, scheduler);
 
 
 /// @brief Interrupt handlers
