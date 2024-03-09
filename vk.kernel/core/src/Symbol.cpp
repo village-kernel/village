@@ -83,8 +83,10 @@ public:
 	/// @param name symbol name
 	void Unexport(const char* name)
 	{
-		for (Symbol* symbol = symbols.Begin(); !symbols.IsEnd(); symbol = symbols.Next())
+		for (symbols.Begin(); !symbols.IsEnd(); symbols.Next())
 		{
+			Symbol* symbol = symbols.Item();
+
 			if (0 == strcmp(name, symbol->name))
 			{
 				symbols.Remove(symbol, symbols.GetNid()); break;
@@ -98,8 +100,10 @@ public:
 	/// @return symbol address
 	uint32_t Search(const char* name)
 	{
-		for (Symbol* symbol = symbols.Begin(); !symbols.IsEnd(); symbol = symbols.Next())
+		for (symbols.Begin(); !symbols.IsEnd(); symbols.Next())
 		{
+			Symbol* symbol = symbols.Item();
+
 			if (0 == strcmp(name, symbol->name))
 			{
 				return symbol->addr;
