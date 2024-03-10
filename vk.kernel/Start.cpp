@@ -17,5 +17,5 @@ int main(int argc, char* argv[])
 	kernel->Setup();
 	kernel->Start();
 	kernel->Exit();
-	return _ERR;
+	return 0;
 }

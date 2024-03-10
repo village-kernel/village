@@ -143,7 +143,7 @@ public:
 	/// @brief Thread wait for task
 	/// @param pid process id
 	/// @return result
-	int WaitForTask(int pid)
+	bool WaitForTask(int pid)
 	{
 		//Gets the task
 		Task* task = tasks.GetItem(pid);
@@ -153,9 +153,9 @@ public:
 		{
 			//Blocking wait
 			while(task->state != TaskState::Exited) {}
-			return _OK;
+			return true;
 		}
-		return _ERR;
+		return false;
 	}
 
 
