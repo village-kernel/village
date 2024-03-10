@@ -34,7 +34,7 @@ enum DriverID
 };
 
 
-/// @brief Module id defines
+/// @brief Component id defines
 enum ComponentID
 {
 	_system = 1,
@@ -52,7 +52,6 @@ enum ComponentID
 	_input,
 	_workQueue,
 	_loader,
-	_application,
 };
 
 
