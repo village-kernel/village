@@ -21,9 +21,9 @@ public:
 	//Methods
 	FileSysOpt();
 	~FileSysOpt();
-	int Move(const char* from, const char* to);
-	int Copy(const char* from, const char* to);
-	int Remove(const char* name);
+	bool Move(const char* from, const char* to);
+	bool Copy(const char* from, const char* to);
+	bool Remove(const char* name);
 };
 
 #endif //!__FILE_SYS_OPT_H__

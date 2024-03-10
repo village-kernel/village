@@ -34,13 +34,13 @@ void FatSystem::Setup()
 	}
 
 	diskdrv = kernel->device->GetDriver(DriverID::_storage);
-	if (NULL == diskdrv || _ERR == diskdrv->Open())
+	if (NULL == diskdrv || !diskdrv->Open())
 	{
 		kernel->debug->Error("Not disk driver found");
 		return;
 	}
 
-	if (_ERR == ReadMBR())
+	if (!ReadMBR())
 	{
 		kernel->debug->Error("Not a valid disk");
 		return;
@@ -48,11 +48,11 @@ void FatSystem::Setup()
 
 	for (uint8_t i = 0; i < 4; i++)
 	{
-		if (_OK == CheckDPT(&mbr->dpt[i]))
+		if (CheckDPT(&mbr->dpt[i]))
 		{
 			FatVolume* fatOpts = new FatVolume();
 
-			if (_OK != fatOpts->Setup(diskdrv, mbr->dpt[i].relativeSectors))
+			if (!fatOpts->Setup(diskdrv, mbr->dpt[i].relativeSectors))
 			{
 				delete fatOpts;
 				continue;
@@ -75,7 +75,7 @@ void FatSystem::Exit()
 
 
 /// @brief Read MBR
-int FatSystem::ReadMBR()
+bool FatSystem::ReadMBR()
 {
 	static const uint8_t mbr_sector = 0;
 
@@ -85,23 +85,19 @@ int FatSystem::ReadMBR()
 	{
 		diskdrv->Read((uint8_t*)mbr, 1, mbr_sector);
 
-		if (magic == mbr->magic) return _OK;
+		if (magic == mbr->magic) return true;
 	}
 
-	return _ERR;
+	return false;
 }
 
 
 /// @brief 
 /// @param dpt 
 /// @return 
-int FatSystem::CheckDPT(DPT* dpt)
+bool FatSystem::CheckDPT(DPT* dpt)
 {
-	if (dpt->systemID == 11)
-	{
-		return _OK;
-	}
-	return _ERR;
+	return (dpt->systemID == 11);
 }
 
 

@@ -30,9 +30,9 @@ FileSysOpt::~FileSysOpt()
 /// @param from 
 /// @param to 
 /// @return 
-int FileSysOpt::Move(const char* from, const char* to)
+bool FileSysOpt::Move(const char* from, const char* to)
 {
-	return _ERR;
+	return false;
 }
 
 
@@ -40,16 +40,16 @@ int FileSysOpt::Move(const char* from, const char* to)
 /// @param from 
 /// @param to 
 /// @return 
-int FileSysOpt::Copy(const char* from, const char* to)
+bool FileSysOpt::Copy(const char* from, const char* to)
 {
-	return _ERR;
+	return false;
 }
 
 
 /// @brief File system remove
 /// @param name 
 /// @return 
-int FileSysOpt::Remove(const char* name)
+bool FileSysOpt::Remove(const char* name)
 {
 	if (NULL != filesys)
 	{
@@ -61,5 +61,5 @@ int FileSysOpt::Remove(const char* name)
 		opts->Remove(name);
 	}
 
-	return _ERR;
+	return false;
 }
