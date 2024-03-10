@@ -11,12 +11,12 @@
 
 
 ///Load *.ini file and decode
-int IniParser::Load(std::string filePath)
+bool IniParser::Load(std::string filePath)
 {
 	FileStream file;
-	Result res = _ERR;
+	bool res = false;
 
-	if (FR_OK == file.Open(filePath, FileStream::_Read))
+	if (file.Open(filePath, FileStream::_Read))
 	{
 		int size = file.Size();
 
@@ -25,7 +25,7 @@ int IniParser::Load(std::string filePath)
 		if (file.Read((uint8_t*)str.c_str(), size) == size)
 		{
 			Decode(str);
-			res = _OK;
+			res = true;
 		}
 		
 		file.Close();
@@ -37,12 +37,12 @@ int IniParser::Load(std::string filePath)
 
 
 ///Encode and save to *.ini file
-int IniParser::Save(std::string filePath)
+bool IniParser::Save(std::string filePath)
 {
 	FileStream file;
-	Result res = _ERR;
+	bool res = false;
 
-	if (FR_OK == file.Open(filePath, FileStream::_Create | FileStream::_Write))
+	if (file.Open(filePath, FileStream::_Create | FileStream::_Write))
 	{
 		std::string str = Encode();
 
@@ -50,7 +50,7 @@ int IniParser::Save(std::string filePath)
 		
 		if (file.Write((uint8_t*)str.c_str(), size) == size)
 		{
-			res =  _OK;
+			res = true;
 		}
 
 		file.Close();

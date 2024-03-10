@@ -30,7 +30,7 @@ private:
 public:
 	//Methods
 	RcParser(const char* filename = NULL);
-	int Load(const char* filename);
+	bool Load(const char* filename);
 	List<char*>& GetRunCmds();
 	void Release();
 };
