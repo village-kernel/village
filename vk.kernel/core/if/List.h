@@ -310,9 +310,9 @@ public:
 	/// @param obj object pointer
 	/// @param nid node id
 	/// @return result
-	int Remove(Object obj, int nid = -1)
+	bool Remove(Object obj, int nid = -1)
 	{
-		if (NULL == obj) return _ERR;
+		if (NULL == obj) return false;
 
 		for (Node* node = head; NULL != node; node = node->next)
 		{
@@ -331,20 +331,20 @@ public:
 				size--;
 				delete node;
 				delete obj;
-				return _OK;
+				return true;
 			}
 		}
 
-		return _ERR;
+		return false;
 	}
 
 	/// @brief Remove object node from list
 	/// @param obj object pointer
 	/// @param nid node id
 	/// @return result
-	int RemoveByName(Object obj, char* name)
+	bool RemoveByName(Object obj, char* name)
 	{
-		if (NULL == obj) return _ERR;
+		if (NULL == obj) return false;
 
 		for (Node* node = head; NULL != node; node = node->next)
 		{
@@ -364,11 +364,11 @@ public:
 				size--;
 				delete node;
 				delete obj;
-				return _OK;
+				return true;
 			}
 		}
 
-		return _ERR;
+		return false;
 	}
 
 	/// @brief List GetItem
