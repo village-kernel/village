@@ -36,7 +36,7 @@ public:
 	virtual ~BaseExecutor();
 	virtual int Run(Behavior behavior, const char* args);
 	virtual int Run(Behavior behavior, const char* path, int argc, char* argv[]);
-	virtual int Wait();
+	virtual bool Wait();
 };
 
 #endif //!__BASE_EXECUTOR_H__

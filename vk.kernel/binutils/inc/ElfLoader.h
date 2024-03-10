@@ -303,27 +303,27 @@ private:
 	bool isIgnoreUnresolvedSymbols;
 
 	//Methods
-	int LoadElf();
-	int PreParser();
-	int SetMapAddr();
-	int LoadProgram();
-	int PostParser();
-	int SharedObjs();
-	int RelEntries();
-	int RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
+	bool LoadElf();
+	bool PreParser();
+	bool SetMapAddr();
+	bool LoadProgram();
+	bool PostParser();
+	bool SharedObjs();
+	bool RelEntries();
+	void RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size);
 #if defined(ARCH_ARM)
-	int RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type);
+	void RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type);
 #endif
 public:
 	//Methods
 	ElfLoader(const char* filename = NULL);
 	~ElfLoader();
-	int Load(const char* filename);
-	int FillBssZero();
-	int InitArray();
-	int Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
-	int FiniArray();
-	int Exit();
+	bool Load(const char* filename);
+	bool FillBssZero();
+	bool InitArray();
+	bool Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
+	bool FiniArray();
+	bool Exit();
 
 	//Tool methods
 	const char* GetFileName();

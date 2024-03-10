@@ -30,33 +30,33 @@ ElfLoader::~ElfLoader()
 /// @brief ElfLoader load and parser elf file
 /// @param filename 
 /// @return result
-int ElfLoader::Load(const char* filename)
+bool ElfLoader::Load(const char* filename)
 {
 	//Save filename in local
 	this->filename = new char[strlen(filename) + 1]();
 	strcpy(this->filename, filename);
 
-	if (LoadElf()         != _OK) return _ERR;
-	if (PreParser()       != _OK) return _ERR;
-	if (SetMapAddr()      != _OK) return _ERR;
-	if (LoadProgram()     != _OK) return _ERR;
-	if (PostParser()      != _OK) return _ERR;
-	if (SharedObjs()      != _OK) return _ERR;
-	if (RelEntries()      != _OK) return _ERR;
+	if (!LoadElf())     return false;
+	if (!PreParser())   return false;
+	if (!SetMapAddr())  return false;
+	if (!LoadProgram()) return false;
+	if (!PostParser())  return false;
+	if (!SharedObjs())  return false;
+	if (!RelEntries())  return false;
 	
 	kernel->debug->Output(Debug::_Lv2, "%s load done", filename);
-	return _OK;
+	return true;
 }
 
 
 /// @brief ElfLoader load elf file
 /// @param filename 
 /// @return result
-int ElfLoader::LoadElf()
+bool ElfLoader::LoadElf()
 {
 	FileStream file;
 
-	if (_OK == file.Open(filename, FileMode::_Read))
+	if (file.Open(filename, FileMode::_Read))
 	{
 		int size = file.Size();
 		elf.load = (uint32_t)new char[size]();
@@ -65,14 +65,14 @@ int ElfLoader::LoadElf()
 		{
 			kernel->debug->Output(Debug::_Lv1, "%s elf file load successful", filename);
 			file.Close();
-			return _OK;
+			return true;
 		}
 
 		file.Close();
 	}
 
 	kernel->debug->Error("%s elf file load failed", filename);
-	return _ERR;
+	return false;
 }
 
 
@@ -218,29 +218,29 @@ void ElfLoader::IgnoreUnresolvedSymbols(bool enable)
 
 /// @brief Pre parser
 /// @return result
-int ElfLoader::PreParser()
+bool ElfLoader::PreParser()
 {
 	//Set elf header pointer
 	elf.header = (ELFHeader*)(elf.load);
 
 	//Check if it is a valid elf file
 	const uint8_t elfmagic[] = {0x7f, 'E', 'L', 'F'};
-	if (elf.header->ident[0] !=  elfmagic[0]    ) return _ERR;
-	if (elf.header->ident[1] !=  elfmagic[1]    ) return _ERR;
-	if (elf.header->ident[2] !=  elfmagic[2]    ) return _ERR;
-	if (elf.header->ident[3] !=  elfmagic[3]    ) return _ERR;
-	if (elf.header->ident[4] != _ELF_Class_32   ) return _ERR;
-	if (elf.header->version  != _ELF_Ver_Current) return _ERR;
+	if (elf.header->ident[0] !=  elfmagic[0]    ) return false;
+	if (elf.header->ident[1] !=  elfmagic[1]    ) return false;
+	if (elf.header->ident[2] !=  elfmagic[2]    ) return false;
+	if (elf.header->ident[3] !=  elfmagic[3]    ) return false;
+	if (elf.header->ident[4] != _ELF_Class_32   ) return false;
+	if (elf.header->version  != _ELF_Ver_Current) return false;
 #if defined(ARCH_X86)
-	if (elf.header->machine  != _ELF_Machine_X86) return _ERR;
+	if (elf.header->machine  != _ELF_Machine_X86) return false;
 #elif defined(ARCH_ARM)
-	if (elf.header->machine  != _ELF_Machine_ARM) return _ERR;
+	if (elf.header->machine  != _ELF_Machine_ARM) return false;
 #endif
 	if ((elf.header->type    != _ELF_Type_Dyn) &&
 		(elf.header->type    != _ELF_Type_Exec))
 	{
 		kernel->debug->Error("%s is not executable", filename);
-		return _ERR;
+		return false;
 	}
 
 	//Set executable entry
@@ -275,13 +275,13 @@ int ElfLoader::PreParser()
 	}
 
 	kernel->debug->Output(Debug::_Lv1, "%s pre parser successful", filename);
-	return _OK;
+	return true;
 }
 
 
 /// @brief Set mapping address
 /// @return result
-int ElfLoader::SetMapAddr()
+bool ElfLoader::SetMapAddr()
 {
 	if (_ELF_Type_Dyn == elf.header->type)
 	{
@@ -304,13 +304,13 @@ int ElfLoader::SetMapAddr()
 	}
 
 	kernel->debug->Output(Debug::_Lv1, "%s set mapping address successful", filename);
-	return _OK;
+	return true;
 }
 
 
 /// @brief Load program to mapping address
 /// @return result
-int ElfLoader::LoadProgram()
+bool ElfLoader::LoadProgram()
 {
 	for (uint32_t i = 0; i < elf.header->programHeaderNum; i++)
 	{
@@ -329,16 +329,16 @@ int ElfLoader::LoadProgram()
 	}
 
 	kernel->debug->Output(Debug::_Lv1, "%s load program successful", filename);
-	return _OK;
+	return true;
 }
 
 
 /// @brief Post parser
 /// @return result
-int ElfLoader::PostParser()
+bool ElfLoader::PostParser()
 {
 	//Returns when the elf type is not dynamic
-	if (_ELF_Type_Dyn != elf.header->type) return _OK;
+	if (_ELF_Type_Dyn != elf.header->type) return true;
 
 	//Set elf header pointer
 	elf.header = (ELFHeader*)(elf.map);
@@ -372,13 +372,13 @@ int ElfLoader::PostParser()
 	}
 
 	kernel->debug->Output(Debug::_Lv1, "%s post parser successful", filename);
-	return _OK;
+	return true;
 }
 
 
 /// @brief Load shared objects
 /// @return result
-int ElfLoader::SharedObjs()
+bool ElfLoader::SharedObjs()
 {
 	//Handler dynamic source
 	for (int i = elf.dynsecNum - 1; i >= 0; i--)
@@ -399,23 +399,23 @@ int ElfLoader::SharedObjs()
 			{
 				kernel->debug->Error("%s load shared object %s failed", filename, path);
 				delete[] path;
-				return _ERR;
+				return false;
 			}
 
 			delete[] path;
 		}
 	}
 
-	return _OK;
+	return true;
 }
 
 
 /// @brief Relocation dynamic symbol entries
 /// @return result
-int ElfLoader::RelEntries()
+bool ElfLoader::RelEntries()
 {
 	//Returns when elf type is not dynamic
-	if (_ELF_Type_Dyn != elf.header->type) return _OK;
+	if (_ELF_Type_Dyn != elf.header->type) return true;
 
 	//Set relocation tables
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
@@ -470,7 +470,7 @@ int ElfLoader::RelEntries()
 					else
 					{
 						kernel->debug->Error("%s relocation symbols failed, symbol %s not found", filename, symName);
-						return _ERR;
+						return false;
 					}
 				}
 
@@ -485,7 +485,7 @@ int ElfLoader::RelEntries()
 	}
 
 	kernel->debug->Output(Debug::_Lv1, "%s relocation entries successful", filename);
-	return _OK;
+	return true;
 }
 
 
@@ -495,8 +495,7 @@ int ElfLoader::RelEntries()
 /// @param relAddr 
 /// @param symAddr 
 /// @param type 
-/// @return result
-int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size)
+void ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size)
 {
 	uint32_t A = *((uint32_t*)relAddr);
 	uint32_t B = elf.map;
@@ -574,9 +573,8 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint
 			*relVal = Z + A;
 			break;
 
-		default: return 0;
+		default: break;
 	}
-	return 0;
 }
 
 #elif defined(ARCH_ARM)
@@ -586,7 +584,7 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint
 /// @param symAddr 
 /// @param type 
 /// @return address
-int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size)
+void ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size)
 {
 	switch (type)
 	{
@@ -610,9 +608,8 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint
 		case _R_ARM_THM_JUMP11:
 			break;
 			
-		default: return 0;
+		default: break;
 	}
-	return 0;
 }
 
 
@@ -621,7 +618,7 @@ int ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint
 /// @param symAddr 
 /// @param type 
 /// @return result
-int ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type)
+void ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type)
 {
 	uint16_t upper = ((uint16_t *)relAddr)[0];
 	uint16_t lower = ((uint16_t *)relAddr)[1];
@@ -648,8 +645,6 @@ int ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type)
 
 	lower = ((lower & 0xd000) | (J1 << 13) | (J2 << 11) | ((offset >> 1) & 0x07ff));
 	((uint16_t*)relAddr)[1] = lower;
-
-	return _OK;
 }
 
 #endif
@@ -657,7 +652,7 @@ int ElfLoader::RelJumpCall(uint32_t relAddr, uint32_t symAddr, uint8_t type)
 
 /// @brief ElfLoader Fill bss zero
 /// @return result
-int ElfLoader::FillBssZero()
+bool ElfLoader::FillBssZero()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -678,13 +673,13 @@ int ElfLoader::FillBssZero()
 			break;
 		}
 	}
-	return _OK;
+	return true;
 }
 
 
 /// @brief ElfLoader init array
 /// @return result
-int ElfLoader::InitArray()
+bool ElfLoader::InitArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -705,19 +700,19 @@ int ElfLoader::InitArray()
 			break;
 		}
 	}
-	return _OK;
+	return true;
 }
 
 
 /// @brief ElfLoader execute symbol
 /// @param symbol 
 /// @return result
-int ElfLoader::Execute(const char* symbol, int argc, char* argv[])
+bool ElfLoader::Execute(const char* symbol, int argc, char* argv[])
 {
 	if (NULL == symbol && 0 != elf.exec)
 	{
 		((StartEntry)elf.exec)(kernel, argc, argv);
-		return _OK;
+		return true;
 	}
 	else
 	{
@@ -726,17 +721,17 @@ int ElfLoader::Execute(const char* symbol, int argc, char* argv[])
 		if (symbolAddr)
 		{
 			((FuncEntry)symbolAddr)(argc, argv);
-			return _OK;
+			return true;
 		}
 	}
 	kernel->debug->Error("%s %s not found", filename, symbol);
-	return _ERR;
+	return false;
 }
 
 
 /// @brief ElfLoader fini array
 /// @return result
-int ElfLoader::FiniArray()
+bool ElfLoader::FiniArray()
 {
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
 	{
@@ -757,16 +752,16 @@ int ElfLoader::FiniArray()
 			break;
 		}
 	}
-	return _OK;
+	return true;
 }
 
 
 /// @brief ElfLoader exit
 /// @return result
-int ElfLoader::Exit()
+bool ElfLoader::Exit()
 {
 	delete[] filename;
 	delete[] (char*)elf.load;
 	delete[] (char*)elf.map;
-	return _OK;
+	return true;
 }

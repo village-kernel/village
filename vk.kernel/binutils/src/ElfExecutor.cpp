@@ -14,7 +14,7 @@
 int ElfExecutor::Execute(const char* path)
 {
 	//Load, parser and execute bin file
-	if (elf.Load(path) != Result::_OK) return 0;
+	if (!elf.Load(path)) return 0;
 
 	//Create a sandboxed thread to run the app
 	return kernel->thread->CreateTask(path, (Method)&ElfExecutor::Sandbox, this);

@@ -53,7 +53,7 @@ int BaseExecutor::Run(Behavior behavior, const char* path, int argc, char* argv[
 	this->argv = argv;
 
 	//Load, parser file and create task
-	if ((pid = Execute(path)) == 0) return _ERR;
+	if ((pid = Execute(path)) == 0) return -1;
 
 	//Wait for task done
 	if (behavior == _Foreground) kernel->thread->WaitForTask(pid);
@@ -64,7 +64,7 @@ int BaseExecutor::Run(Behavior behavior, const char* path, int argc, char* argv[
 
 /// @brief BaseExecutor wait
 /// @return result
-int BaseExecutor::Wait()
+bool BaseExecutor::Wait()
 {
 	return kernel->thread->WaitForTask(pid);
 }

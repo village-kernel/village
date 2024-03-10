@@ -78,7 +78,7 @@ bool ModuleTool::Install(const char* filename)
 	{
 		ElfLoader* mod = new ElfLoader();
 
-		if (_OK == mod->Load(filename))
+		if (mod->Load(filename))
 		{
 			mod->FillBssZero();
 			mod->InitArray();
