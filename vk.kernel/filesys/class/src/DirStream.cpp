@@ -58,7 +58,7 @@ bool DirStream::IsExist(const char* name)
 /// @param name 
 /// @param opt 
 /// @return 
-int DirStream::Open(const char* name, int mode)
+bool DirStream::Open(const char* name, int mode)
 {
 	if (NULL != filesys)
 	{
@@ -70,7 +70,7 @@ int DirStream::Open(const char* name, int mode)
 		fd = opts->OpenDir(name, mode);
 	}
 	
-	return (fd != -1) ? _OK : _ERR;
+	return (fd != -1);
 }
 
 

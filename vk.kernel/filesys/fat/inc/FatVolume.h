@@ -28,7 +28,7 @@ private:
 	FatObject* CreateDir(const char* path, int attr);
 public:
 	//FileOpts Methods
-	int SetVolumeLabel(const char* label);
+	bool SetVolumeLabel(const char* label);
 	char* GetVolumeLabel();
 	
 	int Open(const char* name, int mode);
@@ -42,7 +42,7 @@ public:
 	int SizeDir(int fd);
 	void CloseDir(int fd);
 
-	int Remove(const char* name);
+	bool Remove(const char* name);
 public:
 	//Methods
 	FatVolume();

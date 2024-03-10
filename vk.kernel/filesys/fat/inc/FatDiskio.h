@@ -124,10 +124,10 @@ private:
 	Info     info;
 
 	//Methods
-	int CheckFileSystem();
+	bool CheckFileSystem();
 public:
 	//Method
-	int Setup(Driver* diskdrv, uint32_t fstSec);
+	bool Setup(Driver* diskdrv, uint32_t fstSec);
 	uint32_t WriteSector(char* data, uint32_t sector, uint32_t secSize = 1);
 	uint32_t ReadSector(char* data, uint32_t sector, uint32_t secSize = 1);
 

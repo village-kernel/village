@@ -58,7 +58,7 @@ bool FileStream::IsExist(const char* name)
 /// @param name 
 /// @param opt 
 /// @return 
-int FileStream::Open(const char* name, int mode)
+bool FileStream::Open(const char* name, int mode)
 {
 	if (NULL != filesys)
 	{
@@ -70,7 +70,7 @@ int FileStream::Open(const char* name, int mode)
 		fd = opts->Open(name, mode);
 	}
 
-	return (fd != -1) ? _OK : _ERR;
+	return (fd != -1);
 }
 
 
