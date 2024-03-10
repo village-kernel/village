@@ -6,7 +6,8 @@
 			"label": "Build",
 			"command": "make",
 			"args": [
-				"-j8"
+				"all",
+				"rootfs",
 			],
 			"detail": "Build project"
 		},
