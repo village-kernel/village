@@ -88,13 +88,13 @@ int main(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		return _ERR;
+		return -1;
 	}
 	else
 	{
 		Launch launch;
 		launch.Initialize(argv[1], argv[2], argv[3]);
 		launch.Execute();
-		return _OK;
+		return 0;
 	}
 }
