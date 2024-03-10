@@ -13,7 +13,7 @@
 
 
 ///Initializes internal buffers
-void UartSerial::Initialize()
+bool UartSerial::Open()
 {
 	//Init config
 	InitConfig();
@@ -42,6 +42,8 @@ void UartSerial::Initialize()
 	txDma.SetPeriphAddr(usart.GetTxAddr());
 	txDma.ConfigIncMode(true, false);
 	txDma.ConfigRequest(config.usartTxDmaReq);
+
+	return true;
 }
 
 

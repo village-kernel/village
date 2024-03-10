@@ -105,7 +105,7 @@ private:
 	int WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t address);
 public:
 	//Methods
-	int Open();
+	bool Open();
 	void Close();
 
 	int Write(uint8_t *txData, uint32_t blkSize, uint32_t sector);

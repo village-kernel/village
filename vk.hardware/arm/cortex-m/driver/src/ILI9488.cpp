@@ -513,15 +513,15 @@ public:
 
 
 	/// @brief 
-	int Open()
+	bool Open()
 	{
 		if (NULL == ili9488)
 		{
 			ili9488 = new ILI9488();
 			ili9488->Initialize();
-			return _OK;
+			return true;
 		}
-		return _ERR;
+		return false;
 	}
 
 

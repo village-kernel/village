@@ -22,7 +22,7 @@ public:
 	virtual ~Driver() {}
 
 	//Opts methods
-	virtual int Open() = 0;
+	virtual bool Open() = 0;
 	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
 	virtual int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0)  { return 0; }
 	virtual int IOCtrl(uint8_t cmd, void* data) { return 0; }
