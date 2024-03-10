@@ -72,6 +72,32 @@ endmenu
 
 menu "utilities"
 
+menu "fileutils"
+
+comment "This is using to configure fileutils"
+
+config FILEUTILS
+	select FILESYSTEM
+	bool "Enable file utils support"
+	default n
+
+config DIRSTREAM
+	depends on FILEUTILS
+	bool "Enable dirstream function"
+	default n
+
+config FILESTREAM
+	depends on FILEUTILS
+	bool "Enable filestream function"
+	default n
+
+config FILESYSOPT
+	depends on FILEUTILS
+	bool "Enable filesysopt function"
+	default n
+
+endmenu
+
 menu "binutils"
 
 comment "This is using to configure binutils"

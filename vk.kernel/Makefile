@@ -31,18 +31,18 @@ src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/s
 inc-$(CONFIG_SUBSYS)                        += vk.kernel/subsys/inc
 src-$(CONFIG_SUBSYS)                        += vk.kernel/subsys/src
 
-inc-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/inc
 inc-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/inc
 inc-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/inc
 
-src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/src
 src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/src
 src-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/src
 
+inc-$(CONFIG_FILEUTILS)                     += vk.kernel/utilities/fileutils/inc
 inc-$(CONFIG_BINUTILS)                      += vk.kernel/utilities/binutils/inc
 inc-$(CONFIG_PARSER)                        += vk.kernel/utilities/parser/inc
 inc-$(CONFIG_SYNC)                          += vk.kernel/utilities/sync/inc
 
+src-$(CONFIG_FILEUTILS)                     += vk.kernel/utilities/fileutils/src
 src-$(CONFIG_BINUTILS)                      += vk.kernel/utilities/binutils/src
 src-$(CONFIG_PARSER)                        += vk.kernel/utilities/parser/src
 src-$(CONFIG_SYNC)                          += vk.kernel/utilities/sync/src
@@ -76,9 +76,9 @@ objs-$(CONFIG_FATFS)                        += FatObject.o
 objs-$(CONFIG_FATFS)                        += FatSystem.o
 objs-$(CONFIG_FATFS)                        += FatVolume.o
 
-objs-kernel-$(CONFIG_FILESYSTEM)            += DirStream.o
-objs-kernel-$(CONFIG_FILESYSTEM)            += FileStream.o
-objs-kernel-$(CONFIG_FILESYSTEM)            += FileSysOpt.o
+objs-kernel-$(CONFIG_DIRSTREAM)             += DirStream.o
+objs-kernel-$(CONFIG_FILESTREAM)            += FileStream.o
+objs-kernel-$(CONFIG_FILESYSOPT)            += FileSysOpt.o
 
 objs-kernel-$(CONFIG_SPINLOCK)              += SpinLock.o
 objs-kernel-$(CONFIG_MUTEX)                 += Mutex.o
