@@ -28,14 +28,14 @@ private:
 	char* filename;
 
 	//Methods
-	int LoadBin();
+	bool LoadBin();
 public:
 	//Methods
 	BinLoader(const char* filename = NULL);
 	~BinLoader();
-	int Load(const char* filename);
-	int Execute(int argc = 0, char* argv[] = NULL);
-	int Exit();
+	bool Load(const char* filename);
+	bool Execute(int argc = 0, char* argv[] = NULL);
+	bool Exit();
 };
 
 #endif //!__BIN_LOADER_H__

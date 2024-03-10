@@ -28,28 +28,28 @@ BinLoader::~BinLoader()
 /// @brief BinLoader load file
 /// @param filename 
 /// @return result
-int BinLoader::Load(const char* filename)
+bool BinLoader::Load(const char* filename)
 {
 	//Save filename in local
 	this->filename = new char[strlen(filename) + 1]();
 	strcpy(this->filename, filename);
 
 	//Load and mapping
-	if (LoadBin() != _OK) return _ERR;
+	if (!LoadBin()) return false;
 
 	//Output debug info
 	kernel->debug->Output(Debug::_Lv2, "%s load done", filename);
-	return _OK;
+	return true;
 }
 
 
 /// @brief BinLoader load bin file
 /// @return 
-int BinLoader::LoadBin()
+bool BinLoader::LoadBin()
 {
 	FileStream file;
 
-	if (_OK == file.Open(filename, FileMode::_Read))
+	if (file.Open(filename, FileMode::_Read))
 	{
 		int size = file.Size();
 		bin.load = (uint32_t)new char[size]();
@@ -59,14 +59,14 @@ int BinLoader::LoadBin()
 			bin.exec = bin.load + *((uint32_t*)bin.load);
 			kernel->debug->Output(Debug::_Lv1, "%s bin file load successful", filename);
 			file.Close();
-			return _OK;
+			return true;
 		}
 
 		file.Close();
 	}
 
 	kernel->debug->Error("%s bin file load failed", filename);
-	return _ERR;
+	return false;
 }
 
 
@@ -74,23 +74,23 @@ int BinLoader::LoadBin()
 /// @param argc 
 /// @param argv 
 /// @return 
-int BinLoader::Execute(int argc, char* argv[])
+bool BinLoader::Execute(int argc, char* argv[])
 {
 	if (0 != bin.exec)
 	{
 		((Entry)bin.exec)(argc, argv);
-		return _OK;
+		return true;
 	}
 	kernel->debug->Error("%s execute failed!", filename);
-	return _ERR;
+	return false;
 }
 
 
 /// @brief BinLoader exit
 /// @return result
-int BinLoader::Exit()
+bool BinLoader::Exit()
 {
 	delete[] filename;
 	delete[] (char*)bin.load;
-	return _OK;
+	return true;
 }

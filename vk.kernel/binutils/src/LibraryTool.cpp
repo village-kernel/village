@@ -80,7 +80,7 @@ bool LibraryTool::Install(const char* filename)
 
 		library->IgnoreUnresolvedSymbols();
 
-		if (_OK == library->Load(filename))
+		if (library->Load(filename))
 		{
 			library->FillBssZero();
 			library->InitArray();
