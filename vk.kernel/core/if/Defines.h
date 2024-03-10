@@ -12,14 +12,6 @@
 #include "stdlib.h"
 
 
-/// @brief Execute result defines
-enum Result
-{
-	_OK     = 0,
-	_ERR    = 1,
-};
-
-
 /// @brief Driver id defines
 enum DriverID
 {
