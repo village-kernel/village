@@ -27,9 +27,54 @@ config ENVIRONMENT
 
 endmenu
 
-# confg binutils menu
+#config subsystem
+
+menu "subsys"
+
+config SUBSYS
+	depends on MODULE
+	bool "Enable sub system support"
+	default n
+
+config LOADER
+	depends on SUBSYS
+	bool "Enable loader support"
+	default y
+
+config INPUT
+	depends on SUBSYS
+	bool "Enable input support"
+	default y
+
+config WORKQUEUE
+	depends on SUBSYS
+	bool "Enable workqueue support"
+	default y
+
+endmenu
+
+# config file system
+
+menu "filesys"
+
+config FILESYSTEM
+	bool "Enable file system"
+	default n
+
+config FATFS
+	depends on FILESYSTEM
+	bool "Add fat file system in support list"
+	default n
+
+endmenu
+
+# confg utilities menu
+
+menu "utilities"
 
 menu "binutils"
+
+comment "This is using to configure binutils"
 
 config BINUTILS
 	select FILESTREAM
@@ -72,88 +117,42 @@ config MODTOOL
 
 endmenu
 
-#config subsystem
+menu "parser"
 
-menu "subsystem"
+comment "This is using to configure parser"
 
-config SUBSYS
-	depends on MODULE
-	bool "Enable sub system support"
+config PARSER
+	bool "Enable parser support"
 	default n
-
-config LOADER
-	depends on SUBSYS
-	bool "Enable loader support"
-	default y
-
-config INPUT
-	depends on SUBSYS
-	bool "Enable input support"
-	default y
-
-config WORKQUEUE
-	depends on SUBSYS
-	bool "Enable workqueue support"
-	default y
-
-endmenu
-
-# config utilities menu
-
-menu "utilities"
-
-config UTILITIES
-	bool "Enable utilities support"
-	default n
-
-config SYNCLOCK
-	depends on UTILITIES
-	bool "Enable sync lock function"
-	 default y
 
 config INIPARSER
-	depends on UTILITIES
+	depends on PARSER
 	select FILESTREAM
 	bool "Enable ini file parser function"
 	default n
 
 config PINPARSER
-	depends on UTILITIES
+	depends on PARSER
 	select FATFS
 	bool "Enable pin parser function"
 	default n
 
 config RCPARSER
-	depends on UTILITIES
+	depends on PARSER
 	select FILESTREAM
 	bool "Enable resource script parser function"
 	default n
 
 config REGEX
-	depends on UTILITIES
+	depends on PARSER
 	bool "Enable regex function"
 	default n
 
 endmenu
 
-# config file system
+menu "sync"
 
-menu "filesystem"
-
-config FILESYSTEM
-	bool "Enable file system"
-	default n
-
-config FATFS
-	depends on FILESYSTEM
-	bool "Add fat file system in support list"
-	default n
-
-endmenu
-
-# cofing synchronizes menu
-
-menu "synchronizes"
+comment "This is using to configure sync"
 
 config SYNC
 	bool "Enable synchronizes function"
@@ -173,6 +172,8 @@ config SEMAPHORE
 	depends on SYNC
 	bool "Enable semaphore support"
 	default y
+
+endmenu
 
 endmenu
 
