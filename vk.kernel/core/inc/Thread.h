@@ -12,11 +12,6 @@
 #include "List.h"
 
 
-#ifndef TASK_STACK
-#define TASK_STACK      1024
-#endif
-
-
 /// @brief Thread
 class Thread : public Component
 {
