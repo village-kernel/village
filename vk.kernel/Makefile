@@ -29,16 +29,7 @@ src-$(CONFIG_STM32F4xx)                     += vk.kernel/arch/arm/cortex-m/src/s
 src-$(CONFIG_STM32H7xx)                     += vk.kernel/arch/arm/cortex-m/src/stm32h7xx
 
 inc-$(CONFIG_SUBSYS)                        += vk.kernel/subsys/inc
-inc-$(CONFIG_SYNC)                          += vk.kernel/sync/inc
-inc-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/inc
-inc-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/inc
-inc-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/inc
-
 src-$(CONFIG_SUBSYS)                        += vk.kernel/subsys/src
-src-$(CONFIG_SYNC)                          += vk.kernel/sync/src
-src-$(CONFIG_BRIDGE)                        += vk.kernel/bridge/src
-src-$(CONFIG_BINUTILS)                      += vk.kernel/binutils/src
-src-$(CONFIG_UTILITIES)                     += vk.kernel/utilities/src
 
 inc-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/inc
 inc-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/inc
@@ -48,6 +39,13 @@ src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/class/src
 src-$(CONFIG_FILESYSTEM)                    += vk.kernel/filesys/core/src
 src-$(CONFIG_FATFS)                         += vk.kernel/filesys/fat/src
 
+inc-$(CONFIG_BINUTILS)                      += vk.kernel/utilities/binutils/inc
+inc-$(CONFIG_PARSER)                        += vk.kernel/utilities/parser/inc
+inc-$(CONFIG_SYNC)                          += vk.kernel/utilities/sync/inc
+
+src-$(CONFIG_BINUTILS)                      += vk.kernel/utilities/binutils/src
+src-$(CONFIG_PARSER)                        += vk.kernel/utilities/parser/src
+src-$(CONFIG_SYNC)                          += vk.kernel/utilities/sync/src
 
 ######################################
 # objects
