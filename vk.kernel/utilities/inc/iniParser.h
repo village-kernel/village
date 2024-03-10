@@ -34,8 +34,8 @@ private:
 	std::string Encode();
 public:
 	//Methods
-	int Load(std::string filePath);
-	int Save(std::string filePath);
+	bool Load(std::string filePath);
+	bool Save(std::string filePath);
 
 	void WriteValue(std::string section, std::string key, std::string value);
 	std::string ReadValue(std::string section, std::string key);

@@ -16,12 +16,12 @@ RcParser::RcParser(const char* filename)
 
 
 ///Load file
-int RcParser::Load(const char* filename)
+bool RcParser::Load(const char* filename)
 {
 	FileStream file;
-	Result res = _ERR;
+	bool res = false;
 
-	if (_OK == file.Open(filename, FileMode::_Read))
+	if (true == file.Open(filename, FileMode::_Read))
 	{
 		int size = file.Size();
 
@@ -30,7 +30,7 @@ int RcParser::Load(const char* filename)
 		if (file.Read((char*)text, size) == size)
 		{
 			Decode(text);
-			res = _OK;
+			res = true;
 		}
 		
 		file.Close();
