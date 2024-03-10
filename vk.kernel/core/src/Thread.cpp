@@ -13,6 +13,10 @@
 #include "Cast.h"
 #include "List.h"
 
+#ifndef TASK_STACK
+#define TASK_STACK      1024
+#endif
+
 
 /// @brief ConcreteThread
 class ConcreteThread : public Thread
