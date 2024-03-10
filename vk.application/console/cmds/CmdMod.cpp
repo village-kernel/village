@@ -57,7 +57,7 @@ public:
 			console.Output("Usage: insmod [module]");
 			return;
 		}
-		if (_OK != modules.Install(argv[1]))
+		if (!modules.Install(argv[1]))
 		{
 			console.Error("Install module %s failed", argv[1]);
 		}
@@ -82,7 +82,7 @@ public:
 			console.Output("Usage: rmmod [module]");
 			return;
 		}
-		if (_OK != modules.Uninstall(argv[1]))
+		if (!modules.Uninstall(argv[1]))
 		{
 			console.Error("Uninstall module %s failed", argv[1]);
 		}

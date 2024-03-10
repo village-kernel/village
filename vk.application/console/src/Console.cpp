@@ -260,12 +260,12 @@ int main(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		return _ERR;
+		return -1;
 	}
 	else
 	{
 		console.Initialize(argv[1]);
 		console.Execute();
-		return _OK;
+		return 0;
 	}
 }
