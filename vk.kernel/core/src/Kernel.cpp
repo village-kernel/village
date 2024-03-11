@@ -11,6 +11,18 @@
 class ConcreteKernel : public Kernel, public Class
 {
 private:
+	/// @brief Constructor
+	ConcreteKernel()
+	{
+	}
+
+
+	/// @brief Destructor
+	~ConcreteKernel()
+	{
+	}
+
+
 	/// @brief Get module
 	/// @param id 
 	/// @return 
@@ -76,15 +88,12 @@ private:
 		return 0;
 	}
 public:
-	/// @brief Constructor
-	ConcreteKernel()
+	/// @brief Kernel instance
+	/// @return 
+	static Kernel* Instance()
 	{
-	}
-
-
-	/// @brief Destructor
-	~ConcreteKernel()
-	{
+		static ConcreteKernel instance;
+		return &instance;
 	}
 
 
@@ -150,6 +159,5 @@ public:
 
 
 /// @brief Definition and export kernel
-static ConcreteKernel concreteKernel;
-Kernel* kernel = &concreteKernel;
+Kernel* kernel = ConcreteKernel::Instance();
 EXPORT_SYMBOL(kernel);
