@@ -28,21 +28,6 @@ private:
 
 	//Members
 	List<Symbol*> symbols;
-private:
-	/// @brief Export symbols
-	void ExportSymbols()
-	{
-		extern SymbolInfo __symbols_start;
-		extern SymbolInfo __symbols_end;
-
-		uint32_t count = &__symbols_end - &__symbols_start;
-		SymbolInfo* symbols = &__symbols_start;
-
-		for (uint32_t i = 0; i < count; i++)
-		{
-			Export(symbols[i].addr, symbols[i].name);
-		}
-	}
 public:
 	/// @brief Constructor
 	ConcreteSymbol()
@@ -59,7 +44,7 @@ public:
 	/// @brief Setup
 	void Setup()
 	{
-		ExportSymbols();
+		
 	}
 
 

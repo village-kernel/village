@@ -17,21 +17,6 @@ private:
 	List<FileSys*>   fileSys;
 	List<FileOpts*>  fileOpts;
 	List<MountNode*> mounts;
-
-	/// @brief RegisterFileSyss
-	void RegisterFileSyss()
-	{
-		extern FileSysInfo __filesys_start;
-		extern FileSysInfo __filesys_end;
-
-		uint32_t count = &__filesys_end - &__filesys_start;
-		FileSysInfo* filesys = &__filesys_start;
-
-		for (uint32_t i = 0; i < count; i++)
-		{
-			RegisterFS(filesys[i].fs, filesys[i].name);
-		}
-	}
 public:
 	/// @brief Constructor
 	ConcreteFileSystem()
@@ -48,8 +33,6 @@ public:
 	/// @brief File system setup
 	void Setup()
 	{
-		RegisterFileSyss();
-
 		for (FileSys* fs = fileSys.Begin(); !fileSys.IsEnd(); fs = fileSys.Next())
 		{
 			fs->Setup();

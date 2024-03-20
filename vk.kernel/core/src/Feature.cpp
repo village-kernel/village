@@ -31,24 +31,6 @@ private:
 	{
 		if (isRuntime) component->Exit();
 	}
-
-
-	/// @brief Register components
-	void RegisterComponents()
-	{
-		extern ComponentInfo __components_start;
-		extern ComponentInfo __components_end;
-
-		uint32_t count = &__components_end - &__components_start;
-		ComponentInfo* components = &__components_start;
-
-		for (uint32_t i = 0; i < count; i++)
-		{
-			components[i].body->SetID(components[i].id);
-			components[i].body->SetName(components[i].name);
-			RegisterComponent(components[i].body);
-		}
-	}
 public:
 	/// @brief Constructor
 	ConcreteFeature()
@@ -67,8 +49,6 @@ public:
 	void Setup()
 	{
 		isRuntime = false;
-
-		RegisterComponents();
 		
 		for (components.Begin(); !components.IsEnd(); components.Next())
 		{
