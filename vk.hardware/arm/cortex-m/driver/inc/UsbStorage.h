@@ -19,7 +19,7 @@ private:
 	void Unmount();
 public:
 	//Methods
-	int Open();
+	bool Open();
 	void Close();
 };
 

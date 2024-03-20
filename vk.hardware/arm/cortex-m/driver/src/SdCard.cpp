@@ -11,7 +11,7 @@
 
 
 ///Sd card initialize
-int SdCard::Open()
+bool SdCard::Open()
 {
 	//Init config
 	InitConfig();
@@ -32,7 +32,7 @@ int SdCard::Open()
 	//Initialize sd card
 	SdCardInit();
 
-	return _OK;
+	return true;
 }
 
 

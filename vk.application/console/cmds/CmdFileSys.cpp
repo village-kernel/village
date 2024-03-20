@@ -54,7 +54,7 @@ private:
 	{
 		DirStream dir;
 
-		if (_OK == dir.Open(name, FileMode::_Read))
+		if (dir.Open(name, FileMode::_Read))
 		{
 			int size = dir.Size();
 
@@ -111,7 +111,7 @@ private:
 	void CreateFile(const char* filename)
 	{
 		FileStream file;
-		if (_ERR == file.Open(filename, FileMode::_CreateNew))
+		if (!file.Open(filename, FileMode::_CreateNew))
 		{
 			console.Error("Create file %s failed.", filename);
 		}
@@ -142,7 +142,7 @@ private:
 	void CreateDir(const char* dirname)
 	{
 		DirStream dir;
-		if (_ERR == dir.Open(dirname, FileMode::_CreateNew))
+		if (!dir.Open(dirname, FileMode::_CreateNew))
 		{
 			console.Error("Create directory %s failed.", dirname);
 		}

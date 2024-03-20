@@ -140,7 +140,7 @@ static USBD_HandleTypeDef hUsbDeviceFS;
 
 
 ///USB storage device initialize
-int UsbStorage::Open()
+bool UsbStorage::Open()
 {
 #ifdef STM32H7xx
 	//Select usb clock
@@ -161,7 +161,7 @@ int UsbStorage::Open()
 	//Start usbd
 	USBD_Start(&hUsbDeviceFS);
 
-	return _OK;
+	return true;
 }
 
 

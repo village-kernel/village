@@ -122,7 +122,7 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 /// @brief Set volume label
 /// @param label 
 /// @return 
-int FatVolume::SetVolumeLabel(const char* label)
+bool FatVolume::SetVolumeLabel(const char* label)
 {
 	FatObject* obj = FatEntry(disk).Item();
 
@@ -133,7 +133,7 @@ int FatVolume::SetVolumeLabel(const char* label)
 		FatEntry(disk, obj).Update();
 	}
 
-	return _OK;
+	return true;
 }
 
 
@@ -345,18 +345,18 @@ void FatVolume::CloseDir(int fd)
 /// @brief Remove
 /// @param name 
 /// @return 
-int FatVolume::Remove(const char* name)
+bool FatVolume::Remove(const char* name)
 {
 	FatObject* obj = SearchPath(name);
 
-	if (NULL == obj) return _ERR;
+	if (NULL == obj) return false;
 
 	if (FileType::_File     == obj->GetObjectType() ||
 		FileType::_Diretory == obj->GetObjectType())
 	{
 		FatEntry(disk, obj).Remove();
-		return _OK;
+		return true;
 	}
 	
-	return _ERR;
+	return false;
 }

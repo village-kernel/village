@@ -237,30 +237,30 @@ public:
 
 
 	/// @brief Mouse open
-	int Open()
+	bool Open()
 	{
 		//Get the input module
-		input = (Input*)kernel->modular->GetModule("input");
+		input = (Input*)kernel->feature->GetComponent("input");
 		if (NULL == input)
 		{
 			kernel->debug->Error("input feature not support");
-			return _ERR;
+			return false;
 		}
 
 		//Get the interrupt module
-		interrupt = (Interrupt*)kernel->modular->GetModule("interrupt");
+		interrupt = (Interrupt*)kernel->feature->GetComponent("interrupt");
 		if (NULL == interrupt)
 		{
 			kernel->debug->Error("interrupt feature not support");
-			return _ERR;
+			return false;
 		}
 
 		//Get the work queue module
-		workQueue = (WorkQueue*)kernel->modular->GetModule("workQueue");
+		workQueue = (WorkQueue*)kernel->feature->GetComponent("workQueue");
 		if (NULL == workQueue)
 		{
 			kernel->debug->Error("work queue feature not support");
-			return _ERR;
+			return false;
 		}
 
 		//Create work
@@ -272,7 +272,7 @@ public:
 		//Config
 		ConfigureMouse();
 
-		return _OK;
+		return true;
 	}
 
 

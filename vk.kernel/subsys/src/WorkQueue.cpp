@@ -47,7 +47,7 @@ public:
 	void Setup()
 	{
 		//Gets the thread pointer
-		thread = (Thread*)kernel->modular->GetModule(ModuleID::_thread);
+		thread = (Thread*)kernel->feature->GetComponent(ComponentID::_thread);
 
 		//Create work queue task
 		thread->CreateTask(this->GetName(), (Method)&ConcreteWorkQueue::Execute, this);
@@ -90,30 +90,30 @@ public:
 	/// @brief WorkQueue delete
 	/// @param work workqueue work
 	/// @return result
-	int Delete(Work* work)
+	bool Delete(Work* work)
 	{
 		if (NULL != work && _Finish == work->state)
 		{
 			return works.Remove(work);
 		}
-		return _ERR;
+		return false;
 	}
 
 
 	/// @brief WorkQueue schedule
 	/// @param work workqueue work
 	/// @return result
-	int Sched(Work* work)
+	bool Sched(Work* work)
 	{
 		if (NULL != work)
 		{
 			work->state = _Waked;
-			return _OK;
+			return true;
 		}
-		return _ERR;
+		return false;
 	}
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteWorkQueue, ModuleID::_workQueue, workQueue);
+///Register component
+REGISTER_COMPONENT(ConcreteWorkQueue, ComponentID::_workQueue, workQueue);

@@ -129,11 +129,11 @@ SECTIONS
 		PROVIDE_HIDDEN (__drivers_end = .);
 	} > SRAM
 
-	.modules :
+	.components :
 	{
-		PROVIDE_HIDDEN (__modules_start = .);
-		KEEP(*(.modules*))
-		PROVIDE_HIDDEN (__modules_end = .);
+		PROVIDE_HIDDEN (__components_start = .);
+		KEEP(*(.components*))
+		PROVIDE_HIDDEN (__components_end = .);
 	} > SRAM
 
 	.symbols :

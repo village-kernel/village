@@ -95,5 +95,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteLoader, ModuleID::_loader, loader);
+///Register component
+REGISTER_COMPONENT(ConcreteLoader, ComponentID::_loader, loader);

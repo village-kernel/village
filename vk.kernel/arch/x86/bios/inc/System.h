@@ -8,11 +8,11 @@
 #define __SYSTEM_H__
 
 #include "Hardware.h"
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief System
-class System : public Module
+class System : public Component
 {
 public:
 	virtual void SysTickCounter() = 0;

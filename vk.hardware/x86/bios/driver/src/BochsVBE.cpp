@@ -225,14 +225,14 @@ public:
 
 
 	/// @brief Open
-	int Open()
+	bool Open()
 	{
 		if (NULL == bochsVBE)
 		{
 			bochsVBE = new BochsVBE;
 			bochsVBE->Initialize();
 		}
-		return _OK;
+		return true;
 	}
 
 

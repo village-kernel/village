@@ -12,14 +12,6 @@
 #include "stdlib.h"
 
 
-/// @brief Execute result defines
-enum Result
-{
-	_OK     = 0,
-	_ERR    = 1,
-};
-
-
 /// @brief Driver id defines
 enum DriverID
 {
@@ -34,93 +26,61 @@ enum DriverID
 };
 
 
-/// @brief Module id defines
-enum ModuleID
+/// @brief Component id defines
+enum ComponentID
 {
 	_system = 1,
 	_device,
-	_modular,
+	_feature,
 	_debug,
 	_memory,
 	_archInterrupt,
 	_interrupt,
 	_exception,
-	_environment,
+	_symbol,
 	_thread,
 	_scheduler,
 	_fileSystem,
 	_input,
 	_workQueue,
 	_loader,
-	_application,
 };
 
 
-/// @brief driver
-class Driver;
+///init exit macro
+#define __init __attribute__((constructor(101)))
+#define __exit __attribute__((destructor(101)))
 
 
-/// @brief module
-class Module;
+///Driver register macro
+#define REGISTER_DRIVER(drv, id, name)                     \
+drv p##name;                                               \
+static void __init _Drv_ctor_##name()                      \
+{                                                          \
+	p##name.SetID(id);                                     \
+	p##name.SetName((char*)#name);                         \
+	kernel->device->RegisterDriver(&p##name);              \
+}                                                          \
+static void __exit _Drv_dtor_##name()                      \
+{                                                          \
+	kernel->device->DeregisterDriver(&p##name);            \
+}    
 
 
-/// @brief DriverInfo
-struct DriverInfo
-{
-	uint32_t  id;
-	char*     name;
-	Driver*   driver;
-};
+///Component register macro
+#define REGISTER_COMPONENT(cmp, id, name)                  \
+cmp p##name;                                               \
+static void __init _Cmp_ctor_##name()                      \
+{                                                          \
+	p##name.SetID(id);                                     \
+	p##name.SetName((char*)#name);                         \
+	kernel->feature->RegisterComponent(&p##name);          \
+}                                                          \
+static void __exit _Cmp_dtor_##name()                      \
+{                                                          \
+	kernel->feature->RegisterComponent(&p##name);          \
+}
 
-
-/// @brief ModuleInfo
-struct ModuleInfo
-{
-	uint32_t  id;
-	char*     name;
-	Module*   module;
-};
-
-
-/// @brief SymbolInfo
-struct SymbolInfo
-{
-	char*    name;
-	uint32_t addr;
-};
-
-
-#ifdef BUILD_IN_MODULE
-	///Driver register macro
-	#define REGISTER_DRIVER(drv, id, name)                                                     \
-	static struct _Drv_##name {                                                                \
-		_Drv_##name() { static drv name; name.SetID(id); name.SetName((char*)#name);           \
-		kernel->device->RegisterDriver(&name); }                                               \
-	} const _drv_##name __attribute__((used,__section__(".drivers")))
-
-
-	///Module register macro
-	#define REGISTER_MODULE(mod, id, name)                                                     \
-	static struct _Mod_##name {                                                                \
-		_Mod_##name() { static mod name; name.SetID(id); name.SetName((char*)#name);           \
-		kernel->modular->RegisterModule(&name); }                                              \
-	} const _mod_##name __attribute__((used,__section__(".modules")))
-#else
-	///Driver register macro
-	#define REGISTER_DRIVER(drv, id, name)                                                     \
-	static struct _Drv_##name {                                                                \
-		uint32_t drvId; char* drvName; Driver* driver;                                         \
-		_Drv_##name() { static drv name; drvId = id; drvName = (char*)#name; driver = &name; } \
-	} const _drv_##name __attribute__((used,__section__(".drivers")))
-
-
-	///Module register macro
-	#define REGISTER_MODULE(mod, id, name)                                                     \
-	static struct _Mod_##name {                                                                \
-		uint32_t modId; char* modName; Module* module;                                         \
-		_Mod_##name() { static mod name; modId = id; modName = (char*)#name; module = &name; } \
-	} const _mod_##name __attribute__((used,__section__(".modules")))
-#endif
 
 ///Environment marco
 #ifdef KBUILD_NO_ENVIRONNEMNT
@@ -136,22 +96,18 @@ struct SymbolInfo
 #elif defined(ARCH_ARM)
 	#define marco_cast(src, addr)  __asm volatile("ldr %0, ="#src : "=r"(addr))
 #endif
-
-#ifdef BUILD_IN_MODULE
 	///Export symbol marco
-	#define EXPORT_SYMBOL_ALIAS(symbol, name)                                  \
-	static struct _Sym_##name {                                                \
-		_Sym_##name() { uint32_t symAddr; marco_cast(symbol, symAddr);         \
-		kernel->environment->ExportSymbol(symAddr, (char*)#name); }            \
-	} const _sym_##name __attribute__((used,__section__(".symbols")))
-#else
-	///Export symbol marco
-	#define EXPORT_SYMBOL_ALIAS(symbol, name)                                  \
-	static struct _Sym_##name {                                                \
-		char* symName; uint32_t symAddr;                                       \
-		_Sym_##name() { symName = (char*)#name; marco_cast(symbol, symAddr); } \
-	} const _sym_##name __attribute__((used,__section__(".symbols")))
-#endif
+	#define EXPORT_SYMBOL_ALIAS(sym, name)                 \
+	static void __init _Sym_ctor_##name()                  \
+	{                                                      \
+		uint32_t symAddr = 0;                              \
+		marco_cast(sym, symAddr);                          \
+		kernel->symbol->Export(symAddr, (char*)#name);     \
+	}                                                      \
+	static void __exit _Sym_dtor_##name()                  \
+	{                                                      \
+		kernel->symbol->Unexport((char*)#name);            \
+	}
 
 	///Export symbol marco
 	#define EXPORT_SYMBOL(symbol)          EXPORT_SYMBOL_ALIAS(symbol, symbol) 

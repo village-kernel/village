@@ -121,7 +121,7 @@ private:
 	int Sync();
 public:
 	//Methods
-	int Open();
+	bool Open();
 	int Write(uint8_t *txData, uint32_t blkSize, uint32_t sector);
 	int Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector);
 	int IOCtrl(uint8_t cmd, void* data);

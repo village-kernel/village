@@ -57,7 +57,7 @@ void Launch::Initialize(const char* screen, const char* keyboard, const char* mo
 	mainwin->Show();
 
 	//Attach input
-	Input* input = (Input*)kernel->modular->GetModule("input");
+	Input* input = (Input*)kernel->feature->GetComponent("input");
 	if (NULL != input)
 	{
 		input->Attach(Input::_Movement, (Method)&Launch::UpdateInput, this);
@@ -88,13 +88,13 @@ int main(int argc, char* argv[])
 {
 	if (argc < 2)
 	{
-		return _ERR;
+		return -1;
 	}
 	else
 	{
 		Launch launch;
 		launch.Initialize(argv[1], argv[2], argv[3]);
 		launch.Execute();
-		return _OK;
+		return 0;
 	}
 }

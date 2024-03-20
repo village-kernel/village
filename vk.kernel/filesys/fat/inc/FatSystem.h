@@ -63,8 +63,8 @@ private:
 	Driver*  diskdrv;
 
 	//Methods
-	int ReadMBR();
-	int CheckDPT(DPT* dpt);
+	bool ReadMBR();
+	bool CheckDPT(DPT* dpt);
 public:
 	//Methods
 	FatSystem();

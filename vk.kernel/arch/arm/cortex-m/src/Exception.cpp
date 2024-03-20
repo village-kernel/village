@@ -28,8 +28,8 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteException, ModuleID::_exception, exception);
+///Register component
+REGISTER_COMPONENT(ConcreteException, ComponentID::_exception, exception);
 
 
 /// @brief Output stacked info

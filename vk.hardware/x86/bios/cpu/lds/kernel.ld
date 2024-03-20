@@ -56,7 +56,7 @@ SECTIONS
 	{
 		PROVIDE_HIDDEN (__preinit_array_start = .);
 		KEEP (*(SORT(.preinit_array.*)))
-		KEEP (*(.preinit_array*))
+		KEEP (*(SORT(.preinit_array*)))
 		PROVIDE_HIDDEN (__preinit_array_end = .);
 	} > RAM
 
@@ -64,8 +64,8 @@ SECTIONS
 	{
 		PROVIDE_HIDDEN (__init_array_start = .);
 		KEEP (*(SORT(.init_array.*)))
-		KEEP (*(.init_array*))
-		KEEP (*(.ctors*))
+		KEEP (*(SORT(.init_array*)))
+		KEEP (*(SORT(.ctors*)))
 		PROVIDE_HIDDEN (__init_array_end = .);
 	} > RAM
 
@@ -73,8 +73,8 @@ SECTIONS
 	{
 		PROVIDE_HIDDEN (__fini_array_start = .);
 		KEEP (*(SORT(.fini_array.*)))
-		KEEP (*(.fini_array*))
-		KEEP (*(.dtors*))
+		KEEP (*(SORT(.fini_array*)))
+		KEEP (*(SORT(.dtors*)))
 		PROVIDE_HIDDEN (__fini_array_end = .);
 	} > RAM
 
@@ -104,33 +104,6 @@ SECTIONS
 		 __bss_end__ = _ebss;
 	} > RAM
 
-	.drivers :
-	{
-		PROVIDE_HIDDEN (__drivers_start = .);
-		KEEP(*(.drivers*))
-		PROVIDE_HIDDEN (__drivers_end = .);
-	} > RAM
-
-	.modules :
-	{
-		PROVIDE_HIDDEN (__modules_start = .);
-		KEEP(*(.modules*))
-		PROVIDE_HIDDEN (__modules_end = .);
-	} > RAM
-
-	.symbols :
-	{
-		PROVIDE_HIDDEN (__symbols_start = .);
-		KEEP(*(.symbols*))
-		PROVIDE_HIDDEN (__symbols_end = .);
-	} > RAM
-
-	.filesys :
-	{
-		PROVIDE_HIDDEN (__filesys_start = .);
-		KEEP(*(.filesys*))
-		PROVIDE_HIDDEN (__filesys_end = .);
-	} > RAM
 
 	._user_heap_stack :
 	{

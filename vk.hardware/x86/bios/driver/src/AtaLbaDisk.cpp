@@ -30,12 +30,12 @@ public:
 
 
 	/// @brief open
-	int Open()
+	bool Open()
 	{
 		//Stop device from sending interrupts
 		PortByteOut(ATA_PRIMARY_PORT_CTRL, ATA_CTRL_nIEN);
 		PortByteOut(ATA_SECOND_PORT_CTRL, ATA_CTRL_nIEN);
-		return _OK;
+		return true;
 	}
 
 

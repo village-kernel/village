@@ -27,7 +27,7 @@ public:
 
 
 	/// @brief Open
-	int Open()
+	bool Open()
 	{
 		//uint32_t freq = 1000; //1000hz, 1ms
 		//uint32_t divider = 1193182 / freq;

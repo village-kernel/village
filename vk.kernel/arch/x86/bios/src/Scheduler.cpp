@@ -37,7 +37,7 @@ public:
 	void Setup()
 	{
 		//Gets the interrupt pointer
-		interrupt = (Interrupt*)kernel->modular->GetModule(ModuleID::_interrupt);
+		interrupt = (Interrupt*)kernel->feature->GetComponent(ComponentID::_interrupt);
 
 		//Set the PendSV interrupt handler
 		interrupt->SetISR(IRQ_PendSV, (Method)&ConcreteScheduler::PendSVHandler, this);
@@ -129,5 +129,5 @@ private:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteScheduler, ModuleID::_scheduler, scheduler);
+///Register component
+REGISTER_COMPONENT(ConcreteScheduler, ComponentID::_scheduler, scheduler);

@@ -56,7 +56,7 @@ public:
 	/// @brief Interrupt Setup
 	void Setup()
 	{
-		debug = (Debug*)kernel->modular->GetModule(ModuleID::_debug);
+		debug = (Debug*)kernel->feature->GetComponent(ComponentID::_debug);
 	}
 
 
@@ -125,7 +125,7 @@ public:
 	/// @param user interrupt user
 	/// @param args interrupt args
 	/// @return Result::_OK / Result::_ERR
-	int RemoveISR(int irq, Function func, void* user, void* args)
+	bool RemoveISR(int irq, Function func, void* user, void* args)
 	{
 		List<Isr*>* isrs = &isrTabs[irq];
 
@@ -136,11 +136,11 @@ public:
 				(user == isr->user) &&
 				(args == isr->args))
 			{
-				return (Result)isrs->Remove(isr, isrs->GetNid());
+				return isrs->Remove(isr, isrs->GetNid());
 			}
 		}
 
-		return _ERR;
+		return false;
 	}
 
 
@@ -150,7 +150,7 @@ public:
 	/// @param user interrupt user
 	/// @param args interrupt args
 	/// @return Result::_OK / Result::_ERR
-	int RemoveISR(int irq, Method method, Class* user, void* args)
+	bool RemoveISR(int irq, Method method, Class* user, void* args)
 	{
 		return RemoveISR(irq, union_cast<Function>(method), (void*)user, args);
 	}
@@ -199,5 +199,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteInterrupt, ModuleID::_interrupt, interrupt);
+///Register component
+REGISTER_COMPONENT(ConcreteInterrupt, ComponentID::_interrupt, interrupt);

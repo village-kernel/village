@@ -67,8 +67,8 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteArchInterrupt, ModuleID::_archInterrupt, archInterrupt);
+///Register component
+REGISTER_COMPONENT(ConcreteArchInterrupt, ComponentID::_archInterrupt, archInterrupt);
 
 
 /// @brief Stub handler
