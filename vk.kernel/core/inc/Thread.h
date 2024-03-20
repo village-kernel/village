@@ -7,18 +7,13 @@
 #ifndef __THREAD_H__
 #define __THREAD_H__
 
-#include "Module.h"
+#include "Component.h"
 #include "Registers.h"
 #include "List.h"
 
 
-#ifndef TASK_STACK
-#define TASK_STACK      1024
-#endif
-
-
 /// @brief Thread
-class Thread : public Module
+class Thread : public Component
 {
 public:
 	//Enumerations
@@ -54,7 +49,7 @@ public:
 	virtual int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL) = 0;
 	virtual int CreateTask(const char* name, Method method, Class *user, void* args = NULL) = 0;
 	virtual int DeleteTask(int pid) = 0;
-	virtual int WaitForTask(int pid) = 0;
+	virtual bool WaitForTask(int pid) = 0;
 	virtual List<Task*> GetTasks() = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
 	virtual void TaskExit() = 0;

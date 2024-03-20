@@ -7,11 +7,11 @@
 #ifndef __DEBUG_H__
 #define __DEBUG_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief Debug
-class Debug : public Module
+class Debug : public Component
 {
 public:
 	//Debug level

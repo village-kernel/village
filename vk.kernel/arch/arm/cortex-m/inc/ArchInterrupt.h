@@ -7,11 +7,11 @@
 #ifndef __ARCH_INTERRUPT_H__
 #define __ARCH_INTERRUPT_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief Interrupt
-class ArchInterrupt : public Module
+class ArchInterrupt : public Component
 {
 public:
 	//Static constants

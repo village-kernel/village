@@ -11,23 +11,23 @@
 /// @brief Setup
 /// @param diskdrv 
 /// @param fstSec 
-int FatDiskio::Setup(Driver* diskdrv, uint32_t fstSec)
+bool FatDiskio::Setup(Driver* diskdrv, uint32_t fstSec)
 {
 	this->diskdrv = diskdrv;
 	this->fstSec  = fstSec;
 
-	if (_ERR == CheckFileSystem())
+	if (!CheckFileSystem())
 	{
 		kernel->debug->Error("Not filesystem found");
-		return _ERR;
+		return false;
 	}
-	return _OK;
+	return true;
 }
 
 
 /// @brief Check file system
 /// @return 
-int FatDiskio::CheckFileSystem()
+bool FatDiskio::CheckFileSystem()
 {
 	//Read dbr
 	DBR* dbr = new DBR();
@@ -37,7 +37,7 @@ int FatDiskio::CheckFileSystem()
 	if (magic != dbr->magic)
 	{
 		delete dbr;
-		return _ERR;
+		return false;
 	}
 
 	//Calc fat size
@@ -87,7 +87,7 @@ int FatDiskio::CheckFileSystem()
 	info.secPerClust = dbr->bpb.secPerClust;
 
 	delete dbr;
-	return _OK;
+	return true;
 }
 
 

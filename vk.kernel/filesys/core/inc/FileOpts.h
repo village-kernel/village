@@ -23,7 +23,7 @@ public:
 	virtual ~FileOpts() {};
 
 	//Disk methods
-	virtual int SetVolumeLabel(const char* name)                     = 0;
+	virtual bool SetVolumeLabel(const char* name)                     = 0;
 	virtual char* GetVolumeLabel()                                   = 0;
 
 	//File methods
@@ -40,7 +40,7 @@ public:
 	virtual void CloseDir(int fd)                                    = 0;
 
 	//Opt methods
-	virtual int Remove(const char* name)                             = 0;
+	virtual bool Remove(const char* name)                             = 0;
 };
 
 #endif //!__FILE_OPERATION_INTERFACE_H__

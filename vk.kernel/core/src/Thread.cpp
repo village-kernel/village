@@ -13,6 +13,10 @@
 #include "Cast.h"
 #include "List.h"
 
+#ifndef TASK_STACK
+#define TASK_STACK      1024
+#endif
+
 
 /// @brief ConcreteThread
 class ConcreteThread : public Thread
@@ -59,13 +63,13 @@ public:
 	void Setup()
 	{
 		//Gets the memory pointer
-		memory = (Memory*)kernel->modular->GetModule(ModuleID::_memory);
+		memory = (Memory*)kernel->feature->GetComponent(ComponentID::_memory);
 
 		//Gets the system pointer
-		system = (System*)kernel->modular->GetModule(ModuleID::_system);
+		system = (System*)kernel->feature->GetComponent(ComponentID::_system);
 
 		//Gets the scheduler pointer
-		scheduler = (Scheduler*)kernel->modular->GetModule(ModuleID::_scheduler);
+		scheduler = (Scheduler*)kernel->feature->GetComponent(ComponentID::_scheduler);
 
 		//Frist task should be idle task and the pid is 0
 		CreateTask("IdleTask", (Method)&ConcreteThread::IdleTask, this);
@@ -139,7 +143,7 @@ public:
 	/// @brief Thread wait for task
 	/// @param pid process id
 	/// @return result
-	int WaitForTask(int pid)
+	bool WaitForTask(int pid)
 	{
 		//Gets the task
 		Task* task = tasks.GetItem(pid);
@@ -149,9 +153,9 @@ public:
 		{
 			//Blocking wait
 			while(task->state != TaskState::Exited) {}
-			return _OK;
+			return true;
 		}
-		return _ERR;
+		return false;
 	}
 
 
@@ -236,5 +240,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteThread, ModuleID::_thread, thread);
+///Register component
+REGISTER_COMPONENT(ConcreteThread, ComponentID::_thread, thread);

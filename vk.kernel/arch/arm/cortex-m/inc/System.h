@@ -7,11 +7,11 @@
 #ifndef __SYSTEM_H__
 #define __SYSTEM_H__
 
-#include "Module.h"
+#include "Component.h"
 
 
 /// @brief System
-class System : public Module
+class System : public Component
 {
 public:
 	virtual void SysTickCounter() = 0;

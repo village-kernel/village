@@ -147,5 +147,5 @@ public:
 };
 
 
-///Register module
-REGISTER_MODULE(ConcreteInput, ModuleID::_input, input);
+///Register component
+REGISTER_COMPONENT(ConcreteInput, ComponentID::_input, input);
