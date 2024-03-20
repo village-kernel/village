@@ -16,23 +16,6 @@ class ConcreteDevice : public Device
 private:
 	//Members
 	List<Driver*> drivers;
-private:
-	/// @brief Register drivers
-	void RegisterDrivers()
-	{
-		extern DriverInfo __drivers_start;
-		extern DriverInfo __drivers_end;
-
-		uint32_t count = &__drivers_end - &__drivers_start;
-		DriverInfo* drivers = &__drivers_start;
-
-		for (uint32_t i = 0; i < count; i++)
-		{
-			drivers[i].body->SetID(drivers[i].id);
-			drivers[i].body->SetName(drivers[i].name);
-			RegisterDriver(drivers[i].body);
-		}
-	}
 public:
 	/// @brief Constructor
 	ConcreteDevice()
@@ -49,7 +32,7 @@ public:
 	/// @brief Device Setup
 	void Setup()
 	{
-		RegisterDrivers();
+		
 	}
 
 

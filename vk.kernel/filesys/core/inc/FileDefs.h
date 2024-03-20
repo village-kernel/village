@@ -78,34 +78,19 @@ struct MountNode
 };
 
 
-/// @brief FileSys
-class FileSys;
-
-
-/// @brief FileSysInfo
-struct FileSysInfo
-{
-	char*     name;
-	FileSys*  fs;
-};
-
-
-#ifdef BUILD_IN_MODULE
-	///Filesys register macro
-	#define REGISTER_FS(fs, name)                                                       \
-	static struct _FS_##name {                                                          \
-		_FS_##name() { static fs name;                                                  \
-		FileSystem* filesys = (FileSystem*)kernel->feature->GetComponent("fileSystem"); \
-		if (NULL != filesys) filesys->RegisterFS(&name, (char*)#name); }                \
-	} const _fs_##name __attribute__((used,__section__(".filesys")))
-#else
-	///Filesys register macro
-	#define REGISTER_FS(fs, name)                                                \
-	static struct _FS_##name {                                                   \
-		char* fsname; FileSys* filesys;                                          \
-		_FS_##name() { fsname = (char*)#name; static fs name; filesys = &name; } \
-	} const _fs_##name __attribute__((used,__section__(".filesys")))
-#endif
+///Component register macro
+#define REGISTER_FS(fs, name)                                                         \
+fs p##name;                                                                           \
+static void __init _Fs_ctor_##name()                                                  \
+{                                                                                     \
+	FileSystem* filesys = (FileSystem*)kernel->feature->GetComponent("fileSystem");   \
+	if (NULL != filesys) filesys->RegisterFS(&p##name, (char*)#name);                 \
+}                                                                                     \
+static void __exit _Fs_dtor_##name()                                                  \
+{                                                                                     \
+	FileSystem* filesys = (FileSystem*)kernel->feature->GetComponent("fileSystem");   \
+	if (NULL != filesys) filesys->DeregisterFS(&p##name, (char*)#name);               \
+}
 
 
 #endif //!__FILE_DEFINES_H__

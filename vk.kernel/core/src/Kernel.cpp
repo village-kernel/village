@@ -10,10 +10,29 @@
 /// @brief ConcreteKernel
 class ConcreteKernel : public Kernel, public Class
 {
-private:
+public:
 	/// @brief Constructor
 	ConcreteKernel()
 	{
+		extern System    psystem;
+		extern Debug     pdebug;
+		extern Memory    pmemory;
+		extern Interrupt pinterrupt;
+		extern Thread    pthread;
+		extern Scheduler pscheduler;
+		extern Symbol    psymbol;
+		extern Device    pdevice;
+		extern Feature   pfeature;
+
+		this->system    = &psystem;
+		this->debug     = &pdebug;
+		this->memory    = &pmemory;
+		this->interrupt = &pinterrupt;
+		this->thread    = &pthread;
+		this->scheduler = &pscheduler;
+		this->symbol    = &psymbol;
+		this->device    = &pdevice;
+		this->feature   = &pfeature;
 	}
 
 
@@ -21,89 +40,20 @@ private:
 	~ConcreteKernel()
 	{
 	}
-
-
-	/// @brief Get module
-	/// @param id 
-	/// @return 
-	Component* GetComponent(uint32_t id)
-	{
-		extern ComponentInfo __components_start;
-		extern ComponentInfo __components_end;
-
-		uint32_t count = &__components_end - &__components_start;
-		ComponentInfo* components = &__components_start;
-
-		for (uint32_t i = 0; i < count; i++)
-		{
-			if (id == components[i].id)
-			{
-				return components[i].body;
-			}
-		}
-		return NULL;
-	}
-
-
-	/// @brief Init Component
-	/// @return 
-	uint32_t InitComponents()
-	{
-		//Gets the debug pointer
-		debug = (Debug*)GetComponent(ComponentID::_debug);
-		if (NULL == debug) return ComponentID::_debug;
-
-		//Gets the memory pointer
-		memory = (Memory*)GetComponent(ComponentID::_memory);
-		if (NULL == memory) return ComponentID::_memory;
-
-		//Gets the system pointer
-		system = (System*)GetComponent(ComponentID::_system);
-		if (NULL == system) return ComponentID::_system;
-
-		//Gets the interrupt pointer
-		interrupt = (Interrupt*)GetComponent(ComponentID::_interrupt);
-		if (NULL == interrupt) return ComponentID::_interrupt;
-
-		//Gets the thread pointer
-		thread = (Thread*)GetComponent(ComponentID::_thread);
-		if (NULL == thread) return ComponentID::_thread;
-		
-		//Gets the scheduler pointer
-		scheduler = (Scheduler*)GetComponent(ComponentID::_scheduler);
-		if (NULL == scheduler) return ComponentID::_scheduler;
-
-		//Gets the symbol pointer
-		symbol = (Symbol*)GetComponent(ComponentID::_symbol);
-		if (NULL == symbol) return ComponentID::_symbol;
-
-		//Gets the device pointer
-		device = (Device*)GetComponent(ComponentID::_device);
-		if (NULL == device) return ComponentID::_device;
-
-		//Gets the feature pointer
-		feature = (Feature*)GetComponent(ComponentID::_feature);
-		if (NULL == feature) return ComponentID::_feature;
-
-		return 0;
-	}
 public:
 	/// @brief Kernel instance
-	/// @return 
-	static Kernel* Instance()
+	/// @return kernel
+	static ConcreteKernel& Instance()
 	{
 		static ConcreteKernel instance;
-		return &instance;
+		return instance;
 	}
 
 
 	/// @brief Kernel Setup
 	void Setup()
 	{
-		if (0 == InitComponents())
-		{
-			feature->Setup();
-		}
+		feature->Setup();
 	}
 
 
@@ -159,5 +109,5 @@ public:
 
 
 /// @brief Definition and export kernel
-Kernel* kernel = ConcreteKernel::Instance();
+Kernel* kernel = &ConcreteKernel::Instance();
 EXPORT_SYMBOL(kernel);

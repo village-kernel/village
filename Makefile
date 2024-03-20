@@ -138,10 +138,6 @@ ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
 APPLDFLAGS += -Wl,-static
 endif
 
-ifeq ($(MODULE), 1)
-CXXFLAGS   += -DBUILD_IN_MODULE
-endif
-
 
 #######################################
 # build version flags
@@ -211,7 +207,7 @@ module:
 	$(Q)mkdir -p $(MODULES_DIR)
 	$(Q)echo "#prepare modules" > $(MODULES_DIR)/_load_.rc;
 	$(Q)$(foreach object, $(objs-m), \
-		$(MAKE) MODULE=1 $(object); \
+		$(MAKE) $(object); \
 		$(MAKE) $(MODULES_DIR)/$(object:.o=.mo) objs="$(object)"; \
 		echo /modules/$(object:.o=.mo) >> $(MODULES_DIR)/_load_.rc; \
 	)
