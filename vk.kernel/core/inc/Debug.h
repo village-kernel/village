@@ -8,8 +8,8 @@
 #define __DEBUG_H__
 
 #include "Kernel.h"
-#include "Driver.h"
 #include "Mutex.h"
+#include "DrvStream.h"
 
 
 /// @brief ConcreteDebug
@@ -20,7 +20,7 @@ private:
 	static const uint16_t buf_size = 100;
 
 	//Members
-	Driver*   transceiver;
+	DrvStream transceiver;
 	Mutex     mutex;
 	char      data[buf_size] = { 0 };
 	char      txBuffer[buf_size] = { 0 };
