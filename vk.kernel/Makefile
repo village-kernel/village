@@ -77,6 +77,7 @@ objs-$(CONFIG_FATFS)                        += FatSystem.o
 objs-$(CONFIG_FATFS)                        += FatVolume.o
 
 objs-kernel-$(CONFIG_DIRSTREAM)             += DirStream.o
+objs-kernel-$(CONFIG_DRVSTREAM)             += DrvStream.o
 objs-kernel-$(CONFIG_FILESTREAM)            += FileStream.o
 objs-kernel-$(CONFIG_FILESYSOPT)            += FileSysOpt.o
 
