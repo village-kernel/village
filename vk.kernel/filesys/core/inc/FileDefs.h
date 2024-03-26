@@ -7,6 +7,8 @@
 #ifndef __FILE_DEFINES_H__
 #define __FILE_DEFINES_H__
 
+#include "stddef.h"
+#include "stdint.h"
 
 /// @brief FileMode
 enum FileMode
@@ -14,6 +16,7 @@ enum FileMode
 	_OpenExisting  = 0x00,
 	_Read          = 0x01,
 	_Write         = 0x02,
+	_ReadWrite     = 0x03,
 	_CreateNew     = 0x04,
 	_CreateAlways  = 0x10,
 	_OpenAppend    = 0x30,
