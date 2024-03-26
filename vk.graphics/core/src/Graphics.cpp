@@ -32,7 +32,7 @@ Graphics::~Graphics()
 void Graphics::Initialize(const char* screen, const char* keyboard, const char* mouse)
 {
 	//Get the universal driver by driver name
-	Driver* screendrv = kernel->device->GetDriver(screen);
+	Driver* screendrv = kernel->device.GetDriver(screen);
 
 	//Get the specified lcd driver by driver ioctrl 
 	if (NULL != screendrv)
@@ -49,7 +49,7 @@ void Graphics::Initialize(const char* screen, const char* keyboard, const char* 
 	}
 
 	//Get the universal driver by driver name
-	Driver* keyboarddrv = kernel->device->GetDriver(keyboard);
+	Driver* keyboarddrv = kernel->device.GetDriver(keyboard);
 
 	//Initialize keyboard
 	if (NULL != keyboarddrv)
@@ -58,7 +58,7 @@ void Graphics::Initialize(const char* screen, const char* keyboard, const char* 
 	}
 
 	//Get the universal driver by driver name
-	Driver* mousedrv = kernel->device->GetDriver(mouse);
+	Driver* mousedrv = kernel->device.GetDriver(mouse);
 
 	//Initialize keyboard
 	if (NULL != mousedrv)
