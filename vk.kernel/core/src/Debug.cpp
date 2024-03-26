@@ -28,15 +28,14 @@ ConcreteDebug::~ConcreteDebug()
 void ConcreteDebug::Setup()
 {
 	//Get transceiver driver and initialize
-	transceiver = kernel->device.GetDriver("serial0");
-	if (NULL != transceiver) transceiver->Open();
+	transceiver.Open("serial0", FileMode::_Write);
 }
 
 
 /// @brief Exit
 void ConcreteDebug::Exit()
 {
-	transceiver->Close();
+	transceiver.Close();
 }
 
 
@@ -44,8 +43,6 @@ void ConcreteDebug::Exit()
 /// @param data 
 void ConcreteDebug::Write(const char* data)
 {
-	if (NULL == transceiver) return;
-
 	//Calculate the string length
 	int size = strlen((const char*)data);
 
@@ -69,7 +66,7 @@ void ConcreteDebug::Sending()
 {
 	if (txBufPos)
 	{
-		while (!transceiver->Write((uint8_t*)txBuffer, txBufPos)) {}
+		while (!transceiver.Write(txBuffer, txBufPos)) {}
 		txBufPos = 0;
 	}
 }
