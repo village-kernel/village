@@ -19,7 +19,7 @@ FileStream::FileStream(const char* name, int mode)
 		kernel->debug.Error("file system feature not support");
 		return;
 	}
-	if (NULL != name) fd = Open(name, mode);
+	if (NULL != name) Open(name, mode);
 }
 
 
@@ -117,7 +117,6 @@ int FileStream::Size()
 
 
 /// @brief FileStream close
-/// @return 
 void FileStream::Close()
 {
 	if (NULL != opts)
