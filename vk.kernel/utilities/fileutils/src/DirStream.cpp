@@ -19,7 +19,7 @@ DirStream::DirStream(const char* name, int mode)
 		kernel->debug.Error("file system feature not support");
 		return;
 	}
-	if (NULL != name) fd = Open(name, mode);
+	if (NULL != name) Open(name, mode);
 }
 
 
@@ -56,7 +56,7 @@ bool DirStream::IsExist(const char* name)
 
 /// @brief DirStream open
 /// @param name 
-/// @param opt 
+/// @param mode 
 /// @return 
 bool DirStream::Open(const char* name, int mode)
 {
@@ -75,7 +75,7 @@ bool DirStream::Open(const char* name, int mode)
 
 
 /// @brief DirStream read
-/// @param data 
+/// @param dirs 
 /// @param size 
 /// @param offset 
 /// @return 
@@ -102,7 +102,6 @@ int DirStream::Size()
 
 
 /// @brief DirStream close
-/// @return 
 void DirStream::Close()
 {
 	if (NULL != opts)
