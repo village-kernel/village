@@ -24,7 +24,7 @@ CmdMsgMgr::CmdMsgMgr()
 ///CmdMsgMgr initialize
 void CmdMsgMgr::Initialize(const char* driver)
 {
-	transceiver = kernel->device->GetDriver(driver);
+	transceiver = kernel->device.GetDriver(driver);
 }
 
 
