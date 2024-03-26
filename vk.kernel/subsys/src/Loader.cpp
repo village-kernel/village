@@ -96,4 +96,4 @@ public:
 
 
 ///Register module
-REGISTER_MODULE(new ConcreteLoader(), ModuleID::_serivce, loader);
+REGISTER_MODULE(new ConcreteLoader(), ModuleID::_program, loader);
