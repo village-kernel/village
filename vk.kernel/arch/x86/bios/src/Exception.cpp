@@ -57,7 +57,25 @@ void Exception::Setup()
 /// @brief Exception Exit
 void Exception::Exit()
 {
-
+	interrupt->RemoveISR(IRQ_Division_By_Zero,            (Method)&Exception::DivisionByZeroHandler,            this);
+	interrupt->RemoveISR(IRQ_Debug,                       (Method)&Exception::DebugHandler,                     this);
+	interrupt->RemoveISR(IRQ_Non_Maskable_Interrupt,      (Method)&Exception::NonMaskableInterruptHandler,      this);
+	interrupt->RemoveISR(IRQ_Breakpoint,                  (Method)&Exception::BreakpointHandler,                this);
+	interrupt->RemoveISR(IRQ_Into_Detected_Overflow,      (Method)&Exception::IntoDetectedOverflowHandler,      this);
+	interrupt->RemoveISR(IRQ_Out_Of_Bounds,               (Method)&Exception::OutOfBoundsHandler,               this);
+	interrupt->RemoveISR(IRQ_Invalid_Opcode,              (Method)&Exception::InvalidOpcodeHandler,             this);
+	interrupt->RemoveISR(IRQ_No_Coprocessor,              (Method)&Exception::NoCoprocessorHandler,             this);
+	interrupt->RemoveISR(IRQ_Doule_Fault,                 (Method)&Exception::DouleFaultHandler,                this);
+	interrupt->RemoveISR(IRQ_Coprocessor_Segment_Overrun, (Method)&Exception::CoprocessorSegmentOverrunHandler, this);
+	interrupt->RemoveISR(IRQ_Bad_TSS,                     (Method)&Exception::BadTSSHandler,                    this);
+	interrupt->RemoveISR(IRQ_Segment_Not_Present,         (Method)&Exception::SegmentNotPresentHandler,         this);
+	interrupt->RemoveISR(IRQ_Stack_Fault,                 (Method)&Exception::StackFaultHandler,                this);
+	interrupt->RemoveISR(IRQ_General_Protection_Fault,    (Method)&Exception::GeneralProtectionFaultHandler,    this);
+	interrupt->RemoveISR(IRQ_Page_Fault,                  (Method)&Exception::PageFaultHandler,                 this);
+	interrupt->RemoveISR(IRQ_Unknown_Interrupt,           (Method)&Exception::UnknownInterruptHandler,          this);
+	interrupt->RemoveISR(IRQ_Coprocessor_Fault,           (Method)&Exception::CoprocessorFaultHandler,          this);
+	interrupt->RemoveISR(IRQ_Alignment_Check,             (Method)&Exception::AlignmentCheckHandler,            this);
+	interrupt->RemoveISR(IRQ_Machine_Check,               (Method)&Exception::MachineCheckHandler,              this);
 }
 
 
