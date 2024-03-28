@@ -18,24 +18,6 @@ ConcreteMemory::ConcreteMemory()
 	tail(NULL),
 	curr(NULL)
 {
-	Setup();
-}
-
-
-/// @brief Destructor
-ConcreteMemory::~ConcreteMemory()
-{
-}
-
-
-/// @brief Memory setup sram parameters
-void ConcreteMemory::Setup()
-{
-	if (isMemReady) return;
-
-	//Clear memory ready flag
-	isMemReady = false;
-
 	//Initialize heap end at first call
 	if (0 == sbrk_heap)
 	{
@@ -74,8 +56,18 @@ void ConcreteMemory::Setup()
 
 		curr       = head;
 	}
+}
 
-	//Set memory ready flag
+
+/// @brief Destructor
+ConcreteMemory::~ConcreteMemory()
+{
+}
+
+
+/// @brief Memory setup sram parameters
+void ConcreteMemory::Setup()
+{
 	isMemReady = true;
 }
 
@@ -83,7 +75,7 @@ void ConcreteMemory::Setup()
 /// @brief Exit
 void ConcreteMemory::Exit()
 {
-	
+	isMemReady = false;
 }
 
 
