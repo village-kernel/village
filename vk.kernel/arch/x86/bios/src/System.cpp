@@ -36,7 +36,7 @@ void ConcreteSystem::Setup()
 /// @brief System Exit
 void ConcreteSystem::Exit()
 {
-
+	kernel->interrupt.RemoveISR(IRQ_Systick, (Method)&ConcreteSystem::SysTickHandler, this);
 }
 
 
