@@ -51,14 +51,8 @@ void ConcreteFeature::Exit()
 			if (module->GetID() == id) module->Exit();
 		}
 	}
-}
 
-
-/// @brief Register in runtime
-/// @param module 
-void ConcreteFeature::RegisterInRuntime(Module* module)
-{
-	if (isRuntime) module->Setup();
+	modules.Release();
 }
 
 
@@ -67,15 +61,7 @@ void ConcreteFeature::RegisterInRuntime(Module* module)
 void ConcreteFeature::RegisterModule(Module* module)
 {
 	modules.Add(module, module->GetName());
-	RegisterInRuntime(module);
-}
-
-
-/// @brief Deregister in runtime
-/// @param module 
-void ConcreteFeature::DeregisterInRuntime(Module* module)
-{
-	if (isRuntime) module->Exit();
+	if (isRuntime) module->Setup();
 }
 
 
@@ -83,7 +69,7 @@ void ConcreteFeature::DeregisterInRuntime(Module* module)
 /// @param module module pointer
 void ConcreteFeature::DeregisterModule(Module* module)
 {
-	DeregisterInRuntime(module);
+	if (isRuntime) module->Exit();
 	modules.Remove(module);
 }
 

@@ -19,10 +19,6 @@ private:
 	//Members
 	bool isRuntime;
 	List<Module*> modules;
-
-	//Methods
-	void RegisterInRuntime(Module* module);
-	void DeregisterInRuntime(Module* module);
 public:
 	//Methods
 	ConcreteFeature();
