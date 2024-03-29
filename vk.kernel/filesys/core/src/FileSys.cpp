@@ -1,31 +1,31 @@
 //###########################################################################
-// FileSystem.cpp
+// FileSys.cpp
 // Definitions of the functions that manage file system
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "FileSystem.h"
+#include "FileSys.h"
 #include "Kernel.h"
 #include "List.h"
 
 
-/// @brief ConcreteFileSystem
-class ConcreteFileSystem : public FileSystem
+/// @brief ConcreteFileSys
+class ConcreteFileSys : public FileSys
 {
 private:
 	//Members
-	List<FileSys*>   fileSys;
-	List<FileOpts*>  fileOpts;
-	List<MountNode*> mounts;
+	List<FileSystem*> fileSys;
+	List<FileVolume*> volumes;
+	List<MountNode*>  mounts;
 public:
 	/// @brief Constructor
-	ConcreteFileSystem()
+	ConcreteFileSys()
 	{
 	}
 
 
 	/// @brief Destructor
-	~ConcreteFileSystem()
+	~ConcreteFileSys()
 	{
 	}
 
@@ -33,8 +33,10 @@ public:
 	/// @brief File system setup
 	void Setup()
 	{
-		for (FileSys* fs = fileSys.Begin(); !fileSys.IsEnd(); fs = fileSys.Next())
+		for (fileSys.Begin(); !fileSys.IsEnd(); fileSys.Next())
 		{
+			FileSystem* fs = fileSys.Item();
+
 			fs->Setup();
 		}
 
@@ -45,8 +47,10 @@ public:
 	/// @brief File system exit
 	void Exit()
 	{
-		for (FileSys* fs = fileSys.Begin(); !fileSys.IsEnd(); fs = fileSys.Next())
+		for (fileSys.Begin(); !fileSys.IsEnd(); fileSys.Next())
 		{
+			FileSystem* fs = fileSys.Item();
+
 			fs->Exit();
 		}
 	}
@@ -56,9 +60,9 @@ public:
 	void MountSystemNode()
 	{
 		//Mount root node "/"
-		for (fileOpts.Begin(); !fileOpts.IsEnd(); fileOpts.Next())
+		for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
 		{
-			char* volumelab = fileOpts.GetName();
+			char* volumelab = volumes.GetName();
 			if (0 == strcmp(volumelab, "/media/VILLAGE OS"))
 			{
 				mounts.Add(new MountNode((char*)"/", volumelab, 0755));
@@ -72,7 +76,7 @@ public:
 	/// @brief Register file system
 	/// @param fileOpt file system opt
 	/// @param name file system name
-	void RegisterFS(FileSys* fs, const char* name)
+	void RegisterFS(FileSystem* fs, const char* name)
 	{
 		fileSys.InsertByName(fs, (char*)name);
 	}
@@ -81,45 +85,43 @@ public:
 	/// @brief Deregister file system
 	/// @param fileOpt file system opt
 	/// @param name file system name
-	void DeregisterFS(FileSys* fs, const char* name)
+	void DeregisterFS(FileSystem* fs, const char* name)
 	{
 		fileSys.RemoveByName(fs, (char*)name);
 	}
 
 
-	/// @brief Register file system
-	/// @param opts file system opt
-	/// @param name file system name
-	int RegisterOpts(FileOpts* opts)
+	/// @brief Attach volume
+	/// @param volume
+	int AttachVolume(FileVolume* volume)
 	{
 		char* prefix = (char*)"/media/";
-		char* label  = opts->GetVolumeLabel();
+		char* label  = volume->GetVolumeLabel();
 		char* name   = new char[strlen(prefix) + strlen(label) + 1]();
 		strcat(name, prefix);
 		strcat(name, label);
-		return fileOpts.InsertByName(opts, name);
+		return volumes.InsertByName(volume, name);
 	}
 
 
-	/// @brief Deregister file system
-	/// @param opts file system opt
-	/// @param name file system name
-	int DeregisterOpts(FileOpts* opts)
+	/// @brief Detach volume
+	/// @param volume
+	int DetachVolume(FileVolume* volume)
 	{
-		return fileOpts.Remove(opts);
+		return volumes.Remove(volume);
 	}
 
 
 	/// @brief Get File Opts
 	/// @param name 
 	/// @return 
-	FileOpts* GetFileOpts(const char* name)
+	FileVolume* GetVolume(const char* name)
 	{
 		for (MountNode* mount = mounts.Begin(); !mounts.IsEnd(); mount = mounts.Next())
 		{
 			if (0 == strncmp(mount->target, name, strlen(mount->target)))
 			{
-				return fileOpts.GetItemByName(mount->source);
+				return volumes.GetItemByName(mount->source);
 			}
 		}
 		return NULL;
@@ -128,4 +130,4 @@ public:
 
 
 ///Register module
-REGISTER_MODULE(new ConcreteFileSystem(), ModuleID::_feature, fileSystem);
+REGISTER_MODULE(new ConcreteFileSys(), ModuleID::_feature, filesys);

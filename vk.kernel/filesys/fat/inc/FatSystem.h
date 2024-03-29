@@ -7,12 +7,12 @@
 #ifndef __FAT_FILE_SYSTEM_H__
 #define __FAT_FILE_SYSTEM_H__
 
-#include "FileSys.h"
+#include "FileSystem.h"
 #include "Driver.h"
 
 
 /// @brief FatSystem
-class FatSystem : public FileSys
+class FatSystem : public FileSystem
 {
 private:
 	//Enumerates

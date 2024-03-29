@@ -11,9 +11,9 @@
 /// @brief Constructor
 FileStream::FileStream(const char* name, int mode)
 	:fd(-1),
-	opts(NULL)
+	volume(NULL)
 {
-	filesys = (FileSystem*)kernel->feature.GetModule("fileSystem");
+	filesys = (FileSys*)kernel->feature.GetModule("filesys");
 	if (NULL == filesys)
 	{
 		kernel->debug.Error("file system feature not support");
@@ -36,17 +36,17 @@ bool FileStream::IsExist(const char* name)
 {
 	if (NULL != filesys)
 	{
-		opts = filesys->GetFileOpts(name);
+		volume = filesys->GetVolume(name);
 	}
 
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		fd = opts->Open(name, FileMode::_OpenExisting);
+		fd = volume->Open(name, FileMode::_OpenExisting);
 	}
 	
 	if (fd != -1)
 	{
-		opts->Close(fd);
+		volume->Close(fd);
 		return true;
 	}
 
@@ -62,12 +62,12 @@ bool FileStream::Open(const char* name, int mode)
 {
 	if (NULL != filesys)
 	{
-		opts = filesys->GetFileOpts(name);
+		volume = filesys->GetVolume(name);
 	}
 
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		fd = opts->Open(name, mode);
+		fd = volume->Open(name, mode);
 	}
 
 	return (fd != -1);
@@ -81,9 +81,9 @@ bool FileStream::Open(const char* name, int mode)
 /// @return 
 int FileStream::Write(char* data, int size, int offset)
 {
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		return opts->Write(fd, data, size, offset);
+		return volume->Write(fd, data, size, offset);
 	}
 	return 0;
 }
@@ -96,9 +96,9 @@ int FileStream::Write(char* data, int size, int offset)
 /// @return 
 int FileStream::Read(char* data, int size, int offset)
 {
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		return opts->Read(fd, data, size, offset);
+		return volume->Read(fd, data, size, offset);
 	}
 	return 0;
 }
@@ -108,9 +108,9 @@ int FileStream::Read(char* data, int size, int offset)
 /// @return 
 int FileStream::Size()
 {
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		return opts->Size(fd);
+		return volume->Size(fd);
 	}
 	return 0;
 }
@@ -119,8 +119,8 @@ int FileStream::Size()
 /// @brief FileStream close
 void FileStream::Close()
 {
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		opts->Close(fd);
+		volume->Close(fd);
 	}
 }

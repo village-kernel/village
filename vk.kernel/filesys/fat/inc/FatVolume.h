@@ -8,13 +8,13 @@
 #define __FAT_VOLUME_H__
 
 #include "List.h"
-#include "FileOpts.h"
+#include "FileVolume.h"
 #include "FatDiskio.h"
 #include "FatObject.h"
 
 
 /// @brief FatVolume
-class FatVolume : public FileOpts
+class FatVolume : public FileVolume
 {
 private:
 	//Members
@@ -27,7 +27,7 @@ private:
 	FatObject* SearchDir(FatObject* obj, const char* name);
 	FatObject* CreateDir(const char* path, int attr);
 public:
-	//FileOpts Methods
+	//FileVolume Methods
 	bool SetVolumeLabel(const char* label);
 	char* GetVolumeLabel();
 	

@@ -84,13 +84,13 @@ struct MountNode
 ///Filesystem register macro
 #define REGISTER_FS(fs, name)                                                           \
 static struct _FS_##name {                                                              \
-	FileSys* filesystem = fs;                                                           \
+	FileSystem* filesystem = fs;                                                        \
 	_FS_##name() {                                                                      \
-		FileSystem* filesys = (FileSystem*)kernel->feature.GetModule("fileSystem");     \
+		FileSys* filesys = (FileSys*)kernel->feature.GetModule("filesys");              \
 		if (NULL != filesys) filesys->RegisterFS(filesystem, #name);                    \
 	}                                                                                   \
 	~_FS_##name() {                                                                     \
-		FileSystem* filesys = (FileSystem*)kernel->feature.GetModule("fileSystem");     \
+		FileSys* filesys = (FileSys*)kernel->feature.GetModule("filesys");              \
 		if (NULL != filesys) filesys->DeregisterFS(filesystem, #name);                  \
 	}                                                                                   \
 } const _fs_##name __attribute__((used,__section__(".fs")))
