@@ -11,15 +11,15 @@
 /// @brief Constructor
 DirStream::DirStream(const char* name, int mode)
 	:fd(-1),
-	opts(NULL)
+	volume(NULL)
 {
-	filesys = (FileSystem*)kernel->feature->GetComponent("fileSystem");
+	filesys = (FileSys*)kernel->feature.GetModule("filesys");
 	if (NULL == filesys)
 	{
-		kernel->debug->Error("file system feature not support");
+		kernel->debug.Error("file system feature not support");
 		return;
 	}
-	if (NULL != name) fd = Open(name, mode);
+	if (NULL != name) Open(name, mode);
 }
 
 
@@ -36,17 +36,17 @@ bool DirStream::IsExist(const char* name)
 {
 	if (NULL != filesys)
 	{
-		opts = filesys->GetFileOpts(name);
+		volume = filesys->GetVolume(name);
 	}
 
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		fd = opts->OpenDir(name, FileMode::_OpenExisting);
+		fd = volume->OpenDir(name, FileMode::_OpenExisting);
 	}
 	
 	if (fd != -1)
 	{
-		opts->CloseDir(fd);
+		volume->CloseDir(fd);
 		return true;
 	}
 
@@ -56,18 +56,18 @@ bool DirStream::IsExist(const char* name)
 
 /// @brief DirStream open
 /// @param name 
-/// @param opt 
+/// @param mode 
 /// @return 
 bool DirStream::Open(const char* name, int mode)
 {
 	if (NULL != filesys)
 	{
-		opts = filesys->GetFileOpts(name);
+		volume = filesys->GetVolume(name);
 	}
 
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		fd = opts->OpenDir(name, mode);
+		fd = volume->OpenDir(name, mode);
 	}
 	
 	return (fd != -1);
@@ -75,15 +75,15 @@ bool DirStream::Open(const char* name, int mode)
 
 
 /// @brief DirStream read
-/// @param data 
+/// @param dirs 
 /// @param size 
 /// @param offset 
 /// @return 
 int DirStream::Read(FileDir* dirs, int size, int offset)
 {
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		return opts->ReadDir(fd, dirs, size, offset);
+		return volume->ReadDir(fd, dirs, size, offset);
 	}
 	return 0;
 }
@@ -93,20 +93,19 @@ int DirStream::Read(FileDir* dirs, int size, int offset)
 /// @return 
 int DirStream::Size()
 {
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		return opts->SizeDir(fd);
+		return volume->SizeDir(fd);
 	}
 	return 0;
 }
 
 
 /// @brief DirStream close
-/// @return 
 void DirStream::Close()
 {
-	if (NULL != opts)
+	if (NULL != volume)
 	{
-		opts->CloseDir(fd);
+		volume->CloseDir(fd);
 	}
 }
