@@ -1,27 +1,30 @@
 //###########################################################################
-// FileSystem.h
-// Declarations of the functions that manage file system
+// FileSys.h
+// Specifies the interface for all classes that contain file system
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __FILE_SYSTEM_H__
-#define __FILE_SYSTEM_H__
+#ifndef __FILE_SYSTEM_INTERFACE_H__
+#define __FILE_SYSTEM_INTERFACE_H__
 
-#include "Component.h"
-#include "FileSys.h"
-#include "FileOpts.h"
+#include "stdint.h"
+#include "stddef.h"
+#include "FileVolume.h"
 
 
 /// @brief FileSystem
-class FileSystem : public Component
+class FileSystem
 {
 public:
+	//Constructor
+	FileSystem() {}
+	
+	//Destructor
+	virtual ~FileSystem() {};
+
 	//Methods
-	virtual void RegisterFS(FileSys* fs, const char* name) = 0;
-	virtual void DeregisterFS(FileSys* fs, const char* name) = 0;
-	virtual int RegisterOpts(FileOpts* opts) = 0;
-	virtual int DeregisterOpts(FileOpts* opts) = 0;
-	virtual FileOpts* GetFileOpts(const char* name) = 0;
+	virtual uint32_t GetSystemID() = 0;
+	virtual FileVolume* CreateVolume() = 0;
 };
 
-#endif //!__FILE_SYSTEM_H__
+#endif //!__FILE_SYSTEM_INTERFACE_H__

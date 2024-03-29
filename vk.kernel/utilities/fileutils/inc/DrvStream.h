@@ -1,33 +1,31 @@
 //###########################################################################
-// FileStream.h
+// DrvStream.h
 // Declarations of the functions that manage file
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __FILE_STREAM_H__
-#define __FILE_STREAM_H__
+#ifndef __DRV_STREAM_H__
+#define __DRV_STREAM_H__
 
-#include "FileSys.h"
+#include "FileDefs.h"
+#include "Driver.h"
 
 
-/// @brief FileStream
-class FileStream
+/// @brief DrvStream
+class DrvStream
 {
 private:
 	//Members
-	int fd;
-	FileSys*    filesys;
-	FileVolume* volume;
+	Driver* driver;
 public:
 	//Methods
-	FileStream(const char* name = NULL, int mode = 0);
-	~FileStream();
-	bool IsExist(const char* name);
-	bool Open(const char* name, int mode);
+	DrvStream(const char* name = NULL, int mode = 0);
+	~DrvStream();
+	bool Open(const char* name, int mode = 0);
 	int Write(char* data, int size, int offset = 0);
 	int Read(char* data, int size, int offset = 0);
-	int Size();
+	int IOCtrl(uint8_t cmd, void* data);
 	void Close();
 };
 
-#endif //!__FILE_STREAM_H__
+#endif //!__DRV_STREAM_H__

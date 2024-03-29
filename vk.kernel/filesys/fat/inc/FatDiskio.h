@@ -7,7 +7,7 @@
 #ifndef __FAT_DISk_IO_H__
 #define __FAT_DISk_IO_H__
 
-#include "Driver.h"
+#include "DrvStream.h"
 
 
 /// @brief FatDiskio
@@ -87,6 +87,17 @@ public:
 		uint16_t magic;
 	} __attribute__((packed));
 
+	struct FAT32FSInfo
+	{
+		uint32_t leadSig;
+		uint8_t  reserved1[480];
+		uint32_t structSig;
+		uint32_t freeCount;
+		uint32_t nextFree;
+		uint8_t  reserved2[12];
+		uint32_t trailSig;
+	} __attribute__((packed));
+
 	struct Info
 	{
 		FATType  fatType;
@@ -119,15 +130,17 @@ private:
 	static const uint32_t fat32_eoc_flag = 0xffffff8;
 		
 	//Driver Members
-	Driver*  diskdrv;
-	uint32_t fstSec;
-	Info     info;
+	DrvStream* diskdrv;
+	uint32_t   fstSec;
+	Info       info;
 
 	//Methods
 	bool CheckFileSystem();
 public:
 	//Method
-	bool Setup(Driver* diskdrv, uint32_t fstSec);
+	bool Setup(DrvStream* diskdrv, uint32_t fstSec);
+	void Exit();
+
 	uint32_t WriteSector(char* data, uint32_t sector, uint32_t secSize = 1);
 	uint32_t ReadSector(char* data, uint32_t sector, uint32_t secSize = 1);
 
