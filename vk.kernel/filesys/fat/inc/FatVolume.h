@@ -49,7 +49,8 @@ public:
 	~FatVolume();
 
 	//Methods
-	int Setup(Driver* diskdrv, uint32_t fstSec);
+	bool Setup(DrvStream* diskdrv, uint32_t fstSec);
+	void Exit();
 };
 
 #endif //!__FAT_VOLUME_H__
