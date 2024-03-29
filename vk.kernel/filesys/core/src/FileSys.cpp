@@ -7,51 +7,102 @@
 #include "FileSys.h"
 #include "Kernel.h"
 #include "List.h"
+#include "DrvStream.h"
 
 
 /// @brief ConcreteFileSys
 class ConcreteFileSys : public FileSys
 {
 private:
+	//Enumerates
+	enum BootIndicator
+	{
+		_NotBootable = 0x00,
+		_Bootable    = 0x80,
+	};
+
+	//Structures
+	struct DPT
+	{
+		uint32_t bootIndicator : 8;
+		uint32_t startingHead : 8;
+		uint32_t startingSector : 6;
+		uint32_t startingCylinder: 10;
+		uint32_t systemID : 8;
+		uint32_t endingHead : 8;
+		uint32_t endingSector : 6;
+		uint32_t endingCylinder : 10;
+		uint32_t relativeSectors;
+		uint32_t totalSectors;
+	} __attribute__((packed));
+
+	struct MBR
+	{
+		uint8_t  boot[446];
+		DPT      dpt[4];
+		uint16_t magic;
+	} __attribute__((packed));
+private:
+	//Static constants
+	static const uint16_t magic = 0xaa55;
+
 	//Members
+	MBR*              mbr;
+	DrvStream         diskdrv;
 	List<FileSystem*> fileSys;
 	List<FileVolume*> volumes;
 	List<MountNode*>  mounts;
-public:
-	/// @brief Constructor
-	ConcreteFileSys()
-	{
+private:
+	/// @brief 
+	/// @return 
+	bool InitDisk()
+	{ 
+		if (diskdrv.Open("disk0", FileMode::_ReadWrite)) return true;
+
+		kernel->debug.Error("Not disk driver found");
+
+		return false;
 	}
 
 
-	/// @brief Destructor
-	~ConcreteFileSys()
+	/// @brief 
+	/// @return 
+	bool ReadMBR()
 	{
-	}
+		static const uint8_t mbr_sector = 0;
 
+		mbr = new MBR();
 
-	/// @brief File system setup
-	void Setup()
-	{
-		for (fileSys.Begin(); !fileSys.IsEnd(); fileSys.Next())
+		if (NULL != mbr)
 		{
-			FileSystem* fs = fileSys.Item();
+			diskdrv.Read((char*)mbr, 1, mbr_sector);
 
-			fs->Setup();
+			if (magic == mbr->magic) return true;
 		}
 
-		MountSystemNode();
+		kernel->debug.Error("Not a valid disk");
+
+		return false;
 	}
 
-
-	/// @brief File system exit
-	void Exit()
+	
+	/// @brief Init volumes
+	void InitVolumes()
 	{
-		for (fileSys.Begin(); !fileSys.IsEnd(); fileSys.Next())
+		for (uint8_t i = 0; i < 4; i++)
 		{
-			FileSystem* fs = fileSys.Item();
+			FileSystem* fs = fileSys.GetItem(mbr->dpt[i].systemID);
 
-			fs->Exit();
+			if (NULL != fs)
+			{
+				FileVolume* volume = fs->CreateVolume();
+
+				if (volume->Setup(&diskdrv, mbr->dpt[i].relativeSectors))
+				{
+					AttachVolume(volume);
+				}
+				else delete volume;
+			}
 		}
 	}
 
@@ -71,19 +122,57 @@ public:
 		}
 		kernel->debug.Output(Debug::_Lv2, "Mount system node failed, '/media/VILLAGE OS' not found");
 	}
+public:
+	/// @brief Constructor
+	ConcreteFileSys()
+	{
+	}
+
+
+	/// @brief Destructor
+	~ConcreteFileSys()
+	{
+	}
+
+
+	/// @brief File system setup
+	void Setup()
+	{
+		if (!InitDisk()) return;
+
+		if (!ReadMBR()) return;
+
+		InitVolumes();
+
+		MountSystemNode();
+	}
+
+
+	/// @brief File system exit
+	void Exit()
+	{
+		for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+		{
+			FileVolume* volume = volumes.Item();
+
+			volume->Exit();
+		}
+
+		fileSys.Release();
+	}
 
 
 	/// @brief Register file system
-	/// @param fileOpt file system opt
+	/// @param fs file system
 	/// @param name file system name
 	void RegisterFS(FileSystem* fs, const char* name)
 	{
-		fileSys.InsertByName(fs, (char*)name);
+		fileSys.Insert(fs, fs->GetSystemID(), (char*)name);
 	}
 
 
 	/// @brief Deregister file system
-	/// @param fileOpt file system opt
+	/// @param fs file system
 	/// @param name file system name
 	void DeregisterFS(FileSystem* fs, const char* name)
 	{

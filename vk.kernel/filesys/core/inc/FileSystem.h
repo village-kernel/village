@@ -9,7 +9,7 @@
 
 #include "stdint.h"
 #include "stddef.h"
-#include "FileDefs.h"
+#include "FileVolume.h"
 
 
 /// @brief FileSystem
@@ -23,8 +23,8 @@ public:
 	virtual ~FileSystem() {};
 
 	//Methods
-	virtual void Setup() = 0;
-	virtual void Exit()  = 0;
+	virtual uint32_t GetSystemID() = 0;
+	virtual FileVolume* CreateVolume() = 0;
 };
 
 #endif //!__FILE_SYSTEM_INTERFACE_H__

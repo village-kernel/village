@@ -9,7 +9,7 @@
 
 #include "stdint.h"
 #include "stddef.h"
-#include "FileDefs.h"
+#include "DrvStream.h"
 
 
 /// @brief FileVolume
@@ -21,6 +21,10 @@ public:
 	
 	//Destructor
 	virtual ~FileVolume() {};
+
+	//Methods
+	virtual bool Setup(DrvStream* diskdrv, uint32_t fstSec)          = 0;
+	virtual void Exit()                                              = 0;
 
 	//Disk methods
 	virtual bool SetVolumeLabel(const char* name)                    = 0;
