@@ -69,7 +69,7 @@ objs-$(CONFIG_INPUT)                        += Input.o
 objs-$(CONFIG_LOADER)                       += Loader.o
 objs-$(CONFIG_WORKQUEUE)                    += WorkQueue.o
 
-objs-$(CONFIG_FILESYSTEM)                   += FileSystem.o
+objs-$(CONFIG_FILESYSTEM)                   += FileSys.o
 objs-$(CONFIG_FATFS)                        += FatDiskio.o
 objs-$(CONFIG_FATFS)                        += FatEntry.o
 objs-$(CONFIG_FATFS)                        += FatObject.o

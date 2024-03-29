@@ -4,7 +4,7 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "FileSystem.h"
+#include "FileSys.h"
 #include "FatSystem.h"
 #include "FatVolume.h"
 #include "Kernel.h"
@@ -26,7 +26,7 @@ FatSystem::~FatSystem()
 /// @brief Setup
 void FatSystem::Setup()
 {
-	FileSystem* filesys = (FileSystem*)kernel->feature.GetModule("fileSystem");
+	FileSys* filesys = (FileSys*)kernel->feature.GetModule("filesys");
 	if (NULL == filesys)
 	{
 		kernel->debug.Error("file system feature not support");
@@ -50,15 +50,15 @@ void FatSystem::Setup()
 	{
 		if (CheckDPT(&mbr->dpt[i]))
 		{
-			FatVolume* fatOpts = new FatVolume();
+			FatVolume* volume = new FatVolume();
 
-			if (!fatOpts->Setup(diskdrv, mbr->dpt[i].relativeSectors))
+			if (!volume->Setup(diskdrv, mbr->dpt[i].relativeSectors))
 			{
-				delete fatOpts;
+				delete volume;
 				continue;
 			}
 
-			filesys->RegisterOpts(fatOpts);
+			filesys->AttachVolume(volume);
 		}
 	}
 

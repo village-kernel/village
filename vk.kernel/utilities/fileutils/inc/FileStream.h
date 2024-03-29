@@ -7,7 +7,7 @@
 #ifndef __FILE_STREAM_H__
 #define __FILE_STREAM_H__
 
-#include "FileSystem.h"
+#include "FileSys.h"
 
 
 /// @brief FileStream
@@ -16,8 +16,8 @@ class FileStream
 private:
 	//Members
 	int fd;
-	FileOpts*   opts;
-	FileSystem* filesys;
+	FileSys*    filesys;
+	FileVolume* volume;
 public:
 	//Methods
 	FileStream(const char* name = NULL, int mode = 0);
