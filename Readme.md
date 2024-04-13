@@ -15,16 +15,14 @@
 
 ---
 # 目录：
-- ## vk.application: 应用层代码
-- ## vk.bootloader: 加载器代码
-- ## vk.hardware: 硬件层代码
-- ## vk.kernel: 微内核代码
-- ## vk.network: 网络层代码
-- ## vk.scripts: 工具脚本
-- ## vk.build：编译输出文件夹
+- ## village-boot:    引导层
+- ## village-kernel:  内核层
+- ## village-os:      系统层
+- ## village-scripts: 工具脚本
+- ## village-docs:    相关文档
 
 ---
-# 参与village-kernel开发：
+# 参与village开发：
 
 - ## 1.系统要求
 		mac os / linux / windows（使用wsl子系统）
@@ -59,7 +57,7 @@
 		把项目目录village-kernel拉到vscode界面
 		
 		接着打开vscode终端，拷贝配置文件
-		cp vk.scripts/configs/i686.config .config
+		cp village-scripts/configs/i686.config .config
 		
 		修改配置
 		make menuconfig
@@ -79,7 +77,7 @@
 - ## 5.创建rootfs文件系统镜像
 	- ### Mac OS
 			切换到vscode终端，拷贝文件系统镜像
-			cp vk.scripts/rootfs.img rootfs.img
+			cp village-scripts/rootfs.img rootfs.img
 
 			右键选中rootfs.img，在Finder中打开，双击rootfs.img文件完成挂载
 
@@ -94,7 +92,7 @@
 
 	- ### Linux
 			切换到vscode终端，拷贝文件系统镜像
-			cp vk.scripts/rootfs.img rootfs.img
+			cp village-scripts/rootfs.img rootfs.img
 
 			终端挂载rootfs.img
 			sudo mount -o offset=512 rootfs.img /mnt
@@ -115,19 +113,5 @@
 
 
 # 说明
-- 目前还处于开发阶段，各功能还不完善，代码还有点垃圾。
-- 驱动模块需要进行修改，目前注册驱动还不理想。
-- GUI图形界面目前还没编写，只实现了简单的显示功能。
-- 专用Bootloader目前还没编写。
-- 网络功能还没时间开发，目前只有一人，搞不过来。
-- FAT文件系统还在编写完善，目前只能实现读取功能，其他文件系统待开发。
+- 目前还处于开发阶段，各功能还不完善，框架结构未确定，待优化。
 - 适配平台不多，目前只适配了cortex-m和i686平台，其他平台待适配。
-- 硬件层代码都存放在vk.hardware子模块中。
-- 初步实现了任务管理，内存分配，文件系统，动态加载，系统调度，中断管理，工作队列，
-  线程同步（互斥锁，自旋锁，信号量）。
-
-# 展望未来
-- 短时间内单靠一个人，搞不定太多，进度实在太慢。
-- 编写适配平台底层代码，重写C库，重写文件系统，太耗时间。
-- 寻找更多志同道合的码友，一起参与项目开发，人多力量大。
-- 目前还很简陋，但星星之火，也可以燎原，一起把火烧起来。

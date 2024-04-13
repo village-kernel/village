@@ -1,0 +1,11 @@
+menu "Hardware Abstraction Layer"
+
+config HAL_PCI_CONTROLLER
+	bool "Enable pci controller class"
+	default y
+
+config HAL_PS2_CONTROLLER
+	bool "Enable ps2 controller class"
+	default y
+
+endmenu
