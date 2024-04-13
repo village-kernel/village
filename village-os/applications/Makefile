@@ -1,0 +1,11 @@
+###########################################################################
+# Makefile
+# The Makefile of aplications
+#
+# $Copyright: Copyright (C) village
+############################################################################
+
+-include village-os/applications/taichi/Makefile
+-include village-os/applications/console/Makefile
+-include village-os/applications/launch/Makefile
+-include village-os/applications/settings/Makefile

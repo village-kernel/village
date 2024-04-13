@@ -1,5 +1,0 @@
-# config libraries menu
-
-config VKLIBC
-	bool "Using village kernel libc as c library"
-	default y

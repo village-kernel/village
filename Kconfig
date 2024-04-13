@@ -72,26 +72,14 @@ config ROOTFS
 
 endmenu
 
-menu "Application"
-	source ./vk.application/Kconfig
+menu "village-boot"
+	source ./village-boot/Kconfig
 endmenu
 
-menu "Bootloader"
-	source ./vk.bootloader/Kconfig
+menu "village-kernel"
+	source ./village-kernel/Kconfig
 endmenu
 
-menu "Graphics"
-	source ./vk.graphics/Kconfig
-endmenu
-
-menu "Hardware"
-	source ./vk.hardware/Kconfig
-endmenu
-
-menu "Library"
-	source ./vk.library/Kconfig
-endmenu
-
-menu "Kernel"
-	source ./vk.kernel/Kconfig
+menu "village-os"
+	source ./village-os/Kconfig
 endmenu
