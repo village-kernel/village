@@ -8,9 +8,9 @@
 ######################################
 # paths
 ######################################
-inc-y += village-kernel/vendor/arm/cortex-m/driver/config
-inc-y += village-kernel/vendor/arm/cortex-m/driver/inc
-src-y += village-kernel/vendor/arm/cortex-m/driver/src
+inc-y                         += village-kernel/vendor/arm/cortex-m/driver/config
+inc-y                         += village-kernel/vendor/arm/cortex-m/driver/inc
+src-y                         += village-kernel/vendor/arm/cortex-m/driver/src
 
 ######################################
 # objects
