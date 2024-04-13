@@ -16,14 +16,14 @@ libs-y                       += hw
 ######################################
 inc-y                        += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Include
 
-inc-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Inc
-inc-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Inc
-inc-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Inc
+inc-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Inc
+inc-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Inc
+inc-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Inc
 
-src-y                        +=	village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Source
-src-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Src
-src-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Src
-src-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Src
+src-y                        += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Source
+src-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Src
+src-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Src
+src-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Src
 
 
 ######################################
