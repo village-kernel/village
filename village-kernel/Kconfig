@@ -6,224 +6,283 @@ config KERNEL
 
 if KERNEL
 
-# config stdlib menu
+	# config stdlib menu
 
-menu "stdlib"
+	menu "stdlib"
 
-comment "This is using to config libraries"
+	comment "This is using to config libraries"
 
-config VKLIBC
-	bool "Using village kernel libc as c library"
-	default y
+	config VKLIBC
+		bool "Using village kernel libc as c library"
+		default y
 
-endmenu
+	endmenu
 
-# config vendor
+	# config vendor
 
-menu "vendor"
-	source ./village-kernel/vendor/Kconfig
-endmenu
+	menu "vendor"
 
-# config kernel menu
+	comment "Select CPU Architecture"
 
-menu "kernel"
+	choice
+		prompt "Architecture"
+		default ARM
 
-config TASK_STACK
-	int "The size of thread task stack"
-	default 1024
+		config ARM
+			bool "arm"
 
-config MODULE
-	bool "Enable loadable module support"
-	select FATFS
-	select ELFPARSER
-	select ENVIRONMENT
+		config X86
+			bool "x86"
+			select BOOTSECTION
+	endchoice
 
-config ENVIRONMENT
-	depends on MODULE
-	bool "Build the environment of Loadable module"
-	default y
+	comment "Configure Support Function"
 
-endmenu
+	## ARM
+	if ARM
 
-#config subsystem
+		choice
+			prompt "ARM Series"
+			depends on ARM
+			default CORTEX_M
 
-menu "subsys"
+			config CORTEX_A
+				bool "cortex-A"
 
-config SUBSYS
-	depends on MODULE
-	bool "Enable sub system support"
-	default n
+			config CORTEX_R
+				bool "cortex-R"
 
-config LOADER
-	depends on SUBSYS
-	bool "Enable loader support"
-	default y
+			config CORTEX_M
+				bool "cortex-M"
+		endchoice
 
-config INPUT
-	depends on SUBSYS
-	bool "Enable input support"
-	default y
+		if CORTEX_M
+			source ./village-kernel/vendor/arm/cortex-m/Kconfig
+		endif
 
-config WORKQUEUE
-	depends on SUBSYS
-	bool "Enable workqueue support"
-	default y
+	endif
 
-endmenu
+	## X86
+	if X86
 
-# config file system
+		choice
+			prompt "Boot fireware"
+			depends on X86
+			default BIOS
 
-menu "filesys"
+			config BIOS
+				bool "bios"
 
-config FILESYSTEM
-	bool "Enable file system"
-	default n
+		endchoice
 
-config FATFS
-	depends on FILESYSTEM
-	bool "Add fat file system in support list"
-	default n
+		if BIOS
+			source ./village-kernel/vendor/x86/bios/Kconfig
+		endif
 
-endmenu
+	endif
 
-# confg utilities menu
+	endmenu
 
-menu "utilities"
+	# config kernel menu
 
-menu "fileutils"
+	menu "kernel"
 
-comment "This is using to configure fileutils"
+	config TASK_STACK
+		int "The size of thread task stack"
+		default 1024
 
-config FILEUTILS
-	select FILESYSTEM
-	bool "Enable file utils support"
-	default n
+	config MODULE
+		bool "Enable loadable module support"
+		select FATFS
+		select ELFPARSER
+		select ENVIRONMENT
 
-config DIRSTREAM
-	depends on FILEUTILS
-	bool "Enable dirstream function"
-	default n
+	config ENVIRONMENT
+		depends on MODULE
+		bool "Build the environment of Loadable module"
+		default y
 
-config DRVSTREAM
-	depends on FILEUTILS
-	bool "Enable drvstream function"
-	default n
+	endmenu
 
-config FILESTREAM
-	depends on FILEUTILS
-	bool "Enable filestream function"
-	default n
+	#config subsystem
 
-config FILESYSOPT
-	depends on FILEUTILS
-	bool "Enable filesysopt function"
-	default n
+	menu "subsys"
 
-endmenu
+	config SUBSYS
+		depends on MODULE
+		bool "Enable sub system support"
+		default n
 
-menu "binutils"
+	config LOADER
+		depends on SUBSYS
+		bool "Enable loader support"
+		default y
 
-comment "This is using to configure binutils"
+	config INPUT
+		depends on SUBSYS
+		bool "Enable input support"
+		default y
 
-config BINUTILS
-	select FILESTREAM
-	bool "Enable binutils function"
-	default n
+	config WORKQUEUE
+		depends on SUBSYS
+		bool "Enable workqueue support"
+		default y
 
-config BINLOADER
-	depends on BINUTILS
-	select FILESTREAM
-	bool "Enable *.bin file load function"
-	default n
+	endmenu
 
-config BINEXECUTOR
-	depends on BINUTILS
-	select BINLOADER
-	bool "Enable execute *.bin file function"
-	default n
+	# config file system
 
-config ELFLOADER
-	depends on BINUTILS
-	select FILESTREAM
-	bool "Enable *.elf file load function"
-	default n
+	menu "filesys"
 
-config ELFEXECUTOR
-	depends on BINUTILS
-	select ELFLOADER
-	bool "Enable execute *.elf file function"
-	default n
+	config FILESYSTEM
+		bool "Enable file system"
+		default n
 
-config LIBTOOL
-	depends on BINUTILS
-	bool "Enable library tool function"
-	default n
+	config FATFS
+		depends on FILESYSTEM
+		bool "Add fat file system in support list"
+		default n
 
-config MODTOOL
-	depends on BINUTILS
-	bool "Enable module tool function"
-	default n
+	endmenu
 
-endmenu
+	# confg utilities menu
 
-menu "parser"
+	menu "utilities"
 
-comment "This is using to configure parser"
+		menu "fileutils"
 
-config PARSER
-	bool "Enable parser support"
-	default n
+		comment "This is using to configure fileutils"
 
-config INIPARSER
-	depends on PARSER
-	select FILESTREAM
-	bool "Enable ini file parser function"
-	default n
+		config FILEUTILS
+			select FILESYSTEM
+			bool "Enable file utils support"
+			default n
 
-config PINPARSER
-	depends on PARSER
-	select FATFS
-	bool "Enable pin parser function"
-	default n
+		config DIRSTREAM
+			depends on FILEUTILS
+			bool "Enable dirstream function"
+			default n
 
-config RCPARSER
-	depends on PARSER
-	select FILESTREAM
-	bool "Enable resource script parser function"
-	default n
+		config DRVSTREAM
+			depends on FILEUTILS
+			bool "Enable drvstream function"
+			default n
 
-config REGEX
-	depends on PARSER
-	bool "Enable regex function"
-	default n
+		config FILESTREAM
+			depends on FILEUTILS
+			bool "Enable filestream function"
+			default n
 
-endmenu
+		config FILESYSOPT
+			depends on FILEUTILS
+			bool "Enable filesysopt function"
+			default n
 
-menu "sync"
+		endmenu
 
-comment "This is using to configure sync"
+		menu "binutils"
 
-config SYNC
-	bool "Enable synchronizes function"
-	default y
+		comment "This is using to configure binutils"
 
-config MUTEX
-	depends on SYNC
-	bool "Enable mutex lock support"
-	default y
+		config BINUTILS
+			select FILESTREAM
+			bool "Enable binutils function"
+			default n
 
-config SPINLOCK
-	depends on SYNC
-	bool "Enable spin lock support"
-	default y
+		config BINLOADER
+			depends on BINUTILS
+			select FILESTREAM
+			bool "Enable *.bin file load function"
+			default n
 
-config SEMAPHORE
-	depends on SYNC
-	bool "Enable semaphore support"
-	default y
+		config BINEXECUTOR
+			depends on BINUTILS
+			select BINLOADER
+			bool "Enable execute *.bin file function"
+			default n
 
-endmenu
+		config ELFLOADER
+			depends on BINUTILS
+			select FILESTREAM
+			bool "Enable *.elf file load function"
+			default n
 
-endmenu
+		config ELFEXECUTOR
+			depends on BINUTILS
+			select ELFLOADER
+			bool "Enable execute *.elf file function"
+			default n
+
+		config LIBTOOL
+			depends on BINUTILS
+			bool "Enable library tool function"
+			default n
+
+		config MODTOOL
+			depends on BINUTILS
+			bool "Enable module tool function"
+			default n
+
+		endmenu
+
+		menu "parser"
+
+		comment "This is using to configure parser"
+
+		config PARSER
+			bool "Enable parser support"
+			default n
+
+		config INIPARSER
+			depends on PARSER
+			select FILESTREAM
+			bool "Enable ini file parser function"
+			default n
+
+		config PINPARSER
+			depends on PARSER
+			select FATFS
+			bool "Enable pin parser function"
+			default n
+
+		config RCPARSER
+			depends on PARSER
+			select FILESTREAM
+			bool "Enable resource script parser function"
+			default n
+
+		config REGEX
+			depends on PARSER
+			bool "Enable regex function"
+			default n
+
+		endmenu
+
+		menu "sync"
+
+		comment "This is using to configure sync"
+
+		config SYNC
+			bool "Enable synchronizes function"
+			default y
+
+		config MUTEX
+			depends on SYNC
+			bool "Enable mutex lock support"
+			default y
+
+		config SPINLOCK
+			depends on SYNC
+			bool "Enable spin lock support"
+			default y
+
+		config SEMAPHORE
+			depends on SYNC
+			bool "Enable semaphore support"
+			default y
+
+		endmenu
+
+	endmenu
 
 endif
