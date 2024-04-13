@@ -1,8 +1,8 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/hal/st/stm32f4xx/inc
-src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/hal/st/stm32f4xx/src
+inc-$(CONFIG_STM32F4xx)      += village-kernel/vendor/arm/cortex-m/hal/st/stm32f4xx/inc
+src-$(CONFIG_STM32F4xx)      += village-kernel/vendor/arm/cortex-m/hal/st/stm32f4xx/src
 
 
 ######################################
