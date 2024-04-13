@@ -18,9 +18,9 @@ MCU  := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 DEFS := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F405RG_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F407ZE_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F407ZG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F405RG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE) := -T village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F407ZE_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F407ZG_flash.ld
 
 
 #######################################
@@ -46,14 +46,12 @@ KLDFLAGS  += -Wl,-static -pie
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/ST/STM32F4xx/Include
-inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc
-inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc/Legacy
-
-src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/ST/STM32F4xx/Source/Templates
-src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/ST/STM32F4xx/Source/Templates/gcc
+inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/STM32F4xx/Include
+src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/STM32F4xx/Source
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
+inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc
+inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc/Legacy
 src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Src
 endif
 
