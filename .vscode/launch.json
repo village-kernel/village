@@ -8,7 +8,7 @@
         {
             "name": "Cortex Debug-jlink",
             "cwd": "${workspaceRoot}/",
-            "executable": "${workspaceFolder}/vk.build/village-kernel.elf",
+            "executable": "${workspaceFolder}/build/village-kernel.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "jlink",
@@ -16,7 +16,7 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/village-arch/arm/cortex-m/mcu/st/STM32F4xx_svd/STM32F407.svd",
             "swoConfig": {
                 "enabled": true,
                 "cpuFrequency": 168000000,
@@ -31,7 +31,7 @@
         {
             "name": "Cortex Debug-stlink",
             "cwd": "${workspaceRoot}/",
-            "executable": "${workspaceFolder}/vk.build/village-kernel.elf",
+            "executable": "${workspaceFolder}/build/village-kernel.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",
@@ -43,7 +43,7 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/vk.hardware/arm/cortex-m/mcu/st/STM32F4xx_svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/village-arch/arm/cortex-m/mcu/st/STM32F4xx_svd/STM32F407.svd",
             "swoConfig": {
                 "enabled": true,
                 "cpuFrequency": 168000000,
@@ -59,7 +59,7 @@
             "name": "QEMU Debug x86 bios boot",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/vk.build/village-boot.elf",
+            "program": "${workspaceFolder}/build/village-boot.elf",
             "cwd": "${workspaceFolder}",
             "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",
@@ -70,7 +70,7 @@
             "name": "QEMU Debug x86 bios kernel",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/vk.build/village-kernel.elf",
+            "program": "${workspaceFolder}/build/village-kernel.elf",
             "cwd": "${workspaceFolder}",
             "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",

@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Top Makefile of village-kernel project
+# The Top Makefile of village project
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -43,10 +43,10 @@ export Q
 # paths
 #######################################
 # Build path
-BUILD_DIR     := vk.build
-APPS_DIR      := $(BUILD_DIR)/applications
-MODULES_DIR   := $(BUILD_DIR)/modules
-LIBRARIES_DIR := $(BUILD_DIR)/libraries
+BUILD_DIR     := build
+APPS_DIR      := $(BUILD_DIR)/output/applications
+MODULES_DIR   := $(BUILD_DIR)/output/modules
+LIBRARIES_DIR := $(BUILD_DIR)/output/libraries
 
 # Rootfs path
 ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
@@ -55,12 +55,9 @@ ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
 ######################################
 # include other makefile
 ######################################
--include vk.application/Makefile
--include vk.bootloader/Makefile
--include vk.graphics/Makefile
--include vk.kernel/Makefile
--include vk.hardware/Makefile
--include vk.library/Makefile
+-include village-boot/Makefile
+-include village-kernel/Makefile
+-include village-os/Makefile
 
 
 #######################################
@@ -297,15 +294,13 @@ osImage:
 # copy to rootfs
 #######################################
 rootfs:
-	$(Q)cp -rf $(BUILD_DIR)/applications    $(ROOTFS_DIR)/
-	$(Q)cp -rf $(BUILD_DIR)/libraries       $(ROOTFS_DIR)/
-	$(Q)cp -rf $(BUILD_DIR)/modules         $(ROOTFS_DIR)/
+	$(Q)cp -rf $(BUILD_DIR)/output    $(ROOTFS_DIR)/
 	
 
 #######################################
 # menuconfig
 #######################################
-Scripts      := ./vk.scripts
+Scripts      := ./village-scripts
 Kconfig      := ./Kconfig
 
 menuconfig: $(Scripts)/kconfig/mconf
@@ -335,7 +330,7 @@ clean-mod:
 
 clean-app:
 	$(Q)rm -rf $(APPS_DIR)
-	$(Q)rm -rf $(BUILD_DIR)/vk.application
+	$(Q)rm -rf $(BUILD_DIR)/village-os
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
