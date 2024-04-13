@@ -20,7 +20,7 @@ inc-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_
 inc-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Inc
 inc-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Inc
 
-src-y                        +=	village-kernel/vendor/arm/cortex-m/mcu/st/GCC
+src-y                        +=	village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Source
 src-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Src
 src-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Src
 src-$(CONFIG_USBSTORAGE)     +=	village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Src
