@@ -8,18 +8,18 @@
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/BSP/ST/CMSIS/Device/ST/STM32H7xx/Include
-inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/BSP/ST/STM32H7xx_HAL_Driver/Inc
-inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/BSP/ST/STM32H7xx_HAL_Driver/Inc/Legacy
+inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/ST/STM32H7xx/Include
+inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Inc
+inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Inc/Legacy
 
-src-$(CONFIG_STM32H7xx) += village-kernel/vendor/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates
-src-$(CONFIG_STM32H7xx) += village-kernel/vendor/BSP/ST/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc
+src-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/ST/STM32H7xx/Source/Templates
+src-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/ST/STM32H7xx/Source/Templates/gcc
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
-src-$(CONFIG_STM32H7xx) += village-kernel/vendor/BSP/ST/STM32H7xx_HAL_Driver/Src
+src-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Src
 endif
 
-	
+
 ######################################
 # objects
 ######################################
@@ -48,13 +48,16 @@ objs-$(CONFIG_STM32H755xx)  += startup_stm32h755xx.o
 objs-$(CONFIG_STM32H757xx)  += startup_stm32h757xx.o
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
--include village-kernel/vendor/BSP/ST/STM32H7xx_HAL_Driver/Makefile
+-include village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Makefile
 endif
 
 
 ######################################
 # arch
 ######################################
+# flash CFG
+FLASH_CFG := -f interface/stlink-v2.cfg -f target/stm32h7x.cfg
+
 # MCU
 MCU  := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 
@@ -62,7 +65,4 @@ MCU  := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 DEFS := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-$(CONFIG_STM32H750VB) := -T village-kernel/vendor/BSP/ST/LinkerScripts/STM32H7xx/STM32H750VB_flash.ld
-
-# flash CFG
-FLASH_CFG := -f interface/stlink-v2.cfg -f target/stm32h7x.cfg
+LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32H7xx/STM32H750VB_flash.ld

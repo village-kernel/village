@@ -19,6 +19,7 @@ ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
 src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Src
 endif
 
+
 ######################################
 # objects
 ######################################
@@ -65,9 +66,6 @@ MCU  := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 DEFS := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-BOOT-$(CONFIG_STM32F405RG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F405RG_flash.ld
-LDSCRIPT-BOOT-$(CONFIG_STM32F407ZE) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F407ZE_flash.ld
-LDSCRIPT-BOOT-$(CONFIG_STM32F407ZG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F407ZG_flash.ld
 LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F405RG_flash.ld
 LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F407ZE_flash.ld
 LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/LinkerScripts/STM32F4xx/STM32F407ZG_flash.ld
