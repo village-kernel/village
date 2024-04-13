@@ -18,6 +18,12 @@ config VKLIBC
 
 endmenu
 
+# config vendor
+
+menu "vendor"
+	source ./village-kernel/vendor/Kconfig
+endmenu
+
 # config kernel menu
 
 menu "kernel"
@@ -218,12 +224,6 @@ config SEMAPHORE
 
 endmenu
 
-endmenu
-
-# config vendor
-
-menu "vendor"
-	source ./village-kernel/vendor/Kconfig
 endmenu
 
 endif

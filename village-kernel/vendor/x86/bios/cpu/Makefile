@@ -40,10 +40,11 @@ MCUEM := -melf_i386
 # defines
 DEFS  := -DARCH_X86
 
+
+######################################
 # link script
-LDSCRIPT-APP    := -T village-kernel/vendor/x86/bios/cpu/lds/app.ld
-LDSCRIPT-BOOT   := -T village-kernel/vendor/x86/bios/cpu/lds/boot.ld
-LDSCRIPT-KERNEL := -T village-kernel/vendor/x86/bios/cpu/lds/kernel.ld
+######################################
+LDSCRIPT-KERNEL := -T village-kernel/vendor/x86/bios/cpu/lds/kernel.lds
 
 
 #######################################
@@ -55,35 +56,11 @@ CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.list)
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
 CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit -fno-threadsafe-statics
 
-# boot loader ld flags
-BLDFLAGS  += $(LDSCRIPT-BOOT) -ffreestanding -nostdlib
-BLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
-BLDFLAGS  += -Wl,--no-warn-rwx-segment
-BLDFLAGS  += -Wl,-m,elf_i386
-
 # kernel ld flags
 KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL)
-ifeq ($(CONFIG_VKLIBC), y)
 KLDFLAGS  += -ffreestanding -nostdlib
-else
-KLDFLAGS  += -specs=nosys.specs -lc -lm -lnosys
-endif
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
 KLDFLAGS  += -Wl,--no-warn-rwx-segment
 KLDFLAGS  += -Wl,-m,elf_i386
 KLDFLAGS  += -Wl,-static -pie
-
-# application ld flags
-APPLDFLAGS  += $(MCU) $(LDSCRIPT-APP)
-ifeq ($(CONFIG_VKLIBC), y)
-APPLDFLAGS  += -ffreestanding -nostdlib
-else
-APPLDFLAGS  += -specs=nosys.specs -lc -lm -lnosys
-endif
-APPLDFLAGS  += -Wl,-Map=$(@:.exec=.map),--cref
-APPLDFLAGS  += -Wl,--gc-sections
-APPLDFLAGS  += -Wl,--no-warn-rwx-segment
-APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-in-shared-libs
-APPLDFLAGS  += -Wl,-m,elf_i386
-APPLDFLAGS  += -pie
