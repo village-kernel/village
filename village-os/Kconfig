@@ -1,0 +1,8 @@
+
+menu "applications"
+	source ./village-os/applications/Kconfig
+endmenu
+
+menu "framework"
+	source ./village-os/framework/vkgui/Kconfig
+endmenu

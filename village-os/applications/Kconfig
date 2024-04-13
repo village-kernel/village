@@ -1,0 +1,13 @@
+comment "This is using to configure application"
+
+if GENERATED_APP
+
+source ./village-os/applications/taichi/Kconfig
+
+source ./village-os/applications/console/Kconfig
+
+source ./village-os/applications/launch/Kconfig
+
+source ./village-os/applications/settings/Kconfig
+
+endif
