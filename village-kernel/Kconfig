@@ -5,22 +5,9 @@ config KERNEL
 	default y
 
 if KERNEL
+	# config arch
 
-	# config stdlib menu
-
-	menu "stdlib"
-
-	comment "This is using to config libraries"
-
-	config VKLIBC
-		bool "Using village kernel libc as c library"
-		default y
-
-	endmenu
-
-	# config vendor
-
-	menu "vendor"
+	menu "arch"
 
 	comment "Select CPU Architecture"
 
