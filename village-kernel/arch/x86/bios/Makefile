@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of village-kernel/vendor/x86/bios
+# The Makefile of village-kernel/arch/x86/bios
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -18,7 +18,7 @@ MCUEM := -melf_i386
 DEFS  := -DARCH_X86
 
 # link script
-LDSCRIPT-KERNEL := -T village-kernel/vendor/x86/bios/cpu/lds/kernel.lds
+LDSCRIPT-KERNEL := -T village-kernel/arch/x86/bios/cpu/lds/kernel.lds
 
 
 #######################################
@@ -43,19 +43,10 @@ KLDFLAGS  += -Wl,-static -pie
 ######################################
 # kernel code
 ######################################
-inc-y                                 += village-kernel/vendor/x86/bios/cpu/crt0
-src-y                                 += village-kernel/vendor/x86/bios/cpu/crt0
-
-inc-y                                 += village-kernel/vendor/x86/bios/driver/inc
-src-y                                 += village-kernel/vendor/x86/bios/driver/src
+inc-y                                 += village-kernel/arch/x86/bios/cpu/crt0
+src-y                                 += village-kernel/arch/x86/bios/cpu/crt0
 
 objs-y                                += crt0_kernel.o
-objs-$(CONFIG_ATALBADISK)             += AtaLbaDisk.o
-objs-$(CONFIG_BOCHSVBE)               += BochsVBE.o
-objs-$(CONFIG_GENERALTIMER)           += GeneralTimer.o
-objs-$(CONFIG_PS2KEYBOARD)            += PS2KeyBoard.o
-objs-$(CONFIG_PS2MOUSE)               += PS2Mouse.o
-objs-$(CONFIG_SERIALPORT)             += SerialPort.o
 
 
 ######################################
@@ -63,11 +54,11 @@ objs-$(CONFIG_SERIALPORT)             += SerialPort.o
 ######################################
 libs-y                                += hw
 
-inc-y                                 += village-kernel/vendor/x86/bios/cpu/core
-src-y                                 += village-kernel/vendor/x86/bios/cpu/core 
+inc-y                                 += village-kernel/arch/x86/bios/cpu/core
+src-y                                 += village-kernel/arch/x86/bios/cpu/core 
 
-inc-y                                 += village-kernel/vendor/x86/bios/hal/inc
-src-y                                 += village-kernel/vendor/x86/bios/hal/src
+inc-y                                 += village-kernel/arch/x86/bios/hal/inc
+src-y                                 += village-kernel/arch/x86/bios/hal/src
 
 objs-hw-y                             += i386.o
 objs-hw-$(CONFIG_HAL_PCI_CONTROLLER)  += PCIController.o

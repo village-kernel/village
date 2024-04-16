@@ -18,9 +18,9 @@ MCU  := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 DEFS := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F405RG_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE) := -T village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F407ZE_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG) := -T village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F407ZG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG) := -T village-kernel/arch/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F405RG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE) := -T village-kernel/arch/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F407ZE_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG) := -T village-kernel/arch/arm/cortex-m/mcu/st/STM32F4xx_lds/STM32F407ZG_flash.ld
 
 
 #######################################
@@ -46,13 +46,13 @@ KLDFLAGS  += -Wl,-static -pie
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/STM32F4xx/Include
-src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/STM32F4xx/Source
+inc-$(CONFIG_STM32F4xx) += village-kernel/arch/arm/cortex-m/mcu/st/CMSIS/Device/STM32F4xx/Include
+src-$(CONFIG_STM32F4xx) += village-kernel/arch/arm/cortex-m/mcu/st/CMSIS/Device/STM32F4xx/Source
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
-inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc
-inc-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc/Legacy
-src-$(CONFIG_STM32F4xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Src
+inc-$(CONFIG_STM32F4xx) += village-kernel/arch/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc
+inc-$(CONFIG_STM32F4xx) += village-kernel/arch/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Inc/Legacy
+src-$(CONFIG_STM32F4xx) += village-kernel/arch/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Src
 endif
 
 
@@ -85,5 +85,5 @@ objs-$(CONFIG_STM32F469xx) += startup_stm32f469xx.o
 objs-$(CONFIG_STM32F479xx) += startup_stm32f479xx.o
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
--include village-kernel/vendor/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Makefile
+-include village-kernel/arch/arm/cortex-m/mcu/st/STM32F4xx_HAL_Driver/Makefile
 endif

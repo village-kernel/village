@@ -44,7 +44,7 @@ if KERNEL
 		endchoice
 
 		if CORTEX_M
-			source ./village-kernel/vendor/arm/cortex-m/Kconfig
+			source ./village-kernel/arch/arm/cortex-m/Kconfig
 		endif
 
 	endif
@@ -63,9 +63,23 @@ if KERNEL
 		endchoice
 
 		if BIOS
-			source ./village-kernel/vendor/x86/bios/Kconfig
+			source ./village-kernel/arch/x86/bios/Kconfig
 		endif
 
+	endif
+
+	endmenu
+
+	# config drivers menu
+
+	menu "driver"
+
+	if CORTEX_M
+		source ./village-kernel/drivers/arm/cortex-m/Kconfig
+	endif
+
+	if BIOS
+		source ./village-kernel/drivers/x86/bios/Kconfig
 	endif
 
 	endmenu

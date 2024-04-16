@@ -1,4 +1,4 @@
-menu "Generic Device Driver"
+menu "cortex-m Device Driver"
 
 config DMAFIFO
 	select HAL_DMA

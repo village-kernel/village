@@ -8,18 +8,18 @@
 ######################################
 # kernel code
 ######################################
-inc-y                               += village-kernel/core/if
-inc-y                               += village-kernel/core/inc
-src-y                               += village-kernel/core/src
+inc-y                               += village-kernel/kernel/core/if
+inc-y                               += village-kernel/kernel/core/inc
+src-y                               += village-kernel/kernel/core/src
 
-inc-$(CONFIG_X86)                   += village-kernel/arch/x86/bios/inc
-inc-$(CONFIG_CORTEX_M)              += village-kernel/arch/arm/cortex-m/inc
-inc-$(CONFIG_STM32F4xx)             += village-kernel/arch/arm/cortex-m/inc/stm32f4xx
-inc-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/inc/stm32h7xx
-src-$(CONFIG_X86)                   += village-kernel/arch/x86/bios/src
-src-$(CONFIG_CORTEX_M)              += village-kernel/arch/arm/cortex-m/src
-src-$(CONFIG_STM32F4xx)             += village-kernel/arch/arm/cortex-m/src/stm32f4xx
-src-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/src/stm32h7xx
+inc-$(CONFIG_X86)                   += village-kernel/kernel/arch/x86/bios/inc
+inc-$(CONFIG_CORTEX_M)              += village-kernel/kernel/arch/arm/cortex-m/inc
+inc-$(CONFIG_STM32F4xx)             += village-kernel/kernel/arch/arm/cortex-m/inc/stm32f4xx
+inc-$(CONFIG_STM32H7xx)             += village-kernel/kernel/arch/arm/cortex-m/inc/stm32h7xx
+src-$(CONFIG_X86)                   += village-kernel/kernel/arch/x86/bios/src
+src-$(CONFIG_CORTEX_M)              += village-kernel/kernel/arch/arm/cortex-m/src
+src-$(CONFIG_STM32F4xx)             += village-kernel/kernel/arch/arm/cortex-m/src/stm32f4xx
+src-$(CONFIG_STM32H7xx)             += village-kernel/kernel/arch/arm/cortex-m/src/stm32h7xx
 
 inc-$(CONFIG_SUBSYS)                += village-kernel/subsys/inc
 src-$(CONFIG_SUBSYS)                += village-kernel/subsys/src
@@ -145,10 +145,12 @@ endif
 ######################################
 ## ARM
 ifeq ($(CONFIG_ARM)_$(CONFIG_CORTEX_M), y_y)
--include village-kernel/vendor/arm/cortex-m/Makefile
+-include village-kernel/arch/arm/cortex-m/Makefile
+-include village-kernel/drivers/arm/cortex-m/Makefile
 endif
 
 ## X86
 ifeq ($(CONFIG_X86)_$(CONFIG_BIOS), y_y)
--include village-kernel/vendor/x86/bios/Makefile
+-include village-kernel/arch/x86/bios/Makefile
+-include village-kernel/drivers/x86/bios/Makefile
 endif
