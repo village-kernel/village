@@ -18,7 +18,7 @@ MCU  := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 DEFS := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB) := -T village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_lds/STM32H750VB_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB) := -T village-kernel/arch/arm/cortex-m/mcu/st/STM32H7xx_lds/STM32H750VB_flash.ld
 
 
 #######################################
@@ -44,13 +44,13 @@ KLDFLAGS  += -Wl,-static -pie
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/STM32H7xx/Include
-src-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Device/STM32H7xx/Source
+inc-$(CONFIG_STM32H7xx) += village-kernel/arch/arm/cortex-m/mcu/st/CMSIS/Device/STM32H7xx/Include
+src-$(CONFIG_STM32H7xx) += village-kernel/arch/arm/cortex-m/mcu/st/CMSIS/Device/STM32H7xx/Source
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
-inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Inc
-inc-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Inc/Legacy
-src-$(CONFIG_STM32H7xx) += village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Src
+inc-$(CONFIG_STM32H7xx) += village-kernel/arch/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Inc
+inc-$(CONFIG_STM32H7xx) += village-kernel/arch/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Inc/Legacy
+src-$(CONFIG_STM32H7xx) += village-kernel/arch/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Src
 endif
 
 
@@ -82,5 +82,5 @@ objs-$(CONFIG_STM32H755xx)  += startup_stm32h755xx.o
 objs-$(CONFIG_STM32H757xx)  += startup_stm32h757xx.o
 
 ifeq ($(CONFIG_MANUFACTURER_HAL_DRIVER), y)
--include village-kernel/vendor/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Makefile
+-include village-kernel/arch/arm/cortex-m/mcu/st/STM32H7xx_HAL_Driver/Makefile
 endif

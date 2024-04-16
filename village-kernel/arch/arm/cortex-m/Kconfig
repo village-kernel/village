@@ -1,0 +1,16 @@
+choice
+	prompt "MCU Manufacturer"
+	depends on CORTEX_M
+	default ST
+
+	config ST
+		bool "ST"
+
+	config GD
+		bool "GD"
+endchoice
+
+if ST
+source ./village-kernel/arch/arm/cortex-m/mcu/st/Kconfig
+source ./village-kernel/arch/arm/cortex-m/hal/st/Kconfig
+endif

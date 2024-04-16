@@ -14,16 +14,16 @@ libs-y                       += hw
 ######################################
 # paths
 ######################################
-inc-y                        += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Include
+inc-y                        += village-kernel/arch/arm/cortex-m/mcu/st/CMSIS/Include
 
-inc-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Inc
-inc-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Inc
-inc-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Inc
+inc-$(CONFIG_USBSTORAGE)     += village-kernel/arch/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Inc
+inc-$(CONFIG_USBSTORAGE)     += village-kernel/arch/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Inc
+inc-$(CONFIG_USBSTORAGE)     += village-kernel/arch/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Inc
 
-src-y                        += village-kernel/vendor/arm/cortex-m/mcu/st/CMSIS/Source
-src-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Src
-src-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Src
-src-$(CONFIG_USBSTORAGE)     += village-kernel/vendor/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Src
+src-y                        += village-kernel/arch/arm/cortex-m/mcu/st/CMSIS/Source
+src-$(CONFIG_USBSTORAGE)     += village-kernel/arch/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Class/MSC/Src
+src-$(CONFIG_USBSTORAGE)     += village-kernel/arch/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Core/Src
+src-$(CONFIG_USBSTORAGE)     += village-kernel/arch/arm/cortex-m/mcu/st/STM32_USB_Device_Library/Storage/Src
 
 
 ######################################
@@ -46,7 +46,7 @@ objs-hw-$(CONFIG_USBSTORAGE) += usbd_desc.o
 # dependencies
 ######################################
 ifeq ($(CONFIG_STM32F4xx), y)
--include village-kernel/vendor/arm/cortex-m/mcu/st/stm32f4xx.mk
+-include village-kernel/arch/arm/cortex-m/mcu/st/stm32f4xx.mk
 else ifeq ($(CONFIG_STM32H7xx), y)
--include village-kernel/vendor/arm/cortex-m/mcu/st/stm32h7xx.mk
+-include village-kernel/arch/arm/cortex-m/mcu/st/stm32h7xx.mk
 endif
