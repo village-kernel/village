@@ -15,6 +15,32 @@
 #include "Module.h"
 
 
+/// @brief System
+class System
+{
+public:
+	virtual void SysTickCounter() = 0;
+	virtual uint32_t GetSysClkCounts() = 0;
+	virtual void DelayMs(uint32_t millis) = 0;
+	virtual void EnableIRQ() = 0;
+	virtual void DisableIRQ() = 0;
+	virtual void Reboot() = 0;
+};
+
+
+/// @brief Memory
+class Memory
+{
+public:
+	//Methods
+	virtual uint32_t HeapAlloc(uint32_t size) = 0;
+	virtual uint32_t StackAlloc(uint32_t size) = 0;
+	virtual void Free(uint32_t memory, uint32_t size = 0) = 0;
+	virtual uint32_t GetSize() = 0;
+	virtual uint32_t GetUsed() = 0;
+};
+
+
 /// @brief Debug
 class Debug
 {
@@ -40,19 +66,6 @@ public:
 };
 
 
-/// @brief Memory
-class Memory
-{
-public:
-	//Methods
-	virtual uint32_t HeapAlloc(uint32_t size) = 0;
-	virtual uint32_t StackAlloc(uint32_t size) = 0;
-	virtual void Free(uint32_t memory, uint32_t size = 0) = 0;
-	virtual uint32_t GetSize() = 0;
-	virtual uint32_t GetUsed() = 0;
-};
-
-
 /// @brief Interrupt
 class Interrupt
 {
@@ -69,49 +82,20 @@ public:
 };
 
 
-/// @brief Symbol
-class Symbol
+/// @brief Scheduler
+class Scheduler
 {
+public:
+	//Enumerations
+	enum Access
+	{
+		Unprivileged = 0,
+		Privileged = 1,
+	};
 public:
 	//Methods
-	virtual void Export(uint32_t symAddr, const char* name) = 0;
-	virtual void Unexport(const char* name) = 0;
-	virtual uint32_t Search(const char* name) = 0;
-};
-
-
-/// @brief Device
-class Device
-{
-public:
-	//Methods
-	virtual void RegisterDriver(Driver* driver) = 0;
-	virtual void DeregisterDriver(Driver* driver) = 0;
-	virtual Driver* GetDriver(const char* name) = 0;
-};
-
-
-/// @brief Feature
-class Feature
-{
-public:
-	//Methods
-	virtual void RegisterModule(Module* module) = 0;
-	virtual void DeregisterModule(Module* module) = 0;
-	virtual Module* GetModule(const char* name) = 0;
-};
-
-
-/// @brief System
-class System
-{
-public:
-	virtual void SysTickCounter() = 0;
-	virtual uint32_t GetSysClkCounts() = 0;
-	virtual void DelayMs(uint32_t millis) = 0;
-	virtual void EnableIRQ() = 0;
-	virtual void DisableIRQ() = 0;
-	virtual void Reboot() = 0;
+	virtual void Start() = 0;
+	virtual void Sched(Access access) = 0;
 };
 
 
@@ -165,20 +149,36 @@ public:
 };
 
 
-/// @brief Scheduler
-class Scheduler
+/// @brief Symbol
+class Symbol
 {
 public:
-	//Enumerations
-	enum Access
-	{
-		Unprivileged = 0,
-		Privileged = 1,
-	};
+	//Methods
+	virtual void Export(uint32_t symAddr, const char* name) = 0;
+	virtual void Unexport(const char* name) = 0;
+	virtual uint32_t Search(const char* name) = 0;
+};
+
+
+/// @brief Device
+class Device
+{
 public:
 	//Methods
-	virtual void Start() = 0;
-	virtual void Sched(Access access) = 0;
+	virtual void RegisterDriver(Driver* driver) = 0;
+	virtual void DeregisterDriver(Driver* driver) = 0;
+	virtual Driver* GetDriver(const char* name) = 0;
+};
+
+
+/// @brief Feature
+class Feature
+{
+public:
+	//Methods
+	virtual void RegisterModule(Module* module) = 0;
+	virtual void DeregisterModule(Module* module) = 0;
+	virtual Module* GetModule(const char* name) = 0;
 };
 
 
