@@ -201,6 +201,114 @@ public:
 };
 
 
+/// @brief WorkQueue
+class WorkQueue
+{
+public:
+	//Enumerations
+	enum State
+	{
+		_Suspend = 0,
+		_Waked,
+		_Running,
+		_Finish,
+	};
+
+	//Structures
+	struct Work
+	{
+		Function func;
+		void*    user;
+		void*    args;
+		uint32_t ticks;
+		State    state;
+
+		Work(Function func, void* user, void* args, uint32_t ticks)
+			:func(func),
+			user(user),
+			args(args),
+			ticks(ticks),
+			state(_Suspend)
+		{}
+	};
+public:
+	//Methods
+	virtual Work* Create(Function func, void* user = NULL, void* args = NULL, uint32_t ticks = 0) = 0;
+	virtual Work* Create(Method method, Class* user, void* args = NULL, uint32_t ticks = 0) = 0;
+	virtual bool Delete(Work* work) = 0;
+	virtual bool Sched(Work* work) = 0;
+};
+
+
+/// @brief Input
+class Input
+{
+public:
+	//Input type
+	enum Type
+	{
+		_Event = 0,
+		_Movement,
+		_AllType,
+	};
+
+	//Input event
+	struct Event
+	{
+		int keycode;
+		int status;
+
+		Event()
+			:keycode(0),
+			status(0)
+		{}
+	};
+
+	//Input movement
+	struct Movement
+	{
+		int axisX;
+		int axisY;
+		int axisZ;
+
+		Movement()
+			:axisX(0),
+			axisY(0),
+			axisZ(0)
+		{}
+	};
+public:
+	//Methods
+	virtual void Attach(Type type, Method method, Class* user) = 0;
+	virtual void Attach(Type type, Function func, void* user = NULL) = 0;
+	virtual void Detach(Type type, Method method, Class* user) = 0;
+	virtual void Detach(Type type, Function func, void* user = NULL) = 0;
+	virtual void ReportEvent(int keycode, int status) = 0;
+	virtual void ReportMovement(int axisX, int axisY, int axisZ) = 0;
+};
+
+
+/// @brief ElfLoader
+class ElfLoader;
+
+/// @brief Loader
+class Loader
+{
+public:
+	//Enumerations
+	enum LoadType
+	{
+		_Load_Lib = 0,
+		_Load_Mod,
+	};
+public:
+	//Methods
+	virtual void Loading(int type, const char* filename) = 0;
+	virtual List<ElfLoader*>* GetLibraries() = 0;
+	virtual List<ElfLoader*>* GetModules() = 0;
+};
+
+
 /// @brief Kernel
 class Kernel
 {
@@ -212,10 +320,13 @@ public:
 	Interrupt&   interrupt;
 	Scheduler&   scheduler;
 	Thread&      thread;
+	WorkQueue&   workqueue;
 	Symbol&      symbol;
+	Input&       input;
 	Device&      device;
 	Feature&     feature;
 	FileSystem&  filesys;
+	Loader&      loader;
 public:
 	/// @brief constructor
 	Kernel(
@@ -225,10 +336,13 @@ public:
 		Interrupt&   interrupt,
 		Scheduler&   scheduler,
 		Thread&      thread,
+		WorkQueue&   workqueue,
 		Symbol&      symbol,
+		Input&       input,
 		Device&      device,
 		Feature&     feature,
-		FileSystem&  filesys
+		FileSystem&  filesys,
+		Loader&      loader
 	)
 		:system(system),
 		memory(memory),
@@ -236,10 +350,13 @@ public:
 		interrupt(interrupt),
 		scheduler(scheduler),
 		thread(thread),
+		workqueue(workqueue),
 		symbol(symbol),
+		input(input),
 		device(device),
 		feature(feature),
-		filesys(filesys)
+		filesys(filesys),
+		loader(loader)
 	{}
 
 	/// @brief Destructor

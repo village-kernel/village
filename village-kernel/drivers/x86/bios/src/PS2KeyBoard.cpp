@@ -62,24 +62,14 @@ public:
 	/// @brief KeyBoard open
 	bool Open()
 	{
-		//Get the interrupt module
-		interrupt = (Interrupt*)&kernel->interrupt;
+		//Get the input pointer
+		input = &kernel->input;
 
-		//Get the input module
-		input = (Input*)kernel->feature.GetModule("input");
-		if (NULL == input)
-		{
-			kernel->debug.Error("input feature not support");
-			return false;
-		}
+		//Get the interrupt pointer
+		interrupt = &kernel->interrupt;
 
-		//Get the work queue module
-		workQueue = (WorkQueue*)kernel->feature.GetModule("workQueue");
-		if (NULL == workQueue)
-		{
-			kernel->debug.Error("work queue feature not support");
-			return false;
-		}
+		//Get the work queue pointer
+		workQueue = &kernel->workqueue;
 
 		//Create work
 		work = workQueue->Create((Method)&KeyBoard::ReportHandler, this);

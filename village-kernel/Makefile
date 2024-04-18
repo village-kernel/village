@@ -35,15 +35,14 @@ objs-y                              += Device.o
 objs-y                              += Memory.o
 objs-y                              += Thread.o
 objs-y                              += Interrupt.o
+objs-y                              += Input.o
+objs-y                              += Loader.o
+objs-y                              += WorkQueue.o
 
-objs-y                              += ArchInterrupt.o
-objs-y                              += Exception.o
-objs-y                              += Scheduler.o
 objs-y                              += System.o
-
-objs-$(CONFIG_INPUT)                += Input.o
-objs-$(CONFIG_LOADER)               += Loader.o
-objs-$(CONFIG_WORKQUEUE)            += WorkQueue.o
+objs-y                              += Scheduler.o
+objs-y                              += Exception.o
+objs-y                              += ArchInterrupt.o
 
 objs-y                              += FileSystem.o
 objs-$(CONFIG_FATFS)                += FatDiskio.o

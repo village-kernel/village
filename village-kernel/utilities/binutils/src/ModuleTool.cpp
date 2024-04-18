@@ -24,16 +24,8 @@ ModuleTool::~ModuleTool()
 /// @brief Module tool get modules
 List<ElfLoader*>* ModuleTool::GetModules()
 {
-	//Get the loader module
-	Loader* loader = (Loader*)kernel->feature.GetModule("loader");
-	if (NULL == loader)
-	{
-		kernel->debug.Error("loader feature not support");
-		return NULL;
-	}
-
 	//Get the modules pointer
-	List<ElfLoader*>* modules = loader->GetModules();
+	List<ElfLoader*>* modules = kernel->loader.GetModules();
 	if (NULL == modules)
 	{
 		kernel->debug.Error("get modules address failed");
