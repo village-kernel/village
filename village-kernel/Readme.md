@@ -39,10 +39,6 @@
 - 该目录下的代码会归类到libc.so，libstdc++.so，libm.so共享库。
 - 标准运行库相关目录，目前只初步实现一些POSIX基础接口，例如C库的stdio和string部分接口。
 
-## subsys：
-- 这里用来存放子模块相关代码，非核心可裁剪的模块。
-- 目前有输入子系统Input，加载子系统Loader，以及工作队列WorkQueue。
-
 ## utilities：
 - 该目录下的代码会归类到libkernel.so共享库。
 
