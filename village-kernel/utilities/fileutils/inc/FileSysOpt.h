@@ -7,7 +7,7 @@
 #ifndef __FILE_SYS_OPT_H__
 #define __FILE_SYS_OPT_H__
 
-#include "FileSys.h"
+#include "FileSystem.h"
 
 
 /// @brief FileSysOpt
@@ -15,8 +15,7 @@ class FileSysOpt
 {
 private:
 	//Members
-	FileSys*    filesys;
-	FileVolume* volume;
+	FileVol* volume;
 public:
 	//Methods
 	FileSysOpt();

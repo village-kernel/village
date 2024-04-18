@@ -56,17 +56,12 @@ void Launch::Initialize(const char* screen, const char* keyboard, const char* mo
 
 	mainwin->Show();
 
-	//Attach input
-	Input* input = (Input*)kernel->feature.GetModule("input");
-	if (NULL != input)
-	{
-		input->Attach(Input::_Movement, (Method)&Launch::UpdateInput, this);
-	}
+	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Launch::UpdateInput, this);
 }
 
 
 /// @brief Update
-void Launch::UpdateInput(Input::Movement* input)
+void Launch::UpdateInput(InputEvent::Loc* input)
 {
 	if (NULL != mainwin)
 	{

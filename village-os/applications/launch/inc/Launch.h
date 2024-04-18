@@ -8,7 +8,7 @@
 #define __LAUNCH_H__
 
 #include "Graphics.h"
-#include "Input.h"
+#include "Kernel.h"
 
 
 ///Lanuch
@@ -20,7 +20,7 @@ private:
 	Window*  mainwin;
 
 	//Methods
-	void UpdateInput(Input::Movement* input);
+	void UpdateInput(InputEvent::Loc* input);
 public:
 	//Methods
 	Launch();
