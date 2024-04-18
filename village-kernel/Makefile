@@ -24,10 +24,7 @@ src-$(CONFIG_STM32H7xx)             += village-kernel/kernel/arch/arm/cortex-m/s
 inc-$(CONFIG_SUBSYS)                += village-kernel/subsys/inc
 src-$(CONFIG_SUBSYS)                += village-kernel/subsys/src
 
-inc-y                               += village-kernel/filesys/core/inc
 inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/inc
-
-src-y                               += village-kernel/filesys/core/src
 src-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/src
 
 objs-y                              += Village.o
