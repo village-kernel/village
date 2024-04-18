@@ -11,12 +11,6 @@
 /// @brief Constructor
 FileSysOpt::FileSysOpt()
 {
-	filesys = (FileSys*)kernel->feature.GetModule("filesys");
-	if (NULL == filesys)
-	{
-		kernel->debug.Error("file system feature not support");
-		return;
-	}
 }
 
 
@@ -51,10 +45,7 @@ bool FileSysOpt::Copy(const char* from, const char* to)
 /// @return 
 bool FileSysOpt::Remove(const char* name)
 {
-	if (NULL != filesys)
-	{
-		volume = filesys->GetVolume(name);
-	}
+	volume = kernel->filesys.GetVolume(name);
 	
 	if (NULL != volume)
 	{

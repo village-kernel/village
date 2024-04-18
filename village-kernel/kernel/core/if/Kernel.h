@@ -182,6 +182,25 @@ public:
 };
 
 
+/// @brief FileSys
+class FileSys;
+
+/// @brief FileVol
+class FileVol;
+
+/// @brief FileSystem
+class FileSystem
+{
+public:
+	//Methods
+	virtual void RegisterFS(FileSys* fs, const char* name) = 0;
+	virtual void DeregisterFS(FileSys* fs, const char* name) = 0;
+	virtual int AttachVolume(FileVol* volume) = 0;
+	virtual int DetachVolume(FileVol* volume) = 0;
+	virtual FileVol* GetVolume(const char* name) = 0;
+};
+
+
 /// @brief Kernel
 class Kernel
 {
@@ -196,6 +215,7 @@ public:
 	Symbol&      symbol;
 	Device&      device;
 	Feature&     feature;
+	FileSystem&  filesys;
 public:
 	/// @brief constructor
 	Kernel(
@@ -207,7 +227,8 @@ public:
 		Thread&      thread,
 		Symbol&      symbol,
 		Device&      device,
-		Feature&     feature
+		Feature&     feature,
+		FileSystem&  filesys
 	)
 		:system(system),
 		memory(memory),
@@ -217,7 +238,8 @@ public:
 		thread(thread),
 		symbol(symbol),
 		device(device),
-		feature(feature)
+		feature(feature),
+		filesys(filesys)
 	{}
 
 	/// @brief Destructor

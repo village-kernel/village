@@ -24,10 +24,10 @@ src-$(CONFIG_STM32H7xx)             += village-kernel/kernel/arch/arm/cortex-m/s
 inc-$(CONFIG_SUBSYS)                += village-kernel/subsys/inc
 src-$(CONFIG_SUBSYS)                += village-kernel/subsys/src
 
-inc-$(CONFIG_FILESYSTEM)            += village-kernel/filesys/core/inc
+inc-y                               += village-kernel/filesys/core/inc
 inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/inc
 
-src-$(CONFIG_FILESYSTEM)            += village-kernel/filesys/core/src
+src-y                               += village-kernel/filesys/core/src
 src-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/src
 
 objs-y                              += Village.o
@@ -48,12 +48,11 @@ objs-$(CONFIG_INPUT)                += Input.o
 objs-$(CONFIG_LOADER)               += Loader.o
 objs-$(CONFIG_WORKQUEUE)            += WorkQueue.o
 
-objs-$(CONFIG_FILESYSTEM)           += FileSys.o
+objs-y                              += FileSystem.o
 objs-$(CONFIG_FATFS)                += FatDiskio.o
 objs-$(CONFIG_FATFS)                += FatEntry.o
 objs-$(CONFIG_FATFS)                += FatObject.o
 objs-$(CONFIG_FATFS)                += FatSystem.o
-objs-$(CONFIG_FATFS)                += FatVolume.o
 
 
 ######################################

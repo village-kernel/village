@@ -17,6 +17,7 @@
 #include "Thread.h"
 #include "Scheduler.h"
 #include "Interrupt.h"
+#include "FileSystem.h"
 
 
 /// @brief Village
@@ -24,15 +25,16 @@ class Village : public Kernel
 {
 private:
 	//Members
-	ConcreteSystem    concreteSystem;
-	ConcreteDebug     concreteDebug;
-	ConcreteMemory    concreteMemory;
-	ConcreteSymbol    concreteSymbol;
-	ConcreteDevice    concreteDevice;
-	ConcreteFeature   concreteFeature;
-	ConcreteThread    concreteThread;
-	ConcreteScheduler concreteScheduler;
-	ConcreteInterrupt concreteInterrupt;
+	ConcreteSystem      concreteSystem;
+	ConcreteDebug       concreteDebug;
+	ConcreteMemory      concreteMemory;
+	ConcreteSymbol      concreteSymbol;
+	ConcreteDevice      concreteDevice;
+	ConcreteFeature     concreteFeature;
+	ConcreteThread      concreteThread;
+	ConcreteScheduler   concreteScheduler;
+	ConcreteInterrupt   concreteInterrupt;
+	ConcreteFileSystem  concreteFilesys;
 private:
 	//Methods
 	Village();

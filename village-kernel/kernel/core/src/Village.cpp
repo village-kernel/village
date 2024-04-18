@@ -18,7 +18,8 @@ Village::Village() : Kernel
 	concreteThread,
 	concreteSymbol,
 	concreteDevice,
-	concreteFeature
+	concreteFeature,
+	concreteFilesys
 )
 {
 }
@@ -56,6 +57,9 @@ void Village::Setup()
 	
 	//Setup device
 	concreteDevice.Setup();
+
+	//Setup filesys
+	concreteFilesys.Setup();
 	
 	//Setup feature
 	concreteFeature.Setup();
@@ -78,6 +82,9 @@ void Village::Exit()
 {
 	//Exit feature
 	concreteFeature.Exit();
+
+	//Exit filesys
+	concreteFilesys.Exit();
 
 	//Exit device
 	concreteDevice.Exit();

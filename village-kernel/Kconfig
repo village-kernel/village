@@ -135,12 +135,7 @@ if KERNEL
 
 	menu "filesys"
 
-	config FILESYSTEM
-		bool "Enable file system"
-		default n
-
 	config FATFS
-		depends on FILESYSTEM
 		bool "Add fat file system in support list"
 		default n
 
@@ -155,7 +150,6 @@ if KERNEL
 		comment "This is using to configure fileutils"
 
 		config FILEUTILS
-			select FILESYSTEM
 			bool "Enable file utils support"
 			default n
 
@@ -242,7 +236,7 @@ if KERNEL
 
 		config PINPARSER
 			depends on PARSER
-			select FATFS
+			select FILESTREAM
 			bool "Enable pin parser function"
 			default n
 
