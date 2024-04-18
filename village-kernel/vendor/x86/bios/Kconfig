@@ -1,5 +1,0 @@
-comment "Configure Support Function"
-
-source ./village-kernel/vendor/x86/bios/cpu/Kconfig
-source ./village-kernel/vendor/x86/bios/hal/Kconfig
-source ./village-kernel/vendor/x86/bios/driver/Kconfig

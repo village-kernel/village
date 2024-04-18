@@ -13,12 +13,6 @@ DirStream::DirStream(const char* name, int mode)
 	:fd(-1),
 	volume(NULL)
 {
-	filesys = (FileSys*)kernel->feature.GetModule("filesys");
-	if (NULL == filesys)
-	{
-		kernel->debug.Error("file system feature not support");
-		return;
-	}
 	if (NULL != name) Open(name, mode);
 }
 
@@ -34,10 +28,7 @@ DirStream::~DirStream()
 /// @return 
 bool DirStream::IsExist(const char* name)
 {
-	if (NULL != filesys)
-	{
-		volume = filesys->GetVolume(name);
-	}
+	volume = kernel->filesys.GetVolume(name);
 
 	if (NULL != volume)
 	{
@@ -60,10 +51,7 @@ bool DirStream::IsExist(const char* name)
 /// @return 
 bool DirStream::Open(const char* name, int mode)
 {
-	if (NULL != filesys)
-	{
-		volume = filesys->GetVolume(name);
-	}
+	volume = kernel->filesys.GetVolume(name);
 
 	if (NULL != volume)
 	{

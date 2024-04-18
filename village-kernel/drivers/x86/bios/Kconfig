@@ -1,0 +1,29 @@
+menu "x86bios Device Driver"
+
+config ATALBADISK
+	tristate "Enable ATA LBA disk support"
+	default n
+
+config BOCHSVBE
+	select HAL_PCI_CONTROLLER
+	tristate "Enable Bochs VBE support"
+	default n
+
+config GENERALTIMER
+	tristate "Enable general timer support"
+	default n
+
+config PS2KEYBOARD
+	tristate "Enable ps2 key board input support"
+	default n
+
+config PS2MOUSE
+	select HAL_PS2_CONTROLLER
+	tristate "Enable ps2 mouse input support"
+	default n
+
+config SERIALPORT
+	tristate "Enable serial port support"
+	default y
+	
+endmenu

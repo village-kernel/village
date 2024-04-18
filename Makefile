@@ -55,9 +55,9 @@ ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
 ######################################
 # include other makefile
 ######################################
+-include village-os/Makefile
 -include village-boot/Makefile
 -include village-kernel/Makefile
--include village-os/Makefile
 
 
 #######################################
@@ -115,9 +115,9 @@ BIN = $(CP) -O binary -S
 #######################################
 # setting build environment
 #######################################
-INCLUDES  += $(addprefix -I, $(inc) $(inc-y) $(inc-m))
-VPATH     += $(addprefix $(BUILD_DIR)/, $(src) $(src-y) $(src-m)) $(LIBRARIES_DIR) $(src) $(src-y) $(src-m)
-LIBS      += -L$(LIBRARIES_DIR) $(addprefix -l, $(libs-y))
+INCLUDES  += $(addprefix -I, $(inc) $(inc-y))
+VPATH     += $(addprefix $(BUILD_DIR)/, $(src) $(src-y)) $(src) $(src-y)
+LIBS      += -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
 
 
 #######################################
@@ -154,23 +154,55 @@ CXXFLAGS += -DBUILD_VER='"V$(VERSION)"'
 %.o: %.s
 	$(Q)echo Compiling $@
 	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
-	$(Q)$(AS) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(dir $<)/$@
+	$(Q)$(AS) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(<:.s=.o)
 
 %.o: %.c
 	$(Q)echo Compiling $@
 	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
-	$(Q)$(CC) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(dir $<)/$@
+	$(Q)$(CC) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(<:.c=.o)
 
 %.o: %.cpp
 	$(Q)echo Compiling $@
 	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
-	$(Q)$(CXX) -c $(CXXFLAGS) $< -o $(BUILD_DIR)/$(dir $<)/$@
+	$(Q)$(CXX) -c $(CXXFLAGS) $< -o $(BUILD_DIR)/$(<:.cpp=.o)
+
+%.a: $(objs)
+	$(Q)echo output $@
+	$(Q)$(AR) rcs $@ $^
+
+%.so: $(objs)
+	$(Q)echo output $@
+	$(Q)$(LD) $(MCUEM) -shared -fPIC $^ -o $@
+	$(Q)$(SZ) $@
+
+%.mo: $(objs)
+	$(Q)echo output $@
+	$(Q)$(LD) $(MCUEM) -shared -fPIC $^ -o $@
+	$(Q)$(SZ) $@
+
+%.elf: $(objs)
+	$(Q)echo output $@
+	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(SZ) $@
 
 %.hex: %.elf
 	$(Q)echo output $@
 	$(Q)$(HEX) $< $@
 
 %.bin: %.elf
+	$(Q)echo output $@
+	$(Q)$(BIN) $< $@
+
+%.exec: $(objs)
+	$(Q)echo output $@
+	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(SZ) $@
+
+%.hex: %.exec
+	$(Q)echo output $@
+	$(Q)$(HEX) $< $@
+
+%.bin: %.exec
 	$(Q)echo output $@
 	$(Q)$(BIN) $< $@
 
@@ -188,14 +220,6 @@ library:
 		echo /libraries/lib$(name).so >> $(LIBRARIES_DIR)/_load_.rc; \
 	)
 
-$(LIBRARIES_DIR)/%.a: $(objs)
-	$(Q)echo output $@
-	$(Q)$(AR) rcs $@ $^
-
-$(LIBRARIES_DIR)/%.so: $(objs)
-	$(Q)echo output $@
-	$(Q)$(LD) $(MCUEM) -shared -fPIC $^ -o $@
-
 
 #######################################
 # build the modules
@@ -209,24 +233,17 @@ module:
 		echo /modules/$(object:.o=.mo) >> $(MODULES_DIR)/_load_.rc; \
 	)
 
-$(MODULES_DIR)/%.mo: $(objs)
-	$(Q)echo output $@
-	$(Q)$(LD) $(MCUEM) -shared -fPIC $^ -o $@
-	$(Q)$(SZ) $@
-
 
 #######################################
 # build the kernel
 #######################################
 kernel: $(objs-y)
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf \
+		objs="$(objs-y)"  \
+		libs="$(libs-y)"  \
+		LDFLAGS="$(KLDFLAGS)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.hex
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.bin
-
-$(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(KLDFLAGS) $^ -o $@ $(LIBS)
-	$(Q)$(SZ) $@
 
 
 #######################################
@@ -234,20 +251,16 @@ $(BUILD_DIR)/$(TARGET)-kernel.elf: $(objs-y)
 #######################################
 bootloader:
 	$(Q)$(MAKE) $(objs-boot-y) \
-		inc="$(inc-boot-y)" \
+		inc="$(inc-boot-y)"    \
 		src="$(src-boot-y)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf \
-		inc="$(inc-boot-y)" \
-		src="$(src-boot-y)" \
-		objs="$(objs-boot-y)" \
-		libs="$(libs-boot-y)";
+		inc="$(inc-boot-y)"    \
+		src="$(src-boot-y)"    \
+		objs="$(objs-boot-y)"  \
+		libs="$(libs-boot-y)"  \
+		LDFLAGS="$(BLDFLAGS)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
-
-$(BUILD_DIR)/$(TARGET)-boot.elf: $(objs)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(BLDFLAGS) $^ -o $@ -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
-	$(Q)$(SZ) $@
 
 
 #######################################
@@ -255,28 +268,22 @@ $(BUILD_DIR)/$(TARGET)-boot.elf: $(objs)
 #######################################
 application: crt0_app.o
 	$(Q)mkdir -p $(APPS_DIR)
-	$(Q)$(foreach name, $(apps-y), \
-		$(MAKE) $(objs-$(name)-y) \
-		inc="$(inc-$(name)-y)" \
-		src="$(src-$(name)-y)"; \
-		$(MAKE) $(APPS_DIR)/$(name).exec \
-		objs="crt0_app.o $(objs-$(name)-y)" \
-		libs="$(libs-$(name)-y)" \
-		inc="$(inc-$(name)-y)" \
-		src="$(src-$(name)-y)"; \
+	$(Q)$(foreach name, $(apps-y),          \
+		$(MAKE) $(objs-$(name)-y)           \
+		inc="$(inc-$(name)-y)"              \
+		src="$(src-$(name)-y)";             \
+		$(MAKE) $(APPS_DIR)/$(name).exec    \
+		inc="$(inc-$(name)-y)"              \
+		src="$(src-$(name)-y)"              \
+		objs="crt0_app.o $(objs-$(name)-y)"  \
+		libs="$(libs-$(name)-y)"            \
+		LDFLAGS="$(APPLDFLAGS)";            \
 	)
-
-$(APPS_DIR)/%.exec: $(objs)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(APPLDFLAGS) $^ -o $@ -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
-	$(Q)$(SZ) $@
 ifeq ($(CONFIG_CREATE_APP_HEX_FILE), y)
-	$(Q)echo output $(@:.exec=.hex)
-	$(Q)$(HEX) $@ $(@:.exec=.hex)
+	$(Q)$(foreach name, $(apps-y), $(MAKE) $(APPS_DIR)/$(name).hex;)
 endif
 ifeq ($(CONFIG_CREATE_APP_BIN_FILE), y)
-	$(Q)echo output $(@:.exec=.bin)
-	$(Q)$(BIN) $@ $(@:.exec=.bin)
+	$(Q)$(foreach name, $(apps-y), $(MAKE) $(APPS_DIR)/$(name).bin;)
 endif
 
 
@@ -294,7 +301,7 @@ osImage:
 # copy to rootfs
 #######################################
 rootfs:
-	$(Q)cp -rf $(BUILD_DIR)/output    $(ROOTFS_DIR)/
+	$(Q)cp -rf $(BUILD_DIR)/output/*    $(ROOTFS_DIR)/
 	
 
 #######################################
@@ -330,7 +337,6 @@ clean-mod:
 
 clean-app:
 	$(Q)rm -rf $(APPS_DIR)
-	$(Q)rm -rf $(BUILD_DIR)/village-os
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
