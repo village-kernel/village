@@ -15,8 +15,8 @@
 #include "Scheduler.h"
 #include "Thread.h"
 #include "WorkQueue.h"
+#include "InputEvent.h"
 #include "Symbol.h"
-#include "Input.h"
 #include "Device.h"
 #include "Feature.h"
 #include "FileSystem.h"
@@ -35,8 +35,8 @@ private:
 	ConcreteScheduler   concreteScheduler;
 	ConcreteThread      concreteThread;
 	ConcreteWorkQueue   concreteWorkQueue;
+	ConcreteInputEvent  concreteInputEvent;
 	ConcreteSymbol      concreteSymbol;
-	ConcreteInput       concreteInput;
 	ConcreteDevice      concreteDevice;
 	ConcreteFeature     concreteFeature;
 	ConcreteFileSystem  concreteFilesys;

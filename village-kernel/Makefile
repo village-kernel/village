@@ -35,9 +35,9 @@ objs-y                              += Device.o
 objs-y                              += Memory.o
 objs-y                              += Thread.o
 objs-y                              += Interrupt.o
-objs-y                              += Input.o
-objs-y                              += Loader.o
+objs-y                              += InputEvent.o
 objs-y                              += WorkQueue.o
+objs-y                              += Loader.o
 
 objs-y                              += System.o
 objs-y                              += Scheduler.o
