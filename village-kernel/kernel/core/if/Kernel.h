@@ -240,38 +240,38 @@ public:
 };
 
 
-/// @brief Input
-class Input
+/// @brief InputEvent
+class InputEvent
 {
 public:
 	//Input type
 	enum Type
 	{
-		_Event = 0,
-		_Movement,
+		_Key = 0,
+		_Loc,
 		_AllType,
 	};
 
-	//Input event
-	struct Event
+	//Input key
+	struct Key
 	{
-		int keycode;
+		int code;
 		int status;
 
-		Event()
-			:keycode(0),
+		Key()
+			:code(0),
 			status(0)
 		{}
 	};
 
-	//Input movement
-	struct Movement
+	//Input loc
+	struct Loc
 	{
 		int axisX;
 		int axisY;
 		int axisZ;
 
-		Movement()
+		Loc()
 			:axisX(0),
 			axisY(0),
 			axisZ(0)
@@ -283,8 +283,8 @@ public:
 	virtual void Attach(Type type, Function func, void* user = NULL) = 0;
 	virtual void Detach(Type type, Method method, Class* user) = 0;
 	virtual void Detach(Type type, Function func, void* user = NULL) = 0;
-	virtual void ReportEvent(int keycode, int status) = 0;
-	virtual void ReportMovement(int axisX, int axisY, int axisZ) = 0;
+	virtual void ReportKey(int code, int status) = 0;
+	virtual void ReportLoc(int axisX, int axisY, int axisZ) = 0;
 };
 
 
@@ -321,8 +321,8 @@ public:
 	Scheduler&   scheduler;
 	Thread&      thread;
 	WorkQueue&   workqueue;
+	InputEvent&  inputevent;
 	Symbol&      symbol;
-	Input&       input;
 	Device&      device;
 	Feature&     feature;
 	FileSystem&  filesys;
@@ -337,8 +337,8 @@ public:
 		Scheduler&   scheduler,
 		Thread&      thread,
 		WorkQueue&   workqueue,
+		InputEvent&  inputevent,
 		Symbol&      symbol,
-		Input&       input,
 		Device&      device,
 		Feature&     feature,
 		FileSystem&  filesys,
@@ -351,8 +351,8 @@ public:
 		scheduler(scheduler),
 		thread(thread),
 		workqueue(workqueue),
+		inputevent(inputevent),
 		symbol(symbol),
-		input(input),
 		device(device),
 		feature(feature),
 		filesys(filesys),

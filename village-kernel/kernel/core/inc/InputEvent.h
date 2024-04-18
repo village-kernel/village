@@ -1,19 +1,19 @@
 //###########################################################################
-// Input.h
-// Declarations of the functions that manage input
+// InputEvent.h
+// Declarations of the functions that manage input event
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __INPUT_H__
-#define __INPUT_H__
+#ifndef __INPUT_EVENT_H__
+#define __INPUT_EVENT_H__
 
 #include "Kernel.h"
 #include "List.h"
 #include "Cast.h"
 
 
-/// @brief ConcreteInput
-class ConcreteInput : public Input
+/// @brief ConcreteInputEvent
+class ConcreteInputEvent : public InputEvent
 {
 private:
 	//Structures
@@ -29,9 +29,9 @@ private:
 	};
 
 	//Members
+	Key key;
+	Loc loc;
 	List<Observer*> observers[_AllType];
-	Event           event;
-	Movement        movement;
 
 	//Methods
 	void Attach(List<Observer*>& observers, Function func, void* user);
@@ -39,16 +39,16 @@ private:
 	void Notify(List<Observer*>& observers, void* argv);
 public:
 	//Methods
-	ConcreteInput();
-	~ConcreteInput();
+	ConcreteInputEvent();
+	~ConcreteInputEvent();
 	void Setup();
 	void Exit();
 	void Attach(Type type, Method method, Class* user);
 	void Attach(Type type, Function func, void* user = NULL);
 	void Detach(Type type, Method method, Class* user);
 	void Detach(Type type, Function func, void* user = NULL);
-	void ReportEvent(int keycode, int status);
-	void ReportMovement(int axisX, int axisY, int axisZ);
+	void ReportKey(int code, int status);
+	void ReportLoc(int axisX, int axisY, int axisZ);
 };
 
-#endif //!__INPUT_H__
+#endif //!__INPUT_EVENT_H__

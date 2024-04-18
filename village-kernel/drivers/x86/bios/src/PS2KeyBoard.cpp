@@ -4,10 +4,8 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Input.h"
 #include "Kernel.h"
 #include "Hardware.h"
-#include "WorkQueue.h"
 
 
 /// @brief KeyBoard
@@ -16,9 +14,9 @@ class KeyBoard : public Driver
 private:
 	//Members
 	uint8_t keycode;
-	Input* input;
-	Interrupt* interrupt;
-	WorkQueue* workQueue;
+	InputEvent* inputevent;
+	Interrupt*  interrupt;
+	WorkQueue*  workQueue;
 	WorkQueue::Work* work;
 private:
 	/// @brief Interrupt handler
@@ -37,15 +35,15 @@ private:
 	{
 		//Report keycode and status
 		if (keycode >= 0 && keycode <= 0x39)
-			input->ReportEvent(keycode, 1);
+			inputevent->ReportKey(keycode, 1);
 		else if (keycode >= 0x39 && keycode <= 0x39 + 0x80)
-			input->ReportEvent(keycode - 0x80, 0);
+			inputevent->ReportKey(keycode - 0x80, 0);
 	}
 public:
 	/// @brief Constructor
 	KeyBoard()
 		:keycode(0),
-		input(NULL),
+		inputevent(NULL),
 		interrupt(NULL),
 		workQueue(NULL),
 		work(NULL)
@@ -62,8 +60,8 @@ public:
 	/// @brief KeyBoard open
 	bool Open()
 	{
-		//Get the input pointer
-		input = &kernel->input;
+		//Get the inputevent pointer
+		inputevent = &kernel->inputevent;
 
 		//Get the interrupt pointer
 		interrupt = &kernel->interrupt;

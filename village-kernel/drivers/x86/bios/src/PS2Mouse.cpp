@@ -4,11 +4,9 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Input.h"
 #include "Driver.h"
 #include "Kernel.h"
 #include "Hardware.h"
-#include "WorkQueue.h"
 #include "PS2Controller.h"
 
 
@@ -53,9 +51,9 @@ private:
 	//Controller members
 	PS2Controller ps2;
 	//Work
-	Input* input;
-	Interrupt* interrupt;
-	WorkQueue* workQueue;
+	InputEvent* inputevent;
+	Interrupt*  interrupt;
+	WorkQueue*  workQueue;
 	WorkQueue::Work* work;
 private:
 	/// @brief Mouse write data
@@ -175,43 +173,43 @@ private:
 		if (packet.leftBtn && !isLeftBtnPressed)
 		{
 			isLeftBtnPressed = true;
-			input->ReportEvent(0xf1, 1);
+			inputevent->ReportKey(0xf1, 1);
 		}
 		else if (!packet.leftBtn && isLeftBtnPressed)
 		{
 			isLeftBtnPressed = false;
-			input->ReportEvent(0xf1, 0);
+			inputevent->ReportKey(0xf1, 0);
 		}
 
 		//Report right button
 		if (packet.rightBtn && !isRightBtnPressed)
 		{
 			isRightBtnPressed = true;
-			input->ReportEvent(0xf2, 1);
+			inputevent->ReportKey(0xf2, 1);
 		}
 		else if (!packet.rightBtn && isRightBtnPressed)
 		{
 			isRightBtnPressed = false;
-			input->ReportEvent(0xf2, 0);
+			inputevent->ReportKey(0xf2, 0);
 		}
 
 		//Report middle button
 		if (packet.middleBtn && !isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = true;
-			input->ReportEvent(0xf3, 1);
+			inputevent->ReportKey(0xf3, 1);
 		}
 		else if (!packet.middleBtn && isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = false;
-			input->ReportEvent(0xf3, 0);
+			inputevent->ReportKey(0xf3, 0);
 		}
 
 		//Report axis x, y, z movement value
 		int axisX = (int16_t)packet.x - (packet.xSignBit ? 0x100 : 0);
 		int axisY = (int16_t)packet.y - (packet.ySignBit ? 0x100 : 0);
 		int axisZ = (int8_t)packet.z;
-		input->ReportMovement(axisX, axisY, axisZ);
+		inputevent->ReportLoc(axisX, axisY, axisZ);
 	}
 public:
 	/// @brief Constructor
@@ -222,7 +220,7 @@ public:
 		isLeftBtnPressed(false),
 		isRightBtnPressed(false),
 		isMiddleBtnPressed(false),
-		input(NULL),
+		inputevent(NULL),
 		interrupt(NULL),
 		workQueue(NULL),
 		work(NULL)
@@ -239,8 +237,8 @@ public:
 	/// @brief Mouse open
 	bool Open()
 	{
-		//Get the input pointer
-		input = &kernel->input;
+		//Get the inputevent pointer
+		inputevent = &kernel->inputevent;
 
 		//Get the interrupt pointer
 		interrupt = &kernel->interrupt;
