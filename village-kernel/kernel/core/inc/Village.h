@@ -9,15 +9,18 @@
 
 #include "Kernel.h"
 #include "System.h"
-#include "Debug.h"
 #include "Memory.h"
+#include "Debug.h"
+#include "Interrupt.h"
+#include "Scheduler.h"
+#include "Thread.h"
+#include "WorkQueue.h"
 #include "Symbol.h"
+#include "Input.h"
 #include "Device.h"
 #include "Feature.h"
-#include "Thread.h"
-#include "Scheduler.h"
-#include "Interrupt.h"
 #include "FileSystem.h"
+#include "Loader.h"
 
 
 /// @brief Village
@@ -26,15 +29,18 @@ class Village : public Kernel
 private:
 	//Members
 	ConcreteSystem      concreteSystem;
-	ConcreteDebug       concreteDebug;
 	ConcreteMemory      concreteMemory;
+	ConcreteDebug       concreteDebug;
+	ConcreteInterrupt   concreteInterrupt;
+	ConcreteScheduler   concreteScheduler;
+	ConcreteThread      concreteThread;
+	ConcreteWorkQueue   concreteWorkQueue;
 	ConcreteSymbol      concreteSymbol;
+	ConcreteInput       concreteInput;
 	ConcreteDevice      concreteDevice;
 	ConcreteFeature     concreteFeature;
-	ConcreteThread      concreteThread;
-	ConcreteScheduler   concreteScheduler;
-	ConcreteInterrupt   concreteInterrupt;
 	ConcreteFileSystem  concreteFilesys;
+	ConcreteLoader      concreteLoader;
 private:
 	//Methods
 	Village();

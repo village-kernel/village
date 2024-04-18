@@ -16,10 +16,13 @@ Village::Village() : Kernel
 	concreteInterrupt,
 	concreteScheduler,
 	concreteThread,
+	concreteWorkQueue,
 	concreteSymbol,
+	concreteInput,
 	concreteDevice,
 	concreteFeature,
-	concreteFilesys
+	concreteFilesys,
+	concreteLoader
 )
 {
 }
@@ -51,9 +54,15 @@ void Village::Setup()
 
 	//Setup thread
 	concreteThread.Setup();
+
+	//Setup workqueue
+	concreteWorkQueue.Setup();
 	
 	//Setup symbol
 	concreteSymbol.Setup();
+
+	//Setup input
+	concreteInput.Setup();
 	
 	//Setup device
 	concreteDevice.Setup();
@@ -63,6 +72,9 @@ void Village::Setup()
 	
 	//Setup feature
 	concreteFeature.Setup();
+
+	//Setup loader
+	concreteLoader.Setup();
 }
 
 
@@ -80,6 +92,9 @@ void Village::Start()
 /// @brief Kernel exit
 void Village::Exit()
 {
+	//Exit loader
+	concreteLoader.Exit();
+
 	//Exit feature
 	concreteFeature.Exit();
 
@@ -89,8 +104,14 @@ void Village::Exit()
 	//Exit device
 	concreteDevice.Exit();
 
+	//Exit input
+	concreteInput.Exit();
+
 	//Exit symbol
 	concreteSymbol.Exit();
+
+	//Exit workqueue
+	concreteWorkQueue.Exit();
 
 	//Exit thread
 	concreteThread.Exit();

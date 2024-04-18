@@ -24,16 +24,8 @@ LibraryTool::~LibraryTool()
 /// @brief Library tool Get libraries
 List<ElfLoader*>* LibraryTool::GetLibraries()
 {
-	//Get the loader module
-	Loader* loader = (Loader*)kernel->feature.GetModule("loader");
-	if (NULL == loader)
-	{
-		kernel->debug.Error("loader feature not support");
-		return NULL;
-	}
-
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = loader->GetLibraries();
+	List<ElfLoader*>* libraries = kernel->loader.GetLibraries();
 	if (NULL == libraries)
 	{
 		kernel->debug.Error("get libraries address failed");

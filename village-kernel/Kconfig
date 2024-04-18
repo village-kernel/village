@@ -105,32 +105,6 @@ if KERNEL
 
 	endmenu
 
-	#config subsystem
-
-	menu "subsys"
-
-	config SUBSYS
-		depends on MODULE
-		bool "Enable sub system support"
-		default n
-
-	config LOADER
-		depends on SUBSYS
-		bool "Enable loader support"
-		default y
-
-	config INPUT
-		depends on SUBSYS
-		bool "Enable input support"
-		default y
-
-	config WORKQUEUE
-		depends on SUBSYS
-		bool "Enable workqueue support"
-		default y
-
-	endmenu
-
 	# config file system
 
 	menu "filesys"
