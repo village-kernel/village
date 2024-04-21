@@ -16,6 +16,10 @@ private:
 	//Members
 	int locX;
 	int locY;
+
+	//Methods
+	void Draw(uint32_t x, uint32_t y, uint32_t* data);
+	void Read(uint32_t x, uint32_t y, uint32_t* data);
 public:
 	//Methods
 	Cursor();
