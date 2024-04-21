@@ -1,18 +1,18 @@
 //###########################################################################
-// Launch.h
-// The overall framework of the launch
+// Desktop.h
+// The overall framework of the desktop
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __LAUNCH_H__
-#define __LAUNCH_H__
+#ifndef __DESKTOP_H__
+#define __DESKTOP_H__
 
 #include "Graphics.h"
 #include "Kernel.h"
 
 
 ///Lanuch
-class Launch : public Class
+class Desktop : public Class
 {
 private:
 	//Members
@@ -24,10 +24,10 @@ private:
 	void UpdateLoc(InputEvent::Loc* input);
 public:
 	//Methods
-	Launch();
-	~Launch();
+	Desktop();
+	~Desktop();
 	void Initialize(const char* screen, const char* keyboard, const char* mouse);
 	void Execute();
 };
 
-#endif //!__LAUNCH_H__
+#endif //!__DESKTOP_H__

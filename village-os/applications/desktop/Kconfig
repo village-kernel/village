@@ -1,0 +1,9 @@
+# desktop menu
+
+menu "desktop"
+
+config DESKTOP
+	bool "Build desktop application"
+	default y
+
+endmenu

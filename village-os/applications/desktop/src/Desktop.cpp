@@ -1,28 +1,28 @@
 //###########################################################################
-// Launch.cpp
-// The overall framework of the launch
+// Desktop.cpp
+// The overall framework of the desktop
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Launch.h"
+#include "Desktop.h"
 #include "Kernel.h"
 
 
 /// @brief Constructor
-Launch::Launch()
+Desktop::Desktop()
 	:mainwin(NULL)
 {
 }
 
 
 /// @brief Deconstructor
-Launch::~Launch()
+Desktop::~Desktop()
 {
 }
 
 
 /// @brief Initialize
-void Launch::Initialize(const char* screen, const char* keyboard, const char* mouse)
+void Desktop::Initialize(const char* screen, const char* keyboard, const char* mouse)
 {
 	graphics.Initialize(screen, keyboard, mouse);
 
@@ -56,27 +56,27 @@ void Launch::Initialize(const char* screen, const char* keyboard, const char* mo
 
 	mainwin->Show();
 
-	kernel->inputevent.Attach(InputEvent::_Key, (Method)&Launch::UpdateKey, this);
-	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Launch::UpdateLoc, this);
+	kernel->inputevent.Attach(InputEvent::_Key, (Method)&Desktop::UpdateKey, this);
+	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Desktop::UpdateLoc, this);
 }
 
 
 /// @brief Update key
-void Launch::UpdateKey(InputEvent::Key* input)
+void Desktop::UpdateKey(InputEvent::Key* input)
 {
 	mainwin->UpdateKey(input->code, input->status);
 }
 
 
 /// @brief Update location
-void Launch::UpdateLoc(InputEvent::Loc* input)
+void Desktop::UpdateLoc(InputEvent::Loc* input)
 {
 	mainwin->UpdateCursor(input->axisX, input->axisY, input->axisZ);
 }
 
 
 /// @brief Execute
-void Launch::Execute()
+void Desktop::Execute()
 {
 	while (1) {}
 }
@@ -91,9 +91,9 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		Launch launch;
-		launch.Initialize(argv[1], argv[2], argv[3]);
-		launch.Execute();
+		Desktop desktop;
+		desktop.Initialize(argv[1], argv[2], argv[3]);
+		desktop.Execute();
 		return 0;
 	}
 }

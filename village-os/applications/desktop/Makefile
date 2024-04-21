@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of launch
+# The Makefile of desktop
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,24 +8,24 @@
 ######################################
 # applications
 ######################################
-apps-$(CONFIG_LAUNCH)                += launch
+apps-$(CONFIG_DESKTOP)                += desktop
 
 
 ######################################
 # paths
 ######################################
-inc-launch-$(CONFIG_LAUNCH)          += village-os/applications/launch/inc
+inc-desktop-$(CONFIG_DESKTOP)          += village-os/applications/desktop/inc
 
-src-launch-$(CONFIG_LAUNCH)          += village-os/applications/launch/src
+src-desktop-$(CONFIG_DESKTOP)          += village-os/applications/desktop/src
 
 
 ######################################
 # objects
 ######################################
-objs-launch-$(CONFIG_LAUNCH)         += Launch.o
+objs-desktop-$(CONFIG_DESKTOP)         += Desktop.o
 
 
 ######################################
 # libraries
 ######################################
-libs-launch-$(CONFIG_LAUNCH)         += vkgui kernel stdc++ c
+libs-desktop-$(CONFIG_DESKTOP)         += vkgui kernel stdc++ c
