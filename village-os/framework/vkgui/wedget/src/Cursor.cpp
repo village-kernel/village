@@ -21,15 +21,22 @@ void Cursor::Initialize()
 }
 
 
+
 /// @brief 
 void Cursor::Show()
 {
-	display->DrawRectangle(locX, locY, locX + width, locY + height, Display::White);
+	static uint32_t colorBits[250] = {0};
+	static bool isReady = false;
+	
+	if (isReady)
+	{
+		display->DrawCircle(locX, locY, 5, colorBits);
+	}
 	
 	locX = GetLocX();
 	locY = GetLocY();
-	
-	display->DrawRectangle(locX, locY, locX + width, locY + height);
+	display->ReadCircle(locX, locY, 5, colorBits);
+	display->DrawCircle(locX, locY, 5);
 
-	Wedget::Show();
+	isReady = true;
 }

@@ -20,7 +20,8 @@ private:
 	Window*  mainwin;
 
 	//Methods
-	void UpdateInput(InputEvent::Loc* input);
+	void UpdateKey(InputEvent::Key* input);
+	void UpdateLoc(InputEvent::Loc* input);
 public:
 	//Methods
 	Launch();

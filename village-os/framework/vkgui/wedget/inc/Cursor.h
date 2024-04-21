@@ -13,6 +13,7 @@
 class Cursor : public Wedget
 {
 private:
+	//Members
 	int locX;
 	int locY;
 public:

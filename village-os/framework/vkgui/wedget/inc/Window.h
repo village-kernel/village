@@ -22,7 +22,8 @@ public:
 	//Methods
 	Window();
 	void Initialize();
-	void Update(int axisX, int axisY, int axisZ);
+	void UpdateKey(int code, int status);
+	void UpdateCursor(int axisX, int axisY, int axisZ);
 	void Show();
 };
 

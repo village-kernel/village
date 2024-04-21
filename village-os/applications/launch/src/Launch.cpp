@@ -56,18 +56,22 @@ void Launch::Initialize(const char* screen, const char* keyboard, const char* mo
 
 	mainwin->Show();
 
-	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Launch::UpdateInput, this);
+	kernel->inputevent.Attach(InputEvent::_Key, (Method)&Launch::UpdateKey, this);
+	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Launch::UpdateLoc, this);
 }
 
 
-/// @brief Update
-void Launch::UpdateInput(InputEvent::Loc* input)
+/// @brief Update key
+void Launch::UpdateKey(InputEvent::Key* input)
 {
-	if (NULL != mainwin)
-	{
-		mainwin->Update(input->axisX, input->axisY, input->axisZ);
-		mainwin->Show();
-	}
+	mainwin->UpdateKey(input->code, input->status);
+}
+
+
+/// @brief Update location
+void Launch::UpdateLoc(InputEvent::Loc* input)
+{
+	mainwin->UpdateCursor(input->axisX, input->axisY, input->axisZ);
 }
 
 

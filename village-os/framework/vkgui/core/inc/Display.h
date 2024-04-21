@@ -61,24 +61,32 @@ private:
 	//Members
 	FBDriver*  fbdev;
 	Mutex      lock;
+	uint32_t   limitX;
+	uint32_t   limitY;
 	char       data[buf_size];
 public:
 	//Methods
 	Display();
 	~Display();
 	void Initialize(FBDriver* fbdev);
+	
 	void DrawPoint(uint32_t x, uint32_t y, uint32_t color = defStrokeColor);
 	uint32_t ReadPoint(uint32_t x, uint32_t y);
+	uint32_t ReadDrawPoint(uint32_t x, uint32_t y, uint32_t color = defStrokeColor);
 	void Clear(uint32_t color = defBackgroundColor);
+	
 	void DrawLine(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color = defStrokeColor);
 	void DrawRectangle(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color = defStrokeColor);
-	void DrawCircle(uint32_t x, uint32_t y, uint32_t r, uint32_t color = defStrokeColor);
+	
+	void DrawCircle(uint32_t x, uint32_t y, uint32_t r, uint32_t* colors = NULL);
+	void ReadCircle(uint32_t x, uint32_t y, uint32_t r, uint32_t* colors = NULL);
+
 	void ShowChar(uint32_t x, uint32_t y, uint8_t charVal, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint32_t color = defStrokeColor);
 	void ShowString(uint32_t x, uint32_t y, uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint32_t color = defStrokeColor);
 	void ShowString(uint8_t* str, FontSize fontSize = Font16, DisplayMode mode = Multiply, uint32_t color = defStrokeColor);
-	void ShowPicture(uint8_t *picture, uint32_t x = 0, uint32_t y = 0, uint32_t width = 0, uint32_t height = 0);
 	
-	//Methods
+	void ShowArea(uint32_t* area, uint32_t x = 0, uint32_t y = 0, uint32_t width = 0, uint32_t height = 0);
+	
 	void Printf(const char* format, ...);
 };
 
