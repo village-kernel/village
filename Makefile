@@ -336,7 +336,7 @@ clean-mod:
 	$(Q)rm -rf $(MODULES_DIR)
 
 clean-app:
-	$(Q)rm -rf $(APPS_DIR)
+	$(Q)rm -rf $(APPS_DIR) $(BUILD_DIR)/village-os/applications
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
