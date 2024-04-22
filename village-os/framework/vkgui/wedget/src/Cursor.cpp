@@ -28,21 +28,25 @@ const uint32_t cursordat[] = {
 };
 
 
-/// @brief 
+/// @brief Backup data
+static uint32_t colorBits[128] = {0};
+
+
+/// @brief Constructor
 Cursor::Cursor()
 	:locX(0),
 	locY(0)
 {}
 
 
-/// @brief 
+/// @brief Initialize
 void Cursor::Initialize()
 {
 
 }
 
 
-/// @brief 
+/// @brief Cursor Draw
 /// @param x 
 /// @param y 
 /// @param data 
@@ -61,7 +65,7 @@ void Cursor::Draw(uint32_t x, uint32_t y, uint32_t* data)
 }
 
 
-/// @brief 
+/// @brief Cursor Read
 /// @param x 
 /// @param y 
 /// @param data 
@@ -81,11 +85,10 @@ void Cursor::Read(uint32_t x, uint32_t y, uint32_t* data)
 
 
 
-/// @brief 
+/// @brief Cursor Show
 void Cursor::Show()
 {
 	static bool isReady = false;
-	static uint32_t colorBits[128] = {0};
 	
 	if (isReady)
 	{
