@@ -46,25 +46,6 @@ void Cursor::Initialize()
 }
 
 
-/// @brief Cursor Draw
-/// @param x 
-/// @param y 
-/// @param data 
-void Cursor::Draw(uint32_t x, uint32_t y, uint32_t* data)
-{
-	for (uint32_t i = 0; i < 16; i++)
-	{
-		for (uint32_t j = 0; j < 8; j++)
-		{
-			if (cursordat[i * 8 + j] != 0xffff)
-			{
-				display->DrawPoint(x + j, y + i, data[i * 8 + j]);
-			}
-		}
-	}
-}
-
-
 /// @brief Cursor Read
 /// @param x 
 /// @param y 
@@ -84,22 +65,48 @@ void Cursor::Read(uint32_t x, uint32_t y, uint32_t* data)
 }
 
 
+/// @brief Cursor Draw
+/// @param x 
+/// @param y 
+/// @param data 
+void Cursor::Draw(uint32_t x, uint32_t y, uint32_t* data)
+{
+	for (uint32_t i = 0; i < 16; i++)
+	{
+		for (uint32_t j = 0; j < 8; j++)
+		{
+			if (cursordat[i * 8 + j] != 0xffff)
+			{
+				display->DrawPoint(x + j, y + i, data[i * 8 + j]);
+			}
+		}
+	}
+}
+
 
 /// @brief Cursor Show
 void Cursor::Show()
 {
-	static bool isReady = false;
-	
-	if (isReady)
-	{
-		Draw(locX, locY, (uint32_t*)colorBits);
-	}
-	
 	locX = GetLocX();
 	locY = GetLocY();
+	Read(locX, locY, (uint32_t*)colorBits);
+	Draw(locX, locY, (uint32_t*)cursordat);
+}
+
+
+/// @brief Cursor Update
+void Cursor::Update(int axisX, int axisY)
+{
+	Draw(locX, locY, (uint32_t*)colorBits);
+
+	locX += axisX;
+	locY -= axisY;
+
+	if (locX < 0) locX = 0;
+	else if (locX > width) locX = width;
+	if (locY < 0) locY = 0;
+	else if (locY > height) locY = height;
 
 	Read(locX, locY, (uint32_t*)colorBits);
 	Draw(locX, locY, (uint32_t*)cursordat);
-
-	isReady = true;
 }

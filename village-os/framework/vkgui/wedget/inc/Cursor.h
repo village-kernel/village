@@ -18,13 +18,14 @@ private:
 	int locY;
 
 	//Methods
-	void Draw(uint32_t x, uint32_t y, uint32_t* data);
 	void Read(uint32_t x, uint32_t y, uint32_t* data);
+	void Draw(uint32_t x, uint32_t y, uint32_t* data);
 public:
 	//Methods
 	Cursor();
 	void Initialize();
 	void Show();
+	void Update(int axisX, int axisY);
 };
 
 #endif //!__VK_CURSOR_H__

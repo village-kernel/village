@@ -50,10 +50,12 @@ protected:
 	int      width;
 	int      height;
 	Wedget*  bg;
-
+ public:
 	//Methods
 	int GetLocX();
 	int GetLocY();
+	int GetWidth();
+	int GetHeight();
 public:
 	//Methods
 	Wedget();

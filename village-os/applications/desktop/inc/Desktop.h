@@ -18,6 +18,14 @@ private:
 	//Members
 	Graphics graphics;
 	Window*  mainwin;
+	Toolbar* toolbar;
+	Tabbar*  tabbar;
+	Label*   label;
+	Button*  button1;
+	Button*  button2;
+	Button*  button3;
+	Button*  button4;
+	Cursor*  cursor;
 
 	//Methods
 	void UpdateKey(InputEvent::Key* input);

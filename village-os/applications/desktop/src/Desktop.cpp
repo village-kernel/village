@@ -28,31 +28,34 @@ void Desktop::Initialize(const char* screen, const char* keyboard, const char* m
 
 	mainwin = (Window*)graphics.CreateMainWindow();
 
-	Toolbar* toolbar = (Toolbar*)mainwin->CreateWedget(Wedget::_Toolbar);
+	toolbar = (Toolbar*)mainwin->CreateWedget(Wedget::_Toolbar);
 	toolbar->SetLocation(0, 0, 1024, 20);
 
-	Label* label = (Label*)toolbar->CreateWedget(Wedget::_Label);
+	label = (Label*)toolbar->CreateWedget(Wedget::_Label);
 	label->SetLocation(0, 0, 80, 20);
 	label->SetLabel((char*)"menu");
 
-	Tabbar* tabbar = (Tabbar*)mainwin->CreateWedget(Wedget::_Tabbar);
+	tabbar = (Tabbar*)mainwin->CreateWedget(Wedget::_Tabbar);
 	tabbar->SetLocation(412, 728, 130, 40);
 
-	Button* button1 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button1 = (Button*)tabbar->CreateWedget(Wedget::_Button);
 	button1->SetLocation(10, 10, 20, 20);
 	button1->SetText((char*)"A");
 
-	Button* button2 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button2 = (Button*)tabbar->CreateWedget(Wedget::_Button);
 	button2->SetLocation(40, 10, 20, 20);
 	button2->SetText((char*)"B");
 
-	Button* button3 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button3 = (Button*)tabbar->CreateWedget(Wedget::_Button);
 	button3->SetLocation(70, 10, 20, 20);
 	button3->SetText((char*)"C");
 
-	Button* button4 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button4 = (Button*)tabbar->CreateWedget(Wedget::_Button);
 	button4->SetLocation(100, 10, 20, 20);
 	button4->SetText((char*)"D");
+
+	cursor = (Cursor*)mainwin->CreateWedget(Wedget::_Cursor);
+	cursor->SetLocation(0, 0, mainwin->GetWidth(), mainwin->GetHeight());
 
 	mainwin->Show();
 
@@ -64,14 +67,14 @@ void Desktop::Initialize(const char* screen, const char* keyboard, const char* m
 /// @brief Update key
 void Desktop::UpdateKey(InputEvent::Key* input)
 {
-	mainwin->UpdateKey(input->code, input->status);
+	
 }
 
 
 /// @brief Update location
 void Desktop::UpdateLoc(InputEvent::Loc* input)
 {
-	mainwin->UpdateCursor(input->axisX, input->axisY, input->axisZ);
+	cursor->Update(input->axisX,input->axisY);
 }
 
 

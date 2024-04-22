@@ -134,6 +134,22 @@ int Wedget::GetLocY()
 }
 
 
+/// @brief 
+/// @return 
+int Wedget::GetWidth()
+{
+	return width;
+}
+
+
+/// @brief 
+/// @return 
+int Wedget::GetHeight()
+{
+	return height;
+}
+
+
 /// @brief Wedget background
 /// @param bg : background
 void Wedget::SetBackground(Wedget* bg)
