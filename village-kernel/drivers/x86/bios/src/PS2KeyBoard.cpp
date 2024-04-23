@@ -1,5 +1,5 @@
 //###########################################################################
-// KeyBoard.cpp
+// PS2KeyBoard.cpp
 // Definitions of the functions that manage key board
 //
 // $Copyright: Copyright (C) village
@@ -8,8 +8,8 @@
 #include "Hardware.h"
 
 
-/// @brief KeyBoard
-class KeyBoard : public Driver
+/// @brief PS2KeyBoard
+class PS2KeyBoard : public Driver
 {
 private:
 	//Members
@@ -37,7 +37,7 @@ private:
 	}
 public:
 	/// @brief Constructor
-	KeyBoard()
+	PS2KeyBoard()
 		:keycode(0),
 		inputevent(NULL),
 		interrupt(NULL),
@@ -48,7 +48,7 @@ public:
 
 
 	/// @brief Destructor
-	~KeyBoard()
+	~PS2KeyBoard()
 	{
 	}
 
@@ -66,10 +66,10 @@ public:
 		workQueue = &kernel->workqueue;
 
 		//Create work
-		work = workQueue->Create((Method)&KeyBoard::ReportHandler, this);
+		work = workQueue->Create((Method)&PS2KeyBoard::ReportHandler, this);
 
 		//Set interrupt
-		interrupt->SetISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
+		interrupt->SetISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
 
 		return true;
 	}
@@ -78,11 +78,11 @@ public:
 	/// @brief KeyBoard close
 	void Close()
 	{
-		interrupt->RemoveISR(IRQ_Keyboard_Controller, (Method)(&KeyBoard::InputHandler), this);
+		interrupt->RemoveISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
 		workQueue->Delete(work);
 	}
 };
 
 
 //Register driver
-REGISTER_DRIVER(new KeyBoard(), DriverID::_character, ps2keyboard);
+REGISTER_DRIVER(new PS2KeyBoard(), DriverID::_character, ps2keyboard);
