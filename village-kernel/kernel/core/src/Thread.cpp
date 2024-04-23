@@ -198,6 +198,7 @@ void ConcreteThread::SelectNextTask()
 			if(system->GetSysClkCounts() >= tasks.Item()->ticks)
 			{
 				tasks.Item()->state = TaskState::Running;
+				tasks.Item()->ticks = 0;
 			}
 		}
 
