@@ -340,7 +340,7 @@ void Display::ShowString(uint8_t* str, FontSize fontSize, DisplayMode mode, uint
 
 	while ('\0' != *str)
 	{
-		if ((xOffset + (fontSize >> 1) > fbdev->device.width) || ('\n' == *str))
+		if ((xOffset + (fontSize >> 1) > limitX) || ('\n' == *str))
 		{
 			xOffset = 0;
 			yOffset += fontSize;
