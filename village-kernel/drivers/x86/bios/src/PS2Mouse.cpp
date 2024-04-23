@@ -1,5 +1,5 @@
 //###########################################################################
-// Mouse.cpp
+// PS2Mouse.cpp
 // Definitions of the functions that manage mouse
 //
 // $Copyright: Copyright (C) village
@@ -10,8 +10,8 @@
 #include "PS2Controller.h"
 
 
-/// @brief Mouse
-class Mouse : public Driver
+/// @brief PS2Mouse
+class PS2Mouse : public Driver
 {
 private:
 	//Packet union
@@ -213,7 +213,7 @@ private:
 	}
 public:
 	/// @brief Constructor
-	Mouse()
+	PS2Mouse()
 		:ack(0),
 		config(0),
 		mouseid(0),
@@ -229,7 +229,7 @@ public:
 
 
 	/// @brief Deconstructor
-	~Mouse()
+	~PS2Mouse()
 	{
 	}
 
@@ -247,10 +247,10 @@ public:
 		workQueue = &kernel->workqueue;
 
 		//Create work
-		work = workQueue->Create((Method)&Mouse::ReportHandler, this);
+		work = workQueue->Create((Method)&PS2Mouse::ReportHandler, this);
 
 		//Set interrupt service
-		interrupt->SetISR(IRQ_Mouse_Controller, (Method)&Mouse::InputHandler, this);
+		interrupt->SetISR(IRQ_Mouse_Controller, (Method)&PS2Mouse::InputHandler, this);
 
 		//Config
 		ConfigureMouse();
@@ -262,11 +262,11 @@ public:
 	/// @brief Mouse close
 	void Close()
 	{
-		interrupt->RemoveISR(IRQ_Mouse_Controller, (Method)(&Mouse::InputHandler), this);
+		interrupt->RemoveISR(IRQ_Mouse_Controller, (Method)(&PS2Mouse::InputHandler), this);
 		workQueue->Delete(work);
 	}
 };
 
 
 //Register driver
-REGISTER_DRIVER(new Mouse(), DriverID::_character, ps2mouse);
+REGISTER_DRIVER(new PS2Mouse(), DriverID::_character, ps2mouse);
