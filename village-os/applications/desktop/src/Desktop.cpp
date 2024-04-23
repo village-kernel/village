@@ -6,6 +6,7 @@
 //###########################################################################
 #include "Desktop.h"
 #include "Kernel.h"
+#include "ElfExecutor.h"
 
 
 /// @brief Constructor
@@ -23,6 +24,20 @@ Desktop::~Desktop()
 
 /// @brief Initialize
 void Desktop::Initialize(const char* screen, const char* keyboard, const char* mouse)
+{
+	SetupWin(screen, keyboard, mouse);
+
+	kernel->inputevent.Attach(InputEvent::_Key, (Method)&Desktop::UpdateKey, this);
+	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Desktop::UpdateLoc, this);
+
+	SetID(DriverID::_character);
+	SetName((char*)"desktop");
+	kernel->device.RegisterDriver(this);
+}
+
+
+/// @brief SetupWin
+void Desktop::SetupWin(const char* screen, const char* keyboard, const char* mouse)
 {
 	graphics.Initialize(screen, keyboard, mouse);
 
@@ -54,20 +69,33 @@ void Desktop::Initialize(const char* screen, const char* keyboard, const char* m
 	button4->SetLocation(100, 10, 20, 20);
 	button4->SetText((char*)"D");
 
+	textbox = (TextBox*)mainwin->CreateWedget(Wedget::_TextBox);
+	textbox->SetLocation(40, 40, 944, 650);
+
 	cursor = (Cursor*)mainwin->CreateWedget(Wedget::_Cursor);
 	cursor->SetLocation(0, 0, mainwin->GetWidth(), mainwin->GetHeight());
 
 	mainwin->Show();
-
-	kernel->inputevent.Attach(InputEvent::_Key, (Method)&Desktop::UpdateKey, this);
-	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Desktop::UpdateLoc, this);
 }
+
+const char codes[] = {
+	' ', 
+	' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '+', 0x7f,
+	' ', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 0x0d,
+	' ', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', ' ',
+	'\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+};
+
+char keycode;
 
 
 /// @brief Update key
 void Desktop::UpdateKey(InputEvent::Key* input)
 {
-	
+	if (input->code >= 0 && input->code <= 0x39)
+	{
+		keycode = codes[input->code];
+	}
 }
 
 
@@ -81,7 +109,53 @@ void Desktop::UpdateLoc(InputEvent::Loc* input)
 /// @brief Execute
 void Desktop::Execute()
 {
+	ElfExecutor* console = new ElfExecutor();
+	console->Run(ElfExecutor::_Background, "/applications/console.exec desktop");
 	while (1) {}
+}
+
+
+/// @brief Open
+bool Desktop::Open()
+{
+	return true;
+}
+
+
+/// @brief Write data
+/// @param data 
+/// @param size 
+/// @param offset 
+/// @return 
+int Desktop::Write(uint8_t* data, uint32_t size, uint32_t offset)
+{
+	data[size] = '\0';
+	textbox->AppendText((char*)data);
+	return size;
+}
+
+
+/// @brief Read data from rx buffer
+/// @param data 
+/// @param size 
+/// @param offset 
+/// @return 
+int Desktop::Read(uint8_t* data, uint32_t size, uint32_t offset)
+{
+	if (keycode)
+	{
+		data[0] = keycode;
+		keycode = 0;
+		return 1;
+	}
+	return 0;
+}
+
+
+/// @brief Close
+void Desktop::Close()
+{
+
 }
 
 

@@ -12,7 +12,7 @@
 
 
 ///Lanuch
-class Desktop : public Class
+class Desktop : public Driver
 {
 private:
 	//Members
@@ -25,9 +25,11 @@ private:
 	Button*  button2;
 	Button*  button3;
 	Button*  button4;
+	TextBox* textbox;
 	Cursor*  cursor;
 
 	//Methods
+	void SetupWin(const char* screen, const char* keyboard, const char* mouse);
 	void UpdateKey(InputEvent::Key* input);
 	void UpdateLoc(InputEvent::Loc* input);
 public:
@@ -36,6 +38,12 @@ public:
 	~Desktop();
 	void Initialize(const char* screen, const char* keyboard, const char* mouse);
 	void Execute();
+
+	//Driver
+	bool Open();
+	int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
+	int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
+	void Close();
 };
 
 #endif //!__DESKTOP_H__
