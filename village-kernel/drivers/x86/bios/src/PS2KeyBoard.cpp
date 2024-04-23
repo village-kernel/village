@@ -30,14 +30,10 @@ private:
 	}
 
 
-	/// @brief Report handler
+	/// @brief Repor tkeycode and status
 	void ReportHandler()
 	{
-		//Report keycode and status
-		if (keycode >= 0 && keycode <= 0x39)
-			inputevent->ReportKey(keycode, 1);
-		else if (keycode >= 0x39 && keycode <= 0x39 + 0x80)
-			inputevent->ReportKey(keycode - 0x80, 0);
+		inputevent->ReportKey(keycode, 1);
 	}
 public:
 	/// @brief Constructor
