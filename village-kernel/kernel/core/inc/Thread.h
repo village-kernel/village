@@ -44,7 +44,7 @@ public:
 	///Thread Methods
 	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL);
 	int CreateTask(const char* name, Method method, Class *user, void* args = NULL);
-	int DeleteTask(int pid);
+	bool DeleteTask(int pid);
 	bool WaitForTask(int pid);
 	List<Task*> GetTasks();
 	void Sleep(uint32_t ticks);

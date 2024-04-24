@@ -108,7 +108,7 @@ int ConcreteThread::CreateTask(const char* name, Method method, Class *user, voi
 /// @brief Thread delete task
 /// @param pid process id
 /// @return result
-int ConcreteThread::DeleteTask(int pid)
+bool ConcreteThread::DeleteTask(int pid)
 {
 	Task* task = tasks.GetItem(pid);
 	memory->Free(task->stack);
