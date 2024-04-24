@@ -23,9 +23,9 @@ Desktop::~Desktop()
 
 
 /// @brief Initialize
-void Desktop::Initialize(const char* screen, const char* keyboard, const char* mouse)
+void Desktop::Initialize(const char* screen)
 {
-	SetupWin(screen, keyboard, mouse);
+	SetupWin(screen);
 
 	kernel->inputevent.Attach(InputEvent::_Key, (Method)&Desktop::UpdateKey, this);
 	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Desktop::UpdateLoc, this);
@@ -37,9 +37,9 @@ void Desktop::Initialize(const char* screen, const char* keyboard, const char* m
 
 
 /// @brief SetupWin
-void Desktop::SetupWin(const char* screen, const char* keyboard, const char* mouse)
+void Desktop::SetupWin(const char* screen)
 {
-	graphics.Initialize(screen, keyboard, mouse);
+	graphics.Initialize(screen);
 
 	mainwin = (Window*)graphics.CreateMainWindow();
 
@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		Desktop desktop;
-		desktop.Initialize(argv[1], argv[2], argv[3]);
+		desktop.Initialize(argv[1]);
 		desktop.Execute();
 		return 0;
 	}

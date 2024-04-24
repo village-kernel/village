@@ -30,7 +30,7 @@ Graphics::~Graphics()
 
 /// @brief Intialize
 /// @param drvname 
-void Graphics::Initialize(const char* screen, const char* keyboard, const char* mouse)
+void Graphics::Initialize(const char* screen)
 {
 	//Get the universal driver by driver name
 	DrvStream screendrv;
@@ -46,14 +46,6 @@ void Graphics::Initialize(const char* screen, const char* keyboard, const char* 
 			display->Initialize(fbdev);
 		}
 	}
-
-	//Get the universal driver by driver name
-	DrvStream keyboarddrv;
-	keyboarddrv.Open(keyboard, FileMode::_Read);
-
-	//Get the universal driver by driver name
-	DrvStream mousedrv;
-	mousedrv.Open(mouse, FileMode::_Read);
 }
 
 

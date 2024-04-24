@@ -29,14 +29,14 @@ private:
 	Cursor*  cursor;
 
 	//Methods
-	void SetupWin(const char* screen, const char* keyboard, const char* mouse);
+	void SetupWin(const char* screen);
 	void UpdateKey(InputEvent::Key* input);
 	void UpdateLoc(InputEvent::Loc* input);
 public:
 	//Methods
 	Desktop();
 	~Desktop();
-	void Initialize(const char* screen, const char* keyboard, const char* mouse);
+	void Initialize(const char* screen);
 	void Execute();
 
 	//Driver

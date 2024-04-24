@@ -32,7 +32,7 @@ void Taichi::Initialize()
 void Taichi::Execute()
 {
 	ElfExecutor* desktop = new ElfExecutor();
-	desktop->Run(ElfExecutor::_Background, "/applications/desktop.exec display0 ps2keyboard ps2mouse");
+	desktop->Run(ElfExecutor::_Background, "/applications/desktop.exec display0");
 
 	ElfExecutor* console = new ElfExecutor();
 	console->Run(ElfExecutor::_Background, "/applications/console.exec serial0");
