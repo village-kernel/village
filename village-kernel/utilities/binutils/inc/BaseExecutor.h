@@ -30,6 +30,7 @@ protected:
 
 	//Methods
 	virtual int Execute(const char* path) = 0;
+	virtual bool Release() = 0;
 public:
 	//Methods
 	BaseExecutor();
@@ -37,6 +38,7 @@ public:
 	virtual int Run(Behavior behavior, const char* args);
 	virtual int Run(Behavior behavior, const char* path, int argc, char* argv[]);
 	virtual bool Wait();
+	virtual bool Kill();
 };
 
 #endif //!__BASE_EXECUTOR_H__
