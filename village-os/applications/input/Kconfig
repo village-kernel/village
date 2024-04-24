@@ -1,0 +1,9 @@
+# keyboinputard menu
+
+menu "input"
+
+config INPUT
+	bool "Build input application"
+	default y
+
+endmenu
