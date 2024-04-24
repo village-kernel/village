@@ -22,6 +22,7 @@ private:
 	//Methods
 	int Execute(const char* path);
 	void Sandbox();
+	bool Release();
 };
 
 #endif //!__BIN_EXECUTOR_H__

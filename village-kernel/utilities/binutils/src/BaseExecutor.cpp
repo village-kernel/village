@@ -68,3 +68,11 @@ bool BaseExecutor::Wait()
 {
 	return kernel->thread.WaitForTask(pid);
 }
+
+
+/// @brief BaseExecutor kill
+/// @return result
+bool BaseExecutor::Kill()
+{
+	return (kernel->thread.DeleteTask(pid) && Release());
+}

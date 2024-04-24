@@ -27,3 +27,11 @@ void ElfExecutor::Sandbox()
 	elf.Execute(NULL, argc, argv);
 	elf.Exit();
 }
+
+
+/// @brief ElfExecutor release elf
+/// @return 
+bool ElfExecutor::Release()
+{
+	return elf.Exit();
+}
