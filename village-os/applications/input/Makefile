@@ -22,8 +22,6 @@ src-input-$(CONFIG_INPUT)          += village-os/applications/input/src
 ######################################
 # objects
 ######################################
-objs-input-$(CONFIG_INPUT)         += Keyboard.o
-objs-input-$(CONFIG_INPUT)         += Mouse.o
 objs-input-$(CONFIG_INPUT)         += Input.o
 
 

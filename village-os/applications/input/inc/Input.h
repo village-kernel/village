@@ -7,16 +7,15 @@
 #ifndef __INPUT_H__
 #define __INPUT_H__
 
-#include "Keyboard.h"
-#include "Mouse.h"
+#include "DrvStream.h"
 
 /// @brief Input
 class Input
 {
 private:
 	//Members
-	Keyboard keyboard;
-	Mouse    mouse;
+	DrvStream keyboarddrv;
+	DrvStream mousedrv;
 public:
 	//Methods
 	Input();

@@ -22,16 +22,14 @@ Input::~Input()
 /// @brief Initialize
 void Input::Initialize(const char* keyboard, const char* mouse)
 {
-	this->keyboard.Initialize(keyboard);
-	this->mouse.Initialize(mouse);
+	keyboarddrv.Open(keyboard, FileMode::_Read);
+	mousedrv.Open(mouse, FileMode::_Read);
 }
 
 
 /// @brief Execute
 void Input::Execute()
 {
-	keyboard.Execute();
-	mouse.Execute();
 	while(1) {}
 }
 
