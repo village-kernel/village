@@ -6,43 +6,77 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Hardware.h"
+#include "EventCodes.h"
 
 
 /// @brief PS2KeyBoard
 class PS2KeyBoard : public Driver
 {
 private:
+	//Scan code set 1
+	const int keyCodes[0x59] = {
+		/* 0x00 */ _KeyReserved,   _KeyESC,   _Key1,         _Key2,           _Key3,       _Key4,        _Key5,          _Key6, 
+		/* 0x08 */ _Key7,          _Key8,     _Key9,         _Key0,          _KeyMinus,    _KeyEqual,    _KeyBackSpace,  _KeyTab,
+		/* 0x10 */ _KeyQ,          _KeyW,     _KeyE,         _KeyR,          _KeyT,        _KeyY,        _KeyU,          _KeyI,
+		/* 0x18 */ _KeyO,          _KeyP,     _KeyLeftBrace, _KeyRightBrace, _KeyEnter,    _KeyLeftCtrl, _KeyA,          _KeyS,
+		/* 0x20 */ _KeyD,          _KeyF,     _KeyG,         _KeyH,          _KeyJ,        _KeyK,        _KeyL,          _KeySemicolon,
+		/* 0x28 */ _KeyApostrophe, _KeyGrave, _KeyLeftShift, _KeyBackSlash,  _KeyZ,        _KeyX,        _KeyC,          _KeyV,
+		/* 0x30 */ _KeyB,          _KeyN,     _KeyM,         _KeyComma,      _KeyDot,      _KeySlash,    _KeyRightShift, _KeyKPAsterisk,
+		/* 0x38 */ _KeyLeftAlt,    _KeySpace, _KeyCapsLock,  _KeyF1,         _KeyF2,       _KeyF3,       _KeyF4,         _KeyF5,
+		/* 0x40 */ _KeyF6,         _KeyF7,    _KeyF8,        _KeyF9,         _KeyF10,      _KeyNumLock,  _KeyScrollLock, _KeyKP7,
+		/* 0x48 */ _KeyKP8,        _KeyKP9,   _KeyKPMinus,   _KeyKP4,        _KeyKP5,      _KeyKP6,      _KeyKPPlus,     _KeyKP1,
+		/* 0x50 */ _KeyKP2,        _KeyKP3,   _KeyKP0,       _KeyKPDot,      _KeyReserved, _KeyReserved, _KeyReserved,   _KeyF11,
+		/* 0x58 */ _KeyF12
+	};
+
+	//Extende scan code set 1
+	const int extendeKeyCodes[0x58] = {
+		/* 0x00 */ _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved, _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved,
+		/* 0x08 */ _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved, _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved,
+		/* 0x10 */ _KeyBack,     _KeyReserved,  _KeyReserved, _KeyReserved, _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved,
+		/* 0x18 */ _KeyReserved, _KeyForward,   _KeyReserved, _KeyReserved, _KeyKPEnter,  _KeyRightCtrl, _KeyReserved, _KeyReserved,
+		/* 0x20 */ _KeyMute,     _KeyReserved,  _KeyPlay,     _KeyReserved, _KeyStop,     _KeyReserved,  _KeyReserved, _KeyReserved,
+		/* 0x28 */ _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved, _KeyReserved, _KeyReserved,  _KeyReserved, _KeyVolumeDown,
+		/* 0x30 */ _KeyVolumeUp, _KeyReserved,  _KeyWWW,      _KeyReserved, _KeyReserved, _KeyKPSlash,   _KeyReserved, _KeyReserved,
+		/* 0x38 */ _KeyRightAlt, _KeyReserved,  _KeyReserved, _KeyReserved, _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved,
+		/* 0x40 */ _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved, _KeyReserved, _KeyReserved,  _KeyReserved, _KeyHome,
+		/* 0x48 */ _KeyUp,       _KeyPageUp,    _KeyReserved, _KeyLeft,     _KeyReserved, _KeyRight,     _KeyReserved, _KeyEnd,
+		/* 0x50 */ _KeyDown,     _KeyPageDown,  _KeyInsert,   _KeyDelete,   _KeyReserved, _KeyReserved,  _KeyReserved, _KeyReserved,
+	};
+private:
 	//Members
-	uint8_t keycode;
+	bool isExtende;
 	InputEvent* inputevent;
-	Interrupt*  interrupt;
-	WorkQueue*  workQueue;
-	WorkQueue::Work* work;
 private:
 	/// @brief Interrupt handler
 	void InputHandler()
 	{
 		if (PortByteIn(PS2_READ_STATUS) & PS2_STATUS_OUTPUT_BUFFER)
 		{
-			keycode = PortByteIn(PS2_READ_DATA);
-			workQueue->Sched(work);
+			//Get the raw scancode
+			int scancode = PortByteIn(PS2_READ_DATA);
+			
+			//Set the isExtende flag and return when scancode is 0xE0
+			if (0xE0 == scancode) { isExtende = true; return; }
+			
+			//Select keycodes table
+			const int* pKeyCodes = isExtende ? extendeKeyCodes : keyCodes;
+
+			//Report key event
+			if (scancode > 0 && scancode <= 0x58)
+				inputevent->ReportKey(pKeyCodes[scancode], 1);
+			else if (scancode > 0x80 && scancode <= 0xd8)
+				inputevent->ReportKey(pKeyCodes[scancode - 0x80], 0);
+	
+			//Clear the isExtende flag
+			isExtende = false;
 		}
-	}
-
-
-	/// @brief Repor tkeycode and status
-	void ReportHandler()
-	{
-		inputevent->ReportKey(keycode, 1);
 	}
 public:
 	/// @brief Constructor
 	PS2KeyBoard()
-		:keycode(0),
-		inputevent(NULL),
-		interrupt(NULL),
-		workQueue(NULL),
-		work(NULL)
+		:isExtende(false),
+		inputevent(NULL)
 	{
 	}
 
@@ -59,17 +93,8 @@ public:
 		//Get the inputevent pointer
 		inputevent = &kernel->inputevent;
 
-		//Get the interrupt pointer
-		interrupt = &kernel->interrupt;
-
-		//Get the work queue pointer
-		workQueue = &kernel->workqueue;
-
-		//Create work
-		work = workQueue->Create((Method)&PS2KeyBoard::ReportHandler, this);
-
 		//Set interrupt
-		interrupt->SetISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
+		kernel->interrupt.SetISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
 
 		return true;
 	}
@@ -78,8 +103,7 @@ public:
 	/// @brief KeyBoard close
 	void Close()
 	{
-		interrupt->RemoveISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
-		workQueue->Delete(work);
+		kernel->interrupt.RemoveISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
 	}
 };
 
