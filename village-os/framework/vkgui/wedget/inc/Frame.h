@@ -9,10 +9,14 @@
 
 #include "Wedget.h"
 
-///Frame
+/// @brief Frame
 class Frame : public Wedget
 {
-
+public:
+	//Methods
+	Frame();
+	void Initialize();
+	void Show();
 };
 
 #endif //!__VK_FRAME_H__
