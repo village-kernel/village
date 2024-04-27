@@ -51,7 +51,7 @@ private:
 	//Controller members
 	PS2Controller ps2;
 	//Work
-	InputEvent* inputevent;
+	InputEvent* inputEvent;
 	Interrupt*  interrupt;
 	WorkQueue*  workQueue;
 	WorkQueue::Work* work;
@@ -173,43 +173,43 @@ private:
 		if (packet.leftBtn && !isLeftBtnPressed)
 		{
 			isLeftBtnPressed = true;
-			inputevent->ReportKey(0xf1, 1);
+			inputEvent->ReportKey(0xf1, 1);
 		}
 		else if (!packet.leftBtn && isLeftBtnPressed)
 		{
 			isLeftBtnPressed = false;
-			inputevent->ReportKey(0xf1, 0);
+			inputEvent->ReportKey(0xf1, 0);
 		}
 
 		//Report right button
 		if (packet.rightBtn && !isRightBtnPressed)
 		{
 			isRightBtnPressed = true;
-			inputevent->ReportKey(0xf2, 1);
+			inputEvent->ReportKey(0xf2, 1);
 		}
 		else if (!packet.rightBtn && isRightBtnPressed)
 		{
 			isRightBtnPressed = false;
-			inputevent->ReportKey(0xf2, 0);
+			inputEvent->ReportKey(0xf2, 0);
 		}
 
 		//Report middle button
 		if (packet.middleBtn && !isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = true;
-			inputevent->ReportKey(0xf3, 1);
+			inputEvent->ReportKey(0xf3, 1);
 		}
 		else if (!packet.middleBtn && isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = false;
-			inputevent->ReportKey(0xf3, 0);
+			inputEvent->ReportKey(0xf3, 0);
 		}
 
 		//Report axis x, y, z movement value
 		int axisX = (int16_t)packet.x - (packet.xSignBit ? 0x100 : 0);
 		int axisY = (int16_t)packet.y - (packet.ySignBit ? 0x100 : 0);
 		int axisZ = (int8_t)packet.z;
-		inputevent->ReportLoc(axisX, axisY, axisZ);
+		inputEvent->ReportLoc(axisX, axisY, axisZ);
 	}
 public:
 	/// @brief Constructor
@@ -220,7 +220,7 @@ public:
 		isLeftBtnPressed(false),
 		isRightBtnPressed(false),
 		isMiddleBtnPressed(false),
-		inputevent(NULL),
+		inputEvent(NULL),
 		interrupt(NULL),
 		workQueue(NULL),
 		work(NULL)
@@ -237,14 +237,14 @@ public:
 	/// @brief Mouse open
 	bool Open()
 	{
-		//Get the inputevent pointer
-		inputevent = &kernel->inputevent;
+		//Get the inputEvent pointer
+		inputEvent = &kernel->inputEvent;
 
 		//Get the interrupt pointer
 		interrupt = &kernel->interrupt;
 
 		//Get the work queue pointer
-		workQueue = &kernel->workqueue;
+		workQueue = &kernel->workQueue;
 
 		//Create work
 		work = workQueue->Create((Method)&PS2Mouse::ReportHandler, this);
