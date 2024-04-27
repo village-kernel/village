@@ -21,8 +21,8 @@ Taichi::~Taichi()
 }
 
 
-/// @brief Initialize
-void Taichi::Initialize()
+/// @brief Setup
+void Taichi::Setup()
 {
 
 }
@@ -48,7 +48,7 @@ void Taichi::Execute()
 int main(void)
 {
 	Taichi taichi;
-	taichi.Initialize();
+	taichi.Setup();
 	taichi.Execute();
 	return 0;
 }
