@@ -8,8 +8,8 @@ source ./village-os/applications/console/Kconfig
 
 source ./village-os/applications/desktop/Kconfig
 
-source ./village-os/applications/input/Kconfig
-
 source ./village-os/applications/settings/Kconfig
+
+source ./village-os/applications/simpleInput/Kconfig
 
 endif

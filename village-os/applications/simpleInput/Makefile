@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of input
+# The Makefile of simple input
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,24 +8,24 @@
 ######################################
 # applications
 ######################################
-apps-$(CONFIG_INPUT)               += input
+apps-$(CONFIG_SIMPLE_INPUT)               += simpleInput
 
 
 ######################################
 # paths
 ######################################
-inc-input-$(CONFIG_INPUT)          += village-os/applications/input/inc
+inc-simpleInput-$(CONFIG_SIMPLE_INPUT)   += village-os/applications/simpleInput/inc
 
-src-input-$(CONFIG_INPUT)          += village-os/applications/input/src
+src-simpleInput-$(CONFIG_SIMPLE_INPUT)   += village-os/applications/simpleInput/src
 
 
 ######################################
 # objects
 ######################################
-objs-input-$(CONFIG_INPUT)         += Input.o
+objs-simpleInput-$(CONFIG_SIMPLE_INPUT)  += SimpleInput.o
 
 
 ######################################
 # libraries
 ######################################
-libs-input-$(CONFIG_INPUT)         += kernel
+libs-simpleInput-$(CONFIG_SIMPLE_INPUT)  += kernel

@@ -8,5 +8,5 @@
 -include village-os/applications/taichi/Makefile
 -include village-os/applications/console/Makefile
 -include village-os/applications/desktop/Makefile
--include village-os/applications/input/Makefile
 -include village-os/applications/settings/Makefile
+-include village-os/applications/simpleInput/Makefile
