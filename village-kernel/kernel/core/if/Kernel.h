@@ -320,8 +320,8 @@ public:
 	Interrupt&   interrupt;
 	Scheduler&   scheduler;
 	Thread&      thread;
-	WorkQueue&   workqueue;
-	InputEvent&  inputevent;
+	WorkQueue&   workQueue;
+	InputEvent&  inputEvent;
 	Symbol&      symbol;
 	Device&      device;
 	Feature&     feature;
@@ -336,8 +336,8 @@ public:
 		Interrupt&   interrupt,
 		Scheduler&   scheduler,
 		Thread&      thread,
-		WorkQueue&   workqueue,
-		InputEvent&  inputevent,
+		WorkQueue&   workQueue,
+		InputEvent&  inputEvent,
 		Symbol&      symbol,
 		Device&      device,
 		Feature&     feature,
@@ -350,8 +350,8 @@ public:
 		interrupt(interrupt),
 		scheduler(scheduler),
 		thread(thread),
-		workqueue(workqueue),
-		inputevent(inputevent),
+		workQueue(workQueue),
+		inputEvent(inputEvent),
 		symbol(symbol),
 		device(device),
 		feature(feature),

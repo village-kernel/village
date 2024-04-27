@@ -58,7 +58,7 @@ void Village::Setup()
 	//Setup workqueue
 	concreteWorkQueue.Setup();
 
-	//Setup inputevent
+	//Setup inputEvent
 	concreteInputEvent.Setup();
 	
 	//Setup symbol
@@ -107,7 +107,7 @@ void Village::Exit()
 	//Exit symbol
 	concreteSymbol.Exit();
 
-	//Exit inputevent
+	//Exit inputEvent
 	concreteInputEvent.Exit();
 
 	//Exit workqueue
