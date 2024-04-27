@@ -244,34 +244,69 @@ public:
 class InputEvent
 {
 public:
-	//Input type
-	enum Type
+	//Types
+	enum EventType
 	{
-		_Key = 0,
-		_Loc,
+		_InputKey = 0,
+		_InputAxis,
+		_OutputText,
+		_OutputAxis,
 		_AllType,
 	};
 
+	//Output format
+	enum OutFormat
+	{
+		_Noraml,
+		_Terminal,
+	};
+
 	//Input key
-	struct Key
+	struct InputKey
 	{
 		int code;
 		int status;
 
-		Key()
+		InputKey()
 			:code(0),
 			status(0)
 		{}
 	};
 
-	//Input loc
-	struct Loc
+	//Input axis
+	struct InputAxis
 	{
 		int axisX;
 		int axisY;
 		int axisZ;
 
-		Loc()
+		InputAxis()
+			:axisX(0),
+			axisY(0),
+			axisZ(0)
+		{}
+	};
+
+	//Output text
+	struct OutputText
+	{
+		char* data;
+		int   size;
+
+		OutputText()
+			:data(NULL),
+			size(0)
+		{}
+	};
+
+	//Ouput Axis
+	struct OutputAxis
+	{
+		int axisX;
+		int axisY;
+		int axisZ;
+
+		OutputAxis()
 			:axisX(0),
 			axisY(0),
 			axisZ(0)
@@ -279,12 +314,20 @@ public:
 	};
 public:
 	//Methods
-	virtual void Attach(Type type, Method method, Class* user) = 0;
-	virtual void Attach(Type type, Function func, void* user = NULL) = 0;
-	virtual void Detach(Type type, Method method, Class* user) = 0;
-	virtual void Detach(Type type, Function func, void* user = NULL) = 0;
+	virtual void Attach(EventType type, Method method, Class* user) = 0;
+	virtual void Attach(EventType type, Function func, void* user = NULL) = 0;
+	virtual void Detach(EventType type, Method method, Class* user) = 0;
+	virtual void Detach(EventType type, Function func, void* user = NULL) = 0;
+	
+	//Input Methods
 	virtual void ReportKey(int code, int status) = 0;
-	virtual void ReportLoc(int axisX, int axisY, int axisZ) = 0;
+	virtual void ReportAxis(int axisX, int axisY, int axisZ) = 0;
+
+	//Output Methods
+	virtual void PushText(char* data, int size) = 0;
+	virtual void PushAxis(int axisX, int axisY, int axisZ) = 0;
+	virtual void SetOutFormat(OutFormat format) = 0;
+	virtual OutFormat GetOutFormat() = 0;
 };
 
 

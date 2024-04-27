@@ -209,7 +209,7 @@ private:
 		int axisX = (int16_t)packet.x - (packet.xSignBit ? 0x100 : 0);
 		int axisY = (int16_t)packet.y - (packet.ySignBit ? 0x100 : 0);
 		int axisZ = (int8_t)packet.z;
-		inputEvent->ReportLoc(axisX, axisY, axisZ);
+		inputEvent->ReportAxis(axisX, axisY, axisZ);
 	}
 public:
 	/// @brief Constructor
