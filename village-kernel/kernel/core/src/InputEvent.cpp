@@ -22,7 +22,7 @@ ConcreteInputEvent::~ConcreteInputEvent()
 /// @brief InputEvent Setup
 void ConcreteInputEvent::Setup()
 {
-
+	outFormat = _Noraml;
 }
 
 
@@ -32,48 +32,6 @@ void ConcreteInputEvent::Exit()
 	for (int i = 0; i < _AllType; i++)
 	{
 		observers[i].Release();
-	}		
-}
-
-
-/// @brief Input base attach
-/// @param observer 
-/// @param func 
-/// @param user 
-void ConcreteInputEvent::Attach(List<Observer*>& observers, Function func, void* user)
-{
-	observers.Add(new Observer(func, user));
-}
-
-
-/// @brief Input base detach
-/// @param observer 
-/// @param func 
-/// @param user 
-void ConcreteInputEvent::Detach(List<Observer*>& observers, Function func, void* user)
-{
-	for (observers.Begin(); !observers.IsEnd(); observers.Next())
-	{
-		Observer* observer = observers.Item();
-
-		if ((func == observer->func) &&
-			(user == observer->user))
-		{
-			observers.Remove(observer, observers.GetNid());
-		}
-	}
-}
-
-
-/// @brief Input base notify
-/// @param observer 
-/// @param argv 
-void ConcreteInputEvent::Notify(List<Observer*>& observers, void* argv)
-{
-	for (observers.Begin(); !observers.IsEnd(); observers.Next())
-	{
-		Observer* observer = observers.Item();
-		(observer->func)(observer->user, argv);
 	}
 }
 
@@ -81,36 +39,36 @@ void ConcreteInputEvent::Notify(List<Observer*>& observers, void* argv)
 /// @brief Input attach
 /// @param method 
 /// @param user 
-void ConcreteInputEvent::Attach(Type type, Method method, Class* user)
+void ConcreteInputEvent::Attach(EventType type, Method method, Class* user)
 {
-	Attach(observers[type], union_cast<Function>(method), (void*)user);
+	observers[type].Attach(method, user);
 }
 
 
 /// @brief Input Attach
 /// @param func 
 /// @param user 
-void ConcreteInputEvent::Attach(Type type, Function func, void* user)
+void ConcreteInputEvent::Attach(EventType type, Function func, void* user)
 {
-	Attach(observers[type], func, user);
+	observers[type].Attach(func, user);
 }
 
 
 /// @brief Input Detach
 /// @param method 
 /// @param user 
-void ConcreteInputEvent::Detach(Type type, Method method, Class* user)
+void ConcreteInputEvent::Detach(EventType type, Method method, Class* user)
 {
-	Detach(observers[type], union_cast<Function>(method), (void*)user);
+	observers[type].Detach(method, user);
 }
 
 
 /// @brief Input Detach
 /// @param func 
 /// @param user 
-void ConcreteInputEvent::Detach(Type type, Function func, void* user)
+void ConcreteInputEvent::Detach(EventType type, Function func, void* user)
 {
-	Detach(observers[type], func, user);
+	observers[type].Detach(func, user);
 }
 
 
@@ -119,9 +77,9 @@ void ConcreteInputEvent::Detach(Type type, Function func, void* user)
 /// @param status 
 void ConcreteInputEvent::ReportKey(int code, int status)
 {
-	key.code = code;
-	key.status = status;
-	Notify(observers[_Key], (void*)&key);
+	inputKey.code = code;
+	inputKey.status = status;
+	observers[_InputKey].Notify((void*)&inputKey);
 }
 
 
@@ -129,10 +87,50 @@ void ConcreteInputEvent::ReportKey(int code, int status)
 /// @param axisX 
 /// @param axisY 
 /// @param axisZ 
-void ConcreteInputEvent::ReportLoc(int axisX, int axisY, int axisZ)
+void ConcreteInputEvent::ReportAxis(int axisX, int axisY, int axisZ)
 {
-	loc.axisX = axisX;
-	loc.axisY = axisY;
-	loc.axisZ = axisZ;
-	Notify(observers[_Loc], (void*)&loc);
+	inputAxis.axisX = axisX;
+	inputAxis.axisY = axisY;
+	inputAxis.axisZ = axisZ;
+	observers[_InputAxis].Notify((void*)&inputAxis);
+}
+
+
+/// @brief Input PushText
+/// @param data 
+/// @param size 
+void ConcreteInputEvent::PushText(char* data, int size)
+{
+	outputText.data = data;
+	outputText.size = size;
+	observers[_OutputText].Notify((void*)&outputText);
+}
+
+
+/// @brief Input PushAxis
+/// @param axisX 
+/// @param axisY 
+/// @param axisZ 
+void ConcreteInputEvent::PushAxis(int axisX, int axisY, int axisZ)
+{
+	outputAxis.axisX = axisX;
+	outputAxis.axisY = axisY;
+	outputAxis.axisZ = axisZ;
+	observers[_OutputAxis].Notify((void*)&outputAxis);
+}
+
+
+/// @brief Input SetOutFormat
+/// @param format 
+void ConcreteInputEvent::SetOutFormat(OutFormat format)
+{
+	this->outFormat = format;
+}
+
+
+/// @brief Input GetOutFormat
+/// @return 
+ConcreteInputEvent::OutFormat ConcreteInputEvent::GetOutFormat()
+{
+	return outFormat;
 }
