@@ -23,8 +23,8 @@ Display::~Display()
 }
 
 
-///Display Initialize
-void Display::Initialize(FBDriver* fbdev)
+///Display Setup
+void Display::Setup(FBDriver* fbdev)
 {
 	this->fbdev = fbdev;
 	limitX = fbdev->device.width - 1;

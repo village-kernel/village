@@ -15,12 +15,12 @@ Window::Window()
 
 
 /// @brief 
-void Window::Initialize()
+void Window::Setup()
 {
 }
 
 
-/// @brief Initialize
+/// @brief Show
 void Window::Show()
 {
 	int locX = GetLocX();

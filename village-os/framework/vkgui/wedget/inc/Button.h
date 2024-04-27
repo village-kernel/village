@@ -19,7 +19,7 @@ public:
 	//Methods
 	Button();
 	~Button();
-	void Initialize();
+	void Setup();
 	void Show();
 	void SetText(char* text);
 };

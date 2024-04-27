@@ -8,7 +8,7 @@
 
 
 /// @brief 
-void TextBox::Initialize()
+void TextBox::Setup()
 {
 	text = NULL;
 }

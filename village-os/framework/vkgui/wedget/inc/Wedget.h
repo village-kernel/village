@@ -65,7 +65,7 @@ public:
 	virtual void SetLocation(int x, int y, int width, int height);
 	virtual void SetLocationOffset(int xoff, int yoff);
 	virtual void SetBackground(Wedget* bg);
-	virtual void Initialize();
+	virtual void Setup();
 	virtual void Show();
 };
 

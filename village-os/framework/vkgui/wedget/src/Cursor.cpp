@@ -39,8 +39,8 @@ Cursor::Cursor()
 {}
 
 
-/// @brief Initialize
-void Cursor::Initialize()
+/// @brief Setup
+void Cursor::Setup()
 {
 
 }

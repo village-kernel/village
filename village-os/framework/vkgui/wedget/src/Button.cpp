@@ -21,7 +21,7 @@ Button::~Button()
 
 
 /// @brief 
-void Button::Initialize()
+void Button::Setup()
 {
 
 }

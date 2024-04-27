@@ -28,9 +28,9 @@ Graphics::~Graphics()
 }
 
 
-/// @brief Intialize
+/// @brief Setup
 /// @param drvname 
-void Graphics::Initialize(const char* screen)
+void Graphics::Setup(const char* screen)
 {
 	//Get the universal driver by driver name
 	DrvStream screendrv;
@@ -39,11 +39,11 @@ void Graphics::Initialize(const char* screen)
 		//Get the specified lcd driver by driver ioctrl 
 		screendrv.IOCtrl(0, (void*)&fbdev);
 		
-		//Initialize display
+		//Setup display
 		if (NULL != fbdev)
 		{
 			display = new Display();
-			display->Initialize(fbdev);
+			display->Setup(fbdev);
 		}
 	}
 }
@@ -55,7 +55,7 @@ Wedget* Graphics::CreateMainWindow()
 {
 	mainwin = new Window();
 	mainwin->SetDisplay(display);
-	mainwin->Initialize();
+	mainwin->Setup();
 	mainwin->SetLocation(0, 0, fbdev->device.width, fbdev->device.height);
 	return mainwin;
 }

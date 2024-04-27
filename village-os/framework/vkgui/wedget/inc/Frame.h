@@ -15,7 +15,7 @@ class Frame : public Wedget
 public:
 	//Methods
 	Frame();
-	void Initialize();
+	void Setup();
 	void Show();
 };
 

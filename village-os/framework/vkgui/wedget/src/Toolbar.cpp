@@ -8,7 +8,7 @@
 
 
 /// @brief 
-void Toolbar::Initialize()
+void Toolbar::Setup()
 {
 
 }

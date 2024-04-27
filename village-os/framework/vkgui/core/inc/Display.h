@@ -68,7 +68,7 @@ public:
 	//Methods
 	Display();
 	~Display();
-	void Initialize(FBDriver* fbdev);
+	void Setup(FBDriver* fbdev);
 	
 	void DrawPoint(uint32_t x, uint32_t y, uint32_t color = defStrokeColor);
 	uint32_t ReadPoint(uint32_t x, uint32_t y);

@@ -17,7 +17,7 @@ private:
 	char* text;
 	Mutex lock;
 public:
-	void Initialize();
+	void Setup();
 	void Show();
 	void SetText(char* text);
 	void AppendText(char* text);

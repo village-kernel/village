@@ -12,13 +12,13 @@ Frame::Frame()
 }
 
 
-/// @brief 
-void Frame::Initialize()
+/// @brief Setup
+void Frame::Setup()
 {
 }
 
 
-/// @brief Initialize
+/// @brief Show
 void Frame::Show()
 {
 	int locX = GetLocX();

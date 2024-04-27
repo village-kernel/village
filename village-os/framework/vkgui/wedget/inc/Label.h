@@ -17,7 +17,7 @@ private:
 	char* label;
 public:
 	//Methods
-	void Initialize();
+	void Setup();
 	void Show();
 	void SetLabel(char* label);
 };

@@ -15,7 +15,7 @@ class Window : public Wedget
 public:
 	//Methods
 	Window();
-	void Initialize();
+	void Setup();
 	void Show();
 };
 

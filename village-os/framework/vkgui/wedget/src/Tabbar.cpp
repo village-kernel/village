@@ -8,7 +8,7 @@
 
 
 /// @brief 
-void Tabbar::Initialize()
+void Tabbar::Setup()
 {
 
 }

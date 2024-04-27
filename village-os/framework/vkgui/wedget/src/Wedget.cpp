@@ -78,7 +78,7 @@ Wedget* Wedget::CreateWedget(Wedget::WedgetID id)
 	{
 		wedget->SetDisplay(display);
 		wedget->SetLocationOffset(x, y);
-		wedget->Initialize();
+		wedget->Setup();
 		wedgets.Add(wedget);
 	}
 
@@ -158,8 +158,8 @@ void Wedget::SetBackground(Wedget* bg)
 }
 
 
-/// @brief Wedget default initialize 
-void Wedget::Initialize()
+/// @brief Wedget default steup 
+void Wedget::Setup()
 {
 
 }

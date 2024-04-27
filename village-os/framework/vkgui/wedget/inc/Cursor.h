@@ -23,7 +23,7 @@ private:
 public:
 	//Methods
 	Cursor();
-	void Initialize();
+	void Setup();
 	void Show();
 	void Update(int axisX, int axisY);
 };
