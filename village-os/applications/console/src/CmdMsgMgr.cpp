@@ -22,7 +22,7 @@ CmdMsgMgr::CmdMsgMgr()
 
 
 ///CmdMsgMgr initialize
-void CmdMsgMgr::Initialize(const char* driver)
+void CmdMsgMgr::Setup(const char* driver)
 {
 	transceiver.Open(driver, FileMode::_ReadWrite);
 }
