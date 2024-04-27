@@ -20,23 +20,27 @@ private:
 	Window*  mainwin;
 	Toolbar* toolbar;
 	Tabbar*  tabbar;
-	Label*   label;
+	Button*  button0;
 	Button*  button1;
 	Button*  button2;
 	Button*  button3;
 	Button*  button4;
+	Frame*   frame;
 	TextBox* textbox;
 	Cursor*  cursor;
 
+	//Members
+	InputEvent::OutputText outText;
+
 	//Methods
 	void SetupWin(const char* screen);
-	void UpdateKey(InputEvent::Key* input);
-	void UpdateLoc(InputEvent::Loc* input);
+	void UpdateText(InputEvent::OutputText* input);
+	void UpdateAxis(InputEvent::OutputAxis* input);
 public:
 	//Methods
 	Desktop();
 	~Desktop();
-	void Initialize(const char* screen);
+	void Setup(const char* screen);
 	void Execute();
 
 	//Driver

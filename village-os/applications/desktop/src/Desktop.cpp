@@ -22,55 +22,55 @@ Desktop::~Desktop()
 }
 
 
-/// @brief Initialize
-void Desktop::Initialize(const char* screen)
+/// @brief Setup
+void Desktop::Setup(const char* screen)
 {
 	SetupWin(screen);
-
-	kernel->inputevent.Attach(InputEvent::_Key, (Method)&Desktop::UpdateKey, this);
-	kernel->inputevent.Attach(InputEvent::_Loc, (Method)&Desktop::UpdateLoc, this);
 
 	SetID(DriverID::_character);
 	SetName((char*)"desktop");
 	kernel->device.RegisterDriver(this);
+
+	kernel->inputEvent.Attach(InputEvent::_OutputText, (Method)&Desktop::UpdateText, this);
+	kernel->inputEvent.Attach(InputEvent::_OutputAxis, (Method)&Desktop::UpdateAxis, this);
 }
 
 
 /// @brief SetupWin
 void Desktop::SetupWin(const char* screen)
 {
-	graphics.Initialize(screen);
+	graphics.Setup(screen);
 
 	mainwin = (Window*)graphics.CreateMainWindow();
 
-	toolbar = (Toolbar*)mainwin->CreateWedget(Wedget::_Toolbar);
-	toolbar->SetLocation(0, 0, 1024, 20);
-
-	label = (Label*)toolbar->CreateWedget(Wedget::_Label);
-	label->SetLocation(0, 0, 80, 20);
-	label->SetLabel((char*)"menu");
-
 	tabbar = (Tabbar*)mainwin->CreateWedget(Wedget::_Tabbar);
-	tabbar->SetLocation(412, 728, 130, 40);
+	tabbar->SetLocation(0, 728, 1024, 40);
+
+	button0 = (Button*)tabbar->CreateWedget(Wedget::_Button);
+	button0->SetLocation(0, 0, 40, 40);
+	button0->SetText((char*)"Start");
 
 	button1 = (Button*)tabbar->CreateWedget(Wedget::_Button);
-	button1->SetLocation(10, 10, 20, 20);
+	button1->SetLocation(50, 5, 30, 30);
 	button1->SetText((char*)"A");
 
 	button2 = (Button*)tabbar->CreateWedget(Wedget::_Button);
-	button2->SetLocation(40, 10, 20, 20);
+	button2->SetLocation(90, 5, 30, 30);
 	button2->SetText((char*)"B");
 
 	button3 = (Button*)tabbar->CreateWedget(Wedget::_Button);
-	button3->SetLocation(70, 10, 20, 20);
+	button3->SetLocation(130, 5, 30, 30);
 	button3->SetText((char*)"C");
 
 	button4 = (Button*)tabbar->CreateWedget(Wedget::_Button);
-	button4->SetLocation(100, 10, 20, 20);
+	button4->SetLocation(170, 5, 30, 30);
 	button4->SetText((char*)"D");
 
-	textbox = (TextBox*)mainwin->CreateWedget(Wedget::_TextBox);
-	textbox->SetLocation(40, 40, 944, 650);
+	frame = (Frame*)mainwin->CreateWedget(Wedget::_Frame);
+	frame->SetLocation(40, 40, 944, 650);
+
+	textbox = (TextBox*)frame->CreateWedget(Wedget::_TextBox);
+	textbox->SetLocation(0, 20, 944, 630);
 
 	cursor = (Cursor*)mainwin->CreateWedget(Wedget::_Cursor);
 	cursor->SetLocation(0, 0, mainwin->GetWidth(), mainwin->GetHeight());
@@ -78,31 +78,18 @@ void Desktop::SetupWin(const char* screen)
 	mainwin->Show();
 }
 
-const char codes[] = {
-	' ', 
-	' ', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '+', 0x7f,
-	' ', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', 0x0d,
-	' ', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', '`', ' ',
-	'\\', 'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
-};
 
-char keycode;
-
-
-/// @brief Update key
-void Desktop::UpdateKey(InputEvent::Key* input)
+/// @brief Update text
+void Desktop::UpdateText(InputEvent::OutputText* input)
 {
-	if (input->code >= 0 && input->code <= 0x39)
-	{
-		keycode = codes[input->code];
-	}
+	outText = *input;
 }
 
 
-/// @brief Update location
-void Desktop::UpdateLoc(InputEvent::Loc* input)
+/// @brief Update location axis
+void Desktop::UpdateAxis(InputEvent::OutputAxis* input)
 {
-	cursor->Update(input->axisX,input->axisY);
+	cursor->Update(input->axisX, input->axisY);
 }
 
 
@@ -142,13 +129,18 @@ int Desktop::Write(uint8_t* data, uint32_t size, uint32_t offset)
 /// @return 
 int Desktop::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
-	if (keycode)
+	if (0 == outText.size) return 0;
+
+	int brSize = outText.size;
+
+	for (int i = 0; i < brSize; i++)
 	{
-		data[0] = keycode;
-		keycode = 0;
-		return 1;
+		data[i] = outText.data[i];
 	}
-	return 0;
+
+	outText.size = 0;
+	
+	return brSize;
 }
 
 
@@ -169,7 +161,7 @@ int main(int argc, char* argv[])
 	else
 	{
 		Desktop desktop;
-		desktop.Initialize(argv[1]);
+		desktop.Setup(argv[1]);
 		desktop.Execute();
 		return 0;
 	}
