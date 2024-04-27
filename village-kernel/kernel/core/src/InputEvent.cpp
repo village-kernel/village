@@ -1,6 +1,6 @@
 //###########################################################################
-// Input.cpp
-// Definitions of the functions that manage input
+// InputEvent.cpp
+// Definitions of the functions that manage input event
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
