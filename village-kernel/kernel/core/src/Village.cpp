@@ -55,10 +55,10 @@ void Village::Setup()
 	//Setup thread
 	concreteThread.Setup();
 
-	//Setup workqueue
+	//Setup work queue
 	concreteWorkQueue.Setup();
 
-	//Setup inputEvent
+	//Setup input event
 	concreteInputEvent.Setup();
 	
 	//Setup symbol
@@ -107,10 +107,10 @@ void Village::Exit()
 	//Exit symbol
 	concreteSymbol.Exit();
 
-	//Exit inputEvent
+	//Exit input event
 	concreteInputEvent.Exit();
 
-	//Exit workqueue
+	//Exit work queue
 	concreteWorkQueue.Exit();
 
 	//Exit thread
