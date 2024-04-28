@@ -38,6 +38,7 @@ public:
 	virtual void Free(uint32_t memory, uint32_t size = 0) = 0;
 	virtual uint32_t GetSize() = 0;
 	virtual uint32_t GetUsed() = 0;
+	virtual uint32_t GetCurrAddr() = 0;
 };
 
 
