@@ -64,9 +64,9 @@ private:
 
 			//Report key event
 			if (scancode > 0 && scancode <= 0x58)
-				inputEvent->ReportKey(pKeyCodes[scancode], 1);
+				inputEvent->ReportKey(pKeyCodes[scancode], _KeyPressed);
 			else if (scancode > 0x80 && scancode <= 0xd8)
-				inputEvent->ReportKey(pKeyCodes[scancode - 0x80], 0);
+				inputEvent->ReportKey(pKeyCodes[scancode - 0x80], _KeyReleased);
 	
 			//Clear the isExtende flag
 			isExtende = false;
