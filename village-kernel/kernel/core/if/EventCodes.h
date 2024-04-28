@@ -282,4 +282,10 @@ enum EventCode
 	_KeyMicMute              = 248, /* Mute / unmute the microphone */
 };
 
+enum KeyStatus
+{
+	_KeyReleased = 0,
+	_KeyPressed,
+};
+
 #endif //!__EVENT_CODE_H__
