@@ -98,7 +98,7 @@ void SimpleInput::InputKeyHandler(InputEvent::InputKey* input)
 
 			if (chr >= 'a' && chr <= 'z')
 			{
-				if (isCapsLock && !isShiftPressed)
+				if (isCapsLock ^ isShiftPressed)
 				{
 					chr = upperCodes[input->code];
 				}
