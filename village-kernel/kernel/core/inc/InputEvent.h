@@ -44,7 +44,8 @@ public:
 	void ReportAxis(int axisX, int axisY, int axisZ);
 
 	//Output Methods
-	void PushText(char* data, int size);
+	void PushChar(char chr);
+	void PushString(char* data, int size);
 	void PushAxis(int axisX, int axisY, int axisZ);
 	void SetOutFormat(OutFormat format);
 	OutFormat GetOutFormat();
