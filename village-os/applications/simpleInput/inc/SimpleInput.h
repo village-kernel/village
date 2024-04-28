@@ -20,12 +20,12 @@ private:
 	DrvStream mousedrv;
 
 	//Members
-	bool isUpperCase;
-	char text[20] = {0};
+	bool isCapsLock;
+	bool isShiftPressed;
 
 	//Methods
-	void ReadInputKey(InputEvent::InputKey* input);
-	void ReadInputAxis(InputEvent::InputAxis* input);
+	void InputKeyHandler(InputEvent::InputKey* input);
+	void InputAxisHandler(InputEvent::InputAxis* input);
 public:
 	//Methods
 	SimpleInput();
