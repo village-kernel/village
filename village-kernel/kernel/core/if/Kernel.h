@@ -324,7 +324,8 @@ public:
 	virtual void ReportAxis(int axisX, int axisY, int axisZ) = 0;
 
 	//Output Methods
-	virtual void PushText(char* data, int size) = 0;
+	virtual void PushChar(char chr) = 0;
+	virtual void PushString(char* data, int size) = 0;
 	virtual void PushAxis(int axisX, int axisY, int axisZ) = 0;
 	virtual void SetOutFormat(OutFormat format) = 0;
 	virtual OutFormat GetOutFormat() = 0;

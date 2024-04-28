@@ -96,10 +96,22 @@ void ConcreteInputEvent::ReportAxis(int axisX, int axisY, int axisZ)
 }
 
 
-/// @brief Input PushText
+/// @brief Input PushChar
 /// @param data 
 /// @param size 
-void ConcreteInputEvent::PushText(char* data, int size)
+void ConcreteInputEvent::PushChar(char chr)
+{
+	static char data[2] = {0}; data[0] = chr;
+	outputText.data = data;
+	outputText.size = 1;
+	observers[_OutputText].Notify((void*)&outputText);
+}
+
+
+/// @brief Input PushString
+/// @param data 
+/// @param size 
+void ConcreteInputEvent::PushString(char* data, int size)
 {
 	outputText.data = data;
 	outputText.size = size;
