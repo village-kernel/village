@@ -4,7 +4,7 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-VERSION = 0.0.5
+VERSION = 0.0.6
 
 ######################################
 # include config
@@ -55,9 +55,9 @@ ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
 ######################################
 # include other makefile
 ######################################
--include village-os/Makefile
 -include village-boot/Makefile
 -include village-kernel/Makefile
+-include village-os/Makefile
 
 
 #######################################
@@ -219,6 +219,11 @@ library:
 		$(MAKE) $(LIBRARIES_DIR)/lib$(name).so objs="$(objs-$(name)-y)"; \
 		echo /libraries/lib$(name).so >> $(LIBRARIES_DIR)/_load_.rc; \
 	)
+	$(Q)$(foreach name, $(oslibs-y), \
+		$(MAKE) $(objs-$(name)-y);   \
+		$(MAKE) $(LIBRARIES_DIR)/lib$(name).a  objs="$(objs-$(name)-y)"; \
+		$(MAKE) $(LIBRARIES_DIR)/lib$(name).so objs="$(objs-$(name)-y)"; \
+	)
 
 
 #######################################
@@ -336,7 +341,7 @@ clean-mod:
 	$(Q)rm -rf $(MODULES_DIR)
 
 clean-app:
-	$(Q)rm -rf $(APPS_DIR)
+	$(Q)rm -rf $(APPS_DIR) $(BUILD_DIR)/village-os/applications
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean

@@ -59,11 +59,13 @@ libs-$(CONFIG_KERNEL)               += kernel
 inc-$(CONFIG_FILEUTILS)             += village-kernel/utilities/fileutils/inc
 inc-$(CONFIG_BINUTILS)              += village-kernel/utilities/binutils/inc
 inc-$(CONFIG_PARSER)                += village-kernel/utilities/parser/inc
+inc-$(CONFIG_MODEL)                 += village-kernel/utilities/model/inc
 inc-$(CONFIG_SYNC)                  += village-kernel/utilities/sync/inc
 
 src-$(CONFIG_FILEUTILS)             += village-kernel/utilities/fileutils/src
 src-$(CONFIG_BINUTILS)              += village-kernel/utilities/binutils/src
 src-$(CONFIG_PARSER)                += village-kernel/utilities/parser/src
+src-$(CONFIG_MODEL)                 += village-kernel/utilities/model/src
 src-$(CONFIG_SYNC)                  += village-kernel/utilities/sync/src
 
 objs-kernel-$(CONFIG_DIRSTREAM)     += DirStream.o
@@ -87,6 +89,8 @@ objs-kernel-$(CONFIG_INIPARSER)     += iniParser.o
 objs-kernel-$(CONFIG_PINPARSER)     += pinParser.o
 objs-kernel-$(CONFIG_RCPARSER)      += rcParser.o
 objs-kernel-$(CONFIG_REGEX)         += Regex.o
+
+objs-kernel-$(CONFIG_MODEL)         += ObserverModel.o
 
 
 ######################################
@@ -122,9 +126,9 @@ src-y                               += village-kernel/stdlib/libc/src
 src-y                               += village-kernel/stdlib/libc/stdio
 src-y                               += village-kernel/stdlib/libc/string
 
-objs-c-y                            += $(patsubst %.c, %.o, $(notdir $(wildcard village-kernel/stdlib/libc/src/*.c)))
-objs-c-y                            += $(patsubst %.c, %.o, $(notdir $(wildcard village-kernel/stdlib/libc/stdio/*.c)))
-objs-c-y                            += $(patsubst %.c, %.o, $(notdir $(wildcard village-kernel/stdlib/libc/string/*.c)))
+objs-c-y                            += stdio.o
+objs-c-y                            += stdlib.o
+objs-c-y                            += string.o
 
 
 #######################################

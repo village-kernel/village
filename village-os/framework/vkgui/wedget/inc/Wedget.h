@@ -50,10 +50,12 @@ protected:
 	int      width;
 	int      height;
 	Wedget*  bg;
-
+ public:
 	//Methods
 	int GetLocX();
 	int GetLocY();
+	int GetWidth();
+	int GetHeight();
 public:
 	//Methods
 	Wedget();
@@ -63,8 +65,9 @@ public:
 	virtual void SetLocation(int x, int y, int width, int height);
 	virtual void SetLocationOffset(int xoff, int yoff);
 	virtual void SetBackground(Wedget* bg);
-	virtual void Initialize();
+	virtual void Setup();
 	virtual void Show();
+	virtual void Refresh();
 };
 
 #endif //!__VK_WEDGET_H__

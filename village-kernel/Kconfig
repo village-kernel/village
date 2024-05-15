@@ -227,6 +227,16 @@ if KERNEL
 
 		endmenu
 
+		menu "model"
+
+		comment "This is using to configure model"
+
+		config MODEL
+			bool "Enable design mode function"
+			default y
+
+		endmenu
+
 		menu "sync"
 
 		comment "This is using to configure sync"

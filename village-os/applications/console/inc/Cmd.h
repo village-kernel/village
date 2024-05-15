@@ -21,7 +21,7 @@ public:
 	virtual ~Cmd() {}
 
 	//Methods
-	virtual void Initialize() {}
+	virtual void Setup() {}
 	virtual void Execute(int argc, char* argv[]) = 0;
 	virtual void Help() {}
 };

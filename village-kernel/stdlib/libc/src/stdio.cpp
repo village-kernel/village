@@ -1,6 +1,6 @@
 //###########################################################################
-// vsnprintf.c
-// Header file for stdio classes
+// stdio.cpp
+// Source file for stdio classes
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -8,6 +8,131 @@
 #include "ctype.h"
 #include "string.h"
 
+
+/// @brief putchar
+/// @param c 
+/// @return 
+extern "C" __attribute__((weak)) int putchar(int c)
+{
+	return 0;
+}
+
+
+/// @brief puts
+/// @param str 
+/// @return 
+extern "C" __attribute__((weak)) int puts(const char* str)
+{
+	return 0;
+}
+
+
+/// @brief printf
+/// @param  
+/// @param  
+/// @return 
+extern "C" int printf(char const* format, ...)
+{
+	va_list ap;
+	char buf[512];
+	int n;
+
+	va_start(ap, format);
+	n = vsnprintf(buf, 512, format, ap);
+	va_end(ap);
+
+	puts(buf);
+
+	return n;
+}
+
+
+/// @brief sprintf
+/// @param str 
+/// @param format 
+/// @param  
+/// @return 
+extern "C" int sprintf(char* str, const char* format, ...)
+{
+	va_list ap;
+	int n;
+
+	va_start(ap, format);
+	n = vsprintf(str, format, ap);
+	va_end(ap);
+	return n;
+}
+
+
+/// @brief snprintf
+/// @param str 
+/// @param size 
+/// @param format 
+/// @param  
+/// @return 
+extern "C" int snprintf(char* str, size_t size, const char* format, ...)
+{
+	va_list ap;
+	int n;
+
+	va_start(ap, format);
+	n = vsnprintf(str, size, format, ap);
+	va_end(ap);
+	return n;
+}
+
+
+
+/// @brief asprintf
+/// @param ret 
+/// @param format 
+/// @param  
+/// @return 
+extern "C" int asprintf(char** ret, const char* format, ...)
+{
+	return 0;
+}
+
+
+/// @brief dprintf
+/// @param fd 
+/// @param format 
+/// @param  
+/// @return 
+extern "C" int dprintf(int fd, const char* format, ...)
+{
+	return 0;
+}
+
+
+/// @brief vprintf
+/// @param format 
+/// @param ap 
+/// @return 
+extern "C" int vprintf(const char* format, va_list ap)
+{
+	char buf[512];
+	int n = vsprintf(buf, format, ap);
+	puts(buf);
+	return n;
+}
+
+
+/// @brief vsprintf
+/// @param str 
+/// @param format 
+/// @param ap 
+/// @return 
+extern "C" int vsprintf(char* buf, const char* format, va_list ap)
+{
+	return vsnprintf(buf, 512, format, ap);
+}
+
+
+
+/// @brief skip_atoi
+/// @param s 
+/// @return 
 static int skip_atoi(const char **s)
 {
 	int i = 0;
@@ -25,16 +150,20 @@ static int skip_atoi(const char **s)
 #define SMALL	32		/* Must be 32 == 0x20 */
 #define SPECIAL	64		/* 0x */
 
-#define __do_div(n, base) ({ \
-int __res; \
-__res = ((unsigned long) n) % (unsigned) base; \
-n = ((unsigned long) n) / (unsigned) base; \
-__res; })
+
+static int __do_div(long &n, int base)
+{
+	int res;
+	res = ((unsigned long) n) % (unsigned) base;
+	n = ((unsigned long) n) / (unsigned) base;
+	return res;
+}
+
 
 static char *number(char *str, long num, int base, int size, int precision, int type)
 {
 	/* we are called with base 8, 10 or 16, only, thus don't need "G..."  */
-	static const char digits[16] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
+	static const char digits[17] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
 
 	char tmp[66];
 	char c, sign, locase;
@@ -111,13 +240,13 @@ static char *number(char *str, long num, int base, int size, int precision, int 
 }
 
 
-/// @brief 
+/// @brief vsnprintf
 /// @param buf 
 /// @param size 
 /// @param format 
 /// @param ap 
 /// @return 
-int vsnprintf(char* buf, size_t size, const char* format, va_list ap)
+extern "C" int vsnprintf(char* buf, size_t size, const char* format, va_list ap)
 {
 	int len;
 	unsigned long num;
@@ -306,4 +435,26 @@ int vsnprintf(char* buf, size_t size, const char* format, va_list ap)
 	}
 	*str = '\0';
 	return str - buf;
+}
+
+
+/// @brief vasprintf
+/// @param ret 
+/// @param format 
+/// @param ap 
+/// @return 
+extern "C" int vasprintf(char** ret, const char* format, va_list ap)
+{
+	return 0;
+}
+
+
+/// @brief vdprintf
+/// @param fd 
+/// @param format 
+/// @param ap 
+/// @return 
+extern "C" int vdprintf(int fd, const char* format, va_list ap)
+{
+	return 0;
 }

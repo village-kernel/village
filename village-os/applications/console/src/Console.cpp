@@ -49,19 +49,19 @@ Console& Console::Instance()
 Console& console = Console::Instance();
 
 
-/// @brief Console initialize
-void Console::Initialize(const char* driver)
+/// @brief Console setup
+void Console::Setup(const char* driver)
 {
 	//Set default path
 	strcpy(path, "/");
 
-	//Initialize msg mgr
-	msgMgr.Initialize(driver);
+	//Setup msg mgr
+	msgMgr.Setup(driver);
 
-	//Initialize cmds
+	//Setup cmds
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
-		cmd->Initialize();
+		cmd->Setup();
 	}
 
 	//Output welcome message
@@ -111,7 +111,9 @@ void Console::ExecuteCmd(CmdMsg msg)
 	}
 
 	msgMgr.Write((uint8_t*)msg.cmd);
-	msgMgr.Write((uint8_t*)": command not found\r\n# ");
+	msgMgr.Write((uint8_t*)": command not found\r\n");
+	msgMgr.Write((uint8_t*)path);
+	msgMgr.Write((uint8_t*)" # ");
 }
 
 
@@ -264,7 +266,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		console.Initialize(argv[1]);
+		console.Setup(argv[1]);
 		console.Execute();
 		return 0;
 	}

@@ -24,8 +24,6 @@ public:
 	/// @brief Cmd Run execute
 	void Execute(int argc, char* argv[])
 	{
-		int i = 0;
-
 		if (argc < 2)
 		{
 			console.Output("Usage: run [-b] <program> [arg1] [arg2] [...]");
@@ -34,18 +32,18 @@ public:
 
 		behavior = ElfExecutor::_Foreground;
 
-		for (i = 1; i < argc; i++)
+		for (int i = 0; i < argc; i++)
 		{
 			if (0 == strcmp(argv[i], "-b"))
 			{
 				behavior = ElfExecutor::_Background;
+				argc -= (i + 1);
+				argv += (i + 1);
 				break;
 			}
 		}
 
-		char* path = (i != argc) ? argv[i + 1] : argv[1];
-
-		elfExecutor.Run(behavior, path, argc, argv);
+		elfExecutor.Run(behavior, argv[1], argc - 1, argv + 1);
 	}
 };
 

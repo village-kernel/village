@@ -12,17 +12,10 @@
 ///Window
 class Window : public Wedget
 {
-private:
-	//Members
-	int locX;
-	int locY;
-	int locZ;
-	Wedget* cursor;
 public:
 	//Methods
 	Window();
-	void Initialize();
-	void Update(int axisX, int axisY, int axisZ);
+	void Setup();
 	void Show();
 };
 

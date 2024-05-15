@@ -27,3 +27,11 @@ void BinExecutor::Sandbox()
 	bin.Execute(argc, argv);
 	bin.Exit();
 }
+
+
+/// @brief BinExecutor release bin
+/// @return 
+bool BinExecutor::Release()
+{
+	return bin.Exit();
+}

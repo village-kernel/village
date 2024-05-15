@@ -8,7 +8,7 @@
 
 
 /// @brief 
-void Label::Initialize()
+void Label::Setup()
 {
 
 }

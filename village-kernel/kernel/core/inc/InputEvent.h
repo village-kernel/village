@@ -7,6 +7,7 @@
 #ifndef __INPUT_EVENT_H__
 #define __INPUT_EVENT_H__
 
+#include "ObserverModel.h"
 #include "Kernel.h"
 #include "List.h"
 #include "Cast.h"
@@ -16,39 +17,38 @@
 class ConcreteInputEvent : public InputEvent
 {
 private:
-	//Structures
-	struct Observer
-	{
-		Function    func;
-		void*       user;
+	//Input members
+	InputKey     inputKey;
+	InputAxis    inputAxis;
+	
+	//Output members
+	OutputText   outputText;
+	OutputAxis   outputAxis;
+	OutFormat    outFormat;
 
-		Observer(Function func = NULL, void* user = NULL)
-			:func(func),
-			user(user)
-		{}
-	};
-
-	//Members
-	Key key;
-	Loc loc;
-	List<Observer*> observers[_AllType];
-
-	//Methods
-	void Attach(List<Observer*>& observers, Function func, void* user);
-	void Detach(List<Observer*>& observers, Function func, void* user);
-	void Notify(List<Observer*>& observers, void* argv);
+	//Model members
+	ObserverModel observers[_AllType];
 public:
 	//Methods
 	ConcreteInputEvent();
 	~ConcreteInputEvent();
 	void Setup();
 	void Exit();
-	void Attach(Type type, Method method, Class* user);
-	void Attach(Type type, Function func, void* user = NULL);
-	void Detach(Type type, Method method, Class* user);
-	void Detach(Type type, Function func, void* user = NULL);
+	void Attach(EventType type, Method method, Class* user);
+	void Attach(EventType type, Function func, void* user = NULL);
+	void Detach(EventType type, Method method, Class* user);
+	void Detach(EventType type, Function func, void* user = NULL);
+	
+	//Input Methods
 	void ReportKey(int code, int status);
-	void ReportLoc(int axisX, int axisY, int axisZ);
+	void ReportAxis(int axisX, int axisY, int axisZ);
+
+	//Output Methods
+	void PushChar(char chr);
+	void PushString(char* data, int size);
+	void PushAxis(int axisX, int axisY, int axisZ);
+	void SetOutFormat(OutFormat format);
+	OutFormat GetOutFormat();
 };
 
 #endif //!__INPUT_EVENT_H__

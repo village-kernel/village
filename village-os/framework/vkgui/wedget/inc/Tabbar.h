@@ -14,7 +14,7 @@ class Tabbar : public Wedget
 {
 public:
 	//Methods
-	void Initialize();
+	void Setup();
 	void Show();
 };
 

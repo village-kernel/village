@@ -6,7 +6,6 @@
 //###########################################################################
 #include "stdint.h"
 #include "stddef.h"
-#include "stdlib.h"
 #include "kernel.h"
 
 
@@ -59,30 +58,4 @@ void operator delete(void *ptr, size_t size)
 void operator delete[](void *ptr, size_t size)
 {
 	kernel->memory.Free((uint32_t)ptr, size);
-}
-
-
-/// @brief malloc
-/// @param size 
-/// @return 
-extern "C" void* malloc(size_t size)
-{
-	return (void*)kernel->memory.HeapAlloc((uint32_t)size);
-}
-
-
-/// @brief free
-/// @param ptr 
-extern "C" void free(void* ptr)
-{
-	kernel->memory.Free((uint32_t)ptr);
-}
-
-
-/// @brief rand
-/// @param  
-/// @return 
-extern "C" int rand(void)
-{
-	return kernel->system.GetSysClkCounts();
 }

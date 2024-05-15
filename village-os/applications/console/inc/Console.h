@@ -37,7 +37,7 @@ private:
 	void ExecuteCmd(CmdMsg msg);
 public:
 	//Methods
-	void Initialize(const char* driver);
+	void Setup(const char* driver);
 	void Execute();
 	void RegisterCmd(Cmd* cmd, char* name);
 	void DeregisterCmd(Cmd* cmd, char* name);

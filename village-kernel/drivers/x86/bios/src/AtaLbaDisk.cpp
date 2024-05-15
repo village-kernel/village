@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Driver.h"
+#include "Mutex.h"
 #include "Kernel.h"
 #include "Hardware.h"
 
@@ -15,6 +16,7 @@ class AtaLbaDisk : public Driver
 private:
 	//Members
 	uint8_t drv;
+	Mutex   mutex;
 public: 
 	/// @brief Constructor
 	AtaLbaDisk(uint8_t drv = 1)
@@ -33,8 +35,10 @@ public:
 	bool Open()
 	{
 		//Stop device from sending interrupts
+		mutex.Lock();
 		PortByteOut(ATA_PRIMARY_PORT_CTRL, ATA_CTRL_nIEN);
 		PortByteOut(ATA_SECOND_PORT_CTRL, ATA_CTRL_nIEN);
+		mutex.Unlock();
 		return true;
 	}
 
@@ -53,6 +57,8 @@ public:
 	/// @return 
 	int Write(uint8_t* data, uint32_t count = 0, uint32_t blk = 0)
 	{
+		mutex.Lock();
+
 		for (uint32_t cnt = 0; cnt < count; cnt++, blk++)
 		{
 			//LBA 28 mode
@@ -86,6 +92,8 @@ public:
 			while (ATA_STATUS_BSY == (PortByteIn(ATA_STATUS) & ATA_STATUS_BSY_Msk)) {}
 		}
 
+		mutex.Unlock();
+
 		return 0;
 	}
 
@@ -97,6 +105,8 @@ public:
 	/// @return 
 	int Read(uint8_t* data, uint32_t count = 0, uint32_t blk = 0)
 	{
+		mutex.Lock();
+
 		for (uint32_t cnt = 0; cnt < count; cnt++, blk++)
 		{
 			//LBA 28 mode
@@ -123,6 +133,8 @@ public:
 				((uint16_t*)data)[size + cnt * 256] = PortWordIn(ATA_DATA);
 			}
 		}
+
+		mutex.Unlock();
 		
 		return 0;
 	}

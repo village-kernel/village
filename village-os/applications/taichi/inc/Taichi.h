@@ -15,7 +15,7 @@ public:
 	//Methods
 	Taichi();
 	~Taichi();
-	void Initialize();
+	void Setup();
 	void Execute();
 };
 

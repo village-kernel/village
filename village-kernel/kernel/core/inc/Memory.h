@@ -67,6 +67,7 @@ public:
 	void Free(uint32_t memory, uint32_t size = 0);
 	uint32_t GetSize();
 	uint32_t GetUsed();
+	uint32_t GetCurrAddr();
 };
 
 #endif //!__MEMORY_H__

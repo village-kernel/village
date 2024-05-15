@@ -21,7 +21,7 @@ Button::~Button()
 
 
 /// @brief 
-void Button::Initialize()
+void Button::Setup()
 {
 
 }
@@ -32,7 +32,9 @@ void Button::Show()
 {
 	int locX = GetLocX();
 	int locY = GetLocY();
-	display->ShowString(locX, locY, (uint8_t*)text);
+	int textX = locX + (width / 2) - (strlen(text) * Display::Font16 / 4);
+	int textY = locY + (height / 2 - Display::Font16 / 2);
+	display->ShowString(textX, textY, (uint8_t*)text);
 	display->DrawRectangle(locX, locY, locX + width, locY + height);
 	Wedget::Show();
 }

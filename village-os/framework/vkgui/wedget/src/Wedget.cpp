@@ -78,7 +78,7 @@ Wedget* Wedget::CreateWedget(Wedget::WedgetID id)
 	{
 		wedget->SetDisplay(display);
 		wedget->SetLocationOffset(x, y);
-		wedget->Initialize();
+		wedget->Setup();
 		wedgets.Add(wedget);
 	}
 
@@ -134,6 +134,22 @@ int Wedget::GetLocY()
 }
 
 
+/// @brief 
+/// @return 
+int Wedget::GetWidth()
+{
+	return width;
+}
+
+
+/// @brief 
+/// @return 
+int Wedget::GetHeight()
+{
+	return height;
+}
+
+
 /// @brief Wedget background
 /// @param bg : background
 void Wedget::SetBackground(Wedget* bg)
@@ -142,8 +158,8 @@ void Wedget::SetBackground(Wedget* bg)
 }
 
 
-/// @brief Wedget default initialize 
-void Wedget::Initialize()
+/// @brief Wedget default steup 
+void Wedget::Setup()
 {
 
 }
@@ -155,5 +171,15 @@ void Wedget::Show()
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
 		wedgets.Item()->Show();
+	}
+}
+
+
+/// @brief Wedget default refresh
+void Wedget::Refresh()
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->Refresh();
 	}
 }

@@ -28,9 +28,9 @@ Graphics::~Graphics()
 }
 
 
-/// @brief Intialize
+/// @brief Setup
 /// @param drvname 
-void Graphics::Initialize(const char* screen, const char* keyboard, const char* mouse)
+void Graphics::Setup(const char* screen)
 {
 	//Get the universal driver by driver name
 	DrvStream screendrv;
@@ -39,21 +39,13 @@ void Graphics::Initialize(const char* screen, const char* keyboard, const char* 
 		//Get the specified lcd driver by driver ioctrl 
 		screendrv.IOCtrl(0, (void*)&fbdev);
 		
-		//Initialize display
+		//Setup display
 		if (NULL != fbdev)
 		{
 			display = new Display();
-			display->Initialize(fbdev);
+			display->Setup(fbdev);
 		}
 	}
-
-	//Get the universal driver by driver name
-	DrvStream keyboarddrv;
-	keyboarddrv.Open(keyboard, FileMode::_Read);
-
-	//Get the universal driver by driver name
-	DrvStream mousedrv;
-	mousedrv.Open(mouse, FileMode::_Read);
 }
 
 
@@ -63,7 +55,7 @@ Wedget* Graphics::CreateMainWindow()
 {
 	mainwin = new Window();
 	mainwin->SetDisplay(display);
-	mainwin->Initialize();
+	mainwin->Setup();
 	mainwin->SetLocation(0, 0, fbdev->device.width, fbdev->device.height);
 	return mainwin;
 }
