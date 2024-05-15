@@ -111,7 +111,9 @@ void Console::ExecuteCmd(CmdMsg msg)
 	}
 
 	msgMgr.Write((uint8_t*)msg.cmd);
-	msgMgr.Write((uint8_t*)": command not found\r\n# ");
+	msgMgr.Write((uint8_t*)": command not found\r\n");
+	msgMgr.Write((uint8_t*)path);
+	msgMgr.Write((uint8_t*)" # ");
 }
 
 
