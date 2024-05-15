@@ -14,13 +14,30 @@
 class TextBox : public Wedget
 {
 private:
-	char* text;
 	Mutex lock;
+	bool isOverflow;
+	int locX;
+	int locY;
+	int colSize;
+	int rowSize;
+	int buffCol;
+	int buffRow;
+	int dispCol;
+	int dispRow;
+	char** buff;
+
+	void AllocBuff();
+	void FreeBuff();
+	void ClearBuff();
+	void ShowString(uint32_t x, uint32_t y, char* str, uint32_t size);
 public:
+	TextBox();
+	~TextBox();
 	void Setup();
 	void Show();
 	void SetText(char* text);
 	void AppendText(char* text);
+	void Refresh();
 };
 
 #endif //!__VK_TEXT_BOX_H__
