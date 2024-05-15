@@ -242,7 +242,8 @@ void ConcreteMemory::Free(uint32_t memory, uint32_t size)
 			}
 
 			//Update current node pointer
-			curr = (currNode->prev) ? currNode->prev : head;
+			MapNode* newCurr = (currNode->prev) ? currNode->prev : head;
+			if (curr->map.addr > newCurr->map.addr) curr = newCurr;
 
 			//Update the used size of sram
 			sram_used -= currNode->map.size;
@@ -275,3 +276,7 @@ uint32_t ConcreteMemory::GetSize() { return sram_ended; }
 
 /// @brief Get the used size of sram
 uint32_t ConcreteMemory::GetUsed() { return sram_used; }
+
+
+/// @brief Get the addr of current node
+uint32_t ConcreteMemory::GetCurrAddr() { return curr->map.addr; }

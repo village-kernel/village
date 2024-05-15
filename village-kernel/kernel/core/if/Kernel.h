@@ -38,6 +38,7 @@ public:
 	virtual void Free(uint32_t memory, uint32_t size = 0) = 0;
 	virtual uint32_t GetSize() = 0;
 	virtual uint32_t GetUsed() = 0;
+	virtual uint32_t GetCurrAddr() = 0;
 };
 
 
@@ -135,7 +136,7 @@ public:
 	///Methods
 	virtual int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL) = 0;
 	virtual int CreateTask(const char* name, Method method, Class *user, void* args = NULL) = 0;
-	virtual int DeleteTask(int pid) = 0;
+	virtual bool DeleteTask(int pid) = 0;
 	virtual bool WaitForTask(int pid) = 0;
 	virtual List<Task*> GetTasks() = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
@@ -244,34 +245,69 @@ public:
 class InputEvent
 {
 public:
-	//Input type
-	enum Type
+	//Types
+	enum EventType
 	{
-		_Key = 0,
-		_Loc,
+		_InputKey = 0,
+		_InputAxis,
+		_OutputText,
+		_OutputAxis,
 		_AllType,
 	};
 
+	//Output format
+	enum OutFormat
+	{
+		_Noraml,
+		_Terminal,
+	};
+
 	//Input key
-	struct Key
+	struct InputKey
 	{
 		int code;
 		int status;
 
-		Key()
+		InputKey()
 			:code(0),
 			status(0)
 		{}
 	};
 
-	//Input loc
-	struct Loc
+	//Input axis
+	struct InputAxis
 	{
 		int axisX;
 		int axisY;
 		int axisZ;
 
-		Loc()
+		InputAxis()
+			:axisX(0),
+			axisY(0),
+			axisZ(0)
+		{}
+	};
+
+	//Output text
+	struct OutputText
+	{
+		char* data;
+		int   size;
+
+		OutputText()
+			:data(NULL),
+			size(0)
+		{}
+	};
+
+	//Ouput Axis
+	struct OutputAxis
+	{
+		int axisX;
+		int axisY;
+		int axisZ;
+
+		OutputAxis()
 			:axisX(0),
 			axisY(0),
 			axisZ(0)
@@ -279,12 +315,21 @@ public:
 	};
 public:
 	//Methods
-	virtual void Attach(Type type, Method method, Class* user) = 0;
-	virtual void Attach(Type type, Function func, void* user = NULL) = 0;
-	virtual void Detach(Type type, Method method, Class* user) = 0;
-	virtual void Detach(Type type, Function func, void* user = NULL) = 0;
+	virtual void Attach(EventType type, Method method, Class* user) = 0;
+	virtual void Attach(EventType type, Function func, void* user = NULL) = 0;
+	virtual void Detach(EventType type, Method method, Class* user) = 0;
+	virtual void Detach(EventType type, Function func, void* user = NULL) = 0;
+	
+	//Input Methods
 	virtual void ReportKey(int code, int status) = 0;
-	virtual void ReportLoc(int axisX, int axisY, int axisZ) = 0;
+	virtual void ReportAxis(int axisX, int axisY, int axisZ) = 0;
+
+	//Output Methods
+	virtual void PushChar(char chr) = 0;
+	virtual void PushString(char* data, int size) = 0;
+	virtual void PushAxis(int axisX, int axisY, int axisZ) = 0;
+	virtual void SetOutFormat(OutFormat format) = 0;
+	virtual OutFormat GetOutFormat() = 0;
 };
 
 
@@ -320,8 +365,8 @@ public:
 	Interrupt&   interrupt;
 	Scheduler&   scheduler;
 	Thread&      thread;
-	WorkQueue&   workqueue;
-	InputEvent&  inputevent;
+	WorkQueue&   workQueue;
+	InputEvent&  inputEvent;
 	Symbol&      symbol;
 	Device&      device;
 	Feature&     feature;
@@ -336,8 +381,8 @@ public:
 		Interrupt&   interrupt,
 		Scheduler&   scheduler,
 		Thread&      thread,
-		WorkQueue&   workqueue,
-		InputEvent&  inputevent,
+		WorkQueue&   workQueue,
+		InputEvent&  inputEvent,
 		Symbol&      symbol,
 		Device&      device,
 		Feature&     feature,
@@ -350,8 +395,8 @@ public:
 		interrupt(interrupt),
 		scheduler(scheduler),
 		thread(thread),
-		workqueue(workqueue),
-		inputevent(inputevent),
+		workQueue(workQueue),
+		inputEvent(inputEvent),
 		symbol(symbol),
 		device(device),
 		feature(feature),
