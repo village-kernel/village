@@ -126,9 +126,9 @@ src-y                               += village-kernel/stdlib/libc/src
 src-y                               += village-kernel/stdlib/libc/stdio
 src-y                               += village-kernel/stdlib/libc/string
 
-objs-c-y                            += $(patsubst %.c, %.o, $(notdir $(wildcard village-kernel/stdlib/libc/src/*.c)))
-objs-c-y                            += $(patsubst %.c, %.o, $(notdir $(wildcard village-kernel/stdlib/libc/stdio/*.c)))
-objs-c-y                            += $(patsubst %.c, %.o, $(notdir $(wildcard village-kernel/stdlib/libc/string/*.c)))
+objs-c-y                            += stdio.o
+objs-c-y                            += stdlib.o
+objs-c-y                            += string.o
 
 
 #######################################
