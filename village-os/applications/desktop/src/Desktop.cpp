@@ -70,7 +70,7 @@ void Desktop::SetupWin(const char* screen)
 	frame->SetLocation(40, 40, 944, 650);
 
 	textbox = (TextBox*)frame->CreateWedget(Wedget::_TextBox);
-	textbox->SetLocation(0, 20, 944, 630);
+	textbox->SetLocation(1, 21, 942, 628);
 
 	cursor = (Cursor*)mainwin->CreateWedget(Wedget::_Cursor);
 	cursor->SetLocation(0, 0, mainwin->GetWidth(), mainwin->GetHeight());
@@ -98,7 +98,10 @@ void Desktop::Execute()
 {
 	ElfExecutor* console = new ElfExecutor();
 	console->Run(ElfExecutor::_Background, "/applications/console.exec desktop");
-	while (1) {}
+	while (1)
+	{
+		mainwin->Refresh();
+	}
 }
 
 
