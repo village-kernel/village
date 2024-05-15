@@ -173,3 +173,13 @@ void Wedget::Show()
 		wedgets.Item()->Show();
 	}
 }
+
+
+/// @brief Wedget default refresh
+void Wedget::Refresh()
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->Refresh();
+	}
+}

@@ -67,6 +67,7 @@ public:
 	virtual void SetBackground(Wedget* bg);
 	virtual void Setup();
 	virtual void Show();
+	virtual void Refresh();
 };
 
 #endif //!__VK_WEDGET_H__
