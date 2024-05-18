@@ -64,14 +64,13 @@ private:
 			{
 				for (int i = 0; i < size; i++)
 				{
-					//if ((FileAttr::_Visible == dirs[i].attr) &&
-					//	(0 != strcmp(dirs[i].name, ".")) &&
-					//	(0 != strcmp(dirs[i].name, "..")))
+					if (FileAttr::_Visible == dirs[i].attr)
 					{
-						if (FileType::_Diretory == dirs[i].type)
-							console.OutputRAW("\033[36m%s  \033[39m", dirs[i].name);
-						else if (FileType::_File == dirs[i].type)
+						if ((FileType::_Diretory == dirs[i].type) ||
+							(FileType::_File     == dirs[i].type))
+						{
 							console.OutputRAW("%s  ", dirs[i].name);
+						}
 					}
 				}
 				if (size) console.OutputRAW("\r\n");
