@@ -36,10 +36,20 @@
 	- 由于这里的代码不加入libkernel.so库，故增加了Symbol类，用来导出相关接口。
 
 ## vklibs：
-- 该目录下的代码会归类到libc.so，libstdc++.so，libm.so共享库。
-- 标准运行库相关目录，目前只初步实现一些POSIX基础接口，例如C库的stdio和string部分接口。
+- 该目录是存放共享库代码，目前大部分会被生成为库的代码都该存放在该目录下面。
 
-## utilities：
+### libc：
+- 内核的c库，归类到libc.so共享库。
+- 目前只初步实现一些基础接口，例如stdio和string部分接口。
+
+### libc++：
+- 内核的stdc++库，归类到libstdc++.so共享库。
+- 目前只重定义了new和delete。
+
+### libm：
+- 内核的数学库，归类到libm.so共享库。
+
+### libutils：
 - 该目录下的代码会归类到libkernel.so共享库。
 
 - binutils：

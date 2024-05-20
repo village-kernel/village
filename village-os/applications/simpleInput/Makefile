@@ -28,4 +28,4 @@ objs-simpleInput-$(CONFIG_SIMPLE_INPUT)  += SimpleInput.o
 ######################################
 # libraries
 ######################################
-libs-simpleInput-$(CONFIG_SIMPLE_INPUT)  += kernel
+libs-simpleInput-$(CONFIG_SIMPLE_INPUT)  += utils

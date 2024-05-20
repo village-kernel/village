@@ -28,4 +28,4 @@ objs-settings-$(CONFIG_SETTINGS)     += Settings.o
 ######################################
 # libraries
 ######################################
-libs-settings-$(CONFIG_SETTINGS)     += kernel gui
+libs-settings-$(CONFIG_SETTINGS)     += utils gui

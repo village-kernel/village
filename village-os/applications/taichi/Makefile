@@ -28,4 +28,4 @@ objs-taichi-$(CONFIG_TAICHI)         += Taichi.o
 ######################################
 # libraries
 ######################################
-libs-taichi-$(CONFIG_TAICHI)         += kernel stdc++ c
+libs-taichi-$(CONFIG_TAICHI)         += utils stdc++ c
