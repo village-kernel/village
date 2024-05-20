@@ -1,5 +1,5 @@
 //###########################################################################
-// crt0_kernel.s
+// crt0_kernel.c
 // Low level file that manages kernel entry
 //
 // $Copyright: Copyright (C) village

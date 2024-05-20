@@ -15,7 +15,7 @@ Taichi::Taichi()
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 Taichi::~Taichi()
 {
 }
