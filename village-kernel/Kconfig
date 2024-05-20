@@ -43,10 +43,6 @@ if KERNEL
 				bool "cortex-M"
 		endchoice
 
-		if CORTEX_M
-			source ./village-kernel/arch/arm/cortex-m/Kconfig
-		endif
-
 	endif
 
 	## X86
@@ -61,10 +57,6 @@ if KERNEL
 				bool "bios"
 
 		endchoice
-
-		if BIOS
-			source ./village-kernel/arch/x86/bios/Kconfig
-		endif
 
 	endif
 
@@ -115,150 +107,184 @@ if KERNEL
 
 	endmenu
 
-	# confg libutils menu
+	# confg vklibs menu
 
-	menu "libutils"
+	menu "vklibs"
 
-		menu "fileutils"
+		menu "libc"
 
-		comment "This is using to configure fileutils"
-
-		config FILEUTILS
-			bool "Enable file utils support"
-			default n
-
-		config DIRSTREAM
-			depends on FILEUTILS
-			bool "Enable dirstream function"
-			default n
-
-		config DRVSTREAM
-			depends on FILEUTILS
-			bool "Enable drvstream function"
-			default n
-
-		config FILESTREAM
-			depends on FILEUTILS
-			bool "Enable filestream function"
-			default n
-
-		config FILESYSOPT
-			depends on FILEUTILS
-			bool "Enable filesysopt function"
-			default n
+		comment "This is using to configure libc"
 
 		endmenu
 
-		menu "binutils"
+		menu "libc++"
 
-		comment "This is using to configure binutils"
-
-		config BINUTILS
-			select FILESTREAM
-			bool "Enable binutils function"
-			default n
-
-		config BINLOADER
-			depends on BINUTILS
-			select FILESTREAM
-			bool "Enable *.bin file load function"
-			default n
-
-		config BINEXECUTOR
-			depends on BINUTILS
-			select BINLOADER
-			bool "Enable execute *.bin file function"
-			default n
-
-		config ELFLOADER
-			depends on BINUTILS
-			select FILESTREAM
-			bool "Enable *.elf file load function"
-			default n
-
-		config ELFEXECUTOR
-			depends on BINUTILS
-			select ELFLOADER
-			bool "Enable execute *.elf file function"
-			default n
-
-		config LIBTOOL
-			depends on BINUTILS
-			bool "Enable library tool function"
-			default n
-
-		config MODTOOL
-			depends on BINUTILS
-			bool "Enable module tool function"
-			default n
+		comment "This is using to configure libc++"
 
 		endmenu
 
-		menu "parser"
+		menu "libm"
 
-		comment "This is using to configure parser"
-
-		config PARSER
-			bool "Enable parser support"
-			default n
-
-		config INIPARSER
-			depends on PARSER
-			select FILESTREAM
-			bool "Enable ini file parser function"
-			default n
-
-		config PINPARSER
-			depends on PARSER
-			select FILESTREAM
-			bool "Enable pin parser function"
-			default n
-
-		config RCPARSER
-			depends on PARSER
-			select FILESTREAM
-			bool "Enable resource script parser function"
-			default n
-
-		config REGEX
-			depends on PARSER
-			bool "Enable regex function"
-			default n
+		comment "This is using to configure libm"
 
 		endmenu
 
-		menu "model"
+		menu "libhw"
+			
+			if CORTEX_M
+				source ./village-kernel/vklibs/libhw/arm/cortex-m/Kconfig
+			endif
 
-		comment "This is using to configure model"
-
-		config MODEL
-			bool "Enable design mode function"
-			default y
+			if BIOS
+				source ./village-kernel/vklibs/libhw/x86/bios/Kconfig
+			endif
 
 		endmenu
 
-		menu "sync"
+		menu "libutils"
 
-		comment "This is using to configure sync"
+			menu "fileutils"
 
-		config SYNC
-			bool "Enable synchronizes function"
-			default y
+			comment "This is using to configure fileutils"
 
-		config MUTEX
-			depends on SYNC
-			bool "Enable mutex lock support"
-			default y
+			config FILEUTILS
+				bool "Enable file utils support"
+				default n
 
-		config SPINLOCK
-			depends on SYNC
-			bool "Enable spin lock support"
-			default y
+			config DIRSTREAM
+				depends on FILEUTILS
+				bool "Enable dirstream function"
+				default n
 
-		config SEMAPHORE
-			depends on SYNC
-			bool "Enable semaphore support"
-			default y
+			config DRVSTREAM
+				depends on FILEUTILS
+				bool "Enable drvstream function"
+				default n
+
+			config FILESTREAM
+				depends on FILEUTILS
+				bool "Enable filestream function"
+				default n
+
+			config FILESYSOPT
+				depends on FILEUTILS
+				bool "Enable filesysopt function"
+				default n
+
+			endmenu
+
+			menu "binutils"
+
+			comment "This is using to configure binutils"
+
+			config BINUTILS
+				select FILESTREAM
+				bool "Enable binutils function"
+				default n
+
+			config BINLOADER
+				depends on BINUTILS
+				select FILESTREAM
+				bool "Enable *.bin file load function"
+				default n
+
+			config BINEXECUTOR
+				depends on BINUTILS
+				select BINLOADER
+				bool "Enable execute *.bin file function"
+				default n
+
+			config ELFLOADER
+				depends on BINUTILS
+				select FILESTREAM
+				bool "Enable *.elf file load function"
+				default n
+
+			config ELFEXECUTOR
+				depends on BINUTILS
+				select ELFLOADER
+				bool "Enable execute *.elf file function"
+				default n
+
+			config LIBTOOL
+				depends on BINUTILS
+				bool "Enable library tool function"
+				default n
+
+			config MODTOOL
+				depends on BINUTILS
+				bool "Enable module tool function"
+				default n
+
+			endmenu
+
+			menu "parser"
+
+			comment "This is using to configure parser"
+
+			config PARSER
+				bool "Enable parser support"
+				default n
+
+			config INIPARSER
+				depends on PARSER
+				select FILESTREAM
+				bool "Enable ini file parser function"
+				default n
+
+			config PINPARSER
+				depends on PARSER
+				select FILESTREAM
+				bool "Enable pin parser function"
+				default n
+
+			config RCPARSER
+				depends on PARSER
+				select FILESTREAM
+				bool "Enable resource script parser function"
+				default n
+
+			config REGEX
+				depends on PARSER
+				bool "Enable regex function"
+				default n
+
+			endmenu
+
+			menu "model"
+
+			comment "This is using to configure model"
+
+			config MODEL
+				bool "Enable design mode function"
+				default y
+
+			endmenu
+
+			menu "sync"
+
+			comment "This is using to configure sync"
+
+			config SYNC
+				bool "Enable synchronizes function"
+				default y
+
+			config MUTEX
+				depends on SYNC
+				bool "Enable mutex lock support"
+				default y
+
+			config SPINLOCK
+				depends on SYNC
+				bool "Enable spin lock support"
+				default y
+
+			config SEMAPHORE
+				depends on SYNC
+				bool "Enable semaphore support"
+				default y
+
+			endmenu
 
 		endmenu
 

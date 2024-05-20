@@ -11,6 +11,6 @@ choice
 endchoice
 
 if ST
-source ./village-kernel/arch/arm/cortex-m/mcu/st/Kconfig
-source ./village-kernel/arch/arm/cortex-m/hal/st/Kconfig
+source ./village-kernel/vklibs/libhw/arm/cortex-m/mcu/st/Kconfig
+source ./village-kernel/vklibs/libhw/arm/cortex-m/hal/st/Kconfig
 endif
