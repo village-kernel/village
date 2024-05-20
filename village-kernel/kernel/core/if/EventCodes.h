@@ -280,6 +280,16 @@ enum EventCode
 	_KeyWIMAX                = _KeyWWAN,
 	_KeyRFKill               = 247, /* Key that controls all radios */
 	_KeyMicMute              = 248, /* Mute / unmute the microphone */
+
+	_BtnMouse                = 0x110,
+	_BtnLeft                 = 0x110,
+	_BtnRight                = 0x111,
+	_BtnMiddle               = 0x112,
+	_BtnSide                 = 0x113,
+	_BtnExtra                = 0x114,
+	_BtnForward              = 0x115,
+	_BtnBack                 = 0x116,
+	_BtnTask                 = 0x117,
 };
 
 enum KeyStatus

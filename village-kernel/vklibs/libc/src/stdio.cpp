@@ -142,6 +142,20 @@ static int skip_atoi(const char **s)
 	return i;
 }
 
+
+/// @brief do_div
+/// @param num 
+/// @param base 
+/// @return 
+static int __do_div(long &num, int base)
+{
+	int res;
+	res = ((unsigned long) num) % (unsigned) base;
+	num = ((unsigned long) num) / (unsigned) base;
+	return res;
+}
+
+
 #define ZEROPAD	1		/* pad with zero */
 #define SIGN	2		/* unsigned/signed long */
 #define PLUS	4		/* show plus */
@@ -151,19 +165,10 @@ static int skip_atoi(const char **s)
 #define SPECIAL	64		/* 0x */
 
 
-static int __do_div(long &n, int base)
-{
-	int res;
-	res = ((unsigned long) n) % (unsigned) base;
-	n = ((unsigned long) n) / (unsigned) base;
-	return res;
-}
-
-
 static char *number(char *str, long num, int base, int size, int precision, int type)
 {
 	/* we are called with base 8, 10 or 16, only, thus don't need "G..."  */
-	static const char digits[17] = "0123456789ABCDEF"; /* "GHIJKLMNOPQRSTUVWXYZ"; */
+	static const char digits[16] =  {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'}; 
 
 	char tmp[66];
 	char c, sign, locase;

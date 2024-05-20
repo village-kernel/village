@@ -47,10 +47,10 @@
 
 - ## 3.克隆village-kernel项目
 	- ### ssh方式：
-			git clone git@github.com:village-kernel/village-kernel.git
+			git clone git@github.com:village-kernel/village.git
   
   	- ### https方式：
-			git clone https://github.com/village-kernel/village-kernel.git
+			git clone https://github.com/village-kernel/village.git
 
 
 - ## 4.使用vscode打开village-kernel项目
