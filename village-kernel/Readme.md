@@ -35,7 +35,7 @@
 	- 与内核相关的核心代码，包括线程管理，内存管理，中断管理，模块管理，驱动管理等。
 	- 由于这里的代码不加入libkernel.so库，故增加了Symbol类，用来导出相关接口。
 
-## stdlib：
+## vklibs：
 - 该目录下的代码会归类到libc.so，libstdc++.so，libm.so共享库。
 - 标准运行库相关目录，目前只初步实现一些POSIX基础接口，例如C库的stdio和string部分接口。
 

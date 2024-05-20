@@ -98,8 +98,8 @@ objs-kernel-$(CONFIG_MODEL)         += ObserverModel.o
 ######################################
 libs-y                              += m
 
-inc-y                               += village-kernel/stdlib/libm/inc
-src-y                               += village-kernel/stdlib/libm/src
+inc-y                               += village-kernel/vklibs/libm/inc
+src-y                               += village-kernel/vklibs/libm/src
 
 objs-m-y                            += math.o
 
@@ -109,8 +109,8 @@ objs-m-y                            += math.o
 ######################################
 libs-y                              += stdc++
 
-inc-y                               += village-kernel/stdlib/libc++/inc
-src-y                               += village-kernel/stdlib/libc++/src
+inc-y                               += village-kernel/vklibs/libc++/inc
+src-y                               += village-kernel/vklibs/libc++/src
 
 objs-stdc++-y                       += icxxabi.o
 objs-stdc++-y                       += operator.o
@@ -121,10 +121,10 @@ objs-stdc++-y                       += operator.o
 ######################################
 libs-y                              += c
 
-inc-y                               += village-kernel/stdlib/libc/inc
-src-y                               += village-kernel/stdlib/libc/src
-src-y                               += village-kernel/stdlib/libc/stdio
-src-y                               += village-kernel/stdlib/libc/string
+inc-y                               += village-kernel/vklibs/libc/inc
+src-y                               += village-kernel/vklibs/libc/src
+src-y                               += village-kernel/vklibs/libc/stdio
+src-y                               += village-kernel/vklibs/libc/string
 
 objs-c-y                            += stdio.o
 objs-c-y                            += stdlib.o
