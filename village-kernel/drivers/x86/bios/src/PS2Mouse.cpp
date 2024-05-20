@@ -7,6 +7,7 @@
 #include "Driver.h"
 #include "Kernel.h"
 #include "Hardware.h"
+#include "EventCodes.h"
 #include "PS2Controller.h"
 
 
@@ -173,36 +174,36 @@ private:
 		if (packet.leftBtn && !isLeftBtnPressed)
 		{
 			isLeftBtnPressed = true;
-			inputEvent->ReportKey(0xf1, 1);
+			inputEvent->ReportKey(_BtnLeft, _KeyPressed);
 		}
 		else if (!packet.leftBtn && isLeftBtnPressed)
 		{
 			isLeftBtnPressed = false;
-			inputEvent->ReportKey(0xf1, 0);
+			inputEvent->ReportKey(_BtnLeft, _KeyReleased);
 		}
 
 		//Report right button
 		if (packet.rightBtn && !isRightBtnPressed)
 		{
 			isRightBtnPressed = true;
-			inputEvent->ReportKey(0xf2, 1);
+			inputEvent->ReportKey(_BtnRight, _KeyPressed);
 		}
 		else if (!packet.rightBtn && isRightBtnPressed)
 		{
 			isRightBtnPressed = false;
-			inputEvent->ReportKey(0xf2, 0);
+			inputEvent->ReportKey(_BtnRight, _KeyReleased);
 		}
 
 		//Report middle button
 		if (packet.middleBtn && !isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = true;
-			inputEvent->ReportKey(0xf3, 1);
+			inputEvent->ReportKey(_BtnMiddle, _KeyPressed);
 		}
 		else if (!packet.middleBtn && isMiddleBtnPressed)
 		{
 			isMiddleBtnPressed = false;
-			inputEvent->ReportKey(0xf3, 0);
+			inputEvent->ReportKey(_BtnMiddle, _KeyReleased);
 		}
 
 		//Report axis x, y, z movement value

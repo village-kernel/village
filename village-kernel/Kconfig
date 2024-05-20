@@ -115,9 +115,9 @@ if KERNEL
 
 	endmenu
 
-	# confg utilities menu
+	# confg libutils menu
 
-	menu "utilities"
+	menu "libutils"
 
 		menu "fileutils"
 

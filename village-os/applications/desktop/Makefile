@@ -28,4 +28,4 @@ objs-desktop-$(CONFIG_DESKTOP)         += Desktop.o
 ######################################
 # libraries
 ######################################
-libs-desktop-$(CONFIG_DESKTOP)         += vkgui kernel stdc++ c
+libs-desktop-$(CONFIG_DESKTOP)         += vkgui utils stdc++ c

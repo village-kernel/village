@@ -52,45 +52,45 @@ objs-$(CONFIG_FATFS)                += FatSystem.o
 
 
 ######################################
-# libkernel
+# libutils
 ######################################
-libs-$(CONFIG_KERNEL)               += kernel
+libs-y                              += utils
 
-inc-$(CONFIG_FILEUTILS)             += village-kernel/utilities/fileutils/inc
-inc-$(CONFIG_BINUTILS)              += village-kernel/utilities/binutils/inc
-inc-$(CONFIG_PARSER)                += village-kernel/utilities/parser/inc
-inc-$(CONFIG_MODEL)                 += village-kernel/utilities/model/inc
-inc-$(CONFIG_SYNC)                  += village-kernel/utilities/sync/inc
+inc-$(CONFIG_FILEUTILS)             += village-kernel/vklibs/libutils/fileutils/inc
+inc-$(CONFIG_BINUTILS)              += village-kernel/vklibs/libutils/binutils/inc
+inc-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/inc
+inc-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/inc
+inc-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/inc
 
-src-$(CONFIG_FILEUTILS)             += village-kernel/utilities/fileutils/src
-src-$(CONFIG_BINUTILS)              += village-kernel/utilities/binutils/src
-src-$(CONFIG_PARSER)                += village-kernel/utilities/parser/src
-src-$(CONFIG_MODEL)                 += village-kernel/utilities/model/src
-src-$(CONFIG_SYNC)                  += village-kernel/utilities/sync/src
+src-$(CONFIG_FILEUTILS)             += village-kernel/vklibs/libutils/fileutils/src
+src-$(CONFIG_BINUTILS)              += village-kernel/vklibs/libutils/binutils/src
+src-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/src
+src-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/src
+src-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/src
 
-objs-kernel-$(CONFIG_DIRSTREAM)     += DirStream.o
-objs-kernel-$(CONFIG_DRVSTREAM)     += DrvStream.o
-objs-kernel-$(CONFIG_FILESTREAM)    += FileStream.o
-objs-kernel-$(CONFIG_FILESYSOPT)    += FileSysOpt.o
+objs-utils-$(CONFIG_DIRSTREAM)      += DirStream.o
+objs-utils-$(CONFIG_DRVSTREAM)      += DrvStream.o
+objs-utils-$(CONFIG_FILESTREAM)     += FileStream.o
+objs-utils-$(CONFIG_FILESYSOPT)     += FileSysOpt.o
 
-objs-kernel-$(CONFIG_SPINLOCK)      += SpinLock.o
-objs-kernel-$(CONFIG_MUTEX)         += Mutex.o
-objs-kernel-$(CONFIG_SEMAPHORE)     += Semaphore.o
+objs-utils-$(CONFIG_SPINLOCK)       += SpinLock.o
+objs-utils-$(CONFIG_MUTEX)          += Mutex.o
+objs-utils-$(CONFIG_SEMAPHORE)      += Semaphore.o
 
-objs-kernel-$(CONFIG_BINUTILS)      += BaseExecutor.o
-objs-kernel-$(CONFIG_BINLOADER)     += BinLoader.o
-objs-kernel-$(CONFIG_BINEXECUTOR)   += BinExecutor.o
-objs-kernel-$(CONFIG_ELFLOADER)     += ElfLoader.o
-objs-kernel-$(CONFIG_ELFEXECUTOR)   += ElfExecutor.o
-objs-kernel-$(CONFIG_LIBTOOL)       += LibraryTool.o
-objs-kernel-$(CONFIG_MODTOOL)       += ModuleTool.o
+objs-utils-$(CONFIG_BINUTILS)       += BaseExecutor.o
+objs-utils-$(CONFIG_BINLOADER)      += BinLoader.o
+objs-utils-$(CONFIG_BINEXECUTOR)    += BinExecutor.o
+objs-utils-$(CONFIG_ELFLOADER)      += ElfLoader.o
+objs-utils-$(CONFIG_ELFEXECUTOR)    += ElfExecutor.o
+objs-utils-$(CONFIG_LIBTOOL)        += LibraryTool.o
+objs-utils-$(CONFIG_MODTOOL)        += ModuleTool.o
 
-objs-kernel-$(CONFIG_INIPARSER)     += iniParser.o
-objs-kernel-$(CONFIG_PINPARSER)     += pinParser.o
-objs-kernel-$(CONFIG_RCPARSER)      += rcParser.o
-objs-kernel-$(CONFIG_REGEX)         += Regex.o
+objs-utils-$(CONFIG_INIPARSER)      += iniParser.o
+objs-utils-$(CONFIG_PINPARSER)      += pinParser.o
+objs-utils-$(CONFIG_RCPARSER)       += rcParser.o
+objs-utils-$(CONFIG_REGEX)          += Regex.o
 
-objs-kernel-$(CONFIG_MODEL)         += ObserverModel.o
+objs-utils-$(CONFIG_MODEL)          += ObserverModel.o
 
 
 ######################################
@@ -98,8 +98,8 @@ objs-kernel-$(CONFIG_MODEL)         += ObserverModel.o
 ######################################
 libs-y                              += m
 
-inc-y                               += village-kernel/stdlib/libm/inc
-src-y                               += village-kernel/stdlib/libm/src
+inc-y                               += village-kernel/vklibs/libm/inc
+src-y                               += village-kernel/vklibs/libm/src
 
 objs-m-y                            += math.o
 
@@ -109,8 +109,8 @@ objs-m-y                            += math.o
 ######################################
 libs-y                              += stdc++
 
-inc-y                               += village-kernel/stdlib/libc++/inc
-src-y                               += village-kernel/stdlib/libc++/src
+inc-y                               += village-kernel/vklibs/libc++/inc
+src-y                               += village-kernel/vklibs/libc++/src
 
 objs-stdc++-y                       += icxxabi.o
 objs-stdc++-y                       += operator.o
@@ -121,10 +121,10 @@ objs-stdc++-y                       += operator.o
 ######################################
 libs-y                              += c
 
-inc-y                               += village-kernel/stdlib/libc/inc
-src-y                               += village-kernel/stdlib/libc/src
-src-y                               += village-kernel/stdlib/libc/stdio
-src-y                               += village-kernel/stdlib/libc/string
+inc-y                               += village-kernel/vklibs/libc/inc
+src-y                               += village-kernel/vklibs/libc/src
+src-y                               += village-kernel/vklibs/libc/stdio
+src-y                               += village-kernel/vklibs/libc/string
 
 objs-c-y                            += stdio.o
 objs-c-y                            += stdlib.o

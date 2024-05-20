@@ -39,4 +39,4 @@ objs-console-$(CONFIG_CONSOLE)               += Console.o
 ######################################
 # libraries
 ######################################
-libs-console-$(CONFIG_CONSOLE)               += kernel stdc++ c 
+libs-console-$(CONFIG_CONSOLE)               += utils stdc++ c 
