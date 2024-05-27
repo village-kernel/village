@@ -240,10 +240,10 @@ extern "C" char* strchr(const char* s, int c)
 /// @return 
 extern "C" char* strrchr(const char* s, int c)
 {
-	int pos = 0;
+	int pos = -1;
 	for (int i = 0; s[i]; i++)
 	{
 		if (s[i] == c) pos = i;
 	}
-	return pos ? (char*)(s + pos) : NULL;
+	return (-1 != pos) ? (char*)(s + pos) : NULL;
 }
