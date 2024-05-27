@@ -351,6 +351,32 @@ void FatVolume::CloseDir(int fd)
 }
 
 
+/// @brief IsFileExist
+/// @param name 
+/// @return 
+bool FatVolume::IsFileExist(const char* name)
+{
+	FatObject* obj = SearchPath(name);
+
+	if (NULL == obj || FileType::_File != obj->GetObjectType()) return false;
+
+	return true;
+}
+
+
+/// @brief IsDirExist
+/// @param name 
+/// @return 
+bool FatVolume::IsDirExist(const char* name)
+{
+	FatObject* obj = SearchPath(name);
+
+	if (NULL == obj || FileType::_Diretory != obj->GetObjectType()) return false;
+	
+	return true;
+}
+
+
 /// @brief Remove
 /// @param name 
 /// @return 
