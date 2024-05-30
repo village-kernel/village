@@ -44,8 +44,8 @@ public:
 	virtual void CloseDir(int fd)                                    = 0;
 
 	//Opt methods
-	virtual bool IsFileExist(const char* name)                       = 0;
-	virtual bool IsDirExist(const char* name)                        = 0;
+	virtual FileType GetFileType(const char* name)                   = 0;
+	virtual bool IsExist(const char* name, FileType type)            = 0;
 	virtual bool Remove(const char* name)                            = 0;
 };
 

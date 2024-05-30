@@ -32,7 +32,7 @@ bool FileStream::IsExist(const char* name)
 
 	if (NULL != volume)
 	{
-		return volume->IsFileExist(name);
+		return volume->IsExist(name, FileType::_File);
 	}
 	
 	return false;

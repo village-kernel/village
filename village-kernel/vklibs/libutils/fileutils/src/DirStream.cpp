@@ -32,7 +32,7 @@ bool DirStream::IsExist(const char* name)
 
 	if (NULL != volume)
 	{
-		return volume->IsDirExist(name);
+		return volume->IsExist(name, FileType::_Diretory);
 	}
 	
 	return false;
