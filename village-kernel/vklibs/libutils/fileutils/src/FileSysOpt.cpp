@@ -21,35 +21,35 @@ FileSysOpt::~FileSysOpt()
 
 
 /// @brief File system move
-/// @param from 
-/// @param to 
+/// @param source 
+/// @param target 
 /// @return 
-bool FileSysOpt::Move(const char* from, const char* to)
+bool FileSysOpt::Move(const char* source, const char* target)
 {
 	return false;
 }
 
 
 /// @brief File system copy
-/// @param from 
-/// @param to 
+/// @param source 
+/// @param target 
 /// @return 
-bool FileSysOpt::Copy(const char* from, const char* to)
+bool FileSysOpt::Copy(const char* source, const char* target)
 {
 	return false;
 }
 
 
 /// @brief File system remove
-/// @param name 
+/// @param source 
 /// @return 
-bool FileSysOpt::Remove(const char* name)
+bool FileSysOpt::Remove(const char* source)
 {
-	volume = kernel->filesys.GetVolume(name);
+	FileVol* volume = kernel->filesys.GetVolume(source);
 	
 	if (NULL != volume)
 	{
-		volume->Remove(name);
+		return volume->Remove(source);
 	}
 
 	return false;

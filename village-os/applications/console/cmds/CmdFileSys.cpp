@@ -9,6 +9,31 @@
 #include "DirStream.h"
 #include "FileStream.h"
 #include "FileSysOpt.h"
+#include "string.h"
+
+
+/// @brief AbsolutePath
+/// @param path 
+/// @return 
+static char* AbsolutePath(char* path)
+{
+	char* res = NULL;
+
+	if ('/' != path[0])
+	{
+		res = new char[strlen(console.GetPath()) + strlen(path) + 2]();
+		strcat(res, console.GetPath());
+		if ('/' != res[strlen(console.GetPath()) - 1]) strcat(res, "/");
+		strcat(res, path);
+	}
+	else
+	{
+		res = new char[strlen(path) + 1]();
+		strcat(res, path);
+	}
+
+	return res;
+}
 
 
 /// @brief CmdCd
@@ -21,6 +46,21 @@ private:
 	{
 		if (DirStream().IsExist(path))
 		{
+			char* dir = strrchr(path, '/');
+
+			//Handle "." dir
+			if (0 == strcmp(dir, "/."))
+			{
+				dir[0] = '\0';
+			}
+			//Handle ".." dir
+			else if (0 == strcmp(dir, "/.."))
+			{
+				dir[0] = '\0';
+				dir = strrchr(path, '/');
+				dir[(0 == (dir - path)) ? 1 : 0] = '\0';
+			}
+
 			console.SetPath(path);
 		}
 		else
@@ -39,7 +79,10 @@ public:
 			console.Output("Usage: cd <directory>");
 			return;
 		}
-		ChangeDirectory(argv[1]);
+
+		char* path = AbsolutePath(argv[1]);
+		ChangeDirectory(path);
+		delete path;
 	}
 };
 
@@ -110,10 +153,19 @@ private:
 	void CreateFile(const char* filename)
 	{
 		FileStream file;
-		if (!file.Open(filename, FileMode::_CreateNew))
+
+		if (!file.IsExist(filename))
 		{
-			console.Error("Create file %s failed.", filename);
+			if (!file.Open(filename, FileMode::_CreateNew))
+			{
+				console.Error("Create file %s failed.", filename);
+			}
 		}
+		else
+		{
+			console.Error("The file %s already exists.", filename);
+		}
+
 		file.Close();
 	}
 public:
@@ -127,7 +179,10 @@ public:
 			console.Output("Usage: touch <filename>");
 			return;
 		}
-		CreateFile(argv[1]);
+
+		char* path = AbsolutePath(argv[1]);
+		CreateFile(path);
+		delete path;
 	}
 };
 
@@ -141,10 +196,19 @@ private:
 	void CreateDir(const char* dirname)
 	{
 		DirStream dir;
-		if (!dir.Open(dirname, FileMode::_CreateNew))
+		
+		if (!dir.IsExist(dirname))
 		{
-			console.Error("Create directory %s failed.", dirname);
+			if (!dir.Open(dirname, FileMode::_CreateNew))
+			{
+				console.Error("Create directory %s failed.", dirname);
+			}
 		}
+		else
+		{
+			console.Error("The directory %s already exists.", dirname);
+		}
+
 		dir.Close();
 	}
 public:
@@ -158,7 +222,10 @@ public:
 			console.Output("Usage: mkdir <dirname>");
 			return;
 		}
-		CreateDir(argv[1]);
+
+		char* path = AbsolutePath(argv[1]);
+		CreateDir(path);
+		delete path;
 	}
 };
 
@@ -185,7 +252,12 @@ public:
 			console.Output("Usage: mv <source> <target>");
 			return;
 		}
-		Move(argv[1], argv[2]);
+
+		char* path1 = AbsolutePath(argv[1]);
+		char* path2 = AbsolutePath(argv[2]);
+		Move(path1, path2);
+		delete path1;
+		delete path2;
 	}
 };
 
@@ -212,7 +284,12 @@ public:
 			console.Output("Usage: cp <source> <target>");
 			return;
 		}
-		Copy(argv[1], argv[2]);
+
+		char* path1 = AbsolutePath(argv[1]);
+		char* path2 = AbsolutePath(argv[2]);
+		Copy(path1, path2);
+		delete path1;
+		delete path2;
 	}
 };
 
@@ -239,7 +316,10 @@ public:
 			console.Output("Usage: rm <file/directory>");
 			return;
 		}
-		Remove(argv[1]);
+
+		char* path = AbsolutePath(argv[1]);
+		Remove(path);
+		delete path;
 	}
 };
 

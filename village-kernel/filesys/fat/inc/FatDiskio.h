@@ -145,15 +145,18 @@ public:
 	uint32_t ReadSector(char* data, uint32_t sector, uint32_t secSize = 1);
 
 	uint32_t ClusterToSector(uint32_t clust);
+	
 	uint32_t GetNextCluster(uint32_t clust);
 	uint32_t SetNextCluster(uint32_t clust);
-	uint32_t GetPrevCluster(uint32_t clust);
 	uint32_t ClearPrevCluster(uint32_t clust);
+
 	uint32_t ReadCluster(char* data, uint32_t clust, uint32_t clustSize);
 	uint32_t WriteCluster(char* data, uint32_t clust, uint32_t clustSize);
 	uint32_t ClearCluster(uint32_t clust, uint32_t clustSize);
+
 	uint32_t AllocCluster(uint32_t clustSize = 1);
 	uint32_t FreeCluster(uint32_t clust, uint32_t clustSize = 1);
+	
 	Info& GetInfo();
 };
 

@@ -54,7 +54,7 @@ private:
 	/// @brief BochsVBE write data
 	/// @param reg 
 	/// @param value 
-	void WriteData(uint32_t reg, uint16_t value)
+	inline void WriteData(uint32_t reg, uint16_t value)
 	{
 		uint16_t* videos = (uint16_t*)vmap;
 		videos[reg] = value;
@@ -64,7 +64,7 @@ private:
 	/// @brief BochsVBE read data
 	/// @param reg 
 	/// @return 
-	uint16_t ReadData(uint32_t reg)
+	inline uint16_t ReadData(uint32_t reg)
 	{
 		uint16_t* videos = (uint16_t*)vmap;
 		return videos[reg];
@@ -74,7 +74,7 @@ private:
 	/// @brief BochsVBE write reg
 	/// @param reg 
 	/// @param value 
-	void WriteReg(uint16_t reg, uint16_t value)
+	inline void WriteReg(uint16_t reg, uint16_t value)
 	{
 		PortWordOut(VBE_DISPI_IOPORT_INDEX, reg);
 		PortWordOut(VBE_DISPI_IOPORT_DATA, value);
@@ -84,7 +84,7 @@ private:
 	/// @brief BochsVBE read reg
 	/// @param reg 
 	/// @return 
-	uint16_t ReadReg(uint16_t reg)
+	inline uint16_t ReadReg(uint16_t reg)
 	{
 		PortWordOut(VBE_DISPI_IOPORT_INDEX, reg);
 		return PortWordIn(VBE_DISPI_IOPORT_DATA);

@@ -32,15 +32,9 @@ bool FileStream::IsExist(const char* name)
 
 	if (NULL != volume)
 	{
-		fd = volume->Open(name, FileMode::_OpenExisting);
+		return volume->IsExist(name, FileType::_File);
 	}
 	
-	if (fd != -1)
-	{
-		volume->Close(fd);
-		return true;
-	}
-
 	return false;
 }
 
