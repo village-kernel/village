@@ -32,15 +32,9 @@ bool DirStream::IsExist(const char* name)
 
 	if (NULL != volume)
 	{
-		fd = volume->OpenDir(name, FileMode::_OpenExisting);
+		return volume->IsExist(name, FileType::_Diretory);
 	}
 	
-	if (fd != -1)
-	{
-		volume->CloseDir(fd);
-		return true;
-	}
-
 	return false;
 }
 

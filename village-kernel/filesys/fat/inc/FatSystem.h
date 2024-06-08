@@ -42,6 +42,8 @@ public:
 	int SizeDir(int fd);
 	void CloseDir(int fd);
 
+	FileType GetFileType(const char* name);
+	bool IsExist(const char* name, FileType type);
 	bool Remove(const char* name);
 public:
 	//Methods

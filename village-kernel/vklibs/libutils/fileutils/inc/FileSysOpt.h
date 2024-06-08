@@ -1,6 +1,6 @@
 //###########################################################################
 // FileSysOpt.h
-// Declarations of the functions that manage file
+// Declarations of the functions that manage filesys opts
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -13,16 +13,13 @@
 /// @brief FileSysOpt
 class FileSysOpt
 {
-private:
-	//Members
-	FileVol* volume;
 public:
 	//Methods
 	FileSysOpt();
 	~FileSysOpt();
-	bool Move(const char* from, const char* to);
-	bool Copy(const char* from, const char* to);
-	bool Remove(const char* name);
+	bool Move(const char* source, const char* target);
+	bool Copy(const char* source, const char* target);
+	bool Remove(const char* source);
 };
 
 #endif //!__FILE_SYS_OPT_H__
