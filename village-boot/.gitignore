@@ -1,7 +1,0 @@
-.DS_Store
-*.o
-*.so
-*.hex
-*.bin
-*.elf
-*.efi
