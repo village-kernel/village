@@ -35,5 +35,5 @@ APPLDFLAGS  += -Wl,-m,elf_i386
 endif
 
 ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
-APPLDFLAGS += -Wl,-static
+APPLDFLAGS  += -Wl,-static
 endif
