@@ -33,3 +33,7 @@ APPLDFLAGS  += -pie
 ifeq ($(CONFIG_X86), y)
 APPLDFLAGS  += -Wl,-m,elf_i386
 endif
+
+ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
+APPLDFLAGS += -Wl,-static
+endif

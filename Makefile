@@ -125,10 +125,6 @@ boot:
 #######################################
 # build the applications
 #######################################
-ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
-APPLDFLAGS += -Wl,-static
-endif
-
 app:
 	$(Q)mkdir -p $(APPS_DIR)
 	$(Q)$(MAKE) crt0_app.o inc="$(inc-y)" src="$(src-y)"
