@@ -6,58 +6,31 @@
 ############################################################################
 VERSION = 0.0.7
 
-######################################
-# include config
-######################################
--include .config
 
 ######################################
 # target
 ######################################
 TARGET := village
 
-######################################
-# building variables
-######################################
-# optimization
-OPT ?= $(CONFIG_OPT:"%"=%)
-
-# debug build?
-ifeq ($(CONFIG_DEBUG), y)
-  DEBUG ?= 1
-else
-  DEBUG ?= 0
-endif
-
-# silence build
-ifeq ($(CONFIG_VERBOSE_MODE), y)
-  Q = 
-else
-  Q = @
-endif
-
-export Q
-
 
 #######################################
 # paths
 #######################################
 # Build path
-BUILD_DIR     := build
+WORKSPACE     := $(shell pwd)
+BUILD_DIR     := $(WORKSPACE)/build
+MODS_DIR      := $(BUILD_DIR)/output/modules
+LIBS_DIR      := $(BUILD_DIR)/output/libraries
 APPS_DIR      := $(BUILD_DIR)/output/applications
-MODULES_DIR   := $(BUILD_DIR)/output/modules
-LIBRARIES_DIR := $(BUILD_DIR)/output/libraries
-
-# Rootfs path
-ROOTFS_DIR    ?= $(CONFIG_ROOTFS:"%"=%)
 
 
-######################################
+#######################################
 # include other makefile
-######################################
--include village-boot/Makefile
--include village-kernel/Makefile
--include village-os/Makefile
+#######################################
+include $(WORKSPACE)/Makefile.rules
+include $(WORKSPACE)/village-boot/Makefile
+include $(WORKSPACE)/village-kernel/Makefile
+include $(WORKSPACE)/village-os/Makefile
 
 
 #######################################
@@ -75,10 +48,10 @@ ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
 endif
 ifeq ($(CONFIG_BOOTLOADER), y)
-	$(Q)$(MAKE) bootloader
+	$(Q)$(MAKE) boot
 endif
 ifeq ($(CONFIG_GENERATED_APP), y)
-	$(Q)$(MAKE) application
+	$(Q)$(MAKE) app
 endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
@@ -86,143 +59,21 @@ endif
 
 
 #######################################
-# host compile tool
-#######################################
-HOST_GCC_PREFIX ?= $(CONFIG_HOST_COMPILE_PREFIX:"%"=%)
-HOST_GCC_SUFFIX ?= $(CONFIG_HOST_COMPILE_SUFFIX:"%"=%)
-HOST_CXX = $(HOST_GCC_PREFIX)g++$(HOST_GCC_SUFFIX)
-HOST_CC  = $(HOST_GCC_PREFIX)gcc$(HOST_GCC_SUFFIX)
-HOST_AS  = $(HOST_GCC_PREFIX)gcc$(HOST_GCC_SUFFIX) -x assembler-with-cpp
-
-
-#######################################
-# cross compile tool
-#######################################
-GCC_PREFIX ?= $(CONFIG_CROSS_COMPILE_PREFIX:"%"=%)
-GCC_SUFFIX ?= $(CONFIG_CROSS_COMPILE_SUFFIX:"%"=%)
-CXX = $(GCC_PREFIX)g++$(GCC_SUFFIX)
-CC  = $(GCC_PREFIX)gcc$(GCC_SUFFIX)
-AS  = $(GCC_PREFIX)gcc$(GCC_SUFFIX) -x assembler-with-cpp
-AR  = $(GCC_PREFIX)ar$(GCC_SUFFIX)
-LD  = $(GCC_PREFIX)ld$(GCC_SUFFIX)
-CP  = $(GCC_PREFIX)objcopy$(GCC_SUFFIX)
-SZ  = $(GCC_PREFIX)size$(GCC_SUFFIX)
-ST  = $(GCC_PREFIX)strip$(GCC_SUFFIX)
-HEX = $(CP) -O ihex
-BIN = $(CP) -O binary -S
-
-
-#######################################
-# setting build environment
-#######################################
-INCLUDES  += $(addprefix -I, $(inc) $(inc-y))
-VPATH     += $(addprefix $(BUILD_DIR)/, $(src) $(src-y)) $(src) $(src-y)
-LIBS      += -L$(LIBRARIES_DIR) $(addprefix -l, $(libs))
-
-
-#######################################
-# compiler flags
-#######################################
-ifeq ($(DEBUG), 1)
-CFLAGS    += -g -gdwarf-2 -DDEBUG
-endif
-
-ifneq ($(CONFIG_ENVIRONMENT), y)
-CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
-endif
-
-ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
-APPLDFLAGS += -Wl,-static
-endif
-
-
-#######################################
-# build version flags
-#######################################
-GIT_SHA = $(shell git rev-parse HEAD)
-ifneq ($(GIT_SHA), )
-CXXFLAGS += -DGIT_COMMIT='"$(GIT_SHA)"'
-else
-CXXFLAGS += -DGIT_COMMIT='"unknown"'
-endif
-CXXFLAGS += -DBUILD_VER='"V$(VERSION)"'
-
-
-#######################################
-# mixed compiling
-#######################################
-%.o: %.s
-	$(Q)echo Compiling $@
-	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
-	$(Q)$(AS) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(<:.s=.o)
-
-%.o: %.c
-	$(Q)echo Compiling $@
-	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
-	$(Q)$(CC) -c $(CFLAGS) $< -o $(BUILD_DIR)/$(<:.c=.o)
-
-%.o: %.cpp
-	$(Q)echo Compiling $@
-	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
-	$(Q)$(CXX) -c $(CXXFLAGS) $< -o $(BUILD_DIR)/$(<:.cpp=.o)
-
-%.a: $(objs)
-	$(Q)echo output $@
-	$(Q)$(AR) rcs $@ $^
-
-%.so: $(objs)
-	$(Q)echo output $@
-	$(Q)$(LD) $(MCUEM) -shared -fPIC $^ -o $@
-	$(Q)$(SZ) $@
-
-%.mo: $(objs)
-	$(Q)echo output $@
-	$(Q)$(LD) $(MCUEM) -shared -fPIC $^ -o $@
-	$(Q)$(SZ) $@
-
-%.elf: $(objs)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBS)
-	$(Q)$(SZ) $@
-
-%.hex: %.elf
-	$(Q)echo output $@
-	$(Q)$(HEX) $< $@
-
-%.bin: %.elf
-	$(Q)echo output $@
-	$(Q)$(BIN) $< $@
-
-%.exec: $(objs)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBS)
-	$(Q)$(SZ) $@
-
-%.hex: %.exec
-	$(Q)echo output $@
-	$(Q)$(HEX) $< $@
-
-%.bin: %.exec
-	$(Q)echo output $@
-	$(Q)$(BIN) $< $@
-
-
-#######################################
 # build the libraries
 #######################################
 library: 
-	$(Q)mkdir -p $(LIBRARIES_DIR)
-	$(Q)echo "#prepare libraries" > $(LIBRARIES_DIR)/_load_.rc;
+	$(Q)mkdir -p $(LIBS_DIR)
+	$(Q)echo "#prepare libraries" > $(LIBS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(libs-y), \
-		$(MAKE) $(objs-$(name)-y); \
-		$(MAKE) $(LIBRARIES_DIR)/lib$(name).a  objs="$(objs-$(name)-y)"; \
-		$(MAKE) $(LIBRARIES_DIR)/lib$(name).so objs="$(objs-$(name)-y)"; \
-		echo /libraries/lib$(name).so >> $(LIBRARIES_DIR)/_load_.rc; \
+		$(MAKE) $(objs-$(name)-y) inc="$(inc-y)" src="$(src-y)"; \
+		$(MAKE) $(LIBS_DIR)/lib$(name).a  inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
+		$(MAKE) $(LIBS_DIR)/lib$(name).so inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
+		echo /libraries/lib$(name).so >> $(LIBS_DIR)/_load_.rc; \
 	)
 	$(Q)$(foreach name, $(oslibs-y), \
-		$(MAKE) $(objs-$(name)-y);   \
-		$(MAKE) $(LIBRARIES_DIR)/lib$(name).a  objs="$(objs-$(name)-y)"; \
-		$(MAKE) $(LIBRARIES_DIR)/lib$(name).so objs="$(objs-$(name)-y)"; \
+		$(MAKE) $(objs-$(name)-y) inc="$(inc-y)" src="$(src-y)";  \
+		$(MAKE) $(LIBS_DIR)/lib$(name).a  inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
+		$(MAKE) $(LIBS_DIR)/lib$(name).so inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
 	)
 
 
@@ -230,20 +81,23 @@ library:
 # build the modules
 #######################################
 module:
-	$(Q)mkdir -p $(MODULES_DIR)
-	$(Q)echo "#prepare modules" > $(MODULES_DIR)/_load_.rc;
+	$(Q)mkdir -p $(MODS_DIR)
+	$(Q)echo "#prepare modules" > $(MODS_DIR)/_load_.rc;
 	$(Q)$(foreach object, $(objs-m), \
-		$(MAKE) $(object); \
-		$(MAKE) $(MODULES_DIR)/$(object:.o=.mo) objs="$(object)"; \
-		echo /modules/$(object:.o=.mo) >> $(MODULES_DIR)/_load_.rc; \
+		$(MAKE) $(object) inc="$(inc-y)" src="$(src-y)"; \
+		$(MAKE) $(MODS_DIR)/$(object:.o=.mo) inc="$(inc-y)" src="$(src-y)" objs="$(object)"; \
+		echo /modules/$(object:.o=.mo) >> $(MODS_DIR)/_load_.rc; \
 	)
 
 
 #######################################
 # build the kernel
 #######################################
-kernel: $(objs-y)
+kernel:
+	$(Q)$(MAKE) $(objs-y) inc="$(inc-y)" src="$(src-y)"
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf \
+		inc="$(inc-y)"    \
+		src="$(src-y)"    \
 		objs="$(objs-y)"  \
 		libs="$(libs-y)"  \
 		LDFLAGS="$(KLDFLAGS)";
@@ -254,7 +108,7 @@ kernel: $(objs-y)
 #######################################
 # build the bootloader
 #######################################
-bootloader:
+boot:
 	$(Q)$(MAKE) $(objs-boot-y) \
 		inc="$(inc-boot-y)"    \
 		src="$(src-boot-y)";
@@ -271,16 +125,21 @@ bootloader:
 #######################################
 # build the applications
 #######################################
-application: crt0_app.o
+ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
+APPLDFLAGS += -Wl,-static
+endif
+
+app:
 	$(Q)mkdir -p $(APPS_DIR)
+	$(Q)$(MAKE) crt0_app.o inc="$(inc-y)" src="$(src-y)"
 	$(Q)$(foreach name, $(apps-y),          \
 		$(MAKE) $(objs-$(name)-y)           \
-		inc="$(inc-$(name)-y)"              \
-		src="$(src-$(name)-y)";             \
+		inc="$(inc-y) $(inc-$(name)-y)"     \
+		src="$(src-y) $(src-$(name)-y)";    \
 		$(MAKE) $(APPS_DIR)/$(name).exec    \
-		inc="$(inc-$(name)-y)"              \
-		src="$(src-$(name)-y)"              \
-		objs="crt0_app.o $(objs-$(name)-y)"  \
+		inc="$(inc-y) $(inc-$(name)-y)"     \
+		src="$(src-y) $(src-$(name)-y)"     \
+		objs="crt0_app.o $(objs-$(name)-y)" \
 		libs="$(libs-$(name)-y)"            \
 		LDFLAGS="$(APPLDFLAGS)";            \
 	)
@@ -306,8 +165,8 @@ osImage:
 # copy to rootfs
 #######################################
 rootfs:
-	$(Q)cp -rf $(BUILD_DIR)/output/*    $(ROOTFS_DIR)/
-	
+	$(Q)cp -rf $(BUILD_DIR)/output/*    $(CONFIG_ROOTFS:"%"=%)/
+
 
 #######################################
 # menuconfig
@@ -334,14 +193,19 @@ $(Scripts)/kconfig/conf:
 #######################################
 clean:
 	$(Q)rm -rf $(BUILD_DIR)
-	$(Q)rm -rf $(MODULES_DIR)
-	$(Q)rm -rf include
+
+clean-lib:
+	$(Q)rm -rf $(LIBS_DIR)
 
 clean-mod:
-	$(Q)rm -rf $(MODULES_DIR)
+	$(Q)rm -rf $(MODS_DIR)
+
+clean-boot:
+	$(Q)rm -rf $(BUILD_DIR)/village-boot
 
 clean-app:
-	$(Q)rm -rf $(APPS_DIR) $(BUILD_DIR)/village-os/applications
+	$(Q)rm -rf $(APPS_DIR)
+	$(Q)rm -rf $(BUILD_DIR)/village-os/applications
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean

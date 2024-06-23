@@ -25,7 +25,7 @@ LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB) := -T village-kernel/vklibs/libhw/arm/cort
 # compiler flags
 #######################################
 # gcc flags
-CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
+CFLAGS    += $(MCU) $(DEFS)
 CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.list)
 CFLAGS    += -MMD -MP -MF"$(BUILD_DIR)/$(dir $<)/$(@:%.o=%.d)"
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common

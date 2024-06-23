@@ -8,14 +8,11 @@
 ######################################
 # vklibs/libhw
 ######################################
-# MCU
-MCU   := -m32 -mno-sse
+# CPU
+CPU  := -m32 -mno-sse -DARCH_X86
 
-# MCU EM
-MCUEM := -melf_i386
-
-# defines
-DEFS  := -DARCH_X86
+# CPU EM
+EMULATION := -melf_i386
 
 # link script
 LDSCRIPT-KERNEL := -T village-kernel/vklibs/libhw/x86/bios/cpu/lds/kernel.lds
@@ -25,13 +22,13 @@ LDSCRIPT-KERNEL := -T village-kernel/vklibs/libhw/x86/bios/cpu/lds/kernel.lds
 # compiler flags
 #######################################
 # gcc flags
-CFLAGS    += $(MCU) $(DEFS) $(OPT) $(INCLUDES)
+CFLAGS    += $(CPU)
 CFLAGS    += -Wa,-a,-ad,-alms=$(BUILD_DIR)/$(dir $<)/$(@:.o=.list)
 CFLAGS    += -Wall -fdata-sections -ffunction-sections -fno-common
 CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit -fno-threadsafe-statics
 
 # kernel ld flags
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL)
+KLDFLAGS  += $(CPU) $(LDSCRIPT-KERNEL)
 KLDFLAGS  += -ffreestanding -nostdlib
 KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
 KLDFLAGS  += -Wl,--gc-sections
