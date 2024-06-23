@@ -1,0 +1,166 @@
+###########################################################################
+# Makefile.rules
+# The make rules of village project
+#
+# $Copyright: Copyright (C) village
+############################################################################
+
+#######################################
+# paths
+#######################################
+WORKSPACE     ?= .
+BUILD_DIR     ?= $(WORKSPACE)/build
+
+
+#######################################
+# building environment
+#######################################
+VPATH         := $(addprefix $(BUILD_DIR)/, $(src)) $(BUILD_DIR) $(src)
+INCS          := $(addprefix -I, $(inc))
+LIBS          := -L$(LIBS_DIR) $(addprefix -l, $(libs))
+
+
+######################################
+# include config
+######################################
+include $(WORKSPACE)/.config
+
+
+######################################
+# building variables
+######################################
+# optimization
+OPT ?= $(CONFIG_OPT:"%"=%)
+
+# debug build?
+ifeq ($(CONFIG_DEBUG), y)
+  DEBUG ?= 1
+else
+  DEBUG ?= 0
+endif
+
+# silence build
+ifeq ($(CONFIG_VERBOSE_MODE), y)
+  Q = 
+else
+  Q = @
+endif
+
+
+#######################################
+# compiler flags
+#######################################
+CFLAGS    += $(OPT)
+
+ifeq ($(DEBUG), 1)
+CFLAGS    += -g -gdwarf-2 -DDEBUG
+endif
+
+ifneq ($(CONFIG_ENVIRONMENT), y)
+CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
+endif
+
+
+#######################################
+# build version flags
+#######################################
+GIT_SHA = $(shell git rev-parse HEAD)
+ifneq ($(GIT_SHA), )
+CFLAGS   += -DGIT_COMMIT='"$(GIT_SHA)"'
+else
+CFLAGS   += -DGIT_COMMIT='"unknown"'
+endif
+CFLAGS   += -DBUILD_VER='"V$(VERSION)"'
+
+
+#######################################
+# host compile tool
+#######################################
+HOST_GCC_PREFIX ?= $(CONFIG_HOST_COMPILE_PREFIX:"%"=%)
+HOST_GCC_SUFFIX ?= $(CONFIG_HOST_COMPILE_SUFFIX:"%"=%)
+HOST_CXX = $(HOST_GCC_PREFIX)g++$(HOST_GCC_SUFFIX)
+HOST_CC  = $(HOST_GCC_PREFIX)gcc$(HOST_GCC_SUFFIX)
+HOST_AS  = $(HOST_GCC_PREFIX)gcc$(HOST_GCC_SUFFIX) -x assembler-with-cpp
+HOST_AR  = $(HOST_GCC_PREFIX)ar$(HOST_GCC_SUFFIX)
+HOST_LD  = $(HOST_GCC_PREFIX)ld$(HOST_GCC_SUFFIX)
+HOST_CP  = $(HOST_GCC_PREFIX)objcopy$(HOST_GCC_SUFFIX)
+
+
+#######################################
+# cross compile tool
+#######################################
+GCC_PREFIX ?= $(CONFIG_CROSS_COMPILE_PREFIX:"%"=%)
+GCC_SUFFIX ?= $(CONFIG_CROSS_COMPILE_SUFFIX:"%"=%)
+CXX = $(GCC_PREFIX)g++$(GCC_SUFFIX)
+CC  = $(GCC_PREFIX)gcc$(GCC_SUFFIX)
+AS  = $(GCC_PREFIX)gcc$(GCC_SUFFIX) -x assembler-with-cpp
+AR  = $(GCC_PREFIX)ar$(GCC_SUFFIX)
+LD  = $(GCC_PREFIX)ld$(GCC_SUFFIX)
+CP  = $(GCC_PREFIX)objcopy$(GCC_SUFFIX)
+SZ  = $(GCC_PREFIX)size$(GCC_SUFFIX)
+ST  = $(GCC_PREFIX)strip$(GCC_SUFFIX)
+HEX = $(CP) -O ihex
+BIN = $(CP) -O binary -S
+
+
+#######################################
+# mixed compiling
+#######################################
+%.o: %.s
+	$(Q)echo Compiling $@
+	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
+	$(Q)$(AS) -c $(CFLAGS) $(INCS) $< -o $(BUILD_DIR)/$(<:.s=.o)
+
+%.o: %.c
+	$(Q)echo Compiling $@
+	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
+	$(Q)$(CC) -c $(CFLAGS) $(INCS) $< -o $(BUILD_DIR)/$(<:.c=.o)
+
+%.o: %.cpp
+	$(Q)echo Compiling $@
+	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
+	$(Q)$(CXX) -c $(CXXFLAGS) $(INCS) $< -o $(BUILD_DIR)/$(<:.cpp=.o)
+
+%.a: $(objs)
+	$(Q)echo output $@
+	$(Q)$(AR) rcs $@ $^
+
+%.so: $(objs)
+	$(Q)echo output $@
+	$(Q)$(LD) $(EMULATION) -shared -fPIC $^ -o $@
+	$(Q)$(SZ) $@
+
+%.mo: $(objs)
+	$(Q)echo output $@
+	$(Q)$(LD) $(EMULATION) -shared -fPIC $^ -o $@
+	$(Q)$(SZ) $@
+
+%.elf: $(objs)
+	$(Q)echo output $@
+	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(SZ) $@
+
+%.hex: %.elf
+	$(Q)echo output $@
+	$(Q)$(HEX) $< $@
+
+%.bin: %.elf
+	$(Q)echo output $@
+	$(Q)$(BIN) $< $@
+
+%.exec: $(objs)
+	$(Q)echo output $@
+	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBS)
+	$(Q)$(SZ) $@
+
+%.hex: %.exec
+	$(Q)echo output $@
+	$(Q)$(HEX) $< $@
+
+%.bin: %.exec
+	$(Q)echo output $@
+	$(Q)$(BIN) $< $@
+
+%.efi: %.so
+	$(Q)echo output $@
+	$(Q)$(CP) $(CPFLAGS) $< $@
