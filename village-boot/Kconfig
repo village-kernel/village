@@ -5,17 +5,28 @@ config BOOTLOADER
 
 if BOOTLOADER
 
-comment "Select bootloader"
+	comment "Select bootloader"
 
-choice
-	prompt "bootloader"
-	default X86BIOS
+	choice
+		prompt "boot mode"
+		default LEGACY 
 
-	config X86BIOS
-		bool "x86 bios boot"
+		config LEGACY
+			bool "legacy"
 
-	config X64UEFI
-		bool "x64 uefi boot"
-endchoice
+		config UEFI
+			bool "uefi"
+	endchoice
+
+	choice
+		prompt "boot arch"
+		default IA32
+
+		config IA32
+			bool "ia32"
+
+		config X86_64
+			bool "x86_64"
+	endchoice
 
 endif

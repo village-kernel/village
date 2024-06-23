@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of x86bios boot
+# The Makefile of ia32bios boot
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,26 +8,26 @@
 ######################################
 # paths
 ######################################
-inc-boot-$(CONFIG_X86BIOS)          += 
-src-boot-$(CONFIG_X86BIOS)          += village-boot/x86bios
+inc-boot-$(CONFIG_IA32)          += 
+src-boot-$(CONFIG_IA32)          += village-boot/legacy/ia32bios
 
 
 ######################################
 # objects
 ######################################
-objs-boot-$(CONFIG_X86BIOS)         += boot.o
+objs-boot-$(CONFIG_IA32)         += boot.o
 
 
 ######################################
 # libraries
 ######################################
-libs-boot-$(CONFIG_X86BIOS)         += 
+libs-boot-$(CONFIG_IA32)         += 
 
 
 ######################################
 # link script
 ######################################
-LDSCRIPT-BOOT  := -T village-boot/x86bios/boot.lds
+LDSCRIPT-BOOT  := -T village-boot/legacy/ia32bios/boot.lds
 
 
 #######################################
