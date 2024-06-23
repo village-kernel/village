@@ -4,13 +4,13 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-VERSION = 0.0.7
+VERSION        = 0.0.7
 
 
 ######################################
 # target
 ######################################
-TARGET := village
+TARGET        := village
 
 
 #######################################
@@ -138,13 +138,13 @@ app:
 		objs="crt0_app.o $(objs-$(name)-y)" \
 		libs="$(libs-$(name)-y)"            \
 		LDFLAGS="$(APPLDFLAGS)";            \
+		if [ "$(CONFIG_CREATE_APP_HEX_FILE)" = "y" ]; then \
+		$(MAKE) $(APPS_DIR)/$(name).hex;    \
+		fi;                                 \
+		if [ "$(CONFIG_CREATE_APP_BIN_FILE)" = "y" ]; then \
+		$(MAKE) $(APPS_DIR)/$(name).bin;    \
+		fi;                                 \
 	)
-ifeq ($(CONFIG_CREATE_APP_HEX_FILE), y)
-	$(Q)$(foreach name, $(apps-y), $(MAKE) $(APPS_DIR)/$(name).hex;)
-endif
-ifeq ($(CONFIG_CREATE_APP_BIN_FILE), y)
-	$(Q)$(foreach name, $(apps-y), $(MAKE) $(APPS_DIR)/$(name).bin;)
-endif
 
 
 #######################################
