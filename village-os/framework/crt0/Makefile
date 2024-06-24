@@ -21,19 +21,19 @@ LDSCRIPT-APP := -T village-os/framework/crt0/crt0_app.lds
 # compiler flags
 #######################################
 # application ld flags
-APPLDFLAGS  += $(MCU) $(LDSCRIPT-APP)
-APPLDFLAGS  += -ffreestanding -nostdlib
-APPLDFLAGS  += -static-libgcc
-APPLDFLAGS  += -Wl,-Map=$(APPS_DIR)/$(name).map,--cref
-APPLDFLAGS  += -Wl,--gc-sections
-APPLDFLAGS  += -Wl,--no-warn-rwx-segment
-APPLDFLAGS  += -Wl,--unresolved-symbols=ignore-in-shared-libs
-APPLDFLAGS  += -pie
+LDFLAGS-APP  += $(MCU) $(LDSCRIPT-APP)
+LDFLAGS-APP  += -ffreestanding -nostdlib
+LDFLAGS-APP  += -static-libgcc
+LDFLAGS-APP  += -Wl,-Map=$(APPS_DIR)/$(name).map,--cref
+LDFLAGS-APP  += -Wl,--gc-sections
+LDFLAGS-APP  += -Wl,--no-warn-rwx-segment
+LDFLAGS-APP  += -Wl,--unresolved-symbols=ignore-in-shared-libs
+LDFLAGS-APP  += -pie
 
 ifeq ($(CONFIG_X86), y)
-APPLDFLAGS  += -Wl,-m,elf_i386
+LDFLAGS-APP  += -Wl,-m,elf_i386
 endif
 
 ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
-APPLDFLAGS  += -Wl,-static
+LDFLAGS-APP  += -Wl,-static
 endif

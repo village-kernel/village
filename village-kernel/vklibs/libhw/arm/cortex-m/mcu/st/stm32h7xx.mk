@@ -33,12 +33,12 @@ CFLAGS    += -mword-relocations -mlong-calls
 CXXFLAGS  += $(CFLAGS) -fno-rtti -fno-exceptions -fno-use-cxa-atexit -fno-threadsafe-statics
 
 # kernel ld flags
-KLDFLAGS  += $(MCU) $(LDSCRIPT-KERNEL-y)
-KLDFLAGS  += -ffreestanding -nostdlib
-KLDFLAGS  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
-KLDFLAGS  += -Wl,--gc-sections
-KLDFLAGS  += -Wl,--no-warn-rwx-segment
-KLDFLAGS  += -Wl,-static -pie
+LDFLAGS-KERNEL  += $(MCU) $(LDSCRIPT-KERNEL-y)
+LDFLAGS-KERNEL  += -ffreestanding -nostdlib
+LDFLAGS-KERNEL  += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-kernel.map,--cref
+LDFLAGS-KERNEL  += -Wl,--gc-sections
+LDFLAGS-KERNEL  += -Wl,--no-warn-rwx-segment
+LDFLAGS-KERNEL  += -Wl,-static -pie
 
 
 ######################################

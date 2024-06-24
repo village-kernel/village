@@ -63,16 +63,28 @@ endif
 #######################################
 boot:
 	$(Q)$(MAKE) $(objs-boot-y)                                    \
-		inc="$(inc-boot-y)"                                       \
-		src="$(src-boot-y)";
+		INCS="$(inc-boot-y)"                                      \
+		SRCS="$(src-boot-y)"                                      \
+		CFLAGS="$(CFLAGS-BOOT)"                                   \
+		CXXFLAGS="$(CXXFLAGS-BOOT)";
+ifeq ($(CONFIG_LEGACY), y)
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf                   \
-		inc="$(inc-boot-y)"                                       \
-		src="$(src-boot-y)"                                       \
-		objs="$(objs-boot-y)"                                     \
-		libs="$(libs-boot-y)"                                     \
-		LDFLAGS="$(BLDFLAGS)";
+		INCS="$(inc-boot-y)"                                      \
+		SRCS="$(src-boot-y)"                                      \
+		OBJS="$(objs-boot-y)"                                     \
+		LIBS="$(libs-boot-y)"                                     \
+		LDFLAGS="$(LDFLAGS-BOOT)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
+else ifeq ($(CONFIG_UEFI), y)
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.efi                   \
+		INCS="$(inc-boot-y)"                                      \
+		SRCS="$(src-boot-y)"                                      \
+		OBJS="$(objs-boot-y)"                                     \
+		LIBS="$(libs-boot-y)"                                     \
+		LDFLAGS="$(LDFLAGS-BOOT)"                                 \
+		COPYFLAGS="$(COPYFLAGS-BOOT)";
+endif
 
 
 #######################################
@@ -83,30 +95,30 @@ library:
 	$(Q)echo "#prepare libraries" > $(LIBS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(libs-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)";                                   \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)";                                  \
 		$(MAKE) $(LIBS_DIR)/lib$(name).a                          \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)"                                    \
-				objs="$(objs-$(name)-y)";                         \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(objs-$(name)-y)";                         \
 		$(MAKE) $(LIBS_DIR)/lib$(name).so                         \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)"                                    \
-				objs="$(objs-$(name)-y)";                         \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(objs-$(name)-y)";                         \
 		echo /libraries/lib$(name).so >> $(LIBS_DIR)/_load_.rc;   \
 	)
 	$(Q)$(foreach name, $(oslibs-y),                              \
 		$(MAKE) $(objs-$(name)-y)                                 \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)";                                   \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)";                                  \
 		$(MAKE) $(LIBS_DIR)/lib$(name).a                          \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)"                                    \
-				objs="$(objs-$(name)-y)";                         \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(objs-$(name)-y)";                         \
 		$(MAKE) $(LIBS_DIR)/lib$(name).so                         \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)"                                    \
-				objs="$(objs-$(name)-y)";                         \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(objs-$(name)-y)";                         \
 	)
 
 
@@ -115,14 +127,14 @@ library:
 #######################################
 kernel:
 	$(Q)$(MAKE) $(objs-y)                                         \
-		inc="$(inc-y)"                                            \
-		src="$(src-y)";
+		INCS="$(inc-y)"                                           \
+		SRCS="$(src-y)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf                 \
-		inc="$(inc-y)"                                            \
-		src="$(src-y)"                                            \
-		objs="$(objs-y)"                                          \
-		libs="$(libs-y)"                                          \
-		LDFLAGS="$(KLDFLAGS)";
+		INCS="$(inc-y)"                                           \
+		SRCS="$(src-y)"                                           \
+		OBJS="$(objs-y)"                                          \
+		LIBS="$(libs-y)"                                          \
+		LDFLAGS="$(LDFLAGS-KERNEL)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.hex
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.bin
 
@@ -135,12 +147,12 @@ module:
 	$(Q)echo "#prepare modules" > $(MODS_DIR)/_load_.rc;
 	$(Q)$(foreach object, $(objs-m),                              \
 		$(MAKE) $(object)                                         \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)";                                   \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)";                                  \
 		$(MAKE) $(MODS_DIR)/$(object:.o=.mo)                      \
-				inc="$(inc-y)"                                    \
-				src="$(src-y)"                                    \
-				objs="$(object)";                                 \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(object)";                                 \
 		echo /modules/$(object:.o=.mo) >> $(MODS_DIR)/_load_.rc;  \
 	)
 
@@ -150,17 +162,17 @@ module:
 #######################################
 app:
 	$(Q)mkdir -p $(APPS_DIR)
-	$(Q)$(MAKE) crt0_app.o inc="$(inc-y)" src="$(src-y)"
+	$(Q)$(MAKE) crt0_app.o INCS="$(inc-y)" SRCS="$(src-y)"
 	$(Q)$(foreach name, $(apps-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
-				inc="$(inc-y) $(inc-$(name)-y)"                   \
-				src="$(src-y) $(src-$(name)-y)";                  \
+				INCS="$(inc-y) $(inc-$(name)-y)"                  \
+				SRCS="$(src-y) $(src-$(name)-y)";                 \
 		$(MAKE) $(APPS_DIR)/$(name).exec                          \
-				inc="$(inc-y) $(inc-$(name)-y)"                   \
-				src="$(src-y) $(src-$(name)-y)"                   \
-				objs="crt0_app.o $(objs-$(name)-y)"               \
-				libs="$(libs-$(name)-y)"                          \
-				LDFLAGS="$(APPLDFLAGS)";                          \
+				INCS="$(inc-y) $(inc-$(name)-y)"                  \
+				SRCS="$(src-y) $(src-$(name)-y)"                  \
+				OBJS="crt0_app.o $(objs-$(name)-y)"               \
+				LIBS="$(libs-$(name)-y)"                          \
+				LDFLAGS="$(LDFLAGS-APP)";                         \
 		if [ "$(CONFIG_CREATE_APP_HEX_FILE)" = "y" ]; then        \
 			$(MAKE) $(APPS_DIR)/$(name).hex;                      \
 		fi;                                                       \
@@ -175,9 +187,11 @@ app:
 #######################################
 osImage:
 	$(Q)echo generated village kernel image
+ifeq ($(CONFIG_LEGACY), y)
 	$(Q)dd if=/dev/zero                       of=$(BUILD_DIR)/village-os.img bs=512 count=2880
 	$(Q)dd if=$(BUILD_DIR)/village-boot.bin   of=$(BUILD_DIR)/village-os.img bs=512 seek=0 conv=notrunc
 	$(Q)dd if=$(BUILD_DIR)/village-kernel.bin of=$(BUILD_DIR)/village-os.img bs=512 seek=1 conv=notrunc
+endif
 
 
 #######################################
