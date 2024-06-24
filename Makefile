@@ -17,7 +17,7 @@ TARGET        := village
 # paths
 #######################################
 # Build path
-WORKSPACE     := $(shell pwd)
+WORKSPACE     := .
 BUILD_DIR     := $(WORKSPACE)/build
 MODS_DIR      := $(BUILD_DIR)/output/modules
 LIBS_DIR      := $(BUILD_DIR)/output/libraries
@@ -38,17 +38,17 @@ include $(WORKSPACE)/village-os/Makefile
 #######################################
 # default action: build all
 all:
+ifeq ($(CONFIG_BOOTLOADER), y)
+	$(Q)$(MAKE) boot
+endif
 ifeq ($(CONFIG_GENERATED_LIB), y)
 	$(Q)$(MAKE) library
-endif
-ifeq ($(CONFIG_GENERATED_MOD), y)
-	$(Q)$(MAKE) module
 endif
 ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
 endif
-ifeq ($(CONFIG_BOOTLOADER), y)
-	$(Q)$(MAKE) boot
+ifeq ($(CONFIG_GENERATED_MOD), y)
+	$(Q)$(MAKE) module
 endif
 ifeq ($(CONFIG_GENERATED_APP), y)
 	$(Q)$(MAKE) app
@@ -59,22 +59,72 @@ endif
 
 
 #######################################
+# build the bootloader
+#######################################
+boot:
+	$(Q)$(MAKE) $(objs-boot-y)                                    \
+		inc="$(inc-boot-y)"                                       \
+		src="$(src-boot-y)";
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf                   \
+		inc="$(inc-boot-y)"                                       \
+		src="$(src-boot-y)"                                       \
+		objs="$(objs-boot-y)"                                     \
+		libs="$(libs-boot-y)"                                     \
+		LDFLAGS="$(BLDFLAGS)";
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
+
+
+#######################################
 # build the libraries
 #######################################
 library: 
 	$(Q)mkdir -p $(LIBS_DIR)
 	$(Q)echo "#prepare libraries" > $(LIBS_DIR)/_load_.rc;
-	$(Q)$(foreach name, $(libs-y), \
-		$(MAKE) $(objs-$(name)-y) inc="$(inc-y)" src="$(src-y)"; \
-		$(MAKE) $(LIBS_DIR)/lib$(name).a  inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
-		$(MAKE) $(LIBS_DIR)/lib$(name).so inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
-		echo /libraries/lib$(name).so >> $(LIBS_DIR)/_load_.rc; \
+	$(Q)$(foreach name, $(libs-y),                                \
+		$(MAKE) $(objs-$(name)-y)                                 \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)";                                   \
+		$(MAKE) $(LIBS_DIR)/lib$(name).a                          \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)"                                    \
+				objs="$(objs-$(name)-y)";                         \
+		$(MAKE) $(LIBS_DIR)/lib$(name).so                         \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)"                                    \
+				objs="$(objs-$(name)-y)";                         \
+		echo /libraries/lib$(name).so >> $(LIBS_DIR)/_load_.rc;   \
 	)
-	$(Q)$(foreach name, $(oslibs-y), \
-		$(MAKE) $(objs-$(name)-y) inc="$(inc-y)" src="$(src-y)";  \
-		$(MAKE) $(LIBS_DIR)/lib$(name).a  inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
-		$(MAKE) $(LIBS_DIR)/lib$(name).so inc="$(inc-y)" src="$(src-y)" objs="$(objs-$(name)-y)"; \
+	$(Q)$(foreach name, $(oslibs-y),                              \
+		$(MAKE) $(objs-$(name)-y)                                 \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)";                                   \
+		$(MAKE) $(LIBS_DIR)/lib$(name).a                          \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)"                                    \
+				objs="$(objs-$(name)-y)";                         \
+		$(MAKE) $(LIBS_DIR)/lib$(name).so                         \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)"                                    \
+				objs="$(objs-$(name)-y)";                         \
 	)
+
+
+#######################################
+# build the kernel
+#######################################
+kernel:
+	$(Q)$(MAKE) $(objs-y)                                         \
+		inc="$(inc-y)"                                            \
+		src="$(src-y)";
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf                 \
+		inc="$(inc-y)"                                            \
+		src="$(src-y)"                                            \
+		objs="$(objs-y)"                                          \
+		libs="$(libs-y)"                                          \
+		LDFLAGS="$(KLDFLAGS)";
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.hex
+	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.bin
 
 
 #######################################
@@ -83,43 +133,16 @@ library:
 module:
 	$(Q)mkdir -p $(MODS_DIR)
 	$(Q)echo "#prepare modules" > $(MODS_DIR)/_load_.rc;
-	$(Q)$(foreach object, $(objs-m), \
-		$(MAKE) $(object) inc="$(inc-y)" src="$(src-y)"; \
-		$(MAKE) $(MODS_DIR)/$(object:.o=.mo) inc="$(inc-y)" src="$(src-y)" objs="$(object)"; \
-		echo /modules/$(object:.o=.mo) >> $(MODS_DIR)/_load_.rc; \
+	$(Q)$(foreach object, $(objs-m),                              \
+		$(MAKE) $(object)                                         \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)";                                   \
+		$(MAKE) $(MODS_DIR)/$(object:.o=.mo)                      \
+				inc="$(inc-y)"                                    \
+				src="$(src-y)"                                    \
+				objs="$(object)";                                 \
+		echo /modules/$(object:.o=.mo) >> $(MODS_DIR)/_load_.rc;  \
 	)
-
-
-#######################################
-# build the kernel
-#######################################
-kernel:
-	$(Q)$(MAKE) $(objs-y) inc="$(inc-y)" src="$(src-y)"
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf \
-		inc="$(inc-y)"    \
-		src="$(src-y)"    \
-		objs="$(objs-y)"  \
-		libs="$(libs-y)"  \
-		LDFLAGS="$(KLDFLAGS)";
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.hex
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.bin
-
-
-#######################################
-# build the bootloader
-#######################################
-boot:
-	$(Q)$(MAKE) $(objs-boot-y) \
-		inc="$(inc-boot-y)"    \
-		src="$(src-boot-y)";
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf \
-		inc="$(inc-boot-y)"    \
-		src="$(src-boot-y)"    \
-		objs="$(objs-boot-y)"  \
-		libs="$(libs-boot-y)"  \
-		LDFLAGS="$(BLDFLAGS)";
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
-	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
 
 
 #######################################
@@ -128,22 +151,22 @@ boot:
 app:
 	$(Q)mkdir -p $(APPS_DIR)
 	$(Q)$(MAKE) crt0_app.o inc="$(inc-y)" src="$(src-y)"
-	$(Q)$(foreach name, $(apps-y),          \
-		$(MAKE) $(objs-$(name)-y)           \
-		inc="$(inc-y) $(inc-$(name)-y)"     \
-		src="$(src-y) $(src-$(name)-y)";    \
-		$(MAKE) $(APPS_DIR)/$(name).exec    \
-		inc="$(inc-y) $(inc-$(name)-y)"     \
-		src="$(src-y) $(src-$(name)-y)"     \
-		objs="crt0_app.o $(objs-$(name)-y)" \
-		libs="$(libs-$(name)-y)"            \
-		LDFLAGS="$(APPLDFLAGS)";            \
-		if [ "$(CONFIG_CREATE_APP_HEX_FILE)" = "y" ]; then \
-		$(MAKE) $(APPS_DIR)/$(name).hex;    \
-		fi;                                 \
-		if [ "$(CONFIG_CREATE_APP_BIN_FILE)" = "y" ]; then \
-		$(MAKE) $(APPS_DIR)/$(name).bin;    \
-		fi;                                 \
+	$(Q)$(foreach name, $(apps-y),                                \
+		$(MAKE) $(objs-$(name)-y)                                 \
+				inc="$(inc-y) $(inc-$(name)-y)"                   \
+				src="$(src-y) $(src-$(name)-y)";                  \
+		$(MAKE) $(APPS_DIR)/$(name).exec                          \
+				inc="$(inc-y) $(inc-$(name)-y)"                   \
+				src="$(src-y) $(src-$(name)-y)"                   \
+				objs="crt0_app.o $(objs-$(name)-y)"               \
+				libs="$(libs-$(name)-y)"                          \
+				LDFLAGS="$(APPLDFLAGS)";                          \
+		if [ "$(CONFIG_CREATE_APP_HEX_FILE)" = "y" ]; then        \
+			$(MAKE) $(APPS_DIR)/$(name).hex;                      \
+		fi;                                                       \
+		if [ "$(CONFIG_CREATE_APP_BIN_FILE)" = "y" ]; then        \
+			$(MAKE) $(APPS_DIR)/$(name).bin;                      \
+		fi;                                                       \
 	)
 
 

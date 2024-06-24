@@ -4,28 +4,30 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+ifeq ($(CONFIG_TAICHI), y)
 
 ######################################
 # applications
 ######################################
-apps-$(CONFIG_TAICHI)                += taichi
+apps-y                                += taichi
 
 
 ######################################
 # paths
 ######################################
-inc-taichi-$(CONFIG_TAICHI)          += village-os/applications/taichi/inc
-
-src-taichi-$(CONFIG_TAICHI)          += village-os/applications/taichi/src
+inc-taichi-y                          += village-os/applications/taichi/inc
+src-taichi-y                          += village-os/applications/taichi/src
 
 
 ######################################
 # objects
 ######################################
-objs-taichi-$(CONFIG_TAICHI)         += Taichi.o
+objs-taichi-y                         += Taichi.o
 
 
 ######################################
 # libraries
 ######################################
-libs-taichi-$(CONFIG_TAICHI)         += utils stdc++ c
+libs-taichi-y                         += utils stdc++ c
+
+endif

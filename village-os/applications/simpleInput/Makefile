@@ -4,28 +4,30 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+ifeq ($(CONFIG_SIMPLE_INPUT), y)
 
 ######################################
 # applications
 ######################################
-apps-$(CONFIG_SIMPLE_INPUT)               += simpleInput
+apps-y                                += simpleInput
 
 
 ######################################
 # paths
 ######################################
-inc-simpleInput-$(CONFIG_SIMPLE_INPUT)   += village-os/applications/simpleInput/inc
-
-src-simpleInput-$(CONFIG_SIMPLE_INPUT)   += village-os/applications/simpleInput/src
+inc-simpleInput-y                     += village-os/applications/simpleInput/inc
+src-simpleInput-y                     += village-os/applications/simpleInput/src
 
 
 ######################################
 # objects
 ######################################
-objs-simpleInput-$(CONFIG_SIMPLE_INPUT)  += SimpleInput.o
+objs-simpleInput-y                    += SimpleInput.o
 
 
 ######################################
 # libraries
 ######################################
-libs-simpleInput-$(CONFIG_SIMPLE_INPUT)  += utils
+libs-simpleInput-y                    += utils
+
+endif

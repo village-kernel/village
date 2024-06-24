@@ -4,28 +4,30 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+ifeq ($(CONFIG_DESKTOP), y)
 
 ######################################
 # applications
 ######################################
-apps-$(CONFIG_DESKTOP)                += desktop
+apps-y                                += desktop
 
 
 ######################################
 # paths
 ######################################
-inc-desktop-$(CONFIG_DESKTOP)          += village-os/applications/desktop/inc
-
-src-desktop-$(CONFIG_DESKTOP)          += village-os/applications/desktop/src
+inc-desktop-y                         += village-os/applications/desktop/inc
+src-desktop-y                         += village-os/applications/desktop/src
 
 
 ######################################
 # objects
 ######################################
-objs-desktop-$(CONFIG_DESKTOP)         += Desktop.o
+objs-desktop-y                        += Desktop.o
 
 
 ######################################
 # libraries
 ######################################
-libs-desktop-$(CONFIG_DESKTOP)         += vkgui utils stdc++ c
+libs-desktop-y                        += vkgui utils stdc++ c
+
+endif
