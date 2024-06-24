@@ -33,8 +33,11 @@ LDSCRIPT-BOOT  := -T village-boot/legacy/ia32bios/boot.lds
 #######################################
 # compiler flags
 #######################################
+# boot loader c flags
+CFLAGS-BOOT    += -m32 -mno-sse
+
 # boot loader ld flags
-BLDFLAGS       += $(LDSCRIPT-BOOT) -ffreestanding -nostdlib
-BLDFLAGS       += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
-BLDFLAGS       += -Wl,--no-warn-rwx-segment
-BLDFLAGS       += -Wl,-m,elf_i386
+LDFLAGS-BOOT   += $(LDSCRIPT-BOOT) -ffreestanding -nostdlib
+LDFLAGS-BOOT   += -Wl,-Map=$(BUILD_DIR)/$(TARGET)-boot.map,--cref
+LDFLAGS-BOOT   += -Wl,--no-warn-rwx-segment
+LDFLAGS-BOOT   += -Wl,-m,elf_i386
