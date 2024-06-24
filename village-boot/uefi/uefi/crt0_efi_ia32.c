@@ -164,4 +164,4 @@ EFI_STATUS _start(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE* SystemTable)
 
 
 /// @brief hand-craft a dummy .reloc section so EFI knows it's a relocatable executable
-static const uint32_t dummy_reloc[] __attribute__((section (".reloc"), used)) = { 0, 12, 0 };
+static const uint32_t dummy_reloc[] __attribute__((section (".reloc#"), used)) = { 0, 12, 0 };
