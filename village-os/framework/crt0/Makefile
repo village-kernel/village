@@ -23,7 +23,6 @@ LDSCRIPT-APP := -T village-os/framework/crt0/crt0_app.lds
 # application ld flags
 LDFLAGS-APP  += $(MCU) $(LDSCRIPT-APP)
 LDFLAGS-APP  += -ffreestanding -nostdlib
-LDFLAGS-APP  += -static-libgcc
 LDFLAGS-APP  += -Wl,-Map=$(APPS_DIR)/$(name).map,--cref
 LDFLAGS-APP  += -Wl,--gc-sections
 LDFLAGS-APP  += -Wl,--no-warn-rwx-segment

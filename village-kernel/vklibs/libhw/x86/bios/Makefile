@@ -58,5 +58,6 @@ inc-y                                 += village-kernel/vklibs/libhw/x86/bios/ha
 src-y                                 += village-kernel/vklibs/libhw/x86/bios/hal/src
 
 objs-hw-y                             += i386.o
+objs-hw-y                             += div64.o
 objs-hw-$(CONFIG_HAL_PCI_CONTROLLER)  += PCIController.o
 objs-hw-$(CONFIG_HAL_PS2_CONTROLLER)  += PS2Controller.o
