@@ -48,10 +48,10 @@ ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
 endif
 ifeq ($(CONFIG_GENERATED_MOD), y)
-	$(Q)$(MAKE) module
+	$(Q)$(MAKE) modules
 endif
 ifeq ($(CONFIG_GENERATED_APP), y)
-	$(Q)$(MAKE) app
+	$(Q)$(MAKE) apps
 endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
@@ -142,7 +142,7 @@ kernel:
 #######################################
 # build the modules
 #######################################
-module:
+modules:
 	$(Q)mkdir -p $(MODS_DIR)
 	$(Q)echo "#prepare modules" > $(MODS_DIR)/_load_.rc;
 	$(Q)$(foreach object, $(objs-m),                              \
