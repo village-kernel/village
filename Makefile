@@ -160,7 +160,7 @@ modules:
 #######################################
 # build the applications
 #######################################
-app:
+apps:
 	$(Q)mkdir -p $(APPS_DIR)
 	$(Q)$(MAKE) crt0_app.o INCS="$(inc-y)" SRCS="$(src-y)"
 	$(Q)$(foreach name, $(apps-y),                                \
