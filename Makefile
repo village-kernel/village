@@ -191,11 +191,11 @@ apps:
 				SRCS="$(src-y)";
 	$(Q)$(foreach name, $(apps-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
-				INCS="$(inc-y) $(inc-$(name)-y)"                  \
-				SRCS="$(src-y) $(src-$(name)-y)";                 \
+				INCS="$(inc-$(name)-y) $(inc-y)"                  \
+				SRCS="$(src-$(name)-y) $(src-y)";                 \
 		$(MAKE) $(APPS_DIR)/$(name).exec                          \
-				INCS="$(inc-y) $(inc-$(name)-y)"                  \
-				SRCS="$(src-y) $(src-$(name)-y)"                  \
+				INCS="$(inc-$(name)-y) $(inc-y)"                  \
+				SRCS="$(src-$(name)-y) $(src-y)"                  \
 				OBJS="crt0_app.o $(objs-$(name)-y)"               \
 				LIBS="$(libs-$(name)-y)"                          \
 				LDFLAGS="$(LDFLAGS-APP)";                         \
