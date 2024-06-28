@@ -34,6 +34,30 @@ include $(WORKSPACE)/village-os/Makefile
 
 
 #######################################
+# include extension library makefile
+#######################################
+ifneq ($(L), )
+include $(L)/Makefile
+endif
+
+
+#######################################
+# include extension module makefile
+#######################################
+ifneq ($(M), )
+include $(M)/Makefile
+endif
+
+
+#######################################
+# include extension application makefile
+#######################################
+ifneq ($(A), )
+include $(A)/Makefile
+endif
+
+
+#######################################
 # tasks
 #######################################
 # default action: build all
@@ -42,7 +66,7 @@ ifeq ($(CONFIG_BOOTLOADER), y)
 	$(Q)$(MAKE) boot
 endif
 ifeq ($(CONFIG_GENERATED_LIB), y)
-	$(Q)$(MAKE) library
+	$(Q)$(MAKE) libs
 endif
 ifeq ($(CONFIG_KERNEL), y)
 	$(Q)$(MAKE) kernel
@@ -63,34 +87,34 @@ endif
 #######################################
 boot:
 	$(Q)$(MAKE) $(objs-boot-y)                                    \
-		INCS="$(inc-boot-y)"                                      \
-		SRCS="$(src-boot-y)"                                      \
-		CFLAGS="$(CFLAGS-BOOT)"                                   \
-		CXXFLAGS="$(CXXFLAGS-BOOT)";
+				INCS="$(inc-boot-y)"                              \
+				SRCS="$(src-boot-y)"                              \
+				CFLAGS="$(CFLAGS-BOOT)"                           \
+				CXXFLAGS="$(CXXFLAGS-BOOT)";
 ifeq ($(CONFIG_LEGACY), y)
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.elf                   \
-		INCS="$(inc-boot-y)"                                      \
-		SRCS="$(src-boot-y)"                                      \
-		OBJS="$(objs-boot-y)"                                     \
-		LIBS="$(libs-boot-y)"                                     \
-		LDFLAGS="$(LDFLAGS-BOOT)";
+				INCS="$(inc-boot-y)"                              \
+				SRCS="$(src-boot-y)"                              \
+				OBJS="$(objs-boot-y)"                             \
+				LIBS="$(libs-boot-y)"                             \
+				LDFLAGS="$(LDFLAGS-BOOT)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.hex
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.bin
 else ifeq ($(CONFIG_UEFI), y)
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-boot.efi                   \
-		INCS="$(inc-boot-y)"                                      \
-		SRCS="$(src-boot-y)"                                      \
-		OBJS="$(objs-boot-y)"                                     \
-		LIBS="$(libs-boot-y)"                                     \
-		LDFLAGS="$(LDFLAGS-BOOT)"                                 \
-		COPYFLAGS="$(COPYFLAGS-BOOT)";
+				INCS="$(inc-boot-y)"                              \
+				SRCS="$(src-boot-y)"                              \
+				OBJS="$(objs-boot-y)"                             \
+				LIBS="$(libs-boot-y)"                             \
+				LDFLAGS="$(LDFLAGS-BOOT)"                         \
+				COPYFLAGS="$(COPYFLAGS-BOOT)";
 endif
 
 
 #######################################
 # build the libraries
 #######################################
-library: 
+libs: 
 	$(Q)mkdir -p $(LIBS_DIR)
 	$(Q)echo "#prepare libraries" > $(LIBS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(libs-y),                                \
@@ -127,14 +151,14 @@ library:
 #######################################
 kernel:
 	$(Q)$(MAKE) $(objs-y)                                         \
-		INCS="$(inc-y)"                                           \
-		SRCS="$(src-y)";
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.elf                 \
-		INCS="$(inc-y)"                                           \
-		SRCS="$(src-y)"                                           \
-		OBJS="$(objs-y)"                                          \
-		LIBS="$(libs-y)"                                          \
-		LDFLAGS="$(LDFLAGS-KERNEL)";
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(objs-y)"                                  \
+				LIBS="$(libs-y)"                                  \
+				LDFLAGS="$(LDFLAGS-KERNEL)";
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.hex
 	$(Q)$(MAKE) $(BUILD_DIR)/$(TARGET)-kernel.bin
 
@@ -162,7 +186,9 @@ modules:
 #######################################
 apps:
 	$(Q)mkdir -p $(APPS_DIR)
-	$(Q)$(MAKE) crt0_app.o INCS="$(inc-y)" SRCS="$(src-y)"
+	$(Q)$(MAKE) $(C_RUNTIME_ZERO)                                 \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)";
 	$(Q)$(foreach name, $(apps-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-y) $(inc-$(name)-y)"                  \
@@ -227,18 +253,34 @@ $(Scripts)/kconfig/conf:
 clean:
 	$(Q)rm -rf $(BUILD_DIR)
 
-clean-lib:
-	$(Q)rm -rf $(LIBS_DIR)
-
-clean-mod:
-	$(Q)rm -rf $(MODS_DIR)
-
 clean-boot:
 	$(Q)rm -rf $(BUILD_DIR)/village-boot
 
-clean-app:
+clean-libs:
+ifeq ($(L), )
+	$(Q)rm -rf $(LIBS_DIR)
+else
+	$(Q)rm -rf $(LIBS_DIR)/$(libs-y).*
+	$(Q)rm -rf $(LIBS_DIR)/$(oslibs-y).*
+	$(Q)rm -rf $(BUILD_DIR)/$(L)
+endif
+
+clean-mods:
+ifeq ($(M), )
+	$(Q)rm -rf $(MODS_DIR)
+else
+	$(Q)rm -rf $(MODS_DIR)/$(objs-m:.o=.mo)
+	$(Q)rm -rf $(BUILD_DIR)/$(M)
+endif
+
+clean-apps:
+ifeq ($(A), )
 	$(Q)rm -rf $(APPS_DIR)
 	$(Q)rm -rf $(BUILD_DIR)/village-os/applications
+else
+	$(Q)rm -rf $(APPS_DIR)/$(apps-y).*
+	$(Q)rm -rf $(BUILD_DIR)/$(A)
+endif
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean

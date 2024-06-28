@@ -12,6 +12,12 @@ src-y        += village-os/framework/crt0
 
 
 ######################################
+# crt0
+######################################
+C_RUNTIME_ZERO := crt0_app.o
+
+
+######################################
 # link script
 ######################################
 LDSCRIPT-APP := -T village-os/framework/crt0/crt0_app.lds
