@@ -16,7 +16,6 @@ TARGET        := village
 #######################################
 # paths
 #######################################
-# Build path
 WORKSPACE     := .
 BUILD_DIR     := $(WORKSPACE)/build
 MODS_DIR      := $(BUILD_DIR)/output/modules
@@ -55,6 +54,14 @@ endif
 ifneq ($(A), )
 include $(A)/Makefile
 endif
+
+
+#######################################
+# Phony rules
+#######################################
+.PHONY: all boot libs kernel modules apps osImage rootfs
+.PHONY: clean clean-boot clean-libs clean-mods clean-apps distclean
+.PHONY: menuconfig silentoldconfig
 
 
 #######################################
