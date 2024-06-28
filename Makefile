@@ -35,7 +35,7 @@ include $(WORKSPACE)/village-os/Makefile
 #######################################
 # include extension library makefile
 #######################################
-ifneq ($(L), )
+ifeq ("$(origin L)", "command line")
 include $(L)/Makefile
 endif
 
@@ -43,7 +43,7 @@ endif
 #######################################
 # include extension module makefile
 #######################################
-ifneq ($(M), )
+ifeq ("$(origin M)", "command line")
 include $(M)/Makefile
 endif
 
@@ -51,7 +51,7 @@ endif
 #######################################
 # include extension application makefile
 #######################################
-ifneq ($(A), )
+ifeq ("$(origin A)", "command line")
 include $(A)/Makefile
 endif
 
@@ -59,9 +59,10 @@ endif
 #######################################
 # Phony rules
 #######################################
-.PHONY: all boot libs kernel modules apps osImage rootfs
-.PHONY: clean clean-boot clean-libs clean-mods clean-apps distclean
-.PHONY: menuconfig silentoldconfig
+PHONY += all boot libs kernel modules apps osImage rootfs
+PHONY += clean clean-boot clean-libs clean-mods clean-apps distclean
+PHONY += menuconfig silentoldconfig
+.PHONY: $(PHONY)
 
 
 #######################################
