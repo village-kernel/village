@@ -204,7 +204,7 @@ apps:
 		$(MAKE) $(APPS_DIR)/$(name).exec                          \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
 				SRCS="$(src-$(name)-y)   $(src-y)"                \
-				OBJS="$(objs-$(name)-y)" $(C_RUNTIME_ZERO)        \
+				OBJS="$(objs-$(name)-y)  $(C_RUNTIME_ZERO)"       \
 				LIBS="$(libs-$(name)-y)"                          \
 				LDFLAGS="$(LDFLAGS-APP)";                         \
 		if [ "$(CONFIG_CREATE_APP_HEX_FILE)" = "y" ]; then        \
