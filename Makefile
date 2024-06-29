@@ -238,8 +238,8 @@ rootfs:
 #######################################
 # menuconfig
 #######################################
-Scripts      := ./village-scripts
-Kconfig      := ./Kconfig
+Scripts := $(WORKSPACE)/village-scripts
+Kconfig := $(WORKSPACE)/Kconfig
 
 menuconfig: $(Scripts)/kconfig/mconf
 	$(Q)$< $(Kconfig)
@@ -265,30 +265,17 @@ clean-boot:
 	$(Q)rm -rf $(BUILD_DIR)/village-boot
 
 clean-libs:
-ifeq ($(L), )
-	$(Q)rm -rf $(LIBS_DIR)
-else
 	$(Q)rm -rf $(LIBS_DIR)/$(libs-y).*
 	$(Q)rm -rf $(LIBS_DIR)/$(oslibs-y).*
 	$(Q)rm -rf $(BUILD_DIR)/$(L)
-endif
 
 clean-mods:
-ifeq ($(M), )
-	$(Q)rm -rf $(MODS_DIR)
-else
 	$(Q)rm -rf $(MODS_DIR)/$(objs-m:.o=.mo)
 	$(Q)rm -rf $(BUILD_DIR)/$(M)
-endif
 
 clean-apps:
-ifeq ($(A), )
-	$(Q)rm -rf $(APPS_DIR)
-	$(Q)rm -rf $(BUILD_DIR)/village-os/applications
-else
 	$(Q)rm -rf $(APPS_DIR)/$(apps-y).*
 	$(Q)rm -rf $(BUILD_DIR)/$(A)
-endif
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
