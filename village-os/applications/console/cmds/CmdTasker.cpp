@@ -7,6 +7,8 @@
 #include "Cmd.h"
 #include "Console.h"
 #include "Kernel.h"
+#include "string.h"
+#include "stdlib.h"
 
 
 /// @brief CmdTasker
@@ -33,5 +35,27 @@ public:
 };
 
 
+/// @brief CmdKill
+class CmdKill : public Cmd
+{
+public:
+	/// @brief Cmd kill execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		if (argc >= 2 && 0 == strcmp("-c", argv[1]))
+		{
+			kernel->thread.DeleteTask(atoi(argv[2]));
+		}
+		else
+		{
+			console.Output("Usage: kill -c <pid>");
+		}
+	}
+};
+
+
 ///Register cmd
 REGISTER_CMD(new CmdTasker(), tasker);
+REGISTER_CMD(new CmdKill(),   kill  );
