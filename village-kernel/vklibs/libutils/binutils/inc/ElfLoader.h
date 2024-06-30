@@ -177,6 +177,15 @@ private:
 		_DT_SYMENT      = 11,
 		_DT_INIT        = 12,
 		_DT_FINI        = 13,
+		_DT_RPATH       = 15,
+		_DT_SYMBOLIC    = 16,
+		_DT_REL         = 17,
+		_DT_RELSZ       = 18,
+		_DT_RELENT      = 19,
+		_DT_PLTREL      = 20,
+		_DT_DEBUG       = 21,
+		_DT_TEXTREL     = 22,
+		_DT_JMPREL      = 23,
 	};
 
 	//Structures
