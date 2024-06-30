@@ -22,7 +22,8 @@ Village::Village() : Kernel
 	concreteDevice,
 	concreteFeature,
 	concreteFilesys,
-	concreteLoader
+	concreteLoader,
+	concreteTimer
 )
 {
 }
@@ -67,6 +68,9 @@ void Village::Setup()
 	//Setup device
 	concreteDevice.Setup();
 
+	//Setup timer
+	concreteTimer.Setup();
+
 	//Setup filesys
 	concreteFilesys.Setup();
 	
@@ -100,6 +104,9 @@ void Village::Exit()
 
 	//Exit filesys
 	concreteFilesys.Exit();
+
+	//Exit timer
+	concreteTimer.Exit();
 
 	//Exit device
 	concreteDevice.Exit();
