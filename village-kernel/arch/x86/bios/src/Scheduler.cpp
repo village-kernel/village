@@ -25,10 +25,10 @@ ConcreteScheduler::~ConcreteScheduler()
 void ConcreteScheduler::Setup()
 {
 	//Set the PendSV interrupt handler
-	kernel->interrupt.SetISR(IRQ_PendSV, (Method)&ConcreteScheduler::PendSVHandler, this);
+	kernel->interrupt.SetISR(PendSV_IRQn, (Method)&ConcreteScheduler::PendSVHandler, this);
 
 	//Append the systick interrupt handler
-	kernel->interrupt.AppendISR(IRQ_Systick, (Method)&ConcreteScheduler::SysTickHandler, this);
+	kernel->interrupt.AppendISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 }
 
 
@@ -36,10 +36,10 @@ void ConcreteScheduler::Setup()
 void ConcreteScheduler::Exit()
 {
 	//Append the systick interrupt handler
-	kernel->interrupt.RemoveISR(IRQ_Systick, (Method)&ConcreteScheduler::SysTickHandler, this);
+	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 
 	//Set the PendSV interrupt handler
-	kernel->interrupt.ClearISR(IRQ_PendSV);
+	kernel->interrupt.ClearISR(PendSV_IRQn);
 }
 
 
