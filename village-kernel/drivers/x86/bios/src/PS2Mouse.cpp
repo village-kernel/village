@@ -251,7 +251,7 @@ public:
 		work = workQueue->Create((Method)&PS2Mouse::ReportHandler, this);
 
 		//Set interrupt service
-		interrupt->SetISR(IRQ_Mouse_Controller, (Method)&PS2Mouse::InputHandler, this);
+		interrupt->SetISR(Mouse_Controller_IRQn, (Method)&PS2Mouse::InputHandler, this);
 
 		//Config
 		ConfigureMouse();
@@ -263,7 +263,7 @@ public:
 	/// @brief Mouse close
 	void Close()
 	{
-		interrupt->RemoveISR(IRQ_Mouse_Controller, (Method)(&PS2Mouse::InputHandler), this);
+		interrupt->RemoveISR(Mouse_Controller_IRQn, (Method)(&PS2Mouse::InputHandler), this);
 		workQueue->Delete(work);
 	}
 };

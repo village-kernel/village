@@ -374,41 +374,41 @@ extern "C" {
 #define PS2_CTL_FRIST_PORT_TRANS             PS2_CTL_FRIST_PORT_TRANS_Msk
 
 /* IRQ numbers */
-#define IRQ_Division_By_Zero                 0
-#define IRQ_Debug                            1
-#define IRQ_Non_Maskable_Interrupt           2
-#define IRQ_Breakpoint                       3
-#define IRQ_Into_Detected_Overflow           4
-#define IRQ_Out_Of_Bounds                    5
-#define IRQ_Invalid_Opcode                   6
-#define IRQ_No_Coprocessor                   7
-#define IRQ_Doule_Fault                      8
-#define IRQ_Coprocessor_Segment_Overrun      9
-#define IRQ_Bad_TSS                          10
-#define IRQ_Segment_Not_Present              11
-#define IRQ_Stack_Fault                      12
-#define IRQ_General_Protection_Fault         13
-#define IRQ_Page_Fault                       14
-#define IRQ_Unknown_Interrupt                15
-#define IRQ_Coprocessor_Fault                16
-#define IRQ_Alignment_Check                  17
-#define IRQ_Machine_Check                    18
-#define IRQ_SVC                              30
-#define IRQ_PendSV                           31
+#define Division_By_Zero_IRQn                 0
+#define Debug_IRQn                            1
+#define Non_Maskable_Interrupt_IRQn           2
+#define Breakpoint_IRQn                       3
+#define Into_Detected_Overflow_IRQn           4
+#define Out_Of_Bounds_IRQn                    5
+#define Invalid_Opcode_IRQn                   6
+#define No_Coprocessor_IRQn                   7
+#define Doule_Fault_IRQn                      8
+#define Coprocessor_Segment_Overrun_IRQn      9
+#define Bad_TSS_IRQn                          10
+#define Segment_Not_Present_IRQn              11
+#define Stack_Fault_IRQn                      12
+#define General_Protection_Fault_IRQn         13
+#define Page_Fault_IRQn                       14
+#define Unknown_Interrupt_IRQn                15
+#define Coprocessor_Fault_IRQn                16
+#define Alignment_Check_IRQn                  17
+#define Machine_Check_IRQn                    18
+#define SVC_IRQn                              30
+#define PendSV_IRQn                           31
 
-#define IRQ_Systick                          32
-#define IRQ_Keyboard_Controller              33
-#define IRQ_Serial_Port_COM2                 35
-#define IRQ_Serial_Port_COM1                 36
-#define IRQ_Line_Print_Terminal2             37
-#define IRQ_Floppy_Controller                38
-#define IRQ_Line_Print_Terminal1             39
-#define IRQ_RTC_Timer                        40
-#define IRQ_X86_Assembly_ACPI                41
-#define IRQ_Mouse_Controller                 44
-#define IRQ_Math_Coprocessor                 45
-#define IRQ_ATA_Channel1                     46
-#define IRQ_ATA_Channel2                     47
+#define SysTick_IRQn                          32
+#define Keyboard_Controller_IRQn              33
+#define Serial_Port_COM2_IRQn                 35
+#define Serial_Port_COM1_IRQn                 36
+#define Line_Print_Terminal2_IRQn             37
+#define Floppy_Controller_IRQn                38
+#define Line_Print_Terminal1_IRQn             39
+#define RTC_Timer_IRQn                        40
+#define X86_Assembly_ACPI_IRQn                41
+#define Mouse_Controller_IRQn                 44
+#define Math_Coprocessor_IRQn                 45
+#define ATA_Channel1_IRQn                     46
+#define ATA_Channel2_IRQn                     47
 
 /* i386 utils */
 #define low_8(address)   (uint8_t) ( (address) & 0xFF)

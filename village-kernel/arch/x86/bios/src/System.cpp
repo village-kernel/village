@@ -26,7 +26,7 @@ ConcreteSystem::~ConcreteSystem()
 void ConcreteSystem::Setup()
 {
 	//Set interrupt handler
-	kernel->interrupt.SetISR(IRQ_Systick, (Method)&ConcreteSystem::SysTickHandler, this);
+	kernel->interrupt.SetISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
 
 	//Configure clock
 	ConfigureClock();
@@ -36,7 +36,7 @@ void ConcreteSystem::Setup()
 /// @brief System Exit
 void ConcreteSystem::Exit()
 {
-	kernel->interrupt.RemoveISR(IRQ_Systick, (Method)&ConcreteSystem::SysTickHandler, this);
+	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
 }
 
 
