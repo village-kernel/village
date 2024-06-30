@@ -354,6 +354,43 @@ public:
 };
 
 
+/// @brief Timer
+class Timer
+{
+public:
+	//Enumerations
+	enum State
+	{
+		_Ready = 0,
+		_Done,
+	};
+
+	//Structures
+	struct Job
+	{
+		Function func;
+		void*    user;
+		void*    args;
+		uint32_t ticks;
+		State    state;
+		
+		Job(uint32_t ticks, Function func, void* user, void* args)
+			:func(func),
+			user(user),
+			args(args),
+			ticks(ticks),
+			state(_Ready)
+		{}
+	};
+public:
+	//Methods
+	virtual Job* Create(uint32_t ticks, Function func, void* user = NULL, void* args = NULL) = 0;
+	virtual Job* Create(uint32_t ticks, Method method, Class* user, void* args = NULL) = 0;
+	virtual void Modify(Job* job, uint32_t ticks) = 0;
+	virtual bool Delete(Job* job) = 0;
+};
+
+
 /// @brief Kernel
 class Kernel
 {
@@ -372,6 +409,7 @@ public:
 	Feature&     feature;
 	FileSystem&  filesys;
 	Loader&      loader;
+	Timer&       timer;
 public:
 	/// @brief constructor
 	Kernel(
@@ -387,7 +425,8 @@ public:
 		Device&      device,
 		Feature&     feature,
 		FileSystem&  filesys,
-		Loader&      loader
+		Loader&      loader,
+		Timer&       timer
 	)
 		:system(system),
 		memory(memory),
@@ -401,7 +440,8 @@ public:
 		device(device),
 		feature(feature),
 		filesys(filesys),
-		loader(loader)
+		loader(loader),
+		timer(timer)
 	{}
 
 	/// @brief Destructor

@@ -22,6 +22,8 @@ int rand(void);
 int abs(int i);
 long labs(long i);
 
+int atoi(const char *str);
+
 #ifdef __cplusplus
 }
 #endif

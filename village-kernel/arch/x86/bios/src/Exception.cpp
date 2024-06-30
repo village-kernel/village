@@ -32,50 +32,50 @@ void Exception::Setup()
 	interrupt = (Interrupt*)&kernel->interrupt;
 
 	//Set interrupt service
-	interrupt->AppendISR(IRQ_Division_By_Zero,            (Method)&Exception::DivisionByZeroHandler,            this);
-	interrupt->AppendISR(IRQ_Debug,                       (Method)&Exception::DebugHandler,                     this);
-	interrupt->AppendISR(IRQ_Non_Maskable_Interrupt,      (Method)&Exception::NonMaskableInterruptHandler,      this);
-	interrupt->AppendISR(IRQ_Breakpoint,                  (Method)&Exception::BreakpointHandler,                this);
-	interrupt->AppendISR(IRQ_Into_Detected_Overflow,      (Method)&Exception::IntoDetectedOverflowHandler,      this);
-	interrupt->AppendISR(IRQ_Out_Of_Bounds,               (Method)&Exception::OutOfBoundsHandler,               this);
-	interrupt->AppendISR(IRQ_Invalid_Opcode,              (Method)&Exception::InvalidOpcodeHandler,             this);
-	interrupt->AppendISR(IRQ_No_Coprocessor,              (Method)&Exception::NoCoprocessorHandler,             this);
-	interrupt->AppendISR(IRQ_Doule_Fault,                 (Method)&Exception::DouleFaultHandler,                this);
-	interrupt->AppendISR(IRQ_Coprocessor_Segment_Overrun, (Method)&Exception::CoprocessorSegmentOverrunHandler, this);
-	interrupt->AppendISR(IRQ_Bad_TSS,                     (Method)&Exception::BadTSSHandler,                    this);
-	interrupt->AppendISR(IRQ_Segment_Not_Present,         (Method)&Exception::SegmentNotPresentHandler,         this);
-	interrupt->AppendISR(IRQ_Stack_Fault,                 (Method)&Exception::StackFaultHandler,                this);
-	interrupt->AppendISR(IRQ_General_Protection_Fault,    (Method)&Exception::GeneralProtectionFaultHandler,    this);
-	interrupt->AppendISR(IRQ_Page_Fault,                  (Method)&Exception::PageFaultHandler,                 this);
-	interrupt->AppendISR(IRQ_Unknown_Interrupt,           (Method)&Exception::UnknownInterruptHandler,          this);
-	interrupt->AppendISR(IRQ_Coprocessor_Fault,           (Method)&Exception::CoprocessorFaultHandler,          this);
-	interrupt->AppendISR(IRQ_Alignment_Check,             (Method)&Exception::AlignmentCheckHandler,            this);
-	interrupt->AppendISR(IRQ_Machine_Check,               (Method)&Exception::MachineCheckHandler,              this);
+	interrupt->AppendISR(Division_By_Zero_IRQn,            (Method)&Exception::DivisionByZeroHandler,            this);
+	interrupt->AppendISR(Debug_IRQn,                       (Method)&Exception::DebugHandler,                     this);
+	interrupt->AppendISR(Non_Maskable_Interrupt_IRQn,      (Method)&Exception::NonMaskableInterruptHandler,      this);
+	interrupt->AppendISR(Breakpoint_IRQn,                  (Method)&Exception::BreakpointHandler,                this);
+	interrupt->AppendISR(Into_Detected_Overflow_IRQn,      (Method)&Exception::IntoDetectedOverflowHandler,      this);
+	interrupt->AppendISR(Out_Of_Bounds_IRQn,               (Method)&Exception::OutOfBoundsHandler,               this);
+	interrupt->AppendISR(Invalid_Opcode_IRQn,              (Method)&Exception::InvalidOpcodeHandler,             this);
+	interrupt->AppendISR(No_Coprocessor_IRQn,              (Method)&Exception::NoCoprocessorHandler,             this);
+	interrupt->AppendISR(Doule_Fault_IRQn,                 (Method)&Exception::DouleFaultHandler,                this);
+	interrupt->AppendISR(Coprocessor_Segment_Overrun_IRQn, (Method)&Exception::CoprocessorSegmentOverrunHandler, this);
+	interrupt->AppendISR(Bad_TSS_IRQn,                     (Method)&Exception::BadTSSHandler,                    this);
+	interrupt->AppendISR(Segment_Not_Present_IRQn,         (Method)&Exception::SegmentNotPresentHandler,         this);
+	interrupt->AppendISR(Stack_Fault_IRQn,                 (Method)&Exception::StackFaultHandler,                this);
+	interrupt->AppendISR(General_Protection_Fault_IRQn,    (Method)&Exception::GeneralProtectionFaultHandler,    this);
+	interrupt->AppendISR(Page_Fault_IRQn,                  (Method)&Exception::PageFaultHandler,                 this);
+	interrupt->AppendISR(Unknown_Interrupt_IRQn,           (Method)&Exception::UnknownInterruptHandler,          this);
+	interrupt->AppendISR(Coprocessor_Fault_IRQn,           (Method)&Exception::CoprocessorFaultHandler,          this);
+	interrupt->AppendISR(Alignment_Check_IRQn,             (Method)&Exception::AlignmentCheckHandler,            this);
+	interrupt->AppendISR(Machine_Check_IRQn,               (Method)&Exception::MachineCheckHandler,              this);
 }
 
 
 /// @brief Exception Exit
 void Exception::Exit()
 {
-	interrupt->RemoveISR(IRQ_Division_By_Zero,            (Method)&Exception::DivisionByZeroHandler,            this);
-	interrupt->RemoveISR(IRQ_Debug,                       (Method)&Exception::DebugHandler,                     this);
-	interrupt->RemoveISR(IRQ_Non_Maskable_Interrupt,      (Method)&Exception::NonMaskableInterruptHandler,      this);
-	interrupt->RemoveISR(IRQ_Breakpoint,                  (Method)&Exception::BreakpointHandler,                this);
-	interrupt->RemoveISR(IRQ_Into_Detected_Overflow,      (Method)&Exception::IntoDetectedOverflowHandler,      this);
-	interrupt->RemoveISR(IRQ_Out_Of_Bounds,               (Method)&Exception::OutOfBoundsHandler,               this);
-	interrupt->RemoveISR(IRQ_Invalid_Opcode,              (Method)&Exception::InvalidOpcodeHandler,             this);
-	interrupt->RemoveISR(IRQ_No_Coprocessor,              (Method)&Exception::NoCoprocessorHandler,             this);
-	interrupt->RemoveISR(IRQ_Doule_Fault,                 (Method)&Exception::DouleFaultHandler,                this);
-	interrupt->RemoveISR(IRQ_Coprocessor_Segment_Overrun, (Method)&Exception::CoprocessorSegmentOverrunHandler, this);
-	interrupt->RemoveISR(IRQ_Bad_TSS,                     (Method)&Exception::BadTSSHandler,                    this);
-	interrupt->RemoveISR(IRQ_Segment_Not_Present,         (Method)&Exception::SegmentNotPresentHandler,         this);
-	interrupt->RemoveISR(IRQ_Stack_Fault,                 (Method)&Exception::StackFaultHandler,                this);
-	interrupt->RemoveISR(IRQ_General_Protection_Fault,    (Method)&Exception::GeneralProtectionFaultHandler,    this);
-	interrupt->RemoveISR(IRQ_Page_Fault,                  (Method)&Exception::PageFaultHandler,                 this);
-	interrupt->RemoveISR(IRQ_Unknown_Interrupt,           (Method)&Exception::UnknownInterruptHandler,          this);
-	interrupt->RemoveISR(IRQ_Coprocessor_Fault,           (Method)&Exception::CoprocessorFaultHandler,          this);
-	interrupt->RemoveISR(IRQ_Alignment_Check,             (Method)&Exception::AlignmentCheckHandler,            this);
-	interrupt->RemoveISR(IRQ_Machine_Check,               (Method)&Exception::MachineCheckHandler,              this);
+	interrupt->RemoveISR(Division_By_Zero_IRQn,            (Method)&Exception::DivisionByZeroHandler,            this);
+	interrupt->RemoveISR(Debug_IRQn,                       (Method)&Exception::DebugHandler,                     this);
+	interrupt->RemoveISR(Non_Maskable_Interrupt_IRQn,      (Method)&Exception::NonMaskableInterruptHandler,      this);
+	interrupt->RemoveISR(Breakpoint_IRQn,                  (Method)&Exception::BreakpointHandler,                this);
+	interrupt->RemoveISR(Into_Detected_Overflow_IRQn,      (Method)&Exception::IntoDetectedOverflowHandler,      this);
+	interrupt->RemoveISR(Out_Of_Bounds_IRQn,               (Method)&Exception::OutOfBoundsHandler,               this);
+	interrupt->RemoveISR(Invalid_Opcode_IRQn,              (Method)&Exception::InvalidOpcodeHandler,             this);
+	interrupt->RemoveISR(No_Coprocessor_IRQn,              (Method)&Exception::NoCoprocessorHandler,             this);
+	interrupt->RemoveISR(Doule_Fault_IRQn,                 (Method)&Exception::DouleFaultHandler,                this);
+	interrupt->RemoveISR(Coprocessor_Segment_Overrun_IRQn, (Method)&Exception::CoprocessorSegmentOverrunHandler, this);
+	interrupt->RemoveISR(Bad_TSS_IRQn,                     (Method)&Exception::BadTSSHandler,                    this);
+	interrupt->RemoveISR(Segment_Not_Present_IRQn,         (Method)&Exception::SegmentNotPresentHandler,         this);
+	interrupt->RemoveISR(Stack_Fault_IRQn,                 (Method)&Exception::StackFaultHandler,                this);
+	interrupt->RemoveISR(General_Protection_Fault_IRQn,    (Method)&Exception::GeneralProtectionFaultHandler,    this);
+	interrupt->RemoveISR(Page_Fault_IRQn,                  (Method)&Exception::PageFaultHandler,                 this);
+	interrupt->RemoveISR(Unknown_Interrupt_IRQn,           (Method)&Exception::UnknownInterruptHandler,          this);
+	interrupt->RemoveISR(Coprocessor_Fault_IRQn,           (Method)&Exception::CoprocessorFaultHandler,          this);
+	interrupt->RemoveISR(Alignment_Check_IRQn,             (Method)&Exception::AlignmentCheckHandler,            this);
+	interrupt->RemoveISR(Machine_Check_IRQn,               (Method)&Exception::MachineCheckHandler,              this);
 }
 
 
