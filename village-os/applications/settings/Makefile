@@ -4,28 +4,30 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
+ifeq ($(CONFIG_SETTINGS), y)
 
 ######################################
 # applications
 ######################################
-apps-$(CONFIG_SETTINGS)              += settings
+apps-y                                += settings
 
 
 ######################################
 # paths
 ######################################
-inc-settings-$(CONFIG_SETTINGS)      += village-os/applications/settings/inc
-
-src-settings-$(CONFIG_SETTINGS)      += village-os/applications/settings/src
+inc-settings-y                        += village-os/applications/settings/inc
+src-settings-y                        += village-os/applications/settings/src
 
 
 ######################################
 # objects
 ######################################
-objs-settings-$(CONFIG_SETTINGS)     += Settings.o
+objs-settings-y                       += Settings.o
 
 
 ######################################
 # libraries
 ######################################
-libs-settings-$(CONFIG_SETTINGS)     += utils gui
+libs-settings-y                       += utils gui
+
+endif
