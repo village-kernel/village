@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "stdlib.h"
+#include "ctype.h"
 #include "Kernel.h"
 
 
@@ -60,5 +61,21 @@ extern "C" int abs(int i)
 extern "C" long labs(long i)
 {
 	if (i < 0) i = -i;
+	return i;
+}
+
+
+/// @brief atoi
+/// @param str 
+/// @return 
+extern "C" int atoi(const char *str)
+{
+	int i = 0;
+
+	while (isdigit(*str))
+	{
+		i = i * 10 + *(str++) - '0';
+	}
+
 	return i;
 }
