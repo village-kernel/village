@@ -21,6 +21,7 @@
 #include "Feature.h"
 #include "FileSystem.h"
 #include "Loader.h"
+#include "Timer.h"
 
 
 /// @brief Village
@@ -41,6 +42,7 @@ private:
 	ConcreteFeature     concreteFeature;
 	ConcreteFileSystem  concreteFilesys;
 	ConcreteLoader      concreteLoader;
+	ConcreteTimer       concreteTimer;
 private:
 	//Methods
 	Village();

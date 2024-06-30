@@ -38,6 +38,7 @@ objs-y                              += Interrupt.o
 objs-y                              += InputEvent.o
 objs-y                              += WorkQueue.o
 objs-y                              += Loader.o
+objs-y                              += Timer.o
 
 objs-y                              += System.o
 objs-y                              += Scheduler.o
