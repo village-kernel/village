@@ -94,7 +94,7 @@ public:
 		inputEvent = &kernel->inputEvent;
 
 		//Set interrupt
-		kernel->interrupt.SetISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
+		kernel->interrupt.SetISR(Keyboard_Controller_IRQn, (Method)(&PS2KeyBoard::InputHandler), this);
 
 		return true;
 	}
@@ -103,7 +103,7 @@ public:
 	/// @brief KeyBoard close
 	void Close()
 	{
-		kernel->interrupt.RemoveISR(IRQ_Keyboard_Controller, (Method)(&PS2KeyBoard::InputHandler), this);
+		kernel->interrupt.RemoveISR(Keyboard_Controller_IRQn, (Method)(&PS2KeyBoard::InputHandler), this);
 	}
 };
 
