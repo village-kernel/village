@@ -14,6 +14,7 @@ class BinLoader
 {
 private:
 	//Type define
+	typedef void(*StartEntry)(void* kernel, int argc, char* argv[]);
 	typedef void(*Entry)(int argc, char* argv[]);
 
 	//ELF structure
