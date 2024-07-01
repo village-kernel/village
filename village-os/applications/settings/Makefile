@@ -28,6 +28,6 @@ objs-settings-y                       += Settings.o
 ######################################
 # libraries
 ######################################
-libs-settings-y                       += utils gui
+libs-settings-y                       += 
 
 endif
