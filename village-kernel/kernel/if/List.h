@@ -338,6 +338,16 @@ public:
 		return false;
 	}
 
+
+	/// @brief Remove object node from list
+	/// @param nid node id
+	/// @return result
+	bool Remove(int nid)
+	{
+		return Remove(GetItem(nid), nid); 
+	}
+
+
 	/// @brief Remove object node from list
 	/// @param obj object pointer
 	/// @param nid node id
