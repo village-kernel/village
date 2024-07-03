@@ -20,7 +20,7 @@ private:
 	ElfLoader elf;
 private:
 	//Methods
-	int Execute(const char* path);
+	int Execute();
 	void Sandbox();
 	bool Release();
 };
