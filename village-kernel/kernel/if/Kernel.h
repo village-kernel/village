@@ -354,6 +354,44 @@ public:
 };
 
 
+/// @brief BaseExecutor
+class BaseExecutor;
+
+/// @brief Process
+class Process
+{
+public:
+	//Enumerations
+	enum Behavior
+	{
+		_Foreground = 0,
+		_Background = 1,
+	};
+
+	//Structures
+	struct Data
+	{
+		char*         name;
+		int           pid;
+		int           tid;
+		BaseExecutor* exec;
+
+		Data(char* name = NULL)
+			:name(name),
+			pid(0),
+			tid(0),
+			exec(NULL)
+		{}
+	};
+public:
+	//Methods
+	virtual int Run(Behavior behavior, const char* args) = 0;
+	virtual int Run(Behavior behavior, const char* path, int argc, char* argv[]) = 0;
+	virtual bool Kill(int pid) = 0;
+	virtual List<Data*> GetData() = 0;
+};
+
+
 /// @brief Timer
 class Timer
 {
@@ -409,6 +447,7 @@ public:
 	Feature&     feature;
 	FileSystem&  filesys;
 	Loader&      loader;
+	Process&     process;
 	Timer&       timer;
 public:
 	/// @brief constructor
@@ -426,6 +465,7 @@ public:
 		Feature&     feature,
 		FileSystem&  filesys,
 		Loader&      loader,
+		Process&     process,
 		Timer&       timer
 	)
 		:system(system),
@@ -441,6 +481,7 @@ public:
 		feature(feature),
 		filesys(filesys),
 		loader(loader),
+		process(process),
 		timer(timer)
 	{}
 
