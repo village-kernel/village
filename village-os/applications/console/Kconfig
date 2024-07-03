@@ -24,6 +24,10 @@ config CMD_HELP
 	bool "Add help cmd to console support list"
 	default n
 
+config CMD_KILL
+	bool "Add kill cmd to console support list"
+	default n
+
 config CMD_MEM
 	bool "Add mem cmd to console support list"
 	default n
@@ -35,6 +39,10 @@ config CMD_MOD
 
 config CMD_POWER
 	bool "Add power cmd to console support list"
+	default n
+
+config CMD_PROCESS
+	bool "Add process cmd to console support list"
 	default n
 
 config CMD_RUN
