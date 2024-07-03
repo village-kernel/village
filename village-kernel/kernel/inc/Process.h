@@ -33,6 +33,7 @@ public:
 	void Exit();
 	int Run(Behavior behavior, const char* args);
 	int Run(Behavior behavior, const char* path, int argc, char* argv[]);
+	bool Kill(const char* path);
 	bool Kill(int pid);
 	List<Data*> GetData();
 };

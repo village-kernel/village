@@ -387,6 +387,7 @@ public:
 	//Methods
 	virtual int Run(Behavior behavior, const char* args) = 0;
 	virtual int Run(Behavior behavior, const char* path, int argc, char* argv[]) = 0;
+	virtual bool Kill(const char* path) = 0;
 	virtual bool Kill(int pid) = 0;
 	virtual List<Data*> GetData() = 0;
 };
