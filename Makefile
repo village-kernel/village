@@ -201,7 +201,7 @@ apps:
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
 				SRCS="$(src-$(name)-y)   $(src-y)";               \
-		$(MAKE) $(APPS_DIR)/$(name).exec                          \
+		$(MAKE) $(APPS_DIR)/$(name).elf                           \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
 				SRCS="$(src-$(name)-y)   $(src-y)"                \
 				OBJS="$(objs-$(name)-y)  $(C_RUNTIME_ZERO)"       \
