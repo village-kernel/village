@@ -34,7 +34,7 @@ void ConcreteThread::Setup()
 	//Gets the scheduler pointer
 	scheduler = (Scheduler*)&kernel->scheduler;
 
-	//Frist task should be idle task and the pid is 0
+	//Frist task should be idle task and the tid is 0
 	CreateTask("IdleTask", (Method)&ConcreteThread::IdleTask, this);
 
 	//Set first node
@@ -66,7 +66,7 @@ void ConcreteThread::TaskHandler(Function function, void* user, void* args)
 /// @param function task execute function
 /// @param user task execute uesr
 /// @param args task execute args
-/// @return pid
+/// @return tid
 int ConcreteThread::CreateTask(const char* name, Function function, void* user, void* args)
 {
 	//Create a new task and allocate stack space
@@ -87,10 +87,10 @@ int ConcreteThread::CreateTask(const char* name, Function function, void* user, 
 	);
 
 	//Add task into tasks list
-	task->pid = tasks.Add(task);
+	task->tid = tasks.Add(task);
 
-	//return task pid
-	return task->pid;
+	//return task tid
+	return task->tid;
 }
 
 
@@ -98,7 +98,7 @@ int ConcreteThread::CreateTask(const char* name, Function function, void* user, 
 /// @param method task execute class method
 /// @param user task execute class
 /// @param args task execute args
-/// @return pid
+/// @return tid
 int ConcreteThread::CreateTask(const char* name, Method method, Class *user, void* args)
 {
 	return CreateTask(name, union_cast<Function>(method), (void*)user, args);
@@ -106,23 +106,23 @@ int ConcreteThread::CreateTask(const char* name, Method method, Class *user, voi
 
 
 /// @brief Thread delete task
-/// @param pid process id
+/// @param tid thread id
 /// @return result
-bool ConcreteThread::DeleteTask(int pid)
+bool ConcreteThread::DeleteTask(int tid)
 {
-	Task* task = tasks.GetItem(pid);
+	Task* task = tasks.GetItem(tid);
 	memory->Free(task->stack);
-	return tasks.Remove(task, pid);
+	return tasks.Remove(task, tid);
 }
 
 
 /// @brief Thread wait for task
-/// @param pid process id
+/// @param tid thread id
 /// @return result
-bool ConcreteThread::WaitForTask(int pid)
+bool ConcreteThread::WaitForTask(int tid)
 {
 	//Gets the task
-	Task* task = tasks.GetItem(pid);
+	Task* task = tasks.GetItem(tid);
 
 	//Check task is valid
 	if (NULL != task)
