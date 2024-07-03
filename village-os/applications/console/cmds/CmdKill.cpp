@@ -38,6 +38,13 @@ public:
 			console.Output("kill -t <tid>");
 		}
 	}
+
+
+	/// @brief Cmd kill help
+	void Help()
+	{
+		console.Output("cmd kill: kill process");
+	}
 };
 
 

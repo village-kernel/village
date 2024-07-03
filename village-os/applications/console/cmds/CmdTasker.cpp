@@ -30,6 +30,13 @@ public:
 							tasks.Item()->name);
 		}
 	}
+
+
+	/// @brief Cmd tasker help
+	void Help()
+	{
+		console.Output("cmd ts: list thread task");
+	}
 };
 
 

@@ -20,6 +20,13 @@ public:
 	{
 		kernel->system.Reboot();
 	}
+
+
+	/// @brief Cmd reboot help
+	void Help()
+	{
+		console.Output("cmd reboot: reboot device");
+	}
 };
 
 

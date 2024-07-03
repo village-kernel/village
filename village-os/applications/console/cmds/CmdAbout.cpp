@@ -24,6 +24,13 @@ public:
 		console.Output("build gitcommit : %s", kernel->GetBuildGitCommit());
 		console.Output("village kernel Copyright (C) village.");
 	}
+
+
+	/// @brief Cmd about help
+	void Help()
+	{
+		console.Output("cmd about: display build information");
+	}
 };
 
 

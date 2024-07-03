@@ -38,6 +38,13 @@ public:
 
 		kernel->process.Run(behavior, argv[1], argc - 1, argv + 1);
 	}
+
+
+	/// @brief Cmd run help
+	void Help()
+	{
+		console.Output("cmd run: execute application");
+	}
 };
 
 

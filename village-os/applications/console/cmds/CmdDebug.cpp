@@ -25,6 +25,13 @@ public:
 		}
 		kernel->debug.SetDebugLevel(argv[1][0] - '0');
 	}
+
+
+	/// @brief Cmd debug help
+	void Help()
+	{
+		console.Output("cmd debug: settings debug output level");
+	}
 };
 
 

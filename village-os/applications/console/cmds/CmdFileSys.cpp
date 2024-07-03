@@ -84,6 +84,13 @@ public:
 		ChangeDirectory(path);
 		delete path;
 	}
+
+
+	/// @brief Cmd cd help
+	void Help()
+	{
+		console.Output("cmd cd: change directory");
+	}
 };
 
 
@@ -129,7 +136,7 @@ private:
 		}
 	}
 public:
-	/// @brief Cmd about execute
+	/// @brief Cmd list execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
@@ -140,6 +147,13 @@ public:
 			return;
 		}
 		ListDirectory((argc == 1) ? console.GetPath() : argv[1]);
+	}
+
+
+	/// @brief Cmd list help
+	void Help()
+	{
+		console.Output("cmd ls: list directory");
 	}
 };
 
@@ -184,6 +198,13 @@ public:
 		CreateFile(path);
 		delete path;
 	}
+
+
+	/// @brief Cmd touch help
+	void Help()
+	{
+		console.Output("cmd touch: create file");
+	}
 };
 
 
@@ -227,6 +248,13 @@ public:
 		CreateDir(path);
 		delete path;
 	}
+
+
+	/// @brief Cmd mkdir help
+	void Help()
+	{
+		console.Output("cmd mkdir: create directory");
+	}
 };
 
 
@@ -258,6 +286,13 @@ public:
 		Move(path1, path2);
 		delete path1;
 		delete path2;
+	}
+
+
+	/// @brief Cmd move help
+	void Help()
+	{
+		console.Output("cmd mv: move file or directory");
 	}
 };
 
@@ -291,6 +326,13 @@ public:
 		delete path1;
 		delete path2;
 	}
+
+
+	/// @brief Cmd cp help
+	void Help()
+	{
+		console.Output("cmd cp: copy file or directory");
+	}
 };
 
 
@@ -320,6 +362,13 @@ public:
 		char* path = AbsolutePath(argv[1]);
 		Remove(path);
 		delete path;
+	}
+
+
+	/// @brief Cmd remove help
+	void Help()
+	{
+		console.Output("cmd rm: remove file or directory");
 	}
 };
 

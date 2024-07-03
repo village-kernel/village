@@ -53,6 +53,9 @@ public:
 	//Path Methods
 	void SetPath(const char* path);
 	const char* GetPath();
+
+	//Cmd Methods
+	List<Cmd*> GetCmds();
 	
 	//Singleton Instance
 	static Console& Instance();

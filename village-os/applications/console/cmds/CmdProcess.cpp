@@ -13,7 +13,7 @@
 class CmdProcess : public Cmd
 {
 public:
-	/// @brief Cmd tasker execute
+	/// @brief Cmd ps execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
@@ -27,6 +27,13 @@ public:
 							data.Item()->tid,
 							data.Item()->name);
 		}
+	}
+
+
+	/// @brief Cmd ps help
+	void Help()
+	{
+		console.Output("cmd ps: list process data");
 	}
 };
 

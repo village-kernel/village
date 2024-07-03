@@ -17,7 +17,7 @@ private:
 	//Members
 	ModuleTool modules;
 public:
-	/// @brief Cmd rmmod execute
+	/// @brief Cmd lsmod execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
@@ -36,6 +36,13 @@ public:
 				console.Output("name %s", mods->Item()->GetFileName());
 			}
 		}
+	}
+
+
+	/// @brief Cmd lsmod help
+	void Help()
+	{
+		console.Output("cmd lsmod: list installed module information");
 	}
 };
 
@@ -62,6 +69,13 @@ public:
 			console.Error("Install module %s failed", argv[1]);
 		}
 	}
+
+
+	/// @brief Cmd insmod help
+	void Help()
+	{
+		console.Output("cmd insmod: install module");
+	}
 };
 
 
@@ -86,6 +100,13 @@ public:
 		{
 			console.Error("Uninstall module %s failed", argv[1]);
 		}
+	}
+
+
+	/// @brief Cmd rmmod help
+	void Help()
+	{
+		console.Output("cmd rmmod: remove module");
 	}
 };
 
