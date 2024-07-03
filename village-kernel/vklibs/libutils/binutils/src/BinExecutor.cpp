@@ -9,9 +9,8 @@
 
 
 /// @brief BinExecutor Execute
-/// @param path 
-/// @return pid
-int BinExecutor::Execute(const char* path)
+/// @return tid
+int BinExecutor::Execute()
 {
 	//Load, parser and execute bin file
 	if (!bin.Load(path)) return 0;

@@ -9,9 +9,8 @@
 
 
 /// @brief ElfExecutor Execute
-/// @param path 
-/// @return pid
-int ElfExecutor::Execute(const char* path)
+/// @return tid
+int ElfExecutor::Execute()
 {
 	//Load, parser and execute bin file
 	if (!elf.Load(path)) return 0;
