@@ -39,13 +39,17 @@ public:
 	ConcreteThread();
 	~ConcreteThread();
 	void Setup();
+	void Start();
 	void Exit();
 
 	///Thread Methods
 	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL);
 	int CreateTask(const char* name, Method method, Class *user, void* args = NULL);
-	bool DeleteTask(int tid);
+	bool StartTask(int tid);
+	bool StopTask(int tid);
 	bool WaitForTask(int tid);
+	bool DeleteTask(int tid);
+	bool IsTaskAlive(int tid);
 	List<Task*> GetTasks();
 	void Sleep(uint32_t ticks);
 	void TaskExit();

@@ -107,7 +107,8 @@ public:
 	//Enumerations
 	enum TaskState 
 	{
-		Running = 0,
+		Pending = 0,
+		Running,
 		Suspend,
 		Blocked,
 		Exited,
@@ -129,15 +130,18 @@ public:
 			psp(0),
 			ticks(0),
 			stack(stack),
-			state(TaskState::Suspend)
+			state(TaskState::Pending)
 		{}
 	};
 public:
 	///Methods
 	virtual int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL) = 0;
 	virtual int CreateTask(const char* name, Method method, Class *user, void* args = NULL) = 0;
-	virtual bool DeleteTask(int tid) = 0;
+	virtual bool StartTask(int tid) = 0;
+	virtual bool StopTask(int tid) = 0;
 	virtual bool WaitForTask(int tid) = 0;
+	virtual bool DeleteTask(int tid) = 0;
+	virtual bool IsTaskAlive(int tid) = 0;
 	virtual List<Task*> GetTasks() = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
 	virtual void TaskExit() = 0;
