@@ -36,8 +36,16 @@ void ConcreteThread::Setup()
 
 	//Frist task should be idle task and the tid is 0
 	CreateTask("IdleTask", (Method)&ConcreteThread::IdleTask, this);
+}
 
-	//Set first node
+
+/// @brief Thread start
+void ConcreteThread::Start()
+{
+	for (tasks.Begin(); !tasks.IsEnd(); tasks.Next())
+	{
+		tasks.Item()->state = TaskState::Running;
+	}
 	tasks.Begin();
 }
 
@@ -105,14 +113,39 @@ int ConcreteThread::CreateTask(const char* name, Method method, Class *user, voi
 }
 
 
-/// @brief Thread delete task
-/// @param tid thread id
-/// @return result
-bool ConcreteThread::DeleteTask(int tid)
+/// @brief Start task
+/// @param tid 
+/// @return 
+bool ConcreteThread::StartTask(int tid)
 {
+	//Gets the task
 	Task* task = tasks.GetItem(tid);
-	memory->Free(task->stack);
-	return tasks.Remove(task, tid);
+
+	//Check task is valid
+	if (NULL != task)
+	{
+		task->state = TaskState::Running;
+		return true;
+	}
+	return false;
+}
+
+
+/// @brief Stop task
+/// @param tid 
+/// @return 
+bool ConcreteThread::StopTask(int tid)
+{
+	//Gets the task
+	Task* task = tasks.GetItem(tid);
+
+	//Check task is valid
+	if (NULL != task)
+	{
+		task->state = TaskState::Exited;
+		return true;
+	}
+	return false;
 }
 
 
@@ -132,6 +165,37 @@ bool ConcreteThread::WaitForTask(int tid)
 		return true;
 	}
 	return false;
+}
+
+
+/// @brief Thread delete task
+/// @param tid thread id
+/// @return result
+bool ConcreteThread::DeleteTask(int tid)
+{
+	//Gets the task
+	Task* task = tasks.GetItem(tid);
+
+	//Check task is valid
+	if (NULL != task)
+	{
+		memory->Free(task->stack);
+		return tasks.Remove(task, tid);
+	}
+	return true;
+}
+
+
+/// @brief Thread check task is alive
+/// @param tid 
+/// @return result
+bool ConcreteThread::IsTaskAlive(int tid)
+{
+	//Gets the task
+	Task* task = tasks.GetItem(tid);
+
+	//Returns true when the task is not null and the status is not blocked
+	return ((NULL != task) && (task->state != TaskState::Blocked));
 }
 
 

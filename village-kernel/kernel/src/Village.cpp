@@ -89,6 +89,9 @@ void Village::Setup()
 /// @brief Kernel start
 void Village::Start()
 {
+	//Start thread
+	concreteThread.Start();
+
 	//Start scheduler
 	concreteScheduler.Start();
 
