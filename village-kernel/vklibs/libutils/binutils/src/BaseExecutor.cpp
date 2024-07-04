@@ -39,6 +39,9 @@ int BaseExecutor::Run(const char* path, int argc, char* argv[])
 	//Load, parser file and create task
 	this->tid = Execute();
 
+	//Start task
+	kernel->thread.StartTask(tid);
+
 	return tid;
 }
 
@@ -55,5 +58,5 @@ bool BaseExecutor::Wait()
 /// @return result
 bool BaseExecutor::Kill()
 {
-	return (kernel->thread.DeleteTask(tid) && Release());
+	return (kernel->thread.StopTask(tid) && Release());
 }
