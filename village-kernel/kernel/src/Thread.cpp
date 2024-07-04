@@ -194,8 +194,8 @@ bool ConcreteThread::IsTaskAlive(int tid)
 	//Gets the task
 	Task* task = tasks.GetItem(tid);
 
-	//Returns true when the task is not null and the status is not blocked
-	return ((NULL != task) && (task->state != TaskState::Blocked));
+	//Returns true when the task is not null and the status is not exited
+	return ((NULL != task) && (task->state != TaskState::Exited));
 }
 
 
