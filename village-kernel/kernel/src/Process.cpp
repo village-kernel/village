@@ -44,8 +44,9 @@ void ConcreteProcess::Execute()
 	{
 		for (Data* data = datum.Begin(); !datum.IsEnd(); data = datum.Next())
 		{
-			if (NULL == kernel->thread.GetTasks().GetItem(data->tid))
+			if (false == kernel->thread.IsTaskAlive(data->tid))
 			{
+				kernel->thread.DeleteTask(data->tid);
 				datum.Remove(data);
 			}
 		}
