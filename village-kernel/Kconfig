@@ -76,6 +76,31 @@ if KERNEL
 
 	endmenu
 
+	# config executor menu
+
+	menu "executor"
+
+		config EXECUTOR
+				select BINUTILS
+				select FILESTREAM
+				bool "Enable executor function"
+				default n
+
+		config BINEXECUTOR
+			depends on EXECUTOR
+			select BINLOADER
+			bool "Enable execute *.bin file function"
+			default n
+
+		config ELFEXECUTOR
+			depends on EXECUTOR
+			select ELFLOADER
+			bool "Enable execute *.elf file function"
+			default n
+
+	endmenu
+
+
 	# config kernel menu
 
 	menu "kernel"
@@ -188,22 +213,10 @@ if KERNEL
 				bool "Enable *.bin file load function"
 				default n
 
-			config BINEXECUTOR
-				depends on BINUTILS
-				select BINLOADER
-				bool "Enable execute *.bin file function"
-				default n
-
 			config ELFLOADER
 				depends on BINUTILS
 				select FILESTREAM
 				bool "Enable *.elf file load function"
-				default n
-
-			config ELFEXECUTOR
-				depends on BINUTILS
-				select ELFLOADER
-				bool "Enable execute *.elf file function"
 				default n
 
 			config LIBTOOL

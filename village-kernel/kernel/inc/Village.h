@@ -21,6 +21,7 @@
 #include "Feature.h"
 #include "FileSystem.h"
 #include "Loader.h"
+#include "Process.h"
 #include "Timer.h"
 
 
@@ -42,6 +43,7 @@ private:
 	ConcreteFeature     concreteFeature;
 	ConcreteFileSystem  concreteFilesys;
 	ConcreteLoader      concreteLoader;
+	ConcreteProcess     concreteProcess;
 	ConcreteTimer       concreteTimer;
 private:
 	//Methods

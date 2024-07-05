@@ -201,7 +201,7 @@ apps:
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
 				SRCS="$(src-$(name)-y)   $(src-y)";               \
-		$(MAKE) $(APPS_DIR)/$(name).exec                          \
+		$(MAKE) $(APPS_DIR)/$(name).elf                           \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
 				SRCS="$(src-$(name)-y)   $(src-y)"                \
 				OBJS="$(objs-$(name)-y)  $(C_RUNTIME_ZERO)"       \
@@ -267,15 +267,21 @@ clean-boot:
 clean-libs:
 	$(Q)rm -rf $(LIBS_DIR)/$(libs-y).*
 	$(Q)rm -rf $(LIBS_DIR)/$(oslibs-y).*
+ifneq ($(L), )
 	$(Q)rm -rf $(BUILD_DIR)/$(L)
+endif
 
 clean-mods:
 	$(Q)rm -rf $(MODS_DIR)/$(objs-m:.o=.mo)
+ifneq ($(M), )
 	$(Q)rm -rf $(BUILD_DIR)/$(M)
+endif
 
 clean-apps:
 	$(Q)rm -rf $(APPS_DIR)/$(apps-y).*
+ifneq ($(A), )
 	$(Q)rm -rf $(BUILD_DIR)/$(A)
+endif
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean

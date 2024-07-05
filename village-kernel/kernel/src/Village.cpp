@@ -23,6 +23,7 @@ Village::Village() : Kernel
 	concreteFeature,
 	concreteFilesys,
 	concreteLoader,
+	concreteProcess,
 	concreteTimer
 )
 {
@@ -79,12 +80,18 @@ void Village::Setup()
 
 	//Setup loader
 	concreteLoader.Setup();
+
+	//Setup process
+	concreteProcess.Setup();
 }
 
 
 /// @brief Kernel start
 void Village::Start()
 {
+	//Start thread
+	concreteThread.Start();
+
 	//Start scheduler
 	concreteScheduler.Start();
 
@@ -96,6 +103,9 @@ void Village::Start()
 /// @brief Kernel exit
 void Village::Exit()
 {
+	//Exit process
+	concreteProcess.Exit();
+
 	//Exit loader
 	concreteLoader.Exit();
 

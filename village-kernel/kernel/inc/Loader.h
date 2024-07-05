@@ -11,7 +11,6 @@
 #include "rcParser.h"
 #include "LibraryTool.h"
 #include "ModuleTool.h"
-#include "ElfExecutor.h"
 #include "List.h"
 
 
@@ -24,7 +23,6 @@ private:
 	List<ElfLoader*> modules;
 	LibraryTool      libraryTool;
 	ModuleTool       moduleTool;
-	ElfExecutor      executor;
 
 	//Methods
 	void Execute();
