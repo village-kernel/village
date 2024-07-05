@@ -24,6 +24,9 @@ src-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/src/stm3
 inc-$(CONFIG_SUBSYS)                += village-kernel/subsys/inc
 src-$(CONFIG_SUBSYS)                += village-kernel/subsys/src
 
+inc-$(CONFIG_EXECUTOR)              += village-kernel/executor/inc
+src-$(CONFIG_EXECUTOR)              += village-kernel/executor/src
+
 inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/inc
 src-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/src
 
@@ -52,6 +55,10 @@ objs-$(CONFIG_FATFS)                += FatEntry.o
 objs-$(CONFIG_FATFS)                += FatObject.o
 objs-$(CONFIG_FATFS)                += FatSystem.o
 
+objs-$(CONFIG_EXECUTOR)             += BaseExecutor.o
+objs-$(CONFIG_BINEXECUTOR)          += BinExecutor.o
+objs-$(CONFIG_ELFEXECUTOR)          += ElfExecutor.o
+
 
 ######################################
 # libutils
@@ -79,11 +86,8 @@ objs-utils-$(CONFIG_SPINLOCK)       += SpinLock.o
 objs-utils-$(CONFIG_MUTEX)          += Mutex.o
 objs-utils-$(CONFIG_SEMAPHORE)      += Semaphore.o
 
-objs-utils-$(CONFIG_BINUTILS)       += BaseExecutor.o
 objs-utils-$(CONFIG_BINLOADER)      += BinLoader.o
-objs-utils-$(CONFIG_BINEXECUTOR)    += BinExecutor.o
 objs-utils-$(CONFIG_ELFLOADER)      += ElfLoader.o
-objs-utils-$(CONFIG_ELFEXECUTOR)    += ElfExecutor.o
 objs-utils-$(CONFIG_LIBTOOL)        += LibraryTool.o
 objs-utils-$(CONFIG_MODTOOL)        += ModuleTool.o
 

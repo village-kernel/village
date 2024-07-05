@@ -37,7 +37,7 @@ int BaseExecutor::Run(const char* path, int argc, char* argv[])
 	this->argv = argv;
 	
 	//Load, parser file and create task
-	this->tid = Execute();
+	this->tid = Initiate();
 
 	//Start task
 	kernel->thread.StartTask(tid);
