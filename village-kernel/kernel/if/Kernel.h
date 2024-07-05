@@ -358,6 +358,9 @@ public:
 };
 
 
+/// @brief Executor
+class Executor;
+
 /// @brief BaseExecutor
 class BaseExecutor;
 
@@ -389,6 +392,8 @@ public:
 	};
 public:
 	//Methods
+	virtual void RegisterExecutor(Executor* executor) = 0;
+	virtual void DeregisterExecutor(Executor* executor) = 0;
 	virtual int Run(Behavior behavior, const char* args) = 0;
 	virtual int Run(Behavior behavior, const char* path, int argc, char* argv[]) = 0;
 	virtual bool Kill(const char* path) = 0;
