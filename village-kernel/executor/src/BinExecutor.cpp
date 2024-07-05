@@ -8,9 +8,9 @@
 #include "BinExecutor.h"
 
 
-/// @brief BinExecutor Execute
+/// @brief BinExecutor Initiate
 /// @return tid
-int BinExecutor::Execute()
+int BinExecutor::Initiate()
 {
 	//Load, parser and execute bin file
 	if (!bin.Load(path)) return 0;
@@ -34,3 +34,25 @@ bool BinExecutor::Release()
 {
 	return bin.Exit();
 }
+
+
+/// @brief BinExecutorFty GetSuffixes
+/// @return 
+List<char*> BinExecutorFty::GetSuffixes()
+{
+	List<char*> suffixes;
+	suffixes.Add((char*)".bin");
+	return suffixes;
+}
+
+
+/// @brief BinExecutorFty Create BinExecutor
+/// @return 
+BaseExecutor* BinExecutorFty::Create()
+{
+	return new BinExecutor();
+}
+
+
+///Register executor
+REGISTER_EXECUTOR(new BinExecutorFty(), binExecutor);

@@ -23,7 +23,7 @@ protected:
 	int       tid;
 
 	//Methods
-	virtual int Execute() = 0;
+	virtual int Initiate() = 0;
 	virtual bool Release() = 0;
 public:
 	//Methods
