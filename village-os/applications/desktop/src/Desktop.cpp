@@ -6,7 +6,6 @@
 //###########################################################################
 #include "Desktop.h"
 #include "Kernel.h"
-#include "ElfExecutor.h"
 
 
 /// @brief Constructor
@@ -96,8 +95,7 @@ void Desktop::UpdateAxis(InputEvent::OutputAxis* input)
 /// @brief Execute
 void Desktop::Execute()
 {
-	ElfExecutor* console = new ElfExecutor();
-	console->Run(ElfExecutor::_Background, "/applications/console.exec desktop");
+	kernel->process.Run(Process::_Background, "/applications/console.elf desktop");
 	while (1)
 	{
 		mainwin->Refresh();

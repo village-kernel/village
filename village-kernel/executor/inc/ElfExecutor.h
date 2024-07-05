@@ -8,6 +8,7 @@
 #define __ELF_EXECUTOR_H__
 
 #include "BaseExecutor.h"
+#include "Executor.h"
 #include "ElfLoader.h"
 #include "Class.h"
 
@@ -20,9 +21,18 @@ private:
 	ElfLoader elf;
 private:
 	//Methods
-	int Execute(const char* path);
+	int Initiate();
 	void Sandbox();
 	bool Release();
+};
+
+
+/// @brief ElfExecutorFty
+class ElfExecutorFty : public Executor
+{
+public:
+	List<char*> GetSuffixes();
+	BaseExecutor* Create();
 };
 
 #endif //!__ELF_EXECUTOR_H__

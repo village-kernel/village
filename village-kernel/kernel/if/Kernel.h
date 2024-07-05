@@ -107,7 +107,8 @@ public:
 	//Enumerations
 	enum TaskState 
 	{
-		Running = 0,
+		Pending = 0,
+		Running,
 		Suspend,
 		Blocked,
 		Exited,
@@ -117,7 +118,7 @@ public:
 	struct Task 
 	{
 		char*            name;
-		uint32_t         pid;
+		uint32_t         tid;
 		uint32_t         psp;
 		uint32_t         ticks;
 		uint32_t         stack;
@@ -125,19 +126,22 @@ public:
 		
 		Task(uint32_t stack = 0, char* name = NULL)
 			:name(name),
-			pid(-1),
+			tid(-1),
 			psp(0),
 			ticks(0),
 			stack(stack),
-			state(TaskState::Suspend)
+			state(TaskState::Pending)
 		{}
 	};
 public:
 	///Methods
 	virtual int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL) = 0;
 	virtual int CreateTask(const char* name, Method method, Class *user, void* args = NULL) = 0;
-	virtual bool DeleteTask(int pid) = 0;
-	virtual bool WaitForTask(int pid) = 0;
+	virtual bool StartTask(int tid) = 0;
+	virtual bool StopTask(int tid) = 0;
+	virtual bool WaitForTask(int tid) = 0;
+	virtual bool DeleteTask(int tid) = 0;
+	virtual bool IsTaskAlive(int tid) = 0;
 	virtual List<Task*> GetTasks() = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
 	virtual void TaskExit() = 0;
@@ -354,6 +358,50 @@ public:
 };
 
 
+/// @brief Executor
+class Executor;
+
+/// @brief BaseExecutor
+class BaseExecutor;
+
+/// @brief Process
+class Process
+{
+public:
+	//Enumerations
+	enum Behavior
+	{
+		_Foreground = 0,
+		_Background = 1,
+	};
+
+	//Structures
+	struct Data
+	{
+		char*         name;
+		int           pid;
+		int           tid;
+		BaseExecutor* exec;
+
+		Data(char* name = NULL)
+			:name(name),
+			pid(0),
+			tid(0),
+			exec(NULL)
+		{}
+	};
+public:
+	//Methods
+	virtual void RegisterExecutor(Executor* executor) = 0;
+	virtual void DeregisterExecutor(Executor* executor) = 0;
+	virtual int Run(Behavior behavior, const char* args) = 0;
+	virtual int Run(Behavior behavior, const char* path, int argc, char* argv[]) = 0;
+	virtual bool Kill(const char* path) = 0;
+	virtual bool Kill(int pid) = 0;
+	virtual List<Data*> GetData() = 0;
+};
+
+
 /// @brief Timer
 class Timer
 {
@@ -409,6 +457,7 @@ public:
 	Feature&     feature;
 	FileSystem&  filesys;
 	Loader&      loader;
+	Process&     process;
 	Timer&       timer;
 public:
 	/// @brief constructor
@@ -426,6 +475,7 @@ public:
 		Feature&     feature,
 		FileSystem&  filesys,
 		Loader&      loader,
+		Process&     process,
 		Timer&       timer
 	)
 		:system(system),
@@ -441,6 +491,7 @@ public:
 		feature(feature),
 		filesys(filesys),
 		loader(loader),
+		process(process),
 		timer(timer)
 	{}
 

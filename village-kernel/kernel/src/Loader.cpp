@@ -27,9 +27,6 @@ void ConcreteLoader::Setup()
 
 	//Loading modules
 	Loading(_Load_Mod, "/modules/_load_.rc");
-
-	//Create task
-	kernel->thread.CreateTask("Loader", (Method)&ConcreteLoader::Execute, this);
 }
 
 
@@ -38,14 +35,6 @@ void ConcreteLoader::Exit()
 {
 	libraries.Release();
 	modules.Release();
-}
-
-
-/// @brief Loader execute
-void ConcreteLoader::Execute()
-{
-	//Execute the first application of the village
-	executor.Run(ElfExecutor::_Background, "/applications/taichi.exec");
 }
 
 

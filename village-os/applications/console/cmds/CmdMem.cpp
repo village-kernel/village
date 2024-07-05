@@ -23,6 +23,13 @@ public:
 		uint32_t per  = (uint32_t)((float)used / (float)size * 100);
 		console.Output("memory size: %d Byte, memory used: %d Byte, percentage used: %d %", size, used, per);
 	}
+
+
+	/// @brief Cmd memory help
+	void Help()
+	{
+		console.Output("cmd memory: show memory used information");
+	}
 };
 
 

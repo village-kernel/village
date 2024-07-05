@@ -17,7 +17,19 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		console.Output("help: about");
+		List<Cmd*> cmds = console.GetCmds();
+
+		for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
+		{
+			cmd->Help();
+		}
+	}
+
+
+	/// @brief Cmd help help
+	void Help()
+	{
+		console.Output("cmd help: display cmd help");
 	}
 };
 

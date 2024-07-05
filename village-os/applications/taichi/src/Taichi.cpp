@@ -6,7 +6,6 @@
 //###########################################################################
 #include "Kernel.h"
 #include "Taichi.h"
-#include "ElfExecutor.h"
 
 
 /// @brief Constructor
@@ -31,16 +30,14 @@ void Taichi::Setup()
 /// @brief Execute
 void Taichi::Execute()
 {
-	ElfExecutor* simpleInput = new ElfExecutor();
-	simpleInput->Run(ElfExecutor::_Background, "/applications/simpleInput.exec ps2keyboard ps2mouse");
+	//Execute simple input method
+	kernel->process.Run(Process::_Background, "/applications/simpleInput.elf ps2keyboard ps2mouse");
 
-	ElfExecutor* desktop = new ElfExecutor();
-	desktop->Run(ElfExecutor::_Background, "/applications/desktop.exec display0");
+	//Execute desktop
+	kernel->process.Run(Process::_Background, "/applications/desktop.elf display0");
 
-	ElfExecutor* console = new ElfExecutor();
-	console->Run(ElfExecutor::_Background, "/applications/console.exec serial0");
-
-	while (1) {}
+	//Execute console
+	kernel->process.Run(Process::_Background, "/applications/console.elf serial0");
 }
 
 

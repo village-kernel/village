@@ -257,6 +257,14 @@ const char* Console::GetPath()
 }
 
 
+/// @brief Console get cmds
+/// @return 
+List<Cmd*> Console::GetCmds()
+{
+	return cmds;
+}
+
+
 /// @brief main
 int main(int argc, char* argv[])
 {

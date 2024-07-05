@@ -7,8 +7,6 @@
 #include "Cmd.h"
 #include "Console.h"
 #include "Kernel.h"
-#include "string.h"
-#include "stdlib.h"
 
 
 /// @brief CmdTasker
@@ -23,8 +21,8 @@ public:
 		List<Thread::Task*> tasks = kernel->thread.GetTasks();
 		for (tasks.Begin(); !tasks.IsEnd(); tasks.Next())
 		{
-			console.Output("pid %d, stack 0x%08x, psp 0x%08x, state %d, ticks %d, name %s",
-							tasks.Item()->pid, 
+			console.Output("tid %d, stack 0x%08x, psp 0x%08x, state %d, ticks %d, name %s",
+							tasks.Item()->tid, 
 							tasks.Item()->stack,
 							tasks.Item()->psp,
 							tasks.Item()->state,
@@ -32,30 +30,15 @@ public:
 							tasks.Item()->name);
 		}
 	}
-};
 
 
-/// @brief CmdKill
-class CmdKill : public Cmd
-{
-public:
-	/// @brief Cmd kill execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
+	/// @brief Cmd tasker help
+	void Help()
 	{
-		if (argc >= 2 && 0 == strcmp("-c", argv[1]))
-		{
-			kernel->thread.DeleteTask(atoi(argv[2]));
-		}
-		else
-		{
-			console.Output("Usage: kill -c <pid>");
-		}
+		console.Output("cmd ts: list thread task");
 	}
 };
 
 
 ///Register cmd
-REGISTER_CMD(new CmdTasker(), tasker);
-REGISTER_CMD(new CmdKill(),   kill  );
+REGISTER_CMD(new CmdTasker(), ts);

@@ -8,10 +8,9 @@
 #include "ElfExecutor.h"
 
 
-/// @brief ElfExecutor Execute
-/// @param path 
-/// @return pid
-int ElfExecutor::Execute(const char* path)
+/// @brief ElfExecutor Initiate
+/// @return tid
+int ElfExecutor::Initiate()
 {
 	//Load, parser and execute bin file
 	if (!elf.Load(path)) return 0;
@@ -35,3 +34,25 @@ bool ElfExecutor::Release()
 {
 	return elf.Exit();
 }
+
+
+/// @brief ElfExecutorFty GetSuffixes
+/// @return 
+List<char*> ElfExecutorFty::GetSuffixes()
+{
+	List<char*> suffixes;
+	suffixes.Add((char*)".elf");
+	return suffixes;
+}
+
+
+/// @brief ElfExecutorFty Create
+/// @return 
+BaseExecutor* ElfExecutorFty::Create()
+{
+	return new ElfExecutor();
+}
+
+
+///Register executor
+REGISTER_EXECUTOR(new ElfExecutorFty(), elfExecutor);

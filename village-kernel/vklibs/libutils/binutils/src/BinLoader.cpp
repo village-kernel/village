@@ -78,7 +78,7 @@ bool BinLoader::Execute(int argc, char* argv[])
 {
 	if (0 != bin.exec)
 	{
-		((Entry)bin.exec)(argc, argv);
+		((StartEntry)bin.exec)(kernel, argc, argv);
 		return true;
 	}
 	kernel->debug.Error("%s execute failed!", filename);
