@@ -11,7 +11,7 @@
 #include "Kernel.h"
 #include "List.h"
 #include "Regex.h"
-#include "BaseExecutor.h"
+#include "Executor.h"
 
 
 /// @brief ConcreteProcess
@@ -21,9 +21,11 @@ private:
 	//Members
 	Regex regex;
 	List<Data*> datum;
+	List<Executor*> executors;
 
 	//Methods
-	void Execute();
+	void Taichi();
+	void Listen();
 	BaseExecutor* CreateExecutor(const char* path);
 public:
 	//Methods
@@ -31,6 +33,8 @@ public:
 	~ConcreteProcess();
 	void Setup();
 	void Exit();
+	void RegisterExecutor(Executor* executor);
+	void DeregisterExecutor(Executor* executor);
 	int Run(Behavior behavior, const char* args);
 	int Run(Behavior behavior, const char* path, int argc, char* argv[]);
 	bool Kill(const char* path);

@@ -25,13 +25,16 @@ ConcreteProcess::~ConcreteProcess()
 /// @brief Process Setup
 void ConcreteProcess::Setup()
 {
-	//Create task
-	kernel->thread.CreateTask("Process", (Method)&ConcreteProcess::Execute, this);
+	//Create a running taichi application task
+	kernel->thread.CreateTask("Process", (Method)&ConcreteProcess::Taichi, this);
+
+	//Create a listening thread alive task
+	kernel->thread.CreateTask("Process", (Method)&ConcreteProcess::Listen, this);
 }
 
 
-/// @brief Process Execute
-void ConcreteProcess::Execute()
+/// @brief Process Taichi
+void ConcreteProcess::Taichi()
 {
 	const char* taichi = "/applications/taichi.elf";
 	
@@ -39,7 +42,12 @@ void ConcreteProcess::Execute()
 	{
 		kernel->debug.Error("%s execute failed", taichi);
 	}
+}
 
+
+/// @brief Process Listen
+void ConcreteProcess::Listen()
+{
 	while (1)
 	{
 		for (Data* data = datum.Begin(); !datum.IsEnd(); data = datum.Next())
@@ -50,6 +58,7 @@ void ConcreteProcess::Execute()
 				datum.Remove(data);
 			}
 		}
+		kernel->thread.Sleep(1);
 	}
 }
 
@@ -58,6 +67,23 @@ void ConcreteProcess::Execute()
 void ConcreteProcess::Exit()
 {
 	datum.Release();
+	executors.Release();
+}
+
+
+/// @brief Register executor object
+/// @param executor executor pointer
+void ConcreteProcess::RegisterExecutor(Executor* executor)
+{
+	executors.Add(executor);
+}
+
+
+/// @brief Deregister executor object
+/// @param executor executor pointer
+void ConcreteProcess::DeregisterExecutor(Executor* executor)
+{
+	executors.Remove(executor);
 }
 
 
@@ -68,18 +94,22 @@ BaseExecutor* ConcreteProcess::CreateExecutor(const char* path)
 {
 	char* suffix = strrchr(path, '.');
 
-	if (0 == strcmp(suffix, ".bin"))
+	for (executors.Begin(); !executors.IsEnd(); executors.Next())
 	{
-		return new BinExecutor();
-	}
-	else if (0 == strcmp(suffix, ".elf"))
-	{
-		return new ElfExecutor();
+		List<char*> suffixes = executors.Item()->GetSuffixes();
+
+		for (suffixes.Begin(); !suffixes.IsEnd(); suffixes.Next())
+		{
+			if (0 == strcmp(suffix, suffixes.Item()))
+			{
+				return executors.Item()->Create();
+			}
+		}
 	}
 	return NULL;
 }
 
-
+ 
 /// @brief Process Run
 /// @param behavior 
 /// @param args 
