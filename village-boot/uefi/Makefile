@@ -45,6 +45,7 @@ CFLAGS-BOOT        += -fno-merge-all-constants -std=c11
 CFLAGS-BOOT        += -maccumulate-outgoing-args
 
 # ld flags
+LDFLAGS-BOOT       += -Map $(BUILD_DIR)/$(TARGET)-boot.map --cref
 LDFLAGS-BOOT       += -nostdlib -z nocombreloc -shared -Bsymbolic
 LDFLAGS-BOOT       += --warn-common --no-undefined --fatal-warnings --build-id=sha1
 LDFLAGS-BOOT       += -melf_i386

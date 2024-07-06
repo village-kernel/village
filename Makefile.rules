@@ -168,19 +168,6 @@ BIN = $(CP) -O binary -S
 	$(Q)echo output $@
 	$(Q)$(BIN) $< $@
 
-%.exec: $(OBJS)
-	$(Q)echo output $@
-	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBRARIES)
-	$(Q)$(SZ) $@
-
-%.hex: %.exec
-	$(Q)echo output $@
-	$(Q)$(HEX) $< $@
-
-%.bin: %.exec
-	$(Q)echo output $@
-	$(Q)$(BIN) $< $@
-
 %.efi: $(OBJS)
 	$(Q)echo output $(@:.efi=.elf)
 	$(Q)$(LD) $(LDFLAGS) $^ -o $(@:.efi=.elf) $(LIBRARIES)
