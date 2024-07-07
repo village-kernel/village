@@ -74,7 +74,7 @@ bool ModuleTool::Install(const char* filename)
 		{
 			mod->FillBssZero();
 			mod->InitArray();
-			modules->Add(mod);
+			modules->Add(mod, (char*)filename);
 			kernel->debug.Output(Debug::_Lv2, "%s module install successful", filename);
 		}
 		else
