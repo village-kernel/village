@@ -3,15 +3,18 @@ ENTRY(_start)
 
 SECTIONS
 {
-	PROVIDE (__executable_start = SEGMENT_START("text-segment", 0)); . = SEGMENT_START("text-segment", 0) + SIZEOF_HEADERS;
+	PROVIDE (__executable_start = SEGMENT_START("text-segment", 0)); 
+	. = SEGMENT_START("text-segment", 0) + SIZEOF_HEADERS;
+	
+	_IMGOFFS = .;
+	
+	_sivector = LOADADDR(.entry);
 
-	_sivector = LOADADDR(.entry_vector);
-
-	.entry_vector :
+	.entry :
 	{
 		. = ALIGN(4);
 		_svector = .;
-		KEEP(*(.entry_vector))
+		KEEP(*(.entry))
 		. = ALIGN(4);
 		_evector = .;
 	}
