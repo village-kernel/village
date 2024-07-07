@@ -154,11 +154,11 @@ private:
 
 	enum SymbolBind
 	{
-		_STB_LOCAL    = 0,
-		_STB_GLOBAL   = 1,
-		_STB_WEAK     = 2,
-		_STB_LOPROC   = 13,
-		_STB_HIPROC   = 15,
+		_STB_LOCAL      = 0,
+		_STB_GLOBAL     = 1,
+		_STB_WEAK       = 2,
+		_STB_LOPROC     = 13,
+		_STB_HIPROC     = 15,
 	};
 
 	enum DynamicType
@@ -177,6 +177,7 @@ private:
 		_DT_SYMENT      = 11,
 		_DT_INIT        = 12,
 		_DT_FINI        = 13,
+		_DT_SONAME      = 14,
 		_DT_RPATH       = 15,
 		_DT_SYMBOLIC    = 16,
 		_DT_REL         = 17,
@@ -186,6 +187,25 @@ private:
 		_DT_DEBUG       = 21,
 		_DT_TEXTREL     = 22,
 		_DT_JMPREL      = 23,
+		_DT_ENCODING    = 32,
+		_OLD_DT_LOOS    = 0x60000000,
+		_DT_LOOS        = 0x6000000d,
+		_DT_HIOS        = 0x6ffff000,
+		_DT_VALRNGLO    = 0x6ffffd00,
+		_DT_VALRNGHI    = 0x6ffffdff,
+		_DT_ADDRRNGLO   = 0x6ffffe00,
+		_DT_ADDRRNGHI   = 0x6ffffeff,
+		_DT_VERSYM      = 0x6ffffff0,
+		_DT_RELACOUNT   = 0x6ffffff9,
+		_DT_RELCOUNT    = 0x6ffffffa,
+		_DT_FLAGS_1     = 0x6ffffffb,
+		_DT_VERDEF      = 0x6ffffffc,
+		_DT_VERDEFNUM   = 0x6ffffffd,
+		_DT_VERNEED     = 0x6ffffffe,
+		_DT_VERNEEDNUM  = 0x6fffffff,
+		_OLD_DT_HIOS    = 0x6fffffff,
+		_DT_LOPROC      = 0x70000000,
+		_DT_HIPROC      = 0x7fffffff,
 	};
 
 	//Structures
