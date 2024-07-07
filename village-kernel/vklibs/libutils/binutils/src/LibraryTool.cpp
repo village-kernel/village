@@ -76,7 +76,7 @@ bool LibraryTool::Install(const char* filename)
 		{
 			library->FillBssZero();
 			library->InitArray();
-			libraries->Add(library);
+			libraries->Add(library, (char*)filename);
 			kernel->debug.Output(Debug::_Lv2, "%s library install successful", filename);
 		}
 		else
