@@ -35,7 +35,9 @@ bool BinLoader::Load(const char* filename)
 	strcpy(this->filename, filename);
 
 	//Load and mapping
-	if (!LoadBin()) return false;
+	if (!LoadBin())     return false;
+	if (!PreParser())   return false;
+	if (!RelEntries())  return false;
 
 	//Output debug info
 	kernel->debug.Output(Debug::_Lv2, "%s load done", filename);
@@ -56,7 +58,6 @@ bool BinLoader::LoadBin()
 
 		if (bin.load && (file.Read((char*)bin.load, size) == size))
 		{
-			bin.exec = bin.load + *((uint32_t*)bin.load);
 			kernel->debug.Output(Debug::_Lv1, "%s bin file load successful", filename);
 			file.Close();
 			return true;
@@ -67,6 +68,65 @@ bool BinLoader::LoadBin()
 
 	kernel->debug.Error("%s bin file load failed", filename);
 	return false;
+}
+
+
+/// @brief PreParser
+/// @return 
+bool BinLoader::PreParser()
+{
+	bin.offset  = *(((uint32_t*)bin.load) + 0);
+	bin.dynamic = *(((uint32_t*)bin.load) + 1);
+	bin.entry   = *(((uint32_t*)bin.load) + 2);
+	bin.exec    = bin.load + bin.entry - bin.offset;
+	return true;
+}
+
+
+/// @brief RelEntries
+/// @return
+bool BinLoader::RelEntries()
+{
+	uint32_t   imagebase = 0;
+	uint32_t   relcount = 0;
+	uint32_t*  relAddr = NULL;
+	DynamicHeader* dynamic = NULL;
+	RelocationEntry* relocate = NULL;
+	
+	//Calc the imagebase value
+	imagebase = bin.load - bin.offset;
+
+	//Calc the dynamic address
+	dynamic = (DynamicHeader*)(imagebase + bin.dynamic);
+
+	//Gets the relocate section address and the relcount
+	for (int i = 0; dynamic[i].tag != _DT_NULL; i++)
+	{
+		if (_DT_REL == dynamic[i].tag)
+		{
+			relocate = (RelocationEntry*)(imagebase + dynamic[i].ptr);
+		}
+		else if (_DT_RELCOUNT == dynamic[i].tag)
+		{
+			relcount = dynamic[i].val;
+		}
+	}
+
+	//Check if relocation is needed
+    if (!relocate && relcount == 0) return true;
+	if (!relocate || relcount == 0) return false;
+
+	//Relocate the value of relative type
+	for (uint32_t i = 0; i < relcount; i++)
+	{
+		if (_R_TYPE_RELATIVE == relocate[i].type)
+		{
+			relAddr  = (uint32_t*)(imagebase + relocate[i].offset);
+			*relAddr = imagebase + *relAddr;
+		}
+	}
+
+	return true;
 }
 
 
