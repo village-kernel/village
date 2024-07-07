@@ -347,12 +347,15 @@ public:
 	//Enumerations
 	enum LoadType
 	{
-		_Load_Lib = 0,
-		_Load_Mod,
+		_Lib = 0,
+		_Mod,
 	};
 public:
 	//Methods
-	virtual void Loading(int type, const char* filename) = 0;
+	virtual void Load(int type, const char* filename) = 0;
+	virtual void Unload(int type, const char* filename) = 0;
+	virtual bool Install(int type, const char* filename) = 0;
+	virtual bool Uninstall(int type, const char* filename) = 0;
 	virtual List<ElfLoader*>* GetLibraries() = 0;
 	virtual List<ElfLoader*>* GetModules() = 0;
 };
