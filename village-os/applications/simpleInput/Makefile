@@ -28,6 +28,6 @@ objs-simpleInput-y                    += SimpleInput.o
 ######################################
 # libraries
 ######################################
-libs-simpleInput-y                    += utils
+libs-simpleInput-y                    += utils c
 
 endif
