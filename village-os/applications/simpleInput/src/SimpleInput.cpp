@@ -139,6 +139,8 @@ void SimpleInput::InputAxisHandler(InputEvent::InputAxis* input)
 /// @brief Execute
 void SimpleInput::Execute()
 {
+	kernel->thread.ChangeState(Thread::Blocked);
+
 	while(1) {}
 }
 
