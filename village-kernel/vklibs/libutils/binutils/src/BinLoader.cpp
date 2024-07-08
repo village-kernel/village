@@ -18,7 +18,7 @@ BinLoader::BinLoader(const char* filename)
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 BinLoader::~BinLoader()
 {
 	Exit();
