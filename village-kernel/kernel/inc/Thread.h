@@ -51,6 +51,7 @@ public:
 	bool DeleteTask(int tid);
 	bool IsTaskAlive(int tid);
 	List<Task*> GetTasks();
+	void ChangeState(TaskState state);
 	void Sleep(uint32_t ticks);
 	void TaskExit();
 
