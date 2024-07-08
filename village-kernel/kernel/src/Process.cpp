@@ -6,8 +6,6 @@
 //###########################################################################
 #include "Process.h"
 #include "BaseExecutor.h"
-#include "BinExecutor.h"
-#include "ElfExecutor.h"
 
 
 /// @brief Constructor
