@@ -20,7 +20,7 @@ ElfLoader::ElfLoader(const char* filename)
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 ElfLoader::~ElfLoader()
 {
 	Exit();
