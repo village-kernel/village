@@ -27,7 +27,7 @@ void ConcreteWorkQueue::Setup()
 	thread = (Thread*)&kernel->thread;
 
 	//Create work queue task
-	thread->CreateTask("Workqueue", (Method)&ConcreteWorkQueue::Execute, this);
+	thread->CreateTask("WorkQueue::Execute", (Method)&ConcreteWorkQueue::Execute, this);
 }
 
 
