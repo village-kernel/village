@@ -12,7 +12,7 @@
 /// @return tid
 int ElfExecutor::Initiate()
 {
-	//Load, parser and execute bin file
+	//Load, parser and execute elf file
 	if (!elf.Load(path)) return 0;
 
 	//Create a sandboxed thread to run the app
