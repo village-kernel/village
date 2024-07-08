@@ -46,7 +46,7 @@ extern "C" void* memmove(void* dst, const void* src, size_t len)
 /// @return its first argument
 extern "C" void* memset(void* b, int c, size_t len)
 {
-    uint8_t *temp = (uint8_t *)b;
+    volatile uint8_t *temp = (uint8_t *)b;
     for ( ; len != 0; len--) *temp++ = c;
 	return b;
 }
