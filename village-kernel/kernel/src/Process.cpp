@@ -26,10 +26,10 @@ ConcreteProcess::~ConcreteProcess()
 void ConcreteProcess::Setup()
 {
 	//Create a running taichi application task
-	kernel->thread.CreateTask("Process", (Method)&ConcreteProcess::Taichi, this);
+	kernel->thread.CreateTask("Process::Taichi", (Method)&ConcreteProcess::Taichi, this);
 
 	//Create a listening thread alive task
-	kernel->thread.CreateTask("Process", (Method)&ConcreteProcess::Listen, this);
+	kernel->thread.CreateTask("Process::Listen", (Method)&ConcreteProcess::Listen, this);
 }
 
 
