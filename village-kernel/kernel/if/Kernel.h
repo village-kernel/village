@@ -143,6 +143,7 @@ public:
 	virtual bool DeleteTask(int tid) = 0;
 	virtual bool IsTaskAlive(int tid) = 0;
 	virtual List<Task*> GetTasks() = 0;
+	virtual void ChangeState(TaskState state) = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
 	virtual void TaskExit() = 0;
 
