@@ -31,7 +31,7 @@ private:
 
 	//Methods
 	bool LoadBin();
-	bool PreParser();
+	bool PostParser();
 	bool RelEntries();
 public:
 	//Methods
