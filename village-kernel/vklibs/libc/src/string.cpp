@@ -85,10 +85,9 @@ extern "C" int memcmp(const void* s1, const void* s2, size_t n)
 /// @return the original value of dst
 extern "C" char* strcpy(char* dst, const char* src)
 {
-    for (int i = 0; ;i++)
+    for (int i = 0; '\0' != src[i]; i++)
 	{
         dst[i] = src[i];
-		if ('\0' == src[i]) break;
     }
 	return dst;
 }
@@ -116,8 +115,8 @@ extern "C" char* strncpy(char* dst, const char* src, size_t len)
 /// @return 
 extern "C" char* strcat(char* s1, const char* s2)
 {
-	size_t size1 = 0;
-	size_t size2 = 0;
+	volatile size_t size1 = 0;
+	volatile size_t size2 = 0;
 
 	while(s1[size1]) { size1++; }
 	while(s2[size2]) { s1[size1++] = s2[size2++]; }
@@ -134,8 +133,8 @@ extern "C" char* strcat(char* s1, const char* s2)
 /// @return 
 extern "C" char* strncat(char* s1, const char* s2, size_t n)
 {
-	size_t size1 = 0;
-	size_t size2 = 0;
+	volatile size_t size1 = 0;
+	volatile size_t size2 = 0;
 
 	while(s1[size1]) { size1++; }
 	while(s2[size2]) { s1[size1++] = s2[size2++]; if (size2 >= n) break; }
@@ -198,7 +197,7 @@ extern "C" int strncmp(const char* s1, const char* s2, size_t n)
 /// @return 
 extern "C" size_t strlen(const char* s)
 {
-	size_t size = 0;
+	volatile size_t size = 0;
 
     while(s[size]) size++;
 
@@ -212,7 +211,7 @@ extern "C" size_t strlen(const char* s)
 /// @return 
 extern "C" size_t strnlen(const char* s, size_t maxlen)
 {
-	size_t size = 0;
+	volatile size_t size = 0;
 
     while(s[size] && (size != maxlen)) size++;
 
@@ -240,7 +239,7 @@ extern "C" char* strchr(const char* s, int c)
 /// @return 
 extern "C" char* strrchr(const char* s, int c)
 {
-	int pos = -1;
+	volatile int pos = -1;
 	for (int i = 0; s[i]; i++)
 	{
 		if (s[i] == c) pos = i;
