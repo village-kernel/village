@@ -36,7 +36,7 @@ bool BinLoader::Load(const char* filename)
 
 	//Load and mapping
 	if (!LoadBin())     return false;
-	if (!PreParser())   return false;
+	if (!PostParser())  return false;
 	if (!RelEntries())  return false;
 
 	//Output debug info
@@ -71,9 +71,9 @@ bool BinLoader::LoadBin()
 }
 
 
-/// @brief PreParser
+/// @brief PostParser
 /// @return 
-bool BinLoader::PreParser()
+bool BinLoader::PostParser()
 {
 	bin.offset  = *(((uint32_t*)bin.load) + 0);
 	bin.dynamic = *(((uint32_t*)bin.load) + 1);
