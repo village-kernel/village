@@ -63,6 +63,7 @@ public:
 	bool Load(const char* filename);
 	bool FillBssZero();
 	bool InitArray();
+	bool Execute(int argc = 0, char* argv[] = NULL);
 	bool Execute(const char* symbol = NULL, int argc = 0, char* argv[] = NULL);
 	bool FiniArray();
 	bool Exit();
