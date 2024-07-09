@@ -42,6 +42,9 @@ List<char*> HexExecutorFty::GetSuffixes()
 {
 	List<char*> suffixes;
 	suffixes.Add((char*)".hex");
+#ifdef ASSOCIATED_EXEC_HEX
+	suffixes.Add((char*)".exec");
+#endif
 	return suffixes;
 }
 

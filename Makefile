@@ -213,6 +213,7 @@ apps:
 		if [ "$(CONFIG_CREATE_APP_BIN_FILE)" = "y" ]; then        \
 			$(MAKE) $(APPS_DIR)/$(name).bin;                      \
 		fi;                                                       \
+		$(MAKE) $(APPS_DIR)/$(name).exec;                         \
 	)
 
 

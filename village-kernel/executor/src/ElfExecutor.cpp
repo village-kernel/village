@@ -42,6 +42,9 @@ List<char*> ElfExecutorFty::GetSuffixes()
 {
 	List<char*> suffixes;
 	suffixes.Add((char*)".elf");
+#ifdef ASSOCIATED_EXEC_ELF
+	suffixes.Add((char*)".exec");
+#endif
 	return suffixes;
 }
 
