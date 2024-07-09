@@ -704,17 +704,30 @@ bool ElfLoader::InitArray()
 }
 
 
-/// @brief ElfLoader execute symbol
-/// @param symbol 
-/// @return result
-bool ElfLoader::Execute(const char* symbol, int argc, char* argv[])
+/// @brief ElfLoader execute
+/// @param argc 
+/// @param argv 
+/// @return 
+bool ElfLoader::Execute(int argc, char* argv[])
 {
-	if (NULL == symbol && 0 != elf.exec)
+	if (0 != elf.exec)
 	{
 		((StartEntry)elf.exec)(kernel, argc, argv);
 		return true;
 	}
-	else
+	kernel->debug.Error("%s execute failed!", filename);
+	return false;
+}
+
+
+/// @brief ElfLoader execute symbol
+/// @param symbol 
+/// @param argc 
+/// @param argv 
+/// @return 
+bool ElfLoader::Execute(const char* symbol, int argc, char* argv[])
+{
+	if (NULL != symbol)
 	{
 		uint32_t symbolAddr = GetSymbolAddrByName(symbol);
 		

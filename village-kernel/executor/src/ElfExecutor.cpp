@@ -23,7 +23,7 @@ int ElfExecutor::Initiate()
 /// @brief ElfExecutor execute app
 void ElfExecutor::Sandbox()
 {
-	elf.Execute(NULL, argc, argv);
+	elf.Execute(argc, argv);
 	elf.Exit();
 }
 
