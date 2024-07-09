@@ -82,6 +82,24 @@ endif
 
 
 #######################################
+# associated with *.exec
+#######################################
+ifeq ($(CONFIG_ASSOCIATED_EXEC), ".elf")
+CFLAGS      += -DASSOCIATED_EXEC_ELF
+EXEC_SUFFIX  = .elf
+else ifeq ($(CONFIG_ASSOCIATED_EXEC), ".hex")
+CFLAGS      += -DASSOCIATED_EXEC_HEX
+EXEC_SUFFIX  = .hex
+else ifeq ($(CONFIG_ASSOCIATED_EXEC), ".bin")
+CFLAGS      += -DASSOCIATED_EXEC_BIN
+EXEC_SUFFIX  = .bin
+else
+CFLAGS      += -DASSOCIATED_EXEC_ELF
+EXEC_SUFFIX  = .elf
+endif
+
+
+#######################################
 # build version flags
 #######################################
 GIT_SHA = $(shell git rev-parse HEAD)
@@ -173,3 +191,7 @@ BIN = $(CP) -O binary -S
 	$(Q)$(LD) $(LDFLAGS) $^ -o $(@:.efi=.elf) $(LIBRARIES)
 	$(Q)echo output $@
 	$(Q)$(CP) $(COPYFLAGS) $(@:.efi=.elf) $@
+
+%.exec:
+	$(Q)echo output $@
+	$(Q)cp -rf $(@:.exec=$(EXEC_SUFFIX)) $@
