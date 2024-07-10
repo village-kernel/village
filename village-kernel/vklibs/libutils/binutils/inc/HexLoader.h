@@ -33,14 +33,12 @@ private:
 		uint16_t address;
 		uint8_t  type;
 		char*    data;
-		uint8_t  crc;
 
 		Record()
 			:length(0),
 			address(0),
 			type(0),
-			data(NULL),
-			crc(0)
+			data(NULL)
 		{}
 	};
 
@@ -70,7 +68,8 @@ private:
 
 	//Tool Methods
 	uint16_t HexStrToInt(char* str, int size);
-	Record* RecordParser(char** text);
+	bool     Checksum(char* text);
+	Record*  DecodeRecord(char* text);
 public:
 	//Methods
 	HexLoader(const char* filename = NULL);
