@@ -95,7 +95,7 @@ void Desktop::UpdateAxis(InputEvent::OutputAxis* input)
 /// @brief Execute
 void Desktop::Execute()
 {
-	kernel->process.Run(Process::_Background, "/applications/console.elf desktop");
+	kernel->process.Run(Process::_Background, "/applications/console.exec desktop");
 	while (1)
 	{
 		mainwin->Refresh();

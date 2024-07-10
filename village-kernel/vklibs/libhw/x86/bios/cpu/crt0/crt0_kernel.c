@@ -28,23 +28,33 @@ void __attribute__ ((weak, naked)) IRQ_Handler()
 /// @brief Stub_Handler
 void __attribute__ ((weak, naked)) Stub_Handler() 
 {
-	__asm("pusha");
-	__asm("movw %ds, %ax");
-	__asm("push %eax");
-	__asm("movw $0x10, %ax"); 
+	//Push data into esp
+	__asm("pushl %ds");
+	__asm("pushl %es");
+	__asm("pushl %fs");
+	__asm("pushl %gs");
+	__asm("pushal");
+
+	//Sets the segments
+	__asm("movw $0x10, %ax");
 	__asm("movw %ax, %ds");
 	__asm("movw %ax, %es");
 	__asm("movw %ax, %fs");
 	__asm("movw %ax, %gs");
     
+	//Call IRQ_Handler(%esp)
+	__asm("pushl %esp");
 	__asm("call IRQ_Handler");
-    
-	__asm("pop  %eax");
-	__asm("movw %ax, %ds");
-	__asm("movw %ax, %es");
-	__asm("movw %ax, %fs");
-	__asm("movw %ax, %gs");
-	__asm("popa");
+	__asm("addl $4, %esp");
+
+	//Pop all data back
+	__asm("popal");
+	__asm("popl %gs");
+	__asm("popl %fs");
+	__asm("popl %es");
+	__asm("popl %ds");
+
+	//Skip irq and errcode
 	__asm("add  $8, %esp ");
 	__asm("sti");
 	__asm("iret");
@@ -438,6 +448,7 @@ void __attribute__ ((weak, naked)) Floppy_Controller_Handler()
 	__asm("push $6");
 	__asm("push $38");
 	__asm("jmp Stub_Handler");
+	__asm("sti");
 }
 
 

@@ -6,8 +6,6 @@
 //###########################################################################
 #include "Process.h"
 #include "BaseExecutor.h"
-#include "BinExecutor.h"
-#include "ElfExecutor.h"
 
 
 /// @brief Constructor
@@ -26,17 +24,17 @@ ConcreteProcess::~ConcreteProcess()
 void ConcreteProcess::Setup()
 {
 	//Create a running taichi application task
-	kernel->thread.CreateTask("Process", (Method)&ConcreteProcess::Taichi, this);
+	kernel->thread.CreateTask("Process::Taichi", (Method)&ConcreteProcess::Taichi, this);
 
 	//Create a listening thread alive task
-	kernel->thread.CreateTask("Process", (Method)&ConcreteProcess::Listen, this);
+	kernel->thread.CreateTask("Process::Listen", (Method)&ConcreteProcess::Listen, this);
 }
 
 
 /// @brief Process Taichi
 void ConcreteProcess::Taichi()
 {
-	const char* taichi = "/applications/taichi.elf";
+	const char* taichi = "/applications/taichi.exec";
 	
 	if (0 > Run(Process::_Background, taichi))
 	{

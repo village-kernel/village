@@ -3,15 +3,18 @@ ENTRY(_start)
 
 SECTIONS
 {
-	PROVIDE (__executable_start = SEGMENT_START("text-segment", 0)); . = SEGMENT_START("text-segment", 0) + SIZEOF_HEADERS;
+	PROVIDE (__executable_start = SEGMENT_START("text-segment", 0)); 
+	. = SEGMENT_START("text-segment", 0) + SIZEOF_HEADERS;
+	
+	_IMGOFFS = .;
+	
+	_sivector = LOADADDR(.entry);
 
-	_sivector = LOADADDR(.entry_vector);
-
-	.entry_vector :
+	.entry :
 	{
 		. = ALIGN(4);
 		_svector = .;
-		KEEP(*(.entry_vector))
+		KEEP(*(.entry))
 		. = ALIGN(4);
 		_evector = .;
 	}
@@ -27,22 +30,6 @@ SECTIONS
 
 		. = ALIGN(4);
 		 _etext = .; 
-	}
-
-	.rodata :
-	{
-		. = ALIGN(4);
-		*(.rodata)
-		*(.rodata*)
-		*(.gnu.linkonce.r.*)
-		. = ALIGN(4);
-	}
-
-	.x86.extab : { *(.gcc_except_table.*  .got.plt ) }
-	.x86 : {
-		__exidx_start = .;
-		*(.x86.extab*)
-		__exidx_end = .;
 	}
 
 	.preinit_array :
@@ -78,22 +65,26 @@ SECTIONS
 		. = ALIGN(4);
 		_sdata = .;  
 		*(.data .data.* .gnu.linkonce.d.*)
+
+		. = ALIGN(4);
+		_sbss = .; 
+		*(.dynbss)
+		*(.bss .bss.* .gnu.linkonce.b.*)
+		*(COMMON)
+		. = ALIGN(4);
+		_ebss = .; 
+
 		. = ALIGN(4);
 		_edata = .; 
 	}
 
-	.bss :
+	.rodata :
 	{
 		. = ALIGN(4);
-		_sbss = .; 
-		__bss_start__ = _sbss;
-		*(.dynbss)
-		*(.bss .bss.* .gnu.linkonce.b.*)
-		*(COMMON)
-
+		*(.rodata)
+		*(.rodata*)
+		*(.gnu.linkonce.r.*)
 		. = ALIGN(4);
-		_ebss = .; 
-		 __bss_end__ = _ebss;
 	}
 
 	/*/DISCARD/ :

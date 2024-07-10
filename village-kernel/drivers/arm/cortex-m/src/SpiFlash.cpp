@@ -376,4 +376,4 @@ int SpiFlash::IOCtrl(uint8_t cmd, void* data)
 
 
 ///Register driver
-REGISTER_DRIVER(new SpiFlash(), DriverID::_block, spiFlash);
+REGISTER_DRIVER(new SpiFlash(), DriverID::_block, disk1);

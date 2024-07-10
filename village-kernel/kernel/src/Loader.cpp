@@ -23,24 +23,27 @@ ConcreteLoader::~ConcreteLoader()
 void ConcreteLoader::Setup()
 {
 	//Loading libraries
-	Loading(_Load_Lib, "/libraries/_load_.rc");
+	Load(Loader::_Lib, "/libraries/_load_.rc");
 
 	//Loading modules
-	Loading(_Load_Mod, "/modules/_load_.rc");
+	Load(Loader::_Mod, "/modules/_load_.rc");
 }
 
 
 /// @brief Loader Exit
 void ConcreteLoader::Exit()
 {
-	libraries.Release();
-	modules.Release();
+	//Loading modules
+	Unload(Loader::_Mod, "/modules/_load_.rc");
+
+	//Loading libraries
+	Unload(Loader::_Lib, "/libraries/_load_.rc");
 }
 
 
 /// @brief Loader load
 /// @param filename rc file path
-void ConcreteLoader::Loading(int type, const char* filename)
+void ConcreteLoader::Load(int type, const char* filename)
 {
 	RcParser* parser = new RcParser(filename);
 
@@ -48,18 +51,63 @@ void ConcreteLoader::Loading(int type, const char* filename)
 
 	for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
 	{
-		if (_Load_Lib == type)
-		{
-			if (!libraryTool.Install(runcmds.Item())) break;
-		}
-		else if (_Load_Mod == type)
-		{
-			if (!moduleTool.Install(runcmds.Item())) break;
-		}
+		if (!Install(type, runcmds.Item())) break;
 	}
 
 	parser->Release();
 	delete parser;
+}
+
+
+/// @brief Loader unload
+/// @param filename rc file path
+void ConcreteLoader::Unload(int type, const char* filename)
+{
+	RcParser* parser = new RcParser(filename);
+
+	List<char*>& runcmds = parser->GetRunCmds();
+
+	for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
+	{
+		if (!Uninstall(type, runcmds.Item())) break;
+	}
+
+	parser->Release();
+	delete parser;
+}
+
+
+/// @brief Loader install
+/// @param type 
+/// @param filename 
+bool ConcreteLoader::Install(int type, const char* filename)
+{
+	if (Loader::_Lib == type)
+	{
+		return libraryTool.Install(filename);
+	}
+	else if (Loader::_Mod == type)
+	{
+		return moduleTool.Install(filename);
+	}
+	return false;
+}
+
+
+/// @brief Loader install
+/// @param type 
+/// @param filename 
+bool ConcreteLoader::Uninstall(int type, const char* filename)
+{
+	if (Loader::_Lib == type)
+	{
+		return libraryTool.Uninstall(filename);
+	}
+	else if (Loader::_Mod == type)
+	{
+		return moduleTool.Uninstall(filename);
+	}
+	return false;
 }
 
 

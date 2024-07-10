@@ -213,6 +213,7 @@ apps:
 		if [ "$(CONFIG_CREATE_APP_BIN_FILE)" = "y" ]; then        \
 			$(MAKE) $(APPS_DIR)/$(name).bin;                      \
 		fi;                                                       \
+		$(MAKE) $(APPS_DIR)/$(name).exec;                         \
 	)
 
 
@@ -263,22 +264,24 @@ clean:
 
 clean-boot:
 	$(Q)rm -rf $(BUILD_DIR)/village-boot
+	$(Q)rm -rf $(BUILD_DIR)/village-boot.*
 
 clean-libs:
-	$(Q)rm -rf $(LIBS_DIR)/$(libs-y).*
-	$(Q)rm -rf $(LIBS_DIR)/$(oslibs-y).*
+	$(Q)rm -rf $(LIBS_DIR)
+	$(Q)rm -rf $(LIBS_DIR)
 ifneq ($(L), )
 	$(Q)rm -rf $(BUILD_DIR)/$(L)
 endif
 
 clean-mods:
-	$(Q)rm -rf $(MODS_DIR)/$(objs-m:.o=.mo)
+	$(Q)rm -rf $(MODS_DIR)
 ifneq ($(M), )
 	$(Q)rm -rf $(BUILD_DIR)/$(M)
 endif
 
 clean-apps:
-	$(Q)rm -rf $(APPS_DIR)/$(apps-y).*
+	$(Q)rm -rf $(APPS_DIR)
+	$(Q)rm -rf $(BUILD_DIR)/village-os/applications
 ifneq ($(A), )
 	$(Q)rm -rf $(BUILD_DIR)/$(A)
 endif

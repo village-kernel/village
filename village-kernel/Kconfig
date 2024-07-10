@@ -98,6 +98,12 @@ if KERNEL
 			bool "Enable execute *.elf file function"
 			default n
 
+		config HEXEXECUTOR
+			depends on EXECUTOR
+			select HEXLOADER
+			bool "Enable execute *.hex file function"
+			default n
+
 	endmenu
 
 
@@ -217,6 +223,12 @@ if KERNEL
 				depends on BINUTILS
 				select FILESTREAM
 				bool "Enable *.elf file load function"
+				default n
+
+			config HEXLOADER
+				depends on BINUTILS
+				select FILESTREAM
+				bool "Enable *.hex file load function"
 				default n
 
 			config LIBTOOL

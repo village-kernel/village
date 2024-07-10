@@ -6,16 +6,13 @@
 //###########################################################################
 #include "Cmd.h"
 #include "Console.h"
-#include "ModuleTool.h"
+#include "Kernel.h"
 #include "string.h"
 
 
 /// @brief CmdListMod
 class CmdListMod : public Cmd
 {
-private:
-	//Members
-	ModuleTool modules;
 public:
 	/// @brief Cmd lsmod execute
 	/// @param argc 
@@ -28,12 +25,12 @@ public:
 			return;
 		}
 
-		List<ElfLoader*>* mods = modules.GetModules();
+		List<ElfLoader*>* mods = kernel->loader.GetModules();
 		if (NULL != mods)
 		{
 			for (mods->Begin(); !mods->IsEnd(); mods->Next())
 			{
-				console.Output("name %s", mods->Item()->GetFileName());
+				console.Output("name %s", mods->GetName());
 			}
 		}
 	}
@@ -50,9 +47,6 @@ public:
 /// @brief CmdInsMod
 class CmdInsMod : public Cmd
 {
-private:
-	//Members
-	ModuleTool modules;
 public:
 	/// @brief Cmd insmod execute
 	/// @param argc 
@@ -64,7 +58,7 @@ public:
 			console.Output("Usage: insmod [module]");
 			return;
 		}
-		if (!modules.Install(argv[1]))
+		if (!kernel->loader.Install(Loader::_Mod, argv[1]))
 		{
 			console.Error("Install module %s failed", argv[1]);
 		}
@@ -82,9 +76,6 @@ public:
 /// @brief CmdRmMod
 class CmdRmMod : public Cmd
 {
-private:
-	//Members
-	ModuleTool modules;
 public:
 	/// @brief Cmd rmmod execute
 	/// @param argc 
@@ -96,7 +87,7 @@ public:
 			console.Output("Usage: rmmod [module]");
 			return;
 		}
-		if (!modules.Uninstall(argv[1]))
+		if (!kernel->loader.Uninstall(Loader::_Mod, argv[1]))
 		{
 			console.Error("Uninstall module %s failed", argv[1]);
 		}

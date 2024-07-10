@@ -62,6 +62,11 @@ config CREATE_APP_BIN_FILE
 	bool "create *.bin file"
 	default n
 
+config ASSOCIATED_EXEC
+	depends on GENERATED_APP
+	string "Associated with .exec"
+	default ".elf"
+
 config GENERATED_IMG
 	bool "generated os image"
 	default n
