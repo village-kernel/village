@@ -58,6 +58,7 @@ objs-$(CONFIG_FATFS)                += FatSystem.o
 objs-$(CONFIG_EXECUTOR)             += BaseExecutor.o
 objs-$(CONFIG_BINEXECUTOR)          += BinExecutor.o
 objs-$(CONFIG_ELFEXECUTOR)          += ElfExecutor.o
+objs-$(CONFIG_HEXEXECUTOR)          += HexExecutor.o
 
 
 ######################################
@@ -88,6 +89,7 @@ objs-utils-$(CONFIG_SEMAPHORE)      += Semaphore.o
 
 objs-utils-$(CONFIG_BINLOADER)      += BinLoader.o
 objs-utils-$(CONFIG_ELFLOADER)      += ElfLoader.o
+objs-utils-$(CONFIG_HEXLOADER)      += HexLoader.o
 objs-utils-$(CONFIG_LIBTOOL)        += LibraryTool.o
 objs-utils-$(CONFIG_MODTOOL)        += ModuleTool.o
 

@@ -42,6 +42,9 @@ List<char*> BinExecutorFty::GetSuffixes()
 {
 	List<char*> suffixes;
 	suffixes.Add((char*)".bin");
+#ifdef ASSOCIATED_EXEC_BIN
+	suffixes.Add((char*)".exec");
+#endif
 	return suffixes;
 }
 

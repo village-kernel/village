@@ -7,21 +7,22 @@
 #ifndef __BIN_LOADER_H__
 #define __BIN_LOADER_H__
 
-#include "Defines.h"
+#include "ElfDefines.h"
+
 
 /// @brief BinLoader
-class BinLoader
+class BinLoader : public ElfDefines
 {
 private:
-	//Type define
-	typedef void(*StartEntry)(void* kernel, int argc, char* argv[]);
-	typedef void(*Entry)(int argc, char* argv[]);
-
 	//ELF structure
 	struct BIN
 	{
 		uint32_t load;
 		uint32_t exec;
+
+		uint32_t offset;
+		uint32_t dynamic;
+		uint32_t entry;
 	};
 private:
 	//Members
@@ -30,6 +31,8 @@ private:
 
 	//Methods
 	bool LoadBin();
+	bool PostParser();
+	bool RelEntries();
 public:
 	//Methods
 	BinLoader(const char* filename = NULL);

@@ -32,7 +32,10 @@ public:
 	~ConcreteLoader();
 	void Setup();
 	void Exit();
-	void Loading(int type, const char* filename);
+	void Load(int type, const char* filename);
+	void Unload(int type, const char* filename);
+	bool Install(int type, const char* filename);
+	bool Uninstall(int type, const char* filename);
 	List<ElfLoader*>* GetLibraries();
 	List<ElfLoader*>* GetModules();
 };

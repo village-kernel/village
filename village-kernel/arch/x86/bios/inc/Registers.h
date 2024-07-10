@@ -11,9 +11,6 @@
 
 struct Registers
 {
-	//Data segment selector
-	uint32_t ds;        
-	
 	//Pushed by pusha.
 	uint32_t edi;
 	uint32_t esi;
@@ -23,6 +20,12 @@ struct Registers
 	uint32_t edx;
 	uint32_t ecx;
 	uint32_t eax;
+
+	//Segment selector
+	uint32_t gs;
+	uint32_t fs;
+	uint32_t es;
+	uint32_t ds;
 
 	//Interrupt number and error code
 	uint32_t irq;
@@ -47,7 +50,6 @@ struct Registers
 		uint32_t esi = 0,
 		uint32_t edi = 0
 	):
-		ds(0),
 		edi(edi),
 		esi(esi),
 		ebp(ebp),
@@ -56,6 +58,10 @@ struct Registers
 		edx(edx),
 		ecx(ecx),
 		eax(eax),
+		gs(0),
+		fs(0),
+		es(0),
+		ds(0),
 		irq(0),
 		err(0),
 		eip(eip),

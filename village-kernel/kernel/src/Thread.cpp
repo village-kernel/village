@@ -35,7 +35,7 @@ void ConcreteThread::Setup()
 	scheduler = (Scheduler*)&kernel->scheduler;
 
 	//Frist task should be idle task and the tid is 0
-	CreateTask("IdleTask", (Method)&ConcreteThread::IdleTask, this);
+	CreateTask("Thread::IdleTask", (Method)&ConcreteThread::IdleTask, this);
 }
 
 
@@ -204,6 +204,18 @@ bool ConcreteThread::IsTaskAlive(int tid)
 List<ConcreteThread::Task*> ConcreteThread::GetTasks()
 {
 	return tasks;
+}
+
+
+/// @brief Change State
+/// @param state 
+void ConcreteThread::ChangeState(TaskState state)
+{
+	if(tasks.GetNid() > 0)
+	{
+		tasks.Item()->state = state;
+		scheduler->Sched(Scheduler::Unprivileged);
+	}
 }
 
 

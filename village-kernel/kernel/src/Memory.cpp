@@ -271,7 +271,7 @@ void ConcreteMemory::Free(uint32_t memory, uint32_t size)
 
 
 /// @brief Get the max size of sram
-uint32_t ConcreteMemory::GetSize() { return sram_ended; }
+uint32_t ConcreteMemory::GetSize() { return sram_ended - sram_start; }
 
 
 /// @brief Get the used size of sram

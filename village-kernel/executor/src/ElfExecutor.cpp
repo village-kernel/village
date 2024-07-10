@@ -12,7 +12,7 @@
 /// @return tid
 int ElfExecutor::Initiate()
 {
-	//Load, parser and execute bin file
+	//Load, parser and execute elf file
 	if (!elf.Load(path)) return 0;
 
 	//Create a sandboxed thread to run the app
@@ -23,7 +23,7 @@ int ElfExecutor::Initiate()
 /// @brief ElfExecutor execute app
 void ElfExecutor::Sandbox()
 {
-	elf.Execute(NULL, argc, argv);
+	elf.Execute(argc, argv);
 	elf.Exit();
 }
 
@@ -42,6 +42,9 @@ List<char*> ElfExecutorFty::GetSuffixes()
 {
 	List<char*> suffixes;
 	suffixes.Add((char*)".elf");
+#ifdef ASSOCIATED_EXEC_ELF
+	suffixes.Add((char*)".exec");
+#endif
 	return suffixes;
 }
 

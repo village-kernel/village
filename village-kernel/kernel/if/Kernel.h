@@ -143,6 +143,7 @@ public:
 	virtual bool DeleteTask(int tid) = 0;
 	virtual bool IsTaskAlive(int tid) = 0;
 	virtual List<Task*> GetTasks() = 0;
+	virtual void ChangeState(TaskState state) = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
 	virtual void TaskExit() = 0;
 
@@ -347,12 +348,15 @@ public:
 	//Enumerations
 	enum LoadType
 	{
-		_Load_Lib = 0,
-		_Load_Mod,
+		_Lib = 0,
+		_Mod,
 	};
 public:
 	//Methods
-	virtual void Loading(int type, const char* filename) = 0;
+	virtual void Load(int type, const char* filename) = 0;
+	virtual void Unload(int type, const char* filename) = 0;
+	virtual bool Install(int type, const char* filename) = 0;
+	virtual bool Uninstall(int type, const char* filename) = 0;
 	virtual List<ElfLoader*>* GetLibraries() = 0;
 	virtual List<ElfLoader*>* GetModules() = 0;
 };

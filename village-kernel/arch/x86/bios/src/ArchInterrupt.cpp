@@ -122,17 +122,56 @@ uint16_t ArchInterrupt::GetPicIsr()
 }
 
 
+/// @brief Output stacked info
+/// @param regs stack pointer
+extern "C" void StackedInfo(Registers* regs)
+{
+	kernel->debug.Error("Hard_Fault_Handler:");
+
+	kernel->debug.Error("irq:    0x%08lx", regs->irq);
+	kernel->debug.Error("err:    0x%08lx", regs->err);
+	kernel->debug.Error("psp:    0x%08lx", regs->psp);
+
+	kernel->debug.Error("CPU:");
+	kernel->debug.Error("eax:    0x%08lx", regs->eax);
+	kernel->debug.Error("ecx:    0x%08lx", regs->ecx);
+	kernel->debug.Error("edx:    0x%08lx", regs->edx);
+	kernel->debug.Error("ebx:    0x%08lx", regs->ebx);
+	kernel->debug.Error("ebx:    0x%08lx", regs->ebx);
+	kernel->debug.Error("esp:    0x%08lx", regs->esp);
+	kernel->debug.Error("ebp:    0x%08lx", regs->ebp);
+	kernel->debug.Error("esi:    0x%08lx", regs->esi);
+	kernel->debug.Error("edi:    0x%08lx", regs->edi);
+	kernel->debug.Error("eip:    0x%08lx", regs->eip);
+	kernel->debug.Error("eflags: 0x%08lx", regs->eflags);
+
+	kernel->debug.Error("Segs:");
+	kernel->debug.Error("cs:     0x%08lx", regs->cs);
+	kernel->debug.Error("ss:     0x%08lx", regs->ss);
+	kernel->debug.Error("ds:     0x%08lx", regs->ds);
+	kernel->debug.Error("es:     0x%08lx", regs->es);
+	kernel->debug.Error("fs:     0x%08lx", regs->fs);
+	kernel->debug.Error("gs:     0x%08lx", regs->gs);
+}
+
+
 /// @brief IRQ handler
 /// @param regs 
-extern "C" void IRQ_Handler(Registers regs)
+extern "C" void IRQ_Handler(Registers* regs)
 {
 	//Send an EOI to the PICs
-	if (regs.irq >= 32 && regs.irq <= 47)
+	if (regs->irq >= 32 && regs->irq <= 47)
 	{
-		if (regs.irq >= 40) PortByteOut(PIC2_CMD, PIC_EOI); //slave
-		if (regs.irq >= 32) PortByteOut(PIC1_CMD, PIC_EOI); //master
+		if (regs->irq >= 40) PortByteOut(PIC2_CMD, PIC_EOI); //slave
+		if (regs->irq >= 32) PortByteOut(PIC1_CMD, PIC_EOI); //master
+	}
+
+	//Output stacked info
+	if (regs->irq >= 0 && regs->irq <= 18)
+	{
+		StackedInfo(regs);
 	}
 
 	//Handle the interrupt in a more modular way
-	kernel->interrupt.Handler(regs.irq);
+	kernel->interrupt.Handler(regs->irq);
 }
