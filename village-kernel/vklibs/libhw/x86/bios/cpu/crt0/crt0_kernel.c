@@ -55,7 +55,7 @@ void __attribute__ ((weak, naked)) Stub_Handler()
 	__asm("popl %ds");
 
 	//Skip irq and errcode
-	__asm("add  $8, %esp ");
+	__asm("addl $8, %esp");
 	__asm("sti");
 	__asm("iret");
 }
@@ -448,7 +448,6 @@ void __attribute__ ((weak, naked)) Floppy_Controller_Handler()
 	__asm("push $6");
 	__asm("push $38");
 	__asm("jmp Stub_Handler");
-	__asm("sti");
 }
 
 
