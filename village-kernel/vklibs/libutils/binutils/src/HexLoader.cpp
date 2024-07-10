@@ -98,6 +98,32 @@ uint16_t HexLoader::HexStrToInt(char* str, int size)
 }
 
 
+/// @brief Checksum
+/// @param text 
+/// @return 
+bool HexLoader::Checksum(char* text)
+{
+	uint8_t pos = 0, sum = 0, crc = 0;
+
+	//Length of the record
+	uint8_t len = HexStrToInt(text, 2) + 4;
+	
+	//Sum of all decoded byte values
+	for (pos = 0; pos < len; pos++)
+	{
+		sum += HexStrToInt(text + pos * 2, 2);
+	}
+	
+	//Two's complement
+	sum = ~sum + 1;
+
+	//Crc of the record
+	crc = HexStrToInt(text + pos * 2, 2);
+
+	return (sum == crc);
+}
+
+
 /// @brief RecordParser
 ///
 /// hex format:              |
@@ -116,20 +142,20 @@ uint16_t HexLoader::HexStrToInt(char* str, int size)
 ///
 /// @param text 
 /// @return 
-HexLoader::Record* HexLoader::RecordParser(char** text)
+HexLoader::Record* HexLoader::DecodeRecord(char* text)
 {
 	const int lenPos  = 0, addrPos  = 2, typePos  = 6, dataPos = 8;
-	const int lenSize = 2, addrSize = 4, typeSize = 2, crcSize = 2;
-	      int crcPos     = 0;
+	const int lenSize = 2, addrSize = 4, typeSize = 2;
 
+	//Check sum
+	if (!Checksum(text)) return NULL;
+
+	//Parser the record
 	Record* record  = new Record();
-	record->length  = HexStrToInt(*text + lenPos,  lenSize);
-	record->address = HexStrToInt(*text + addrPos, addrSize);
-	record->type    = HexStrToInt(*text + typePos, typeSize);
-	record->data    = *text + dataPos;
-	crcPos          = dataPos + record->length * 2;
-	record->crc     = HexStrToInt(*text + crcPos, crcSize);
-	*text           = *text + crcPos + crcSize;
+	record->length  = HexStrToInt(text + lenPos,  lenSize);
+	record->address = HexStrToInt(text + addrPos, addrSize);
+	record->type    = HexStrToInt(text + typePos, typeSize);
+	record->data    = text + dataPos;
 
 	return record;
 }
@@ -139,36 +165,50 @@ HexLoader::Record* HexLoader::RecordParser(char** text)
 /// @return 
 bool HexLoader::PreParser()
 {
+	const uint32_t segbase  = 16;
+	const uint32_t constlen = 10;
+
 	uint32_t segment = 0;
 	uint32_t mapSize = 0;
 	char*    text = (char*)hex.load;
 	
 	while (1)
 	{
+		//Loop until text is ":"
 		while (':' != *(text++)) {}
 
-		Record* record = RecordParser(&text);
-
+		//Decode record
+		Record* record = DecodeRecord(text);
+		
+		//Break when decode failed
+		if (NULL == record) break;
+		
+		//Add record into list
 		records.Add(record);
-
+		
+		//Calculate map size
 		if (HexLoader::_Data == record->type)
 		{
 			mapSize = segment + record->address + record->length;
 		}
 		else if (HexLoader::_ExtSegAddr == record->type)
 		{
-			segment += HexStrToInt(record->data, 4) * 0x10;
+			segment += HexStrToInt(record->data, 4) * segbase;
 		}
 		else if (HexLoader::_EndOfFile == record->type)
 		{
 			hex.offset  = records.Begin()->address;
 			mapSize     = mapSize - hex.offset;
 			hex.map     = (uint32_t)new char[mapSize]();
-			break;
+			return true;
 		}
+
+		//Update text with record length
+		text += record->length * 2 + constlen;
 	}
 
-	return true;
+	kernel->debug.Error("%s hex file pre parser failed", filename);
+	return false;
 }
 
 
@@ -176,6 +216,7 @@ bool HexLoader::PreParser()
 /// @return 
 bool HexLoader::LoadProgram()
 {
+	uint8_t* mapping = (uint8_t*)hex.map;
 	uint32_t segment = 0;
 
 	for (records.Begin(); !records.IsEnd(); records.Next())
@@ -186,8 +227,9 @@ bool HexLoader::LoadProgram()
 		{
 			for (uint8_t pos = 0; pos < record->length; pos++)
 			{
-				uint32_t address = record->address - hex.offset + segment + pos;
-				((uint8_t*)hex.map)[address] = HexStrToInt(record->data + pos * 2, 2);
+				uint32_t addr  = record->address + segment + pos - hex.offset;
+				uint32_t value = HexStrToInt(record->data + pos * 2, 2);
+				mapping[addr] = value;
 			}
 		}
 		else if (HexLoader::_ExtSegAddr == record->type)
