@@ -7,7 +7,7 @@
 #ifndef __USB_STORAGE_H__
 #define __USB_STORAGE_H__
 
-#include "HalHeaders.h"
+#include "Hardware.h"
 #include "Driver.h"
 
 ///UsbStorage

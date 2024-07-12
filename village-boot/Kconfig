@@ -20,13 +20,13 @@ if BOOTLOADER
 
 	choice
 		prompt "boot arch"
-		default IA32
+		default BOOTIA32
 
-		config IA32
-			bool "ia32"
+		config BOOTIA32
+			bool "bootia32"
 
-		config X86_64
-			bool "x86_64"
+		config BOOTX64
+			bool "bootx64"
 	endchoice
 
 endif

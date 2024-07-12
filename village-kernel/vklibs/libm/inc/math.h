@@ -14,6 +14,8 @@ extern "C" {
 #include "stddef.h"
 #include "stdarg.h"
 
+typedef float float_t;
+
 #ifndef PI
   #define PI               3.14159265358979f
 #endif

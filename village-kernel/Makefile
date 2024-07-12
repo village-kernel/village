@@ -12,11 +12,12 @@ inc-y                               += village-kernel/kernel/if
 inc-y                               += village-kernel/kernel/inc
 src-y                               += village-kernel/kernel/src
 
-inc-$(CONFIG_X86)                   += village-kernel/arch/x86/bios/inc
+inc-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32legacy/inc
+src-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32legacy/src
+
 inc-$(CONFIG_CORTEX_M)              += village-kernel/arch/arm/cortex-m/inc
 inc-$(CONFIG_STM32F4xx)             += village-kernel/arch/arm/cortex-m/inc/stm32f4xx
 inc-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/inc/stm32h7xx
-src-$(CONFIG_X86)                   += village-kernel/arch/x86/bios/src
 src-$(CONFIG_CORTEX_M)              += village-kernel/arch/arm/cortex-m/src
 src-$(CONFIG_STM32F4xx)             += village-kernel/arch/arm/cortex-m/src/stm32f4xx
 src-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/src/stm32h7xx
@@ -104,17 +105,20 @@ objs-utils-$(CONFIG_MODEL)          += ObserverModel.o
 ######################################
 # libm
 ######################################
+ifeq ($(CONFIG_VKLIBM), y)
 libs-y                              += m
 
 inc-y                               += village-kernel/vklibs/libm/inc
 src-y                               += village-kernel/vklibs/libm/src
 
 objs-m-y                            += math.o
+endif
 
 
 ######################################
 # libstdc++
 ######################################
+ifeq ($(CONFIG_VKLIBCPP), y)
 libs-y                              += stdc++
 
 inc-y                               += village-kernel/vklibs/libc++/inc
@@ -122,11 +126,13 @@ src-y                               += village-kernel/vklibs/libc++/src
 
 objs-stdc++-y                       += icxxabi.o
 objs-stdc++-y                       += operator.o
+endif
 
 
 ######################################
 # libc
 ######################################
+ifeq ($(CONFIG_VKLIBC), y)
 libs-y                              += c
 
 inc-y                               += village-kernel/vklibs/libc/inc
@@ -137,6 +143,7 @@ src-y                               += village-kernel/vklibs/libc/string
 objs-c-y                            += stdio.o
 objs-c-y                            += stdlib.o
 objs-c-y                            += string.o
+endif
 
 
 #######################################
@@ -150,14 +157,20 @@ endif
 ######################################
 # includes
 ######################################
-## ARM
-ifeq ($(CONFIG_ARM)_$(CONFIG_CORTEX_M), y_y)
-include village-kernel/vklibs/libhw/arm/cortex-m/Makefile
+## stm32f4xx
+ifeq ($(CONFIG_STM32F4xx), y)
+include village-kernel/vklibs/libhw/stm32f4xx/Makefile
 include village-kernel/drivers/arm/cortex-m/Makefile
 endif
 
-## X86
-ifeq ($(CONFIG_X86)_$(CONFIG_BIOS), y_y)
-include village-kernel/vklibs/libhw/x86/bios/Makefile
-include village-kernel/drivers/x86/bios/Makefile
+## stm32h7xx
+ifeq ($(CONFIG_STM32H7xx), y)
+include village-kernel/vklibs/libhw/stm32h7xx/Makefile
+include village-kernel/drivers/arm/cortex-m/Makefile
+endif
+
+## ia32legacy
+ifeq ($(CONFIG_IA32LEGACY), y)
+include village-kernel/vklibs/libhw/ia32legacy/Makefile
+include village-kernel/drivers/ia32/legacy/Makefile
 endif

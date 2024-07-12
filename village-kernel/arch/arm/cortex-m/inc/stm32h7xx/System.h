@@ -23,7 +23,6 @@ private:
 	uint32_t cyclesInMicro;
 
 	//Methods
-	void ConfigurePower();
 	void ConfigCoreDebug();
 	void ConfigSysTick();
 	void ConfigureMPU();
