@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of village-kernel/drivers/x86/bios
+# The Makefile of village-kernel/drivers/ia32/legacy
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -8,8 +8,8 @@
 ######################################
 # paths
 ######################################
-inc-y                                 += village-kernel/drivers/x86/bios/inc
-src-y                                 += village-kernel/drivers/x86/bios/src
+inc-y                                 += village-kernel/drivers/ia32/legacy/inc
+src-y                                 += village-kernel/drivers/ia32/legacy/src
 
 ######################################
 # objects
