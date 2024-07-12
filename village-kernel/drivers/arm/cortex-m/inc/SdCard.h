@@ -8,11 +8,9 @@
 #ifndef __SD_CARD_H__
 #define __SD_CARD_H__
 
-#include "HalHeaders.h"
+#include "Hardware.h"
 #include "Driver.h"
-#include "Spi.h"
-#include "Gpo.h"
-#include "Gpi.h"
+
 
 ///SdCard
 class SdCard : public Driver

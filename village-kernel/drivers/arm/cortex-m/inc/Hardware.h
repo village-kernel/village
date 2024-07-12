@@ -9,6 +9,6 @@
 
 #include "stdint.h"
 #include "stdio.h"
-#include "HalHeaders.h"
+#include "village_drv_hw.h"
 
 #endif //!__HARDWARE_H__

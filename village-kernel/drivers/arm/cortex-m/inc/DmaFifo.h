@@ -9,8 +9,8 @@
 #ifndef __DMA_FIFO_H__
 #define __DMA_FIFO_H__
 
-#include "HalHeaders.h"
-#include "Dma.h"
+#include "Hardware.h"
+
 
 ///DmaFifo
 class DmaFifo

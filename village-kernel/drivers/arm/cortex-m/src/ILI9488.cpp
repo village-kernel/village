@@ -5,10 +5,8 @@
 //###########################################################################
 #include "Kernel.h"
 #include "HwConfig.h"
-#include "HalHeaders.h"
-#include "Gpo.h"
-#include "Fsmc.h"
-#include "math.h"
+#include "Hardware.h"
+#include "stdlib.h"
 
 
 /// @brief ILI9488
@@ -475,8 +473,8 @@ public:
 	/// @brief ILI9488 fill color
 	void Fill(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color)
 	{
-		uint16_t width = abs(x0 - x1) + 1;
-		uint16_t height = abs(y0 - y1) + 1;
+		uint16_t width = labs(x0 - x1) + 1;
+		uint16_t height = labs(y0 - y1) + 1;
 		OpenWindow(x0, y0, width, height);
 		Fill(width * height, color);
 	}

@@ -1,0 +1,531 @@
+comment "Configure Support Function"
+
+menu "Board Support Package"
+
+config STM32H7XX_HAL
+	bool "build stm32h7xx_hal.c"
+	default n
+
+config STM32H7XX_HAL_ADC
+	bool "build stm32h7xx_hal_adc.c"
+	default n
+
+config STM32H7XX_HAL_ADC_EX
+	bool "build stm32h7xx_hal_adc_ex.c"
+	default n
+
+config STM32H7XX_HAL_CEC
+	bool "build stm32h7xx_hal_cec.c"
+	default n
+
+config STM32H7XX_HAL_COMP
+	bool "build stm32h7xx_hal_comp.c"
+	default n
+
+config STM32H7XX_HAL_CORDIC
+	bool "build stm32h7xx_hal_cordic.c"
+	default n
+
+config STM32H7XX_HAL_CORTEX
+	bool "build stm32h7xx_hal_cortex.c"
+	default n
+
+config STM32H7XX_HAL_CRC
+	bool "build stm32h7xx_hal_crc.c"
+	default n
+
+config STM32H7XX_HAL_CRC_EX
+	bool "build stm32h7xx_hal_crc_ex.c"
+	default n
+
+config STM32H7XX_HAL_CRYP
+	bool "build stm32h7xx_hal_cryp.c"
+	default n
+
+config STM32H7XX_HAL_CRYP_EX
+	bool "build stm32h7xx_hal_cryp_ex.c"
+	default n
+
+config STM32H7XX_HAL_DAC
+	bool "build stm32h7xx_hal_dac.c"
+	default n
+
+config STM32H7XX_HAL_DAC_EX
+	bool "build stm32h7xx_hal_dac_ex.c"
+	default n
+
+config STM32H7XX_HAL_DCMI
+	bool "build stm32h7xx_hal_dcmi.c"
+	default n
+
+config STM32H7XX_HAL_DFSDM
+	bool "build stm32h7xx_hal_dfsdm.c"
+	default n
+
+config STM32H7XX_HAL_DFSDM_EX
+	bool "build stm32h7xx_hal_dfsdm_ex.c"
+	default n
+
+config STM32H7XX_HAL_DMA
+	bool "build stm32h7xx_hal_dma.c"
+	default n
+
+config STM32H7XX_HAL_DMA2D
+	bool "build stm32h7xx_hal_dma2d.c"
+	default n
+
+config STM32H7XX_HAL_DMA_EX
+	bool "build stm32h7xx_hal_dma_ex.c"
+	default n
+
+config STM32H7XX_HAL_DSI
+	bool "build stm32h7xx_hal_dsi.c"
+	default n
+
+config STM32H7XX_HAL_DTS
+	bool "build stm32h7xx_hal_dts.c"
+	default n
+
+config STM32H7XX_HAL_ETH
+	bool "build stm32h7xx_hal_eth.c"
+	default n
+
+config STM32H7XX_HAL_ETH_EX
+	bool "build stm32h7xx_hal_eth_ex.c"
+	default n
+
+config STM32H7XX_HAL_EXTI
+	bool "build stm32h7xx_hal_exti.c"
+	default n
+
+config STM32H7XX_HAL_FDCAN
+	bool "build stm32h7xx_hal_fdcan.c"
+	default n
+
+config STM32H7XX_HAL_FLASH
+	bool "build stm32h7xx_hal_flash.c"
+	default n
+
+config STM32H7XX_HAL_FLASH_EX
+	bool "build stm32h7xx_hal_flash_ex.c"
+	default n
+
+config STM32H7XX_HAL_FMAC
+	bool "build stm32h7xx_hal_fmac.c"
+	default n
+
+config STM32H7XX_HAL_GFXMMU
+	bool "build stm32h7xx_hal_gfxmmu.c"
+	default n
+
+config STM32H7XX_HAL_GPIO
+	bool "build stm32h7xx_hal_gpio.c"
+	default n
+
+config STM32H7XX_HAL_HASH
+	bool "build stm32h7xx_hal_hash.c"
+	default n
+
+config STM32H7XX_HAL_HASH_EX
+	bool "build stm32h7xx_hal_hash_ex.c"
+	default n
+
+config STM32H7XX_HAL_HCD
+	bool "build stm32h7xx_hal_hcd.c"
+	default n
+
+config STM32H7XX_HAL_HRTIM
+	bool "build stm32h7xx_hal_hrtim.c"
+	default n
+
+config STM32H7XX_HAL_HSEM
+	bool "build stm32h7xx_hal_hsem.c"
+	default n
+
+config STM32H7XX_HAL_I2C
+	bool "build stm32h7xx_hal_i2c.c"
+	default n
+
+config STM32H7XX_HAL_I2C_EX
+	bool "build stm32h7xx_hal_i2c_ex.c"
+	default n
+
+config STM32H7XX_HAL_I2S
+	bool "build stm32h7xx_hal_i2s.c"
+	default n
+
+config STM32H7XX_HAL_I2S_EX
+	bool "build stm32h7xx_hal_i2s_ex.c"
+	default n
+
+config STM32H7XX_HAL_IRDA
+	bool "build stm32h7xx_hal_irda.c"
+	default n
+
+config STM32H7XX_HAL_IWDG
+	bool "build stm32h7xx_hal_iwdg.c"
+	default n
+
+config STM32H7XX_HAL_JPEG
+	bool "build stm32h7xx_hal_jpeg.c"
+	default n
+
+config STM32H7XX_HAL_LPTIM
+	bool "build stm32h7xx_hal_lptim.c"
+	default n
+
+config STM32H7XX_HAL_LTDC
+	bool "build stm32h7xx_hal_ltdc.c"
+	default n
+
+config STM32H7XX_HAL_LTDC_EX
+	bool "build stm32h7xx_hal_ltdc_ex.c"
+	default n
+
+config STM32H7XX_HAL_MDIOS
+	bool "build stm32h7xx_hal_mdios.c"
+	default n
+
+config STM32H7XX_HAL_MDMA
+	bool "build stm32h7xx_hal_mdma.c"
+	default n
+
+config STM32H7XX_HAL_MMC
+	bool "build stm32h7xx_hal_mmc.c"
+	default n
+
+config STM32H7XX_HAL_MMC_EX
+	bool "build stm32h7xx_hal_mmc_ex.c"
+	default n
+
+config STM32H7XX_HAL_NAND
+	bool "build stm32h7xx_hal_nand.c"
+	default n
+
+config STM32H7XX_HAL_NOR
+	bool "build stm32h7xx_hal_nor.c"
+	default n
+
+config STM32H7XX_HAL_OPAMP
+	bool "build stm32h7xx_hal_opamp.c"
+	default n
+
+config STM32H7XX_HAL_OPAMP_EX
+	bool "build stm32h7xx_hal_opamp_ex.c"
+	default n
+
+config STM32H7XX_HAL_OSPI
+	bool "build stm32h7xx_hal_ospi.c"
+	default n
+
+config STM32H7XX_HAL_OTFDEC
+	bool "build stm32h7xx_hal_otfdec.c"
+	default n
+
+config STM32H7XX_HAL_PCD
+	bool "build stm32h7xx_hal_pcd.c"
+	default n
+
+config STM32H7XX_HAL_PCD_EX
+	bool "build stm32h7xx_hal_pcd_ex.c"
+	default n
+
+config STM32H7XX_HAL_PSSI
+	bool "build stm32h7xx_hal_pssi.c"
+	default n
+
+config STM32H7XX_HAL_PWR
+	bool "build stm32h7xx_hal_pwr.c"
+	default n
+
+config STM32H7XX_HAL_PWR_EX
+	bool "build stm32h7xx_hal_pwr_ex.c"
+	default n
+
+config STM32H7XX_HAL_QSPI
+	bool "build stm32h7xx_hal_qspi.c"
+	default n
+
+config STM32H7XX_HAL_RAMECC
+	bool "build stm32h7xx_hal_ramecc.c"
+	default n
+
+config STM32H7XX_HAL_RCC
+	bool "build stm32h7xx_hal_rcc.c"
+	default n
+
+config STM32H7XX_HAL_RCC_EX
+	bool "build stm32h7xx_hal_rcc_ex.c"
+	default n
+
+config STM32H7XX_HAL_RNG
+	bool "build stm32h7xx_hal_rng.c"
+	default n
+
+config STM32H7XX_HAL_RNG_EX
+	bool "build stm32h7xx_hal_rng_ex.c"
+	default n
+
+config STM32H7XX_HAL_RTC
+	bool "build stm32h7xx_hal_rtc.c"
+	default n
+
+config STM32H7XX_HAL_RTC_EX
+	bool "build stm32h7xx_hal_rtc_ex.c"
+	default n
+
+config STM32H7XX_HAL_SAI
+	bool "build stm32h7xx_hal_sai.c"
+	default n
+
+config STM32H7XX_HAL_SAI_EX
+	bool "build stm32h7xx_hal_sai_ex.c"
+	default n
+
+config STM32H7XX_HAL_SD
+	bool "build stm32h7xx_hal_sd.c"
+	default n
+
+config STM32H7XX_HAL_SDRAM
+	bool "build stm32h7xx_hal_sdram.c"
+	default n
+
+config STM32H7XX_HAL_SD_EX
+	bool "build stm32h7xx_hal_sd_ex.c"
+	default n
+
+config STM32H7XX_HAL_SMARTCARD
+	bool "build stm32h7xx_hal_smartcard.c"
+	default n
+
+config STM32H7XX_HAL_SMARTCARD_EX
+	bool "build stm32h7xx_hal_smartcard_ex.c"
+	default n
+
+config STM32H7XX_HAL_SMBUS
+	bool "build stm32h7xx_hal_smbus.c"
+	default n
+
+config STM32H7XX_HAL_SMBUS_EX
+	bool "build stm32h7xx_hal_smbus_ex.c"
+	default n
+
+config STM32H7XX_HAL_SPDIFRX
+	bool "build stm32h7xx_hal_spdifrx.c"
+	default n
+
+config STM32H7XX_HAL_SPI
+	bool "build stm32h7xx_hal_spi.c"
+	default n
+
+config STM32H7XX_HAL_SPI_EX
+	bool "build stm32h7xx_hal_spi_ex.c"
+	default n
+
+config STM32H7XX_HAL_SRAM
+	bool "build stm32h7xx_hal_sram.c"
+	default n
+
+config STM32H7XX_HAL_SWPMI
+	bool "build stm32h7xx_hal_swpmi.c"
+	default n
+
+config STM32H7XX_HAL_TIM
+	bool "build stm32h7xx_hal_tim.c"
+	default n
+
+config STM32H7XX_HAL_TIM_EX
+	bool "build stm32h7xx_hal_tim_ex.c"
+	default n
+
+config STM32H7XX_HAL_UART
+	bool "build stm32h7xx_hal_uart.c"
+	default n
+
+config STM32H7XX_HAL_UART_EX
+	bool "build stm32h7xx_hal_uart_ex.c"
+	default n
+
+config STM32H7XX_HAL_USART
+	bool "build stm32h7xx_hal_usart.c"
+	default n
+
+config STM32H7XX_HAL_USART_EX
+	bool "build stm32h7xx_hal_usart_ex.c"
+	default n
+
+config STM32H7XX_HAL_WWDG
+	bool "build stm32h7xx_hal_wwdg.c"
+	default n
+
+config STM32H7XX_LL_ADC
+	bool "build stm32h7xx_ll_adc.c"
+	default n
+
+config STM32H7XX_LL_BDMA
+	bool "build stm32h7xx_ll_bdma.c"
+	default n
+
+config STM32H7XX_LL_COMP
+	bool "build stm32h7xx_ll_comp.c"
+	default n
+
+config STM32H7XX_LL_CORDIC
+	bool "build stm32h7xx_ll_cordic.c"
+	default n
+
+config STM32H7XX_LL_CRC
+	bool "build stm32h7xx_ll_crc.c"
+	default n
+
+config STM32H7XX_LL_CRS
+	bool "build stm32h7xx_ll_crs.c"
+	default n
+
+config STM32H7XX_LL_DAC
+	bool "build stm32h7xx_ll_dac.c"
+	default n
+
+config STM32H7XX_LL_DELAYBLOCK
+	bool "build stm32h7xx_ll_delayblock.c"
+	default n
+
+config STM32H7XX_LL_DMA
+	bool "build stm32h7xx_ll_dma.c"
+	default n
+
+config STM32H7XX_LL_DMA2D
+	bool "build stm32h7xx_ll_dma2d.c"
+	default n
+
+config STM32H7XX_LL_EXTI
+	bool "build stm32h7xx_ll_exti.c"
+	default n
+
+config STM32H7XX_LL_FMAC
+	bool "build stm32h7xx_ll_fmac.c"
+	default n
+
+config STM32H7XX_LL_FMC
+	bool "build stm32h7xx_ll_fmc.c"
+	default n
+
+config STM32H7XX_LL_GPIO
+	bool "build stm32h7xx_ll_gpio.c"
+	default n
+
+config STM32H7XX_LL_HRTIM
+	bool "build stm32h7xx_ll_hrtim.c"
+	default n
+
+config STM32H7XX_LL_I2C
+	bool "build stm32h7xx_ll_i2c.c"
+	default n
+
+config STM32H7XX_LL_LPTIM
+	bool "build stm32h7xx_ll_lptim.c"
+	default n
+
+config STM32H7XX_LL_LPUART
+	bool "build stm32h7xx_ll_lpuart.c"
+	default n
+
+config STM32H7XX_LL_MDMA
+	bool "build stm32h7xx_ll_mdma.c"
+	default n
+
+config STM32H7XX_LL_OPAMP
+	bool "build stm32h7xx_ll_opamp.c"
+	default n
+
+config STM32H7XX_LL_PWR
+	bool "build stm32h7xx_ll_pwr.c"
+	default n
+
+config STM32H7XX_LL_RCC
+	bool "build stm32h7xx_ll_rcc.c"
+	default n
+
+config STM32H7XX_LL_RNG
+	bool "build stm32h7xx_ll_rng.c"
+	default n
+
+config STM32H7XX_LL_RTC
+	bool "build stm32h7xx_ll_rtc.c"
+	default n
+
+config STM32H7XX_LL_SDMMC
+	bool "build stm32h7xx_ll_sdmmc.c"
+	default n
+
+config STM32H7XX_LL_SPI
+	bool "build stm32h7xx_ll_spi.c"
+	default n
+
+config STM32H7XX_LL_SWPMI
+	bool "build stm32h7xx_ll_swpmi.c"
+	default n
+
+config STM32H7XX_LL_TIM
+	bool "build stm32h7xx_ll_tim.c"
+	default n
+
+config STM32H7XX_LL_USART
+	bool "build stm32h7xx_ll_usart.c"
+	default n
+
+config STM32H7XX_LL_USB
+	bool "build stm32h7xx_ll_usb.c"
+	default n
+
+config STM32H7XX_LL_UTILS
+	bool "build stm32h7xx_ll_utils.c"
+	default n
+
+endmenu
+
+menu "Board Support Driver"
+
+config STM32H7XX_DRV_GPIO
+	bool "Enable GPIO drv class"
+	default y
+
+config STM32H7XX_DRV_GPI
+	depends on STM32H7XX_DRV_GPIO
+	bool "Enable GPI drv class"
+	default y
+
+config STM32H7XX_DRV_GPO
+	depends on STM32H7XX_DRV_GPIO
+	bool "Enable GPO drv class"
+	default y
+
+config STM32H7XX_DRV_NVIC
+	bool "Enalbe NVIC drv class"
+	default y
+
+config STM32H7XX_DRV_USART
+	select STM32H7XX_DRV_GPIO
+	bool "Enable USART drv clas"
+	default n
+
+config STM32H7XX_DRV_SPI
+	select STM32H7XX_DRV_GPIO
+	bool "Enable SPI drv class"
+	default n
+
+config STM32H7XX_DRV_I2C
+	select STM32H7XX_DRV_GPIO
+	bool "Enable I2C drv class"
+	default n
+
+config STM32H7XX_DRV_DMA
+	bool "Enable dma drv class"
+	default n
+
+config STM32H7XX_DRV_FSMC
+	select STM32H7XX_DRV_GPIO
+	bool "Enable FSMC drv class"
+	default n
+
+endmenu
