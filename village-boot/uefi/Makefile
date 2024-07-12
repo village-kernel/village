@@ -8,28 +8,29 @@
 ######################################
 # paths
 ######################################
-inc-boot-$(CONFIG_IA32)          += village-boot/uefi/uefi
-src-boot-$(CONFIG_IA32)          += village-boot/uefi/uefi
-src-boot-$(CONFIG_IA32)          += village-boot/uefi/boot
+inc-boot-y                       += village-boot/uefi/uefi
+src-boot-y                       += village-boot/uefi/uefi
+src-boot-y                       += village-boot/uefi/boot
 
 
 ######################################
 # objects
 ######################################
-objs-boot-$(CONFIG_IA32)         += boot.o
+objs-boot-y                      += boot.o
 objs-boot-$(CONFIG_IA32)         += crt0_efi_ia32.o
 
 
 ######################################
 # libraries
 ######################################
-libs-boot-$(CONFIG_IA32)         += 
+libs-boot-y                      += 
 
 
 ######################################
 # link script
 ######################################
-LDSCRIPT-BOOT      := -T village-boot/uefi/uefi/elf_ia32_efi.lds
+LDSCRIPT-BOOT-$(CONFIG_IA32)     := -T village-boot/uefi/uefi/elf_ia32_efi.lds
+LDSCRIPT-BOOT                    := $(LDSCRIPT-BOOT-y)
 
 
 #######################################
