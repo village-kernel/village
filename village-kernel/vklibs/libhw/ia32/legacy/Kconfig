@@ -1,0 +1,14 @@
+comment "Configure Support Function"
+
+# config drv menu
+menu "Hardware Abstraction Layer"
+
+config DRV_PCI_CONTROLLER
+	bool "Enable pci controller class"
+	default y
+
+config DRV_PS2_CONTROLLER
+	bool "Enable ps2 controller class"
+	default y
+
+endmenu
