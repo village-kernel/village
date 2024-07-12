@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "ArchInterrupt.h"
-#include "HalHeaders.h"
+#include "Hardware.h"
 
 
 /// @brief Declarations

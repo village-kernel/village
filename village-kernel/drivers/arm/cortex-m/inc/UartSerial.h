@@ -9,11 +9,10 @@
 #ifndef __UART_SERIAL_H__
 #define __UART_SERIAL_H__
 
-#include "HalHeaders.h"
-#include "Usart.h"
-#include "Dma.h"
+#include "Hardware.h"
 #include "DmaFifo.h"
 #include "Driver.h"
+
 
 ///UartSerial
 class UartSerial : public Driver
