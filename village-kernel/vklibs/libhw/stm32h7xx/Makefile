@@ -18,7 +18,7 @@ MCU       := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 DEFS      := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/lds/STM32H750VB_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H750VB_flash.ld
 
 
 #######################################
@@ -44,11 +44,11 @@ LDFLAGS-KERNEL                                   += -Wl,-static -pie
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/cmsis
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/core/inc
+inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/cmsis
+inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/core/inc
 
-src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/core/src
-src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/crt0
+src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/core/src
+src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/crt0
 
 
 ######################################
@@ -89,12 +89,12 @@ libs-y                                           += hw
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/hal/inc
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/hal/inc/Legacy
-src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/hal/src
+inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/hal/inc
+inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/hal/inc/Legacy
+src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/hal/src
 
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/drv/inc
-src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/drv/src
+inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/drv/inc
+src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/drv/src
 
 
 ######################################

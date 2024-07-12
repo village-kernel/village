@@ -15,7 +15,7 @@ MCU                                   := -m32 -mno-sse -mno-mmx
 EMULATION                             := -melf_i386 
 
 # link script
-LDSCRIPT-KERNEL                       := -T village-kernel/vklibs/libhw/ia32/legacy/lds/kernel.lds
+LDSCRIPT-KERNEL                       := -T village-kernel/vklibs/libhw/ia32legacy/lds/kernel.lds
 
 # gcc flags
 CFLAGS                                += $(MCU) -DARCH_X86
@@ -36,8 +36,8 @@ LDFLAGS-KERNEL                        += -Wl,-static -pie
 ######################################
 # kernel code
 ######################################
-inc-y                                 += village-kernel/vklibs/libhw/ia32/legacy/crt0
-src-y                                 += village-kernel/vklibs/libhw/ia32/legacy/crt0
+inc-y                                 += village-kernel/vklibs/libhw/ia32legacy/crt0
+src-y                                 += village-kernel/vklibs/libhw/ia32legacy/crt0
 
 objs-y                                += crt0_kernel.o
 
@@ -47,11 +47,11 @@ objs-y                                += crt0_kernel.o
 ######################################
 libs-y                                += hw
 
-inc-y                                 += village-kernel/vklibs/libhw/ia32/legacy/core
-src-y                                 += village-kernel/vklibs/libhw/ia32/legacy/core 
+inc-y                                 += village-kernel/vklibs/libhw/ia32legacy/core
+src-y                                 += village-kernel/vklibs/libhw/ia32legacy/core 
 
-inc-y                                 += village-kernel/vklibs/libhw/ia32/legacy/drv/inc
-src-y                                 += village-kernel/vklibs/libhw/ia32/legacy/drv/src
+inc-y                                 += village-kernel/vklibs/libhw/ia32legacy/drv/inc
+src-y                                 += village-kernel/vklibs/libhw/ia32legacy/drv/src
 
 objs-hw-y                             += i386.o
 objs-hw-y                             += div64.o

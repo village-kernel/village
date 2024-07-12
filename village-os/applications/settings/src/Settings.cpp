@@ -30,7 +30,12 @@ void Settings::Setup()
 /// @brief Execute
 void Settings::Execute()
 {
-	while (1) {}
+	int counter = 0;
+	while (1) 
+	{
+		kernel->debug.Log("hello settings counter %d", counter++);
+		kernel->thread.Sleep(2000);
+	}
 }
 
 
