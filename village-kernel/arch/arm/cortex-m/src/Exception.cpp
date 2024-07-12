@@ -6,7 +6,7 @@
 //###########################################################################
 #include "Exception.h"
 #include "Kernel.h"
-#include "HalHeaders.h"
+#include "Hardware.h"
 
 
 /// @brief Constructor

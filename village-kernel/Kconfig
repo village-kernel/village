@@ -18,47 +18,147 @@ if KERNEL
 		config ARM
 			bool "arm"
 
-		config X86
-			bool "x86"
-			select BOOTSECTION
+		config IA32
+			bool "ia32"
 	endchoice
 
-	comment "Configure Support Function"
+	choice
+		prompt "ARM Series"
+		depends on ARM
+		default CORTEX_M
 
-	## ARM
-	if ARM
+		config CORTEX_A
+			bool "cortex-A"
 
-		choice
-			prompt "ARM Series"
-			depends on ARM
-			default CORTEX_M
+		config CORTEX_R
+			bool "cortex-R"
 
-			config CORTEX_A
-				bool "cortex-A"
+		config CORTEX_M
+			bool "cortex-M"
+	endchoice
 
-			config CORTEX_R
-				bool "cortex-R"
+	choice
+		prompt "MCU Manufacturer"
+		depends on CORTEX_M
+		default ST
 
-			config CORTEX_M
-				bool "cortex-M"
-		endchoice
+		config ST
+			bool "ST"
+	endchoice
 
-	endif
+	choice
+		prompt "MCU Series"
+		depends on ST
+		default STM32F4xx
 
-	## X86
-	if X86
+		config STM32F4xx
+			bool "STM32F4xx"
 
-		choice
-			prompt "Boot fireware"
-			depends on X86
-			default BIOS
+		config STM32H7xx
+			bool "STM32H7xx"
+	endchoice
 
-			config BIOS
-				bool "bios"
+	choice
+		prompt "MCU Type"
+		depends on STM32F4xx
+		default STM32F407xx
 
-		endchoice
+		config STM32F401xc
+			bool "STM32F401xc"
 
-	endif
+		config STM32F401xe
+			bool "STM32F401xe"
+
+		config STM32F405xx
+			bool "STM32F405xx"
+
+		config STM32F407xx
+			bool "STM32F407xx"
+	endchoice
+
+	choice
+		prompt "MCU Model"
+		depends on STM32F407xx
+		default STM32F407ZE
+
+		config STM32F407IE
+			bool "STM32F407IE"
+
+		config STM32F407IG
+			bool "STM32F407IG"
+
+		config STM32F407VE
+			bool "STM32F407VE"
+
+		config STM32F407VG
+			bool "STM32F407VG"
+
+		config STM32F407ZE
+			bool "STM32F407ZE"
+
+		config STM32F407ZG
+			bool "STM32F407ZG"
+	endchoice
+
+	choice
+		prompt "MCU Model"
+		depends on STM32F405xx
+		default STM32F405RG
+
+		config STM32F405OE
+			bool "STM32F405OE"
+
+		config STM32F405OG
+			bool "STM32F405OG"
+
+		config STM32F405RG
+			bool "STM32F405RG"
+
+		config STM32F405VG
+			bool "STM32F405VG"
+
+		config STM32F405ZG
+			bool "STM32F405ZG"
+	endchoice
+
+	choice
+		prompt "MCU Type"
+		depends on STM32H7xx
+		default STM32H750xx
+
+		config STM32H750xx
+			bool "STM32H750xx"
+	endchoice
+
+	choice
+		prompt "MCU Model"
+		depends on STM32H750xx
+		default STM32H750IB
+
+		config STM32H750IB
+			bool "STM32H750IB"
+
+		config STM32H750VB
+			bool "STM32H750VB"
+
+		config STM32H750XB
+			bool "STM32H750XB"
+
+		config STM32H750ZB
+			bool "STM32H750ZB"
+	endchoice
+
+	choice
+		prompt "Boot Mode"
+		depends on IA32
+		default IA32LEGACY
+
+		config IA32LEGACY
+			bool "legacy"
+
+		config IA32UEFI
+			bool "uefi"
+	endchoice
 
 	endmenu
 
@@ -70,8 +170,8 @@ if KERNEL
 		source ./village-kernel/drivers/arm/cortex-m/Kconfig
 	endif
 
-	if BIOS
-		source ./village-kernel/drivers/x86/bios/Kconfig
+	if IA32LEGACY
+		source ./village-kernel/drivers/ia32/legacy/Kconfig
 	endif
 
 	endmenu
@@ -146,11 +246,19 @@ if KERNEL
 
 		comment "This is using to configure libc"
 
+		config VKLIBC
+			bool "using vklibc"
+			default y
+
 		endmenu
 
 		menu "libc++"
 
 		comment "This is using to configure libc++"
+
+		config VKLIBCPP
+			bool "using vklibc++"
+			default y
 
 		endmenu
 
@@ -158,16 +266,24 @@ if KERNEL
 
 		comment "This is using to configure libm"
 
+		config VKLIBM
+			bool "using vklibm"
+			default y
+
 		endmenu
 
 		menu "libhw"
 			
-			if CORTEX_M
-				source ./village-kernel/vklibs/libhw/arm/cortex-m/Kconfig
+			if IA32LEGACY
+				source ./village-kernel/vklibs/libhw/ia32/legacy/Kconfig
 			endif
 
-			if BIOS
-				source ./village-kernel/vklibs/libhw/x86/bios/Kconfig
+			if STM32F4xx
+				source ./village-kernel/vklibs/libhw/arm/cortex-m/stm32f4xx/Kconfig
+			endif
+
+			if STM32H7xx
+				source ./village-kernel/vklibs/libhw/arm/cortex-m/stm32h7xx/Kconfig
 			endif
 
 		endmenu

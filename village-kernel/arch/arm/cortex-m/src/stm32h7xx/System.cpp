@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "System.h"
-#include "HalHeaders.h"
+#include "Hardware.h"
 
 
 /// @brief Constructor
@@ -27,7 +27,7 @@ void ConcreteSystem::Setup()
 	//Config clock
 	ConfigCoreDebug();
 	ConfigureMPU();
-	ConfigurePower()
+	ConfigurePower();
 	ConfigSysTick();
 	ConfigureForHsi();
 }
@@ -37,15 +37,6 @@ void ConcreteSystem::Setup()
 void ConcreteSystem::Exit()
 {
 
-}
-
-
-/// @brief Configure the main internal regulator output voltage
-void ConcreteSystem::ConfigurePower()
-{
-	//Select regulator voltage output Scale 1 mode
-	RCC->APB1ENR |= RCC_APB1ENR_PWREN;
-	PWR->CR |= PWR_CR_VOS;
 }
 
 
@@ -140,13 +131,13 @@ void ConcreteSystem::ConfigurePower()
 	PWR->D3CR = (PWR->D3CR & ~PWR_D3CR_VOS) | PWR_D3CR_VOS_1;
 
 	//Delay after setting the voltage scaling
-	uint32_t tmpreg1 = PWR->D3CR & PWR_D3CR_VOS;
+	__attribute__((unused)) uint32_t tmpreg1 = PWR->D3CR & PWR_D3CR_VOS;
 
 	//Setting the syscfg boost setting
 	SYSCFG->PWRCR = (SYSCFG->PWRCR & ~SYSCFG_PWRCR_ODEN) | SYSCFG_PWRCR_ODEN;
 
 	//Delay after setting the syscfg boost setting
-	uint32_t tmpreg2 = SYSCFG->PWRCR & SYSCFG_PWRCR_ODEN;
+	__attribute__((unused)) uint32_t tmpreg2 = SYSCFG->PWRCR & SYSCFG_PWRCR_ODEN;
 
 	//Voltage scaling output selection ready
 	while (!(PWR->D3CR & PWR_D3CR_VOSRDY)) {}
@@ -460,5 +451,5 @@ void ConcreteSystem::Reboot()
 /// @brief SysTick handler
 extern "C" void __weak SysTick_Handler()
 {
-	kernel->system->SysTickCounter();
+	kernel->system.SysTickCounter();
 }

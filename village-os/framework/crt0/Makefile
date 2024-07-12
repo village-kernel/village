@@ -35,7 +35,7 @@ LDFLAGS-APP  += -Wl,--no-warn-rwx-segment
 LDFLAGS-APP  += -Wl,--unresolved-symbols=ignore-in-shared-libs
 LDFLAGS-APP  += -pie
 
-ifeq ($(CONFIG_X86), y)
+ifeq ($(CONFIG_IA32), y)
 LDFLAGS-APP  += -Wl,-m,elf_i386
 endif
 

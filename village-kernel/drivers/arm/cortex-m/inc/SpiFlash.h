@@ -8,10 +8,9 @@
 #ifndef __SPI_FLASH_H__
 #define __SPI_FLASH_H__
 
-#include "HalHeaders.h"
+#include "Hardware.h"
 #include "Driver.h"
-#include "Spi.h"
-#include "Gpo.h"
+
 
 ///SpiFlash
 class SpiFlash : public Driver
