@@ -19,6 +19,7 @@ DEFS      := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8
 
 # link script
 LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H750VB_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H743II)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H743II_flash.ld
 
 
 #######################################
