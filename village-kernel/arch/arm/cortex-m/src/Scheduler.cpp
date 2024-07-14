@@ -55,9 +55,9 @@ void ConcreteScheduler::Start()
 	__asm volatile("msr control, r0");
 
 	//Move to Unprivileged level, Set bit[0] nPRIV
-	__asm volatile("mrs r0, control");
-	__asm volatile("orr r0, r0, #1");
-	__asm volatile("msr control, r0");
+	//__asm volatile("mrs r0, control");
+	//__asm volatile("orr r0, r0, #1");
+	//__asm volatile("msr control, r0");
 
 	//Set start schedule flag
 	isStartSchedule = true;
