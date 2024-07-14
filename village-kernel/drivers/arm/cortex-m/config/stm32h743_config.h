@@ -18,7 +18,7 @@
 #define UART_SERIAL_TX_DMA_CHANNEL           3
 #define UART_SERIAL_RX_DMA_REQUEST           41
 #define UART_SERIAL_TX_DMA_REQUEST           42
-#define UART_SERIAL_ENABLEDMA                false
+#define UART_SERIAL_ENABLEDMA                true
 
 #define UART_SERIAL_RX_CH                    Gpio::_ChA
 #define UART_SERIAL_RX_PIN                   10
@@ -113,7 +113,7 @@
 #define SPI_FLASH_WP_CH                      Gpio::_ChF
 #define SPI_FLASH_WP_PIN                     15
 
-#define SPI_FLASH_CHANNEL                    Spi::_Spi5
+#define SPI_FLASH_CHANNEL                    Spi::_Spi1
 
 
 //********************************SD Card*********************************//
