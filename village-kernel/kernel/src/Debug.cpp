@@ -29,6 +29,9 @@ void ConcreteDebug::Setup()
 {
 	//Get transceiver driver and initialize
 	transceiver.Open("serial0", FileMode::_Write);
+
+	//Output debug info
+	Info("Debug feature initialized done!");
 }
 
 
