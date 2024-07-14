@@ -15,11 +15,16 @@ FLASH_CMD := openocd -f interface/stlink-v2.cfg -f target/stm32h7x.cfg -c "progr
 MCU       := -mcpu=cortex-m7 -mthumb -mfpu=fpv5-sp-d16 -mfloat-abi=hard
 
 # defines
-DEFS      := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32H750xx -D'HSE_VALUE=((uint32_t)8000000)'
+DEFS      := -DARCH_ARM -DUSE_HAL_DRIVER -D'HSE_VALUE=((uint32_t)8000000)'
+ifeq ($(CONFIG_STM32H743II), y)
+DEFS      += -DSTM32H743xx
+else ifeq ($(CONFIG_STM32H750VB), y)
+DEFS      += -DSTM32H750xx
+endif
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H750VB_flash.ld
 LDSCRIPT-KERNEL-$(CONFIG_STM32H743II)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H743II_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H750VB_flash.ld
 
 
 #######################################
