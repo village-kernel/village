@@ -80,6 +80,9 @@ void UartSerial::InitConfig()
 	config.usartTxDmaGroup = UART_SERIAL_TX_DMA_GROUP;
 	config.usartTxDmaCh = UART_SERIAL_TX_DMA_CHANNEL;
 	config.usartTxDmaReq = UART_SERIAL_TX_DMA_REQUEST;
+	
+	//COnfig enable dma
+	config.enableDMA = UART_SERIAL_ENABLEDMA;
 }
 
 
@@ -95,20 +98,27 @@ int UartSerial::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	usart.CheckError();
 
-	if (txDma.IsReady())
+	if (config.enableDMA)
 	{
-		CopyTxData(data + offset, size);
+		if (txDma.IsReady())
+		{
+			CopyTxData(data + offset, size);
 
-		//Reset pipeline, sync bus and memory access
-		__asm ("dmb\n" "dsb\n" "isb\n");
+			//Reset pipeline, sync bus and memory access
+			__asm ("dmb\n" "dsb\n" "isb\n");
 
-		txDma.Disable();
-		txDma.ClearTransferCompleteFlag();
-		txDma.SetMemAddr0(txBuffer);
-		txDma.SetDataLen(size);
-		txDma.Enable();
+			txDma.Disable();
+			txDma.ClearTransferCompleteFlag();
+			txDma.SetMemAddr0(txBuffer);
+			txDma.SetDataLen(size);
+			txDma.Enable();
 
-		return size;
+			return size;
+		}
+	}
+	else
+	{
+		if (0 == usart.Write(data + offset, size)) return true;
 	}
 
 	return 0;
@@ -118,20 +128,27 @@ int UartSerial::Write(uint8_t* data, uint32_t size, uint32_t offset)
 ///Read data from rx buffer
 int UartSerial::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
-	uint32_t readSize = 0;
-
 	usart.CheckError();
 
-	rxFifo.Update();
-
-	while (rxFifo.Length())
+	if (config.enableDMA)
 	{
-		data[offset + readSize++] = rxFifo.Dequeue();
+		uint32_t readSize = 0;
 
-		if (readSize >= size) break;
+		rxFifo.Update();
+
+		while (rxFifo.Length())
+		{
+			data[offset + readSize++] = rxFifo.Dequeue();
+
+			if (readSize >= size) break;
+		}
+
+		return readSize;
 	}
-
-	return readSize;
+	else
+	{
+		return usart.Read(data + offset, size);
+	}
 }
 
 

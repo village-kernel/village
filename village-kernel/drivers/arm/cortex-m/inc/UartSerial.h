@@ -22,6 +22,7 @@ public:
 	struct Config
 	{
 		bool enableRTS = false;
+		bool enableDMA = true;
 
 		uint16_t usartCh;
 		uint32_t usartBaudrate;
