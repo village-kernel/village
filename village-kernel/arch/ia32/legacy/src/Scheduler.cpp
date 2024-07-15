@@ -68,7 +68,7 @@ void ConcreteScheduler::Start()
 
 /// @brief Rescheduler task
 /// @param access scheduler access
-void ConcreteScheduler::Sched(ConcreteScheduler::Access access)
+void ConcreteScheduler::Sched()
 {
 	if (false == isStartSchedule) return;
 
@@ -114,5 +114,5 @@ void __attribute__((naked)) ConcreteScheduler::PendSVHandler()
 /// @brief SysTick handler
 void ConcreteScheduler::SysTickHandler()
 {
-	Sched(ConcreteScheduler::Privileged);
+	Sched();
 }

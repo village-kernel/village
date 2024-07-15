@@ -87,16 +87,9 @@ public:
 class Scheduler
 {
 public:
-	//Enumerations
-	enum Access
-	{
-		Unprivileged = 0,
-		Privileged = 1,
-	};
-public:
 	//Methods
 	virtual void Start() = 0;
-	virtual void Sched(Access access) = 0;
+	virtual void Sched() = 0;
 };
 
 
