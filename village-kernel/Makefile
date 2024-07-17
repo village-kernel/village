@@ -12,8 +12,8 @@ inc-y                               += village-kernel/kernel/if
 inc-y                               += village-kernel/kernel/inc
 src-y                               += village-kernel/kernel/src
 
-inc-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32legacy/inc
-src-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32legacy/src
+inc-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32/legacy/inc
+src-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32/legacy/src
 
 inc-$(CONFIG_CORTEX_M)              += village-kernel/arch/arm/cortex-m/inc
 inc-$(CONFIG_STM32F4xx)             += village-kernel/arch/arm/cortex-m/inc/stm32f4xx
