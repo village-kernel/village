@@ -16,6 +16,7 @@ class ArchInterrupt
 public:
 	//Static constants
 	static const uint32_t isr_num = 256;
+	static const uint32_t rsvd_isr_size = 0;
 private:
 	//Structures
 	struct IdtGate
