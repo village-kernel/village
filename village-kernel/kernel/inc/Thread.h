@@ -24,7 +24,7 @@ class ConcreteThread : public Thread, public Class
 private:
 	//Static constants
 	static const uint32_t task_stack_size = TASK_STACK;
-	static const uint32_t psp_frame_size = sizeof(TaskContext) >> 2;
+	static const uint32_t psp_frame_size = sizeof(TaskContext);
 	
 	//Members
 	List<Task*> tasks;
