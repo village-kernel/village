@@ -4,9 +4,10 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "UsbStorage.h"
 #include "usbd_desc.h"
 #include "usbd_msc.h"
+#include "Hardware.h"
+#include "Driver.h"
 #include "Device.h"
 #include "System.h"
 #include "Kernel.h"
@@ -139,51 +140,56 @@ static USBD_StorageTypeDef USBD_Storage_Interface_fops_FS =
 static USBD_HandleTypeDef hUsbDeviceFS;
 
 
-///USB storage device initialize
-bool UsbStorage::Open()
+/// @brief UsbStorage
+class UsbStorage : public Driver
 {
-#ifdef STM32H7xx
-	//Select usb clock
-	RCC->D2CCIP2R |= RCC_D2CCIP2R_USBSEL;
-
-	//Enable USB Voltage detector
-	PWR->CR3 |= PWR_CR3_USB33DEN;
-#endif
-	//Initialize usb device
-	USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
-
-	//Register usb class
-	USBD_RegisterClass(&hUsbDeviceFS, &USBD_MSC);
-
-	//Register usb storage
-	USBD_MSC_RegisterStorage(&hUsbDeviceFS, &USBD_Storage_Interface_fops_FS);
-
-	//Start usbd
-	USBD_Start(&hUsbDeviceFS);
-
-	return true;
-}
+private:
+	/// @brief Start mount usb storage to pc
+	void Mount()
+	{
+		USBD_Start(&hUsbDeviceFS);
+	}
 
 
-/// @brief Close
-void UsbStorage::Close()
-{
+	/// @brief Stop mount usb storage to pc
+	void Unmount()
+	{
+		USBD_Stop(&hUsbDeviceFS);
+	}
+public:
+	/// @brief USB storage device initialize
+	/// @return 
+	bool Open()
+	{
+	#ifdef STM32H7xx
+		//Select usb clock
+		RCC->D2CCIP2R |= RCC_D2CCIP2R_USBSEL;
 
-}
+		//Enable USB Voltage detector
+		PWR->CR3 |= PWR_CR3_USB33DEN;
+	#endif
+		//Initialize usb device
+		USBD_Init(&hUsbDeviceFS, &FS_Desc, DEVICE_FS);
+
+		//Register usb class
+		USBD_RegisterClass(&hUsbDeviceFS, &USBD_MSC);
+
+		//Register usb storage
+		USBD_MSC_RegisterStorage(&hUsbDeviceFS, &USBD_Storage_Interface_fops_FS);
+
+		//Start usbd
+		USBD_Start(&hUsbDeviceFS);
+
+		return true;
+	}
 
 
-///Start mount usb storage to pc
-void UsbStorage::Mount()
-{
-	USBD_Start(&hUsbDeviceFS);
-}
+	/// @brief Close
+	void Close()
+	{
 
-
-///Stop mount usb storage to pc
-void UsbStorage::Unmount()
-{
-	USBD_Stop(&hUsbDeviceFS);
-}
+	}
+};
 
 
 ///Register driver
