@@ -95,6 +95,7 @@
 #define HAL_UART_MODULE_ENABLED
 #define HAL_USART_MODULE_ENABLED
 #define HAL_WWDG_MODULE_ENABLED
+#define USE_FULL_LL_DRIVER
 
 /* ########################## Oscillator Values adaptation ####################*/
 /**
