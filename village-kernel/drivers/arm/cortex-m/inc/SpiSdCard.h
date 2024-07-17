@@ -74,23 +74,23 @@ private:
 
 	enum DataResponse
 	{
-		_data_ok            = 0x05,
-		_data_CRC_err       = 0x0b,
-		_data_write_err     = 0x0d,
-		_data_other_err     = 0xff,
+		_DataOk             = 0x05,
+		_DataCrcErr         = 0x0b,
+		_DataWriteErr       = 0x0d,
+		_DataOtherErr       = 0xff,
 	};
 
 	enum CommResponese
 	{
-		_response_no_err    = 0x00,
-		_in_idle_state      = 0x01,
-		_erase_reset        = 0x02,
-		_illegal_cmd        = 0x04,
-		_com_crc_err        = 0x08,
-		_erase_sequence_err = 0x10,
-		_address_err        = 0x20,
-		_parameter_err      = 0x40,
-		_response_failure   = 0xff,
+		_ResponseNoErr      = 0x00,
+		_InIdleState        = 0x01,
+		_EraseReset         = 0x02,
+		_IllegalCmd         = 0x04,
+		_ComCrcErr          = 0x08,
+		_EraseSequenceErr   = 0x10,
+		_AddressErr         = 0x20,
+		_ParameterErr       = 0x40,
+		_ResponseFailure    = 0xff,
 	};
 
 	//Members
