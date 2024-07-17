@@ -7,7 +7,7 @@
 #ifndef __ARCH_INTERRUPT_H__
 #define __ARCH_INTERRUPT_H__
 
-#include "Kernel.h"
+#include "Registers.h"
 
 
 /// @brief Interrupt
