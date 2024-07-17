@@ -54,6 +54,7 @@ void ConcreteInterrupt::Exit()
 int ConcreteInterrupt::SetISR(int irq, Function func, void* user, void* args)
 {
 	ClearISR(irq);
+	irq += ArchInterrupt::rsvd_isr_size;
 	return isrTabs[irq].Add(new Isr(irq, func, user, args));
 }
 
@@ -78,6 +79,7 @@ int ConcreteInterrupt::SetISR(int irq, Method method, Class* user, void* args)
 /// @return the number of the isr in isrTabs, return -1 when fail.
 int ConcreteInterrupt::AppendISR(int irq, Function func, void* user, void* args)
 {
+	irq += ArchInterrupt::rsvd_isr_size;
 	return isrTabs[irq].Add(new Isr(irq, func, user, args));
 }
 
@@ -102,6 +104,8 @@ int ConcreteInterrupt::AppendISR(int irq, Method method, Class* user, void* args
 /// @return Result::_OK / Result::_ERR
 bool ConcreteInterrupt::RemoveISR(int irq, Function func, void* user, void* args)
 {
+	irq += ArchInterrupt::rsvd_isr_size;
+
 	List<Isr*>* isrs = &isrTabs[irq];
 
 	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
@@ -136,6 +140,8 @@ bool ConcreteInterrupt::RemoveISR(int irq, Method method, Class* user, void* arg
 /// @return Result::_OK / Result::_ERR
 void ConcreteInterrupt::ClearISR(int irq)
 {
+	irq += ArchInterrupt::rsvd_isr_size;
+
 	List<Isr*>* isrs = &isrTabs[irq];
 
 	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
