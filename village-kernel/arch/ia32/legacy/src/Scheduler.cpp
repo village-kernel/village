@@ -35,10 +35,10 @@ void ConcreteScheduler::Setup()
 /// @brief Scheduler Exit
 void ConcreteScheduler::Exit()
 {
-	//Append the systick interrupt handler
+	//Remove the systick interrupt handler
 	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 
-	//Set the PendSV interrupt handler
+	//Clear the PendSV interrupt handler
 	kernel->interrupt.ClearISR(PendSV_IRQn);
 }
 
