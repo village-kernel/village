@@ -1,19 +1,19 @@
 //###########################################################################
-// SdCard.h
+// SpiSdCard.h
 //
 // Communicates with sd card using the SPI bus
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __SD_CARD_H__
-#define __SD_CARD_H__
+#ifndef __SPI_SD_CARD_H__
+#define __SPI_SD_CARD_H__
 
 #include "Hardware.h"
 #include "Driver.h"
 
 
-///SdCard
-class SdCard : public Driver
+/// @brief SpiSdCard
+class SpiSdCard : public Driver
 {
 public:
 	//Enumerations
@@ -126,4 +126,4 @@ public:
 	void Close();
 };
 
-#endif //!__SD_CARD_H__
+#endif //!__SPI_SD_CARD_H__

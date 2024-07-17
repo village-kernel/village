@@ -1,17 +1,17 @@
 //###########################################################################
-// SdCard.cpp
+// SpiSdCard.cpp
 //
 // Communicates with sd card using the SPI bus
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "SdCard.h"
+#include "SpiSdCard.h"
 #include "HwConfig.h"
 #include "Kernel.h"
 
 
 ///Sd card initialize
-bool SdCard::Open()
+bool SpiSdCard::Open()
 {
 	//Init config
 	InitConfig();
@@ -37,14 +37,14 @@ bool SdCard::Open()
 
 
 /// @brief Close
-void SdCard::Close()
+void SpiSdCard::Close()
 {
 
 }
 
 
 ///Init config
-inline void SdCard::InitConfig()
+inline void SpiSdCard::InitConfig()
 {
 	config.SpiCh = SPI_SD_CHANNEL;
 	config.SpiConfig.sckCh = SPI_SD_SCK_CH;
@@ -64,21 +64,21 @@ inline void SdCard::InitConfig()
 
 
 ///Spi sd card write one byte writeData
-inline void SdCard::WriteOneByte(uint8_t data)
+inline void SpiSdCard::WriteOneByte(uint8_t data)
 {
 	spi.WriteAndReadOneByte(data);
 }
 
 
 ///Spi sd card read one byte writeData
-inline uint8_t SdCard::ReadOneByte()
+inline uint8_t SpiSdCard::ReadOneByte()
 {
 	return spi.WriteAndReadOneByte(0xff);
 }
 
 
 ///Spi sd card wait ready
-inline uint8_t SdCard::WaitReady()
+inline uint8_t SpiSdCard::WaitReady()
 {
 	for (uint16_t cnt = 0; cnt < 0xffff; cnt++)
 	{
@@ -89,7 +89,7 @@ inline uint8_t SdCard::WaitReady()
 
 
 ///Get sd card ack
-inline uint8_t SdCard::GetAck(uint8_t reponse)
+inline uint8_t SpiSdCard::GetAck(uint8_t reponse)
 {
 	for (uint32_t cnt = 0; cnt < 0xffff; cnt++)
 	{
@@ -100,7 +100,7 @@ inline uint8_t SdCard::GetAck(uint8_t reponse)
 
 
 ///Spi select sd card
-inline uint8_t SdCard::SelectCard()
+inline uint8_t SpiSdCard::SelectCard()
 {
 	csPin.Clear();
 	if (0 == WaitReady()) return 0;
@@ -110,7 +110,7 @@ inline uint8_t SdCard::SelectCard()
 
 
 ///Spi unselect sd card
-inline uint8_t SdCard::UnselectCard()
+inline uint8_t SpiSdCard::UnselectCard()
 {
 	csPin.Set();
 	ReadOneByte(); //Provide additional 8 clocks
@@ -119,7 +119,7 @@ inline uint8_t SdCard::UnselectCard()
 
 
 ///Spi sd card write cmd
-inline uint8_t SdCard::WriteCmd(uint8_t cmd, uint32_t arg, uint8_t crc)
+inline uint8_t SpiSdCard::WriteCmd(uint8_t cmd, uint32_t arg, uint8_t crc)
 {
 	const uint8_t write_separately = 0x40;
 
@@ -151,7 +151,7 @@ inline uint8_t SdCard::WriteCmd(uint8_t cmd, uint32_t arg, uint8_t crc)
 
 
 ///Sd card send data
-inline uint8_t SdCard::SendData(uint8_t *txData, uint16_t size, uint8_t cmd)
+inline uint8_t SpiSdCard::SendData(uint8_t *txData, uint16_t size, uint8_t cmd)
 {
 	if (WaitReady()) return 1;
 
@@ -183,7 +183,7 @@ inline uint8_t SdCard::SendData(uint8_t *txData, uint16_t size, uint8_t cmd)
 
 
 ///Sd card receive data
-inline uint8_t SdCard::RecvData(uint8_t *rxData, uint16_t size)
+inline uint8_t SpiSdCard::RecvData(uint8_t *rxData, uint16_t size)
 {
 	if (GetAck(0xfe)) return 1;
 
@@ -200,7 +200,7 @@ inline uint8_t SdCard::RecvData(uint8_t *rxData, uint16_t size)
 
 
 ///Spi sd card initialize
-uint8_t SdCard::SdCardInit()
+uint8_t SpiSdCard::SdCardInit()
 {
 	uint8_t res;
 	uint8_t data[4];
@@ -298,7 +298,7 @@ uint8_t SdCard::SdCardInit()
 
 
 ///Spi sd card get ocr data
-int SdCard::GetOCR(uint8_t* ocrData)
+int SpiSdCard::GetOCR(uint8_t* ocrData)
 {
 	uint8_t	res = WriteCmd(_ReadOCR, 0, 0x01);
 
@@ -315,7 +315,7 @@ int SdCard::GetOCR(uint8_t* ocrData)
 
 
 ///Spi sd card get cid data
-int SdCard::GetCID(uint8_t* cidData)
+int SpiSdCard::GetCID(uint8_t* cidData)
 {
 	uint8_t res = WriteCmd(_SendCID, 0, 0x01);
 	
@@ -331,7 +331,7 @@ int SdCard::GetCID(uint8_t* cidData)
 
 
 ///Spi sd card get csd data
-int SdCard::GetCSD(uint8_t* csdData)
+int SpiSdCard::GetCSD(uint8_t* csdData)
 {
 	uint8_t res = WriteCmd(_SendCSD, 0, 0x01);
 	
@@ -347,7 +347,7 @@ int SdCard::GetCSD(uint8_t* csdData)
 
 
 ///Spi sd card get sector count
-uint32_t SdCard::GetSectorCount()
+uint32_t SpiSdCard::GetSectorCount()
 {
 	uint8_t csd[16];
 	
@@ -371,7 +371,7 @@ uint32_t SdCard::GetSectorCount()
 
 
 ///Spi sd card Sync
-int SdCard::Sync()
+int SpiSdCard::Sync()
 {
 	uint8_t res = 1;
 	csPin.Clear();
@@ -382,7 +382,7 @@ int SdCard::Sync()
 
 
 ///Spi sd card io ctrl
-int SdCard::IOCtrl(uint8_t cmd, void* data)
+int SpiSdCard::IOCtrl(uint8_t cmd, void* data)
 {
 	switch (cmd)
 	{
@@ -422,7 +422,7 @@ int SdCard::IOCtrl(uint8_t cmd, void* data)
 
 
 ///Spi sd card write data
-int SdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
+int SpiSdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 {
 	uint8_t res = 0;
 
@@ -474,7 +474,7 @@ int SdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 
 
 ///Spi sd card read data
-int SdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
+int SpiSdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 {
 	uint8_t res = 0;
 
@@ -519,4 +519,4 @@ int SdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 
 
 ///Register driver
-REGISTER_DRIVER(new SdCard(), DriverID::_block, disk0);
+REGISTER_DRIVER(new SpiSdCard(), DriverID::_block, disk0);

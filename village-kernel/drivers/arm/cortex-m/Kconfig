@@ -11,14 +11,14 @@ config ILI9488
 	bool "Enable ILI9488 support"
 	default n
 
-config SDCARD
-	select DRV_SPI
-	bool "Enable SD card support"
-	default n
-
 config SPIFLASH
 	select DRV_SPI
 	bool "Enable SPI flash support"
+	default n
+
+config SPISDCARD
+	select DRV_SPI
+	bool "Enable SPI SD card support"
 	default n
 
 config UARTSERIAL
