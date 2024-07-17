@@ -93,9 +93,9 @@ inline uint8_t SpiSdCard::GetAck(uint8_t reponse)
 {
 	for (uint32_t cnt = 0; cnt < 0xffff; cnt++)
 	{
-		if (ReadOneByte() == reponse) return _response_no_err;
+		if (ReadOneByte() == reponse) return _ResponseNoErr;
 	}
-	return _response_failure;
+	return _ResponseFailure;
 }
 
 
@@ -143,7 +143,7 @@ inline uint8_t SpiSdCard::WriteCmd(uint8_t cmd, uint32_t arg, uint8_t crc)
 	for (uint8_t cnt = 0; cnt < 0x1f; cnt++)
 	{
 		res = ReadOneByte();
-		if (0 == (res & _com_crc_err)) return res; 
+		if (0 == (res & _ComCrcErr)) return res; 
 	}
 
 	return res;
@@ -176,7 +176,7 @@ inline uint8_t SpiSdCard::SendData(uint8_t *txData, uint16_t size, uint8_t cmd)
 		
 		//Get response
 		uint8_t res = ReadOneByte();
-		if (_data_ok != (res & 0x1f)) return 2;
+		if (_DataOk != (res & 0x1f)) return 2;
 	}
 	return 0;
 }
@@ -215,13 +215,13 @@ uint8_t SpiSdCard::SdCardInit()
 	for (uint8_t i = 0; i < 20; i++)
 	{
 		res = WriteCmd(_Reset, 0, 0x95);
-		if (_in_idle_state == res) break;
+		if (_InIdleState == res) break;
 	}
 
 	//Set sd card type
 	sdcardType = _NONE;
 
-	if (_in_idle_state == res)
+	if (_InIdleState == res)
 	{
 		if (1 == WriteCmd(_SendIfCond, 0x1aa, 0x87)) //sd v2.0
 		{
@@ -237,14 +237,14 @@ uint8_t SpiSdCard::SdCardInit()
 					res = WriteCmd(_AppCmd, 0, 0x01);
 					res = WriteCmd(_SdSendOpCond, 0x40000000, 0x01);
 
-					if (_response_no_err == res) break;
+					if (_ResponseNoErr == res) break;
 				}
 
-				if (_response_no_err == res)
+				if (_ResponseNoErr == res)
 				{
 					res = WriteCmd(_ReadOCR, 0, 0x01);
 
-					if (_response_no_err == res)
+					if (_ResponseNoErr == res)
 					{
 						for (uint8_t i = 0; i < 4; i++)
 						{
@@ -271,7 +271,7 @@ uint8_t SpiSdCard::SdCardInit()
 					res = WriteCmd(_AppCmd, 0, 0x01);
 					res = WriteCmd(_SdSendOpCond, 0, 0x01);
 
-					if (_response_no_err == res) break;
+					if (_ResponseNoErr == res) break;
 				}
 			}
 			else
@@ -280,11 +280,11 @@ uint8_t SpiSdCard::SdCardInit()
 				for (i = 0; i < 0xffff; i++)
 				{
 					res = WriteCmd(_GetOCR, 0, 0x01);
-					if (_response_no_err == res) break;
+					if (_ResponseNoErr == res) break;
 				}
 			}
 
-			if ((0xffff == i) || (_response_no_err != WriteCmd(_SetBlockLen, 512, 0x01)))
+			if ((0xffff == i) || (_ResponseNoErr != WriteCmd(_SetBlockLen, 512, 0x01)))
 			{
 				sdcardType = _NONE;
 			}
@@ -302,7 +302,7 @@ int SpiSdCard::GetOCR(uint8_t* ocrData)
 {
 	uint8_t	res = WriteCmd(_ReadOCR, 0, 0x01);
 
-	if (_response_no_err == res)
+	if (_ResponseNoErr == res)
 	{
 		for (uint8_t i = 0; i < 4; i++)
 		{
@@ -319,7 +319,7 @@ int SpiSdCard::GetCID(uint8_t* cidData)
 {
 	uint8_t res = WriteCmd(_SendCID, 0, 0x01);
 	
-	if (_response_no_err == res)
+	if (_ResponseNoErr == res)
 	{
 		res = RecvData(cidData, 16);
 	}
@@ -335,7 +335,7 @@ int SpiSdCard::GetCSD(uint8_t* csdData)
 {
 	uint8_t res = WriteCmd(_SendCSD, 0, 0x01);
 	
-	if (_response_no_err == res)
+	if (_ResponseNoErr == res)
 	{
 		res = RecvData(csdData, 16);
 	}
@@ -432,7 +432,7 @@ int SpiSdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 	{
 		res = WriteCmd(_WriteBlock, sector, 0x01);
 
-		if (_response_no_err == res)
+		if (_ResponseNoErr == res)
 		{
 			res = SendData(txData, 512, 0xfe);
 		}
@@ -447,13 +447,13 @@ int SpiSdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 
 		res = WriteCmd(_WriteMultipleBlock, sector, 0x01);
 
-		if (_response_no_err == res)
+		if (_ResponseNoErr == res)
 		{
 			for (uint32_t cnt = 0; cnt < blkSize; cnt++)
 			{
 				res = SendData(txData, 512, 0xfc);
 
-				if (_response_no_err == res)
+				if (_ResponseNoErr == res)
 				{
 					txData += 512;
 				}
@@ -484,7 +484,7 @@ int SpiSdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 	{
 		res = WriteCmd(_ReadSingleBlock, sector, 0x01);
 
-		if (_response_no_err == res)
+		if (_ResponseNoErr == res)
 		{
 			res = RecvData(rxData, 512);
 		}
@@ -493,13 +493,13 @@ int SpiSdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 	{
 		res = WriteCmd(_ReadMultipleBlock, sector, 0x01);
 
-		if (_response_no_err == res)
+		if (_ResponseNoErr == res)
 		{
 			for (uint32_t cnt = 0; cnt < blkSize; cnt++)
 			{
 				res = RecvData(rxData, 512);
 
-				if (_response_no_err == res)
+				if (_ResponseNoErr == res)
 				{
 					rxData += 512;
 				}
