@@ -11,7 +11,7 @@
 
 
 /// @brief System
-class ConcreteSystem : public System
+class ConcreteSystem : public System, public Class
 {
 private:
 	///Static constants
@@ -23,6 +23,7 @@ private:
 	uint32_t cyclesInMicro;
 
 	//Methods
+	void SysTickHandler();
 	void ConfigurePower();
 	void ConfigCoreDebug();
 	void ConfigSysTick();

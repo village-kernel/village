@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "System.h"
+#include "Kernel.h"
 #include "Hardware.h"
 
 
@@ -24,6 +25,9 @@ ConcreteSystem::~ConcreteSystem()
 /// @brief System Setup
 void ConcreteSystem::Setup()
 {
+	//Set interrupt handler
+	kernel->interrupt.SetISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
+
 	//Config clock
 	ConfigCoreDebug();
 	ConfigureMPU();
@@ -36,7 +40,7 @@ void ConcreteSystem::Setup()
 /// @brief System Exit
 void ConcreteSystem::Exit()
 {
-
+	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
 }
 
 
@@ -396,20 +400,6 @@ void ConcreteSystem::ConfigureForXtal()
 }
 
 
-/// @brief Get system clock count
-uint32_t ConcreteSystem::GetSysClkCounts()
-{
-	return sysTicks;
-}
-
-
-/// @brief System clock counter
-void ConcreteSystem::SysTickCounter()
-{
-	sysTicks++;
-}
-
-
 /// @brief Delays for a specified number of microseconds.
 void ConcreteSystem::DelayUs(uint32_t micros)
 {
@@ -448,8 +438,14 @@ void ConcreteSystem::Reboot()
 }
 
 
-/// @brief SysTick handler
-extern "C" void __weak SysTick_Handler()
-{
-	kernel->system.SysTickCounter();
-}
+/// @brief Get system clock count
+/// @return 
+uint32_t ConcreteSystem::GetSysClkCounts() { return sysTicks; }
+
+
+/// @brief System clock counter
+void ConcreteSystem::SysTickCounter() { sysTicks++; }
+
+
+/// @brief System clock handler
+void ConcreteSystem::SysTickHandler() { sysTicks++; }
