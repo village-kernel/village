@@ -8,10 +8,24 @@
 #define __EXCEPTION_H__
 
 #include "Kernel.h"
+#include "Class.h"
+
 
 /// @brief Exception
-class Exception 
+class Exception : public Class
 {
+private:
+	//Members
+	Debug*     debug;
+	Interrupt* interrupt;
+
+	//Methods
+	void NMIHandler();
+	void HardFaultHandler();
+	void MemManageHandler();
+	void BusFaultHandler();
+	void UsageFaultHandler();
+	void DebugMonHandler();
 public:
 	//Methods
 	Exception();

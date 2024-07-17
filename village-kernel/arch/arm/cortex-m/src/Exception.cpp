@@ -5,17 +5,18 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Exception.h"
-#include "Kernel.h"
 #include "Hardware.h"
 
 
 /// @brief Constructor
 Exception::Exception()
+	:debug(NULL),
+	interrupt(NULL)
 {
 }
 
 
-/// @brief Deconstructor
+/// @brief Destructor
 Exception::~Exception()
 {
 }
@@ -24,52 +25,77 @@ Exception::~Exception()
 /// @brief Exception Setup
 void Exception::Setup()
 {
-	
+	//Gets the debug pointer
+	debug = (Debug*)&kernel->debug;
+
+	//Gets the interrupt pointer
+	interrupt = (Interrupt*)&kernel->interrupt;
+
+	//Set interrupt service
+	interrupt->AppendISR(NonMaskableInt_IRQn,              (Method)&Exception::NMIHandler,            this);
+	interrupt->AppendISR(HardFault_IRQn,                   (Method)&Exception::HardFaultHandler,      this);
+	interrupt->AppendISR(MemoryManagement_IRQn,            (Method)&Exception::MemManageHandler,      this);
+	interrupt->AppendISR(BusFault_IRQn,                    (Method)&Exception::BusFaultHandler,       this);
+	interrupt->AppendISR(UsageFault_IRQn,                  (Method)&Exception::UsageFaultHandler,     this);
+	interrupt->AppendISR(DebugMonitor_IRQn,                (Method)&Exception::DebugMonHandler,       this);
 }
 
 
 /// @brief Exception Exit
 void Exception::Exit()
 {
-
+	interrupt->RemoveISR(NonMaskableInt_IRQn,             (Method)&Exception::NMIHandler,            this);
+	interrupt->RemoveISR(HardFault_IRQn,                  (Method)&Exception::HardFaultHandler,      this);
+	interrupt->RemoveISR(MemoryManagement_IRQn,           (Method)&Exception::MemManageHandler,      this);
+	interrupt->RemoveISR(BusFault_IRQn,                   (Method)&Exception::BusFaultHandler,       this);
+	interrupt->RemoveISR(UsageFault_IRQn,                 (Method)&Exception::UsageFaultHandler,     this);
+	interrupt->RemoveISR(DebugMonitor_IRQn,               (Method)&Exception::DebugMonHandler,       this);
 }
 
 
-/// @brief Output stacked info
-/// @param hardfault_args stack pointer
-extern "C" void stacked_info(unsigned int * hardfault_args)
+/// @brief NMIHandler
+void Exception::NMIHandler()
 {
-	volatile uint32_t stacked_r0 = ((uint32_t)hardfault_args[0]);
-	volatile uint32_t stacked_r1 = ((uint32_t)hardfault_args[1]);
-	volatile uint32_t stacked_r2 = ((uint32_t)hardfault_args[2]);
-	volatile uint32_t stacked_r3 = ((uint32_t)hardfault_args[3]);
-
-	volatile uint32_t stacked_r12 = ((uint32_t)hardfault_args[4]);
-	volatile uint32_t stacked_lr  = ((uint32_t)hardfault_args[5]);
-	volatile uint32_t stacked_pc  = ((uint32_t)hardfault_args[6]);
-	volatile uint32_t stacked_psr = ((uint32_t)hardfault_args[7]);
-
-	kernel->debug.Error("Hard_Fault_Handler:");
-	kernel->debug.Error("r0:   0x%08lx", stacked_r0);
-	kernel->debug.Error("r1:   0x%08lx", stacked_r1);
-	kernel->debug.Error("r2:   0x%08lx", stacked_r2);
-	kernel->debug.Error("r3:   0x%08lx", stacked_r3);
-	kernel->debug.Error("r12:  0x%08lx", stacked_r12);
-	kernel->debug.Error("lr:   0x%08lx", stacked_lr);
-	kernel->debug.Error("pc:   0x%08lx", stacked_pc);
-	kernel->debug.Error("xpsr: 0x%08lx", stacked_psr);
-
-	while (1);
+	debug->Error("NMI Handler");
+	while(1) {}
 }
 
 
-/// @brief HardFault_Handler
-/// @param  
-extern "C" void HardFault_Handler(void)
+/// @brief HardFaultHandler
+void Exception::HardFaultHandler()
 {
-	__asm volatile("tst lr, #4");      // check LR to know which stack is used
-	__asm volatile("ite eq");          // 2 next instructions are conditional
-	__asm volatile("mrseq r0, msp");   // save MSP if bit 2 is 0
-	__asm volatile("mrsne r0, psp");   // save PSP if bit 2 is 1
-	__asm volatile("b stacked_info");  // pass R0 as the argument
+	debug->Error("Hard Fault Handler");
+	while(1) {}
+}
+
+
+/// @brief MemManageHandler
+void Exception::MemManageHandler()
+{
+	debug->Error("Mem Manage Handler");
+	while(1) {}
+}
+
+
+/// @brief BusFaultHandler
+void Exception::BusFaultHandler()
+{
+	debug->Error("Bus Fault Handler");
+	while(1) {}
+}
+
+
+/// @brief UsageFaultHandler
+void Exception::UsageFaultHandler()
+{
+	debug->Error("Usage Fault Handler");
+	while(1) {}
+}
+
+
+/// @brief DebugMonHandler
+void Exception::DebugMonHandler()
+{
+	debug->Error("Debug Mon Handler");
+	while(1) {}
 }
