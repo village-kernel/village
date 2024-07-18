@@ -97,6 +97,7 @@ private:
 	Gpo csPin;
 	Gpi detectPin;
 	SdCardType sdcardType;
+	uint32_t sectorSize;
 	Config config;
 private:
 	/// @brief Init config
@@ -230,7 +231,7 @@ private:
 
 		if (0xfd != cmd)
 		{
-			for (uint16_t cnt = 0; cnt < 512; cnt++)
+			for (uint16_t cnt = 0; cnt < sectorSize; cnt++)
 			{
 				if (cnt < size)
 				{
@@ -359,12 +360,15 @@ private:
 					}
 				}
 
-				if ((0xffff == i) || (_ResponseNoErr != WriteCmd(_SetBlockLen, 512, 0x01)))
+				if ((0xffff == i) || (_ResponseNoErr != WriteCmd(_SetBlockLen, sectorSize, 0x01)))
 				{
 					sdcardType = _NONE;
 				}
 			}
 		}
+
+		//Calculate the sector size
+		sectorSize = (SdCardType::_V2HC != sdcardType) ? sectorSize : 1;
 
 		UnselectCard();
 
@@ -499,7 +503,7 @@ public:
 	{
 		uint8_t res = 0;
 
-		if (SdCardType::_V2HC != sdcardType) sector = sector * 512;
+		if (SdCardType::_V2HC != sdcardType) sector = sector * sectorSize;
 
 		if (1 == blkSize)
 		{
@@ -507,7 +511,7 @@ public:
 
 			if (_ResponseNoErr == res)
 			{
-				res = SendData(txData, 512, 0xfe);
+				res = SendData(txData, sectorSize, 0xfe);
 			}
 		}
 		else
@@ -524,19 +528,14 @@ public:
 			{
 				for (uint32_t cnt = 0; cnt < blkSize; cnt++)
 				{
-					res = SendData(txData, 512, 0xfc);
+					res = SendData(txData, sectorSize, 0xfc);
 
-					if (_ResponseNoErr == res)
-					{
-						txData += 512;
-					}
-					else
-					{
-						break;
-					}
+					if (_ResponseNoErr != res) break;
+
+					txData += sectorSize;
 				}
 
-				res = SendData(0, 512, 0xfd);
+				res = SendData(0, sectorSize, 0xfd);
 			}
 		}
 
@@ -563,7 +562,7 @@ public:
 
 			if (_ResponseNoErr == res)
 			{
-				res = RecvData(rxData, 512);
+				res = RecvData(rxData, sectorSize);
 			}
 		}
 		else
@@ -574,16 +573,11 @@ public:
 			{
 				for (uint32_t cnt = 0; cnt < blkSize; cnt++)
 				{
-					res = RecvData(rxData, 512);
+					res = RecvData(rxData, sectorSize);
 
-					if (_ResponseNoErr == res)
-					{
-						rxData += 512;
-					}
-					else
-					{
-						break;
-					}
+					if (_ResponseNoErr != res) break;
+
+					rxData += sectorSize;
 				}
 				WriteCmd(_StopTrans, 0, 0x01);
 			}
@@ -610,7 +604,7 @@ public:
 				*(uint32_t*)data = GetSectorCount();
 				break;
 			case _GetSectorSize:
-				*(uint16_t *)data = (SdCardType::_V2HC != sdcardType) ? 512 : 1;
+				*(uint16_t *)data = sectorSize;
 				break;
 			case _GetBlockSzie:
 				*(uint16_t *)data = 8;
