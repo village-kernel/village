@@ -24,7 +24,7 @@ public:
 		bool enableDMA = true;
 
 		uint16_t usartCh;
-		uint32_t usartBaudrate;
+		uint32_t baudrate;
 		Usart::PinConfig usartTxPin;
 		Usart::PinConfig usartRxPin;
 		Usart::PinConfig usartDePin;
@@ -44,7 +44,7 @@ private:
 	{
 		//Config uart serial
 		config.usartCh = UART_SERIAL_CHANNEL;
-		config.usartBaudrate = UART_SERIAL_BAUD_RATE;
+		config.baudrate = UART_SERIAL_BAUD_RATE;
 
 		//Config uart tx pin
 		config.usartTxPin.ch = UART_SERIAL_TX_CH;
@@ -84,7 +84,7 @@ public:
 		usart.ConfigPin(config.usartTxPin);
 		usart.ConfigPin(config.usartRxPin);
 		if (config.enableRTS) usart.ConfigPin(config.usartDePin);
-		usart.SetBaudRate(config.usartBaudrate);
+		usart.SetBaudRate(config.baudrate);
 		usart.ConfigPortSettings(Usart::_8Bits, Usart::_NoParity, Usart::_1Stop);
 		usart.ConfigDriverEnableMode(true, false);
 		usart.ConfigReceiverTimeout(true, 39); // 3.5bytes: 3.5 * 11 = 38.5
@@ -103,12 +103,12 @@ public:
 	}
 
 
-	/// @brief Write data via dma.
+	/// @brief Write data
 	/// @param data 
 	/// @param size 
 	/// @param offset 
 	/// @return 
-	int Write(uint8_t* data, uint32_t size, uint32_t offset)
+	int Write(uint8_t* data, uint32_t size, uint32_t offset = 0)
 	{
 		usart.CheckError();
 
@@ -119,12 +119,12 @@ public:
 	}
 
 
-	/// @brief Read data from rx buffer
+	/// @brief Read data
 	/// @param data 
 	/// @param size 
 	/// @param offset 
 	/// @return 
-	int Read(uint8_t* data, uint32_t size, uint32_t offset)
+	int Read(uint8_t* data, uint32_t size, uint32_t offset = 0)
 	{
 		usart.CheckError();
 
