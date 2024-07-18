@@ -29,7 +29,7 @@ private:
 	void ConfigureMPU();
 	void ConfigurePower();
 	void ConfigureForHsi();
-	void ConfigureForXtal();
+	void ConfigureFor25MhzXtal();
 public:
 	//Methods
 	ConcreteSystem();
