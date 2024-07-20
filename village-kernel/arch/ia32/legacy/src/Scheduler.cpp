@@ -77,6 +77,13 @@ void ConcreteScheduler::Sched()
 }
 
 
+/// @brief SysTick handler
+void ConcreteScheduler::SysTickHandler()
+{
+	Sched();
+}
+
+
 /// @brief PendSV handler
 void __attribute__((naked)) ConcreteScheduler::PendSVHandler()
 {
@@ -108,11 +115,4 @@ void __attribute__((naked)) ConcreteScheduler::PendSVHandler()
 	__asm volatile("popl %ebp");
 	__asm volatile("sti");
 	__asm volatile("ret");
-}
-
-
-/// @brief SysTick handler
-void ConcreteScheduler::SysTickHandler()
-{
-	Sched();
 }

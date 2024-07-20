@@ -18,8 +18,10 @@ private:
 	bool isStartSchedule;
 
 	//Methods
-	void PendSVHandler();
 	void SysTickHandler();
+
+	//Static Methods
+	static void PendSVHandler();
 public:
 	//Methods
 	ConcreteScheduler();
