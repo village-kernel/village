@@ -151,6 +151,16 @@ void ConcreteInterrupt::ClearISR(int irq)
 }
 
 
+/// @brief Replace the stub_handler
+/// @param irq 
+/// @param handler 
+void ConcreteInterrupt::Replace(int irq, uint32_t handler)
+{
+	irq += ArchInterrupt::rsvd_isr_size;
+	archInterrupt.Install(irq, handler);
+}
+
+
 /// @brief Interrupt handler
 /// @param irq irq number
 void ConcreteInterrupt::Handler(int irq)

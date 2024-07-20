@@ -79,6 +79,7 @@ public:
 	virtual bool RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
 	virtual bool RemoveISR(int irq, Method method, Class* user, void* args = NULL) = 0;
 	virtual void ClearISR(int irq) = 0;
+	virtual void Replace(int irq, uint32_t handler) = 0;
 	virtual void Handler(int irq) = 0;
 };
 

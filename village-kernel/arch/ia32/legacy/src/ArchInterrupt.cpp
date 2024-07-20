@@ -24,7 +24,7 @@ void ArchInterrupt::Setup()
 	for (uint32_t i = 1; i < count; i++)
 	{
 		//The first func is _start(), we don't need
-		SetIdtGate(i - 1, (uint32_t)_svector[i]);
+		Install(i - 1, (uint32_t)_svector[i]);
 	}
 
 	//Remap the PIC
@@ -42,10 +42,10 @@ void ArchInterrupt::Exit()
 }
 
 
-/// @brief Set idt gate
+/// @brief Install idt gate
 /// @param irq 
 /// @param handler 
-void ArchInterrupt::SetIdtGate(int irq, uint32_t handler)
+void ArchInterrupt::Install(int irq, uint32_t handler)
 {
 	idt[irq].lowOffset = low_16(handler);
 	idt[irq].highOffset = high_16(handler);

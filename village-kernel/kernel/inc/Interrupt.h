@@ -56,6 +56,7 @@ public:
 	bool RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL);
 	bool RemoveISR(int irq, Method method, Class* user, void* args = NULL);
 	void ClearISR(int irq);
+	void Replace(int irq, uint32_t handler);
 	void Handler(int irq);
 };
 

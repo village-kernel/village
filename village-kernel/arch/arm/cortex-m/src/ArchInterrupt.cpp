@@ -49,6 +49,22 @@ void ArchInterrupt::Setup()
 }
 
 
+/// @brief Install irq handler
+/// @param irq 
+/// @param handler 
+void ArchInterrupt::Install(int irq, uint32_t handler)
+{
+	//Symbol defined in the linker script
+	extern void *_svector;
+
+	//Calculate the address of usr isr vectors
+	uint32_t* vectors = (uint32_t*)&_svector;
+
+	//Replace irq handler
+	vectors[irq] = handler;
+}
+
+
 /// @brief Exit
 void ArchInterrupt::Exit()
 {
@@ -106,21 +122,21 @@ extern "C" void IRQ_Handler(Registers* regs)
 /// @brief Stub_Handler
 extern "C" void __attribute__ ((naked)) Stub_Handler() 
 {
-	//Save LR back to main
+	//Store lr back to main
 	__asm volatile("push {lr}");
 
-	//Save IPSR to sp
+	//Store ipsr to sp
 	__asm volatile("mrs r0, ipsr");
 	__asm volatile("push {r0}");
 
-	//Save r4-r11 regs to sp
+	//Store r4-r11 regs to sp
 	__asm volatile("stmdb sp!, {r4-r11}");
 
 	//Call IRQ_Handler(sp)
 	__asm volatile("mov r0, sp");
 	__asm volatile("bl IRQ_Handler");
 
-	//Retrieve r4-r11 regs from sp
+	//Restore r4-r11 regs from sp
 	__asm volatile("ldmia sp!, {r4-r11}");
 
 	//Skip ipsr
