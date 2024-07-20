@@ -108,13 +108,13 @@ struct TaskContext
 		r9(0),
 		r10(0),
 		r11(0),
-		ilr(0xFFFFFFE9u),
+		ilr(0xFFFFFFFDu),
 		r0(r0),
 		r1(r1),
 		r2(r2),
 		r3(r3),
 		r12(0),
-		lr(0xFFFFFFE9u),
+		lr(0xFFFFFFFDu),
 		pc(pc),
 		xpsr(0x01000000u)
 	{}
