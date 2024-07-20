@@ -24,6 +24,7 @@ public:
 	//Methods
 	void Setup();
 	void Exit();
+	void Install(int irq, uint32_t handler);
 };
 
 #endif //!__INTERRUPT_H__

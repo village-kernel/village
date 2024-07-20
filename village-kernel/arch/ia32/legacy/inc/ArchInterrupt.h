@@ -61,13 +61,13 @@ private:
 	IdtRegister idtReg;
 
 	//Methods
-	void SetIdtGate(int irq, uint32_t handler);
 	void SetIdt();
 	void RemapPIC();
 public:
 	//Methods
 	void Setup();
 	void Exit();
+	void Install(int irq, uint32_t handler);
 	uint16_t GetPicIrqReg(int ocw3);
 	uint16_t GetPicIrr();
 	uint16_t GetPicIsr();
