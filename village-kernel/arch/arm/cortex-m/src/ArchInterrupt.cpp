@@ -32,8 +32,8 @@ void ArchInterrupt::Setup()
 	//Calculate the address of usr isr vectors
 	uint32_t* vectors = (uint32_t*)&_svector;
 
-	//Set the new isr handler, offset _estack and Reset_Handler
-	for (uint32_t i = 2; i < isrSizes; i++)
+	//Set the new isr handler
+	for (uint32_t i = 0; i < isrSizes; i++)
 	{
 		//Change the origin handler into isr table
 		if (vectors[i] != (uint32_t)&(Default_Handler) + 1)
@@ -41,7 +41,8 @@ void ArchInterrupt::Setup()
 			kernel->interrupt.SetISR(i - rsvd_isr_size, (Function)vectors[i], NULL, NULL);
 		}
 
-		vectors[i] = (uint32_t)&Stub_Handler;
+		//Offset _estack and Reset_Handler
+		if (i >= 2) vectors[i] = (uint32_t)&Stub_Handler;
 	}
 
 	//Relocation isr vecotr table
@@ -83,7 +84,6 @@ void ArchInterrupt::ConfigVectorTable(uint32_t vector)
 /// @param regs stack pointer
 extern "C" void StackedInfo(Registers* regs)
 {
-	kernel->debug.Error("Hard_Fault_Handler:");
 	kernel->debug.Error("irq:  0x%08lx", regs->irq);
 	kernel->debug.Error("r0:   0x%08lx", regs->r0);
 	kernel->debug.Error("r1:   0x%08lx", regs->r1);
