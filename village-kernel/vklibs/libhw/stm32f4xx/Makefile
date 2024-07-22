@@ -57,30 +57,29 @@ src-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/
 # objects
 ######################################
 objs-$(CONFIG_STM32F4xx)                         += system_stm32f4xx.o
-objs-$(CONFIG_STM32F4xx)                         += startup_stm32libcinit.o
-objs-$(CONFIG_STM32F401xc)                       += startup_stm32f401xc.o
-objs-$(CONFIG_STM32F401xe)                       += startup_stm32f401xe.o
-objs-$(CONFIG_STM32F405xx)                       += startup_stm32f405xx.o
-objs-$(CONFIG_STM32F407xx)                       += startup_stm32f407xx.o
-objs-$(CONFIG_STM32F410cx)                       += startup_stm32f410cx.o
-objs-$(CONFIG_STM32F410rx)                       += startup_stm32f410rx.o
-objs-$(CONFIG_STM32F410tx)                       += startup_stm32f410tx.o
-objs-$(CONFIG_STM32F411xe)                       += startup_stm32f411xe.o
-objs-$(CONFIG_STM32F412cx)                       += startup_stm32f412cx.o
-objs-$(CONFIG_STM32F412rx)                       += startup_stm32f412rx.o
-objs-$(CONFIG_STM32F412vx)                       += startup_stm32f412vx.o
-objs-$(CONFIG_STM32F412zx)                       += startup_stm32f412zx.o
-objs-$(CONFIG_STM32F413xx)                       += startup_stm32f413xx.o
-objs-$(CONFIG_STM32F415xx)                       += startup_stm32f415xx.o
-objs-$(CONFIG_STM32F417xx)                       += startup_stm32f417xx.o
-objs-$(CONFIG_STM32F423xx)                       += startup_stm32f423xx.o
-objs-$(CONFIG_STM32F427xx)                       += startup_stm32f427xx.o
-objs-$(CONFIG_STM32F429xx)                       += startup_stm32f429xx.o
-objs-$(CONFIG_STM32F437xx)                       += startup_stm32f437xx.o
-objs-$(CONFIG_STM32F439xx)                       += startup_stm32f439xx.o
-objs-$(CONFIG_STM32F446tx)                       += startup_stm32f446tx.o
-objs-$(CONFIG_STM32F469xx)                       += startup_stm32f469xx.o
-objs-$(CONFIG_STM32F479xx)                       += startup_stm32f479xx.o
+objs-$(CONFIG_STM32F401xc)                       += crt0_kernel_stm32f401xc.o
+objs-$(CONFIG_STM32F401xe)                       += crt0_kernel_stm32f401xe.o
+objs-$(CONFIG_STM32F405xx)                       += crt0_kernel_stm32f405xx.o
+objs-$(CONFIG_STM32F407xx)                       += crt0_kernel_stm32f407xx.o
+objs-$(CONFIG_STM32F410cx)                       += crt0_kernel_stm32f410cx.o
+objs-$(CONFIG_STM32F410rx)                       += crt0_kernel_stm32f410rx.o
+objs-$(CONFIG_STM32F410tx)                       += crt0_kernel_stm32f410tx.o
+objs-$(CONFIG_STM32F411xe)                       += crt0_kernel_stm32f411xe.o
+objs-$(CONFIG_STM32F412cx)                       += crt0_kernel_stm32f412cx.o
+objs-$(CONFIG_STM32F412rx)                       += crt0_kernel_stm32f412rx.o
+objs-$(CONFIG_STM32F412vx)                       += crt0_kernel_stm32f412vx.o
+objs-$(CONFIG_STM32F412zx)                       += crt0_kernel_stm32f412zx.o
+objs-$(CONFIG_STM32F413xx)                       += crt0_kernel_stm32f413xx.o
+objs-$(CONFIG_STM32F415xx)                       += crt0_kernel_stm32f415xx.o
+objs-$(CONFIG_STM32F417xx)                       += crt0_kernel_stm32f417xx.o
+objs-$(CONFIG_STM32F423xx)                       += crt0_kernel_stm32f423xx.o
+objs-$(CONFIG_STM32F427xx)                       += crt0_kernel_stm32f427xx.o
+objs-$(CONFIG_STM32F429xx)                       += crt0_kernel_stm32f429xx.o
+objs-$(CONFIG_STM32F437xx)                       += crt0_kernel_stm32f437xx.o
+objs-$(CONFIG_STM32F439xx)                       += crt0_kernel_stm32f439xx.o
+objs-$(CONFIG_STM32F446tx)                       += crt0_kernel_stm32f446tx.o
+objs-$(CONFIG_STM32F469xx)                       += crt0_kernel_stm32f469xx.o
+objs-$(CONFIG_STM32F479xx)                       += crt0_kernel_stm32f479xx.o
 
 
 ######################################
