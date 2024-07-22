@@ -36,7 +36,7 @@ void ArchInterrupt::Setup()
 	for (uint32_t i = 0; i < isrSizes; i++)
 	{
 		//Change the origin handler into isr table
-		if (vectors[i] != (uint32_t)&(Default_Handler) + 1)
+		if (vectors[i] != (uint32_t)&Default_Handler)
 		{
 			kernel->interrupt.SetISR(i - rsvd_isr_size, (Function)vectors[i], NULL, NULL);
 		}
