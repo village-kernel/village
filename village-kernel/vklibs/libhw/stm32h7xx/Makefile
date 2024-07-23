@@ -61,7 +61,6 @@ src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/
 # objects
 ######################################
 objs-$(CONFIG_STM32H7xx)                         += system_stm32h7xx.o
-objs-$(CONFIG_STM32H743xx)                       += crt0_kernel_stm32h743xx.o
 objs-$(CONFIG_STM32H7a3xx)                       += crt0_kernel_stm32h7a3xx.o
 objs-$(CONFIG_STM32H7a3xxq)                      += crt0_kernel_stm32h7a3xxq.o
 objs-$(CONFIG_STM32H7b0xx)                       += crt0_kernel_stm32h7b0xx.o
