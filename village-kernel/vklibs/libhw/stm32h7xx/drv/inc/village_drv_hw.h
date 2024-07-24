@@ -13,6 +13,7 @@
 #include "stm32h7xx_drv_gpo.h"
 #include "stm32h7xx_drv_nvic.h"
 #include "stm32h7xx_drv_usart.h"
+#include "stm32h7xx_drv_sdio.h"
 #include "stm32h7xx_drv_spi.h"
 #include "stm32h7xx_drv_i2c.h"
 #include "stm32h7xx_drv_dma.h"

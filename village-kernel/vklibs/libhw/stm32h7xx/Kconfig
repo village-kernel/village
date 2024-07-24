@@ -486,6 +486,10 @@ endmenu
 
 menu "Board Support Driver"
 
+config STM32H7XX_DRV
+	bool "Enable drv class"
+	default n
+
 config STM32H7XX_DRV_GPIO
 	bool "Enable GPIO drv class"
 	default y
@@ -509,6 +513,11 @@ config STM32H7XX_DRV_USART
 	bool "Enable USART drv clas"
 	default n
 
+config STM32H7XX_DRV_SDIO
+	select STM32H7XX_DRV_GPIO
+	bool "Enable SDIO drv class"
+	default n
+
 config STM32H7XX_DRV_SPI
 	select STM32H7XX_DRV_GPIO
 	bool "Enable SPI drv class"
@@ -520,7 +529,7 @@ config STM32H7XX_DRV_I2C
 	default n
 
 config STM32H7XX_DRV_DMA
-	bool "Enable dma drv class"
+	bool "Enable DMA drv class"
 	default n
 
 config STM32H7XX_DRV_FSMC
