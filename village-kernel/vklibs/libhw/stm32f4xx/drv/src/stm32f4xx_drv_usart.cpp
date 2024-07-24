@@ -152,32 +152,36 @@ void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
 ///Write data to usart
 int Usart::Write(uint8_t* txData, uint16_t length)
 {
-	while (length)
+	uint16_t loop = length;
+
+	while (loop)
 	{
 		if (IsTxRegisterEmpty())
 		{
 			base->DR = *txData++;
-			length--;
+			loop--;
 		}
 	}
 
-	return 0;
+	return length;
 }
 
 
 ///Read data from usart
 int Usart::Read(uint8_t* rxData, uint16_t length)
 {
-	while (length)
+	uint16_t loop = length;
+
+	while (loop)
 	{
 		if (IsReadDataRegNotEmpty())
 		{
 			*rxData++ = base->DR;
-			length--;
+			loop--;
 		}
 	}
 
-	return 0;
+	return length;
 }
 
 
