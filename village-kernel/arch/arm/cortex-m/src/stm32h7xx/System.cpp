@@ -118,7 +118,7 @@ void ConcreteSystem::ConfigureMPU()
 	SCB_EnableDCache();
 
 	//Enable instruction cache
-	SCB_EnableICache();
+	//SCB_EnableICache();
 }
 
 
