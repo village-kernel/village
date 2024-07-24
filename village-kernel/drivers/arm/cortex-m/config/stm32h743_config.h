@@ -117,25 +117,29 @@
 
 
 //********************************SD Card*********************************//
-#define SPI_SD_SCK_CH                        Gpio::_ChC
-#define SPI_SD_SCK_PIN                       10
-#define SPI_SD_SCK_AF_NUM                    6
+#define SDMMC_D0_CH                          Gpio::_ChC
+#define SDMMC_D0_PIN                         8
+#define SDMMC_D0_AF_NUM                      12
 
-#define SPI_SD_MISO_CH                       Gpio::_ChC
-#define SPI_SD_MISO_PIN                      11
-#define SPI_SD_MISO_AF_NUM                   6
+#define SDMMC_D1_CH                          Gpio::_ChC
+#define SDMMC_D1_PIN                         9
+#define SDMMC_D1_AF_NUM                      12
 
-#define SPI_SD_MOSI_CH                       Gpio::_ChC
-#define SPI_SD_MOSI_PIN                      11
-#define SPI_SD_MOSI_AF_NUM                   6
+#define SDMMC_D2_CH                          Gpio::_ChC
+#define SDMMC_D2_PIN                         10
+#define SDMMC_D2_AF_NUM                      12
 
-#define SPI_SD_CS_CH                         Gpio::_ChD
-#define SPI_SD_CS_PIN                        2
+#define SDMMC_D3_CH                          Gpio::_ChC
+#define SDMMC_D3_PIN                         11
+#define SDMMC_D3_AF_NUM                      12
 
-#define SPI_SD_DETECT_CH                     Gpio::GpioChannel(NULL)
-#define SPI_SD_DETECT_PIN                    uint8_t(NULL)
+#define SDMMC_CK_CH                          Gpio::_ChC
+#define SDMMC_CK_PIN                         12
+#define SDMMC_CK_AF_NUM                      12
 
-#define SPI_SD_CHANNEL                       Spi::_Spi3
+#define SDMMC_CMD_CH                         Gpio::_ChD
+#define SDMMC_CMD_PIN                        2
+#define SDMMC_CMD_AF_NUM                     12
 
 
 #endif // !__HW_STM32H743_CONFIG_H__
