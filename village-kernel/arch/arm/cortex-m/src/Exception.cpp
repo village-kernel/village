@@ -5,24 +5,62 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Exception.h"
+#include "Interrupt.h"
 #include "Hardware.h"
 #include "Registers.h"
+#include "Kernel.h"
 
 
-/// @brief Constructor
-Exception::Exception()
-{
-}
-
-
-/// @brief Destructor
-Exception::~Exception()
-{
-}
+/// @brief Declarations
+extern "C" void Default_Handler();
 
 
 /// @brief Exception Setup
 void Exception::Setup()
+{
+	//Symbol defined in the linker script
+	extern void *_sivector, *_svector, *_evector;
+
+	//Copy isr vector from sivector
+	void **pSource = &_sivector, **pDest = &_svector;
+	for (; pDest != &_evector; pSource++, pDest++)
+		*pDest = *pSource;
+
+	//Calculate the size of isr vector
+	uint32_t isrSizes = ((uint32_t)&_evector - (uint32_t)&_svector) >> 2;
+
+	//Calculate the address of usr isr vectors
+	volatile uint32_t* vectors = (uint32_t*)&_svector;
+
+	//Set the new isr handler
+	for (uint32_t i = 0; i < isrSizes; i++)
+	{
+		//Change the origin handler into isr table
+		if (vectors[i] != (uint32_t)&Default_Handler)
+		{
+			kernel->interrupt.SetISR(i - rsvd_isr_size, (Function)vectors[i], NULL, NULL);
+		}
+
+		//Offset _estack and Reset_Handler
+		if (i >= 2) vectors[i] = (uint32_t)&Exception::StubHandler;
+	}
+
+	//Install handlers
+	InstallHandlers();
+
+	//Relocation isr vecotr table
+	ConfigVectorTable((uint32_t)&_svector);
+}
+
+
+/// @brief Exception Exit
+void Exception::Exit()
+{
+}
+
+
+/// @brief Exception install handlers
+void Exception::InstallHandlers()
 {
 	kernel->interrupt.Replace(NonMaskableInt_IRQn,     (uint32_t)&Exception::NMIHandler         );
 	kernel->interrupt.Replace(HardFault_IRQn,          (uint32_t)&Exception::HardFaultHandler   );
@@ -33,9 +71,39 @@ void Exception::Setup()
 }
 
 
-/// @brief Exception Exit
-void Exception::Exit()
+/// @brief Install irq handler
+/// @param irq 
+/// @param handler 
+void Exception::Install(int irq, uint32_t handler)
 {
+	//Symbol defined in the linker script
+	extern void *_svector;
+
+	//Calculate the address of usr isr vectors
+	volatile uint32_t* vectors = (uint32_t*)&_svector;
+
+	//Replace irq handler
+	vectors[irq] = handler;
+}
+
+
+/// @brief System config vector table, this value must be a multiple of 0x200.
+void Exception::ConfigVectorTable(uint32_t vector)
+{
+	SCB->VTOR = vector;
+}
+
+
+/// @brief Stub Handler
+void Exception::StubHandler()
+{
+	uint32_t irq = 0;
+
+	//Gets the ipsr value
+	__asm volatile("mrs %0, ipsr" : "+r"(irq));
+
+	//Handle the interrupt in a more modular way
+	kernel->interrupt.Handler(irq);
 }
 
 
