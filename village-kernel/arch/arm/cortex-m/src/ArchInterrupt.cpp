@@ -11,7 +11,6 @@
 
 
 /// @brief Declarations
-extern "C" void Stub_Handler();
 extern "C" void Default_Handler();
 
 
@@ -42,7 +41,7 @@ void ArchInterrupt::Setup()
 		}
 
 		//Offset _estack and Reset_Handler
-		if (i >= 2) vectors[i] = (uint32_t)&Stub_Handler;
+		if (i >= 2) vectors[i] = (uint32_t)&ArchInterrupt::StubHandler;
 	}
 
 	//Relocation isr vecotr table
@@ -80,69 +79,14 @@ void ArchInterrupt::ConfigVectorTable(uint32_t vector)
 }
 
 
-/// @brief Output stacked info
-/// @param regs stack pointer
-extern "C" void StackedInfo(Registers* regs)
+/// @brief Stub_Handler
+void ArchInterrupt::StubHandler()
 {
-	kernel->debug.Error("irq:  0x%08lx", regs->irq);
-	kernel->debug.Error("r0:   0x%08lx", regs->r0);
-	kernel->debug.Error("r1:   0x%08lx", regs->r1);
-	kernel->debug.Error("r2:   0x%08lx", regs->r2);
-	kernel->debug.Error("r3:   0x%08lx", regs->r3);
-	kernel->debug.Error("r4:   0x%08lx", regs->r4);
-	kernel->debug.Error("r5:   0x%08lx", regs->r5);
-	kernel->debug.Error("r6:   0x%08lx", regs->r6);
-	kernel->debug.Error("r7:   0x%08lx", regs->r7);
-	kernel->debug.Error("r8:   0x%08lx", regs->r8);
-	kernel->debug.Error("r9:   0x%08lx", regs->r9);
-	kernel->debug.Error("r10:  0x%08lx", regs->r10);
-	kernel->debug.Error("r11:  0x%08lx", regs->r11);
-	kernel->debug.Error("r12:  0x%08lx", regs->r12);
-	kernel->debug.Error("lr:   0x%08lx", regs->lr);
-	kernel->debug.Error("pc:   0x%08lx", regs->pc);
-	kernel->debug.Error("xpsr: 0x%08lx", regs->xpsr);
-}
+	uint32_t irq = 0;
 
-
-/// @brief IRQ handler
-/// @param regs 
-extern "C" void IRQ_Handler(Registers* regs)
-{
-	//Output stacked info
-	if (regs->irq >= 2 && regs->irq <= 13)
-	{
-		StackedInfo(regs);
-	}
+	//Gets the ipsr value
+	__asm volatile("mrs %0, ipsr" : "+r"(irq));
 
 	//Handle the interrupt in a more modular way
-	kernel->interrupt.Handler(regs->irq);
-}
-
-
-/// @brief Stub_Handler
-extern "C" void __attribute__ ((naked)) Stub_Handler() 
-{
-	//Store lr back to main
-	__asm volatile("push {lr}");
-
-	//Store ipsr to sp
-	__asm volatile("mrs r0, ipsr");
-	__asm volatile("push {r0}");
-
-	//Store r4-r11 regs to sp
-	__asm volatile("stmdb sp!, {r4-r11}");
-
-	//Call IRQ_Handler(sp)
-	__asm volatile("mov r0, sp");
-	__asm volatile("bl IRQ_Handler");
-
-	//Restore r4-r11 regs from sp
-	__asm volatile("ldmia sp!, {r4-r11}");
-
-	//Skip ipsr
-	__asm volatile("add sp, sp, #4");
-
-	//Exit
-	__asm volatile("pop {lr}");
-	__asm volatile("bx lr");
+	kernel->interrupt.Handler(irq);
 }

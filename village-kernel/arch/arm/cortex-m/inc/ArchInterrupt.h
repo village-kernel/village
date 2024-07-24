@@ -20,6 +20,7 @@ public:
 private:
 	//Methods
 	void ConfigVectorTable(uint32_t vector);
+	static void StubHandler();
 public:
 	//Methods
 	void Setup();
