@@ -52,7 +52,7 @@ void ConcreteScheduler::Start()
 	//Get frist task psp
 	volatile uint32_t psp = kernel->thread.GetTaskPSP();
 
-	//Set frist task esp
+	//Set frist task psp
 	__asm volatile("msr psp, %0" : "+r"(psp));
 
 	//Change to use PSP, set bit[1] SPSEL
@@ -74,7 +74,7 @@ void ConcreteScheduler::Sched()
 {
 	if (false == isStartSchedule) return;
 
-	//trigger PendSV directly
+	//Trigger PendSV directly
 	SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
 }
 
@@ -91,11 +91,11 @@ void __attribute__ ((naked)) ConcreteScheduler::PendSVHandler()
 {
 	uint32_t psp = 0;
 
+	//Push lr regs to main sp
+	__asm volatile("push {lr}");
+
 	//Get current task psp
 	__asm volatile("mrs %0, psp" : "=r"(psp));
-
-	//Store lr regs
-	__asm volatile("stmdb %0!, {lr}" : "+r"(psp));
 
 	//Store r4-r11 regs
 	__asm volatile("stmdb %0!, {r4-r11}" : "+r"(psp));
@@ -112,12 +112,10 @@ void __attribute__ ((naked)) ConcreteScheduler::PendSVHandler()
 	//Restore r4-r11 regs
 	__asm volatile("ldmia %0!, {r4-r11}" : "+r"(psp));
 
-	//Restore lr regs
-	__asm volatile("ldmia %0!, {lr}" : "+r"(psp));
-
 	//Set new task sp
 	__asm volatile("msr psp, %0" : "+r"(psp));
 
 	//Exit
+	__asm volatile("pop {lr}");
 	__asm volatile("bx lr");
 }
