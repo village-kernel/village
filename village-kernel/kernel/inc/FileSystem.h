@@ -60,8 +60,8 @@ private:
 	//Methods
 	bool InitDisk();
 	bool ReadMBR();
-	void InitVolumes();
-	void MountSystemNode();
+	bool InitVolumes();
+	bool MountSystemNode();
 public:
 	//Methods
 	ConcreteFileSystem();

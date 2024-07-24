@@ -26,9 +26,11 @@ void ConcreteFileSystem::Setup()
 
 	if (!ReadMBR()) return;
 
-	InitVolumes();
+	if (!InitVolumes()) return;
 
-	MountSystemNode();
+	if (!MountSystemNode()) return;
+
+	kernel->debug.Info("File system initialized done!");
 }
 
 
@@ -80,7 +82,7 @@ bool ConcreteFileSystem::ReadMBR()
 
 
 /// @brief Init volumes
-void ConcreteFileSystem::InitVolumes()
+bool ConcreteFileSystem::InitVolumes()
 {
 	for (uint8_t i = 0; i < 4; i++)
 	{
@@ -97,11 +99,12 @@ void ConcreteFileSystem::InitVolumes()
 			else delete volume;
 		}
 	}
+	return (0 != volumes.GetSize());
 }
 
 
 /// @brief Mount node
-void ConcreteFileSystem::MountSystemNode()
+bool ConcreteFileSystem::MountSystemNode()
 {
 	//Mount root node "/"
 	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
@@ -110,12 +113,12 @@ void ConcreteFileSystem::MountSystemNode()
 		if (0 == strcmp(volumelab, "/media/VILLAGE OS"))
 		{
 			mounts.Add(new MountNode((char*)"/", volumelab, 0755));
-			return;
+			return true;
 		}
 	}
 	kernel->debug.Output(Debug::_Lv2, "Mount system node failed, '/media/VILLAGE OS' not found");
+	return false;
 }
-
 
 
 /// @brief Register file system
