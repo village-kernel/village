@@ -9,7 +9,6 @@
 
 /// @brief Constructor
 ConcreteInterrupt::ConcreteInterrupt()
-	:debug(NULL)
 {
 }
 
@@ -23,8 +22,6 @@ ConcreteInterrupt::~ConcreteInterrupt()
 /// @brief Interrupt Setup
 void ConcreteInterrupt::Setup()
 {
-	debug = (Debug*)&kernel->debug;
-
 	exception.Setup();
 }
 
@@ -167,10 +164,10 @@ void ConcreteInterrupt::Handler(int irq)
 	{
 		if (++warnings[irq] >= warning_times)
 		{
-			debug->Error("IRQ %d no being handled correctly, system will halt on here", irq);
+			kernel->debug.Error("IRQ %d no being handled correctly, system will halt on here", irq);
 			while(1) {}
 		}
-		debug->Warn("IRQ %d has no interrupt service function", irq);
+		kernel->debug.Warn("IRQ %d has no interrupt service function", irq);
 		return;
 	}
 	else
