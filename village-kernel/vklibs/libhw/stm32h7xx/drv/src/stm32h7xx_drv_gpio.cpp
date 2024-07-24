@@ -35,8 +35,10 @@ void Gpio::Initialize(GpioChannel channel, uint16_t pin)
 void Gpio::Initialize(GpioChannel channel, uint16_t pin, uint8_t altMode, GpioSpeed speed)
 {
 	Initialize(channel, pin);
-	ConfigMode(_Alt);
 	ConfigAltFunc(altMode);
+	ConfigMode(_Alt);
+	ConfigOutputType(_PushPull);
+	ConfigInputType(_NoPull);
 	ConfigSpeed(speed);
 }
 
