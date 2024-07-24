@@ -97,11 +97,16 @@ uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
 		//Calculate the next map size
 		nextMapSize = size_of_node + size;
 
+		//Calculate the next map
+		nextMapAddr = currNode->map.addr + currNode->map.size;
+
 		//Align memory by aligning allocation sizes
 		if (nextMapSize % align) nextMapSize += (align - (nextMapSize % align));
+		
+		//Align memory by aligning allocation addr
+		if (nextMapAddr % align) nextMapAddr += (align - (nextMapAddr % align));
 
-		//Calculate the next map and end addr
-		nextMapAddr = currNode->map.addr + currNode->map.size;
+		//Calculate the end addr
 		nextEndAddr = nextMapAddr + nextMapSize;
 
 		//There is free space between the current node and the next node
@@ -166,11 +171,16 @@ uint32_t ConcreteMemory::StackAlloc(uint32_t size)
 		//Calculate the prev map size
 		prevMapSize = size;
 
+		//Calculate the prev map
+		prevMapAddr = currNode->map.addr - currNode->map.size;
+
 		//Align memory by aligning allocation sizes
 		if (prevMapSize % align) prevMapSize += (align - (prevMapSize % align));
 
-		//Calculate the prev map and end addr
-		prevMapAddr = currNode->map.addr - currNode->map.size;
+		//Align memory by aligning allocation addr
+		if (prevMapAddr % align) prevMapAddr += (align - (prevMapAddr % align));
+
+		//Calculate the end addr
 		prevEndAddr = prevMapAddr - prevMapSize;
 
 		//There is free space between the current node and the prev node
