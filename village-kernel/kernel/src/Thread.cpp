@@ -66,7 +66,7 @@ void ConcreteThread::TaskHandler(Function function, void* user, void* args)
 	{
 		(function)(user, args);
 	}
-	TaskExit();
+	TaskExit(); while(1) {}
 }
 
 
