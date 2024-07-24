@@ -8,24 +8,33 @@
 #define __EXCEPTION_H__
 
 #include "Kernel.h"
-#include "Class.h"
-
 
 /// @brief Exception
-class Exception : public Class
+class Exception
 {
 private:
-	//Members
-	Debug*     debug;
-	Interrupt* interrupt;
+	//Enumerations
+	enum IRQnType
+	{
+		NonMaskableInt_IRQn         = -14,
+		HardFault_IRQn              = -13,
+		MemoryManagement_IRQn       = -12,
+		BusFault_IRQn               = -11,
+		UsageFault_IRQn             = -10,
+		SVCall_IRQn                 = -5, 
+		DebugMonitor_IRQn           = -4, 
+		PendSV_IRQn                 = -2, 
+		SysTick_IRQn                = -1, 
+	};
 
-	//Methods
-	void NMIHandler();
-	void HardFaultHandler();
-	void MemManageHandler();
-	void BusFaultHandler();
-	void UsageFaultHandler();
-	void DebugMonHandler();
+	//Static Methods
+	static void NMIHandler();
+	static void HardFaultHandler();
+	static void MemManageHandler();
+	static void BusFaultHandler();
+	static void UsageFaultHandler();
+	static void DebugMonHandler();
+	static void ExceptionInfo(const char* exception);
 public:
 	//Methods
 	Exception();
