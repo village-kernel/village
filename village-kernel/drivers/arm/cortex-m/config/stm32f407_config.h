@@ -11,14 +11,14 @@
 
 //*********************************Serial**********************************//
 #define UART_SERIAL_CHANNEL                  1
-#define UART_SERIAL_BAUD_RATE                230400
+#define UART_SERIAL_BAUD_RATE                115200
 #define UART_SERIAL_TX_DMA_GROUP             2
 #define UART_SERIAL_RX_DMA_GROUP             2
 #define UART_SERIAL_RX_DMA_CHANNEL           2
 #define UART_SERIAL_TX_DMA_CHANNEL           7
 #define UART_SERIAL_RX_DMA_REQUEST           4
 #define UART_SERIAL_TX_DMA_REQUEST           4
-#define UART_SERIAL_ENABLEDMA                ture
+#define UART_SERIAL_ENABLEDMA                true
 
 #define UART_SERIAL_RX_CH                    Gpio::_ChA
 #define UART_SERIAL_RX_PIN                   10
