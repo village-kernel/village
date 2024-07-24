@@ -107,6 +107,21 @@ void Exception::StubHandler()
 }
 
 
+/// @brief Exception Info
+/// @param exception 
+#define ExceptionInfo(exception)                   \
+{                                                  \
+	const char* excep = exception;                 \
+	__asm volatile("tst lr, #4");                  \
+	__asm volatile("ite eq");                      \
+	__asm volatile("mrseq r0, msp");               \
+	__asm volatile("mrsne r0, psp");               \
+	__asm volatile("stmdb r0!, {r4-r11}");         \
+	__asm volatile("mov r1, %0" : "+r"(excep));    \
+	__asm volatile("b StackedInfo");               \
+}
+
+
 /// @brief NMIHandler
 void __attribute__ ((naked)) Exception::NMIHandler()
 {
@@ -146,20 +161,6 @@ void __attribute__ ((naked)) Exception::UsageFaultHandler()
 void __attribute__ ((naked)) Exception::DebugMonHandler()
 {
 	ExceptionInfo("Debug Mon Handler");
-}
-
-
-/// @brief Exception Info
-/// @param exception 
-inline void Exception::ExceptionInfo(const char* exception)
-{
-	__asm volatile("tst lr, #4");
-	__asm volatile("ite eq");
-	__asm volatile("mrseq r0, msp");
-	__asm volatile("mrsne r0, psp");
-	__asm volatile("stmdb r0!, {r4-r11}");
-	__asm volatile("mov r1, %0" : "+r"(exception));
-	__asm volatile("b StackedInfo");
 }
 
 

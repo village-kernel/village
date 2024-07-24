@@ -44,7 +44,6 @@ private:
 	static void BusFaultHandler();
 	static void UsageFaultHandler();
 	static void DebugMonHandler();
-	static void ExceptionInfo(const char* exception);
 public:
 	//Methods
 	void Setup();
