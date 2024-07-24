@@ -25,8 +25,6 @@ void ConcreteInterrupt::Setup()
 {
 	debug = (Debug*)&kernel->debug;
 
-	archInterrupt.Setup();
-
 	exception.Setup();
 }
 
@@ -34,14 +32,12 @@ void ConcreteInterrupt::Setup()
 /// @brief Exit
 void ConcreteInterrupt::Exit()
 {
-	for (uint32_t i = 0; i < ArchInterrupt::isr_num; i++)
+	for (uint32_t i = 0; i < Exception::isr_num; i++)
 	{
 		isrTabs[i].Release();
 	}
 
 	exception.Exit();
-
-	archInterrupt.Exit();
 }
 
 
@@ -54,7 +50,7 @@ void ConcreteInterrupt::Exit()
 int ConcreteInterrupt::SetISR(int irq, Function func, void* user, void* args)
 {
 	ClearISR(irq);
-	irq += ArchInterrupt::rsvd_isr_size;
+	irq += Exception::rsvd_isr_size;
 	return isrTabs[irq].Add(new Isr(irq, func, user, args));
 }
 
@@ -79,7 +75,7 @@ int ConcreteInterrupt::SetISR(int irq, Method method, Class* user, void* args)
 /// @return the number of the isr in isrTabs, return -1 when fail.
 int ConcreteInterrupt::AppendISR(int irq, Function func, void* user, void* args)
 {
-	irq += ArchInterrupt::rsvd_isr_size;
+	irq += Exception::rsvd_isr_size;
 	return isrTabs[irq].Add(new Isr(irq, func, user, args));
 }
 
@@ -104,7 +100,7 @@ int ConcreteInterrupt::AppendISR(int irq, Method method, Class* user, void* args
 /// @return Result::_OK / Result::_ERR
 bool ConcreteInterrupt::RemoveISR(int irq, Function func, void* user, void* args)
 {
-	irq += ArchInterrupt::rsvd_isr_size;
+	irq += Exception::rsvd_isr_size;
 
 	List<Isr*>* isrs = &isrTabs[irq];
 
@@ -140,7 +136,7 @@ bool ConcreteInterrupt::RemoveISR(int irq, Method method, Class* user, void* arg
 /// @return Result::_OK / Result::_ERR
 void ConcreteInterrupt::ClearISR(int irq)
 {
-	irq += ArchInterrupt::rsvd_isr_size;
+	irq += Exception::rsvd_isr_size;
 
 	List<Isr*>* isrs = &isrTabs[irq];
 
@@ -156,8 +152,8 @@ void ConcreteInterrupt::ClearISR(int irq)
 /// @param handler 
 void ConcreteInterrupt::Replace(int irq, uint32_t handler)
 {
-	irq += ArchInterrupt::rsvd_isr_size;
-	archInterrupt.Install(irq, handler);
+	irq += Exception::rsvd_isr_size;
+	exception.Install(irq, handler);
 }
 
 

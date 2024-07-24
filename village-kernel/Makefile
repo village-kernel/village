@@ -48,7 +48,6 @@ objs-y                              += Timer.o
 objs-y                              += System.o
 objs-y                              += Scheduler.o
 objs-y                              += Exception.o
-objs-y                              += ArchInterrupt.o
 
 objs-y                              += FileSystem.o
 objs-$(CONFIG_FATFS)                += FatDiskio.o

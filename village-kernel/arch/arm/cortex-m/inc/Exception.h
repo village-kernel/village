@@ -9,9 +9,14 @@
 
 #include "Kernel.h"
 
+
 /// @brief Exception
 class Exception
 {
+public:
+	//Static constants
+	static const uint32_t isr_num = 256;
+	static const uint32_t rsvd_isr_size = 16;
 private:
 	//Enumerations
 	enum IRQnType
@@ -21,13 +26,18 @@ private:
 		MemoryManagement_IRQn       = -12,
 		BusFault_IRQn               = -11,
 		UsageFault_IRQn             = -10,
-		SVCall_IRQn                 = -5, 
-		DebugMonitor_IRQn           = -4, 
-		PendSV_IRQn                 = -2, 
-		SysTick_IRQn                = -1, 
+		SVCall_IRQn                 = -5,
+		DebugMonitor_IRQn           = -4,
+		PendSV_IRQn                 = -2,
+		SysTick_IRQn                = -1,
 	};
+private:
+	//Methods
+	void InstallHandlers();
+	void ConfigVectorTable(uint32_t vector);
 
 	//Static Methods
+	static void StubHandler();
 	static void NMIHandler();
 	static void HardFaultHandler();
 	static void MemManageHandler();
@@ -37,10 +47,9 @@ private:
 	static void ExceptionInfo(const char* exception);
 public:
 	//Methods
-	Exception();
-	~Exception();
 	void Setup();
 	void Exit();
+	void Install(int irq, uint32_t handler);
 };
 
 #endif //!__EXCEPTION_H__

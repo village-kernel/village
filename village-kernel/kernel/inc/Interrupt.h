@@ -11,7 +11,6 @@
 #include "List.h"
 #include "Cast.h"
 #include "Exception.h"
-#include "ArchInterrupt.h"
 
 
 /// @brief ConcreteInterrupt
@@ -38,11 +37,10 @@ private:
 	static const uint32_t warning_times = 10;
 
 	//Members
-	Exception     exception;
-	ArchInterrupt archInterrupt;
 	Debug*        debug;
-	uint8_t       warnings[ArchInterrupt::isr_num] = { 0 };
-	List<Isr*>    isrTabs[ArchInterrupt::isr_num];
+	Exception     exception;
+	uint8_t       warnings[Exception::isr_num] = { 0 };
+	List<Isr*>    isrTabs[Exception::isr_num];
 public:
 	//Methods
 	ConcreteInterrupt();
