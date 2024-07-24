@@ -11,6 +11,11 @@ config ILI9488
 	bool "Enable ILI9488 support"
 	default n
 
+config SDMMC
+	select DRV_SDIO
+	bool "Enable SD MMC support"
+	default n
+
 config SPIFLASH
 	select DRV_SPI
 	bool "Enable SPI flash support"
