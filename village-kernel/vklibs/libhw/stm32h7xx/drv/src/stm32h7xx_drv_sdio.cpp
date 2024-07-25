@@ -9,10 +9,18 @@
 #include "Kernel.h"
 
 
+/// @brief Static members
+SD_HandleTypeDef Sdio::hsd;
+uint8_t Sdio::writeStatus = 0;
+uint8_t Sdio::readStatus = 0;
+
+
 /// @brief Initialize
 /// @param config 
-void Sdio::Initialize(Config config)
+uint8_t Sdio::Initialize(Config config)
 {
+	uint8_t state = MSD_OK;
+
 	//Reset the peripheral sdmmc
 	RCC->AHB3RSTR |= RCC_AHB3RSTR_SDMMC1RST_Msk;
 	RCC->AHB3RSTR &= ~RCC_AHB3RSTR_SDMMC1RST_Msk;
@@ -26,18 +34,32 @@ void Sdio::Initialize(Config config)
 	//Config pis
 	PinConfig(config);
 
-	//SD init
-	hsd1.Instance = SDMMC1;
-	hsd1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
-	hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
-	hsd1.Init.BusWide = SDMMC_BUS_WIDE_4B;
-	hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
-	hsd1.Init.ClockDiv = 0;
+	//Config interrupt
+	HAL_NVIC_SetPriority(SDMMC1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(SDMMC1_IRQn);
 
-	if (HAL_OK != HAL_SD_Init(&hsd1))
+	//SD config
+	hsd.Instance = SDMMC1;
+	hsd.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
+	hsd.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
+	hsd.Init.BusWide = SDMMC_BUS_WIDE_4B;
+	hsd.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
+	hsd.Init.ClockDiv = 0;
+	
+	//HAL SD initialization
+	state = HAL_SD_Init(&hsd);
+
+	//Configure SD Bus width (4 bits mode selected)
+	if (state == MSD_OK)
 	{
-		kernel->debug.Error("SD initialize failed");
+		//Enable wide operation
+		if (HAL_SD_ConfigWideBusOperation(&hsd, SDMMC_BUS_WIDE_4B) != HAL_OK)
+		{
+			state = MSD_ERROR;
+		}
 	}
+
+	return state;
 }
 
 
@@ -55,39 +77,164 @@ void Sdio::PinConfig(Config config)
 }
 
 
-/// @brief Write
+/// @brief WriteBlocks
 /// @param data 
 /// @param count 
 /// @param blk 
 /// @return 
-int Sdio::Write(uint8_t* data, uint32_t count, uint32_t blk)
+uint8_t Sdio::WriteBlocks(uint8_t* data, uint32_t count, uint32_t blk, uint32_t timeout)
 {
-	if (HAL_OK == HAL_SD_WriteBlocks_DMA(&hsd1, data, blk, count))
+	uint8_t state = MSD_OK;
+
+	if (HAL_SD_WriteBlocks(&hsd, data, blk, count, timeout) != HAL_OK)
 	{
-		while (HAL_SD_STATE_READY != hsd1.State)
-		{
-			HAL_SD_IRQHandler(&hsd1);
-		}
-		return count;
+		state = MSD_ERROR;
 	}
-	return 0;
+
+	return state;
 }
 
 
-/// @brief Read
+/// @brief ReadBlocks
 /// @param data 
 /// @param count 
 /// @param blk 
 /// @return 
-int Sdio::Read(uint8_t* data, uint32_t count, uint32_t blk)
+uint8_t Sdio::ReadBlocks(uint8_t* data, uint32_t count, uint32_t blk, uint32_t timeout)
 {
-	if (HAL_OK == HAL_SD_ReadBlocks_DMA(&hsd1, data, blk, count))
+	uint8_t state = MSD_OK;
+
+	if (HAL_SD_ReadBlocks(&hsd, data, blk, count, timeout) != HAL_OK)
 	{
-		while (HAL_SD_STATE_READY != hsd1.State)
-		{
-			HAL_SD_IRQHandler(&hsd1);
-		}
-		return count;
+		state = MSD_ERROR;
 	}
-	return 0;
+
+	return state;
+}
+
+
+/// @brief WriteBlocksDMA
+/// @param data 
+/// @param count 
+/// @param blk 
+/// @return 
+uint8_t Sdio::WriteBlocksDMA(uint8_t* data, uint32_t count, uint32_t blk)
+{
+	uint8_t state = MSD_OK;
+
+	//Write block(s) in DMA transfer mode
+	if (HAL_SD_WriteBlocks_DMA(&hsd, data, blk, count) != HAL_OK)
+	{
+		state = MSD_ERROR;
+	}
+
+	return state;
+}
+
+
+/// @brief ReadBlocksDMA
+/// @param data 
+/// @param count 
+/// @param blk 
+/// @return 
+uint8_t Sdio::ReadBlocksDMA(uint8_t* data, uint32_t count, uint32_t blk)
+{
+	uint8_t state = MSD_OK;
+
+	//Read block(s) in DMA transfer mode
+	if (HAL_SD_ReadBlocks_DMA(&hsd, data, blk, count) != HAL_OK)
+	{
+		state = MSD_ERROR;
+	}
+
+	return state;
+}
+
+
+/// @brief Erase
+/// @param startAddr 
+/// @param endAddr 
+/// @return 
+uint8_t Sdio::Erase(uint32_t startAddr, uint32_t endAddr)
+{
+	uint8_t state = MSD_OK;
+
+	if (HAL_SD_Erase(&hsd, startAddr, endAddr) != HAL_OK)
+	{
+		state = MSD_ERROR;
+	}
+
+	return state;
+}
+
+
+/// @brief GetCardState
+/// @param  
+/// @return 
+uint8_t Sdio::GetCardState()
+{
+	return ((HAL_SD_GetCardState(&hsd) == HAL_SD_CARD_TRANSFER ) ? SD_TRANSFER_OK : SD_TRANSFER_BUSY);
+}
+
+
+/// @brief GetCardInfo
+/// @param CardInfo 
+void Sdio::GetCardInfo(SDCardInfo *cardInfo)
+{
+	//Get SD card Information
+	HAL_SD_GetCardInfo(&hsd, (HAL_SD_CardInfoTypeDef*)cardInfo);
+}
+
+
+/// @brief ClearWriteStatus
+void Sdio::ClearWriteStatus() { writeStatus = false; }
+
+
+/// @brief SetWriteStatus
+void Sdio::SetWriteStatus() { writeStatus = true; }
+
+
+/// @brief ClearReadStatus
+void Sdio::ClearReadStatus() { readStatus = false; }
+
+
+/// @brief SetReadStatus
+void Sdio::SetReadStatus() { readStatus = true; }
+
+
+/// @brief GetWriteStatus
+/// @return 
+bool Sdio::GetWriteStatus() { return writeStatus; }
+
+
+/// @brief GetReadStatus
+/// @return 
+bool Sdio::GetReadStatus() { return readStatus; }
+
+
+/// @brief IRQHandler
+void Sdio::IRQHandler() { HAL_SD_IRQHandler(&hsd); }
+
+
+/// @brief HAL_SD_TxCpltCallback
+/// @param hsd 
+extern "C" void HAL_SD_TxCpltCallback(SD_HandleTypeDef *hsd)
+{
+	Sdio::SetWriteStatus();
+}
+
+
+/// @brief HAL_SD_RxCpltCallback
+/// @param hsd 
+extern "C" void HAL_SD_RxCpltCallback(SD_HandleTypeDef *hsd)
+{
+	Sdio::SetReadStatus();
+}
+
+
+/// @brief IRQHandler
+/// @param  
+extern "C" void SDMMC1_IRQHandler()
+{
+	Sdio::IRQHandler();
 }
