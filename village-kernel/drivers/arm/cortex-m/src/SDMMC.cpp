@@ -129,13 +129,6 @@ public:
 	}
 
 
-	/// @brief close
-	void Close()
-	{
-
-	}
-
-
 	/// @brief Write data
 	/// @param data 
 	/// @param blkSize 
@@ -268,6 +261,13 @@ public:
 			default: break;
 		}
 		return 0;
+	}
+
+
+	/// @brief close
+	void Close()
+	{
+		sdio.Uninitialize();
 	}
 };
 
