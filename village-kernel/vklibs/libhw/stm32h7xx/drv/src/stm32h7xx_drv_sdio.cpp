@@ -63,6 +63,14 @@ uint8_t Sdio::Initialize(Config config)
 }
 
 
+/// @brief Sdio Uninitialize
+uint8_t Sdio::Uninitialize()
+{
+	HAL_NVIC_DisableIRQ(SDMMC1_IRQn);
+	return 0;
+}
+
+
 /// @brief Pin configure
 /// @param config 
 void Sdio::PinConfig(Config config)

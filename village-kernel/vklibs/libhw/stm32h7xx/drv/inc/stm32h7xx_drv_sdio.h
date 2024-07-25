@@ -83,6 +83,7 @@ private:
 public:
 	//Methods
 	uint8_t Initialize(Config config);
+	uint8_t Uninitialize();
 	uint8_t WriteBlocks(uint8_t* data, uint32_t count, uint32_t blk, uint32_t timeout);
 	uint8_t ReadBlocks(uint8_t* data, uint32_t count, uint32_t blk, uint32_t timeout);
 	uint8_t WriteBlocksDMA(uint8_t* data, uint32_t count, uint32_t blk);
