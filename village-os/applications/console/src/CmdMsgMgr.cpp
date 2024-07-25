@@ -188,7 +188,7 @@ bool CmdMsgMgr::HandleInputData()
 					}
 
 					//ASCII DEL
-					else if (0x7f == byte)
+					else if (0x7f == byte || '\b' == byte)
 					{
 						if (rxBufPos)
 						{
@@ -239,7 +239,7 @@ bool CmdMsgMgr::HandleInputData()
 					}
 
 					//ASCII DEL
-					else if (0x7f == byte)
+					else if (0x7f == byte || '\b' == byte)
 					{
 						if (rxBufPos)
 						{
