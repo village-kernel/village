@@ -83,21 +83,34 @@ public:
 		usart.Initialize(config.usartCh);
 		usart.ConfigPin(config.usartTxPin);
 		usart.ConfigPin(config.usartRxPin);
-		if (config.enableRTS) usart.ConfigPin(config.usartDePin);
 		usart.SetBaudRate(config.baudrate);
 		usart.ConfigPortSettings(Usart::_8Bits, Usart::_NoParity, Usart::_1Stop);
-		usart.ConfigDriverEnableMode(true, false);
-		usart.ConfigReceiverTimeout(true, 39); // 3.5bytes: 3.5 * 11 = 38.5
-		usart.ConfigDma();
+
+		//Configure usart RTS
+		if (config.enableRTS)
+		{
+			usart.ConfigPin(config.usartDePin);
+			usart.ConfigDriverEnableMode(true, false);
+			usart.ConfigReceiverTimeout(true, 39); // 3.5bytes: 3.5 * 11 = 38.5
+		}
+		
+		//Configure usart DMA
+		if (config.enableDMA)
+		{
+			//Enable dma
+			usart.ConfigDma();
+
+			//Configure tx fifo
+			config.usartTxDma.periphAddr = usart.GetTxAddr();
+			txFifo.Open(config.usartTxDma);
+
+			//Configure rx fifo
+			config.usartRxDma.periphAddr = usart.GetRxAddr();
+			rxFifo.Open(config.usartRxDma);
+		}
+
+		//Enable usart
 		usart.Enable();
-
-		//Configure tx fifo
-		config.usartTxDma.periphAddr = usart.GetTxAddr();
-		txFifo.Open(config.usartTxDma);
-
-		//Configure rx fifo
-		config.usartRxDma.periphAddr = usart.GetRxAddr();
-		rxFifo.Open(config.usartRxDma);
 
 		return true;
 	}
@@ -115,7 +128,7 @@ public:
 		if (config.enableDMA)
 			return txFifo.Write(data, size, offset);
 		else
-			return usart.Write(data + offset, size);
+			return usart.Write(data, size, offset);
 	}
 
 
@@ -131,15 +144,18 @@ public:
 		if (config.enableDMA)
 			return rxFifo.Read(data, size, offset);
 		else
-			return usart.Read(data + offset, size);
+			return usart.Read(data, size, offset);
 	}
 
 
 	/// @brief Close
 	void Close()
 	{
-		txFifo.Close();
-		rxFifo.Close();
+		if (config.enableDMA)
+		{
+			txFifo.Close();
+			rxFifo.Close();
+		}
 	}
 };
 
