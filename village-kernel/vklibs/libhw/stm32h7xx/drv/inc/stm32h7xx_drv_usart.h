@@ -68,8 +68,8 @@ public:
 	void ConfigDma(bool dmaTxEnable = true, bool dmaRxEnable = true);
 	void SetBaudRate(uint32_t baudRate, bool over8 = false);
 	void CheckError();
-	int Write(uint8_t* txData, uint16_t length);
-	int Read(uint8_t* rxData, uint16_t length);
+	int Write(uint8_t* data, uint32_t size, uint32_t offset);
+	int Read(uint8_t* data, uint32_t size, uint32_t offset);
 
 	///Enables operation of the USART peripheral
 	inline void Enable() { base->CR1 |= USART_CR1_UE; }
