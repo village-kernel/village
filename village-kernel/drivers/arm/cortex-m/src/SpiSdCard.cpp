@@ -104,6 +104,7 @@ private:
 	inline void InitConfig()
 	{
 		config = SPI_SDCARD_CONFIG;
+		sectorSize = 512;
 	}
 
 
