@@ -7,19 +7,20 @@
 #include "stm32h7xx_drv_i2c.h"
 
 
-///Pins Initialize
-void I2c::Initialize(PinConfig pins)
+/// @brief Pins Initialize
+/// @param pins 
+void I2c::Initialize(Config config)
 {
 	//Config scl pin as General purpose output mode with pull up
-	sclPin.Initialize(pins.sclCh, pins.sclPin, Gpio::_High);
+	sclPin.Initialize(config.sclCh, config.sclPin, Gpio::_Output, Gpio::_High);
 	
 	//Config sda as Output open-drain mode with pull up
-	sdaPin.Initialize(pins.sdaCh, pins.sdaPin, Gpio::_High);
+	sdaPin.Initialize(config.sdaCh, config.sdaPin, Gpio::_Output, Gpio::_High);
 	sdaPin.ConfigOutputType(Gpio::_OpenDrain);
 }
 
 
-///I2c delay
+/// @brief I2c delay
 inline void I2c::I2cDelay()
 {
 	volatile uint8_t delayCycles = 250;
@@ -27,7 +28,7 @@ inline void I2c::I2cDelay()
 }
 
 
-///start condition
+/// @brief start condition
 void I2c::Start()
 {
 	sclPin.Clear();
@@ -45,7 +46,7 @@ void I2c::Start()
 }
 
 
-///stop condition
+/// @brief stop condition
 void I2c::Stop()
 {
 	sclPin.Clear();
@@ -60,7 +61,8 @@ void I2c::Stop()
 }
 
 
-///write one byte data
+/// @brief write one byte data
+/// @param data 
 void I2c::WriteByte(uint8_t data)
 { 
 	const uint8_t MSB = 0x80;
@@ -83,7 +85,8 @@ void I2c::WriteByte(uint8_t data)
 }
 
 
-///read one byte data
+/// @brief read one byte data
+/// @return 
 uint8_t I2c::ReadByte()
 {
 	uint8_t data = 0;
@@ -107,7 +110,8 @@ uint8_t I2c::ReadByte()
 }
 
 
-///get ack, 0 : ack ,1 : nack
+/// @brief get ack, 0 : ack ,1 : nack
+/// @return 
 I2c::AckType I2c::GetAck()
 {
 	AckType ack = Ack;
@@ -127,7 +131,8 @@ I2c::AckType I2c::GetAck()
 }
 
 
-///put ack, 0 : ack, 1 : nack
+/// @brief put ack, 0 : ack, 1 : nack
+/// @param ack 
 void I2c::PutAck(AckType ack)
 {
 	sclPin.Clear();
@@ -140,4 +145,3 @@ void I2c::PutAck(AckType ack)
 	sclPin.Clear();
 	I2cDelay();
 }
-

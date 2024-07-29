@@ -15,29 +15,6 @@
 class Sdio
 {
 public:
-	//Structures
-	struct Config
-	{
-		Gpio::GpioChannel d0Ch;
-		Gpio::GpioChannel d1Ch;
-		Gpio::GpioChannel d2Ch;
-		Gpio::GpioChannel d3Ch;
-		Gpio::GpioChannel ckCh;
-		Gpio::GpioChannel cmdCh;
-		uint16_t d0Pin;
-		uint16_t d1Pin;
-		uint16_t d2Pin;
-		uint16_t d3Pin;
-		uint16_t ckPin;
-		uint16_t cmdPin;
-		uint8_t d0AltNum;
-		uint8_t d1AltNum;
-		uint8_t d2AltNum;
-		uint8_t d3AltNum;
-		uint8_t ckAltNum;
-		uint8_t cmdAltNum;
-	};
-
 	enum SDStatus
 	{
 		MSD_OK                    = 0x00,
@@ -77,12 +54,9 @@ private:
 	//Static members
 	static uint8_t writeStatus;
 	static uint8_t readStatus;
-
-	//Methods
-	void PinConfig(Config config);
 public:
 	//Methods
-	uint8_t Initialize(Config config);
+	uint8_t Initialize();
 	uint8_t Uninitialize();
 	uint8_t WriteBlocks(uint8_t* data, uint32_t count, uint32_t blk, uint32_t timeout);
 	uint8_t ReadBlocks(uint8_t* data, uint32_t count, uint32_t blk, uint32_t timeout);

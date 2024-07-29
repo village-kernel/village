@@ -7,7 +7,8 @@
 #include "stm32f4xx_drv_i2c.h"
 
 
-///Pins Initialize
+/// @brief Pins Initialize
+/// @param pins 
 void I2c::Initialize(PinConfig pins)
 {
 	//Config scl pin as General purpose output mode with pull up
@@ -19,7 +20,7 @@ void I2c::Initialize(PinConfig pins)
 }
 
 
-///I2c delay
+/// @brief I2c delay
 inline void I2c::I2cDelay()
 {
 	volatile uint8_t delayCycles = 250;
@@ -27,7 +28,7 @@ inline void I2c::I2cDelay()
 }
 
 
-///start condition
+/// @brief start condition
 void I2c::Start()
 {
 	sclPin.Clear();
@@ -45,7 +46,7 @@ void I2c::Start()
 }
 
 
-///stop condition
+/// @brief stop condition
 void I2c::Stop()
 {
 	sclPin.Clear();
@@ -60,7 +61,8 @@ void I2c::Stop()
 }
 
 
-///write one byte data
+/// @brief write one byte data
+/// @param data 
 void I2c::WriteByte(uint8_t data)
 { 
 	const uint8_t MSB = 0x80;
@@ -83,7 +85,8 @@ void I2c::WriteByte(uint8_t data)
 }
 
 
-///read one byte data
+/// @brief read one byte data
+/// @return 
 uint8_t I2c::ReadByte()
 {
 	uint8_t data = 0;
@@ -107,7 +110,8 @@ uint8_t I2c::ReadByte()
 }
 
 
-///get ack, 0 : ack ,1 : nack
+/// @brief get ack, 0 : ack ,1 : nack
+/// @return 
 I2c::AckType I2c::GetAck()
 {
 	AckType ack = Ack;
@@ -127,7 +131,8 @@ I2c::AckType I2c::GetAck()
 }
 
 
-///put ack, 0 : ack, 1 : nack
+/// @brief put ack, 0 : ack, 1 : nack
+/// @param ack 
 void I2c::PutAck(AckType ack)
 {
 	sclPin.Clear();

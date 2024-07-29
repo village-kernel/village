@@ -7,12 +7,10 @@
 #include "stm32h7xx_drv_fsmc.h"
 
 
-///Initialize
-void Fsmc::Initialize(Config config)
+/// @brief Initialize
+/// @param config 
+void Fsmc::Initialize()
 {
-	//Config pins
-	PinConfig(config);
-
 	//Enable the peripheral clock for fsmc
 	RCC->AHB3ENR |= RCC_AHB3ENR_FMCEN_Msk;
 
@@ -46,31 +44,4 @@ void Fsmc::Initialize(Config config)
 	Timing.AccessMode = FMC_ACCESS_MODE_A;
 
 	HAL_SRAM_Init(&hsram4, &Timing, NULL);
-}
-
-
-///Pin configure
-void Fsmc::PinConfig(Config config)
-{
-	Gpio pin;
-	pin.Initialize(config.csCh, config.csPin, pin_alt_num);
-	pin.Initialize(config.rsCh, config.rsPin, pin_alt_num);
-	pin.Initialize(config.wrCh, config.wrPin, pin_alt_num);
-	pin.Initialize(config.rdCh, config.rdPin, pin_alt_num);
-	pin.Initialize(config.db0Ch, config.db0Pin, pin_alt_num);
-	pin.Initialize(config.db1Ch, config.db1Pin, pin_alt_num);
-	pin.Initialize(config.db2Ch, config.db2Pin, pin_alt_num);
-	pin.Initialize(config.db3Ch, config.db3Pin, pin_alt_num);
-	pin.Initialize(config.db4Ch, config.db4Pin, pin_alt_num);
-	pin.Initialize(config.db5Ch, config.db5Pin, pin_alt_num);
-	pin.Initialize(config.db6Ch, config.db6Pin, pin_alt_num);
-	pin.Initialize(config.db7Ch, config.db7Pin, pin_alt_num);
-	pin.Initialize(config.db8Ch, config.db8Pin, pin_alt_num);
-	pin.Initialize(config.db9Ch, config.db9Pin, pin_alt_num);
-	pin.Initialize(config.db10Ch, config.db10Pin, pin_alt_num);
-	pin.Initialize(config.db11Ch, config.db11Pin, pin_alt_num);
-	pin.Initialize(config.db12Ch, config.db12Pin, pin_alt_num);
-	pin.Initialize(config.db13Ch, config.db13Pin, pin_alt_num);
-	pin.Initialize(config.db14Ch, config.db14Pin, pin_alt_num);
-	pin.Initialize(config.db15Ch, config.db15Pin, pin_alt_num);
 }

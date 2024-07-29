@@ -16,6 +16,14 @@ class Usart
 {	
 public:
 	//Enumerations
+	enum Channel
+	{
+		_Usart1 = 1,
+		_Usart2 = 2,
+		_Usart3 = 3,
+	};
+
+	//Enumerations
 	enum DataBits
 	{
 		_8Bits = 0,
@@ -46,12 +54,11 @@ public:
 private:
 	//Members
 	volatile USART_TypeDef* base;
-	volatile uint16_t channel;
+	volatile Channel channel;
 public:
 	//Methods
 	Usart();
-	void Initialize(uint16_t channel);
-	void ConfigPin(PinConfig config);
+	void Initialize(Channel channel);
 	void ConfigPortSettings(DataBits dataBits, Parity parity, StopBits stopBits);
 	void ConfigDriverEnableMode(bool usingDEM = true, bool polarity = false);
 	void ConfigReceiverTimeout(bool enable, uint32_t rto = 0, uint8_t blen = 0);

@@ -17,7 +17,8 @@ Exti::Exti()
 }
 
 
-///Selects the interrupt line
+/// @brief Selects the interrupt line
+/// @param line 
 void Exti::Initialize(uint8_t line)
 {
 	//config regs
@@ -30,7 +31,8 @@ void Exti::Initialize(uint8_t line)
 }
 
 
-///Select between event or interrupt mode
+/// @brief Select between event or interrupt mode
+/// @param mode 
 void Exti::ConfigMode(ExtiMode mode)
 {
 	if (_Interrupt == mode)
@@ -46,7 +48,8 @@ void Exti::ConfigMode(ExtiMode mode)
 }
 
 
-///Selects external interrupt trigger edge
+/// @brief Selects external interrupt trigger edge
+/// @param trigger 
 void Exti::ConfigTriggerEdge(ExtiEdge trigger)
 {
 	if (_Rising == trigger)
@@ -67,16 +70,18 @@ void Exti::ConfigTriggerEdge(ExtiEdge trigger)
 }
 
 
-///Software Generated Interrupt
-///This bit is cleared by clearing the corresponding bit in the EXTI_PR register (by
-///writing a ‘1’ into the bit).
+/// @brief Software Generated Interrupt
+///        This bit is cleared by clearing the corresponding bit in the EXTI_PR register (by
+///        writing a ‘1’ into the bit).
 void Exti::SoftInt()
 {
 	EXTI->SWIER |= bitMask;
 }
 
 
-///Configures the Gpi pin that triggers the interrupt
+/// @brief Configures the Gpi pin that triggers the interrupt
+/// @param ch 
+/// @param pin 
 void Exti::ConfigExtPin(Gpio::GpioChannel ch, uint8_t pin)
 {
 	int nTemp = 0;
@@ -107,7 +112,8 @@ void Exti::ConfigExtPin(Gpio::GpioChannel ch, uint8_t pin)
 }
 
 
-///Enable ext interrupt
+/// @brief Enable ext interrupt
+/// @param enable 
 void Exti::EnableInterrupt(bool enable)
 {
 	Nvic nvic;
@@ -130,4 +136,3 @@ void Exti::EnableInterrupt(bool enable)
 	if (enable) nvic.EnableInterrupt();
 	else nvic.DisableInterrupt();
 }
-

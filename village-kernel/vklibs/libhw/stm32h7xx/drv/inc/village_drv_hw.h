@@ -9,8 +9,7 @@
 
 #include "stm32h7xx_drv.h"
 #include "stm32h7xx_drv_gpio.h"
-#include "stm32h7xx_drv_gpi.h"
-#include "stm32h7xx_drv_gpo.h"
+#include "stm32h7xx_drv_ltdc.h"
 #include "stm32h7xx_drv_nvic.h"
 #include "stm32h7xx_drv_usart.h"
 #include "stm32h7xx_drv_sdio.h"

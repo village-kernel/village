@@ -8,7 +8,7 @@
 #define __I2C_H__
 
 #include "stm32f4xx_drv.h"
-#include "stm32f4xx_drv_gpo.h"
+#include "stm32f4xx_drv_gpio.h"
 
 
 /// @brief I2c
@@ -32,8 +32,8 @@ public:
 	};
 private:
 	//Members
-	Gpo sclPin;
-	Gpo sdaPin;
+	Gpio sclPin;
+	Gpio sdaPin;
 
 	//Methods
 	void I2cDelay(void);

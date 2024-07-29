@@ -194,9 +194,8 @@ objs-hw-$(CONFIG_STM32F4XX_LL_USART)             += stm32f4xx_ll_usart.o
 objs-hw-$(CONFIG_STM32F4XX_LL_USB)               += stm32f4xx_ll_usb.o
 objs-hw-$(CONFIG_STM32F4XX_LL_UTILS)             += stm32f4xx_ll_utils.o
 
+objs-hw-$(CONFIG_STM32F4XX_DRV)                  += stm32f4xx_drv.o
 objs-hw-$(CONFIG_STM32F4XX_DRV_GPIO)             += stm32f4xx_drv_gpio.o
-objs-hw-$(CONFIG_STM32F4XX_DRV_GPI)              += stm32f4xx_drv_gpi.o
-objs-hw-$(CONFIG_STM32F4XX_DRV_GPO)              += stm32f4xx_drv_gpo.o
 objs-hw-$(CONFIG_STM32F4XX_DRV_NVIC)             += stm32f4xx_drv_nvic.o
 objs-hw-$(CONFIG_STM32F4XX_DRV_USART)            += stm32f4xx_drv_usart.o
 objs-hw-$(CONFIG_STM32F4XX_DRV_SPI)              += stm32f4xx_drv_spi.o

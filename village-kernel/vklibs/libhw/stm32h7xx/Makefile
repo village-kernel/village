@@ -229,8 +229,7 @@ objs-hw-$(CONFIG_STM32H7XX_LL_UTILS)             += stm32h7xx_ll_utils.o
 
 objs-hw-$(CONFIG_STM32H7XX_DRV)                  += stm32h7xx_drv.o
 objs-hw-$(CONFIG_STM32H7XX_DRV_GPIO)             += stm32h7xx_drv_gpio.o
-objs-hw-$(CONFIG_STM32H7XX_DRV_GPI)              += stm32h7xx_drv_gpi.o
-objs-hw-$(CONFIG_STM32H7XX_DRV_GPO)              += stm32h7xx_drv_gpo.o
+objs-hw-$(CONFIG_STM32H7XX_DRV_LTDC)             += stm32h7xx_drv_ltdc.o
 objs-hw-$(CONFIG_STM32H7XX_DRV_NVIC)             += stm32h7xx_drv_nvic.o
 objs-hw-$(CONFIG_STM32H7XX_DRV_USART)            += stm32h7xx_drv_usart.o
 objs-hw-$(CONFIG_STM32H7XX_DRV_SDIO)             += stm32h7xx_drv_sdio.o

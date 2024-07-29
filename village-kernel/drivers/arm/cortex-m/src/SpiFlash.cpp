@@ -26,12 +26,12 @@ public:
 	//Structures
 	struct Config
 	{
-		Spi::Channel SpiCh;
-		Spi::PinConfig SpiConfig;
-		Gpio::GpioChannel flashcsCh;
-		uint16_t flashcsPin;
-		Gpio::GpioChannel flashwpCh;
-		uint16_t flashwpPin;
+		Spi::Channel spiCh;
+		Gpio::Config sckGpio;
+		Gpio::Config misoGpio;
+		Gpio::Config mosiGpio;
+		Gpio::Config csGpio;
+		Gpio::Config wpGpio;
 	};
 private:
 	//Static Constants
@@ -75,8 +75,8 @@ private:
 
 	//Periph Members
 	Spi spi;
-	Gpo csPin;
-	Gpo wpPin;
+	Gpio csGpio;
+	Gpio wpGpio;
 	Config config;
 
 	//Members
@@ -85,23 +85,34 @@ private:
 	/// @brief Init config
 	inline void InitConfig()
 	{
-		config.SpiCh = SPI_FLASH_CHANNEL;
-		config.SpiConfig.sckCh = SPI_FLASH_SCK_CH;
-		config.SpiConfig.sckPin = SPI_FLASH_SCK_PIN;
-		config.SpiConfig.sckAltNum = SPI_FLASH_SCK_AF_NUM;
-		config.SpiConfig.misoCh = SPI_FLASH_MISO_CH;
-		config.SpiConfig.misoPin = SPI_FLASH_MISO_PIN;
-		config.SpiConfig.misoAltNum = SPI_FLAHS_MISO_AF_NUM;
-		config.SpiConfig.mosiCh = SPI_FLASH_MOSI_CH;	
-		config.SpiConfig.mosiPin = SPI_FLASH_MOSI_PIN;
-		config.SpiConfig.mosiAltNum = SPI_FLASH_MOSI_AF_NUM;
-		config.flashcsCh = SPI_FLASH_CS_CH;
-		config.flashcsPin = SPI_FLASH_CS_PIN;
-		config.flashwpCh = SPI_FLASH_WP_CH;
-		config.flashwpPin = SPI_FLASH_WP_PIN;
+		config = SPI_FLASH_CONFIG;
 	}
 
 
+	/// @brief Pin config
+	inline void PinConfig()
+	{
+		Gpio gpio;
+
+		gpio.Initialize(config.sckGpio);
+		gpio.ConfigOutputType(Gpio::_PushPull);
+		gpio.ConfigInputType(Gpio::_PullUp);
+		gpio.ConfigSpeed(Gpio::_HighSpeed);
+
+		gpio.Initialize(config.mosiGpio);
+		gpio.ConfigOutputType(Gpio::_PushPull);
+		gpio.ConfigInputType(Gpio::_PullUp);
+		gpio.ConfigSpeed(Gpio::_HighSpeed);
+
+		gpio.Initialize(config.misoGpio);
+		gpio.ConfigOutputType(Gpio::_PushPull);
+		gpio.ConfigInputType(Gpio::_PullUp);
+		gpio.ConfigSpeed(Gpio::_HighSpeed);
+
+		csGpio.Initialize(config.csGpio);
+		wpGpio.Initialize(config.wpGpio);
+	}
+private:
 	/// @brief Spi flash write writeAddr
 	/// @param addr 
 	inline void WriteAddr(uint32_t addr)
@@ -137,19 +148,25 @@ private:
 
 
 	/// @brief Spi flash Select chip
-	inline void SelectChip()
-	{
-		csPin.Clear();
-	}
+	inline void SelectChip() { csGpio.Clear(); }
 
 
 	/// @brief Spi flash Unselect chip
-	inline void UnselectChip()
-	{
-		csPin.Set();
-	}
+	inline void UnselectChip() { csGpio.Set(); }
 
 
+	/// @brief Enable write protection
+	inline void EnableWP() { wpGpio.Clear(); }
+
+
+	/// @brief Disable write protection
+	inline void DisableWP() { wpGpio.Set(); }
+
+
+	/// @brief Check flash is error
+	/// @return 
+	inline bool IsFlashError() { return flashError; }
+private:
 	/// @brief Spi flash Get ID
 	/// @return 
 	uint16_t GetDeviceID()
@@ -353,18 +370,15 @@ public:
 		//Init config
 		InitConfig();
 
+		//Pin config
+		PinConfig();
+
 		//Initialize spi
-		spi.Initialize(config.SpiCh);
-		spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol0Cpha0, config.SpiConfig);
+		spi.Initialize(config.spiCh);
+		spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol0Cpha0);
 		spi.ConfigBaudRatePrescaler(Spi::_Fpclk16);
 		spi.ConfigFrame(Spi::_MsbFirst, Spi::_8Bit);
 		spi.Enable();
-
-		//Initialize spi flash cs pin
-		csPin.Initialize(config.flashcsCh, config.flashcsPin, Gpio::_High);
-
-		//Initialize spi flash wp pin
-		wpPin.Initialize(config.flashwpCh, config.flashwpPin, Gpio::_High);
 
 		//Check if the device id is correct
 		if (GetDeviceID() != DeviceID) flashError = true;
@@ -468,19 +482,6 @@ public:
 	{
 
 	}
-
-
-	/// @brief Enable write protection
-	inline void EnableWP() { wpPin.Clear(); }
-
-
-	/// @brief Disable write protection
-	inline void DisableWP() { wpPin.Set(); }
-
-
-	/// @brief Check flash is error
-	/// @return 
-	inline bool IsFlashError() { return flashError; }
 };
 
 

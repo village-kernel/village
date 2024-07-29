@@ -17,7 +17,7 @@ uint8_t Sdio::readStatus = 0;
 
 /// @brief Initialize
 /// @param config 
-uint8_t Sdio::Initialize(Config config)
+uint8_t Sdio::Initialize()
 {
 	uint8_t state = MSD_OK;
 
@@ -30,9 +30,6 @@ uint8_t Sdio::Initialize(Config config)
 
 	//Select SDMMC kernel clock source: pll2_r_ck
 	RCC->D1CCIPR = (RCC->D1CCIPR & ~RCC_D1CCIPR_SDMMCSEL) | (0b01 << RCC_D1CCIPR_SDMMCSEL_Pos);
-
-	//Config pis
-	PinConfig(config);
 
 	//Config interrupt
 	HAL_NVIC_SetPriority(SDMMC1_IRQn, 0, 0);
@@ -68,20 +65,6 @@ uint8_t Sdio::Uninitialize()
 {
 	HAL_NVIC_DisableIRQ(SDMMC1_IRQn);
 	return 0;
-}
-
-
-/// @brief Pin configure
-/// @param config 
-void Sdio::PinConfig(Config config)
-{
-	Gpio pin;
-	pin.Initialize(config.d0Ch, config.d0Pin, config.d0AltNum, Gpio::_SuperHighSpeed);
-	pin.Initialize(config.d1Ch, config.d1Pin, config.d1AltNum, Gpio::_SuperHighSpeed);
-	pin.Initialize(config.d2Ch, config.d2Pin, config.d2AltNum, Gpio::_SuperHighSpeed);
-	pin.Initialize(config.d3Ch, config.d3Pin, config.d3AltNum, Gpio::_SuperHighSpeed);
-	pin.Initialize(config.ckCh, config.ckPin, config.ckAltNum, Gpio::_SuperHighSpeed);
-	pin.Initialize(config.cmdCh, config.cmdPin, config.cmdAltNum, Gpio::_SuperHighSpeed);
 }
 
 

@@ -494,14 +494,9 @@ config STM32H7XX_DRV_GPIO
 	bool "Enable GPIO drv class"
 	default y
 
-config STM32H7XX_DRV_GPI
-	depends on STM32H7XX_DRV_GPIO
-	bool "Enable GPI drv class"
-	default y
-
-config STM32H7XX_DRV_GPO
-	depends on STM32H7XX_DRV_GPIO
-	bool "Enable GPO drv class"
+config STM32H7XX_DRV_LTDC
+	select STM32H7XX_DRV_GPIO
+	bool "Enalbe LTDC drv class"
 	default y
 
 config STM32H7XX_DRV_NVIC

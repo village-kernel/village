@@ -1,21 +1,20 @@
 //###########################################################################
-// stm32h7xx_drv_fsmc.h
-// Hardware layer class that manages FSMC module
+// stm32h7xx_drv_ltdc.h
+// Hardware Layer class that manages a single ltdc module
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __FSMC_H__
-#define __FSMC_H__
+#ifndef __LTDC_H__
+#define __LTDC_H__
 
+#include "stm32h7xx_drv.h"
 #include "stm32h7xx_drv_gpio.h"
 
 
-/// @brief FSMC
-class Fsmc
+/// @brief Ltdc
+class Ltdc
 {
-public:
-	//Methods
-	void Initialize();
+
 };
 
-#endif //!__FSMC_H__
+#endif // !__LTDC_H__

@@ -7,18 +7,19 @@
 #include "stm32h7xx_drv_usart.h"
 
 
-///Default Constructor
+/// @brief Constructor
 Usart::Usart()
 	: base(NULL)
 {
 }
 
 
-///Initializes the serial module
-void Usart::Initialize(uint16_t channel)
+/// @brief Initializes the serial module
+/// @param channel 
+void Usart::Initialize(Channel channel)
 {
 	//Enable the peripheral clock and assign the base pointer
-	if (1 == channel)
+	if (_Usart1 == channel)
 	{
 		RCC->APB2RSTR |= RCC_APB2RSTR_USART1RST;
 		RCC->APB2RSTR &= ~RCC_APB2RSTR_USART1RST;
@@ -26,7 +27,7 @@ void Usart::Initialize(uint16_t channel)
 		RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 		base = USART1;
 	}
-	else if (2 == channel)
+	else if (_Usart2 == channel)
 	{
 		RCC->APB1LRSTR |= RCC_APB1LRSTR_USART2RST;
 		RCC->APB1LRSTR &= ~RCC_APB1LRSTR_USART2RST;
@@ -34,7 +35,7 @@ void Usart::Initialize(uint16_t channel)
 		RCC->APB1LENR |= RCC_APB1LENR_USART2EN;
 		base = USART2; 
 	}
-	else if (3 == channel)
+	else if (_Usart3 == channel)
 	{
 		RCC->APB1LRSTR |= RCC_APB1LRSTR_USART3RST;
 		RCC->APB1LRSTR &= ~RCC_APB1LRSTR_USART3RST;
@@ -42,7 +43,7 @@ void Usart::Initialize(uint16_t channel)
 		RCC->APB1LENR |= RCC_APB1LENR_USART3EN;
 		base = USART3;
 	}
-	else if (4 == channel)
+	else if (_Usart4 == channel)
 	{
 		RCC->APB1LRSTR |= RCC_APB1LRSTR_UART4RST;
 		RCC->APB1LRSTR &= ~RCC_APB1LRSTR_UART4RST;
@@ -50,7 +51,7 @@ void Usart::Initialize(uint16_t channel)
 		RCC->APB1LENR |= RCC_APB1LENR_UART4EN;
 		base = UART4;
 	}
-	else if (5 == channel)
+	else if (_Usart5 == channel)
 	{
 		RCC->APB1LRSTR |= RCC_APB1LRSTR_UART5RST;
 		RCC->APB1LRSTR &= ~RCC_APB1LRSTR_UART5RST;
@@ -67,20 +68,10 @@ void Usart::Initialize(uint16_t channel)
 }
 
 
-///Configures usart pins
-void Usart::ConfigPin(PinConfig config)
-{
-	Gpio usartPin;
-	usartPin.Initialize(config.ch, config.pin);
-	usartPin.ConfigAltFunc(config.alt);
-	usartPin.ConfigMode(Gpio::_Alt);
-	usartPin.ConfigOutputType(Gpio::_PushPull);
-	usartPin.ConfigInputType(Gpio::_NoPull);
-	usartPin.ConfigSpeed(Gpio::_SuperHighSpeed);
-}
-
-
-///Configures basic port settings
+/// @brief Configures basic port settings
+/// @param dataBits 
+/// @param parity 
+/// @param stopBits 
 void Usart::ConfigPortSettings(DataBits dataBits, Parity parity, StopBits stopBits)
 {
 	//Configure word size
@@ -104,9 +95,11 @@ void Usart::ConfigPortSettings(DataBits dataBits, Parity parity, StopBits stopBi
 }
 
 
-///Sets the baud rate of the serial bus
-///baudRate indicates the desired baudRate
-///over8 indicates the whether oversampling by 8 will be used (otherwise oversampling of 16)
+/// @brief Sets the baud rate of the serial bus
+///        baudRate indicates the desired baudRate
+///        over8 indicates the whether oversampling by 8 will be used (otherwise oversampling of 16)
+/// @param baudRate 
+/// @param over8 
 void Usart::SetBaudRate(uint32_t baudRate, bool over8)
 {
 	if (0 != baudRate)
@@ -139,7 +132,9 @@ void Usart::SetBaudRate(uint32_t baudRate, bool over8)
 }
 
 
-///Configure RS485 driver enable mode
+/// @brief Configure RS485 driver enable mode
+/// @param usingDEM 
+/// @param polarity 
 void Usart::ConfigDriverEnableMode(bool usingDEM, bool polarity)
 {
 	base->CR3 = (base->CR3 & ~USART_CR3_DEM_Msk) | ((usingDEM ? 1 : 0) << USART_CR3_DEM_Pos);
@@ -147,7 +142,10 @@ void Usart::ConfigDriverEnableMode(bool usingDEM, bool polarity)
 }
 
 
-///Configure receiver timeout
+/// @brief Configure receiver timeout
+/// @param enable 
+/// @param rto 
+/// @param blen 
 void Usart::ConfigReceiverTimeout(bool enable, uint32_t rto, uint8_t blen)
 {
 	base->CR2 = (base->CR2 & ~USART_CR2_RTOEN_Msk) | ((enable ? 1 : 0) << USART_CR2_RTOEN_Pos);
@@ -156,7 +154,9 @@ void Usart::ConfigReceiverTimeout(bool enable, uint32_t rto, uint8_t blen)
 }
 
 
-///Enables or disables DMA transmitter / DMA receiver
+/// @brief Enables or disables DMA transmitter / DMA receiver
+/// @param dmaTxEnable 
+/// @param dmaRxEnable 
 void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
 {
 	if (dmaTxEnable) base->CR3 |= USART_CR3_DMAT;
@@ -167,7 +167,11 @@ void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
 }
 
 
-///Write data to usart
+/// @brief Write data to usart
+/// @param data 
+/// @param size 
+/// @param offset 
+/// @return 
 int Usart::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	uint16_t loop = size;
@@ -187,7 +191,11 @@ int Usart::Write(uint8_t* data, uint32_t size, uint32_t offset)
 }
 
 
-///Read data from usart
+/// @brief Read data from usart
+/// @param data 
+/// @param size 
+/// @param offset 
+/// @return 
 int Usart::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	uint32_t length = 0;
@@ -204,7 +212,7 @@ int Usart::Read(uint8_t* data, uint32_t size, uint32_t offset)
 }
 
 
-///Check error
+/// @brief Check error
 void Usart::CheckError()
 {
 	if (base->ISR & (USART_ISR_PE | USART_ISR_FE | USART_ISR_NE | USART_ISR_ORE))

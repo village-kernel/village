@@ -7,23 +7,24 @@
 #include "stm32f4xx_drv_usart.h"
 
 
-///Default Constructor
+/// @brief Constructor
 Usart::Usart()
 	: base(__null),
-	channel(0)
+	channel(_Usart1)
 {
 }
 
 
-///Initializes the serial module
-void Usart::Initialize(uint16_t channel)
+/// @brief Initializes the serial module
+/// @param channel 
+void Usart::Initialize(Channel channel)
 {
 	//Get uart channel
 	this->channel = channel;
 
 	//assign the base pointer and enable the peripheral clock
 	//also configure clock source to SYSCLK
-	if (1 == channel)
+	if (_Usart1 == channel)
 	{
 		RCC->APB2RSTR |= RCC_APB2RSTR_USART1RST;
 		RCC->APB2RSTR &= ~RCC_APB2RSTR_USART1RST;
@@ -31,7 +32,7 @@ void Usart::Initialize(uint16_t channel)
 		RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
 		base = USART1;
 	}
-	else if (2 == channel)
+	else if (_Usart2 == channel)
 	{
 		RCC->APB1RSTR |= RCC_APB1RSTR_USART2RST;
 		RCC->APB1RSTR &= ~RCC_APB1RSTR_USART2RST;
@@ -39,7 +40,7 @@ void Usart::Initialize(uint16_t channel)
 		RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 		base = USART2;
 	}
-	else if (3 == channel)
+	else if (_Usart3 == channel)
 	{
 		RCC->APB1RSTR |= RCC_APB1RSTR_USART3RST;
 		RCC->APB1RSTR &= ~RCC_APB1RSTR_USART3RST;
@@ -53,20 +54,10 @@ void Usart::Initialize(uint16_t channel)
 }
 
 
-///Configures usart pins
-void Usart::ConfigPin(PinConfig config)
-{
-	Gpio usartPin;
-	usartPin.Initialize(config.ch, config.pin);
-	usartPin.ConfigAltFunc(config.alt);
-	usartPin.ConfigMode(Gpio::_Alt);
-	usartPin.ConfigOutputType(Gpio::_PushPull);
-	usartPin.ConfigInputType(Gpio::_NoPull);
-	usartPin.ConfigSpeed(Gpio::_HighSpeed);
-}
-
-
-///Configures basic port settings
+/// @brief Configures basic port settings
+/// @param dataBits 
+/// @param parity 
+/// @param stopBits 
 void Usart::ConfigPortSettings(DataBits dataBits, Parity parity, StopBits stopBits)
 {
 	//Configure word size
@@ -90,9 +81,11 @@ void Usart::ConfigPortSettings(DataBits dataBits, Parity parity, StopBits stopBi
 }
 
 
-///Sets the baud rate of the serial bus
-///baudRate indicates the desired baudRate
-///over8 indicates the whether oversampling by 8 will be used (otherwise oversampling of 16)
+/// @brief Sets the baud rate of the serial bus
+///        baudRate indicates the desired baudRate
+///        over8 indicates the whether oversampling by 8 will be used (otherwise oversampling of 16)
+/// @param baudRate 
+/// @param over8 
 void Usart::SetBaudRate(uint32_t baudRate, bool over8)
 {
 	//Calculate the pclk1 frequency
@@ -124,21 +117,28 @@ void Usart::SetBaudRate(uint32_t baudRate, bool over8)
 }
 
 
-///Configure RS485 driver enable mode
+/// @brief Configure RS485 driver enable mode
+/// @param usingDEM 
+/// @param polarity 
 void Usart::ConfigDriverEnableMode(bool usingDEM, bool polarity)
 {
 	//unsupport
 }
 
 
-///Configure receiver timeout
+/// @brief Configure receiver timeout
+/// @param enable 
+/// @param rto 
+/// @param blen 
 void Usart::ConfigReceiverTimeout(bool enable, uint32_t rto, uint8_t blen)
 {
 	//unsupport
 }
 
 
-///Enables or disables DMA transmitter / DMA receiver
+/// @brief Enables or disables DMA transmitter / DMA receiver
+/// @param dmaTxEnable 
+/// @param dmaRxEnable 
 void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
 {
 	if (dmaTxEnable) base->CR3 |= USART_CR3_DMAT;
@@ -149,7 +149,11 @@ void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
 }
 
 
-///Write data to usart
+/// @brief Write data to usart
+/// @param data 
+/// @param size 
+/// @param offset 
+/// @return 
 int Usart::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	uint16_t loop = size;
@@ -160,7 +164,7 @@ int Usart::Write(uint8_t* data, uint32_t size, uint32_t offset)
 	{
 		if (IsTxRegisterEmpty())
 		{
-			base->TDR = *data++;
+			base->DR = *data++;
 			loop--;
 		}
 	}
@@ -169,7 +173,11 @@ int Usart::Write(uint8_t* data, uint32_t size, uint32_t offset)
 }
 
 
-///Read data from usart
+/// @brief Read data from usart
+/// @param data 
+/// @param size 
+/// @param offset 
+/// @return 
 int Usart::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	uint32_t length = 0;
@@ -178,7 +186,7 @@ int Usart::Read(uint8_t* data, uint32_t size, uint32_t offset)
 
 	while (IsReadDataRegNotEmpty())
 	{
-		*data++ = base->RDR;
+		*data++ = base->DR;
 		if (++length >= size) break;
 	}
 
@@ -186,7 +194,7 @@ int Usart::Read(uint8_t* data, uint32_t size, uint32_t offset)
 }
 
 
-///Check error
+/// @brief Check error
 void Usart::CheckError()
 {
 	if (base->SR & (USART_SR_PE | USART_SR_FE | USART_SR_NE | USART_SR_ORE))
