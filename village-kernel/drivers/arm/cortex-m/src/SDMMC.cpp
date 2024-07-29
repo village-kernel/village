@@ -14,6 +14,17 @@
 class SDMMC : public Driver
 {
 public:
+	//Structures
+	struct Config
+	{
+		Gpio::Config d0Gpio;
+		Gpio::Config d1Gpio;
+		Gpio::Config d2Gpio;
+		Gpio::Config d3Gpio;
+		Gpio::Config ckGpio;
+		Gpio::Config cmdGpio;
+	};
+
 	//Enumerations
 	enum IOCtrlCmd
 	{
@@ -36,34 +47,25 @@ private:
 
 	//Members
 	Sdio sdio;
-	Sdio::Config config;
+	Config config;
 private:
 	/// @brief Init config
 	inline void InitConfig()
 	{
-		config.d0Ch     = SDMMC_D0_CH;
-		config.d0Pin    = SDMMC_D0_PIN;
-		config.d0AltNum = SDMMC_D0_AF_NUM;
+		config = SDMMC_CONFIG;
+	}
 
-		config.d1Ch     = SDMMC_D1_CH;
-		config.d1Pin    = SDMMC_D1_PIN;
-		config.d1AltNum = SDMMC_D1_AF_NUM;
-
-		config.d2Ch     = SDMMC_D2_CH;
-		config.d2Pin    = SDMMC_D2_PIN;
-		config.d2AltNum = SDMMC_D2_AF_NUM;
-
-		config.d3Ch     = SDMMC_D3_CH;
-		config.d3Pin    = SDMMC_D3_PIN;
-		config.d3AltNum = SDMMC_D3_AF_NUM;
-
-		config.ckCh     = SDMMC_CK_CH;
-		config.ckPin    = SDMMC_CK_PIN;
-		config.ckAltNum = SDMMC_CK_AF_NUM;
-
-		config.cmdCh     = SDMMC_CMD_CH;
-		config.cmdPin    = SDMMC_CMD_PIN;
-		config.cmdAltNum = SDMMC_CMD_AF_NUM;
+	/// @brief Pin configure
+	/// @param config 
+	inline void PinConfig()
+	{
+		Gpio pin;
+		pin.Initialize(config.d0Gpio);
+		pin.Initialize(config.d1Gpio);
+		pin.Initialize(config.d2Gpio);
+		pin.Initialize(config.d3Gpio);
+		pin.Initialize(config.ckGpio);
+		pin.Initialize(config.cmdGpio);
 	}
 private:
 	/// @brief GetTicks
@@ -101,26 +103,17 @@ private:
 		return false;
 	}
 public: 
-	/// @brief Constructor
-	SDMMC()
-	{
-	}
-
-
-	/// @brief Destructor
-	~SDMMC()
-	{
-	}
-
-
 	/// @brief open
 	bool Open()
 	{
 		//Init config
 		InitConfig();
 
+		//Pin config
+		PinConfig();
+
 		//Initialize sdio
-		if (Sdio::MSD_OK == sdio.Initialize(config))
+		if (Sdio::MSD_OK == sdio.Initialize())
 		{
 			return CheckStatus();
 		}

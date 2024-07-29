@@ -20,56 +20,44 @@ public:
 	//Structures
 	struct Config
 	{
-		bool enableRTS = false;
-		bool enableDMA = true;
+		Usart::Channel  usartCh;
+		uint32_t        baudrate;
+		bool            enableRTS;
+		bool            enableDMA;
 
-		uint16_t usartCh;
-		uint32_t baudrate;
-		Usart::PinConfig usartTxPin;
-		Usart::PinConfig usartRxPin;
-		Usart::PinConfig usartDePin;
+		Gpio::Config    txGpio;
+		Gpio::Config    rxGpio;
+		Gpio::Config    deGpio;
 
-		DmaFifo::Config usartTxDma;
-		DmaFifo::Config usartRxDma;
+		DmaFifo::Config txDma;
+		DmaFifo::Config rxDma;
 	};
 private:
 	//Members
-	Usart usart;
+	Usart   usart;
 	DmaFifo txFifo;
 	DmaFifo rxFifo;
-	Config config;
+	Config  config;
 private:
 	/// @brief Initialize config
-	void InitConfig()
+	inline void InitConfig()
 	{
-		//Config uart serial
-		config.usartCh = UART_SERIAL_CHANNEL;
-		config.baudrate = UART_SERIAL_BAUD_RATE;
+		config = UART_SERIAL_CONFIG;
+	}
 
-		//Config uart tx pin
-		config.usartTxPin.ch = UART_SERIAL_TX_CH;
-		config.usartTxPin.pin = UART_SERIAL_TX_PIN;
-		config.usartTxPin.alt = UART_SERIAL_TX_AF_NUM;
 
-		//Config uart rx pin
-		config.usartRxPin.ch = UART_SERIAL_RX_CH;
-		config.usartRxPin.pin = UART_SERIAL_RX_PIN;
-		config.usartRxPin.alt = UART_SERIAL_RX_AF_NUM;
+	/// @brief Pin config
+	inline void PinConfig()
+	{
+		Gpio gpio;
 
-		//Config uart tx dma
-		config.usartTxDma.group = UART_SERIAL_TX_DMA_GROUP;
-		config.usartTxDma.channel = UART_SERIAL_TX_DMA_CHANNEL;
-		config.usartTxDma.request = UART_SERIAL_TX_DMA_REQUEST;
-		config.usartTxDma.isReadFifo = false;
-
-		//Config uart rx dma
-		config.usartRxDma.group = UART_SERIAL_RX_DMA_GROUP;
-		config.usartRxDma.channel = UART_SERIAL_RX_DMA_CHANNEL;
-		config.usartRxDma.request = UART_SERIAL_RX_DMA_REQUEST;
-		config.usartRxDma.isReadFifo = true;
+		gpio.Initialize(config.txGpio);
+		gpio.Initialize(config.rxGpio);
 		
-		//COnfig enable dma
-		config.enableDMA = UART_SERIAL_ENABLEDMA;
+		if (config.enableRTS)
+		{
+			gpio.Initialize(config.deGpio);
+		}
 	}
 public:
 	/// @brief Initializes internal buffers
@@ -79,17 +67,17 @@ public:
 		//Init config
 		InitConfig();
 
+		//Pin config
+		PinConfig();
+
 		//Configure usart
 		usart.Initialize(config.usartCh);
-		usart.ConfigPin(config.usartTxPin);
-		usart.ConfigPin(config.usartRxPin);
 		usart.SetBaudRate(config.baudrate);
 		usart.ConfigPortSettings(Usart::_8Bits, Usart::_NoParity, Usart::_1Stop);
 
 		//Configure usart RTS
 		if (config.enableRTS)
 		{
-			usart.ConfigPin(config.usartDePin);
 			usart.ConfigDriverEnableMode(true, false);
 			usart.ConfigReceiverTimeout(true, 39); // 3.5bytes: 3.5 * 11 = 38.5
 		}
@@ -101,12 +89,12 @@ public:
 			usart.ConfigDma();
 
 			//Configure tx fifo
-			config.usartTxDma.periphAddr = usart.GetTxAddr();
-			txFifo.Open(config.usartTxDma);
+			config.txDma.periphAddr = usart.GetTxAddr();
+			txFifo.Open(config.txDma);
 
 			//Configure rx fifo
-			config.usartRxDma.periphAddr = usart.GetRxAddr();
-			rxFifo.Open(config.usartRxDma);
+			config.rxDma.periphAddr = usart.GetRxAddr();
+			rxFifo.Open(config.rxDma);
 		}
 
 		//Enable usart

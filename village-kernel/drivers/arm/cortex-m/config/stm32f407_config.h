@@ -9,133 +9,74 @@
 #define __HW_STM32F407_CONFIG_H__
 
 
-//*********************************Serial**********************************//
-#define UART_SERIAL_CHANNEL                  1
-#define UART_SERIAL_BAUD_RATE                115200
-#define UART_SERIAL_TX_DMA_GROUP             2
-#define UART_SERIAL_RX_DMA_GROUP             2
-#define UART_SERIAL_RX_DMA_CHANNEL           2
-#define UART_SERIAL_TX_DMA_CHANNEL           7
-#define UART_SERIAL_RX_DMA_REQUEST           4
-#define UART_SERIAL_TX_DMA_REQUEST           4
-#define UART_SERIAL_ENABLEDMA                true
-
-#define UART_SERIAL_RX_CH                    Gpio::_ChA
-#define UART_SERIAL_RX_PIN                   10
-#define UART_SERIAL_RX_AF_NUM                7
-
-#define UART_SERIAL_TX_CH                    Gpio::_ChA
-#define UART_SERIAL_TX_PIN                   9
-#define UART_SERIAL_TX_AF_NUM                7
+//*********************************Serial*********************************//
+#define UART_SERIAL_CONFIG                                                \
+{                                                                         \
+	.usartCh   = Usart::_Usart1,                                          \
+	.baudrate  = 115200,                                                  \
+	.enableRTS = false,                                                   \
+	.enableDMA = true,                                                    \
+                                                                          \
+	.txGpio = { Gpio::_ChA, 9,  Gpio::_Alt, 7, 0 },                       \
+	.rxGpio = { Gpio::_ChA, 10, Gpio::_Alt, 7, 0 },                       \
+	.deGpio = { 0, 0, 0, 0, 0 },                                          \
+                                                                          \
+	.txDma = { 2, 7, 4, NULL, false },                                    \
+	.rxDma = { 2, 2, 4, NULL, true  },                                    \
+}
 
 
-//*********************************lcd Pin*********************************//
-#define LCD_BACK_LIGHT_CH                    Gpio::_ChG
-#define LCD_BACK_LIGHT_PIN                   8
-
-#define LCD_CS_CH                            Gpio::_ChG
-#define LCD_CS_PIN                           12
-
-#define LCD_RS_CH                            Gpio::_ChF
-#define LCD_RS_PIN                           12
-
-#define LCD_WR_CH                            Gpio::_ChD
-#define LCD_WR_PIN                           5
-
-#define LCD_RD_CH                            Gpio::_ChD
-#define LCD_RD_PIN                           4
-
-#define LCD_DB0_CH                           Gpio::_ChD
-#define LCD_DB0_PIN                          14
-
-#define LCD_DB1_CH                           Gpio::_ChD
-#define LCD_DB1_PIN                          15
-
-#define LCD_DB2_CH                           Gpio::_ChD
-#define LCD_DB2_PIN                          0
-
-#define LCD_DB3_CH                           Gpio::_ChD
-#define LCD_DB3_PIN                          1
-
-#define LCD_DB4_CH                           Gpio::_ChE
-#define LCD_DB4_PIN                          7
-
-#define LCD_DB5_CH                           Gpio::_ChE
-#define LCD_DB5_PIN                          8
-
-#define LCD_DB6_CH                           Gpio::_ChE
-#define LCD_DB6_PIN                          9
-
-#define LCD_DB7_CH                           Gpio::_ChE
-#define LCD_DB7_PIN                          10
-
-#define LCD_DB8_CH                           Gpio::_ChE
-#define LCD_DB8_PIN                          11
-
-#define LCD_DB9_CH                           Gpio::_ChE
-#define LCD_DB9_PIN                          12
-
-#define LCD_DB10_CH                          Gpio::_ChE
-#define LCD_DB10_PIN                         13
-
-#define LCD_DB11_CH                          Gpio::_ChE
-#define LCD_DB11_PIN                         14
-
-#define LCD_DB12_CH                          Gpio::_ChE
-#define LCD_DB12_PIN                         15
-
-#define LCD_DB13_CH                          Gpio::_ChD
-#define LCD_DB13_PIN                         8
-
-#define LCD_DB14_CH                          Gpio::_ChD
-#define LCD_DB14_PIN                         9
-
-#define LCD_DB15_CH                          Gpio::_ChD
-#define LCD_DB15_PIN                         10
-
-
-//********************************SpiFlash*********************************//
-#define SPI_FLASH_SCK_CH                     Gpio::_ChB
-#define SPI_FLASH_SCK_PIN                    13
-#define SPI_FLASH_SCK_AF_NUM                 5
-
-#define SPI_FLASH_MISO_CH                    Gpio::_ChB
-#define SPI_FLASH_MISO_PIN                   14
-#define SPI_FLAHS_MISO_AF_NUM                5
-
-#define SPI_FLASH_MOSI_CH                    Gpio::_ChB
-#define SPI_FLASH_MOSI_PIN                   15
-#define SPI_FLASH_MOSI_AF_NUM                5
-
-#define SPI_FLASH_CS_CH                      Gpio::_ChB
-#define SPI_FLASH_CS_PIN                     12
-
-#define SPI_FLASH_WP_CH                      Gpio::_ChF
-#define SPI_FLASH_WP_PIN                     15
-
-#define SPI_FLASH_CHANNEL                    Spi::_Spi2
+//********************************SpiFlash********************************//
+#define SPI_FLASH_CONFIG                                                  \
+{                                                                         \
+	.spiCh    = Spi::_Spi2,                                               \
+                                                                          \
+	.sckGpio  = { Gpio::_ChB, 13,  Gpio::_Alt,    5,  0 },                \
+	.misoGpio = { Gpio::_ChB, 14,  Gpio::_Alt,    5,  0 },                \
+	.mosiGpio = { Gpio::_ChB, 15,  Gpio::_Alt,    5,  0 },                \
+	.csGpio   = { Gpio::_ChB, 12,  Gpio::_Output, 0,  0 },                \
+	.wpGpio   = { Gpio::_ChF, 15,  Gpio::_Output, 0,  0 },                \
+}
 
 
 //********************************SD Card*********************************//
-#define SPI_SD_SCK_CH                        Gpio::_ChC
-#define SPI_SD_SCK_PIN                       10
-#define SPI_SD_SCK_AF_NUM                    6
+#define SPI_SDCARD_CONFIG                                                 \
+{                                                                         \
+	.spiCh    = Spi::_Spi3,                                               \
+                                                                          \
+	.sckGpio  = { Gpio::_ChC, 10, Gpio::_Alt,    6, 0 },                  \
+	.misoGpio = { Gpio::_ChC, 11, Gpio::_Alt,    6, 0 },                  \
+	.mosiGpio = { Gpio::_ChC, 12, Gpio::_Alt,    6, 0 },                  \
+	.csGpio   = { Gpio::_ChB, 5,  Gpio::_Output, 0, 1 },                  \
+	.dtGpio   = { Gpio::_ChB, 6,  Gpio::_Output, 0, 0 },                  \
+}
 
-#define SPI_SD_MISO_CH                       Gpio::_ChC
-#define SPI_SD_MISO_PIN                      11
-#define SPI_SD_MISO_AF_NUM                   6
 
-#define SPI_SD_MOSI_CH                       Gpio::_ChC
-#define SPI_SD_MOSI_PIN                      12
-#define SPI_SD_MOSI_AF_NUM                   6
-
-#define SPI_SD_CS_CH                         Gpio::_ChB
-#define SPI_SD_CS_PIN                        5
-
-#define SPI_SD_DETECT_CH                     Gpio::_ChB
-#define SPI_SD_DETECT_PIN                    6
-
-#define SPI_SD_CHANNEL                       Spi::_Spi3
+//*********************************lcd Pin********************************//
+#define LCD_RGB565_CONFIG                                                 \
+{                                                                         \
+	.blGpio   = { Gpio::_ChG, 8,  Gpio::_Output,  0, 0 },                 \
+	.csGpio   = { Gpio::_ChG, 12, Gpio::_Alt,    12, 0 },                 \
+	.rsGpio   = { Gpio::_ChF, 12, Gpio::_Alt,    12, 0 },                 \
+	.wrGpio   = { Gpio::_ChD, 5,  Gpio::_Alt,    12, 0 },                 \
+	.rdGpio   = { Gpio::_ChD, 4,  Gpio::_Alt,    12, 0 },                 \
+	.db0Gpio  = { Gpio::_ChD, 14, Gpio::_Alt,    12, 0 },                 \
+	.db1Gpio  = { Gpio::_ChD, 15, Gpio::_Alt,    12, 0 },                 \
+	.db2Gpio  = { Gpio::_ChD, 0,  Gpio::_Alt,    12, 0 },                 \
+	.db3Gpio  = { Gpio::_ChD, 1,  Gpio::_Alt,    12, 0 },                 \
+	.db4Gpio  = { Gpio::_ChE, 7,  Gpio::_Alt,    12, 0 },                 \
+	.db5Gpio  = { Gpio::_ChE, 8,  Gpio::_Alt,    12, 0 },                 \
+	.db6Gpio  = { Gpio::_ChE, 9,  Gpio::_Alt,    12, 0 },                 \
+	.db7Gpio  = { Gpio::_ChE, 10, Gpio::_Alt,    12, 0 },                 \
+	.db8Gpio  = { Gpio::_ChE, 11, Gpio::_Alt,    12, 0 },                 \
+	.db9Gpio  = { Gpio::_ChE, 12, Gpio::_Alt,    12, 0 },                 \
+	.db10Gpio = { Gpio::_ChE, 13, Gpio::_Alt,    12, 0 },                 \
+	.db11Gpio = { Gpio::_ChE, 14, Gpio::_Alt,    12, 0 },                 \
+	.db12Gpio = { Gpio::_ChE, 15, Gpio::_Alt,    12, 0 },                 \
+	.db13Gpio = { Gpio::_ChD, 8,  Gpio::_Alt,    12, 0 },                 \
+	.db14Gpio = { Gpio::_ChD, 9,  Gpio::_Alt,    12, 0 },                 \
+	.db15Gpio = { Gpio::_ChD, 10, Gpio::_Alt,    12, 0 },                 \
+}
 
 
 #endif // !__HW_STM32F407_CONFIG_H__

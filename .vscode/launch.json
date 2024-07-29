@@ -17,15 +17,6 @@
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
             "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
-            "swoConfig": {
-                "enabled": true,
-                "cpuFrequency": 168000000,
-                "swoFrequency": 2000000,
-                "source": "probe",
-                "decoders": [
-                    { "type": "console", "label": "ITM", "port": 0 }
-                ]
-            },
             "preLaunchTask": "Build"
         },
         {
@@ -44,15 +35,6 @@
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
             "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
-            "swoConfig": {
-                "enabled": true,
-                "cpuFrequency": 168000000,
-                "swoFrequency": 2000000,
-                "source": "probe",
-                "decoders": [
-                    { "type": "console", "label": "ITM", "port": 0 }
-                ]
-            },
             "preLaunchTask": "Build"
         },
 		{

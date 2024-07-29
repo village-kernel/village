@@ -43,12 +43,12 @@ public:
 	//Structures
 	struct Config
 	{
-		Spi::Channel SpiCh;
-		Spi::PinConfig SpiConfig;
-		Gpio::GpioChannel sdcsCh;
-		uint16_t sdcsPin;
-		Gpio::GpioChannel detectCh;
-		uint16_t detectPin;
+		Spi::Channel spiCh;
+		Gpio::Config sckGpio;
+		Gpio::Config misoGpio;
+		Gpio::Config mosiGpio;
+		Gpio::Config csGpio;
+		Gpio::Config dtGpio;
 	};
 private:
 	enum SdCardCmd
@@ -94,32 +94,43 @@ private:
 
 	//Members
 	Spi spi;
-	Gpo csPin;
-	Gpi detectPin;
+	Gpio csGpio;
+	Gpio dtGpio;
+	Config config;
 	SdCardType sdcardType;
 	uint32_t sectorSize;
-	Config config;
 private:
 	/// @brief Init config
 	inline void InitConfig()
 	{
-		config.SpiCh = SPI_SD_CHANNEL;
-		config.SpiConfig.sckCh = SPI_SD_SCK_CH;
-		config.SpiConfig.sckPin = SPI_SD_SCK_PIN;
-		config.SpiConfig.sckAltNum = SPI_SD_SCK_AF_NUM;
-		config.SpiConfig.misoCh = SPI_SD_MISO_CH;
-		config.SpiConfig.misoPin = SPI_SD_MISO_PIN;
-		config.SpiConfig.misoAltNum = SPI_SD_MISO_AF_NUM;
-		config.SpiConfig.mosiCh = SPI_SD_MOSI_CH;	
-		config.SpiConfig.mosiPin = SPI_SD_MOSI_PIN;
-		config.SpiConfig.mosiAltNum = SPI_SD_MOSI_AF_NUM;
-		config.sdcsCh = SPI_SD_CS_CH;
-		config.sdcsPin = SPI_SD_CS_PIN;
-		config.detectCh = SPI_SD_DETECT_CH;
-		config.detectPin = SPI_SD_DETECT_PIN;
+		config = SPI_SDCARD_CONFIG;
 	}
 
 
+	/// @brief Pin config
+	inline void PinConfig()
+	{
+		Gpio gpio;
+
+		gpio.Initialize(config.sckGpio);
+		gpio.ConfigOutputType(Gpio::_PushPull);
+		gpio.ConfigInputType(Gpio::_PullUp);
+		gpio.ConfigSpeed(Gpio::_HighSpeed);
+
+		gpio.Initialize(config.mosiGpio);
+		gpio.ConfigOutputType(Gpio::_PushPull);
+		gpio.ConfigInputType(Gpio::_PullUp);
+		gpio.ConfigSpeed(Gpio::_HighSpeed);
+
+		gpio.Initialize(config.misoGpio);
+		gpio.ConfigOutputType(Gpio::_PushPull);
+		gpio.ConfigInputType(Gpio::_PullUp);
+		gpio.ConfigSpeed(Gpio::_HighSpeed);
+		
+		csGpio.Initialize(config.csGpio);
+		dtGpio.Initialize(config.dtGpio);
+	}
+private:
 	/// @brief Spi sd card write one byte writeData
 	/// @param data 
 	inline void WriteOneByte(uint8_t data)
@@ -165,7 +176,7 @@ private:
 	/// @return 
 	inline uint8_t SelectCard()
 	{
-		csPin.Clear();
+		csGpio.Clear();
 		if (0 == WaitReady()) return 0;
 		UnselectCard();
 		return 1;
@@ -176,7 +187,7 @@ private:
 	/// @return 
 	inline uint8_t UnselectCard()
 	{
-		csPin.Set();
+		csGpio.Set();
 		ReadOneByte(); //Provide additional 8 clocks
 		return 0;
 	}
@@ -461,9 +472,9 @@ private:
 	int Sync()
 	{
 		uint8_t res = 1;
-		csPin.Clear();
+		csGpio.Clear();
 		if (0 == WaitReady()) res = 0;
-		csPin.Set();
+		csGpio.Set();
 		return res;
 	}
 public:
@@ -474,18 +485,15 @@ public:
 		//Init config
 		InitConfig();
 
+		//Pin config
+		PinConfig();
+
 		//Initialize spi
-		spi.Initialize(config.SpiCh);
-		spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol1Cpha1, config.SpiConfig);
+		spi.Initialize(config.spiCh);
+		spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol1Cpha1);
 		spi.ConfigBaudRatePrescaler(Spi::_Fpclk16);
 		spi.ConfigFrame(Spi::_MsbFirst, Spi::_8Bit);
 		spi.Enable();
-
-		//Initialize spi sd cs pin
-		csPin.Initialize(config.sdcsCh, config.sdcsPin, Gpio::_High);
-
-		//Initialize sd card detect pin
-		detectPin.Initialize(config.detectCh, config.detectPin);
 
 		//Initialize sd card
 		SdCardInit();
