@@ -22,16 +22,20 @@ ConcreteFileSystem::~ConcreteFileSystem()
 /// @brief File system setup
 void ConcreteFileSystem::Setup()
 {
+	//Get all block device drivers
 	List<Driver*> drivers = kernel->device.GetDrivers(DriverID::_block);
 
+	//Initialize all hard disk
 	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
 	{
 		InitMBRDisk(drivers.Item());
 	}
 
-	if (!MountSystemNode()) return;
-
-	kernel->debug.Info("File system initialized done!");
+	//Mount system node
+	if (MountSystemNode())
+		kernel->debug.Info("File system initialization completed!");
+	else
+		kernel->debug.Error("File system initialization failed!");
 }
 
 
