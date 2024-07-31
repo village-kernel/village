@@ -25,8 +25,8 @@ src-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/src/stm3
 inc-$(CONFIG_SUBSYS)                += village-kernel/subsys/inc
 src-$(CONFIG_SUBSYS)                += village-kernel/subsys/src
 
-inc-$(CONFIG_EXECUTOR)              += village-kernel/executor/inc
-src-$(CONFIG_EXECUTOR)              += village-kernel/executor/src
+inc-$(CONFIG_BINUTILS)              += village-kernel/binutils/inc
+src-$(CONFIG_BINUTILS)              += village-kernel/binutils/src
 
 inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/inc
 src-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/src
@@ -59,6 +59,11 @@ objs-$(CONFIG_EXECUTOR)             += BaseExecutor.o
 objs-$(CONFIG_BINEXECUTOR)          += BinExecutor.o
 objs-$(CONFIG_ELFEXECUTOR)          += ElfExecutor.o
 objs-$(CONFIG_HEXEXECUTOR)          += HexExecutor.o
+objs-$(CONFIG_BINLOADER)            += BinLoader.o
+objs-$(CONFIG_ELFLOADER)            += ElfLoader.o
+objs-$(CONFIG_HEXLOADER)            += HexLoader.o
+objs-$(CONFIG_LIBTOOL)              += LibraryTool.o
+objs-$(CONFIG_MODTOOL)              += ModuleTool.o
 
 
 ######################################
@@ -67,13 +72,11 @@ objs-$(CONFIG_HEXEXECUTOR)          += HexExecutor.o
 libs-y                              += utils
 
 inc-$(CONFIG_FILEUTILS)             += village-kernel/vklibs/libutils/fileutils/inc
-inc-$(CONFIG_BINUTILS)              += village-kernel/vklibs/libutils/binutils/inc
 inc-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/inc
 inc-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/inc
 inc-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/inc
 
 src-$(CONFIG_FILEUTILS)             += village-kernel/vklibs/libutils/fileutils/src
-src-$(CONFIG_BINUTILS)              += village-kernel/vklibs/libutils/binutils/src
 src-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/src
 src-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/src
 src-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/src
@@ -86,12 +89,6 @@ objs-utils-$(CONFIG_FILESYSOPT)     += FileSysOpt.o
 objs-utils-$(CONFIG_SPINLOCK)       += SpinLock.o
 objs-utils-$(CONFIG_MUTEX)          += Mutex.o
 objs-utils-$(CONFIG_SEMAPHORE)      += Semaphore.o
-
-objs-utils-$(CONFIG_BINLOADER)      += BinLoader.o
-objs-utils-$(CONFIG_ELFLOADER)      += ElfLoader.o
-objs-utils-$(CONFIG_HEXLOADER)      += HexLoader.o
-objs-utils-$(CONFIG_LIBTOOL)        += LibraryTool.o
-objs-utils-$(CONFIG_MODTOOL)        += ModuleTool.o
 
 objs-utils-$(CONFIG_INIPARSER)      += iniParser.o
 objs-utils-$(CONFIG_PINPARSER)      += pinParser.o
