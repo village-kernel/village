@@ -56,3 +56,22 @@ Driver* ConcreteDevice::GetDriver(const char* name)
 {
 	return drivers.GetItemByName(name);
 }
+
+
+/// @brief Get the driver object list by driver id
+/// @param id 
+/// @return driver list
+List<Driver*> ConcreteDevice::GetDrivers(DriverID id)
+{
+	List<Driver*> list;
+
+	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
+	{
+		if (id == drivers.Item()->GetID())
+		{
+			list.Add(drivers.Item());
+		}
+	}
+
+	return list;
+}

@@ -27,6 +27,7 @@ public:
 	void RegisterDriver(Driver* driver);
 	void DeregisterDriver(Driver* driver);
 	Driver* GetDriver(const char* name);
+	List<Driver*> GetDrivers(DriverID id);
 };
 
 #endif // !__DEVICE_H__
