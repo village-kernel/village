@@ -266,4 +266,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new SDMMC(), DriverID::_block, disk0);
+REGISTER_DRIVER(new SDMMC(), DriverID::_block, sdmmc);
