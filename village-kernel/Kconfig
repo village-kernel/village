@@ -221,9 +221,11 @@ if KERNEL
 
 	endmenu
 
-	# config executor menu
+	# config binutils menu
 
-	menu "executor"
+	menu "binutils"
+
+		comment "This is using to configure binutils"
 
 		config EXECUTOR
 				select BINUTILS
@@ -234,23 +236,54 @@ if KERNEL
 		config BINEXECUTOR
 			depends on EXECUTOR
 			select BINLOADER
-			bool "Enable execute *.bin file function"
+			bool "Enable *.bin file execute function"
 			default n
 
 		config ELFEXECUTOR
 			depends on EXECUTOR
 			select ELFLOADER
-			bool "Enable execute *.elf file function"
+			bool "Enable *.elf file execute function"
 			default n
 
 		config HEXEXECUTOR
 			depends on EXECUTOR
 			select HEXLOADER
-			bool "Enable execute *.hex file function"
+			bool "Enable *.hex file execute function"
 			default n
 
-	endmenu
+		config BINUTILS
+			select FILESTREAM
+			bool "Enable binutils function"
+			default n
 
+		config BINLOADER
+			depends on BINUTILS
+			select FILESTREAM
+			bool "Enable *.bin file loader function"
+			default n
+
+		config ELFLOADER
+			depends on BINUTILS
+			select FILESTREAM
+			bool "Enable *.elf file loader function"
+			default n
+
+		config HEXLOADER
+			depends on BINUTILS
+			select FILESTREAM
+			bool "Enable *.hex file loader function"
+			default n
+
+		config LIBTOOL
+			depends on BINUTILS
+			bool "Enable library tool function"
+			default n
+
+		config MODTOOL
+			depends on BINUTILS
+			bool "Enable module tool function"
+			default n
+	endmenu
 
 	# config kernel menu
 
@@ -369,45 +402,6 @@ if KERNEL
 			config FILESYSOPT
 				depends on FILEUTILS
 				bool "Enable filesysopt function"
-				default n
-
-			endmenu
-
-			menu "binutils"
-
-			comment "This is using to configure binutils"
-
-			config BINUTILS
-				select FILESTREAM
-				bool "Enable binutils function"
-				default n
-
-			config BINLOADER
-				depends on BINUTILS
-				select FILESTREAM
-				bool "Enable *.bin file load function"
-				default n
-
-			config ELFLOADER
-				depends on BINUTILS
-				select FILESTREAM
-				bool "Enable *.elf file load function"
-				default n
-
-			config HEXLOADER
-				depends on BINUTILS
-				select FILESTREAM
-				bool "Enable *.hex file load function"
-				default n
-
-			config LIBTOOL
-				depends on BINUTILS
-				bool "Enable library tool function"
-				default n
-
-			config MODTOOL
-				depends on BINUTILS
-				bool "Enable module tool function"
 				default n
 
 			endmenu
