@@ -35,10 +35,6 @@ void Spi::Initialize(Channel channel)
 		RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
 		base = SPI3;
 	}
-
-	//Get the tx and rx register pointer
-	txReg = (uint32_t)&(base->DR);
-	rxReg = (uint32_t)&(base->DR);
 }
 
 

@@ -84,8 +84,6 @@ private:
 
 	//Members
 	volatile SPI_TypeDef *base;
-	volatile uint32_t txReg;
-	volatile uint32_t rxReg;
 
 	//Methods
 	bool WaitForTxEmpty();
@@ -113,16 +111,16 @@ public:
 	inline void Disable() { base->CR1 &= ~SPI_CR1_SPE; }
 
 	///Write one byte data
-	inline void WriteOneByte(uint8_t txData) { *(__IO uint8_t *)txReg = txData; }
+	inline void WriteOneByte(uint8_t txData) { base->DR = (uint8_t)txData; }
 	
 	///Read one byte data
-	inline uint8_t ReadOneByte() { return *(__IO uint8_t *)rxReg; }
+	inline uint8_t ReadOneByte() { return (uint8_t)base->DR; }
 
 	///Write two byte data
-	inline void WriteTwoByte(uint8_t txData) { *(__IO uint16_t *)txReg = txData; }
+	inline void WriteTwoByte(uint16_t txData) { base->DR = txData; }
 
 	///Read two byte data
-	inline uint16_t ReadTwoByte() { return *(__IO uint16_t *)rxReg; }
+	inline uint16_t ReadTwoByte() { return base->DR; }
 };
 
 #endif // !__SPI_H__
