@@ -86,6 +86,7 @@ private:
 	inline void InitConfig()
 	{
 		config = SPI_FLASH_CONFIG;
+		flashError = false;
 	}
 
 
@@ -486,4 +487,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new SpiFlash(), DriverID::_block, disk1);
+REGISTER_DRIVER(new SpiFlash(), DriverID::_block, spiFlash);
