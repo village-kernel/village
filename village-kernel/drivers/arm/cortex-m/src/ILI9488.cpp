@@ -501,6 +501,7 @@ private:
 public:
 	/// @brief Constructor
 	ILI9488Drv()
+		:ili9488(NULL)
 	{
 	}
 
