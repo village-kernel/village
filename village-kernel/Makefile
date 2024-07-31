@@ -148,6 +148,14 @@ endif
 #######################################
 # compiler flags
 #######################################
+ifdef CONFIG_KERNEL_RSVD_HEAP
+CFLAGS    += -DKERNEL_RSVD_HEAP=$(CONFIG_KERNEL_RSVD_HEAP)
+endif
+
+ifdef CONFIG_KERNEL_RSVD_STACK
+CFLAGS    += -DKERNEL_RSVD_STACK=$(CONFIG_KERNEL_RSVD_STACK)
+endif
+
 ifdef CONFIG_TASK_STACK
 CFLAGS    += -DTASK_STACK=$(CONFIG_TASK_STACK)
 endif

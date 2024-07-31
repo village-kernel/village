@@ -256,6 +256,14 @@ if KERNEL
 
 	menu "kernel"
 
+	config KERNEL_RSVD_HEAP
+		int "The size of kernel reserved heap"
+		default 1024
+
+	config KERNEL_RSVD_STACK
+		int "The size of kernel reserved heap"
+		default 1024
+
 	config TASK_STACK
 		int "The size of thread task stack"
 		default 1024
