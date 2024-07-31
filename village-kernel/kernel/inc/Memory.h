@@ -10,6 +10,15 @@
 #include "Kernel.h"
 
 
+#ifndef KERNEL_RSVD_HEAP
+#define KERNEL_RSVD_HEAP       1024
+#endif
+
+#ifndef KERNEL_RSVD_STACK
+#define KERNEL_RSVD_STACK      1024
+#endif
+
+
 /// @brief ConcreteMemory
 class ConcreteMemory : public Memory
 {
@@ -42,8 +51,8 @@ private:
 	//Static constants
 	const static uint8_t  align = 4;
 	const static uint32_t size_of_node = sizeof(MapNode);
-	const static uint32_t kernel_rsvd_heap  = 0x4000;  //16k
-	const static uint32_t kernel_rsvd_stack = 0x3200;  //12k
+	const static uint32_t kernel_rsvd_heap  = KERNEL_RSVD_HEAP;
+	const static uint32_t kernel_rsvd_stack = KERNEL_RSVD_STACK;
 
 	//Sram parameters
 	bool isMemReady;
