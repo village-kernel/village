@@ -7,11 +7,11 @@
 #ifndef __FILE_SYSTEM_H__
 #define __FILE_SYSTEM_H__
 
-#include "DrvStream.h"
 #include "FileDefs.h"
 #include "FileSys.h"
 #include "List.h"
 #include "Kernel.h"
+#include "Driver.h"
 
 
 /// @brief ConcreteFileSystem
@@ -47,20 +47,13 @@ class ConcreteFileSystem : public FileSystem
 		uint16_t magic;
 	} __attribute__((packed));
 private:
-	//Static constants
-	static const uint16_t magic = 0xaa55;
-
 	//Members
-	MBR*              mbr;
-	DrvStream         diskdrv;
 	List<FileSys*>    fileSys;
 	List<FileVol*>    volumes;
 	List<MountNode*>  mounts;
 
 	//Methods
-	bool InitDisk();
-	bool ReadMBR();
-	bool InitVolumes();
+	bool InitMBRDisk(Driver* diskdrv);
 	bool MountSystemNode();
 public:
 	//Methods
