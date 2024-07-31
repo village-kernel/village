@@ -34,8 +34,8 @@
 	.sckGpio  = { Gpio::_ChB, 13,  Gpio::_Alt,    5,  0 },                \
 	.misoGpio = { Gpio::_ChB, 14,  Gpio::_Alt,    5,  0 },                \
 	.mosiGpio = { Gpio::_ChB, 15,  Gpio::_Alt,    5,  0 },                \
-	.csGpio   = { Gpio::_ChB, 12,  Gpio::_Output, 0,  0 },                \
-	.wpGpio   = { Gpio::_ChF, 15,  Gpio::_Output, 0,  0 },                \
+	.csGpio   = { Gpio::_ChB, 12,  Gpio::_Output, 0,  1 },                \
+	.wpGpio   = { Gpio::_ChF, 15,  Gpio::_Output, 0,  1 },                \
 }
 
 
