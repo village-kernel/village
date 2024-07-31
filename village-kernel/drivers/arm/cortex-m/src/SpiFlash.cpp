@@ -178,7 +178,7 @@ private:
 		WriteAddr(0);
 
 		//manufacturer id and device id
-		uint16_t id = ReadOneByte() << 8 | (uint16_t)ReadOneByte();
+		uint16_t id = (uint16_t)ReadOneByte() << 8 | (uint16_t)ReadOneByte();
 
 		UnselectChip();
 		return id;
