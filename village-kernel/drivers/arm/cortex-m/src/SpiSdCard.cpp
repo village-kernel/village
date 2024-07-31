@@ -650,4 +650,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new SpiSdCard(), DriverID::_block, disk0);
+REGISTER_DRIVER(new SpiSdCard(), DriverID::_block, spiSdCard);
