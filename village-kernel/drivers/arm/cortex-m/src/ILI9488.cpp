@@ -129,9 +129,9 @@ private:
 		WriteCmd(0x04);
 		
 		//The first pack we don't need
-		uint32_t lcdID = ReadData();
+		volatile uint32_t lcdID = ReadData();
 
-		lcdID = (ReadData() & 0x00ff) << 16;
+		lcdID  = (ReadData() & 0x00ff) << 16;
 		lcdID += (ReadData() & 0x00ff) << 8;
 		lcdID += (ReadData() & 0x00ff);
 
