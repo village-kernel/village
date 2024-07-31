@@ -33,11 +33,8 @@ ConcreteMemory::ConcreteMemory()
 		if (sram_start % align) sram_start += (align - (sram_start % align));
 		if (sram_ended % align) sram_ended -= (sram_ended % align);
 
-		//Calculate the used size of sram
-		sram_used  = kernel_rsvd_heap + kernel_rsvd_stack;
-
 		//Calculate sbrk stack address
-		sbrk_heap  = (uint32_t)&_ebss;
+		sbrk_heap = (uint32_t)&_ebss;
 	}
 
 	//Initialize list, align 4 bytes
