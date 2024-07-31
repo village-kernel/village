@@ -19,7 +19,7 @@ protected:
 	static const uint16_t maxFourBitPin = 8;
 
 	//Members
-	GPIO_TypeDef* baseReg;
+	volatile GPIO_TypeDef* baseReg;
 	uint32_t bitMask;
 	uint16_t pinNum;
 public:
