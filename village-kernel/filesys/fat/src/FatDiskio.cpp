@@ -11,7 +11,7 @@
 /// @brief Setup
 /// @param diskdrv 
 /// @param fstSec 
-bool FatDiskio::Setup(DrvStream* diskdrv, uint32_t fstSec)
+bool FatDiskio::Setup(Driver* diskdrv, uint32_t fstSec)
 {
 	this->diskdrv = diskdrv;
 	this->fstSec  = fstSec;
@@ -107,7 +107,7 @@ uint32_t FatDiskio::ReadSector(char* data, uint32_t sector, uint32_t secSize)
 {
 	if (NULL != diskdrv)
 	{
-		diskdrv->Read(data, secSize, sector + fstSec);
+		diskdrv->Read((uint8_t*)data, secSize, sector + fstSec);
 	}
 	return secSize;
 }
@@ -122,7 +122,7 @@ uint32_t FatDiskio::WriteSector(char* data, uint32_t sector, uint32_t secSize)
 {
 	if (NULL != diskdrv)
 	{
-		diskdrv->Write(data, secSize, sector + fstSec);
+		diskdrv->Write((uint8_t*)data, secSize, sector + fstSec);
 	}
 	return secSize;
 }

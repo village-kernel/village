@@ -22,11 +22,12 @@ ConcreteFileSystem::~ConcreteFileSystem()
 /// @brief File system setup
 void ConcreteFileSystem::Setup()
 {
-	if (!InitDisk()) return;
+	List<Driver*> drivers = kernel->device.GetDrivers(DriverID::_block);
 
-	if (!ReadMBR()) return;
-
-	if (!InitVolumes()) return;
+	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
+	{
+		InitMBRDisk(drivers.Item());
+	}
 
 	if (!MountSystemNode()) return;
 
@@ -50,40 +51,32 @@ void ConcreteFileSystem::Exit()
 
 /// @brief Init disk driver
 /// @return 
-bool ConcreteFileSystem::InitDisk()
-{ 
-	if (diskdrv.Open("disk0", FileMode::_ReadWrite)) return true;
-
-	kernel->debug.Error("Not disk driver found");
-
-	return false;
-}
-
-
-/// @brief Read disk MBR section
-/// @return 
-bool ConcreteFileSystem::ReadMBR()
+bool ConcreteFileSystem::InitMBRDisk(Driver* diskdrv)
 {
-	static const uint8_t mbr_sector = 0;
+	static const uint16_t magic = 0xaa55;
+	static const uint16_t mbr_sector = 0;
 
-	mbr = new MBR();
+	kernel->debug.Info("Try to initialize the hard drive (%s) by using MBR format", diskdrv->GetName());
 
-	if (NULL != mbr)
+	//Open the disk driver
+	if (!diskdrv->Open())
 	{
-		diskdrv.Read((char*)mbr, 1, mbr_sector);
-
-		if (magic == mbr->magic) return true;
+		kernel->debug.Error("hard drive (%s) open failed", diskdrv->GetName());
+		return false;
 	}
 
-	kernel->debug.Error("Not a valid disk");
+	//Read the master boot record
+	MBR* mbr = new MBR();
 
-	return false;
-}
+	diskdrv->Read((uint8_t*)mbr, 1, mbr_sector);
 
+	if (magic != mbr->magic)
+	{
+		kernel->debug.Error("Not a valid disk");
+		return false;
+	}
 
-/// @brief Init volumes
-bool ConcreteFileSystem::InitVolumes()
-{
+	//Attach the volumes
 	for (uint8_t i = 0; i < 4; i++)
 	{
 		FileSys* fs = fileSys.GetItem(mbr->dpt[i].systemID);
@@ -92,14 +85,17 @@ bool ConcreteFileSystem::InitVolumes()
 		{
 			FileVol* volume = fs->CreateVolume();
 
-			if (volume->Setup(&diskdrv, mbr->dpt[i].relativeSectors))
+			if (volume->Setup(diskdrv, mbr->dpt[i].relativeSectors))
 			{
 				AttachVolume(volume);
 			}
 			else delete volume;
 		}
 	}
-	return (0 != volumes.GetSize());
+
+	delete mbr;
+
+	return true;
 }
 
 

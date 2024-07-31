@@ -28,7 +28,7 @@ FatVolume::~FatVolume()
 /// @param diskdrv 
 /// @param fstSec 
 /// @return 
-bool FatVolume::Setup(DrvStream* diskdrv, uint32_t fstSec)
+bool FatVolume::Setup(Driver* diskdrv, uint32_t fstSec)
 {
 	return disk.Setup(diskdrv, fstSec);
 }
