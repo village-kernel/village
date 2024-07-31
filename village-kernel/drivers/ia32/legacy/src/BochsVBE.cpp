@@ -213,6 +213,7 @@ private:
 public:
 	/// @brief Constructor
 	BochsVBEDrv()
+		:bochsVBE(NULL)
 	{
 	}
 
