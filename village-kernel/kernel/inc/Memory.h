@@ -8,6 +8,7 @@
 #define __MEMORY_H__
 
 #include "Kernel.h"
+#include "SpinLock.h"
 
 
 #ifndef KERNEL_RSVD_HEAP
@@ -65,6 +66,11 @@ private:
 	MapNode* head;
 	MapNode* tail;
 	MapNode* curr;
+
+	//Locks
+	SpinLock heapLock;
+	SpinLock stackLock;
+	SpinLock freeLock;
 public:
 	//Methods
 	ConcreteMemory();
