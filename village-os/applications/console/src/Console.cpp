@@ -143,7 +143,7 @@ void Console::Log(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	msgMgr.Write((uint8_t*)"Log: ");
 	msgMgr.Write((uint8_t*)data);
@@ -160,7 +160,7 @@ void Console::Info(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	msgMgr.Write((uint8_t*)"\033[36mInfo: ");
 	msgMgr.Write((uint8_t*)data);
@@ -177,7 +177,7 @@ void Console::Error(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	msgMgr.Write((uint8_t*)"\033[31mError: ");
 	msgMgr.Write((uint8_t*)data);
@@ -194,7 +194,7 @@ void Console::Warn(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	msgMgr.Write((uint8_t*)"\033[33mWarning: ");
 	msgMgr.Write((uint8_t*)data);
@@ -211,7 +211,7 @@ void Console::Output(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	msgMgr.Write((uint8_t*)data);
 	msgMgr.Write((uint8_t*)"\r\n");
@@ -227,7 +227,7 @@ void Console::OutputRAW(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	msgMgr.Write((uint8_t*)data);
 	mutex.Unlock();
