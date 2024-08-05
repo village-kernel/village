@@ -20,7 +20,7 @@ public:
 	struct Config
 	{
 		uint8_t group;
-		uint8_t channel;
+		uint8_t stream;
 		uint8_t request;
 		void*   periphAddr;
 		bool    isReadFifo;
