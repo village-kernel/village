@@ -17,20 +17,20 @@ public:
 	//Enumerations
 	enum DmaGroup
 	{
-		_DmaGroup1 = 1,
-		_DmaGroup2,
+		_Group1 = 1,
+		_Group2,
 	};
 
-	enum DmaChannel
+	enum DmaStream
 	{
-		_DmaStream0 = 0,
-		_DmaStream1,
-		_DmaStream2,
-		_DmaStream3,
-		_DmaStream4,
-		_DmaStream5,
-		_DmaStream6,
-		_DmaStream7,
+		_Stream0 = 0,
+		_Stream1,
+		_Stream2,
+		_Stream3,
+		_Stream4,
+		_Stream5,
+		_Stream6,
+		_Stream7,
 	};
 
 	enum DmaMemBurstTrans
@@ -83,7 +83,7 @@ protected:
 public:
 	//Methods
 	Dma();
-	void Initialize(uint8_t dmaGroup, uint8_t dmaChannel);
+	void Initialize(uint8_t group, uint8_t stream);
 	void ConfigBurstTransfer(DmaMemBurstTrans transfer);
 	void ConfigInterrupts(bool enaXferErr, bool enaHalfXfer, bool enaFullXfer);
 	void ConfigDirAndDataWidth(DmaDatDir dmaDataDir, DmaDataSize dmaDataSize);

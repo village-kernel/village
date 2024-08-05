@@ -21,60 +21,60 @@ Dma::Dma()
 
 
 /// @brief Selects the DMA channel number
-/// @param dmaGroup 
-/// @param dmaChannel 
-void Dma::Initialize(uint8_t dmaGroup, uint8_t dmaChannel)
+/// @param group 
+/// @param channel 
+void Dma::Initialize(uint8_t group, uint8_t stream)
 {
-	if (_DmaGroup1 == dmaGroup)
+	if (_Group1 == group)
 	{
 		//Enable dma1 clock
 		RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
 
 		//Gets the DMA and stream register
 		commonReg = DMA1;
-		streamReg = DMA1_Stream0 + dmaChannel;
+		streamReg = DMA1_Stream0 + stream;
 
 		//Gets the DMAMUX and DMAMUX status register
 		muxStatusReg = DMAMUX1_ChannelStatus;
-		muxChannelReg = DMAMUX1_Channel0 + dmaChannel;
+		muxChannelReg = DMAMUX1_Channel0 + stream;
 	}
-	else if (_DmaGroup2 == dmaGroup)
+	else if (_Group2 == group)
 	{
 		//Enable dma2 clock
 		RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN;
 		
 		//Gets the DMA and stream register
 		commonReg = DMA2;
-		streamReg = DMA2_Stream0 + dmaChannel;
+		streamReg = DMA2_Stream0 + stream;
 		
 		//Gets the DMAMUX and DMAMUX status register
 		muxStatusReg = DMAMUX1_ChannelStatus;
-		muxChannelReg = DMAMUX1_Channel0 + dmaChannel + 8;
+		muxChannelReg = DMAMUX1_Channel0 + stream + 8;
 	}
 
-	if (dmaChannel <= _DmaStream3)
+	if (stream <= _Stream3)
 	{
 		//Gets the status and flag clear register
 		statusReg = &(commonReg->LISR);
 		flagClearReg = &(commonReg->LIFCR);
 		
 		//Calaculate the flag offset
-		if (dmaChannel == _DmaStream0 || dmaChannel == _DmaStream1)
-			flagOffset = dmaChannel * 6;
+		if (stream == _Stream0 || stream == _Stream1)
+			flagOffset = stream * 6;
 		else
-			flagOffset = dmaChannel * 6 + 4;
+			flagOffset = stream * 6 + 4;
 	}
-	else if (dmaChannel >= _DmaStream4)
+	else if (stream >= _Stream4)
 	{
 		//Gets the status and flag clear register
 		statusReg = &(commonReg->HISR);
 		flagClearReg = &(commonReg->HIFCR);
 		
 		//Calaculate the flag offset
-		if (dmaChannel == _DmaStream4 || dmaChannel == _DmaStream5)
-			flagOffset = (dmaChannel - _DmaStream4) * 6;
+		if (stream == _Stream4 || stream == _Stream5)
+			flagOffset = (stream - _Stream4) * 6;
 		else
-			flagOffset = (dmaChannel - _DmaStream4) * 6 + 4;
+			flagOffset = (stream - _Stream4) * 6 + 4;
 	}
 
 	//Disable dma
@@ -127,7 +127,6 @@ void Dma::ConfigCircularMode(bool isEnableCircularMode)
 {
 	streamReg->CR = (streamReg->CR & ~DMA_SxCR_CIRC_Msk) | (isEnableCircularMode << DMA_SxCR_CIRC_Pos);
 }
-
 
 
 /// @brief Enable or disable DMA related interrupts, including interrupt when:
