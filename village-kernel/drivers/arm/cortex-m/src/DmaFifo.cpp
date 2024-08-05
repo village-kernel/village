@@ -23,7 +23,7 @@ DmaFifo::DmaFifo()
 /// @param config 
 void DmaFifo::Open(Config config)
 {
-	dma.Initialize(config.group, config.channel);
+	dma.Initialize(config.group, config.stream);
 	dma.ConfigPriority(Dma::_VeryHigh);
 	dma.ConfigIncMode(true, false);
 	dma.ConfigRequest(config.request);
