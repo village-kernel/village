@@ -44,7 +44,7 @@ bool ElfLoader::Load(const char* filename)
 	if (!SharedObjs())  return false;
 	if (!RelEntries())  return false;
 	
-	kernel->debug.Output(Debug::_Lv2, "%s load done", filename);
+	kernel->debug.Output(Debug::_Lv2, "load at 0x%8x, %s load done", elf.map, filename);
 	return true;
 }
 
