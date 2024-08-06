@@ -69,7 +69,7 @@ void ConcreteDebug::Sending()
 {
 	if (txBufPos)
 	{
-		while (!transceiver.Write(txBuffer, txBufPos)) {}
+		while (txBufPos != transceiver.Write(txBuffer, txBufPos)) {}
 		txBufPos = 0;
 	}
 }
