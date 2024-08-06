@@ -228,6 +228,7 @@ void ConcreteThread::Sleep(uint32_t ticks)
 		tasks.Item()->state = TaskState::Suspend;
 		tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
 		scheduler->Sched();
+		while (TaskState::Suspend == tasks.Item()->state) {}
 	}
 }
 
