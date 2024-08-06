@@ -89,16 +89,19 @@ void ConcreteScheduler::SysTickHandler(void)
 /// @brief PendSV Handler
 void __attribute__ ((naked)) ConcreteScheduler::PendSVHandler()
 {
-	uint32_t psp = 0;
+	static volatile uint32_t psp = 0;
 
 	//Push lr regs to main sp
 	__asm volatile("push {lr}");
 
 	//Get current task psp
-	__asm volatile("mrs %0, psp" : "=r"(psp));
+	__asm volatile("mrs r0, psp");
 
 	//Store r4-r11 regs
-	__asm volatile("stmdb %0!, {r4-r11}" : "+r"(psp));
+	__asm volatile("stmdb r0!, {r4-r11}");
+
+	//Get psp value: psp = r0
+	__asm volatile("mov %0, r0" : "+r"(psp));
 
 	//Store old task psp
 	kernel->thread.SaveTaskPSP(psp);
@@ -109,11 +112,14 @@ void __attribute__ ((naked)) ConcreteScheduler::PendSVHandler()
 	//Get new task psp
 	psp = kernel->thread.GetTaskPSP();
 
+	//Set r0 value: r0 = psp
+	__asm volatile("mov r0, %0" : "+r"(psp));
+
 	//Restore r4-r11 regs
-	__asm volatile("ldmia %0!, {r4-r11}" : "+r"(psp));
+	__asm volatile("ldmia r0!, {r4-r11}");
 
 	//Set new task sp
-	__asm volatile("msr psp, %0" : "+r"(psp));
+	__asm volatile("msr psp, r0");
 
 	//Exit
 	__asm volatile("pop {lr}");
