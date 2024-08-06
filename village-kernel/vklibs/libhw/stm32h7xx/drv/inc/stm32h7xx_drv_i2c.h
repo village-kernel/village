@@ -8,7 +8,7 @@
 #define __I2C_H__
 
 #include "stm32h7xx_drv.h"
-#include "stm32h7xx_drv_gpo.h"
+#include "stm32h7xx_drv_gpio.h"
 
 
 /// @brief I2c
@@ -23,7 +23,7 @@ public:
 	};
 
 	//Structures
-	struct PinConfig
+	struct Config
 	{
 		Gpio::GpioChannel sclCh;
 		Gpio::GpioChannel sdaCh;
@@ -32,14 +32,14 @@ public:
 	};
 private:
 	//Members
-	Gpo sclPin;
-	Gpo sdaPin;
+	Gpio sclPin;
+	Gpio sdaPin;
 
 	//Methods
 	void I2cDelay(void);
 public:
 	//Methods
-	void Initialize(PinConfig pins);
+	void Initialize(Config config);
 	void Start();
 	void Stop();
 	void WriteByte(uint8_t data);	
@@ -48,5 +48,4 @@ public:
 	void PutAck(AckType ack);
 };
 
-#endif /* __I2C_H__ */
-
+#endif // !__I2C_H__

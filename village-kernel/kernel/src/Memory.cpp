@@ -33,11 +33,8 @@ ConcreteMemory::ConcreteMemory()
 		if (sram_start % align) sram_start += (align - (sram_start % align));
 		if (sram_ended % align) sram_ended -= (sram_ended % align);
 
-		//Calculate the used size of sram
-		sram_used  = kernel_rsvd_heap + kernel_rsvd_stack;
-
 		//Calculate sbrk stack address
-		sbrk_heap  = (uint32_t)&_ebss;
+		sbrk_heap = (uint32_t)&_ebss;
 	}
 
 	//Initialize list, align 4 bytes
@@ -84,12 +81,15 @@ void ConcreteMemory::Exit()
 /// @return alloc address
 uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
 {
+	heapLock.Lock();
+
 	MapNode* newNode  = NULL;
 	MapNode* currNode = curr;
 	MapNode* nextNode = curr->next;
 	uint32_t nextMapSize = 0;
 	uint32_t nextMapAddr = 0;
 	uint32_t nextEndAddr = 0;
+	uint32_t allocAddr = 0;
 
 	//Find free space
 	while (NULL != nextNode)
@@ -97,11 +97,16 @@ uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
 		//Calculate the next map size
 		nextMapSize = size_of_node + size;
 
+		//Calculate the next map
+		nextMapAddr = currNode->map.addr + currNode->map.size;
+
 		//Align memory by aligning allocation sizes
 		if (nextMapSize % align) nextMapSize += (align - (nextMapSize % align));
+		
+		//Align memory by aligning allocation addr
+		if (nextMapAddr % align) nextMapAddr += (align - (nextMapAddr % align));
 
-		//Calculate the next map and end addr
-		nextMapAddr = currNode->map.addr + currNode->map.size;
+		//Calculate the end addr
 		nextEndAddr = nextMapAddr + nextMapSize;
 
 		//There is free space between the current node and the next node
@@ -131,7 +136,8 @@ uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
 			currNode->next    = newNode;
 			nextNode->prev    = newNode;
 			curr              = newNode;
-			return newNode->map.addr + size_of_node;
+			allocAddr         = newNode->map.addr + size_of_node;
+			break;
 		}
 		else
 		{
@@ -141,10 +147,15 @@ uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
 	}
 
 	//Out of memory
-	if (isMemReady) kernel->debug.Error("out of memory.");
+	if (0 == allocAddr)
+	{
+		if (isMemReady) kernel->debug.Error("out of memory.");
+		while(1) {}
+	}
 
-	//Halt on here
-	while(1) {}
+	heapLock.Unlock();
+
+	return allocAddr;
 }
 
 
@@ -153,12 +164,15 @@ uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
 /// @return alloc address
 uint32_t ConcreteMemory::StackAlloc(uint32_t size)
 {
+	stackLock.Lock();
+
 	MapNode* newNode  = new MapNode();
 	MapNode* prevNode = tail->prev;
 	MapNode* currNode = tail;
 	uint32_t prevMapSize = 0;
 	uint32_t prevMapAddr = 0;
 	uint32_t prevEndAddr = 0;
+	uint32_t allocAddr = 0;
 
 	//Find free space
 	while (NULL != prevNode)
@@ -166,11 +180,16 @@ uint32_t ConcreteMemory::StackAlloc(uint32_t size)
 		//Calculate the prev map size
 		prevMapSize = size;
 
+		//Calculate the prev map
+		prevMapAddr = currNode->map.addr - currNode->map.size;
+
 		//Align memory by aligning allocation sizes
 		if (prevMapSize % align) prevMapSize += (align - (prevMapSize % align));
 
-		//Calculate the prev map and end addr
-		prevMapAddr = currNode->map.addr - currNode->map.size;
+		//Align memory by aligning allocation addr
+		if (prevMapAddr % align) prevMapAddr += (align - (prevMapAddr % align));
+
+		//Calculate the end addr
 		prevEndAddr = prevMapAddr - prevMapSize;
 
 		//There is free space between the current node and the prev node
@@ -198,7 +217,8 @@ uint32_t ConcreteMemory::StackAlloc(uint32_t size)
 			newNode->next     = currNode;
 			currNode->prev    = newNode;
 			prevNode->next    = newNode;
-			return newNode->map.addr;
+			allocAddr         = newNode->map.addr;
+			break;
 		}
 		else
 		{
@@ -208,10 +228,15 @@ uint32_t ConcreteMemory::StackAlloc(uint32_t size)
 	}
 
 	//Out of memory
-	if (isMemReady) kernel->debug.Error("out of memory.");
+	if (0 == allocAddr)
+	{
+		if (isMemReady) kernel->debug.Error("out of memory.");
+		while(1) {}
+	}
 
-	//Halt on here
-	while(1) {}
+	stackLock.Unlock();
+	
+	return allocAddr;
 }
 
 
@@ -221,6 +246,8 @@ uint32_t ConcreteMemory::StackAlloc(uint32_t size)
 void ConcreteMemory::Free(uint32_t memory, uint32_t size)
 {
 	if (0 == memory) return;
+
+	freeLock.Lock();
 
 	MapNode* currNode = curr;
 
@@ -267,6 +294,8 @@ void ConcreteMemory::Free(uint32_t memory, uint32_t size)
 			currNode = (memory < currNode->map.addr) ? currNode->prev : currNode->next;
 		}
 	}
+
+	freeLock.Unlock();
 }
 
 

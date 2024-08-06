@@ -6,133 +6,160 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
-#include "UartSerial.h"
 #include "HwConfig.h"
-#include "string.h"
+#include "Hardware.h"
+#include "DmaFifo.h"
+#include "Driver.h"
+#include "Kernel.h"
 
 
-///Initializes internal buffers
-bool UartSerial::Open()
+/// @brief UartSerial
+class UartSerial : public Driver
 {
-	//Init config
-	InitConfig();
-
-	//Configure usart
-	usart.Initialize(config.usartCh);
-	usart.ConfigPin(config.usartTxPin);
-	usart.ConfigPin(config.usartRxPin);
-	if (config.enableRTS) usart.ConfigPin(config.usartDePin);
-	usart.SetBaudRate(config.usartBaudrate);
-	usart.ConfigPortSettings(Usart::_8Bits, Usart::_NoParity, Usart::_1Stop);
-	usart.ConfigDriverEnableMode(true, false);
-	usart.ConfigReceiverTimeout(true, 39); // 3.5bytes: 3.5 * 11 = 38.5
-	usart.ConfigDma();
-	usart.Enable();
-
-	//Configure rx fifo
-	rxFifo.Initialize(config.usartRxDmaGroup, config.usartRxDmaCh, config.usartRxDmaReq, usart.GetRxAddr());
-	rxFifo.Enable();
-	rxFifo.Clear();
-
-	//Configure tx dma
-	txDma.Initialize(config.usartTxDmaGroup, config.usartTxDmaCh);
-	txDma.ConfigDirAndDataWidth(Dma::_MemoryToPeriph, Dma::_8Bits);
-	txDma.ConfigPriority(Dma::_VeryHigh);
-	txDma.SetPeriphAddr(usart.GetTxAddr());
-	txDma.ConfigIncMode(true, false);
-	txDma.ConfigRequest(config.usartTxDmaReq);
-
-	return true;
-}
-
-
-/// @brief Close
-void UartSerial::Close()
-{
-
-}
-
-
-///Initialize config
-void UartSerial::InitConfig()
-{
-	//Config uart serial
-	config.usartCh = UART_SERIAL_CHANNEL;
-	config.usartBaudrate = UART_SERIAL_BAUD_RATE;
-
-	//Config uart rx pin
-	config.usartRxPin.ch = UART_SERIAL_RX_CH;
-	config.usartRxPin.pin = UART_SERIAL_RX_PIN;
-	config.usartRxPin.alt = UART_SERIAL_RX_AF_NUM;
-
-	//Config uart tx pin
-	config.usartTxPin.ch = UART_SERIAL_TX_CH;
-	config.usartTxPin.pin = UART_SERIAL_TX_PIN;
-	config.usartTxPin.alt = UART_SERIAL_TX_AF_NUM;
-
-	//Config uart rx dma
-	config.usartRxDmaGroup = UART_SERIAL_RX_DMA_GROUP;
-	config.usartRxDmaCh = UART_SERIAL_RX_DMA_CHANNEL;
-	config.usartRxDmaReq = UART_SERIAL_RX_DMA_REQUEST;
-
-	//Config uart tx dma
-	config.usartTxDmaGroup = UART_SERIAL_TX_DMA_GROUP;
-	config.usartTxDmaCh = UART_SERIAL_TX_DMA_CHANNEL;
-	config.usartTxDmaReq = UART_SERIAL_TX_DMA_REQUEST;
-}
-
-
-///Copy the sent data to the send buffer to avoid accidentally modifying the sent data.
-inline void UartSerial::CopyTxData(uint8_t* txData, uint16_t length)
-{
-	memcpy((uint8_t*)txBuffer, (uint8_t*)txData, length);
-}
-
-
-///Write data via dma.
-int UartSerial::Write(uint8_t* data, uint32_t size, uint32_t offset)
-{
-	usart.CheckError();
-
-	if (txDma.IsReady())
+public:
+	//Structures
+	struct Config
 	{
-		CopyTxData(data + offset, size);
+		Usart::Channel  usartCh;
+		uint32_t        baudrate;
+		bool            enableRTS;
+		bool            enableDMA;
 
-		//Reset pipeline, sync bus and memory access
-		__asm ("dmb\n" "dsb\n" "isb\n");
+		Gpio::Config    txGpio;
+		Gpio::Config    rxGpio;
+		Gpio::Config    deGpio;
 
-		txDma.Disable();
-		txDma.ClearTransferCompleteFlag();
-		txDma.SetMemAddr0(txBuffer);
-		txDma.SetDataLen(size);
-		txDma.Enable();
-
-		return size;
+		DmaFifo::Config txDma;
+		DmaFifo::Config rxDma;
+	};
+private:
+	//Members
+	Usart   usart;
+	DmaFifo txFifo;
+	DmaFifo rxFifo;
+	Config  config;
+	bool    isUsed;
+private:
+	/// @brief Initialize config
+	inline void InitConfig()
+	{
+		config = UART_SERIAL_CONFIG;
 	}
 
-	return 0;
-}
 
-
-///Read data from rx buffer
-int UartSerial::Read(uint8_t* data, uint32_t size, uint32_t offset)
-{
-	uint32_t readSize = 0;
-
-	usart.CheckError();
-
-	rxFifo.Update();
-
-	while (rxFifo.Length())
+	/// @brief Pin config
+	inline void PinConfig()
 	{
-		data[offset + readSize++] = rxFifo.Dequeue();
+		Gpio gpio;
 
-		if (readSize >= size) break;
+		gpio.Initialize(config.txGpio);
+		gpio.Initialize(config.rxGpio);
+		
+		if (config.enableRTS)
+		{
+			gpio.Initialize(config.deGpio);
+		}
+	}
+public:
+	/// @brief Constructor
+	UartSerial()
+		:isUsed(false)
+	{
 	}
 
-	return readSize;
-}
+
+	/// @brief Initializes internal buffers
+	/// @return 
+	bool Open()
+	{
+		//Return when is used
+		if (isUsed) return true;
+
+		//Init config
+		InitConfig();
+
+		//Pin config
+		PinConfig();
+
+		//Configure usart
+		usart.Initialize(config.usartCh);
+		usart.SetBaudRate(config.baudrate);
+		usart.ConfigPortSettings(Usart::_8Bits, Usart::_NoParity, Usart::_1Stop);
+
+		//Configure usart RTS
+		if (config.enableRTS)
+		{
+			usart.ConfigDriverEnableMode(true, false);
+			usart.ConfigReceiverTimeout(true, 39); // 3.5bytes: 3.5 * 11 = 38.5
+		}
+		
+		//Configure usart DMA
+		if (config.enableDMA)
+		{
+			//Enable dma
+			usart.ConfigDma();
+
+			//Configure tx fifo
+			config.txDma.periphAddr = usart.GetTxAddr();
+			txFifo.Open(config.txDma);
+
+			//Configure rx fifo
+			config.rxDma.periphAddr = usart.GetRxAddr();
+			rxFifo.Open(config.rxDma);
+		}
+
+		//Enable usart
+		usart.Enable();
+
+		//Set isUsed flag
+		isUsed = true;
+
+		return true;
+	}
+
+
+	/// @brief Write data
+	/// @param data 
+	/// @param size 
+	/// @param offset 
+	/// @return 
+	int Write(uint8_t* data, uint32_t size, uint32_t offset = 0)
+	{
+		usart.CheckError();
+
+		if (config.enableDMA)
+			return txFifo.Write(data, size, offset);
+		else
+			return usart.Write(data, size, offset);
+	}
+
+
+	/// @brief Read data
+	/// @param data 
+	/// @param size 
+	/// @param offset 
+	/// @return 
+	int Read(uint8_t* data, uint32_t size, uint32_t offset = 0)
+	{
+		usart.CheckError();
+
+		if (config.enableDMA)
+			return rxFifo.Read(data, size, offset);
+		else
+			return usart.Read(data, size, offset);
+	}
+
+
+	/// @brief Close
+	void Close()
+	{
+		if (config.enableDMA)
+		{
+			txFifo.Close();
+			rxFifo.Close();
+		}
+	}
+};
 
 
 ///Register driver

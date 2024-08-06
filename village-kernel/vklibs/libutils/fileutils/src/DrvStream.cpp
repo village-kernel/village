@@ -31,7 +31,7 @@ bool DrvStream::Open(const char* name, int mode)
 	if (NULL == driver)
 	{
 		driver = kernel->device.GetDriver(name);
-		return driver->Open();
+		if (NULL != driver) return driver->Open();
 	}
 	return false;
 }

@@ -22,7 +22,6 @@ protected:
 	GPIO_TypeDef* baseReg;
 	uint32_t bitMask;
 	uint16_t pinNum;
-
 public:
 	//Enumerations
 	enum GpioChannel
@@ -38,13 +37,12 @@ public:
 		_ChI = 8,
 		_ChJ = 9,
 		_ChK = 10,
-		
 	};
 	
 	enum GpioMode
 	{
 		_Input  = 0b00,
-		_Ouput  = 0b01,
+		_Output = 0b01,
 		_Alt    = 0b10,
 		_Analog = 0b11,
 	};
@@ -75,23 +73,54 @@ public:
 		_HighSpeed = 0b10,
 		_SuperHighSpeed = 0b11,
 	};
-	
-	//Methods
-	Gpio();
-	void Initialize(GpioChannel channel, uint16_t pin);
-	void Initialize(GpioChannel channel, uint16_t pin, uint8_t altMode, GpioSpeed speed = _HighSpeed);
-	void ConfigMode(GpioMode mode);
-	void ConfigInputType(GpioInputType inputType);
-	void ConfigOutputType(GpioOutType outputType);
-	void ConfigAltFunc(uint8_t altMode);
-	void ConfigSpeed(GpioSpeed speed);
-	void FailSafe();
-	
+
+	struct Config
+	{
+		uint16_t ch;
+		uint16_t pin;
+		uint16_t mode;
+		uint16_t altfun;
+		uint16_t value;
+	};
+private:
 	///Returns the mask used for register manipulation
 	inline uint32_t BitMask() { return bitMask; }
 
 	///Returns the mask used for double bit register manipulation
 	inline uint32_t DoubleBitMask() { return 0b11 << (pinNum * 2); }
+public:
+	//Methods
+	Gpio();
+	void Initialize(Config config);
+	void ConfigMode(GpioMode mode);
+	void ConfigInputType(GpioInputType inputType);
+	void ConfigOutputType(GpioOutType outputType);
+	void ConfigSpeed(GpioSpeed speed);
+	void ConfigAltFunc(uint8_t altMode);
+	
+	///Reads the value of the pin
+	inline uint32_t Read() { return (baseReg->IDR >> pinNum) & 0x1; }
+
+	///Slightly more efficient than Read() but a logic high read may be any non-zero value
+	inline uint32_t ReadRaw() { return baseReg->IDR & bitMask; }
+
+	///Drives the pin high
+	inline void Set() { baseReg->BSRR = bitMask; }
+
+	///Drives the pin low
+	inline void Clear() { baseReg->BSRR = (bitMask << 16); }
+
+	///Toggles the pin value
+	inline void Toggle() { if (_Low == GetOutputState()) Set(); else Clear(); }
+
+	///Writes a specified state into the pin
+	inline void Write(GpioState state) { if (_Low == state) Clear(); else Set(); }
+
+	///Gets the current input state
+	inline GpioState GetInputState() { return (GpioState)((baseReg->IDR >> pinNum) & 0x1); }
+
+	///Gets the current output state
+	inline GpioState GetOutputState() { return (GpioState)((baseReg->ODR >> pinNum) & 0x1); }
 };
 
-#endif /* __GPIO_H__ */
+#endif // !__GPIO_H__

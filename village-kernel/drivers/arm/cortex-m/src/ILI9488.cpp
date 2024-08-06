@@ -13,11 +13,30 @@
 class ILI9488 : public FBDriver
 {
 public:
+	//Structures
 	struct Config
 	{
-		Fsmc::Config fsmcConfig;
-		Gpio::GpioChannel backLightCh;
-		uint16_t backLightPin;
+		Gpio::Config blGpio;
+		Gpio::Config csGpio;
+		Gpio::Config rsGpio;
+		Gpio::Config wrGpio;
+		Gpio::Config rdGpio;
+		Gpio::Config db0Gpio;
+		Gpio::Config db1Gpio;
+		Gpio::Config db2Gpio;
+		Gpio::Config db3Gpio;
+		Gpio::Config db4Gpio;
+		Gpio::Config db5Gpio;
+		Gpio::Config db6Gpio;
+		Gpio::Config db7Gpio;
+		Gpio::Config db8Gpio;
+		Gpio::Config db9Gpio;
+		Gpio::Config db10Gpio;
+		Gpio::Config db11Gpio;
+		Gpio::Config db12Gpio;
+		Gpio::Config db13Gpio;
+		Gpio::Config db14Gpio;
+		Gpio::Config db15Gpio;
 	};
 protected:
 	//Enumerates
@@ -43,19 +62,52 @@ protected:
 	};
 
 	//LCD map
-	struct __packed LCDMap
+	struct LCDMap
 	{
-		volatile uint16_t reg;
-		volatile uint16_t ram;
-	};
+		uint16_t reg;
+		uint16_t ram;
+	} __attribute__((packed));
 
 	//Members
 	Fsmc fsmc;
-	Gpo backLight;
+	Gpio blGpio;
 	Config config;
 	DriverInfo lcd;
-	LCDMap *lcdmap = (LCDMap*)(uint32_t)(0x6C000000 | 0x0000007E);
+	volatile LCDMap *lcdmap = (LCDMap*)(uint32_t)(0x6C00007E);
+private:
+	/// @brief Init config
+	inline void InitConfig()
+	{
+		config = LCD_RGB565_CONFIG;
+	}
 
+
+	/// @brief Pin config
+	inline void PinConfig()
+	{
+		Gpio pin;
+		pin.Initialize(config.csGpio);
+		pin.Initialize(config.rsGpio);
+		pin.Initialize(config.wrGpio);
+		pin.Initialize(config.rdGpio);
+		pin.Initialize(config.db0Gpio);
+		pin.Initialize(config.db1Gpio);
+		pin.Initialize(config.db2Gpio);
+		pin.Initialize(config.db3Gpio);
+		pin.Initialize(config.db4Gpio);
+		pin.Initialize(config.db5Gpio);
+		pin.Initialize(config.db6Gpio);
+		pin.Initialize(config.db7Gpio);
+		pin.Initialize(config.db8Gpio);
+		pin.Initialize(config.db9Gpio);
+		pin.Initialize(config.db10Gpio);
+		pin.Initialize(config.db11Gpio);
+		pin.Initialize(config.db12Gpio);
+		pin.Initialize(config.db13Gpio);
+		pin.Initialize(config.db14Gpio);
+		pin.Initialize(config.db15Gpio);
+		blGpio.Initialize(config.blGpio);
+	}
 private:
 	/// @brief ILI9488 fill color
 	/// @param pointSizes 
@@ -72,14 +124,14 @@ private:
 
 
 	/// @brief ILI9488 read id
-	uint32_t ReadID()
+	inline uint32_t ReadID()
 	{
 		WriteCmd(0x04);
 		
 		//The first pack we don't need
-		uint32_t lcdID = ReadData();
+		volatile uint32_t lcdID = ReadData();
 
-		lcdID = (ReadData() & 0x00ff) << 16;
+		lcdID  = (ReadData() & 0x00ff) << 16;
 		lcdID += (ReadData() & 0x00ff) << 8;
 		lcdID += (ReadData() & 0x00ff);
 
@@ -88,28 +140,28 @@ private:
 
 
 	/// @brief ILI9488 write reg
-	void WriteCmd(uint16_t reg)
+	inline void WriteCmd(uint16_t reg)
 	{
 		lcdmap->reg = reg;
 	}
 
 
 	/// @brief ILI9488 write data
-	void WriteData(uint16_t data)
+	inline void WriteData(uint16_t data)
 	{
 		lcdmap->ram = data;
 	}
 
 
 	/// @brief ILI9488 read data
-	uint16_t ReadData()
+	inline uint16_t ReadData()
 	{
-		return (uint16_t)lcdmap->ram;
+		return lcdmap->ram;
 	}
 
 
 	/// @brief ILI9488 write reg
-	void WriteReg(uint16_t reg, uint16_t value)
+	inline void WriteReg(uint16_t reg, uint16_t value)
 	{
 		lcdmap->reg = reg;
 		lcdmap->ram = value;
@@ -117,7 +169,7 @@ private:
 
 
 	/// @brief ILI9488 read reg
-	uint16_t ReadRegData(uint16_t reg)
+	inline uint16_t ReadRegData(uint16_t reg)
 	{
 		WriteCmd(reg);
 		return ReadData();
@@ -125,14 +177,14 @@ private:
 
 
 	/// @brief ILI9488 prepare write gram
-	void PrepareWriteRAM()
+	inline void PrepareWriteRAM()
 	{
 		lcdmap->reg = lcd.wRamCmd;
 	}
 
 
 	/// @brief ILI9488 write gram
-	void WriteRAM(uint16_t rgbVal)
+	inline void WriteRAM(uint16_t rgbVal)
 	{
 		lcdmap->ram = rgbVal;
 	}
@@ -148,10 +200,10 @@ public:
 	{
 		InitConfig();
 
-		backLight.Initialize(config.backLightCh, config.backLightPin, Gpio::_Low);
+		PinConfig();
 
-		fsmc.Initialize(config.fsmcConfig);
-
+		fsmc.Initialize();
+	
 		kernel->system.DelayMs(50);
 
 		DeviceConfig();
@@ -162,56 +214,6 @@ public:
 			Clear();
 			BackLightOn();
 		}
-	}
-
-
-	/// @brief Init config
-	void InitConfig()
-	{
-		config.backLightCh = LCD_BACK_LIGHT_CH;
-		config.backLightPin = LCD_BACK_LIGHT_PIN;
-
-		config.fsmcConfig.csCh = LCD_CS_CH;
-		config.fsmcConfig.csPin = LCD_CS_PIN;
-		config.fsmcConfig.rsCh = LCD_RS_CH;
-		config.fsmcConfig.rsPin = LCD_RS_PIN;
-		config.fsmcConfig.wrCh = LCD_WR_CH;
-		config.fsmcConfig.wrPin = LCD_WR_PIN;
-		config.fsmcConfig.rdCh = LCD_RD_CH;
-		config.fsmcConfig.rdPin = LCD_RD_PIN;
-
-		config.fsmcConfig.db0Ch = LCD_DB0_CH;
-		config.fsmcConfig.db0Pin = LCD_DB0_PIN;
-		config.fsmcConfig.db1Ch = LCD_DB1_CH;
-		config.fsmcConfig.db1Pin = LCD_DB1_PIN;
-		config.fsmcConfig.db2Ch = LCD_DB2_CH;
-		config.fsmcConfig.db2Pin = LCD_DB2_PIN;
-		config.fsmcConfig.db3Ch = LCD_DB3_CH;
-		config.fsmcConfig.db3Pin = LCD_DB3_PIN;
-		config.fsmcConfig.db4Ch = LCD_DB4_CH;
-		config.fsmcConfig.db4Pin = LCD_DB4_PIN;
-		config.fsmcConfig.db5Ch = LCD_DB5_CH;
-		config.fsmcConfig.db5Pin = LCD_DB5_PIN;
-		config.fsmcConfig.db6Ch = LCD_DB6_CH;
-		config.fsmcConfig.db6Pin = LCD_DB6_PIN;
-		config.fsmcConfig.db7Ch = LCD_DB7_CH;
-		config.fsmcConfig.db7Pin = LCD_DB7_PIN;
-		config.fsmcConfig.db8Ch = LCD_DB8_CH;
-		config.fsmcConfig.db8Pin = LCD_DB8_PIN;
-		config.fsmcConfig.db9Ch = LCD_DB9_CH;
-		config.fsmcConfig.db9Pin = LCD_DB9_PIN;
-		config.fsmcConfig.db10Ch = LCD_DB10_CH;
-		config.fsmcConfig.db10Pin = LCD_DB10_PIN;
-		config.fsmcConfig.db11Ch = LCD_DB11_CH;
-		config.fsmcConfig.db11Pin = LCD_DB11_PIN;
-		config.fsmcConfig.db12Ch = LCD_DB12_CH;
-		config.fsmcConfig.db12Pin = LCD_DB12_PIN;
-		config.fsmcConfig.db13Ch = LCD_DB13_CH;
-		config.fsmcConfig.db13Pin = LCD_DB13_PIN;
-		config.fsmcConfig.db14Ch = LCD_DB14_CH;
-		config.fsmcConfig.db14Pin = LCD_DB14_PIN;
-		config.fsmcConfig.db15Ch = LCD_DB15_CH;
-		config.fsmcConfig.db15Pin = LCD_DB15_PIN;
 	}
 
 
@@ -340,14 +342,14 @@ public:
 	/// @brief ILI9488 display on
 	void BackLightOn()
 	{
-		backLight.Set();
+		blGpio.Set();
 	}
 
 
 	/// @brief ILI9488 display off
 	void BackLightOff()
 	{
-		backLight.Clear();
+		blGpio.Clear();
 	}
 
 
@@ -499,6 +501,7 @@ private:
 public:
 	/// @brief Constructor
 	ILI9488Drv()
+		:ili9488(NULL)
 	{
 	}
 

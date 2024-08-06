@@ -46,6 +46,7 @@ void ConcreteWorkQueue::Execute()
 				work->state = _Finish;
 			}
 		}
+		kernel->thread.Sleep(1);
 	}
 }
 

@@ -17,7 +17,7 @@ extern "C" void* memcpy(void* dst, const void* src, size_t len)
 {
     for (size_t i = 0; i < len; i++)
 	{
-        ((uint8_t*)dst)[i] = ((uint8_t*)src)[i];
+        ((volatile uint8_t*)dst)[i] = ((volatile uint8_t*)src)[i];
     }
 	return dst;
 }
@@ -32,8 +32,8 @@ extern "C" void* memmove(void* dst, const void* src, size_t len)
 {
     for (size_t i = 0; i < len; i++)
 	{
-        ((uint8_t*)dst)[i] = ((uint8_t*)src)[i];
-		((uint8_t*)src)[i] = 0;
+        ((volatile uint8_t*)dst)[i] = ((volatile uint8_t*)src)[i];
+		((volatile uint8_t*)src)[i] = 0;
     }
 	return dst;
 }
@@ -46,8 +46,10 @@ extern "C" void* memmove(void* dst, const void* src, size_t len)
 /// @return its first argument
 extern "C" void* memset(void* b, int c, size_t len)
 {
-    volatile uint8_t *temp = (uint8_t *)b;
-    for ( ; len != 0; len--) *temp++ = c;
+	for (size_t i = 0; i < len; i++)
+	{
+		((volatile uint8_t*)b)[i] = c;
+	}
 	return b;
 }
 

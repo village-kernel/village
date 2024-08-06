@@ -11,11 +11,17 @@
 
 
 /// @brief Scheduler
-class ConcreteScheduler : public Scheduler
+class ConcreteScheduler : public Scheduler, public Class
 {
 private:
 	//Members
 	bool isStartSchedule;
+
+	//Methods
+	void SysTickHandler();
+
+	//Static Methods
+	static void PendSVHandler();
 public:
 	//Methods
 	ConcreteScheduler();
@@ -23,7 +29,7 @@ public:
 	void Setup();
 	void Exit();
 	void Start();
-	void Sched(Access access);
+	void Sched();
 };
 
 #endif // !__SCHEDULER_H__

@@ -11,7 +11,7 @@
 
 
 /// @brief System
-class ConcreteSystem : public System
+class ConcreteSystem : public System, public Class
 {
 private:
 	///Static constants
@@ -23,12 +23,13 @@ private:
 	uint32_t cyclesInMicro;
 
 	//Methods
+	void SysTickHandler();
 	void ConfigCoreDebug();
 	void ConfigSysTick();
 	void ConfigureMPU();
 	void ConfigurePower();
 	void ConfigureForHsi();
-	void ConfigureForXtal();
+	void ConfigureFor25MhzXtal();
 public:
 	//Methods
 	ConcreteSystem();

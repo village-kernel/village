@@ -21,6 +21,8 @@ public:
 		_Spi1 = 0,
 		_Spi2 = 1,
 		_Spi3 = 2,
+		_Spi4 = 4,
+		_Spi5 = 5,
 	};
 
 	enum Mode
@@ -91,23 +93,6 @@ public:
 		_MotorolaMode = 0,
 		_TiMode       = 1,
 	};
-
-	//Structures
-	struct PinConfig
-	{
-		Gpio::GpioChannel nssCh;
-		Gpio::GpioChannel sckCh;
-		Gpio::GpioChannel misoCh;
-		Gpio::GpioChannel mosiCh;
-		uint16_t nssPin;
-		uint16_t sckPin;
-		uint16_t mosiPin;
-		uint16_t misoPin;
-		uint8_t nssAltNum;
-		uint8_t sckAltNum;
-		uint8_t mosiAltNum;
-		uint8_t misoAltNum;
-	};
 private:
 	//Static constant
 	static const uint32_t timeout_cnt = 500000;
@@ -125,7 +110,7 @@ public:
 	//Methods
 	Spi();
 	void Initialize(Channel channel);
-	void ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode,PinConfig pinConfig);
+	void ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode);
 	void ConfigFrame(LsbFirst lsbfirst, DataSize datasize);
 	void ConfigBaudRatePrescaler(BaudRate baud_rate);
 	void ConfigCommMode(CommMode commMode);

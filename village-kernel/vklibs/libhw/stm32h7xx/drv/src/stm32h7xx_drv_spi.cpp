@@ -7,15 +7,16 @@
 #include "stm32h7xx_drv_spi.h"
 
 
-///Constructor
+/// @brief Constructor
 Spi::Spi()
 	: base(NULL)
 {
 }
 
 
-///Initializes the internal members for the SPI object.
-///does not actually perform any configuration
+/// @brief Initializes the internal members for the SPI object.
+///        does not actually perform any configuration
+/// @param channel 
 void Spi::Initialize(Channel channel)
 {
 	//Enable clock
@@ -34,6 +35,16 @@ void Spi::Initialize(Channel channel)
 		RCC->APB1LENR |= RCC_APB1LENR_SPI3EN;
 		base = SPI3;
 	}
+	else if (_Spi4 == channel)
+	{
+		RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
+		base = SPI4;
+	}
+		else if (_Spi5 == channel)
+	{
+		RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
+		base = SPI5;
+	}
 
 	//Get the tx and rx register pointer
 	txReg = (uint32_t)&(base->TXDR);
@@ -41,40 +52,14 @@ void Spi::Initialize(Channel channel)
 }
 
 
-///Performs basic configuration, selects Master/Slave mode
-///Selects CPOL and CPHA values.
-///Configures GPIO pins for SPI use
-void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode, PinConfig pinConfig)
+/// @brief Performs basic configuration, selects Master/Slave mode
+///        Selects CPOL and CPHA values.
+/// @param MasterSelection 
+/// @param cpolCphaMode 
+void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode)
 {
-	Gpio misoPin;
-	Gpio mosiPin;
-	Gpio sckPin;
-
-	sckPin.Initialize(pinConfig.sckCh, pinConfig.sckPin);
-	sckPin.ConfigMode(Gpio::_Alt);
-	sckPin.ConfigAltFunc(pinConfig.sckAltNum);
-	sckPin.ConfigSpeed(Gpio::_HighSpeed);
-
-	mosiPin.Initialize(pinConfig.mosiCh, pinConfig.mosiPin);
-	mosiPin.ConfigMode(Gpio::_Alt);
-	mosiPin.ConfigAltFunc(pinConfig.mosiAltNum);
-	mosiPin.ConfigSpeed(Gpio::_HighSpeed);
-
-	misoPin.Initialize(pinConfig.misoCh, pinConfig.misoPin);
-	misoPin.ConfigMode(Gpio::_Alt);
-	misoPin.ConfigAltFunc(pinConfig.misoAltNum);
-	misoPin.ConfigSpeed(Gpio::_HighSpeed);
-
 	if (_Master == MasterSelection)
 	{
-		misoPin.ConfigOutputType(Gpio::_PushPull);
-		mosiPin.ConfigOutputType(Gpio::_PushPull);
-		sckPin.ConfigOutputType(Gpio::_PushPull);
-
-		misoPin.ConfigInputType(Gpio::_PullUp);
-		mosiPin.ConfigInputType(Gpio::_PullUp);
-		sckPin.ConfigInputType(Gpio::_PullUp);
-
 		//Enable software slave management
 		base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SSOM_Msk)) | SPI_CFG2_SSOM;
 
@@ -86,10 +71,6 @@ void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode, PinCon
 	}
 	else
 	{
-		misoPin.ConfigOutputType(Gpio::_PushPull);
-		mosiPin.ConfigInputType(Gpio::_PullUp);
-		sckPin.ConfigInputType(Gpio::_NoPull);
-
 		//Disable software slave management
 		base->CFG2 = base->CFG2 & ~(SPI_CFG2_SSM_Msk);
 	}
@@ -106,7 +87,9 @@ void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode, PinCon
 }
 
 
-///Configures the frame size and order (LSB or MSB first)
+/// @brief Configures the frame size and order (LSB or MSB first)
+/// @param lsbfirst 
+/// @param datasize 
 void Spi::ConfigFrame(LsbFirst lsbfirst, DataSize datasize)
 {
 	if (LsbFirst::_LsbFirst == lsbfirst)
@@ -120,44 +103,51 @@ void Spi::ConfigFrame(LsbFirst lsbfirst, DataSize datasize)
 }
 
 
-///Sets the baud rate of sclk during master mode
-///The baud rate of SPI2 SPI3 is based on APP1
-///The baud rate of SPI1 SPI4 is based on APP2
+/// @brief Sets the baud rate of sclk during master mode
+///        The baud rate of SPI2 SPI3 is based on APP1
+///        The baud rate of SPI1 SPI4 is based on APP2
+/// @param baud_rate 
 void Spi::ConfigBaudRatePrescaler(BaudRate baud_rate)
 {
 	base->CFG1 = (base->CFG1 & ~SPI_CFG1_MBR_Msk) | (baud_rate << SPI_CFG1_MBR_Pos);
 }
 
 
-///Config 1-line or 2-line unidirectional data mode selected
+/// @brief Config 1-line or 2-line unidirectional data mode selected
+/// @param commMode 
 void Spi::ConfigCommMode(CommMode commMode)
 {
 	base->CFG2 = (base->CFG2 & ~(SPI_CFG2_COMM_Msk)) | (commMode << SPI_CFG2_COMM_Pos);
 }
 
 
-///Enable or disable hardware CRC calculation
+/// @brief Enable or disable hardware CRC calculation
+/// @param isEnableCrc 
 void Spi::ConfigCrc(bool isEnableCrc)
 {
 	base->CFG1 = (base->CFG1 & ~(SPI_CFG1_CRCEN_Msk)) | (isEnableCrc << SPI_CFG1_CRCEN_Pos);
 }
 
 
-///Configure the frame format to Motorola or TI mode
+/// @brief Configure the frame format to Motorola or TI mode
+/// @param frf 
 void Spi::ConfigFrameFormat(FrameFormat frf)
 {
 	base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SP_Msk)) | (frf << SPI_CFG2_SP_Pos);
 }
 
 
-///Configures the threshold of the RXFIFO that triggers an RXNE event
+/// @brief Configures the threshold of the RXFIFO that triggers an RXNE event
+/// @param SpiRxThresthreshold 
 void Spi::ConfigFifoRecThreshold(RxFifoThres SpiRxThresthreshold)
 {
 	base->CFG1 = (base->CFG1 & ~(SPI_CFG1_FTHLV_Msk)) | (SpiRxThresthreshold << SPI_CFG1_FTHLV_Pos);
 }
 
 
-///Enable or disable the DMA function for SPI
+/// @brief Enable or disable the DMA function for SPI
+/// @param isEnableTxDma 
+/// @param isEnableRxDma 
 void Spi::ConfigDma(bool isEnableTxDma, bool isEnableRxDma)
 {
 	base->CFG1 = (base->CFG1 & (~SPI_CFG1_TXDMAEN)) | (isEnableTxDma << SPI_CFG1_TXDMAEN_Pos);
@@ -165,7 +155,8 @@ void Spi::ConfigDma(bool isEnableTxDma, bool isEnableRxDma)
 }
 
 
-///Wait for tx reg empty
+/// @brief Wait for tx reg empty
+/// @return 
 inline bool Spi::WaitForTxEmpty()
 {
 	volatile uint32_t counter = 0;
@@ -179,7 +170,8 @@ inline bool Spi::WaitForTxEmpty()
 }
 
 
-///Wait for rx reg not empty
+/// @brief Wait for rx reg not empty
+/// @return 
 inline bool Spi::WaitForRxNotEmpty()
 {
 	volatile uint32_t counter = 0;
@@ -193,7 +185,8 @@ inline bool Spi::WaitForRxNotEmpty()
 }
 
 
-///Wait for tx completed
+/// @brief Wait for tx completed
+/// @return 
 inline bool Spi::WaitForTxCompleted()
 {
 	volatile uint32_t counter = 0;
@@ -207,7 +200,9 @@ inline bool Spi::WaitForTxCompleted()
 }
 
 
-///Send one byte data and receive one byte data 
+/// @brief Send one byte data and receive one byte data 
+/// @param txData 
+/// @return 
 uint8_t Spi::WriteAndReadOneByte(uint8_t txData)
 {
 	//Start transfer
@@ -230,7 +225,9 @@ uint8_t Spi::WriteAndReadOneByte(uint8_t txData)
 }
 
 
-///Send two bytes data and receive two bytes data 
+/// @brief Send two bytes data and receive two bytes data 
+/// @param txData 
+/// @return 
 uint16_t Spi::WriteAndReadTwoByte(uint16_t txData)
 {
 	//Start transfer

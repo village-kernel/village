@@ -5,8 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Scheduler.h"
-#include "Kernel.h"
-#include "System.h"
 #include "Hardware.h"
 
 
@@ -26,14 +24,22 @@ ConcreteScheduler::~ConcreteScheduler()
 /// @brief Scheduler Setup
 void ConcreteScheduler::Setup()
 {
-	
+	//Replace the PendSV interrupt handler
+	kernel->interrupt.Replace(PendSV_IRQn, (uint32_t)&ConcreteScheduler::PendSVHandler);
+
+	//Append the systick interrupt handler
+	kernel->interrupt.AppendISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 }
 
 
 /// @brief Scheduler Exit
 void ConcreteScheduler::Exit()
 {
+	//Remove the systick interrupt handler
+	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 
+	//Clear the PendSV interrupt handler
+	kernel->interrupt.ClearISR(PendSV_IRQn);
 }
 
 
@@ -44,19 +50,14 @@ void ConcreteScheduler::Start()
 	isStartSchedule = false;
 
 	//Get frist task psp
-	uint32_t psp = kernel->thread.GetTaskPSP();
+	volatile uint32_t psp = kernel->thread.GetTaskPSP();
 
-	//Set frist task esp
-	__asm volatile("msr psp, %0" : "=r"(psp));
+	//Set frist task psp
+	__asm volatile("msr psp, %0" : "+r"(psp));
 
 	//Change to use PSP, set bit[1] SPSEL
 	__asm volatile("mrs r0, control");
 	__asm volatile("orr r0, r0, #2");
-	__asm volatile("msr control, r0");
-
-	//Move to Unprivileged level, Set bit[0] nPRIV
-	__asm volatile("mrs r0, control");
-	__asm volatile("orr r0, r0, #1");
 	__asm volatile("msr control, r0");
 
 	//Set start schedule flag
@@ -69,103 +70,58 @@ void ConcreteScheduler::Start()
 
 /// @brief Rescheduler task
 /// @param access scheduler access
-void ConcreteScheduler::Sched(ConcreteScheduler::Access access)
+void ConcreteScheduler::Sched()
 {
 	if (false == isStartSchedule) return;
 
-	if (Access::Privileged == access)
-	{
-		// trigger PendSV directly
-		SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
-	}
-	else
-	{
-		// call Supervisor exception to get Privileged access
-		__asm volatile("SVC #255");
-	}
+	//Trigger PendSV directly
+	SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
 }
 
 
-/// @brief Interrupt handlers
-extern "C" 
+/// @brief Systick handler
+void ConcreteScheduler::SysTickHandler(void)
 {
-	/// @brief Systick handler
-	void SysTick_Handler(void)
-	{
-		kernel->system.SysTickCounter();
-		kernel->scheduler.Sched(ConcreteScheduler::Privileged);
-	}
+	Sched();
+}
 
 
-	/// @brief PendSV_Handler
-	/// @param  
-	void __attribute__ ((naked)) PendSV_Handler(void)
-	{
-		uint32_t psp = 0;
+/// @brief PendSV Handler
+void __attribute__ ((naked)) ConcreteScheduler::PendSVHandler()
+{
+	static volatile uint32_t psp = 0;
 
-		//Save LR back to main, must do this firstly
-		__asm volatile("push {lr}");
+	//Push lr regs to main sp
+	__asm volatile("push {lr}");
 
-		//Gets the current psp
-		__asm volatile("mrs %0, psp" : "=r"(psp));
+	//Get current task psp
+	__asm volatile("mrs r0, psp");
 
-		//Save R4 to R11 to psp frame stack
-		__asm volatile("stmdb %0!, {r4-r11}" : "=r"(psp));
+	//Store r4-r11 regs
+	__asm volatile("stmdb r0!, {r4-r11}");
 
-		//Save current value of psp
-		kernel->thread.SaveTaskPSP(psp);
+	//Get psp value: psp = r0
+	__asm volatile("mov %0, r0" : "+r"(psp));
 
-		//Select next task
-		kernel->thread.SelectNextTask();
+	//Store old task psp
+	kernel->thread.SaveTaskPSP(psp);
 
-		//Get its past psp value, return psp is in R0
-		psp = kernel->thread.GetTaskPSP();
+	//Select next task
+	kernel->thread.SelectNextTask();
 
-		//Retrieve R4-R11 from psp frame stack
-		__asm volatile("ldmia %0!, {r4-r11}" : "=r"(psp));
+	//Get new task psp
+	psp = kernel->thread.GetTaskPSP();
 
-		//Update psp
-		__asm volatile("msr psp, %0" : "=r"(psp));
+	//Set r0 value: r0 = psp
+	__asm volatile("mov r0, %0" : "+r"(psp));
 
-		//Exit
-		__asm volatile("pop {lr}");
-		__asm volatile("bx lr");
-	}
+	//Restore r4-r11 regs
+	__asm volatile("ldmia r0!, {r4-r11}");
 
+	//Set new task sp
+	__asm volatile("msr psp, r0");
 
-	/// @brief Execute task requests
-	/// @param sp stack pointer
-	void TaskOperator(uint32_t* sp)
-	{
-		//Get the address of the instruction saved in PC
-		uint8_t *pInstruction = (uint8_t*)(sp[6]);
-
-		//Go back 2 bytes (16-bit opcode)
-		pInstruction -= 2;
-
-		//Get the opcode, in little endian
-		uint8_t svcNumber = *pInstruction;
-
-		switch(svcNumber)
-		{
-			case 0xFF:
-				//Trigger PendSV
-				SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
-				break;
-			default:
-				break;
-		}
-	}
-
-
-	/// @brief SVC_Handler
-	/// @param  
-	void __attribute__ ((naked)) SVC_Handler(void)
-	{
-		__asm volatile("tst lr, 4");        // check LR to know which stack is used
-		__asm volatile("ite eq");           // 2 next instructions are conditional
-		__asm volatile("mrseq r0, msp");    // save MSP if bit 2 is 0
-		__asm volatile("mrsne r0, psp");    // save PSP if bit 2 is 1
-		__asm volatile("b TaskOperator");   // pass R0 as the argument
-	}
+	//Exit
+	__asm volatile("pop {lr}");
+	__asm volatile("bx lr");
 }

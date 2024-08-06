@@ -33,7 +33,7 @@ private:
 	InputEvent::OutputText outText;
 
 	//Methods
-	void SetupWin(const char* screen);
+	bool SetupWin(const char* screen);
 	void UpdateText(InputEvent::OutputText* input);
 	void UpdateAxis(InputEvent::OutputAxis* input);
 public:

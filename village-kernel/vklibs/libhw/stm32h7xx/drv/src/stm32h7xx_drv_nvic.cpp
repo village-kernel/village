@@ -7,41 +7,51 @@
 #include "stm32h7xx_drv_nvic.h"
 
 
-///Default Constructor
+/// @brief Constructor
 Nvic::Nvic()
 {
 }
 
 
-///Config IRQ Type
+/// @brief Config IRQ Type
+/// @param type 
 void Nvic::Initialize(IRQn_Type type)
 {
 	irqType = type;
 }
 
 
-///Returns the priority group setting, which indicates the number of bits used for the group priority and subpriority.
+/// @brief Returns the priority group setting, which indicates 
+///        the number of bits used for the group priority and subpriority.
+/// @return 
 Nvic::PriorityGrouping Nvic::GetPriorityGroupSetting()
 {
 	return PriorityGrouping(NVIC_GetPriorityGrouping());
 }
 
 
-///Gets the priority value of the specified interrupt and
-///decodes it into group priority and sub priority fields
+/// @brief Gets the priority value of the specified interrupt and
+///        decodes it into group priority and sub priority fields
+/// @param groupPriority 
+/// @param subPriority 
 void Nvic::DecodePriority(uint32_t* groupPriority, uint32_t* subPriority)
 {
 	NVIC_DecodePriority(irqType, GetPriorityGroupSetting(), groupPriority, subPriority);
 }
 
 
-///Configures the priority group setting, which determines the number of bits used for the group priority and subpriority.
+/// @brief Configures the priority group setting, which determines
+///        the number of bits used for the group priority and subpriority.
+/// @param prioGroup 
 void Nvic::ConfigPriorityGroupSetting(PriorityGrouping prioGroup)
 {
 	NVIC_SetPriorityGrouping(prioGroup);
 }
 
-///Sets the group priority and sub priority of the selected interrupt
+
+/// @brief Sets the group priority and sub priority of the selected interrupt
+/// @param groupPriority 
+/// @param subPriority 
 void Nvic::SetPriority(uint8_t groupPriority, uint8_t subPriority)
 {
 	uint32_t prioritygroup = NVIC_GetPriorityGrouping();

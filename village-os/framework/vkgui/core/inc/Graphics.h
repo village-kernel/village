@@ -22,7 +22,7 @@ public:
 	//Methods
 	Graphics();
 	~Graphics();
-	void Setup(const char* screen);
+	bool Setup(const char* screen);
 	Wedget* CreateMainWindow();
 };
 

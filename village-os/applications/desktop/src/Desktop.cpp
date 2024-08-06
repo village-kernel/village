@@ -24,7 +24,7 @@ Desktop::~Desktop()
 /// @brief Setup
 void Desktop::Setup(const char* screen)
 {
-	SetupWin(screen);
+	if (false == SetupWin(screen)) return;
 
 	SetID(DriverID::_character);
 	SetName((char*)"desktop");
@@ -36,9 +36,9 @@ void Desktop::Setup(const char* screen)
 
 
 /// @brief SetupWin
-void Desktop::SetupWin(const char* screen)
+bool Desktop::SetupWin(const char* screen)
 {
-	graphics.Setup(screen);
+	if (false == graphics.Setup(screen)) return false;
 
 	mainwin = (Window*)graphics.CreateMainWindow();
 
@@ -75,6 +75,8 @@ void Desktop::SetupWin(const char* screen)
 	cursor->SetLocation(0, 0, mainwin->GetWidth(), mainwin->GetHeight());
 
 	mainwin->Show();
+
+	return true;
 }
 
 
@@ -95,7 +97,10 @@ void Desktop::UpdateAxis(InputEvent::OutputAxis* input)
 /// @brief Execute
 void Desktop::Execute()
 {
-	kernel->process.Run(Process::_Background, "/applications/console.exec desktop");
+	//kernel->process.Run(Process::_Background, "/applications/console.exec desktop");
+	
+	if (NULL == mainwin) return;
+
 	while (1)
 	{
 		mainwin->Refresh();

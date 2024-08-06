@@ -7,6 +7,8 @@
 #ifndef __REGISTERS_ARM_H__
 #define __REGISTERS_ARM_H__
 
+#include "stdint.h"
+
 struct Registers
 {
 	uint32_t r4;
@@ -17,6 +19,7 @@ struct Registers
 	uint32_t r9;
 	uint32_t r10;
 	uint32_t r11;
+
 	uint32_t r0;
 	uint32_t r1;
 	uint32_t r2;
@@ -60,7 +63,7 @@ struct Registers
 		pc(pc),
 		xpsr(0x01000000u)
 	{}
-};
+} __attribute__((packed));
 
 typedef Registers TaskContext;
 
