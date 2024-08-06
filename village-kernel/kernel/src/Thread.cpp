@@ -66,7 +66,7 @@ void ConcreteThread::TaskHandler(Function function, void* user, void* args)
 	{
 		(function)(user, args);
 	}
-	TaskExit();
+	TaskExit(); while(1) {}
 }
 
 
@@ -214,7 +214,7 @@ void ConcreteThread::ChangeState(TaskState state)
 	if(tasks.GetNid() > 0)
 	{
 		tasks.Item()->state = state;
-		scheduler->Sched(Scheduler::Unprivileged);
+		scheduler->Sched();
 	}
 }
 
@@ -227,7 +227,8 @@ void ConcreteThread::Sleep(uint32_t ticks)
 	{
 		tasks.Item()->state = TaskState::Suspend;
 		tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
-		scheduler->Sched(Scheduler::Unprivileged);
+		scheduler->Sched();
+		while (TaskState::Suspend == tasks.Item()->state) {}
 	}
 }
 
@@ -239,7 +240,7 @@ void ConcreteThread::TaskExit()
 	{
 		tasks.Item()->state = TaskState::Exited;
 		DeleteTask(tasks.GetNid());
-		scheduler->Sched(Scheduler::Unprivileged);
+		scheduler->Sched();
 	}
 }
 

@@ -17,7 +17,7 @@ class ConcreteDebug : public Debug
 {
 private:
 	//Static constants
-	static const uint16_t buf_size = 100;
+	static const uint16_t buf_size = 256;
 
 	//Members
 	DrvStream transceiver;

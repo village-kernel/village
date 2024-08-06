@@ -39,6 +39,9 @@ Village::~Village()
 /// @brief Kernel Setup
 void Village::Setup()
 {
+	//Setup interrupt
+	concreteInterrupt.Setup();
+
 	//Setup system
 	concreteSystem.Setup();
 
@@ -47,9 +50,6 @@ void Village::Setup()
 
 	//Setup debug
 	concreteDebug.Setup();
-	
-	//Setup interrupt
-	concreteInterrupt.Setup();
 	
 	//Setup scheduler
 	concreteScheduler.Setup();
@@ -136,9 +136,6 @@ void Village::Exit()
 	//Exit scheduler
 	concreteScheduler.Exit();
 
-	//Exit interrupt
-	concreteInterrupt.Exit();
-
 	//Exit debug
 	concreteDebug.Exit();
 
@@ -147,6 +144,9 @@ void Village::Exit()
 
 	//Exit system
 	concreteSystem.Exit();
+
+	//Exit interrupt
+	concreteInterrupt.Exit();
 }
 
 

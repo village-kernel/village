@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "System.h"
+#include "Kernel.h"
 #include "Hardware.h"
 
 
@@ -24,19 +25,22 @@ ConcreteSystem::~ConcreteSystem()
 /// @brief System Setup
 void ConcreteSystem::Setup()
 {
+	//Set interrupt handler
+	kernel->interrupt.SetISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
+
 	//Config clock
 	ConfigCoreDebug();
 	ConfigureMPU();
 	ConfigurePower();
 	ConfigSysTick();
-	ConfigureForHsi();
+	ConfigureFor25MhzXtal();
 }
 
 
 /// @brief System Exit
 void ConcreteSystem::Exit()
 {
-
+	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
 }
 
 
@@ -114,7 +118,7 @@ void ConcreteSystem::ConfigureMPU()
 	SCB_EnableDCache();
 
 	//Enable instruction cache
-	SCB_EnableICache();
+	//SCB_EnableICache();
 }
 
 
@@ -271,8 +275,8 @@ void ConcreteSystem::ConfigureForHsi()
 
 
 /// @brief Configures the system to use an hse crystal as clock source.
-/// @brief XTAL: 48Mhz, PLL1: 480Mhz, PLL2 = 84Mhz, System Clock = PLL1.
-void ConcreteSystem::ConfigureForXtal()
+/// @brief XTAL: 25Mhz, PLL1: 480Mhz, PLL2 = 480Mhz, PLL3 = 480Mhz, System Clock = PLL1.
+void ConcreteSystem::ConfigureFor25MhzXtal()
 {
 	//Reset CFGR register
 	RCC->CFGR = 0x00000000;
@@ -289,69 +293,108 @@ void ConcreteSystem::ConfigureForXtal()
 	//Wait till HSI48 is ready
 	while (!(RCC->CR & RCC_CR_HSI48RDY)) {}
 
-	//Disable main PLL
-	RCC->CR &= ~RCC_CR_PLL1ON;
-	while (RCC->CR & RCC_CR_PLL1RDY) {}
+	//Configure PLL1
+	{
+		//Disable PLL1
+		RCC->CR &= ~RCC_CR_PLL1ON;
+		while (RCC->CR & RCC_CR_PLL1RDY) {}
 
-	//Configure main PLL clock source
-	RCC->PLLCKSELR &= ~RCC_PLLCKSELR_PLLSRC_Msk;
-	RCC->PLLCKSELR |= RCC_PLLCKSELR_PLLSRC_HSE;
+		//Configure PLL1 clock source
+		RCC->PLLCKSELR &= ~RCC_PLLCKSELR_PLLSRC_Msk;
+		RCC->PLLCKSELR |= RCC_PLLCKSELR_PLLSRC_HSE;
 
-	//Configure main PLL multiplication factor
-	RCC->PLLCKSELR &= ~RCC_PLLCKSELR_DIVM1_Msk;
-	RCC->PLLCKSELR |= 3 << RCC_PLLCKSELR_DIVM1_Pos;
+		//Configure PLL1 multiplication factor
+		RCC->PLLCKSELR &= ~RCC_PLLCKSELR_DIVM1_Msk;
+		RCC->PLLCKSELR |= 5 << RCC_PLLCKSELR_DIVM1_Pos;
 
-	//Configure main PLL division factor
-	RCC->PLL1DIVR = ((60U - 1U) << RCC_PLL1DIVR_N1_Pos) |
-					(( 2U - 1U) << RCC_PLL1DIVR_P1_Pos) |
-					(( 2U - 1U) << RCC_PLL1DIVR_Q1_Pos) |
-					(( 2U - 1U) << RCC_PLL1DIVR_R1_Pos);
+		//Configure PLL1 division factor
+		RCC->PLL1DIVR = ((192U - 1U) << RCC_PLL1DIVR_N1_Pos) |
+						((  2U - 1U) << RCC_PLL1DIVR_P1_Pos) |
+						((  2U - 1U) << RCC_PLL1DIVR_Q1_Pos) |
+						((  2U - 1U) << RCC_PLL1DIVR_R1_Pos);
 
-	//Configure PLL PLL1FRACN
-	RCC->PLL1FRACR = (RCC->PLL1FRACR & ~RCC_PLL1FRACR_FRACN1_Msk);
+		//Configure PLL PLL1FRACN
+		RCC->PLL1FRACR = (RCC->PLL1FRACR & ~RCC_PLL1FRACR_FRACN1_Msk);
 
-	//Select PLL1 input reference frequency range: VCI
-	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL1RGE_Msk) | RCC_PLLCFGR_PLL1RGE_3;
+		//Select PLL1 input reference frequency range: VCI
+		RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL1RGE_Msk) | RCC_PLLCFGR_PLL1RGE_3;
 
-	//Select PLL1 output frequency range : VCO
-	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL1VCOSEL_Msk);
+		//Select PLL1 output frequency range : VCO
+		RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL1VCOSEL_Msk);
 
-	//Enable PLL System, PLL1Q, PLL1R and PLL1FRACN Clock output
-	RCC->PLLCFGR |= RCC_PLLCFGR_DIVP1EN | RCC_PLLCFGR_DIVQ1EN | RCC_PLLCFGR_DIVR1EN | RCC_PLLCFGR_PLL1FRACEN;
+		//Enable PLL1 System, PLL1Q, PLL1R and PLL1FRACN Clock output
+		RCC->PLLCFGR |= RCC_PLLCFGR_DIVP1EN | RCC_PLLCFGR_DIVQ1EN | RCC_PLLCFGR_DIVR1EN | RCC_PLLCFGR_PLL1FRACEN;
 
-	//Enable main PLL
-	RCC->CR |= RCC_CR_PLL1ON;
-	while (!(RCC->CR & RCC_CR_PLL1RDY)) {}
+		//Enable PLL1
+		RCC->CR |= RCC_CR_PLL1ON;
+		while (!(RCC->CR & RCC_CR_PLL1RDY)) {}
+	}
 
-	//Disable PLL2
-	RCC->CR &= ~RCC_CR_PLL2ON;
-	while (RCC->CR & RCC_CR_PLL2RDY) {}
+	//Configure PLL2
+	{
+		//Disable PLL2
+		RCC->CR &= ~RCC_CR_PLL2ON;
+		while (RCC->CR & RCC_CR_PLL2RDY) {}
 
-	//Configure PLL2 multiplication factor
-	RCC->PLLCKSELR &= ~RCC_PLLCKSELR_DIVM2_Msk;
-	RCC->PLLCKSELR |= 4 << RCC_PLLCKSELR_DIVM2_Pos;
+		//Configure PLL2 multiplication factor
+		RCC->PLLCKSELR &= ~RCC_PLLCKSELR_DIVM2_Msk;
+		RCC->PLLCKSELR |= 5 << RCC_PLLCKSELR_DIVM2_Pos;
 
-	//Configure PLL2 division factor
-	RCC->PLL2DIVR = ((21U - 1U) << RCC_PLL2DIVR_N2_Pos) |
-					(( 3U - 1U) << RCC_PLL2DIVR_P2_Pos) |
-					(( 2U - 1U) << RCC_PLL2DIVR_Q2_Pos) |
-					(( 2U - 1U) << RCC_PLL2DIVR_R2_Pos);
+		//Configure PLL2 division factor
+		RCC->PLL2DIVR = ((192U - 1U) << RCC_PLL2DIVR_N2_Pos) |
+						((  2U - 1U) << RCC_PLL2DIVR_P2_Pos) |
+						((  2U - 1U) << RCC_PLL2DIVR_Q2_Pos) |
+						((  4U - 1U) << RCC_PLL2DIVR_R2_Pos);
 
-	//Configure PLL PLL2FRACN
-	RCC->PLL2FRACR = (RCC->PLL2FRACR & ~RCC_PLL2FRACR_FRACN2_Msk);
+		//Configure PLL PLL2FRACN
+		RCC->PLL2FRACR = (RCC->PLL2FRACR & ~RCC_PLL2FRACR_FRACN2_Msk);
 
-	//Select PLL2 input reference frequency range: VCI
-	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL2RGE_Msk) | RCC_PLLCFGR_PLL2RGE_3;
+		//Select PLL2 input reference frequency range: VCI
+		RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL2RGE_Msk) | RCC_PLLCFGR_PLL2RGE_3;
 
-	//Select PLL2 output frequency range : VCO
-	RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL2VCOSEL_Msk);
+		//Select PLL2 output frequency range : VCO
+		RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL2VCOSEL_Msk);
 
-	//Enable PLL System, PLL1Q, PLL1R and PLL1FRACN Clock output
-	RCC->PLLCFGR |= RCC_PLLCFGR_DIVP2EN | RCC_PLLCFGR_DIVQ2EN | RCC_PLLCFGR_DIVR2EN | RCC_PLLCFGR_PLL2FRACEN;
+		//Enable PLL System, PLL2Q, PLL2R and PLL2FRACN Clock output
+		RCC->PLLCFGR |= RCC_PLLCFGR_DIVP2EN | RCC_PLLCFGR_DIVQ2EN | RCC_PLLCFGR_DIVR2EN | RCC_PLLCFGR_PLL2FRACEN;
 
-	//Enable main PLL
-	RCC->CR |= RCC_CR_PLL2ON;
-	while (!(RCC->CR & RCC_CR_PLL2RDY)) {}
+		//Enable PLL2
+		RCC->CR |= RCC_CR_PLL2ON;
+		while (!(RCC->CR & RCC_CR_PLL2RDY)) {}
+	}
+
+	//Configure PLL3
+	{
+		//Disable PLL3
+		RCC->CR &= ~RCC_CR_PLL3ON;
+		while (RCC->CR & RCC_CR_PLL3RDY) {}
+
+		//Configure PLL3 multiplication factor
+		RCC->PLLCKSELR &= ~RCC_PLLCKSELR_DIVM3_Msk;
+		RCC->PLLCKSELR |= 5 << RCC_PLLCKSELR_DIVM3_Pos;
+
+		//Configure PLL3 division factor
+		RCC->PLL3DIVR = ((192U - 1U) << RCC_PLL3DIVR_N3_Pos) |
+						((  2U - 1U) << RCC_PLL3DIVR_P3_Pos) |
+						(( 16U - 1U) << RCC_PLL3DIVR_Q3_Pos) |
+						((  8U - 1U) << RCC_PLL3DIVR_R3_Pos);
+
+		//Configure PLL PLL3FRACN
+		RCC->PLL3FRACR = (RCC->PLL3FRACR & ~RCC_PLL3FRACR_FRACN3_Msk);
+
+		//Select PLL3 input reference frequency range: VCI
+		RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL2RGE_Msk) | RCC_PLLCFGR_PLL2RGE_3;
+
+		//Select PLL3 output frequency range : VCO
+		RCC->PLLCFGR = (RCC->PLLCFGR & ~RCC_PLLCFGR_PLL2VCOSEL_Msk);
+
+		//Enable PLL3 System, PLL3Q, PLL3R and PLL3FRACN Clock output
+		RCC->PLLCFGR |= RCC_PLLCFGR_DIVP3EN | RCC_PLLCFGR_DIVQ3EN | RCC_PLLCFGR_DIVR3EN | RCC_PLLCFGR_PLL3FRACEN;
+
+		//Enable PLL3
+		RCC->CR |= RCC_CR_PLL3ON;
+		while (!(RCC->CR & RCC_CR_PLL3RDY)) {}
+	}
 
 	//Increasing the CPU frequency 
 	//Program the new number of wait states to the LATENCY bits in the FLASH_ACR register
@@ -396,20 +439,6 @@ void ConcreteSystem::ConfigureForXtal()
 }
 
 
-/// @brief Get system clock count
-uint32_t ConcreteSystem::GetSysClkCounts()
-{
-	return sysTicks;
-}
-
-
-/// @brief System clock counter
-void ConcreteSystem::SysTickCounter()
-{
-	sysTicks++;
-}
-
-
 /// @brief Delays for a specified number of microseconds.
 void ConcreteSystem::DelayUs(uint32_t micros)
 {
@@ -448,8 +477,14 @@ void ConcreteSystem::Reboot()
 }
 
 
-/// @brief SysTick handler
-extern "C" void __weak SysTick_Handler()
-{
-	kernel->system.SysTickCounter();
-}
+/// @brief Get system clock count
+/// @return 
+uint32_t ConcreteSystem::GetSysClkCounts() { return sysTicks; }
+
+
+/// @brief System clock counter
+void ConcreteSystem::SysTickCounter() { sysTicks++; }
+
+
+/// @brief System clock handler
+void ConcreteSystem::SysTickHandler() { sysTicks++; }

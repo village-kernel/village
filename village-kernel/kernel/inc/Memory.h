@@ -8,6 +8,16 @@
 #define __MEMORY_H__
 
 #include "Kernel.h"
+#include "SpinLock.h"
+
+
+#ifndef KERNEL_RSVD_HEAP
+#define KERNEL_RSVD_HEAP       1024
+#endif
+
+#ifndef KERNEL_RSVD_STACK
+#define KERNEL_RSVD_STACK      1024
+#endif
 
 
 /// @brief ConcreteMemory
@@ -42,8 +52,8 @@ private:
 	//Static constants
 	const static uint8_t  align = 4;
 	const static uint32_t size_of_node = sizeof(MapNode);
-	const static uint32_t kernel_rsvd_heap  = 0x4000;  //10k
-	const static uint32_t kernel_rsvd_stack = 0x3200;  //8k
+	const static uint32_t kernel_rsvd_heap  = KERNEL_RSVD_HEAP;
+	const static uint32_t kernel_rsvd_stack = KERNEL_RSVD_STACK;
 
 	//Sram parameters
 	bool isMemReady;
@@ -56,6 +66,11 @@ private:
 	MapNode* head;
 	MapNode* tail;
 	MapNode* curr;
+
+	//Locks
+	SpinLock heapLock;
+	SpinLock stackLock;
+	SpinLock freeLock;
 public:
 	//Methods
 	ConcreteMemory();

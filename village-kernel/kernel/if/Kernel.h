@@ -79,6 +79,7 @@ public:
 	virtual bool RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
 	virtual bool RemoveISR(int irq, Method method, Class* user, void* args = NULL) = 0;
 	virtual void ClearISR(int irq) = 0;
+	virtual void Replace(int irq, uint32_t handler) = 0;
 	virtual void Handler(int irq) = 0;
 };
 
@@ -87,16 +88,9 @@ public:
 class Scheduler
 {
 public:
-	//Enumerations
-	enum Access
-	{
-		Unprivileged = 0,
-		Privileged = 1,
-	};
-public:
 	//Methods
 	virtual void Start() = 0;
-	virtual void Sched(Access access) = 0;
+	virtual void Sched() = 0;
 };
 
 
@@ -174,6 +168,7 @@ public:
 	virtual void RegisterDriver(Driver* driver) = 0;
 	virtual void DeregisterDriver(Driver* driver) = 0;
 	virtual Driver* GetDriver(const char* name) = 0;
+	virtual List<Driver*> GetDrivers(DriverID id) = 0;
 };
 
 

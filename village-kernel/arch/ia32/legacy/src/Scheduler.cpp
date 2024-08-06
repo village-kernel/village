@@ -35,10 +35,10 @@ void ConcreteScheduler::Setup()
 /// @brief Scheduler Exit
 void ConcreteScheduler::Exit()
 {
-	//Append the systick interrupt handler
+	//Remove the systick interrupt handler
 	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 
-	//Set the PendSV interrupt handler
+	//Clear the PendSV interrupt handler
 	kernel->interrupt.ClearISR(PendSV_IRQn);
 }
 
@@ -68,12 +68,19 @@ void ConcreteScheduler::Start()
 
 /// @brief Rescheduler task
 /// @param access scheduler access
-void ConcreteScheduler::Sched(ConcreteScheduler::Access access)
+void ConcreteScheduler::Sched()
 {
 	if (false == isStartSchedule) return;
 
 	//Trigger PendSV directly
 	__asm volatile("int $31");
+}
+
+
+/// @brief SysTick handler
+void ConcreteScheduler::SysTickHandler()
+{
+	Sched();
 }
 
 
@@ -108,11 +115,4 @@ void __attribute__((naked)) ConcreteScheduler::PendSVHandler()
 	__asm volatile("popl %ebp");
 	__asm volatile("sti");
 	__asm volatile("ret");
-}
-
-
-/// @brief SysTick handler
-void ConcreteScheduler::SysTickHandler()
-{
-	Sched(ConcreteScheduler::Privileged);
 }

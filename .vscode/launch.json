@@ -6,7 +6,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Cortex Debug-jlink",
+            "name": "Cortex Debug-jlink STM32F407",
             "cwd": "${workspaceRoot}/",
             "executable": "${workspaceFolder}/build/village-kernel.elf",
             "request": "launch",
@@ -16,20 +16,11 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/arm/cortex-m/stm32f4xx/svd/STM32F407.svd",
-            "swoConfig": {
-                "enabled": true,
-                "cpuFrequency": 168000000,
-                "swoFrequency": 2000000,
-                "source": "probe",
-                "decoders": [
-                    { "type": "console", "label": "ITM", "port": 0 }
-                ]
-            },
+            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
             "preLaunchTask": "Build"
         },
         {
-            "name": "Cortex Debug-stlink",
+            "name": "Cortex Debug-stlink STM32F407",
             "cwd": "${workspaceRoot}/",
             "executable": "${workspaceFolder}/build/village-kernel.elf",
             "request": "launch",
@@ -43,16 +34,39 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/arm/cortex-m/stm32f4xx/svd/STM32F407.svd",
-            "swoConfig": {
-                "enabled": true,
-                "cpuFrequency": 168000000,
-                "swoFrequency": 2000000,
-                "source": "probe",
-                "decoders": [
-                    { "type": "console", "label": "ITM", "port": 0 }
-                ]
-            },
+            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
+            "preLaunchTask": "Build"
+        },
+		{
+            "name": "Cortex Debug-jlink STM32H743",
+            "cwd": "${workspaceRoot}/",
+            "executable": "${workspaceFolder}/build/village-kernel.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "jlink",
+            "device": "STM32H743II",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "showDevDebugTimestamps": true,
+            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
+            "preLaunchTask": "Build"
+        },
+		{
+            "name": "Cortex Debug-stlink STM32H743",
+            "cwd": "${workspaceRoot}/",
+            "executable": "${workspaceFolder}/build/village-kernel.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "STM32H743II",
+            "interface": "swd",
+            "configFiles": [
+                "interface/stlink-v2.cfg",
+                "target/stm32h7x.cfg",
+            ],
+            "runToEntryPoint": "main",
+            "showDevDebugTimestamps": true,
+            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
             "preLaunchTask": "Build"
         },
         {

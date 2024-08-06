@@ -11,7 +11,6 @@
 #include "List.h"
 #include "Cast.h"
 #include "Exception.h"
-#include "ArchInterrupt.h"
 
 
 /// @brief ConcreteInterrupt
@@ -39,10 +38,8 @@ private:
 
 	//Members
 	Exception     exception;
-	ArchInterrupt archInterrupt;
-	Debug*        debug;
-	uint8_t       warnings[ArchInterrupt::isr_num] = { 0 };
-	List<Isr*>    isrTabs[ArchInterrupt::isr_num];
+	uint8_t       warnings[Exception::isr_num] = { 0 };
+	List<Isr*>    isrTabs[Exception::isr_num];
 public:
 	//Methods
 	ConcreteInterrupt();
@@ -56,6 +53,7 @@ public:
 	bool RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL);
 	bool RemoveISR(int irq, Method method, Class* user, void* args = NULL);
 	void ClearISR(int irq);
+	void Replace(int irq, uint32_t handler);
 	void Handler(int irq);
 };
 

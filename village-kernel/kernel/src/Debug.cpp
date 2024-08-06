@@ -29,6 +29,9 @@ void ConcreteDebug::Setup()
 {
 	//Get transceiver driver and initialize
 	transceiver.Open("serial0", FileMode::_Write);
+
+	//Output debug info
+	Info("Debug feature initialized done!");
 }
 
 
@@ -66,7 +69,7 @@ void ConcreteDebug::Sending()
 {
 	if (txBufPos)
 	{
-		while (!transceiver.Write(txBuffer, txBufPos)) {}
+		while (txBufPos != transceiver.Write(txBuffer, txBufPos)) {}
 		txBufPos = 0;
 	}
 }
@@ -80,7 +83,7 @@ void ConcreteDebug::Log(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	Write("Log: ");
 	Write(data);
@@ -97,7 +100,7 @@ void ConcreteDebug::Info(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	Write("\033[36mInfo: ");
 	Write(data);
@@ -114,7 +117,7 @@ void ConcreteDebug::Error(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	Write("\033[31mError: ");
 	Write(data);
@@ -131,7 +134,7 @@ void ConcreteDebug::Warn(const char* format, ...)
 	mutex.Lock();
 	va_list arg;
 	va_start(arg, format);
-	vsprintf(data, format, arg);
+	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
 	Write("\033[33mWarning: ");
 	Write(data);
@@ -150,7 +153,7 @@ void ConcreteDebug::Output(int level, const char* format, ...)
 		mutex.Lock();
 		va_list arg;
 		va_start(arg, format);
-		vsprintf(data, format, arg);
+		vsnprintf(data, buf_size, format, arg);
 		va_end(arg);
 		Write("\033[36mDebug: ");
 		Write(data);

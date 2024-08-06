@@ -18,8 +18,8 @@ private:
 	bool isStartSchedule;
 
 	//Methods
-	void PendSVHandler();
 	void SysTickHandler();
+	void PendSVHandler();
 public:
 	//Methods
 	ConcreteScheduler();
@@ -27,7 +27,7 @@ public:
 	void Setup();
 	void Exit();
 	void Start();
-	void Sched(Access access);
+	void Sched();
 };
 
 #endif // !__SCHEDULER_H__

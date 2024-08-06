@@ -42,7 +42,7 @@ bool HexLoader::Load(const char* filename)
 	if (!RelEntries())  return false;
 
 	//Output debug info
-	kernel->debug.Output(Debug::_Lv2, "%s load done", filename);
+	kernel->debug.Output(Debug::_Lv2, "load at 0x%8x, %s load done", hex.map, filename);
 	return true;
 }
 
