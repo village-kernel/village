@@ -38,6 +38,7 @@ private:
 	DmaFifo txFifo;
 	DmaFifo rxFifo;
 	Config  config;
+	bool    isUsed;
 private:
 	/// @brief Initialize config
 	inline void InitConfig()
@@ -60,10 +61,20 @@ private:
 		}
 	}
 public:
+	/// @brief Constructor
+	UartSerial()
+		:isUsed(false)
+	{
+	}
+
+
 	/// @brief Initializes internal buffers
 	/// @return 
 	bool Open()
 	{
+		//Return when is used
+		if (isUsed) return true;
+
 		//Init config
 		InitConfig();
 
@@ -99,6 +110,9 @@ public:
 
 		//Enable usart
 		usart.Enable();
+
+		//Set isUsed flag
+		isUsed = true;
 
 		return true;
 	}
