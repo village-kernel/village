@@ -510,8 +510,6 @@ public:
 	/// @return 
 	int Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 	{
-		kernel->system.DisableIRQ();
-
 		uint8_t res = 0;
 
 		if (SdCardType::_V2HC != sdcardType) sector = sector * sectorSize;
@@ -552,8 +550,6 @@ public:
 
 		UnselectCard();
 
-		kernel->system.EnableIRQ();
-
 		return res;
 	}
 
@@ -565,8 +561,6 @@ public:
 	/// @return 
 	int Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 	{
-		kernel->system.DisableIRQ();
-
 		uint8_t res = 0;
 
 		if (SdCardType::_V2HC != sdcardType) sector = sector << 9;
@@ -599,8 +593,6 @@ public:
 		}
 
 		UnselectCard();
-
-		kernel->system.EnableIRQ();
 
 		return res;
 	}
