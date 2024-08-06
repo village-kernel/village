@@ -62,18 +62,18 @@ protected:
 	};
 
 	//LCD map
-	struct __packed LCDMap
+	struct LCDMap
 	{
-		volatile uint16_t reg;
-		volatile uint16_t ram;
-	};
+		uint16_t reg;
+		uint16_t ram;
+	} __attribute__((packed));
 
 	//Members
 	Fsmc fsmc;
 	Gpio blGpio;
 	Config config;
 	DriverInfo lcd;
-	LCDMap *lcdmap = (LCDMap*)(uint32_t)(0x6C000000 | 0x0000007E);
+	volatile LCDMap *lcdmap = (LCDMap*)(uint32_t)(0x6C00007E);
 private:
 	/// @brief Init config
 	inline void InitConfig()
@@ -124,7 +124,7 @@ private:
 
 
 	/// @brief ILI9488 read id
-	uint32_t ReadID()
+	inline uint32_t ReadID()
 	{
 		WriteCmd(0x04);
 		
@@ -140,28 +140,28 @@ private:
 
 
 	/// @brief ILI9488 write reg
-	void WriteCmd(uint16_t reg)
+	inline void WriteCmd(uint16_t reg)
 	{
 		lcdmap->reg = reg;
 	}
 
 
 	/// @brief ILI9488 write data
-	void WriteData(uint16_t data)
+	inline void WriteData(uint16_t data)
 	{
 		lcdmap->ram = data;
 	}
 
 
 	/// @brief ILI9488 read data
-	uint16_t ReadData()
+	inline uint16_t ReadData()
 	{
-		return (uint16_t)lcdmap->ram;
+		return lcdmap->ram;
 	}
 
 
 	/// @brief ILI9488 write reg
-	void WriteReg(uint16_t reg, uint16_t value)
+	inline void WriteReg(uint16_t reg, uint16_t value)
 	{
 		lcdmap->reg = reg;
 		lcdmap->ram = value;
@@ -169,7 +169,7 @@ private:
 
 
 	/// @brief ILI9488 read reg
-	uint16_t ReadRegData(uint16_t reg)
+	inline uint16_t ReadRegData(uint16_t reg)
 	{
 		WriteCmd(reg);
 		return ReadData();
@@ -177,14 +177,14 @@ private:
 
 
 	/// @brief ILI9488 prepare write gram
-	void PrepareWriteRAM()
+	inline void PrepareWriteRAM()
 	{
 		lcdmap->reg = lcd.wRamCmd;
 	}
 
 
 	/// @brief ILI9488 write gram
-	void WriteRAM(uint16_t rgbVal)
+	inline void WriteRAM(uint16_t rgbVal)
 	{
 		lcdmap->ram = rgbVal;
 	}
@@ -203,7 +203,7 @@ public:
 		PinConfig();
 
 		fsmc.Initialize();
-
+	
 		kernel->system.DelayMs(50);
 
 		DeviceConfig();
