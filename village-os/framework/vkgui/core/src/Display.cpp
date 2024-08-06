@@ -26,9 +26,12 @@ Display::~Display()
 ///Display Setup
 void Display::Setup(FBDriver* fbdev)
 {
-	this->fbdev = fbdev;
-	limitX = fbdev->device.width - 1;
-	limitY = fbdev->device.height - 1;
+	if (NULL != fbdev)
+	{
+		this->fbdev = fbdev;
+		limitX = fbdev->device.width - 1;
+		limitY = fbdev->device.height - 1;
+	}
 	Clear();
 }
 
@@ -39,7 +42,10 @@ void Display::Setup(FBDriver* fbdev)
 /// @param color 
 void Display::DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 {
-	fbdev->DrawPoint(x, y, color);
+	if (NULL != fbdev)
+	{
+		fbdev->DrawPoint(x, y, color);
+	}
 }
 
 
@@ -49,7 +55,11 @@ void Display::DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 /// @return 
 uint32_t Display::ReadPoint(uint32_t x, uint32_t y)
 {
-	return fbdev->ReadPoint(x, y);
+	if (NULL != fbdev)
+	{
+		return fbdev->ReadPoint(x, y);
+	}
+	return 0;
 }
 
 
@@ -60,8 +70,14 @@ uint32_t Display::ReadPoint(uint32_t x, uint32_t y)
 /// @return 
 uint32_t Display::ReadDrawPoint(uint32_t x, uint32_t y, uint32_t color)
 {
-	uint32_t ret = fbdev->ReadPoint(x, y);
-	fbdev->DrawPoint(x, y, color);
+	uint32_t ret = 0;
+
+	if (NULL != fbdev)
+	{
+		ret = fbdev->ReadPoint(x, y);
+		fbdev->DrawPoint(x, y, color);
+	}
+	
 	return ret;
 }
 
@@ -70,7 +86,10 @@ uint32_t Display::ReadDrawPoint(uint32_t x, uint32_t y, uint32_t color)
 /// @param color 
 void Display::Clear(uint32_t color)
 {
-	fbdev->Clear(color);
+	if (NULL != fbdev)
+	{
+		fbdev->Clear(color);
+	}
 }
 
 

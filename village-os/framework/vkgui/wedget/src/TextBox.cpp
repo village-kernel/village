@@ -113,10 +113,13 @@ void TextBox::AllocBuff()
 /// @brief FreeBuff
 void TextBox::FreeBuff()
 {
+	if (NULL == buff) return;
+
 	for (int i = 0; i < rowSize; i++)
 	{
 		delete buff[i];
 	}
+	
 	delete[] buff;
 }
 

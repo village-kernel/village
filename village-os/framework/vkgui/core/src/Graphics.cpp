@@ -22,15 +22,15 @@ Graphics::Graphics()
 /// @brief Destructor
 Graphics::~Graphics()
 {
-	delete fbdev;
-	delete display;
-	delete mainwin;
+	if (fbdev)   delete fbdev;
+	if (display) delete display;
+	if (mainwin) delete mainwin;
 }
 
 
 /// @brief Setup
 /// @param drvname 
-void Graphics::Setup(const char* screen)
+bool Graphics::Setup(const char* screen)
 {
 	//Get the universal driver by driver name
 	DrvStream screendrv;
@@ -46,6 +46,7 @@ void Graphics::Setup(const char* screen)
 			display->Setup(fbdev);
 		}
 	}
+	return (NULL != display);
 }
 
 
@@ -53,9 +54,13 @@ void Graphics::Setup(const char* screen)
 /// @return 
 Wedget* Graphics::CreateMainWindow()
 {
-	mainwin = new Window();
-	mainwin->SetDisplay(display);
-	mainwin->Setup();
-	mainwin->SetLocation(0, 0, fbdev->device.width, fbdev->device.height);
-	return mainwin;
+	if (NULL != display)
+	{
+		mainwin = new Window();
+		mainwin->SetDisplay(display);
+		mainwin->Setup();
+		mainwin->SetLocation(0, 0, fbdev->device.width, fbdev->device.height);
+		return mainwin;
+	}
+	return NULL;
 }
