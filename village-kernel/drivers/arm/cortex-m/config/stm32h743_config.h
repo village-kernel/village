@@ -21,8 +21,8 @@
 	.rxGpio = { Gpio::_ChA, 10, Gpio::_Alt, 7, 0 },                       \
 	.deGpio = { 0, 0, 0, 0, 0 },                                          \
                                                                           \
-	.txDma = { 1, 3, 42, NULL, false },                                   \
-	.rxDma = { 1, 2, 41, NULL, true  },                                   \
+	.txDma = { Dma::_Group1, Dma::_Stream3, 42, NULL, false },            \
+	.rxDma = { Dma::_Group1, Dma::_Stream2, 41, NULL, true  },            \
 }
 
 
