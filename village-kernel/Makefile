@@ -30,8 +30,8 @@ inc-$(CONFIG_BINUTILS)              += village-kernel/binutils/if
 inc-$(CONFIG_BINUTILS)              += village-kernel/binutils/inc
 src-$(CONFIG_BINUTILS)              += village-kernel/binutils/src
 
-inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/inc
-src-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/src
+inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fs/fat/inc
+src-$(CONFIG_FATFS)                 += village-kernel/filesys/fs/fat/src
 
 objs-y                              += Village.o
 objs-y                              += Debug.o
