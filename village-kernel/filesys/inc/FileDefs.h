@@ -82,11 +82,15 @@ struct MountNode
 
 
 ///Filesystem register macro
-#define REGISTER_FS(fs, name)                                         \
-static struct _FS_##name {                                            \
-	FileSys* filesystem = fs;                                         \
-	_FS_##name() { kernel->filesys.RegisterFS(filesystem, #name); }   \
-	~_FS_##name() {kernel->filesys.DeregisterFS(filesystem, #name); } \
+#define REGISTER_FS(fs, name)                                 \
+static struct _FS_##name {                                    \
+	FileSys* filesystem = fs;                                 \
+	_FS_##name() {                                            \
+		kernel->filesys.RegisterFS(filesystem, #name);        \
+	}                                                         \
+	~_FS_##name() {                                           \
+		kernel->filesys.DeregisterFS(filesystem, #name);      \
+	}                                                         \
 } const _fs_##name __attribute__((used,__section__(".fs")))
 
 
