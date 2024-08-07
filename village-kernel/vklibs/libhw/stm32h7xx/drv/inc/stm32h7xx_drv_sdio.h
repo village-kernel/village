@@ -52,8 +52,8 @@ private:
 	static SD_HandleTypeDef hsd;
 
 	//Static members
-	static uint8_t writeStatus;
-	static uint8_t readStatus;
+	static volatile uint8_t writeStatus;
+	static volatile uint8_t readStatus;
 public:
 	//Methods
 	uint8_t Initialize();

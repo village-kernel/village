@@ -11,8 +11,8 @@
 
 /// @brief Static members
 SD_HandleTypeDef Sdio::hsd;
-uint8_t Sdio::writeStatus = 0;
-uint8_t Sdio::readStatus = 0;
+volatile uint8_t Sdio::writeStatus = 0;
+volatile uint8_t Sdio::readStatus = 0;
 
 
 /// @brief Initialize
@@ -37,11 +37,11 @@ uint8_t Sdio::Initialize()
 
 	//SD config
 	hsd.Instance = SDMMC1;
-	hsd.Init.ClockEdge = SDMMC_CLOCK_EDGE_FALLING;
+	hsd.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
 	hsd.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
 	hsd.Init.BusWide = SDMMC_BUS_WIDE_4B;
 	hsd.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
-	hsd.Init.ClockDiv = 4;
+	hsd.Init.ClockDiv = 0;
 	
 	//HAL SD initialization
 	state = HAL_SD_Init(&hsd);
