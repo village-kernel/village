@@ -14,7 +14,7 @@ class SpinLock
 {
 private:
 	//Members
-	bool lock;
+	volatile bool lock;
 public:
 	//Methods
 	SpinLock();
