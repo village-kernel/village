@@ -25,6 +25,7 @@ src-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/src/stm3
 inc-$(CONFIG_SUBSYS)                += village-kernel/subsys/inc
 src-$(CONFIG_SUBSYS)                += village-kernel/subsys/src
 
+inc-$(CONFIG_BINUTILS)              += village-kernel/binutils/if
 inc-$(CONFIG_BINUTILS)              += village-kernel/binutils/inc
 src-$(CONFIG_BINUTILS)              += village-kernel/binutils/src
 
