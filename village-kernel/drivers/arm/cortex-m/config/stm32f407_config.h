@@ -18,11 +18,11 @@
 	.enableDMA = true,                                                    \
                                                                           \
 	.txGpio = { Gpio::_ChA, 9,  Gpio::_Alt, 7, 0 },                       \
-	.rxGpio = { Gpio::_ChA, 10, Gpio::_Alt, 7, 0 },                       \
+	.rxGpio = { Gpio::_ChB, 7,  Gpio::_Alt, 7, 0 },                       \
 	.deGpio = { 0, 0, 0, 0, 0 },                                          \
                                                                           \
-	.txDma = { 2, 7, 4, NULL, false },                                    \
-	.rxDma = { 2, 2, 4, NULL, true  },                                    \
+	.txDma = { Dma::_Group2, Dma::_Stream7, 4, NULL, false },             \
+	.rxDma = { Dma::_Group2, Dma::_Stream2, 4, NULL, true  },             \
 }
 
 
