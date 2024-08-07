@@ -4,8 +4,6 @@ if GENERATED_APP
 
 source ./village-os/applications/taichi/Kconfig
 
-source ./village-os/applications/console/Kconfig
-
 source ./village-os/applications/desktop/Kconfig
 
 source ./village-os/applications/settings/Kconfig

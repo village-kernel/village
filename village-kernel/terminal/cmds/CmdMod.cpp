@@ -21,7 +21,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: lsmod");
+			console->Output("Usage: lsmod");
 			return;
 		}
 
@@ -30,7 +30,7 @@ public:
 		{
 			for (mods->Begin(); !mods->IsEnd(); mods->Next())
 			{
-				console.Output("name %s", mods->GetName());
+				console->Output("name %s", mods->GetName());
 			}
 		}
 	}
@@ -39,7 +39,7 @@ public:
 	/// @brief Cmd lsmod help
 	void Help()
 	{
-		console.Output("cmd lsmod: list installed module information");
+		console->Output("cmd lsmod: list installed module information");
 	}
 };
 
@@ -55,12 +55,12 @@ public:
 	{
 		if (argc < 2)
 		{
-			console.Output("Usage: insmod [module]");
+			console->Output("Usage: insmod [module]");
 			return;
 		}
 		if (!kernel->loader.Install(Loader::_Mod, argv[1]))
 		{
-			console.Error("Install module %s failed", argv[1]);
+			console->Error("Install module %s failed", argv[1]);
 		}
 	}
 
@@ -68,7 +68,7 @@ public:
 	/// @brief Cmd insmod help
 	void Help()
 	{
-		console.Output("cmd insmod: install module");
+		console->Output("cmd insmod: install module");
 	}
 };
 
@@ -84,12 +84,12 @@ public:
 	{
 		if (argc < 2)
 		{
-			console.Output("Usage: rmmod [module]");
+			console->Output("Usage: rmmod [module]");
 			return;
 		}
 		if (!kernel->loader.Uninstall(Loader::_Mod, argv[1]))
 		{
-			console.Error("Uninstall module %s failed", argv[1]);
+			console->Error("Uninstall module %s failed", argv[1]);
 		}
 	}
 
@@ -97,7 +97,7 @@ public:
 	/// @brief Cmd rmmod help
 	void Help()
 	{
-		console.Output("cmd rmmod: remove module");
+		console->Output("cmd rmmod: remove module");
 	}
 };
 

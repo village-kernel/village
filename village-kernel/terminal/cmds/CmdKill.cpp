@@ -33,9 +33,9 @@ public:
 		}
 		else
 		{
-			console.Output("Usage: ");
-			console.Output("kill -p <pid>");
-			console.Output("kill -t <tid>");
+			console->Output("Usage: ");
+			console->Output("kill -p <pid>");
+			console->Output("kill -t <tid>");
 		}
 	}
 
@@ -43,7 +43,7 @@ public:
 	/// @brief Cmd kill help
 	void Help()
 	{
-		console.Output("cmd kill: kill process");
+		console->Output("cmd kill: kill process");
 	}
 };
 

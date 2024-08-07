@@ -6,6 +6,7 @@
 //###########################################################################
 #include "Cmd.h"
 #include "Console.h"
+#include "Kernel.h"
 
 
 /// @brief CmdHelp
@@ -17,11 +18,13 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		List<Cmd*> cmds = console.GetCmds();
+		List<Cmd*> cmds = kernel->terminal.GetCmds();
 
 		for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 		{
+			cmd->Setup(console);
 			cmd->Help();
+			cmd->Exit();
 		}
 	}
 
@@ -29,7 +32,7 @@ public:
 	/// @brief Cmd help help
 	void Help()
 	{
-		console.Output("cmd help: display cmd help");
+		console->Output("cmd help: display cmd help");
 	}
 };
 

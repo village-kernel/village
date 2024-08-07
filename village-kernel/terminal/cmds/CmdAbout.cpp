@@ -18,18 +18,18 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		console.Output("build date      : %s", kernel->GetBuildDate());
-		console.Output("build time      : %s", kernel->GetBuildTime());
-		console.Output("build version   : %s", kernel->GetBuildVersion());
-		console.Output("build gitcommit : %s", kernel->GetBuildGitCommit());
-		console.Output("village kernel Copyright (C) village.");
+		console->Output("build date      : %s", kernel->GetBuildDate());
+		console->Output("build time      : %s", kernel->GetBuildTime());
+		console->Output("build version   : %s", kernel->GetBuildVersion());
+		console->Output("build gitcommit : %s", kernel->GetBuildGitCommit());
+		console->Output("village kernel Copyright (C) village.");
 	}
 
 
 	/// @brief Cmd about help
 	void Help()
 	{
-		console.Output("cmd about: display build information");
+		console->Output("cmd about: display build information");
 	}
 };
 

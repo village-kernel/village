@@ -25,7 +25,7 @@ public:
 	/// @brief Cmd reboot help
 	void Help()
 	{
-		console.Output("cmd reboot: reboot device");
+		console->Output("cmd reboot: reboot device");
 	}
 };
 

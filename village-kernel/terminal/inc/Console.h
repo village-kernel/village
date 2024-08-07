@@ -15,7 +15,7 @@
 #include "List.h"
 
 
-///Console
+/// @brief Console
 class Console
 {
 private:
@@ -24,23 +24,21 @@ private:
 	static const uint16_t path_size = 100;
 
 	//Members
-	List<Cmd*> cmds;
 	Mutex      mutex;
 	Regex      regex;
 	CmdMsgMgr  msgMgr;
 	char       data[buf_size];
 	char       path[path_size];
-
+	
 	//Methods
-	Console();
-	~Console();
 	void ExecuteCmd(CmdMsg msg);
 public:
 	//Methods
+	Console();
+	~Console();
 	void Setup(const char* driver);
 	void Execute();
-	void RegisterCmd(Cmd* cmd, char* name);
-	void DeregisterCmd(Cmd* cmd, char* name);
+	void Exit();
 
 	//Output Methods
 	void Log(const char* format, ...);
@@ -53,15 +51,6 @@ public:
 	//Path Methods
 	void SetPath(const char* path);
 	const char* GetPath();
-
-	//Cmd Methods
-	List<Cmd*> GetCmds();
-	
-	//Singleton Instance
-	static Console& Instance();
 };
-
-///Declarations Console reference
-extern Console& console;
 
 #endif // !__CONSOLE_H__

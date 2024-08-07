@@ -36,33 +36,17 @@ Console::~Console()
 }
 
 
-/// @brief Singleton Instance
-/// @return Console instance
-Console& Console::Instance()
-{
-	static Console instance;
-	return instance;
-}
-
-
-/// @brief Definitions console and export
-Console& console = Console::Instance();
-
-
 /// @brief Console setup
 void Console::Setup(const char* driver)
 {
+	//Disable irq
+	kernel->system.DisableIRQ();
+
 	//Set default path
 	strcpy(path, "/");
 
 	//Setup msg mgr
 	msgMgr.Setup(driver);
-
-	//Setup cmds
-	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
-	{
-		cmd->Setup();
-	}
 
 	//Output welcome message
 	uint8_t sizeofstr = sizeof(vk_welcome) / sizeof(char*);
@@ -75,10 +59,13 @@ void Console::Setup(const char* driver)
 	//Output console symbol
 	msgMgr.Write((uint8_t*)path);
 	msgMgr.Write((uint8_t*)" # ");
+
+	//Enable irq
+	kernel->system.EnableIRQ();
 }
 
 
-/// @brief Recevice and handler message
+/// @brief Console execute
 void Console::Execute()
 {
 	while (1)
@@ -97,12 +84,16 @@ void Console::ExecuteCmd(CmdMsg msg)
 {
 	msgMgr.Write((uint8_t*)"\r\n");
 
+	List<Cmd*> cmds = kernel->terminal.GetCmds();
+
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
 		if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
 		{
 			regex.Split((const char*)msg.args);
+			cmd->Setup(this);
 			cmd->Execute(regex.Size(), regex.ToArray());
+			cmd->Exit();
 			regex.Clear();
 			msgMgr.Write((uint8_t*)path);
 			msgMgr.Write((uint8_t*)" # ");
@@ -117,21 +108,10 @@ void Console::ExecuteCmd(CmdMsg msg)
 }
 
 
-/// @brief Register cmd object
-/// @param cmd console command pointer
-/// @param name console command name
-void Console::RegisterCmd(Cmd* cmd, char* name)
+/// @brief Exit
+void Console::Exit()
 {
-	cmds.InsertByName(cmd, name);
-}
-
-
-/// @brief Deregister cmd object
-/// @param cmd console command pointer
-/// @param name console command name 
-void Console::DeregisterCmd(Cmd* cmd, char* name)
-{
-	cmds.RemoveByName(cmd, name);
+	msgMgr.Exit();
 }
 
 
@@ -254,28 +234,4 @@ void Console::SetPath(const char* path)
 const char* Console::GetPath()
 {
 	return path;
-}
-
-
-/// @brief Console get cmds
-/// @return 
-List<Cmd*> Console::GetCmds()
-{
-	return cmds;
-}
-
-
-/// @brief main
-int main(int argc, char* argv[])
-{
-	if (argc < 2)
-	{
-		return -1;
-	}
-	else
-	{
-		console.Setup(argv[1]);
-		console.Execute();
-		return 0;
-	}
 }

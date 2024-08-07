@@ -15,15 +15,15 @@
 /// @brief AbsolutePath
 /// @param path 
 /// @return 
-static char* AbsolutePath(char* path)
+static char* AbsolutePath(Console* console, char* path)
 {
 	char* res = NULL;
 
 	if ('/' != path[0])
 	{
-		res = new char[strlen(console.GetPath()) + strlen(path) + 2]();
-		strcat(res, console.GetPath());
-		if ('/' != res[strlen(console.GetPath()) - 1]) strcat(res, "/");
+		res = new char[strlen(console->GetPath()) + strlen(path) + 2]();
+		strcat(res, console->GetPath());
+		if ('/' != res[strlen(console->GetPath()) - 1]) strcat(res, "/");
 		strcat(res, path);
 	}
 	else
@@ -61,11 +61,11 @@ private:
 				dir[(0 == (dir - path)) ? 1 : 0] = '\0';
 			}
 
-			console.SetPath(path);
+			console->SetPath(path);
 		}
 		else
 		{
-			console.Error("%s is not a valid path, please confirm whether the path is correct", path);
+			console->Error("%s is not a valid path, please confirm whether the path is correct", path);
 		}
 	}
 public:
@@ -76,11 +76,11 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: cd <directory>");
+			console->Output("Usage: cd <directory>");
 			return;
 		}
 
-		char* path = AbsolutePath(argv[1]);
+		char* path = AbsolutePath(console, argv[1]);
 		ChangeDirectory(path);
 		delete path;
 	}
@@ -89,7 +89,7 @@ public:
 	/// @brief Cmd cd help
 	void Help()
 	{
-		console.Output("cmd cd: change directory");
+		console->Output("cmd cd: change directory");
 	}
 };
 
@@ -119,11 +119,11 @@ private:
 						if ((FileType::_Diretory == dirs[i].type) ||
 							(FileType::_File     == dirs[i].type))
 						{
-							console.OutputRAW("%s  ", dirs[i].name);
+							console->OutputRAW("%s  ", dirs[i].name);
 						}
 					}
 				}
-				if (size) console.OutputRAW("\r\n");
+				if (size) console->OutputRAW("\r\n");
 			}
 
 			delete[] dirs;
@@ -132,7 +132,7 @@ private:
 		}
 		else
 		{
-			console.Error("%s is not a valid path, please confirm whether the path is correct", name);
+			console->Error("%s is not a valid path, please confirm whether the path is correct", name);
 		}
 	}
 public:
@@ -143,17 +143,17 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: ls [directory]");
+			console->Output("Usage: ls [directory]");
 			return;
 		}
-		ListDirectory((argc == 1) ? console.GetPath() : argv[1]);
+		ListDirectory((argc == 1) ? console->GetPath() : argv[1]);
 	}
 
 
 	/// @brief Cmd list help
 	void Help()
 	{
-		console.Output("cmd ls: list directory");
+		console->Output("cmd ls: list directory");
 	}
 };
 
@@ -172,12 +172,12 @@ private:
 		{
 			if (!file.Open(filename, FileMode::_CreateNew))
 			{
-				console.Error("Create file %s failed.", filename);
+				console->Error("Create file %s failed.", filename);
 			}
 		}
 		else
 		{
-			console.Error("The file %s already exists.", filename);
+			console->Error("The file %s already exists.", filename);
 		}
 
 		file.Close();
@@ -190,11 +190,11 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: touch <filename>");
+			console->Output("Usage: touch <filename>");
 			return;
 		}
 
-		char* path = AbsolutePath(argv[1]);
+		char* path = AbsolutePath(console, argv[1]);
 		CreateFile(path);
 		delete path;
 	}
@@ -203,7 +203,7 @@ public:
 	/// @brief Cmd touch help
 	void Help()
 	{
-		console.Output("cmd touch: create file");
+		console->Output("cmd touch: create file");
 	}
 };
 
@@ -222,12 +222,12 @@ private:
 		{
 			if (!dir.Open(dirname, FileMode::_CreateNew))
 			{
-				console.Error("Create directory %s failed.", dirname);
+				console->Error("Create directory %s failed.", dirname);
 			}
 		}
 		else
 		{
-			console.Error("The directory %s already exists.", dirname);
+			console->Error("The directory %s already exists.", dirname);
 		}
 
 		dir.Close();
@@ -240,11 +240,11 @@ public:
 	{
 		if (argc < 1)
 		{
-			console.Output("Usage: mkdir <dirname>");
+			console->Output("Usage: mkdir <dirname>");
 			return;
 		}
 
-		char* path = AbsolutePath(argv[1]);
+		char* path = AbsolutePath(console, argv[1]);
 		CreateDir(path);
 		delete path;
 	}
@@ -253,7 +253,7 @@ public:
 	/// @brief Cmd mkdir help
 	void Help()
 	{
-		console.Output("cmd mkdir: create directory");
+		console->Output("cmd mkdir: create directory");
 	}
 };
 
@@ -277,12 +277,12 @@ public:
 	{
 		if (argc < 3)
 		{
-			console.Output("Usage: mv <source> <target>");
+			console->Output("Usage: mv <source> <target>");
 			return;
 		}
 
-		char* path1 = AbsolutePath(argv[1]);
-		char* path2 = AbsolutePath(argv[2]);
+		char* path1 = AbsolutePath(console, argv[1]);
+		char* path2 = AbsolutePath(console, argv[2]);
 		Move(path1, path2);
 		delete path1;
 		delete path2;
@@ -292,7 +292,7 @@ public:
 	/// @brief Cmd move help
 	void Help()
 	{
-		console.Output("cmd mv: move file or directory");
+		console->Output("cmd mv: move file or directory");
 	}
 };
 
@@ -316,12 +316,12 @@ public:
 	{
 		if (argc < 2)
 		{
-			console.Output("Usage: cp <source> <target>");
+			console->Output("Usage: cp <source> <target>");
 			return;
 		}
 
-		char* path1 = AbsolutePath(argv[1]);
-		char* path2 = AbsolutePath(argv[2]);
+		char* path1 = AbsolutePath(console, argv[1]);
+		char* path2 = AbsolutePath(console, argv[2]);
 		Copy(path1, path2);
 		delete path1;
 		delete path2;
@@ -331,7 +331,7 @@ public:
 	/// @brief Cmd cp help
 	void Help()
 	{
-		console.Output("cmd cp: copy file or directory");
+		console->Output("cmd cp: copy file or directory");
 	}
 };
 
@@ -355,11 +355,11 @@ public:
 	{
 		if (argc < 2)
 		{
-			console.Output("Usage: rm <file/directory>");
+			console->Output("Usage: rm <file/directory>");
 			return;
 		}
 
-		char* path = AbsolutePath(argv[1]);
+		char* path = AbsolutePath(console, argv[1]);
 		Remove(path);
 		delete path;
 	}
@@ -368,7 +368,7 @@ public:
 	/// @brief Cmd remove help
 	void Help()
 	{
-		console.Output("cmd rm: remove file or directory");
+		console->Output("cmd rm: remove file or directory");
 	}
 };
 

@@ -13,10 +13,10 @@
 static struct _CMD_##name {                                       \
 	Cmd* command = cmd;                                           \
 	_CMD_##name() {                                               \
-		Console::Instance().RegisterCmd(command, (char*)#name);   \
+		kernel->terminal.RegisterCmd(command, (char*)#name);      \
 	}                                                             \
 	~_CMD_##name() {                                              \
-		Console::Instance().DeregisterCmd(command, (char*)#name); \
+		kernel->terminal.DeregisterCmd(command, (char*)#name);    \
 	}                                                             \
 } const _cmd_##name __attribute__((used,__section__(".cmds")))
 

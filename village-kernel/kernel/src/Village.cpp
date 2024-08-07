@@ -24,7 +24,8 @@ Village::Village() : Kernel
 	concreteFilesys,
 	concreteLoader,
 	concreteProcess,
-	concreteTimer
+	concreteTimer,
+	concreteTerminal
 )
 {
 }
@@ -72,6 +73,9 @@ void Village::Setup()
 	//Setup timer
 	concreteTimer.Setup();
 
+	//Setup terminal
+	concreteTerminal.Setup();
+
 	//Setup filesys
 	concreteFilesys.Setup();
 	
@@ -114,6 +118,9 @@ void Village::Exit()
 
 	//Exit filesys
 	concreteFilesys.Exit();
+
+	//Exit terminal
+	concreteTerminal.Exit();
 
 	//Exit timer
 	concreteTimer.Exit();

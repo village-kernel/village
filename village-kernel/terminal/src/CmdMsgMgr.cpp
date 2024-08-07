@@ -10,7 +10,7 @@
 #include "string.h"
 
 
-///Constructor
+/// @brief Constructor
 CmdMsgMgr::CmdMsgMgr()
 	:txBufPos(0),
 	rxBufPos(0),
@@ -21,26 +21,36 @@ CmdMsgMgr::CmdMsgMgr()
 }
 
 
-///CmdMsgMgr initialize
+/// @brief CmdMsgMgr initialize
+/// @param driver 
 void CmdMsgMgr::Setup(const char* driver)
 {
 	transceiver.Open(driver, FileMode::_ReadWrite);
 }
 
 
-///CmdMsgMgr execute
+/// @brief CmdMsgMgr execute
+/// @return 
 bool CmdMsgMgr::Execute()
 {
 	//Sent data when txbuffer not empty
-	//Reset txBufPos when sent data successfully
-	if (txBufPos && transceiver.Write((char*)txBuffer, txBufPos)) txBufPos = 0;
+	Sending();
 
 	//Received data and decode
-	return HandleInputData();
+	return Receiving();
 }
 
 
-///CmdMsgMgr write
+/// @brief CmdMsgMgr Exit
+void CmdMsgMgr::Exit()
+{
+	transceiver.Close();
+}
+
+
+/// @brief CmdMsgMgr write
+/// @param msg 
+/// @param size 
 void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 {
 	//Calculate the size of msg
@@ -52,19 +62,27 @@ void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 		txBuffer[txBufPos++] = msg[i];
 
 		//The txBuffer is full, block here until the data is sent
-		if (txBufPos >= arg_buffer_size)
-		{
-			while (!transceiver.Write((char*)txBuffer, txBufPos)) {}
-			txBufPos = 0;
-		}
+		if (txBufPos >= arg_buffer_size) Sending();
 	}
 
 	//Sent data when txbuffer not empty
-	if (txBufPos && transceiver.Write((char*)txBuffer, txBufPos)) txBufPos = 0;
+	Sending();
 }
 
 
-/// @brief 
+/// @brief Sent data when txbuffer not empty
+/// @brief Reset txBufPos when sent data successfully
+void CmdMsgMgr::Sending()
+{
+	if (txBufPos)
+	{
+		while (txBufPos != transceiver.Write((char*)txBuffer, txBufPos)) {}
+		txBufPos = 0;
+	}
+}
+
+
+/// @brief RecordTempCmd
 void CmdMsgMgr::RecordTempCmd()
 {
 	//Return when history is not last
@@ -136,8 +154,9 @@ void CmdMsgMgr::RestoredHistory()
 }
 
 
-///CmdMsgMgr Handle input data
-bool CmdMsgMgr::HandleInputData()
+/// @brief CmdMsgMgr receiving data and decode
+/// @return 
+bool CmdMsgMgr::Receiving()
 {
 	const uint8_t br_buf_size = 20;
 	uint8_t brBuff[br_buf_size] = { 0 };

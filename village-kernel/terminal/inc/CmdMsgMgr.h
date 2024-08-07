@@ -52,15 +52,17 @@ private:
 	InputMode inputMode;
 
 	//Methods
+	void Sending();
 	void RecordTempCmd();
 	void RecordHistory();
 	void RestoredHistory();
-	bool HandleInputData();
+	bool Receiving();
 public:
 	//Methods
 	CmdMsgMgr();
 	void Setup(const char* driver);
 	bool Execute();
+	void Exit();
 	void Write(uint8_t* txMsg, uint16_t size = 0);
 
 	///Gets the decoded message
