@@ -14,9 +14,9 @@ class Semaphore
 {
 private:
 	//Members
-	int limit;
-	int counter;
-	int ticks;
+	volatile int limit;
+	volatile int counter;
+	volatile int ticks;
 public:
 	//Methods
 	Semaphore(int limit = 1, int ticks = 1);
