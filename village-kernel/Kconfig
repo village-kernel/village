@@ -324,6 +324,59 @@ if KERNEL
 
 	endmenu
 
+
+	# terminal menu
+
+	menu "terminal"
+
+	config CMD_ABOUT
+		bool "Add about cmd to terminal support list"
+		default n
+
+	config CMD_DEBUG
+		bool "Add debug system cmd to terminal support list"
+		default n
+
+	config CMD_FILESYS
+		bool "Add file system cmd to terminal support list"
+		default n
+
+	config CMD_HELP
+		bool "Add help cmd to terminal support list"
+		default n
+
+	config CMD_KILL
+		bool "Add kill cmd to terminal support list"
+		default n
+
+	config CMD_MEM
+		bool "Add mem cmd to terminal support list"
+		default n
+
+	config CMD_MOD
+		select MODINSTALLER
+		bool "Add insmod and rmmod cmd to terminal support list"
+		default n
+
+	config CMD_POWER
+		bool "Add power cmd to terminal support list"
+		default n
+
+	config CMD_PROCESS
+		bool "Add process cmd to terminal support list"
+		default n
+
+	config CMD_RUN
+		select EXECUTOR
+		bool "Add run cmd to terminal support list"
+		default n
+
+	config CMD_TASKER
+		bool "Add tasker cmd to terminal support list"
+		default n
+
+	endmenu
+
 	# confg vklibs menu
 
 	menu "vklibs"
