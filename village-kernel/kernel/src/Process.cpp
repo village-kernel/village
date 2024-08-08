@@ -28,6 +28,9 @@ void ConcreteProcess::Setup()
 
 	//Create a listening thread alive task
 	kernel->thread.CreateTask("Process::Listen", (Method)&ConcreteProcess::Listen, this);
+
+	//Output debug info
+	kernel->debug.Info("Process setup done!");
 }
 
 
