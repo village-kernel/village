@@ -25,6 +25,9 @@ void ConcreteWorkQueue::Setup()
 {
 	//Create work queue task
 	kernel->thread.CreateTask("WorkQueue::Execute", (Method)&ConcreteWorkQueue::Execute, this);
+
+	//Output debug info
+	kernel->debug.Info("Work queue setup done!");
 }
 
 
