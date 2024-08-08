@@ -33,9 +33,9 @@ void ConcreteFileSystem::Setup()
 
 	//Mount system node
 	if (MountSystemNode())
-		kernel->debug.Info("File system initialization completed!");
+		kernel->debug.Info("File system setup completed!");
 	else
-		kernel->debug.Error("File system initialization failed!");
+		kernel->debug.Error("File system setup failed!");
 }
 
 
@@ -60,7 +60,7 @@ bool ConcreteFileSystem::InitMBRDisk(const char* diskdrv)
 	static const uint16_t magic = 0xaa55;
 	static const uint16_t mbr_sector = 0;
 
-	kernel->debug.Info("Try to initialize the hard drive (%s) by using MBR format", diskdrv);
+	kernel->debug.Info("Try to setup the hard drive (%s) by using MBR format", diskdrv);
 
 	//Create an drvstream object
 	DrvStream* driver = new DrvStream();
