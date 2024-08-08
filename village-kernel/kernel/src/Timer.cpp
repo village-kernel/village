@@ -28,6 +28,9 @@ void ConcreteTimer::Setup()
 
 	//Set interrupt handler
 	kernel->interrupt.AppendISR(SysTick_IRQn, (Method)&ConcreteTimer::Execute, this);
+
+	//Output debug info
+	kernel->debug.Info("Timer setup done!");
 }
 
 

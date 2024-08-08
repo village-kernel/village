@@ -23,6 +23,9 @@ ConcreteInputEvent::~ConcreteInputEvent()
 void ConcreteInputEvent::Setup()
 {
 	outFormat = _Noraml;
+
+	//Output debug info
+	kernel->debug.Info("Input event setup done!");
 }
 
 

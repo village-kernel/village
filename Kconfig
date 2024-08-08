@@ -37,6 +37,11 @@ config GENERATED_LIB
 	bool "generated libs"
 	default y
 
+config POWER_UP_LOAD_LIBS
+	depends on GENERATED_LIB
+	bool "load library on power up"
+	default y
+
 config GENERATED_MOD
 	bool "generated mods"
 	option modules

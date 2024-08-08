@@ -36,6 +36,9 @@ void ConcreteFeature::Setup()
 	}
 
 	isRuntime = true;
+
+	//Output debug info
+	kernel->debug.Info("Feature setup done!");
 }
 
 

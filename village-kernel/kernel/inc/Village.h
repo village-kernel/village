@@ -23,6 +23,7 @@
 #include "Loader.h"
 #include "Process.h"
 #include "Timer.h"
+#include "Terminal.h"
 
 
 /// @brief Village
@@ -45,6 +46,7 @@ private:
 	ConcreteLoader      concreteLoader;
 	ConcreteProcess     concreteProcess;
 	ConcreteTimer       concreteTimer;
+	ConcreteTerminal    concreteTerminal;
 private:
 	//Methods
 	Village();

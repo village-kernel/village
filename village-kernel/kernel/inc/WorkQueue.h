@@ -18,7 +18,6 @@ class ConcreteWorkQueue : public WorkQueue, public Class
 {
 private:
 	//Members
-	Thread*     thread;
 	List<Work*> works;
 
 	//Methods
