@@ -28,7 +28,7 @@ void ConcreteFileSystem::Setup()
 	//Initialize all hard disk
 	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
 	{
-		InitMBRDisk(drivers.Item());
+		InitMBRDisk(drivers.Item()->GetName());
 	}
 
 	//Mount system node
@@ -55,28 +55,33 @@ void ConcreteFileSystem::Exit()
 
 /// @brief Init disk driver
 /// @return 
-bool ConcreteFileSystem::InitMBRDisk(Driver* diskdrv)
+bool ConcreteFileSystem::InitMBRDisk(const char* diskdrv)
 {
 	static const uint16_t magic = 0xaa55;
 	static const uint16_t mbr_sector = 0;
 
-	kernel->debug.Info("Try to initialize the hard drive (%s) by using MBR format", diskdrv->GetName());
+	kernel->debug.Info("Try to initialize the hard drive (%s) by using MBR format", diskdrv);
+
+	//Create an drvstream object
+	DrvStream* driver = new DrvStream();
 
 	//Open the disk driver
-	if (!diskdrv->Open())
+	if (!driver->Open(diskdrv, FileMode::_ReadWrite))
 	{
-		kernel->debug.Error("hard drive (%s) open failed", diskdrv->GetName());
+		kernel->debug.Error("hard drive (%s) open failed", diskdrv);
+		delete driver;
 		return false;
 	}
 
 	//Read the master boot record
 	MBR* mbr = new MBR();
 
-	diskdrv->Read((uint8_t*)mbr, 1, mbr_sector);
+	driver->Read((char*)mbr, 1, mbr_sector);
 
 	if (magic != mbr->magic)
 	{
 		kernel->debug.Error("Not a valid disk");
+		delete driver;
 		return false;
 	}
 
@@ -89,7 +94,7 @@ bool ConcreteFileSystem::InitMBRDisk(Driver* diskdrv)
 		{
 			FileVol* volume = fs->CreateVolume();
 
-			if (volume->Setup(diskdrv, mbr->dpt[i].relativeSectors))
+			if (volume->Setup(driver, mbr->dpt[i].relativeSectors))
 			{
 				AttachVolume(volume);
 			}

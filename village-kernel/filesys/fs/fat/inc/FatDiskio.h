@@ -7,7 +7,7 @@
 #ifndef __FAT_DISk_IO_H__
 #define __FAT_DISk_IO_H__
 
-#include "Driver.h"
+#include "DrvStream.h"
 
 
 /// @brief FatDiskio
@@ -130,7 +130,7 @@ private:
 	static const uint32_t fat32_eoc_flag = 0xffffff8;
 		
 	//Driver Members
-	Driver*    diskdrv;
+	DrvStream* diskdrv;
 	uint32_t   fstSec;
 	Info       info;
 
@@ -138,7 +138,7 @@ private:
 	bool CheckFileSystem();
 public:
 	//Method
-	bool Setup(Driver* diskdrv, uint32_t fstSec);
+	bool Setup(DrvStream* diskdrv, uint32_t fstSec);
 	void Exit();
 
 	uint32_t WriteSector(char* data, uint32_t sector, uint32_t secSize = 1);

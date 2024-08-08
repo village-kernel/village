@@ -7,11 +7,11 @@
 #ifndef __FILE_SYSTEM_H__
 #define __FILE_SYSTEM_H__
 
+#include "DrvStream.h"
 #include "FileDefs.h"
 #include "FileSys.h"
 #include "List.h"
 #include "Kernel.h"
-#include "Driver.h"
 
 
 /// @brief ConcreteFileSystem
@@ -53,7 +53,7 @@ private:
 	List<MountNode*>  mounts;
 
 	//Methods
-	bool InitMBRDisk(Driver* diskdrv);
+	bool InitMBRDisk(const char* diskdrv);
 	bool MountSystemNode();
 public:
 	//Methods
