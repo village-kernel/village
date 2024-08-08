@@ -156,33 +156,21 @@
 		make
 
 - ## 5.创建rootfs文件系统镜像
-	- ### Mac OS
-			格式化内存卡为fat格式，设置名称为VILLAGE OS
+		格式化内存卡为mbr分区fat格式
+		
+		设置分区名称为VILLAGE OS
 
-			修改rootfs文件系统挂载路径
-			make menuconfig
+		修改rootfs文件系统挂载路径
+		make menuconfig
 
-			进入Compiler选项
-			(/Volumes/VILLAGE OS) rootfs path
+		进入Compiler选项
+		(/Volumes/VILLAGE OS) rootfs path
 
-			拷贝相关文件到文件系统
-			make rootfs
+		拷贝相关文件到文件系统
+		make rootfs
 
-			从PC拔出卡，把卡插入到开发板上面
+		从PC拔出卡，把卡插入到开发板上面
 
-	- ### Linux
-			格式化内存卡为fat格式，设置名称为VILLAGE OS
-
-			修改rootfs文件系统挂载路径
-			make menuconfig
-
-			进入Compiler选项
-			(/mnt/VILLAGE OS) rootfs path
-
-			拷贝相关文件到文件系统
-			sudo make rootfs
-
-			从PC拔出卡，把卡插入到开发板上面
 
 - ## 6.运行与调试代码
 		切换到vscode debug界面
