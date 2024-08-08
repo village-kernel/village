@@ -22,7 +22,8 @@ ConcreteDevice::~ConcreteDevice()
 /// @brief Device Setup
 void ConcreteDevice::Setup()
 {
-	
+	//Output debug info
+	kernel->debug.Info("Device setup done!");
 }
 
 
