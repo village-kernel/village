@@ -174,7 +174,7 @@
 
 - ## 6.运行与调试代码
 		切换到vscode debug界面
-		选择Cortex Debug-jlink STM32fF407
+		选择Cortex Debug-stlink STM32fF407
 
 # 说明
 - 目前还处于开发阶段，各功能还不完善，框架结构未确定，待优化。
