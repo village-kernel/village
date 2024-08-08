@@ -36,6 +36,9 @@ void ConcreteThread::Setup()
 
 	//Frist task should be idle task and the tid is 0
 	CreateTask("Thread::IdleTask", (Method)&ConcreteThread::IdleTask, this);
+
+	//Output debug info
+	kernel->debug.Info("Thread setup done!");
 }
 
 
