@@ -276,7 +276,11 @@ bool CmdMsgMgr::Receiving()
 					else if (0x0d == byte)
 					{
 						//Check rxBuffer length
-						if (strlen((const char*)rxBuffer) <= 0) return false;
+						if (strlen((const char*)rxBuffer) <= 0)
+						{
+							strcpy((char*)cmdBuffer, "null");
+							return true;
+						}
 
 						//Set command
 						for (uint16_t i = 0; ; i++)

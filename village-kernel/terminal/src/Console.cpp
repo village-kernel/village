@@ -42,6 +42,9 @@ void Console::Setup(const char* driver)
 	//Disable irq
 	kernel->system.DisableIRQ();
 
+	//Set default user
+	strcpy(user, "root@village");
+
 	//Set default path
 	strcpy(path, "/");
 
@@ -57,8 +60,7 @@ void Console::Setup(const char* driver)
 	}
 
 	//Output console symbol
-	msgMgr.Write((uint8_t*)path);
-	msgMgr.Write((uint8_t*)" # ");
+	ShowUserAndPath();
 
 	//Enable irq
 	kernel->system.EnableIRQ();
@@ -84,8 +86,17 @@ void Console::ExecuteCmd(CmdMsg msg)
 {
 	msgMgr.Write((uint8_t*)"\r\n");
 
+	//Skip null command
+	if (0 == strcmp("null", (const char*)msg.cmd))
+	{
+		ShowUserAndPath();
+		return;
+	}
+
+	//Gets all terminal commands
 	List<Cmd*> cmds = kernel->terminal.GetCmds();
 
+	//Find the command and execute it 
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 	{
 		if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
@@ -95,16 +106,15 @@ void Console::ExecuteCmd(CmdMsg msg)
 			cmd->Execute(regex.Size(), regex.ToArray());
 			cmd->Exit();
 			regex.Clear();
-			msgMgr.Write((uint8_t*)path);
-			msgMgr.Write((uint8_t*)" # ");
+			ShowUserAndPath();
 			return;
 		}
 	}
 
+	//Command not found
 	msgMgr.Write((uint8_t*)msg.cmd);
 	msgMgr.Write((uint8_t*)": command not found\r\n");
-	msgMgr.Write((uint8_t*)path);
-	msgMgr.Write((uint8_t*)" # ");
+	ShowUserAndPath();
 }
 
 
@@ -112,6 +122,18 @@ void Console::ExecuteCmd(CmdMsg msg)
 void Console::Exit()
 {
 	msgMgr.Exit();
+}
+
+
+/// @brief Console show user and path
+void Console::ShowUserAndPath()
+{
+	mutex.Lock();
+	msgMgr.Write((uint8_t*)user);
+	msgMgr.Write((uint8_t*)" ");
+	msgMgr.Write((uint8_t*)path);
+	msgMgr.Write((uint8_t*)" # ");
+	mutex.Unlock();
 }
 
 
