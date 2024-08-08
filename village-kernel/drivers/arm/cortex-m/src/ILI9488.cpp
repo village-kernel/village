@@ -42,10 +42,10 @@ protected:
 	//Enumerates
 	enum Direction
 	{
-		Up = 0,
-		Left,
-		Right,
-		Down,
+		_Up = 0,
+		_Left,
+		_Right,
+		_Down,
 	};
 
 	//Structures
@@ -221,17 +221,24 @@ public:
 	void DeviceConfig()
 	{
 		lcd.id = 0x548066;
-		lcd.dir = Down;
-		lcd.width = 320;
-		lcd.height = 480;
 		lcd.setXCmd = 0x2A;
 		lcd.setYCmd = 0x2B;
 		lcd.wRamCmd = 0X2C;
 		lcd.rRamCmd = 0x2E;
 
+		lcd.dir = _Up;
+		//lcd.dir = _Down;
+		lcd.width = 320;
+		lcd.height = 480;
+
+		////lcd.dir = _Left;
+		//lcd.dir = _Right;
+		//lcd.width = 480;
+		//lcd.height = 320;
+
 		device.width = lcd.width;
 		device.height = lcd.height;
-		device.bitdepth = 0x10; // 16 bpp
+		device.bitdepth = 16; // 16 bpp
 	}
 
 
@@ -372,22 +379,22 @@ public:
 	{
 		switch (dir)
 		{
-		case Up:
+		case _Up:
 			WriteCmd(0x36);
 			WriteData(0x08);
 			break;
 
-		case Right:
+		case _Right:
 			WriteCmd(0x36);
 			WriteData(0x68);
 			break;
 
-		case Down:
+		case _Down:
 			WriteCmd(0x36);
 			WriteData(0xC8);
 			break;
 
-		case Left:
+		case _Left:
 			WriteCmd(0x36);
 			WriteData(0xA8);
 			break;
