@@ -21,6 +21,7 @@ class Console
 private:
 	//Static constants
 	static const uint16_t buf_size = 256;
+	static const uint16_t user_size = 50;
 	static const uint16_t path_size = 100;
 
 	//Members
@@ -28,9 +29,11 @@ private:
 	Regex      regex;
 	CmdMsgMgr  msgMgr;
 	char       data[buf_size];
+	char       user[user_size];
 	char       path[path_size];
 	
 	//Methods
+	void ShowUserAndPath();
 	void ExecuteCmd(CmdMsg msg);
 public:
 	//Methods
