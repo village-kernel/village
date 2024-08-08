@@ -22,10 +22,11 @@ private:
 	//Members
 	DrvStream transceiver;
 	Mutex     mutex;
+	bool      isReady;
+	uint8_t   debugLevel;
+	uint16_t  txBufPos;
 	char      data[buf_size] = { 0 };
 	char      txBuffer[buf_size] = { 0 };
-	uint16_t  txBufPos;
-	uint8_t   debugLevel;
 
 	//Methods
 	void Write(const char* data);

@@ -43,7 +43,7 @@ bool Desktop::SetupWin(const char* screen)
 	mainwin = (Window*)graphics.CreateMainWindow();
 
 	tabbar = (Tabbar*)mainwin->CreateWedget(Wedget::_Tabbar);
-	tabbar->SetLocation(0, 728, 1024, 40);
+	tabbar->SetLocation(0, mainwin->GetHeight() - 40, mainwin->GetWidth(), 40);
 
 	button0 = (Button*)tabbar->CreateWedget(Wedget::_Button);
 	button0->SetLocation(0, 0, 40, 40);
@@ -66,10 +66,10 @@ bool Desktop::SetupWin(const char* screen)
 	button4->SetText((char*)"D");
 
 	frame = (Frame*)mainwin->CreateWedget(Wedget::_Frame);
-	frame->SetLocation(40, 40, 944, 650);
+	frame->SetLocation(20, 20, mainwin->GetWidth() - 40, mainwin->GetHeight() - 78);
 
 	textbox = (TextBox*)frame->CreateWedget(Wedget::_TextBox);
-	textbox->SetLocation(1, 21, 942, 628);
+	textbox->SetLocation(1, 21, mainwin->GetWidth() - 42, mainwin->GetHeight() - 100);
 
 	cursor = (Cursor*)mainwin->CreateWedget(Wedget::_Cursor);
 	cursor->SetLocation(0, 0, mainwin->GetWidth(), mainwin->GetHeight());
@@ -97,14 +97,11 @@ void Desktop::UpdateAxis(InputEvent::OutputAxis* input)
 /// @brief Execute
 void Desktop::Execute()
 {
-	//kernel->process.Run(Process::_Background, "/applications/console.exec desktop");
-	
 	if (NULL == mainwin) return;
 
-	while (1)
-	{
-		mainwin->Refresh();
-	}
+	kernel->terminal.CreateConsole("desktop");
+
+	while (1) mainwin->Refresh();
 }
 
 

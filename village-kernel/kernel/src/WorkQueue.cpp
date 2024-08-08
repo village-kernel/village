@@ -9,7 +9,6 @@
 
 /// @brief Constructor
 ConcreteWorkQueue::ConcreteWorkQueue()
-	:thread(NULL)
 {
 }
 
@@ -17,17 +16,18 @@ ConcreteWorkQueue::ConcreteWorkQueue()
 /// @brief Destructor
 ConcreteWorkQueue::~ConcreteWorkQueue()
 {
+	works.Release();
 }
 
 
 /// @brief WorkQueue setup
 void ConcreteWorkQueue::Setup()
 {
-	//Gets the thread pointer
-	thread = (Thread*)&kernel->thread;
-
 	//Create work queue task
-	thread->CreateTask("WorkQueue::Execute", (Method)&ConcreteWorkQueue::Execute, this);
+	kernel->thread.CreateTask("WorkQueue::Execute", (Method)&ConcreteWorkQueue::Execute, this);
+
+	//Output debug info
+	kernel->debug.Info("Work queue setup done!");
 }
 
 
@@ -41,7 +41,7 @@ void ConcreteWorkQueue::Execute()
 			if (_Waked == work->state)
 			{
 				work->state = _Running;
-				if (work->ticks) thread->Sleep(work->ticks);
+				if (work->ticks) kernel->thread.Sleep(work->ticks);
 				(work->func)(work->user, work->args);
 				work->state = _Finish;
 			}

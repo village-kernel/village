@@ -23,6 +23,9 @@ ConcreteInterrupt::~ConcreteInterrupt()
 void ConcreteInterrupt::Setup()
 {
 	exception.Setup();
+
+	//Output debug info
+	kernel->debug.Info("Interrupt setup done!");
 }
 
 

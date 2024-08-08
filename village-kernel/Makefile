@@ -12,6 +12,15 @@ inc-y                               += village-kernel/kernel/if
 inc-y                               += village-kernel/kernel/inc
 src-y                               += village-kernel/kernel/src
 
+inc-y                               += village-kernel/filesys/if
+inc-y                               += village-kernel/filesys/inc
+src-y                               += village-kernel/filesys/src
+
+inc-y                               += village-kernel/terminal/if
+inc-y                               += village-kernel/terminal/inc
+src-y                               += village-kernel/terminal/src
+src-y                               += village-kernel/terminal/cmds
+
 inc-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32/legacy/inc
 src-$(CONFIG_IA32LEGACY)            += village-kernel/arch/ia32/legacy/src
 
@@ -22,14 +31,12 @@ src-$(CONFIG_CORTEX_M)              += village-kernel/arch/arm/cortex-m/src
 src-$(CONFIG_STM32F4xx)             += village-kernel/arch/arm/cortex-m/src/stm32f4xx
 src-$(CONFIG_STM32H7xx)             += village-kernel/arch/arm/cortex-m/src/stm32h7xx
 
-inc-$(CONFIG_SUBSYS)                += village-kernel/subsys/inc
-src-$(CONFIG_SUBSYS)                += village-kernel/subsys/src
-
+inc-$(CONFIG_BINUTILS)              += village-kernel/binutils/if
 inc-$(CONFIG_BINUTILS)              += village-kernel/binutils/inc
 src-$(CONFIG_BINUTILS)              += village-kernel/binutils/src
 
-inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/inc
-src-$(CONFIG_FATFS)                 += village-kernel/filesys/fat/src
+inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fs/fat/inc
+src-$(CONFIG_FATFS)                 += village-kernel/filesys/fs/fat/src
 
 objs-y                              += Village.o
 objs-y                              += Debug.o
@@ -64,6 +71,21 @@ objs-$(CONFIG_ELFLOADER)            += ElfLoader.o
 objs-$(CONFIG_HEXLOADER)            += HexLoader.o
 objs-$(CONFIG_LIBTOOL)              += LibraryTool.o
 objs-$(CONFIG_MODTOOL)              += ModuleTool.o
+
+objs-y                              += CmdMsgMgr.o
+objs-y                              += Console.o
+objs-y                              += Terminal.o
+objs-$(CONFIG_CMD_ABOUT)            += CmdAbout.o
+objs-$(CONFIG_CMD_DEBUG)            += CmdDebug.o
+objs-$(CONFIG_CMD_FILESYS)          += CmdFileSys.o
+objs-$(CONFIG_CMD_HELP)             += CmdHelp.o
+objs-$(CONFIG_CMD_KILL)             += CmdKill.o
+objs-$(CONFIG_CMD_MEM)              += CmdMem.o
+objs-$(CONFIG_CMD_MOD)              += CmdMod.o
+objs-$(CONFIG_CMD_POWER)            += CmdPower.o
+objs-$(CONFIG_CMD_PROCESS)          += CmdProcess.o
+objs-$(CONFIG_CMD_RUN)              += CmdRun.o
+objs-$(CONFIG_CMD_TASKER)           += CmdTasker.o
 
 
 ######################################

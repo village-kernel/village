@@ -137,7 +137,9 @@ libs:
 				INCS="$(inc-y)"                                   \
 				SRCS="$(src-y)"                                   \
 				OBJS="$(objs-$(name)-y)";                         \
-		echo /libraries/lib$(name).so >> $(LIBS_DIR)/_load_.rc;   \
+		if [ "$(CONFIG_POWER_UP_LOAD_LIBS)" = "y" ]; then         \
+			echo /libraries/lib$(name).so >> $(LIBS_DIR)/_load_.rc;\
+		fi;                                                       \
 	)
 	$(Q)$(foreach name, $(oslibs-y),                              \
 		$(MAKE) $(objs-$(name)-y)                                 \

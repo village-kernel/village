@@ -23,7 +23,8 @@ ConcreteSymbol::~ConcreteSymbol()
 /// @brief Setup
 void ConcreteSymbol::Setup()
 {
-	
+	//Output debug info
+	kernel->debug.Info("Symbol setup done!");
 }
 
 

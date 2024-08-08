@@ -14,8 +14,8 @@ class Mutex
 {
 private:
 	//Members
-	bool lock;
-	int  ticks;
+	volatile bool lock;
+	volatile int  ticks;
 public:
 	//Methods
 	Mutex(int ticks = 1);

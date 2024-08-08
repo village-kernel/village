@@ -438,6 +438,44 @@ public:
 };
 
 
+/// @brief Cmd
+class Cmd;
+
+/// @brief Console
+class Console;
+
+/// @brief Terminal
+class Terminal
+{
+public:
+	//Structures
+	struct Sandbox
+	{
+		int           cid;
+		int           tid;
+		char*         driver;
+		Console*      console;
+
+		Sandbox(char* driver = NULL)
+			:cid(0),
+			tid(0),
+			driver(driver),
+			console(NULL)
+		{}
+	};
+public:
+	//Cmd Methods
+	virtual void RegisterCmd(Cmd* cmd, char* name) = 0;
+	virtual void DeregisterCmd(Cmd* cmd, char* name) = 0;
+	virtual List<Cmd*> GetCmds() = 0;
+
+	//Console Methods
+	virtual int CreateConsole(const char* driver) = 0;
+	virtual bool DestroyConsole(const char* driver) = 0;
+	virtual List<Sandbox*> GetSandboxes() = 0;
+};
+
+
 /// @brief Kernel
 class Kernel
 {
@@ -458,6 +496,7 @@ public:
 	Loader&      loader;
 	Process&     process;
 	Timer&       timer;
+	Terminal&    terminal;
 public:
 	/// @brief constructor
 	Kernel(
@@ -475,7 +514,8 @@ public:
 		FileSystem&  filesys,
 		Loader&      loader,
 		Process&     process,
-		Timer&       timer
+		Timer&       timer,
+		Terminal&    terminal
 	)
 		:system(system),
 		memory(memory),
@@ -491,7 +531,8 @@ public:
 		filesys(filesys),
 		loader(loader),
 		process(process),
-		timer(timer)
+		timer(timer),
+		terminal(terminal)
 	{}
 
 	/// @brief Destructor

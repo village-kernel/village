@@ -12,8 +12,9 @@
 
 /// @brief Constructor
 ConcreteDebug::ConcreteDebug()
-	:txBufPos(0),
-	debugLevel(_Lv2)
+	:isReady(false),
+	debugLevel(_Lv2),
+	txBufPos(0)
 {
 }
 
@@ -30,15 +31,22 @@ void ConcreteDebug::Setup()
 	//Get transceiver driver and initialize
 	transceiver.Open("serial0", FileMode::_Write);
 
+	//Set ready flag
+	isReady = true;
+
 	//Output debug info
-	Info("Debug feature initialized done!");
+	Info("Debug setup done!");
 }
 
 
 /// @brief Exit
 void ConcreteDebug::Exit()
 {
+	//Close transceiver
 	transceiver.Close();
+
+	//Clear ready flag
+	isReady = false;
 }
 
 
@@ -49,13 +57,31 @@ void ConcreteDebug::Write(const char* data)
 	//Calculate the string length
 	int size = strlen((const char*)data);
 
+	//When the device is not ready and the buffer is full, 
+	//the previous part of the data is discarded.
+	if (!isReady && ((buf_size - txBufPos) < size))
+	{
+		//Calculate how much data needs to be discarded
+		int delta = size - (buf_size - txBufPos);
+
+		//Discard specified amount of data
+		for (int i = 0; i < buf_size - delta; i++)
+		{
+			txBuffer[i] = txBuffer[i + delta];
+		}
+
+		//Update txBufPos
+		txBufPos -= delta;
+	}
+
 	//Copy msg data into txBuffer
 	for (int i = 0; i < size; i++)
 	{
-		txBuffer[txBufPos++] = data[i];
-
 		//The txBuffer is full, block here until the data is sent
 		if (txBufPos >= buf_size) Sending();
+
+		//Copy data
+		txBuffer[txBufPos++] = data[i];
 	}
 
 	//Sending msg
@@ -67,7 +93,7 @@ void ConcreteDebug::Write(const char* data)
 /// @brief Reset txBufPos when sent data successfully
 void ConcreteDebug::Sending()
 {
-	if (txBufPos)
+	if (isReady && txBufPos)
 	{
 		while (txBufPos != transceiver.Write(txBuffer, txBufPos)) {}
 		txBufPos = 0;

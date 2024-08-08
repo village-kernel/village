@@ -35,9 +35,6 @@ void Taichi::Execute()
 
 	//Execute desktop
 	kernel->process.Run(Process::_Background, "/applications/desktop.exec display0");
-
-	//Execute console
-	kernel->process.Run(Process::_Background, "/applications/console.exec serial0");
 }
 
 
