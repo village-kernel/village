@@ -22,7 +22,7 @@
 - ## village-docs:    相关文档
 
 ---
-# 参与village开发：
+# 搭建开发i686平台环境：
 
 - ## 1.系统要求
 		mac os / linux / windows（使用wsl子系统）
@@ -111,6 +111,82 @@
 		切换到vscode debug界面
 		选择QEMU Debug x86_64 kernel
 
+# 搭建开发cortex-m平台环境：
+
+- ## 1.系统要求
+		mac os / linux / windows（使用wsl子系统）
+
+- ## 2.搭建开发环境, 以mac os为例 (Linux一样可以ubuntu22.04测试过)
+	## 安装vscode, git
+		安装简单，跳过。安装完成之后打开vscode，安装C/C++, Cortex-Debug拓展插件，调试代码需要。
+
+	### 安装homebrew
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+	### 安装交叉编译工具
+		brew install make gcc gcc-arm-embedded
+
+- ## 3.克隆village-kernel项目
+	- ### ssh方式：
+			git clone git@github.com:village-kernel/village.git
+  
+  	- ### https方式：
+			git clone https://github.com/village-kernel/village.git
+
+
+- ## 4.使用vscode打开village-kernel项目
+		把项目目录village-kernel拉到vscode界面
+		
+		接着打开vscode终端，拷贝配置文件
+		cp village-scripts/configs/stm32f407.config .config
+		
+		修改配置
+		make menuconfig
+		进入Compiler选项
+		
+		配置宿主机编译器：
+		() host compile prefix
+		(-13) host compile suffix
+		
+		配置交叉编译器：
+		(arm-none-eabi-) cross compile prefix
+		() cross compile suffix
+
+		编译项目
+		make
+
+- ## 5.创建rootfs文件系统镜像
+	- ### Mac OS
+			格式化内存卡为fat格式，设置名称为VILLAGE OS
+
+			修改rootfs文件系统挂载路径
+			make menuconfig
+
+			进入Compiler选项
+			(/Volumes/VILLAGE OS) rootfs path
+
+			拷贝相关文件到文件系统
+			make rootfs
+
+			从PC拔出卡，把卡插入到开发板上面
+
+	- ### Linux
+			格式化内存卡为fat格式，设置名称为VILLAGE OS
+
+			修改rootfs文件系统挂载路径
+			make menuconfig
+
+			进入Compiler选项
+			(/mnt/VILLAGE OS) rootfs path
+
+			拷贝相关文件到文件系统
+			sudo make rootfs
+
+			从PC拔出卡，把卡插入到开发板上面
+
+- ## 6.运行与调试代码
+		切换到vscode debug界面
+		选择Cortex Debug-jlink STM32fF407
 
 # 说明
 - 目前还处于开发阶段，各功能还不完善，框架结构未确定，待优化。
