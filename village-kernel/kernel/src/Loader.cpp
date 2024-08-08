@@ -27,6 +27,9 @@ void ConcreteLoader::Setup()
 
 	//Loading modules
 	Load(Loader::_Mod, "/modules/_load_.rc");
+
+	//Output debug info
+	kernel->debug.Info("Loader setup done!");
 }
 
 
