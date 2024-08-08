@@ -23,7 +23,11 @@ ConcreteTerminal::~ConcreteTerminal()
 /// @brief Terminal Setup
 void ConcreteTerminal::Setup()
 {
+	//Create the default console
 	CreateConsole("serial0");
+
+	//Output debug info
+	kernel->debug.Info("Terminal setup done!");
 }
 
 
