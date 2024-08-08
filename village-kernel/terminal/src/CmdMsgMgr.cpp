@@ -59,10 +59,11 @@ void CmdMsgMgr::Write(uint8_t* msg, uint16_t size)
 	//Copy msg data into txBuffer
 	for (int i = 0; i < size; i++)
 	{
-		txBuffer[txBufPos++] = msg[i];
-
 		//The txBuffer is full, block here until the data is sent
 		if (txBufPos >= arg_buffer_size) Sending();
+
+		//Copy data
+		txBuffer[txBufPos++] = msg[i];
 	}
 
 	//Sent data when txbuffer not empty
