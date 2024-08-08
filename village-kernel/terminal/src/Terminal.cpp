@@ -107,6 +107,9 @@ int ConcreteTerminal::CreateConsole(const char* driver)
 		ThreadName(driver), (Method)&ConcreteTerminal::ConsoleSandbox, this, sandbox
 	);
 
+	//Start console task
+	kernel->thread.StartTask(sandbox->tid);
+
 	return sandbox->cid;
 }
 
