@@ -66,6 +66,9 @@ ConcreteMemory::~ConcreteMemory()
 void ConcreteMemory::Setup()
 {
 	isMemReady = true;
+
+	//Output debug info
+	kernel->debug.Info("Memory setup done!");
 }
 
 
