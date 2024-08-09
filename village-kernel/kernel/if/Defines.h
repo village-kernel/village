@@ -63,19 +63,6 @@ static struct _Mod_##name {                                       \
 } const _mod_##name __attribute__((used,__section__(".modules")))
 
 
-///Executor register macro
-#define REGISTER_EXECUTOR(exec, name)                             \
-static struct _Exec_##name {                                      \
-	Executor* executor = exec;                                    \
-	_Exec_##name() {                                              \
-		kernel->process.RegisterExecutor(executor);               \
-	}                                                             \
-	~_Exec_##name() {                                             \
-		kernel->process.DeregisterExecutor(executor);             \
-	}                                                             \
-} const _exec_##name __attribute__((used,__section__(".executors")))
-
-
 ///Environment marco
 #ifdef KBUILD_NO_ENVIRONNEMNT
 	///Export symbol marco
