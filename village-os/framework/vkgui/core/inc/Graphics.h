@@ -15,7 +15,7 @@ class Graphics
 {
 private:
 	//Members
-	FBDriver*   fbdev;
+	FBDevice*   fbdev;
 	Display*    display;
 	Wedget*     mainwin;
 public:
