@@ -18,7 +18,7 @@ enum DriverID
 	_block,
 	_network,
 	_character,
-	_miscellaneous,
+	_framebuffer,
 	_dirverIdSize,
 };
 
