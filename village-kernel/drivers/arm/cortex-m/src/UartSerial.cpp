@@ -68,7 +68,7 @@ public:
 	}
 
 
-	/// @brief Initializes internal buffers
+	/// @brief Open
 	/// @return 
 	bool Open()
 	{
