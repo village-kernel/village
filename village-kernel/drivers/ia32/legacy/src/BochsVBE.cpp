@@ -161,7 +161,7 @@ public:
 	/// @param color 
 	void DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 	{
-		uint32_t reg = (uint32_t)x + (uint32_t)y * device.width;
+		uint32_t reg = (uint32_t)x + (uint32_t)y * fbinfo.width;
 		WriteData(reg, color);
 	}
 
