@@ -30,12 +30,12 @@ public:
 };
 
 
-/// @brief FBDriver
-class FBDriver
+/// @brief FBDevice
+class FBDevice
 {
 public:
 	//Structures
-	struct DeviceInfo
+	struct FBInfo
 	{
 		uint32_t  width;
 		uint32_t  height;
@@ -43,13 +43,13 @@ public:
 	};
 
 	//Members
-	DeviceInfo device;
+	FBInfo fbinfo;
 public:
 	//Constructor
-	FBDriver()  {}
+	FBDevice()  {}
 
 	//Destructor
-	virtual ~FBDriver() {}
+	virtual ~FBDevice() {}
 
 	//Methods
 	virtual void DrawPoint(uint32_t x, uint32_t y, uint32_t color) = 0;
