@@ -49,6 +49,9 @@ void Village::Setup()
 	//Setup memory
 	concreteMemory.Setup();
 
+	//Setup device
+	concreteDevice.Setup();
+
 	//Setup debug
 	concreteDebug.Setup();
 	
@@ -66,19 +69,16 @@ void Village::Setup()
 	
 	//Setup symbol
 	concreteSymbol.Setup();
-	
-	//Setup device
-	concreteDevice.Setup();
 
 	//Setup timer
 	concreteTimer.Setup();
 
+	//Setup filesys
+	concreteFilesys.Setup();
+
 	//Setup terminal
 	concreteTerminal.Setup();
 
-	//Setup filesys
-	concreteFilesys.Setup();
-	
 	//Setup feature
 	concreteFeature.Setup();
 
@@ -116,17 +116,14 @@ void Village::Exit()
 	//Exit feature
 	concreteFeature.Exit();
 
-	//Exit filesys
-	concreteFilesys.Exit();
-
 	//Exit terminal
 	concreteTerminal.Exit();
 
+	//Exit filesys
+	concreteFilesys.Exit();
+
 	//Exit timer
 	concreteTimer.Exit();
-
-	//Exit device
-	concreteDevice.Exit();
 
 	//Exit symbol
 	concreteSymbol.Exit();
@@ -145,6 +142,9 @@ void Village::Exit()
 
 	//Exit debug
 	concreteDebug.Exit();
+
+	//Exit device
+	concreteDevice.Exit();
 
 	//Exit memory
 	concreteMemory.Exit();
