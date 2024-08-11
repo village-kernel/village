@@ -1,0 +1,93 @@
+menu "block"
+
+config ATALBADISK
+	tristate "Enable ATA LBA disk support"
+	default n
+
+config SDMMC
+	select DRV_SDIO
+	bool "Enable SD MMC support"
+	default n
+
+config SPIFLASH
+	select DRV_SPI
+	bool "Enable SPI flash support"
+	default n
+
+config SPISDCARD
+	select DRV_SPI
+	bool "Enable SPI SD card support"
+	default n
+
+endmenu
+
+menu "display"
+
+config BOCHSVBE
+	select DRV_PCI_CONTROLLER
+	tristate "Enable Bochs VBE support"
+	default n
+
+config ILI9488
+	select DRV_FSMC
+	select MANUFACTURER_HAL_DRIVER
+	bool "Enable ILI9488 support"
+	default n
+
+endmenu
+
+menu "dma"
+
+config DMAFIFO
+	select DRV_DMA
+	bool "Enable dma fifo support"
+	default n
+
+endmenu
+
+menu "keyboard"
+
+config PS2KEYBOARD
+	tristate "Enable ps2 key board input support"
+	default n
+
+endmenu
+
+menu "mouse"
+
+config PS2MOUSE
+	select DRV_PS2_CONTROLLER
+	tristate "Enable ps2 mouse input support"
+	default n
+
+endmenu
+
+menu "serial"
+
+config UARTSERIAL
+	select DRV_USART
+	bool "Enable UART serial support"
+	default n
+
+config SERIALPORT
+	tristate "Enable serial port support"
+	default y
+
+endmenu
+
+menu "timer"
+
+config GENERALTIMER
+	tristate "Enable general timer support"
+	default n
+
+endmenu
+
+menu "usb"
+
+config USBSTORAGE
+	depends on SDCARD || SPIFLASH
+	bool "Enable USB storage support"
+	default n
+
+endmenu

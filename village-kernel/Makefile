@@ -184,20 +184,20 @@ endif
 ######################################
 # includes
 ######################################
+# drivers
+include village-kernel/drivers/Makefile
+
 ## stm32f4xx
 ifeq ($(CONFIG_STM32F4xx), y)
 include village-kernel/vklibs/libhw/stm32f4xx/Makefile
-include village-kernel/drivers/arm/cortex-m/Makefile
 endif
 
 ## stm32h7xx
 ifeq ($(CONFIG_STM32H7xx), y)
 include village-kernel/vklibs/libhw/stm32h7xx/Makefile
-include village-kernel/drivers/arm/cortex-m/Makefile
 endif
 
 ## ia32legacy
 ifeq ($(CONFIG_IA32LEGACY), y)
 include village-kernel/vklibs/libhw/ia32legacy/Makefile
-include village-kernel/drivers/ia32/legacy/Makefile
 endif
