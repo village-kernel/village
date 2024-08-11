@@ -25,8 +25,9 @@ public:
 	virtual void EnableIRQ() = 0;
 	virtual void DisableIRQ() = 0;
 	virtual void Sleep() = 0;
-	virtual void Reboot() = 0;
+	virtual void Standby() = 0;
 	virtual void Shutdown() = 0;
+	virtual void Reboot() = 0;
 };
 
 
@@ -559,8 +560,9 @@ public:
 
 	/// @brief Power Methods
 	virtual void Sleep() = 0;
-	virtual void Reboot() = 0;
+	virtual void Standby() = 0;
 	virtual void Shutdown() = 0;
+	virtual void Reboot() = 0;
 	
 	/// @brief Kernel build info 
 	virtual const char* GetBuildDate() = 0;

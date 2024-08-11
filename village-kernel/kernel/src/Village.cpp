@@ -171,10 +171,10 @@ void Village::Sleep()
 }
 
 
-/// @brief Kernel reboot
-void Village::Reboot()
+/// @brief Kernel standby
+void Village::Standby()
 {
-	concreteSignal.Raising(Signals::_Reboot);
+	concreteSignal.Raising(Signals::_Standby);
 }
 
 
@@ -182,6 +182,13 @@ void Village::Reboot()
 void Village::Shutdown()
 {
 	concreteSignal.Raising(Signals::_Shutdown);
+}
+
+
+/// @brief Kernel reboot
+void Village::Reboot()
+{
+	concreteSignal.Raising(Signals::_Reboot);
 }
 
 

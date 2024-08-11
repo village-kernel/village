@@ -61,8 +61,9 @@ public:
 
 	//Power Methods
 	void Sleep();
-	void Reboot();
+	void Standby();
 	void Shutdown();
+	void Reboot();
 
 	//Kernel build info 
 	const char* GetBuildDate();

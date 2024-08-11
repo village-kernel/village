@@ -41,14 +41,18 @@ void ConcreteSignal::Raising(int signal)
 	{
 		kernel->system.Sleep();
 	}
-	else if (Signals::_Reboot == signal)
+	else if (Signals::_Standby == signal)
 	{
-		kernel->Exit();
-		kernel->system.Reboot();
-	} 
+		kernel->system.Standby();
+	}
 	else if (Signals::_Shutdown == signal)
 	{
 		kernel->Exit();
 		kernel->system.Shutdown();
 	}
+	else if (Signals::_Reboot == signal)
+	{
+		kernel->Exit();
+		kernel->system.Reboot();
+	} 
 }
