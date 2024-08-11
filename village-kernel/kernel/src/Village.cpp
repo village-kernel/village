@@ -167,21 +167,21 @@ void Village::Exit()
 /// @brief Kernel sleep
 void Village::Sleep()
 {
-	kernel->signal.Raising(Signals::_Sleep);
+	concreteSignal.Raising(Signals::_Sleep);
 }
 
 
 /// @brief Kernel reboot
 void Village::Reboot()
 {
-	kernel->signal.Raising(Signals::_Reboot);
+	concreteSignal.Raising(Signals::_Reboot);
 }
 
 
 /// @brief kernel shutdown
 void Village::Shutdown()
 {
-	kernel->signal.Raising(Signals::_Shutdown);
+	concreteSignal.Raising(Signals::_Shutdown);
 }
 
 
