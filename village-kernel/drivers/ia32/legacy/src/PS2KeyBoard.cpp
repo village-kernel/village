@@ -45,7 +45,7 @@ private:
 	};
 private:
 	//Members
-	bool isExtende;
+	bool isExtended;
 	InputEvent* inputEvent;
 private:
 	/// @brief Interrupt handler
@@ -56,11 +56,11 @@ private:
 			//Get the raw scancode
 			int scancode = PortByteIn(PS2_READ_DATA);
 			
-			//Set the isExtende flag and return when scancode is 0xE0
-			if (0xE0 == scancode) { isExtende = true; return; }
+			//Set the isExtended flag and return when scancode is 0xE0
+			if (0xE0 == scancode) { isExtended = true; return; }
 			
 			//Select keycodes table
-			const int* pKeyCodes = isExtende ? extendeKeyCodes : keyCodes;
+			const int* pKeyCodes = isExtended ? extendeKeyCodes : keyCodes;
 
 			//Report key event
 			if (scancode > 0 && scancode <= 0x58)
@@ -68,14 +68,14 @@ private:
 			else if (scancode > 0x80 && scancode <= 0xd8)
 				inputEvent->ReportKey(pKeyCodes[scancode - 0x80], _KeyReleased);
 	
-			//Clear the isExtende flag
-			isExtende = false;
+			//Clear the isExtended flag
+			isExtended = false;
 		}
 	}
 public:
 	/// @brief Constructor
 	PS2KeyBoard()
-		:isExtende(false),
+		:isExtended(false),
 		inputEvent(NULL)
 	{
 	}
