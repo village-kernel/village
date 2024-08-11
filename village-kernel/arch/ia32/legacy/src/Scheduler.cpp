@@ -29,6 +29,9 @@ void ConcreteScheduler::Setup()
 
 	//Append the systick interrupt handler
 	kernel->interrupt.AppendISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
+
+	//Output debug info
+	kernel->debug.Info("Scheduler setup done!");
 }
 
 
@@ -46,6 +49,9 @@ void ConcreteScheduler::Exit()
 /// @brief Start scheduler
 void ConcreteScheduler::Start()
 {
+	//Output debug info
+	kernel->debug.Info("Scheduler start sched!");
+
 	//Clear start schedule flag
 	isStartSchedule = false;
 
