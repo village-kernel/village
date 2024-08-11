@@ -25,28 +25,28 @@ public:
 	/// @brief Cmd sleep help
 	void Help()
 	{
-		console->Output("cmd sleep: sleep device");
+		console->Output("cmd sleep: enter sleep mode");
 	}
 };
 
 
-/// @brief CmdReboot
-class CmdReboot : public Cmd
+/// @brief CmdStandby
+class CmdStandby : public Cmd
 {
 public:
-	/// @brief Cmd reboot execute
+	/// @brief Cmd standby execute
 	/// @param argc 
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		kernel->Reboot();
+		kernel->Standby();
 	}
 
 
-	/// @brief Cmd reboot help
+	/// @brief Cmd standby help
 	void Help()
 	{
-		console->Output("cmd reboot: reboot device");
+		console->Output("cmd standby: enter standby mode");
 	}
 };
 
@@ -72,8 +72,29 @@ public:
 };
 
 
+/// @brief CmdReboot
+class CmdReboot : public Cmd
+{
+public:
+	/// @brief Cmd reboot execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		kernel->Reboot();
+	}
+
+
+	/// @brief Cmd reboot help
+	void Help()
+	{
+		console->Output("cmd reboot: reboot device");
+	}
+};
+
 
 ///Register cmd
 REGISTER_CMD(new CmdSleep(),    sleep   );
-REGISTER_CMD(new CmdReboot(),   reboot  );
+REGISTER_CMD(new CmdStandby(),  standby );
 REGISTER_CMD(new CmdShutdown(), shutdown);
+REGISTER_CMD(new CmdReboot(),   reboot  );
