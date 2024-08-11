@@ -9,6 +9,7 @@
 
 /// @brief Constructor
 ConcreteInterrupt::ConcreteInterrupt()
+	:isReady(false)
 {
 }
 
@@ -22,7 +23,11 @@ ConcreteInterrupt::~ConcreteInterrupt()
 /// @brief Interrupt Setup
 void ConcreteInterrupt::Setup()
 {
+	//Setup exception
 	exception.Setup();
+
+	//Set ready flag
+	isReady = true;
 
 	//Output debug info
 	kernel->debug.Info("Interrupt setup done!");
@@ -32,12 +37,14 @@ void ConcreteInterrupt::Setup()
 /// @brief Exit
 void ConcreteInterrupt::Exit()
 {
-	exception.Exit();
+	isReady = false;
 
 	for (uint32_t i = 0; i < Exception::isr_num; i++)
 	{
 		isrTabs[i].Release();
 	}
+
+	exception.Exit();
 }
 
 
@@ -161,6 +168,8 @@ void ConcreteInterrupt::Replace(int irq, uint32_t handler)
 /// @param irq irq number
 void ConcreteInterrupt::Handler(int irq)
 {
+	if (false == isReady) return;
+
 	List<Isr*>* isrs = &isrTabs[irq];
 	
 	if (isrs->IsEmpty())
