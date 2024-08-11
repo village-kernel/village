@@ -21,9 +21,14 @@ private:
 
 	//Members
 	bool isCapsLock;
+	bool isAltPressed;
+	bool isCtrlPressed;
 	bool isShiftPressed;
 
 	//Methods
+	void SpecialKeysPressed(int code);
+	void SpecialKeysReleased(int code);
+	void CharacterKeys(int code);
 	void InputKeyHandler(InputEvent::InputKey* input);
 	void InputAxisHandler(InputEvent::InputAxis* input);
 public:

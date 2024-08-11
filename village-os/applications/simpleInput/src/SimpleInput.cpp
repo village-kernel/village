@@ -37,6 +37,8 @@ static const char upperCodes[0x3A] = {
 /// @brief Constructor
 SimpleInput::SimpleInput()
 	:isCapsLock(false),
+	isAltPressed(false),
+	isCtrlPressed(false),
 	isShiftPressed(false)
 {
 } 
@@ -61,70 +63,107 @@ void SimpleInput::Setup(const char* keyboard, const char* mouse)
 }
 
 
+/// @brief SpecialKeysPressed
+/// @param code 
+void SimpleInput::SpecialKeysPressed(int code)
+{
+	switch (code)
+	{
+		case EventCode::_KeyUp:
+			kernel->inputEvent.PushString((char*)"\033[A", 3);
+			break;
+		case EventCode::_KeyDown:
+			kernel->inputEvent.PushString((char*)"\033[B", 3);
+			break;
+		case EventCode::_KeyRight:
+			kernel->inputEvent.PushString((char*)"\033[C", 3);
+			break;
+		case EventCode::_KeyLeft:
+			kernel->inputEvent.PushString((char*)"\033[D", 3);
+			break;
+		case EventCode::_KeyCapsLock:
+			isCapsLock = !isCapsLock;
+			break;
+		case EventCode::_KeyLeftAlt:
+		case EventCode::_KeyRightAlt:
+			isAltPressed = true;
+			break;
+		case EventCode::_KeyLeftCtrl:
+		case EventCode::_KeyRightCtrl:
+			isCtrlPressed = true;
+			break;
+		case EventCode::_KeyLeftShift:
+		case EventCode::_KeyRightShift:
+			isShiftPressed = true;
+			break;
+		default:
+			break;
+	}
+}
+
+
+/// @brief SpecialKeysReleased
+/// @param code 
+void SimpleInput::SpecialKeysReleased(int code)
+{
+	switch (code)
+	{
+		case EventCode::_KeyLeftAlt:
+		case EventCode::_KeyRightAlt:
+			isAltPressed = false;
+			break;
+		case EventCode::_KeyLeftCtrl:
+		case EventCode::_KeyRightCtrl:
+			isCtrlPressed = false;
+			break;
+		case EventCode::_KeyLeftShift:
+		case EventCode::_KeyRightShift:
+			isShiftPressed = false;
+			break;
+		default:
+			break;
+	}
+}
+
+
+/// @brief CharacterKeys
+/// @param code 
+void SimpleInput::CharacterKeys(int code)
+{
+	if ((code > EventCode::_KeyReserved) && 
+		(code <= EventCode:: _KeySpace))
+	{
+		char chr = lowerCodes[code];
+
+		if (chr >= 'a' && chr <= 'z')
+		{
+			if (isCapsLock ^ isShiftPressed) chr = upperCodes[code];
+		}
+		else
+		{
+			if (isShiftPressed) chr = upperCodes[code];
+		}
+
+		kernel->inputEvent.PushChar(chr);
+	}
+}
+
+
 /// @brief Input key handler
 void SimpleInput::InputKeyHandler(InputEvent::InputKey* input)
 {
 	if (KeyStatus::_KeyPressed == input->status)
 	{
-		switch (input->code)
-		{
-			case EventCode::_KeyUp:
-				kernel->inputEvent.PushString((char*)"\033[A", 3);
-				break;
-			case EventCode::_KeyDown:
-				kernel->inputEvent.PushString((char*)"\033[B", 3);
-				break;
-			case EventCode::_KeyRight:
-				kernel->inputEvent.PushString((char*)"\033[C", 3);
-				break;
-			case EventCode::_KeyLeft:
-				kernel->inputEvent.PushString((char*)"\033[D", 3);
-				break;
-			case EventCode::_KeyCapsLock:
-				isCapsLock = !isCapsLock;
-				break;
-			case EventCode::_KeyLeftShift:
-			case EventCode::_KeyRightShift:
-				isShiftPressed = true;
-				break;
-			default:
-				break;
-		}
+		//Special keys pressed
+		SpecialKeysPressed(input->code);
 
-		if ((input->code > EventCode::_KeyReserved) && 
-			(input->code <= EventCode:: _KeySpace))
-		{
-			char chr = lowerCodes[input->code];
-
-			if (chr >= 'a' && chr <= 'z')
-			{
-				if (isCapsLock ^ isShiftPressed)
-				{
-					chr = upperCodes[input->code];
-				}
-			}
-			else
-			{
-				if (isShiftPressed)
-				{
-					chr = upperCodes[input->code];
-				}
-			}
-
-			kernel->inputEvent.PushChar(chr);
-		}
+		//Character keys
+		CharacterKeys(input->code);
 	}
 	else
 	{
-		switch (input->code)
-		{
-			case EventCode::_KeyLeftShift:
-			case EventCode::_KeyRightShift:
-				isShiftPressed = false;
-				break;
-			default:
-				break;
-		}
+		//Special keys released
+		SpecialKeysReleased(input->code);
 	}
 }
 
@@ -139,7 +178,7 @@ void SimpleInput::InputAxisHandler(InputEvent::InputAxis* input)
 /// @brief Execute
 void SimpleInput::Execute()
 {
-	kernel->thread.ChangeState(Thread::Blocked);
+	kernel->thread.ChangeState(Thread::_Blocked);
 
 	while(1) {}
 }
