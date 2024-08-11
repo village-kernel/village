@@ -37,6 +37,7 @@ private:
 	static const uint32_t warning_times = 10;
 
 	//Members
+	volatile bool isReady;
 	Exception     exception;
 	uint8_t       warnings[Exception::isr_num] = { 0 };
 	List<Isr*>    isrTabs[Exception::isr_num];
