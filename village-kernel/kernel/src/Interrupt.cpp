@@ -32,12 +32,12 @@ void ConcreteInterrupt::Setup()
 /// @brief Exit
 void ConcreteInterrupt::Exit()
 {
+	exception.Exit();
+
 	for (uint32_t i = 0; i < Exception::isr_num; i++)
 	{
 		isrTabs[i].Release();
 	}
-
-	exception.Exit();
 }
 
 
