@@ -9,6 +9,27 @@
 #include "Kernel.h"
 
 
+/// @brief CmdSleep
+class CmdSleep : public Cmd
+{
+public:
+	/// @brief Cmd sleep execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		kernel->Sleep();
+	}
+
+
+	/// @brief Cmd sleep help
+	void Help()
+	{
+		console->Output("cmd sleep: sleep device");
+	}
+};
+
+
 /// @brief CmdReboot
 class CmdReboot : public Cmd
 {
@@ -18,7 +39,7 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		kernel->system.Reboot();
+		kernel->Reboot();
 	}
 
 
@@ -30,5 +51,29 @@ public:
 };
 
 
+/// @brief CmdShutdown
+class CmdShutdown : public Cmd
+{
+public:
+	/// @brief Cmd shutdown execute
+	/// @param argc 
+	/// @param argv 
+	void Execute(int argc, char* argv[])
+	{
+		kernel->Shutdown();
+	}
+
+
+	/// @brief Cmd shutdown help
+	void Help()
+	{
+		console->Output("cmd shutdown: shutdown device");
+	}
+};
+
+
+
 ///Register cmd
-REGISTER_CMD(new CmdReboot(), reboot);
+REGISTER_CMD(new CmdSleep(),    sleep   );
+REGISTER_CMD(new CmdReboot(),   reboot  );
+REGISTER_CMD(new CmdShutdown(), shutdown);
