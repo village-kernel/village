@@ -19,11 +19,16 @@
 class System
 {
 public:
+	/// @brief Ticks Methods
 	virtual void SysTickCounter() = 0;
 	virtual uint32_t GetSysClkCounts() = 0;
 	virtual void DelayMs(uint32_t millis) = 0;
+	
+	/// @brief IRQ Methods
 	virtual void EnableIRQ() = 0;
 	virtual void DisableIRQ() = 0;
+
+	/// @brief Power Methods
 	virtual void Sleep() = 0;
 	virtual void Standby() = 0;
 	virtual void Shutdown() = 0;
@@ -35,10 +40,12 @@ public:
 class Memory
 {
 public:
-	//Methods
+	/// @brief Alloc Methods
 	virtual uint32_t HeapAlloc(uint32_t size) = 0;
 	virtual uint32_t StackAlloc(uint32_t size) = 0;
 	virtual void Free(uint32_t memory, uint32_t size = 0) = 0;
+	
+	/// @brief Info Methods
 	virtual uint32_t GetSize() = 0;
 	virtual uint32_t GetUsed() = 0;
 	virtual uint32_t GetCurrAddr() = 0;
@@ -60,7 +67,7 @@ public:
 		_Lv5
 	};
 public:
-	//Methods
+	/// @brief Methods
 	virtual void Log(const char* format, ...) = 0;
 	virtual void Info(const char* format, ...) = 0;
 	virtual void Error(const char* format, ...) = 0;
@@ -74,15 +81,25 @@ public:
 class Interrupt
 {
 public:
-	//Methods
+	/// @brief Set Methods
 	virtual int SetISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
 	virtual int SetISR(int irq, Method method, Class* user, void* args = NULL) = 0;
+	
+	/// @brief Append Methods
 	virtual int AppendISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
 	virtual int AppendISR(int irq, Method method, Class* user, void* args = NULL) = 0;
+	
+	/// @brief Remove Methods
 	virtual bool RemoveISR(int irq, Function func, void* user = NULL, void* args = NULL) = 0;
 	virtual bool RemoveISR(int irq, Method method, Class* user, void* args = NULL) = 0;
+	
+	/// @brief Clear Methods
 	virtual void ClearISR(int irq) = 0;
+
+	/// @brief Replace Methods
 	virtual void Replace(int irq, uint32_t handler) = 0;
+
+	/// @brief Feature Methods
 	virtual void Handler(int irq) = 0;
 };
 
@@ -91,7 +108,7 @@ public:
 class Scheduler
 {
 public:
-	//Methods
+	/// @brief Methods
 	virtual void Start() = 0;
 	virtual void Sched() = 0;
 };
@@ -131,20 +148,24 @@ public:
 		{}
 	};
 public:
-	///Methods
+	/// @brief Create Methods
 	virtual int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL) = 0;
 	virtual int CreateTask(const char* name, Method method, Class *user, void* args = NULL) = 0;
+	
+	/// @brief Task Methods
 	virtual bool StartTask(int tid) = 0;
 	virtual bool StopTask(int tid) = 0;
 	virtual bool WaitForTask(int tid) = 0;
 	virtual bool DeleteTask(int tid) = 0;
 	virtual bool IsTaskAlive(int tid) = 0;
 	virtual List<Task*> GetTasks() = 0;
+	
+	/// @brief State Methods
 	virtual void ChangeState(TaskState state) = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
 	virtual void TaskExit() = 0;
 
-	//Scheduler Methods
+	/// @brief Scheduler Methods
 	virtual void SaveTaskPSP(uint32_t psp) = 0;
 	virtual uint32_t GetTaskPSP() = 0;
 	virtual void SelectNextTask() = 0;
@@ -156,7 +177,7 @@ public:
 class Symbol
 {
 public:
-	//Methods
+	/// @brief Methods
 	virtual void Export(uint32_t symAddr, const char* name) = 0;
 	virtual void Unexport(const char* name) = 0;
 	virtual uint32_t Search(const char* name) = 0;
@@ -167,9 +188,11 @@ public:
 class Device
 {
 public:
-	//Methods
+	/// @brief Register Methods
 	virtual void RegisterDriver(Driver* driver) = 0;
 	virtual void DeregisterDriver(Driver* driver) = 0;
+	
+	/// @brief Data Methods
 	virtual Driver* GetDriver(const char* name) = 0;
 	virtual List<Driver*> GetDrivers(DriverID id) = 0;
 };
@@ -179,9 +202,11 @@ public:
 class Feature
 {
 public:
-	//Methods
+	/// @brief Register Methods
 	virtual void RegisterModule(Module* module) = 0;
 	virtual void DeregisterModule(Module* module) = 0;
+	
+	/// @brief Data Methods
 	virtual Module* GetModule(const char* name) = 0;
 };
 
@@ -196,9 +221,11 @@ class FileVol;
 class FileSystem
 {
 public:
-	//Methods
+	/// @brief Register Methods
 	virtual void RegisterFS(FileSys* fs, const char* name) = 0;
 	virtual void DeregisterFS(FileSys* fs, const char* name) = 0;
+	
+	/// @brief Volume Methods
 	virtual int AttachVolume(FileVol* volume) = 0;
 	virtual int DetachVolume(FileVol* volume) = 0;
 	virtual FileVol* GetVolume(const char* name) = 0;
@@ -236,9 +263,11 @@ public:
 		{}
 	};
 public:
-	//Methods
+	/// @brief Create Methods
 	virtual Work* Create(Function func, void* user = NULL, void* args = NULL, uint32_t ticks = 0) = 0;
 	virtual Work* Create(Method method, Class* user, void* args = NULL, uint32_t ticks = 0) = 0;
+	
+	/// @brief Feature Methods
 	virtual bool Delete(Work* work) = 0;
 	virtual bool Sched(Work* work) = 0;
 };
@@ -317,17 +346,17 @@ public:
 		{}
 	};
 public:
-	//Methods
+	/// @brief Methods
 	virtual void Attach(EventType type, Method method, Class* user) = 0;
 	virtual void Attach(EventType type, Function func, void* user = NULL) = 0;
 	virtual void Detach(EventType type, Method method, Class* user) = 0;
 	virtual void Detach(EventType type, Function func, void* user = NULL) = 0;
 	
-	//Input Methods
+	/// @brief Input Methods
 	virtual void ReportKey(int code, int status) = 0;
 	virtual void ReportAxis(int axisX, int axisY, int axisZ) = 0;
 
-	//Output Methods
+	/// @brief Output Methods
 	virtual void PushChar(char chr) = 0;
 	virtual void PushString(char* data, int size) = 0;
 	virtual void PushAxis(int axisX, int axisY, int axisZ) = 0;
@@ -350,11 +379,15 @@ public:
 		_Mod,
 	};
 public:
-	//Methods
+	/// @brief Load Methods
 	virtual void Load(int type, const char* filename) = 0;
 	virtual void Unload(int type, const char* filename) = 0;
+	
+	/// @brief Install Methods
 	virtual bool Install(int type, const char* filename) = 0;
 	virtual bool Uninstall(int type, const char* filename) = 0;
+	
+	/// @brief Data Methods
 	virtual List<ElfLoader*>* GetLibraries() = 0;
 	virtual List<ElfLoader*>* GetModules() = 0;
 };
@@ -393,13 +426,19 @@ public:
 		{}
 	};
 public:
-	//Methods
+	/// @brief Register Methods
 	virtual void RegisterExecutor(Executor* executor) = 0;
 	virtual void DeregisterExecutor(Executor* executor) = 0;
+	
+	/// @brief Run Methods
 	virtual int Run(Behavior behavior, const char* args) = 0;
 	virtual int Run(Behavior behavior, const char* path, int argc, char* argv[]) = 0;
+	
+	/// @brief Kill Methods
 	virtual bool Kill(const char* path) = 0;
 	virtual bool Kill(int pid) = 0;
+	
+	/// @brief Data Methods
 	virtual List<Data*> GetData() = 0;
 };
 
@@ -433,9 +472,11 @@ public:
 		{}
 	};
 public:
-	//Methods
+	/// @brief Create Methods
 	virtual Job* Create(uint32_t ticks, Function func, void* user = NULL, void* args = NULL) = 0;
 	virtual Job* Create(uint32_t ticks, Method method, Class* user, void* args = NULL) = 0;
+	
+	/// @brief Feature Methods
 	virtual void Modify(Job* job, uint32_t ticks) = 0;
 	virtual bool Delete(Job* job) = 0;
 };
@@ -467,12 +508,12 @@ public:
 		{}
 	};
 public:
-	//Cmd Methods
+	/// @brief Cmd Methods
 	virtual void RegisterCmd(Cmd* cmd, char* name) = 0;
 	virtual void DeregisterCmd(Cmd* cmd, char* name) = 0;
 	virtual List<Cmd*> GetCmds() = 0;
 
-	//Console Methods
+	/// @brief Console Methods
 	virtual int CreateConsole(const char* driver) = 0;
 	virtual bool DestroyConsole(const char* driver) = 0;
 	virtual List<Sandbox*> GetSandboxes() = 0;
@@ -483,7 +524,7 @@ public:
 class Signal
 {
 public:
-	//Methods
+	/// @brief Feature Methods
 	virtual void Raising(int signal) = 0;
 };
 
