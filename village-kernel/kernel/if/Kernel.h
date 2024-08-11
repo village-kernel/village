@@ -104,11 +104,11 @@ public:
 	//Enumerations
 	enum TaskState 
 	{
-		Pending = 0,
-		Running,
-		Suspend,
-		Blocked,
-		Exited,
+		_Pending = 0,
+		_Running,
+		_Suspend,
+		_Blocked,
+		_Exited,
 	};
 
 	//Structures
@@ -127,7 +127,7 @@ public:
 			psp(0),
 			ticks(0),
 			stack(stack),
-			state(TaskState::Pending)
+			state(TaskState::_Pending)
 		{}
 	};
 public:
