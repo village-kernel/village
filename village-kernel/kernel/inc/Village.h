@@ -24,6 +24,7 @@
 #include "Process.h"
 #include "Timer.h"
 #include "Terminal.h"
+#include "Signal.h"
 
 
 /// @brief Village
@@ -47,15 +48,23 @@ private:
 	ConcreteProcess     concreteProcess;
 	ConcreteTimer       concreteTimer;
 	ConcreteTerminal    concreteTerminal;
+	ConcreteSignal      concreteSignal;
 private:
 	//Methods
 	Village();
 	~Village();
 public:
-	//Methods
+	//Kernel Methods
 	void Setup();
 	void Start();
 	void Exit();
+
+	//Power Methods
+	void Sleep();
+	void Reboot();
+	void Shutdown();
+
+	//Kernel build info 
 	const char* GetBuildDate();
 	const char* GetBuildTime();
 	const char* GetBuildVersion();

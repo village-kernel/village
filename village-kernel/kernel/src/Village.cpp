@@ -25,7 +25,8 @@ Village::Village() : Kernel
 	concreteLoader,
 	concreteProcess,
 	concreteTimer,
-	concreteTerminal
+	concreteTerminal,
+	concreteSignal
 )
 {
 }
@@ -87,6 +88,9 @@ void Village::Setup()
 
 	//Setup process
 	concreteProcess.Setup();
+
+	//Setup signal
+	concreteSignal.Setup();
 }
 
 
@@ -107,6 +111,9 @@ void Village::Start()
 /// @brief Kernel exit
 void Village::Exit()
 {
+	//Exit signal
+	concreteSignal.Exit();
+
 	//Exit process
 	concreteProcess.Exit();
 
@@ -154,6 +161,27 @@ void Village::Exit()
 
 	//Exit interrupt
 	concreteInterrupt.Exit();
+}
+
+
+/// @brief Kernel sleep
+void Village::Sleep()
+{
+	kernel->signal.Raising(Signals::_Sleep);
+}
+
+
+/// @brief Kernel reboot
+void Village::Reboot()
+{
+	kernel->signal.Raising(Signals::_Reboot);
+}
+
+
+/// @brief kernel shutdown
+void Village::Shutdown()
+{
+	kernel->signal.Raising(Signals::_Shutdown);
 }
 
 
