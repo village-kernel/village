@@ -26,11 +26,20 @@ public:
 	~ConcreteSystem();
 	void Setup();
 	void Exit();
+
+	//Ticks Methods
 	void SysTickCounter();
 	uint32_t GetSysClkCounts();
 	void DelayMs(uint32_t millis);
+	
+	//IRQ Methods
 	void EnableIRQ();
 	void DisableIRQ();
+	
+	//Power Methods
+	void Sleep();
+	void Standby();
+	void Shutdown();
 	void Reboot();
 };
 
