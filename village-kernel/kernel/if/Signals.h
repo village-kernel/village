@@ -12,8 +12,9 @@ enum Signals
 	_None = 0,
 	
 	_Sleep,
-	_Reboot,
+	_Standby,
 	_Shutdown,
+	_Reboot,
 
 	_Kill,
 };
