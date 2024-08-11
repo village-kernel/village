@@ -51,6 +51,7 @@ objs-y                              += WorkQueue.o
 objs-y                              += Loader.o
 objs-y                              += Process.o
 objs-y                              += Timer.o
+objs-y                              += Signal.o
 
 objs-y                              += System.o
 objs-y                              += Scheduler.o

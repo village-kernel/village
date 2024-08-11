@@ -24,7 +24,9 @@ public:
 	virtual void DelayMs(uint32_t millis) = 0;
 	virtual void EnableIRQ() = 0;
 	virtual void DisableIRQ() = 0;
+	virtual void Sleep() = 0;
 	virtual void Reboot() = 0;
+	virtual void Shutdown() = 0;
 };
 
 
@@ -476,6 +478,15 @@ public:
 };
 
 
+/// @brief Signal
+class Signal
+{
+public:
+	//Methods
+	virtual void Raising(int signal) = 0;
+};
+
+
 /// @brief Kernel
 class Kernel
 {
@@ -497,6 +508,7 @@ public:
 	Process&     process;
 	Timer&       timer;
 	Terminal&    terminal;
+	Signal&      signal;
 public:
 	/// @brief constructor
 	Kernel(
@@ -515,7 +527,8 @@ public:
 		Loader&      loader,
 		Process&     process,
 		Timer&       timer,
-		Terminal&    terminal
+		Terminal&    terminal,
+		Signal&      signal
 	)
 		:system(system),
 		memory(memory),
@@ -532,7 +545,8 @@ public:
 		loader(loader),
 		process(process),
 		timer(timer),
-		terminal(terminal)
+		terminal(terminal),
+		signal(signal)
 	{}
 
 	/// @brief Destructor
@@ -543,6 +557,11 @@ public:
 	virtual void Start() = 0;
 	virtual void Exit() = 0;
 
+	/// @brief Power Methods
+	virtual void Sleep() = 0;
+	virtual void Reboot() = 0;
+	virtual void Shutdown() = 0;
+	
 	/// @brief Kernel build info 
 	virtual const char* GetBuildDate() = 0;
 	virtual const char* GetBuildTime() = 0;
