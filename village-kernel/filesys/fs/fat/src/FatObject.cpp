@@ -239,10 +239,7 @@ bool FatObject::IsLongName()
 /// @return 
 char* FatObject::GetObjectName()
 {
-	if ((lfe->attr & _FAT_ATTR_LONG_NAME_MASK) == _FAT_ATTR_LONG_NAME)
-		return GetLongName();
-	else
-		return GetShortName();
+	return IsLongName() ? GetLongName() : GetShortName();
 }
 
 
