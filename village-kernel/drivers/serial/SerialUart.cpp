@@ -1,5 +1,5 @@
 //###########################################################################
-// UartSerial.cpp
+// SerialUart.cpp
 // Provides a simple interface to transmit and receive bytes via the USART 
 // module. DMA is used to minimize CPU usage. All buffers are managed 
 // by the class internally.
@@ -13,8 +13,8 @@
 #include "Kernel.h"
 
 
-/// @brief UartSerial
-class UartSerial : public Driver
+/// @brief SerialUart
+class SerialUart : public Driver
 {
 public:
 	//Structures
@@ -62,7 +62,7 @@ private:
 	}
 public:
 	/// @brief Constructor
-	UartSerial()
+	SerialUart()
 		:isUsed(false)
 	{
 	}
@@ -163,4 +163,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new UartSerial(), DriverID::_character, serial0);
+REGISTER_DRIVER(new SerialUart(), DriverID::_character, serial0);
