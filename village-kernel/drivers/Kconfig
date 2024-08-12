@@ -56,12 +56,12 @@ endmenu
 
 menu "serial"
 
-config UARTSERIAL
-	tristate "Enable UART serial support"
-	default n
-
 config SERIALPORT
 	tristate "Enable serial port support"
+	default n
+
+config SERIALUART
+	tristate "Enable serial uart support"
 	default n
 
 endmenu

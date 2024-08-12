@@ -8,7 +8,6 @@
 ######################################
 # paths
 ######################################
-inc-y                                 += village-kernel/drivers/config
 inc-y                                 += village-kernel/drivers/include
 
 
@@ -68,7 +67,7 @@ inc-y                                 += village-kernel/drivers/serial
 src-y                                 += village-kernel/drivers/serial
 
 objs-$(CONFIG_SERIALPORT)             += SerialPort.o
-objs-$(CONFIG_UARTSERIAL)             += UartSerial.o
+objs-$(CONFIG_SERIALUART)             += SerialUart.o
 
 
 ######################################
