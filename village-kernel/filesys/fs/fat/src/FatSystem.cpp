@@ -347,9 +347,11 @@ void FatVolume::CloseDir(int fd)
 {
 	FatObject* obj = objs.GetItem(fd);
 
-	if (NULL == obj) return;
-
-	objs.Remove(obj, fd);
+	if (NULL != obj)
+	{
+		objs.Remove(obj, fd);
+		delete obj;
+	}
 }
 
 
@@ -358,9 +360,17 @@ void FatVolume::CloseDir(int fd)
 /// @return 
 FileType FatVolume::GetFileType(const char* name)
 {
+	FileType type = FileType::_Unknown;
+
 	FatObject* obj = SearchPath(name);
 
-	return (NULL != obj) ? obj->GetObjectType() : FileType::_Unknown;
+	if (NULL != obj) 
+	{
+		type = obj->GetObjectType();
+		delete obj;
+	}
+
+	return type;
 }
 
 
@@ -372,9 +382,16 @@ bool FatVolume::IsExist(const char* name, FileType type)
 {
 	FatObject* obj = SearchPath(name);
 
-	if (NULL == obj || type != obj->GetObjectType()) return false;
+	if (NULL != obj) 
+	{
+		if (type == obj->GetObjectType())
+		{
+			delete obj;
+			return true;
+		}
+	}
 
-	return true;
+	return false;
 }
 
 
@@ -385,15 +402,17 @@ bool FatVolume::Remove(const char* name)
 {
 	FatObject* obj = SearchPath(name);
 
-	if (NULL == obj) return false;
-
-	if (FileType::_File     == obj->GetObjectType() ||
-		FileType::_Diretory == obj->GetObjectType())
+	if (NULL != obj)
 	{
-		FatEntry(disk, obj).Remove();
-		return true;
+		if (FileType::_File     == obj->GetObjectType() ||
+			FileType::_Diretory == obj->GetObjectType())
+		{
+			FatEntry(disk, obj).Remove();
+			delete obj;
+			return true;
+		}
 	}
-	
+
 	return false;
 }
 
