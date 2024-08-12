@@ -15,11 +15,13 @@
 class ConcreteSignal : public Signal
 {
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteSignal();
 	~ConcreteSignal();
 	void Setup();
 	void Exit();
+
+	/// @brief Feature Methods
 	void Raising(int signal);
 };
 

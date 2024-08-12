@@ -18,24 +18,30 @@
 class ConcreteLoader : public Loader, public Class
 {
 private:
-	//Members
+	/// @brief Members
 	List<ElfLoader*> libraries;
 	List<ElfLoader*> modules;
 	LibraryTool      libraryTool;
 	ModuleTool       moduleTool;
 
-	//Methods
+	/// @brief Methods
 	void Execute();
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteLoader();
 	~ConcreteLoader();
 	void Setup();
 	void Exit();
+
+	/// @brief Load Methods
 	void Load(int type, const char* filename);
 	void Unload(int type, const char* filename);
+
+	/// @brief Install Methods
 	bool Install(int type, const char* filename);
 	bool Uninstall(int type, const char* filename);
+
+	/// @brief Data Methods
 	List<ElfLoader*>* GetLibraries();
 	List<ElfLoader*>* GetModules();
 };

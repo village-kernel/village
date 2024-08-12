@@ -15,7 +15,7 @@
 class ConcreteSymbol : public Symbol
 {
 private:
-	//Structures
+	/// @brief Structures
 	struct Entry
 	{
 		const char* name;
@@ -27,14 +27,16 @@ private:
 		{}
 	};
 
-	//Members
+	/// @brief Members
 	List<Entry*> entrys;
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteSymbol();
 	~ConcreteSymbol();
 	void Setup();
 	void Exit();
+
+	/// @brief Methods
 	void Export(uint32_t symAddr, const char* name);
 	void Unexport(const char* name);
 	uint32_t Search(const char* name);

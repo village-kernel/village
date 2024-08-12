@@ -14,29 +14,29 @@
 class ConcreteSystem : public System, public Class
 {
 private:
-	//Members
+	/// @brief Members
 	uint32_t sysTicks;
 	
-	//Methods
+	/// @brief Methods
 	void SysTickHandler();
 	void ConfigureClock();
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteSystem();
 	~ConcreteSystem();
 	void Setup();
 	void Exit();
 
-	//Ticks Methods
+	/// @brief Ticks Methods
 	void SysTickCounter();
 	uint32_t GetSysClkCounts();
 	void DelayMs(uint32_t millis);
 	
-	//IRQ Methods
+	/// @brief IRQ Methods
 	void EnableIRQ();
 	void DisableIRQ();
 	
-	//Power Methods
+	/// @brief Power Methods
 	void Sleep();
 	void Standby();
 	void Shutdown();

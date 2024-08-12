@@ -165,7 +165,7 @@ int ConcreteFileSystem::DetachVolume(FileVol* volume)
 }
 
 
-/// @brief Get File Opts
+/// @brief Get volume
 /// @param name 
 /// @return 
 FileVol* ConcreteFileSystem::GetVolume(const char* name)

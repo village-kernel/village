@@ -31,7 +31,7 @@
 class Village : public Kernel
 {
 private:
-	//Members
+	/// @brief Members
 	ConcreteSystem      concreteSystem;
 	ConcreteMemory      concreteMemory;
 	ConcreteDebug       concreteDebug;
@@ -50,28 +50,28 @@ private:
 	ConcreteTerminal    concreteTerminal;
 	ConcreteSignal      concreteSignal;
 private:
-	//Methods
+	/// @brief Methods
 	Village();
 	~Village();
 public:
-	//Kernel Methods
+	/// @brief Kernel Methods
 	void Setup();
 	void Start();
 	void Exit();
 
-	//Power Methods
+	/// @brief Power Methods
 	void Sleep();
 	void Standby();
 	void Shutdown();
 	void Reboot();
 
-	//Kernel build info 
+	/// @brief Kernel build info 
 	const char* GetBuildDate();
 	const char* GetBuildTime();
 	const char* GetBuildVersion();
 	const char* GetBuildGitCommit();
 
-	//Static methods
+	/// @brief Static methods
 	static Village& Instance();
 };
 

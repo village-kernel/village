@@ -15,11 +15,11 @@
 class Exception : public Class
 {
 public:
-	//Static constants
+	/// @brief Static constants
 	static const uint32_t isr_num = 256;
 	static const uint32_t rsvd_isr_size = 0;
 private:
-	//Structures
+	/// @brief Structures
 	struct IdtGate
 	{
 		uint16_t lowOffset;  /* Lower 16 bits of handler function address */
@@ -53,22 +53,22 @@ private:
 		{}
 	} __attribute__((packed));
 
-	//Static constants
+	/// @brief Static constants
 	static const uint32_t kernel_code_segment = 8;
 	static const uint32_t idt_entires = isr_num;
 
-	//Members
+	/// @brief Members
 	IdtGate idt[idt_entires];
 	IdtRegister idtReg;
 private:
-	//Methods
+	/// @brief Methods
 	void SetIdt();
 	void RemapPIC();
 	uint16_t GetPicIrqReg(int ocw3);
 	uint16_t GetPicIrr();
 	uint16_t GetPicIsr();
 private:
-	//Methods
+	/// @brief Methods
 	void InstallHandlers();
 	void UninstallHandlers();
 	void DivisionByZeroHandler();
@@ -91,7 +91,7 @@ private:
 	void AlignmentCheckHandler();
 	void MachineCheckHandler();
 public:
-	//Methods
+	/// @brief Methods
 	void Setup();
 	void Exit();
 	void Install(int irq, uint32_t handler);
