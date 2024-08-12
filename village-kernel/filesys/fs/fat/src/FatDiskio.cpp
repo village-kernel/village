@@ -16,12 +16,10 @@ bool FatDiskio::Setup(DrvStream* diskdrv, uint32_t fstSec)
 	this->diskdrv = diskdrv;
 	this->fstSec  = fstSec;
 
-	if (!CheckFileSystem())
-	{
-		kernel->debug.Error("Not filesystem found");
-		return false;
-	}
-	return true;
+	if (CheckFileSystem()) return true;
+
+	kernel->debug.Error("Not filesystem found");
+	return false;
 }
 
 
