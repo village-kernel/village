@@ -1,6 +1,6 @@
 //###########################################################################
-// SDMMC.cpp
-// Definitions of the functions that manage sd mmc disk
+// SdioSdCard.cpp
+// Definitions of the functions that manage sdio sdcard disk
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -10,8 +10,8 @@
 #include "Hardware.h"
 
 
-/// @brief SDMMC
-class SDMMC : public Driver
+/// @brief SdioSdCard
+class SdioSdCard : public Driver
 {
 public:
 	//Structures
@@ -219,7 +219,7 @@ public:
 	}
 
 
-	/// @brief SDMMC io ctrl
+	/// @brief SdioSdCard io ctrl
 	/// @param cmd 
 	/// @param data 
 	/// @return 
@@ -266,4 +266,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new SDMMC(), DriverID::_block, sdmmc);
+REGISTER_DRIVER(new SdioSdCard(), DriverID::_block, sdioSdCard);

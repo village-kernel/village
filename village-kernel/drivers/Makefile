@@ -12,17 +12,16 @@ inc-y                                 += village-kernel/drivers/config
 inc-y                                 += village-kernel/drivers/include
 
 
-
 ######################################
 # block
 ######################################
 inc-y                                 += village-kernel/drivers/block
 src-y                                 += village-kernel/drivers/block
 
-objs-$(CONFIG_SDMMC)                  += SDMMC.o
-objs-$(CONFIG_SPIFLASH)               += SpiFlash.o
-objs-$(CONFIG_SPISDCARD)              += SpiSdCard.o
 objs-$(CONFIG_ATALBADISK)             += AtaLbaDisk.o
+objs-$(CONFIG_SDIOSDCARD)             += SdioSdCard.o
+objs-$(CONFIG_SPISDCARD)              += SpiSdCard.o
+objs-$(CONFIG_SPIW25QXX)              += SpiW25qxx.o
 
 
 ######################################

@@ -1,22 +1,19 @@
 menu "block"
 
 config ATALBADISK
-	tristate "Enable ATA LBA disk support"
+	tristate "Enable ata lba disk support"
 	default n
 
-config SDMMC
-	select DRV_SDIO
-	bool "Enable SD MMC support"
-	default n
-
-config SPIFLASH
-	select DRV_SPI
-	bool "Enable SPI flash support"
+config SDIOSDCARD
+	tristate "Enable sdio sd card support"
 	default n
 
 config SPISDCARD
-	select DRV_SPI
-	bool "Enable SPI SD card support"
+	tristate "Enable spi sd card support"
+	default n
+
+config SPIW25QXX
+	tristate "Enable spi w25qxx flash support"
 	default n
 
 endmenu
@@ -24,14 +21,11 @@ endmenu
 menu "display"
 
 config BOCHSVBE
-	select DRV_PCI_CONTROLLER
 	tristate "Enable Bochs VBE support"
 	default n
 
 config ILI9488
-	select DRV_FSMC
-	select MANUFACTURER_HAL_DRIVER
-	bool "Enable ILI9488 support"
+	tristate "Enable ILI9488 support"
 	default n
 
 endmenu
@@ -39,8 +33,7 @@ endmenu
 menu "dma"
 
 config DMAFIFO
-	select DRV_DMA
-	bool "Enable dma fifo support"
+	tristate "Enable dma fifo support"
 	default n
 
 endmenu
@@ -56,7 +49,6 @@ endmenu
 menu "mouse"
 
 config PS2MOUSE
-	select DRV_PS2_CONTROLLER
 	tristate "Enable ps2 mouse input support"
 	default n
 
@@ -65,13 +57,12 @@ endmenu
 menu "serial"
 
 config UARTSERIAL
-	select DRV_USART
-	bool "Enable UART serial support"
+	tristate "Enable UART serial support"
 	default n
 
 config SERIALPORT
 	tristate "Enable serial port support"
-	default y
+	default n
 
 endmenu
 
@@ -86,8 +77,7 @@ endmenu
 menu "usb"
 
 config USBSTORAGE
-	depends on SDCARD || SPIFLASH
-	bool "Enable USB storage support"
+	tristate "Enable USB storage support"
 	default n
 
 endmenu
