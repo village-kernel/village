@@ -1,7 +1,6 @@
 //###########################################################################
 // SpiSdCard.cpp
-//
-// Communicates with sd card using the SPI bus
+// Definitions of the functions that manage spi sdcard disk
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
