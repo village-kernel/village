@@ -16,16 +16,20 @@
 class ConcreteDevice : public Device
 {
 private:
-	//Members
+	/// @brief Members
 	List<Driver*> drivers;
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteDevice();
 	~ConcreteDevice();
 	void Setup();
 	void Exit();
+
+	/// @brief Register Methods
 	void RegisterDriver(Driver* driver);
 	void DeregisterDriver(Driver* driver);
+	
+	/// @brief Data Methods
 	Driver* GetDriver(const char* name);
 	List<Driver*> GetDrivers(DriverID id);
 };

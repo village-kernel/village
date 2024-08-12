@@ -56,7 +56,7 @@ public:
 class Debug
 {
 public:
-	//Debug level
+	/// @brief Debug level
 	enum Level
 	{
 		_Lv0 = 0,
@@ -118,7 +118,7 @@ public:
 class Thread
 {
 public:
-	//Enumerations
+	/// @brief Enumerations
 	enum TaskState 
 	{
 		_Pending = 0,
@@ -128,7 +128,7 @@ public:
 		_Exited,
 	};
 
-	//Structures
+	/// @brief Structures
 	struct Task 
 	{
 		char*            name;
@@ -236,7 +236,7 @@ public:
 class WorkQueue
 {
 public:
-	//Enumerations
+	/// @brief Enumerations
 	enum State
 	{
 		_Suspend = 0,
@@ -245,7 +245,7 @@ public:
 		_Finish,
 	};
 
-	//Structures
+	/// @brief Structures
 	struct Work
 	{
 		Function func;
@@ -277,7 +277,7 @@ public:
 class InputEvent
 {
 public:
-	//Types
+	/// @brief Types
 	enum EventType
 	{
 		_InputKey = 0,
@@ -287,14 +287,14 @@ public:
 		_AllType,
 	};
 
-	//Output format
+	/// @brief Output format
 	enum OutFormat
 	{
 		_Noraml,
 		_Terminal,
 	};
 
-	//Input key
+	/// @brief Input key
 	struct InputKey
 	{
 		int code;
@@ -306,7 +306,7 @@ public:
 		{}
 	};
 
-	//Input axis
+	/// @brief Input axis
 	struct InputAxis
 	{
 		int axisX;
@@ -320,7 +320,7 @@ public:
 		{}
 	};
 
-	//Output text
+	/// @brief Output text
 	struct OutputText
 	{
 		char* data;
@@ -332,7 +332,7 @@ public:
 		{}
 	};
 
-	//Ouput Axis
+	/// @brief Ouput Axis
 	struct OutputAxis
 	{
 		int axisX;
@@ -346,7 +346,7 @@ public:
 		{}
 	};
 public:
-	/// @brief Methods
+	/// @brief Attach Methods
 	virtual void Attach(EventType type, Method method, Class* user) = 0;
 	virtual void Attach(EventType type, Function func, void* user = NULL) = 0;
 	virtual void Detach(EventType type, Method method, Class* user) = 0;
@@ -372,7 +372,7 @@ class ElfLoader;
 class Loader
 {
 public:
-	//Enumerations
+	/// @brief Enumerations
 	enum LoadType
 	{
 		_Lib = 0,
@@ -403,14 +403,14 @@ class BaseExecutor;
 class Process
 {
 public:
-	//Enumerations
+	/// @brief Enumerations
 	enum Behavior
 	{
 		_Foreground = 0,
 		_Background = 1,
 	};
 
-	//Structures
+	/// @brief Structures
 	struct Data
 	{
 		char*         name;
@@ -447,14 +447,14 @@ public:
 class Timer
 {
 public:
-	//Enumerations
+	/// @brief Enumerations
 	enum State
 	{
 		_Ready = 0,
 		_Done,
 	};
 
-	//Structures
+	/// @brief Structures
 	struct Job
 	{
 		Function func;
@@ -492,7 +492,7 @@ class Console;
 class Terminal
 {
 public:
-	//Structures
+	/// @brief Structures
 	struct Sandbox
 	{
 		int           cid;

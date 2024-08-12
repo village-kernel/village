@@ -24,7 +24,7 @@
 class ConcreteMemory : public Memory
 {
 private:
-	//Structures
+	/// @brief Structures
 	struct Map 
 	{
 		uint32_t addr;
@@ -49,37 +49,41 @@ private:
 		{}
 	};
 private:
-	//Static constants
+	/// @brief Static constants
 	const static uint8_t  align = 4;
 	const static uint32_t size_of_node = sizeof(MapNode);
 	const static uint32_t kernel_rsvd_heap  = KERNEL_RSVD_HEAP;
 	const static uint32_t kernel_rsvd_stack = KERNEL_RSVD_STACK;
 
-	//Sram parameters
+	/// @brief Sram parameters
 	bool isMemReady;
 	uint32_t sram_start;
 	uint32_t sram_ended;
 	uint32_t sram_used;
 	uint32_t sbrk_heap;
 
-	//Members
+	/// @brief Members
 	MapNode* head;
 	MapNode* tail;
 	MapNode* curr;
 
-	//Locks
+	/// @brief Locks
 	SpinLock heapLock;
 	SpinLock stackLock;
 	SpinLock freeLock;
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteMemory();
 	~ConcreteMemory();
 	void Setup();
 	void Exit();
+
+	/// @brief Alloc Methods
 	uint32_t HeapAlloc(uint32_t size);
 	uint32_t StackAlloc(uint32_t size);
 	void Free(uint32_t memory, uint32_t size = 0);
+
+	/// @brief Info Methods
 	uint32_t GetSize();
 	uint32_t GetUsed();
 	uint32_t GetCurrAddr();

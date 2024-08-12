@@ -14,14 +14,14 @@
 class ConcreteScheduler : public Scheduler, public Class
 {
 private:
-	//Members
+	/// @brief Members
 	bool isStartSchedule;
 
-	//Methods
+	/// @brief Methods
 	void SysTickHandler();
 	void PendSVHandler();
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteScheduler();
 	~ConcreteScheduler();
 	void Setup();

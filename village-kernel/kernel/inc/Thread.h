@@ -22,40 +22,44 @@
 class ConcreteThread : public Thread, public Class
 {
 private:
-	//Static constants
+	/// @brief Static constants
 	static const uint32_t task_stack_size = TASK_STACK;
 	static const uint32_t psp_frame_size = sizeof(TaskContext);
 	
-	//Members
+	/// @brief Members
 	List<Task*> tasks;
 	Memory*     memory;
 	System*     system;
 	Scheduler*  scheduler;
 
-	//Members
+	/// @brief Members
 	void TaskHandler(Function function, void* user, void* args);
 public:
-	///Methods
+	/// @brief Methods
 	ConcreteThread();
 	~ConcreteThread();
 	void Setup();
 	void Start();
 	void Exit();
 
-	///Thread Methods
+	/// @brief Create Methods
 	int CreateTask(const char* name, Function function, void* user = NULL, void* args = NULL);
 	int CreateTask(const char* name, Method method, Class *user, void* args = NULL);
+
+	/// @brief Task Methods
 	bool StartTask(int tid);
 	bool StopTask(int tid);
 	bool WaitForTask(int tid);
 	bool DeleteTask(int tid);
 	bool IsTaskAlive(int tid);
 	List<Task*> GetTasks();
+
+	/// @brief State Methods
 	void ChangeState(TaskState state);
 	void Sleep(uint32_t ticks);
 	void TaskExit();
 
-	//Scheduler Methods
+	/// @brief Scheduler Methods
 	void SaveTaskPSP(uint32_t psp);
 	uint32_t GetTaskPSP();
 	void SelectNextTask();
