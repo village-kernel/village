@@ -270,6 +270,8 @@ void FatVolume::Close(int fd)
 	if (NULL == obj) return;
 
 	objs.Remove(obj, fd);
+
+	delete obj;
 }
 
 
