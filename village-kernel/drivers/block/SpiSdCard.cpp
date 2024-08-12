@@ -491,7 +491,7 @@ public:
 		//Initialize spi
 		spi.Initialize(config.spiCh);
 		spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol0Cpha0);
-		spi.ConfigBaudRatePrescaler(Spi::_Fpclk16);
+		spi.ConfigBaudRatePrescaler(Spi::_Fpclk2);
 		spi.ConfigFrame(Spi::_MsbFirst, Spi::_8Bit);
 		spi.Enable();
 
