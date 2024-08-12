@@ -49,10 +49,10 @@ void FatVolume::Exit()
 }
 
 
-/// @brief Not dir
+/// @brief BaseName
 /// @param path 
 /// @return 
-char* FatVolume::NotDir(const char* path)
+char* FatVolume::BaseName(const char* path)
 {
 	uint8_t pos = strlen(path);
 	char ch = 0; do { ch = path[--pos]; } while ('/' != ch && pos);
@@ -129,7 +129,7 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 	
 	if (FileType::_Diretory == obj->GetObjectType())
 	{
-		obj = FatEntry(disk, obj).Create(NotDir(path), attr);
+		obj = FatEntry(disk, obj).Create(BaseName(path), attr);
 	}
 
 	return obj;
@@ -202,21 +202,24 @@ int FatVolume::Write(int fd, char* data, int size, int offset)
 
 	if (NULL == obj) return -1;
 
-	bool isDone = false;
 	uint32_t fileSize = obj->GetFileSize();
 	uint32_t fstClust = obj->GetFirstCluster();
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
+	uint32_t allocSize = clusSize * secPerClust * bytesPerSec;
 
-	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
+	char* allocBuff = (char*)new char[allocSize]();
 	
 	memcpy((void*)allocBuff, (const void*)data, size);
 
-	if (clusSize == disk.WriteCluster(allocBuff, fstClust, clusSize)) isDone = true;
+	if (clusSize == disk.WriteCluster(allocBuff, fstClust, clusSize))
+	{
+		delete[] allocBuff;
+		return size;
+	}
 
 	delete[] allocBuff;
-
-	return isDone ? size : 0;
+	return -1;
 }
 
 
@@ -232,23 +235,23 @@ int FatVolume::Read(int fd, char* data, int size, int offset)
 
 	if (NULL == obj) return -1;
 
-	bool isDone = false;
 	uint32_t fileSize = obj->GetFileSize();
 	uint32_t fstClust = obj->GetFirstCluster();
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
+	uint32_t allocSize = clusSize * secPerClust * bytesPerSec;
 
-	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
+	char* allocBuff = (char*)new char[allocSize]();
 	
 	if (clusSize == disk.ReadCluster(allocBuff, fstClust, clusSize))
 	{
 		memcpy((void*)data, (const void*)allocBuff, size);
-		isDone = true;
+		delete[] allocBuff;
+		return size;
 	}
 
 	delete[] allocBuff;
-
-	return isDone ? size : 0;
+	return -1;
 }
 
 
