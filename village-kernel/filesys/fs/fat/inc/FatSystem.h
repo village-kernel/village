@@ -21,6 +21,10 @@ private:
 	FatDiskio        disk;
 	List<FatObject*> objs;
 
+	//Members
+	uint32_t bytesPerSec;
+	uint32_t secPerClust;
+
 	//Directory Methods
 	char* NotDir(const char* path);
 	FatObject* SearchPath(const char* path, int reserve = 0);

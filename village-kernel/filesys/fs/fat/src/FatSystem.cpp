@@ -14,6 +14,8 @@
 
 /// @brief Constructor
 FatVolume::FatVolume()
+	:bytesPerSec(0),
+	secPerClust(0)
 {
 }
 
@@ -30,7 +32,13 @@ FatVolume::~FatVolume()
 /// @return 
 bool FatVolume::Setup(DrvStream* diskdrv, uint32_t fstSec)
 {
-	return disk.Setup(diskdrv, fstSec);
+	if (disk.Setup(diskdrv, fstSec))
+	{
+		bytesPerSec = disk.GetInfo().bytesPerSec;
+		secPerClust = disk.GetInfo().secPerClust;
+		return true;
+	}
+	return false;
 }
 
 
@@ -196,11 +204,9 @@ int FatVolume::Write(int fd, char* data, int size, int offset)
 
 	bool isDone = false;
 	uint32_t fileSize = obj->GetFileSize();
-	uint32_t bytesPerSec = disk.GetInfo().bytesPerSec;
-	uint32_t secPerClust = disk.GetInfo().secPerClust;
+	uint32_t fstClust = obj->GetFirstCluster();
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-	uint32_t fstClust = obj->GetFirstCluster();
 
 	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
 	
@@ -228,11 +234,9 @@ int FatVolume::Read(int fd, char* data, int size, int offset)
 
 	bool isDone = false;
 	uint32_t fileSize = obj->GetFileSize();
-	uint32_t bytesPerSec = disk.GetInfo().bytesPerSec;
-	uint32_t secPerClust = disk.GetInfo().secPerClust;
+	uint32_t fstClust = obj->GetFirstCluster();
 	uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 	uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-	uint32_t fstClust = obj->GetFirstCluster();
 
 	char* allocBuff = (char*)new char[clusSize * secPerClust * bytesPerSec]();
 	
