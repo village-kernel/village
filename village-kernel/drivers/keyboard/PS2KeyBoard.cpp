@@ -46,7 +46,6 @@ private:
 private:
 	//Members
 	bool isExtended;
-	InputEvent* inputEvent;
 private:
 	/// @brief Interrupt handler
 	void InputHandler()
@@ -64,9 +63,9 @@ private:
 
 			//Report key event
 			if (scancode > 0 && scancode <= 0x58)
-				inputEvent->ReportKey(pKeyCodes[scancode], _KeyPressed);
+				kernel->inputEvent.ReportKey(pKeyCodes[scancode], _KeyPressed);
 			else if (scancode > 0x80 && scancode <= 0xd8)
-				inputEvent->ReportKey(pKeyCodes[scancode - 0x80], _KeyReleased);
+				kernel->inputEvent.ReportKey(pKeyCodes[scancode - 0x80], _KeyReleased);
 	
 			//Clear the isExtended flag
 			isExtended = false;
@@ -75,8 +74,7 @@ private:
 public:
 	/// @brief Constructor
 	PS2KeyBoard()
-		:isExtended(false),
-		inputEvent(NULL)
+		:isExtended(false)
 	{
 	}
 
@@ -90,12 +88,7 @@ public:
 	/// @brief KeyBoard open
 	bool Open()
 	{
-		//Get the inputEvent pointer
-		inputEvent = &kernel->inputEvent;
-
-		//Set interrupt
 		kernel->interrupt.SetISR(Keyboard_Controller_IRQn, (Method)(&PS2KeyBoard::InputHandler), this);
-
 		return true;
 	}
 
