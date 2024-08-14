@@ -13,7 +13,7 @@
 int HexExecutor::Initiate()
 {
 	//Load, parser and execute hex file
-	if (!hex.Load(path)) return 0;
+	if (!hex.Load(path)) return -1;
 
 	//Create a sandboxed thread to run the app
 	return kernel->thread.CreateTask(path, (Method)&HexExecutor::Sandbox, this);

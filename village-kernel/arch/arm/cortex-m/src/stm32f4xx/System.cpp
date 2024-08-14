@@ -219,6 +219,48 @@ void ConcreteSystem::DisableIRQ()
 }
 
 
+/// @brief Enters Sleep mode
+void ConcreteSystem::Sleep()
+{
+	//Clear SLEEPDEEP bit
+	SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+
+	//Request Wait For Interrupt
+	__WFI();
+}
+
+
+/// @brief Enters Standby mode
+void ConcreteSystem::Standby()
+{
+	//Select standby  mode
+	PWR->CR |= PWR_CR_PDDS;
+
+	//Set SLEEPDEEP bit
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	//Request Wait For Interrupt
+	__WFI();
+}
+
+
+/// @brief Enters Stop mode
+void ConcreteSystem::Shutdown()
+{
+	//Select Set PDDS and LPDS bits
+	PWR->CR = (PWR->CR & ~(PWR_CR_PDDS | PWR_CR_LPDS)) | PWR_CR_LPDS;
+
+	//Set SLEEPDEEP bit
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	//Wait Wake-up
+	__WFI();
+
+	//Clear SLEEPDEEP bit
+	SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+}
+
+
 /// @brief Reset STM32 core and peripherals
 void ConcreteSystem::Reboot()
 {

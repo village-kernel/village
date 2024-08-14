@@ -59,7 +59,7 @@ Wedget* Graphics::CreateMainWindow()
 		mainwin = new Window();
 		mainwin->SetDisplay(display);
 		mainwin->Setup();
-		mainwin->SetLocation(0, 0, fbdev->device.width, fbdev->device.height);
+		mainwin->SetLocation(0, 0, fbdev->fbinfo.width, fbdev->fbinfo.height);
 		return mainwin;
 	}
 	return NULL;

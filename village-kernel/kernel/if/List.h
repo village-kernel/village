@@ -330,7 +330,6 @@ public:
 
 				size--;
 				delete node;
-				delete obj;
 				return true;
 			}
 		}
@@ -354,8 +353,6 @@ public:
 	/// @return result
 	bool RemoveByName(Object obj, char* name)
 	{
-		if (NULL == obj) return false;
-
 		for (Node* node = head; NULL != node; node = node->next)
 		{
 			if ((0 == strcmp(name, node->name)) ||
@@ -373,7 +370,6 @@ public:
 
 				size--;
 				delete node;
-				delete obj;
 				return true;
 			}
 		}
@@ -413,7 +409,6 @@ public:
 		while (NULL != node)
 		{
 			Node* next = node->next;
-			delete node->obj;
 			delete node;
 			node = next;
 		}

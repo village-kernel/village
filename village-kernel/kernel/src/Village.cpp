@@ -25,7 +25,8 @@ Village::Village() : Kernel
 	concreteLoader,
 	concreteProcess,
 	concreteTimer,
-	concreteTerminal
+	concreteTerminal,
+	concreteSignal
 )
 {
 }
@@ -49,6 +50,9 @@ void Village::Setup()
 	//Setup memory
 	concreteMemory.Setup();
 
+	//Setup device
+	concreteDevice.Setup();
+
 	//Setup debug
 	concreteDebug.Setup();
 	
@@ -66,19 +70,16 @@ void Village::Setup()
 	
 	//Setup symbol
 	concreteSymbol.Setup();
-	
-	//Setup device
-	concreteDevice.Setup();
 
 	//Setup timer
 	concreteTimer.Setup();
 
+	//Setup filesys
+	concreteFilesys.Setup();
+
 	//Setup terminal
 	concreteTerminal.Setup();
 
-	//Setup filesys
-	concreteFilesys.Setup();
-	
 	//Setup feature
 	concreteFeature.Setup();
 
@@ -87,6 +88,9 @@ void Village::Setup()
 
 	//Setup process
 	concreteProcess.Setup();
+
+	//Setup signal
+	concreteSignal.Setup();
 }
 
 
@@ -107,6 +111,9 @@ void Village::Start()
 /// @brief Kernel exit
 void Village::Exit()
 {
+	//Exit signal
+	concreteSignal.Exit();
+
 	//Exit process
 	concreteProcess.Exit();
 
@@ -116,17 +123,14 @@ void Village::Exit()
 	//Exit feature
 	concreteFeature.Exit();
 
-	//Exit filesys
-	concreteFilesys.Exit();
-
 	//Exit terminal
 	concreteTerminal.Exit();
 
+	//Exit filesys
+	concreteFilesys.Exit();
+
 	//Exit timer
 	concreteTimer.Exit();
-
-	//Exit device
-	concreteDevice.Exit();
 
 	//Exit symbol
 	concreteSymbol.Exit();
@@ -146,6 +150,9 @@ void Village::Exit()
 	//Exit debug
 	concreteDebug.Exit();
 
+	//Exit device
+	concreteDevice.Exit();
+
 	//Exit memory
 	concreteMemory.Exit();
 
@@ -154,6 +161,34 @@ void Village::Exit()
 
 	//Exit interrupt
 	concreteInterrupt.Exit();
+}
+
+
+/// @brief Kernel sleep
+void Village::Sleep()
+{
+	concreteSignal.Raising(Signals::_Sleep);
+}
+
+
+/// @brief Kernel standby
+void Village::Standby()
+{
+	concreteSignal.Raising(Signals::_Standby);
+}
+
+
+/// @brief kernel shutdown
+void Village::Shutdown()
+{
+	concreteSignal.Raising(Signals::_Shutdown);
+}
+
+
+/// @brief Kernel reboot
+void Village::Reboot()
+{
+	concreteSignal.Raising(Signals::_Reboot);
 }
 
 

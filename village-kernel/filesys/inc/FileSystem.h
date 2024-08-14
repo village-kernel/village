@@ -18,14 +18,14 @@
 class ConcreteFileSystem : public FileSystem
 {
 	private:
-	//Enumerates
+	/// @brief Enumerates
 	enum BootIndicator
 	{
 		_NotBootable = 0x00,
 		_Bootable    = 0x80,
 	};
 
-	//Structures
+	/// @brief Structures
 	struct DPT
 	{
 		uint32_t bootIndicator : 8;
@@ -47,22 +47,26 @@ class ConcreteFileSystem : public FileSystem
 		uint16_t magic;
 	} __attribute__((packed));
 private:
-	//Members
+	/// @brief Members
 	List<FileSys*>    fileSys;
 	List<FileVol*>    volumes;
 	List<MountNode*>  mounts;
 
-	//Methods
+	/// @brief Methods
 	bool InitMBRDisk(const char* diskdrv);
 	bool MountSystemNode();
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteFileSystem();
 	~ConcreteFileSystem();
 	void Setup();
 	void Exit();
+	
+	/// @brief Register Methods
 	void RegisterFS(FileSys* fs, const char* name);
 	void DeregisterFS(FileSys* fs, const char* name);
+	
+	/// @brief Volume Methods
 	int AttachVolume(FileVol* volume);
 	int DetachVolume(FileVol* volume);
 	FileVol* GetVolume(const char* name);

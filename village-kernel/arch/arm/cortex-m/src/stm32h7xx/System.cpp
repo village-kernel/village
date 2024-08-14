@@ -469,6 +469,59 @@ void ConcreteSystem::DisableIRQ()
 }
 
 
+/// @brief Enters Sleep mode
+void ConcreteSystem::Sleep()
+{
+	//Clear SLEEPDEEP bit
+	SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+
+	//Request Wait For Interrupt
+	__WFI();
+}
+
+
+/// @brief Enters Standby mode
+void ConcreteSystem::Standby()
+{
+	//Enter DSTANDBY mode when Cortex-M7 enters DEEP-SLEEP
+	PWR->CPUCR |= (PWR_CPUCR_PDDS_D1 | PWR_CPUCR_PDDS_D3);
+
+	//Set SLEEPDEEP bit
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	//Ensure that all instructions are done before entering STOP mode
+	__DSB ();
+	__ISB ();
+
+	//Request Wait For Interrupt
+	__WFI();
+}
+
+
+/// @brief Enters Stop mode
+void ConcreteSystem::Shutdown()
+{
+	//Select LPDS bits
+	PWR->CR1 = (PWR->CR1 & ~PWR_CR1_LPDS) | PWR_CR1_LPDS;
+
+	//Keep DSTOP mode when Cortex-M7 enter in DEEP-SLEEP
+	PWR->CPUCR &= ~(PWR_CPUCR_PDDS_D1 | PWR_CPUCR_PDDS_D3);
+
+	//Set SLEEPDEEP bit
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	//Ensure that all instructions are done before entering STOP mode
+	__DSB ();
+	__ISB ();
+
+	//Wait Wake-up
+	__WFI();
+
+	//Clear SLEEPDEEP bit
+	SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
+}
+
+
 /// @brief Reset STM32 core and peripherals
 void ConcreteSystem::Reboot()
 {

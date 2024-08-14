@@ -14,15 +14,15 @@
 class ConcreteSystem : public System, public Class
 {
 private:
-	///Static constants
+	/// @brief Static constants
 	static const uint32_t microsInSec = 1000000;
 	static const uint32_t microsInMilli = 1000;
 
-	//Members
+	/// @brief Members
 	uint32_t sysTicks;
 	uint32_t cyclesInMicro;
 
-	//Methods
+	/// @brief Methods
 	void SysTickHandler();
 	void ConfigCoreDebug();
 	void ConfigSysTick();
@@ -31,17 +31,26 @@ private:
 	void ConfigureForHsi();
 	void ConfigureFor25MhzXtal();
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteSystem();
 	~ConcreteSystem();
 	void Setup();
 	void Exit();
+
+	/// @brief Ticks Metthods
 	void SysTickCounter();
 	uint32_t GetSysClkCounts();
 	void DelayUs(uint32_t micros);
 	void DelayMs(uint32_t millis);
+	
+	/// @brief IRQ Methods
 	void EnableIRQ();
 	void DisableIRQ();
+
+	/// @brief Power Methods
+	void Sleep();
+	void Standby();
+	void Shutdown();
 	void Reboot();
 };
 

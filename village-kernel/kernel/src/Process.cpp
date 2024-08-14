@@ -107,6 +107,8 @@ BaseExecutor* ConcreteProcess::CreateExecutor(const char* path)
 			}
 		}
 	}
+	
+	kernel->debug.Error("No associated executor found");
 	return NULL;
 }
 

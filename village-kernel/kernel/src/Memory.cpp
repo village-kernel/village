@@ -256,8 +256,19 @@ void ConcreteMemory::Free(uint32_t memory, uint32_t size)
 
 	while (NULL != currNode)
 	{
-		if ((memory >= currNode->map.addr) && 
-			(memory < (currNode->map.addr + currNode->map.size)))
+		uint32_t currStartAddr = currNode->map.addr;
+		uint32_t currEndedAddr = currNode->map.addr + currNode->map.size;
+
+		//Break when the memory is between the end of the current node 
+		//and the beginning of the next node, because it has been released
+		if (NULL != currNode->next)
+		{
+			uint32_t nextStartAddr = currNode->next->map.addr;
+			if (memory > currEndedAddr && memory < nextStartAddr) break;
+		}
+
+		//Release memory node
+		if ((memory >= currStartAddr) && (memory < currEndedAddr))
 		{
 			if (0 == size || size_of_node == (currNode->map.size - size))
 			{

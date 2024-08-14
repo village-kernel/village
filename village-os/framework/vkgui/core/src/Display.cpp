@@ -24,13 +24,13 @@ Display::~Display()
 
 
 ///Display Setup
-void Display::Setup(FBDriver* fbdev)
+void Display::Setup(FBDevice* fbdev)
 {
 	if (NULL != fbdev)
 	{
 		this->fbdev = fbdev;
-		limitX = fbdev->device.width - 1;
-		limitY = fbdev->device.height - 1;
+		limitX = fbdev->fbinfo.width - 1;
+		limitY = fbdev->fbinfo.height - 1;
 	}
 	Clear();
 }

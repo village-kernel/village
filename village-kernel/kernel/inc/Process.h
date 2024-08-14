@@ -18,27 +18,35 @@
 class ConcreteProcess : public Process, public Class
 {
 private:
-	//Members
+	/// @brief Members
 	Regex regex;
 	List<Data*> datum;
 	List<Executor*> executors;
 
-	//Methods
+	/// @brief Methods
 	void Taichi();
 	void Listen();
 	BaseExecutor* CreateExecutor(const char* path);
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteProcess();
 	~ConcreteProcess();
 	void Setup();
 	void Exit();
+
+	/// @brief Register Methods
 	void RegisterExecutor(Executor* executor);
 	void DeregisterExecutor(Executor* executor);
+
+	/// @brief Run Methods
 	int Run(Behavior behavior, const char* args);
 	int Run(Behavior behavior, const char* path, int argc, char* argv[]);
+
+	/// @brief Kill Methods
 	bool Kill(const char* path);
 	bool Kill(int pid);
+
+	/// @brief Data Methods
 	List<Data*> GetData();
 };
 

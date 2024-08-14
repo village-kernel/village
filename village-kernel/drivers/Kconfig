@@ -1,0 +1,83 @@
+menu "block"
+
+config ATALBADISK
+	tristate "Enable ata lba disk support"
+	default n
+
+config SDIOSDCARD
+	tristate "Enable sdio sd card support"
+	default n
+
+config SPISDCARD
+	tristate "Enable spi sd card support"
+	default n
+
+config SPIW25QXX
+	tristate "Enable spi w25qxx flash support"
+	default n
+
+endmenu
+
+menu "display"
+
+config BOCHSVBE
+	tristate "Enable Bochs VBE support"
+	default n
+
+config ILI9488
+	tristate "Enable ILI9488 support"
+	default n
+
+endmenu
+
+menu "dma"
+
+config DMAFIFO
+	tristate "Enable dma fifo support"
+	default n
+
+endmenu
+
+menu "keyboard"
+
+config PS2KEYBOARD
+	tristate "Enable ps2 key board input support"
+	default n
+
+endmenu
+
+menu "mouse"
+
+config PS2MOUSE
+	tristate "Enable ps2 mouse input support"
+	default n
+
+endmenu
+
+menu "serial"
+
+config SERIALPORT
+	tristate "Enable serial port support"
+	default n
+
+config SERIALUART
+	tristate "Enable serial uart support"
+	default n
+
+endmenu
+
+menu "timer"
+
+config GENERALTIMER
+	tristate "Enable general timer support"
+	default n
+
+endmenu
+
+menu "usb"
+
+config USBSTORAGE
+	tristate "Enable USB storage support"
+	default n
+
+endmenu

@@ -1,7 +1,6 @@
 //###########################################################################
-// SpiFlash.cpp
-//
-// Communicates with an external flash using the SPI bus
+// SpiW25qxx.cpp
+// Definitions of the functions that manage spi w25qxx disk
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -11,8 +10,8 @@
 #include "Kernel.h"
 
 
-/// @brief SpiFlash
-class SpiFlash : public Driver
+/// @brief SpiW25qxx
+class SpiW25qxx : public Driver
 {
 public:
 	//Enumerations
@@ -487,4 +486,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new SpiFlash(), DriverID::_block, spiFlash);
+REGISTER_DRIVER(new SpiW25qxx(), DriverID::_block, spiW25qxx);

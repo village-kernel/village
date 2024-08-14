@@ -14,11 +14,11 @@
 class Exception
 {
 public:
-	//Static constants
+	/// @brief Static constants
 	static const uint32_t isr_num = 256;
 	static const uint32_t rsvd_isr_size = 16;
 private:
-	//Enumerations
+	/// @brief Enumerations
 	enum IRQnType
 	{
 		NonMaskableInt_IRQn         = -14,
@@ -32,11 +32,11 @@ private:
 		SysTick_IRQn                = -1,
 	};
 private:
-	//Methods
+	/// @brief Methods
 	void InstallHandlers();
 	void ConfigVectorTable(uint32_t vector);
 
-	//Static Methods
+	/// @brief Static Methods
 	static void StubHandler();
 	static void NMIHandler();
 	static void HardFaultHandler();
@@ -45,7 +45,7 @@ private:
 	static void UsageFaultHandler();
 	static void DebugMonHandler();
 public:
-	//Methods
+	/// @brief Methods
 	void Setup();
 	void Exit();
 	void Install(int irq, uint32_t handler);

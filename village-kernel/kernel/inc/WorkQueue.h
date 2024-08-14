@@ -17,19 +17,23 @@
 class ConcreteWorkQueue : public WorkQueue, public Class
 {
 private:
-	//Members
+	/// @brief Members
 	List<Work*> works;
 
-	//Methods
+	/// @brief Methods
 	void Execute();
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteWorkQueue();
 	~ConcreteWorkQueue();
 	void Setup();
 	void Exit();
+
+	/// @brief Create Methods
 	Work* Create(Function func, void* user = NULL, void* args = NULL, uint32_t ticks = 0);
 	Work* Create(Method method, Class* user, void* args = NULL, uint32_t ticks = 0);
+
+	/// @brief Feature Methods
 	bool Delete(Work* work);
 	bool Sched(Work* work);
 };

@@ -16,10 +16,10 @@
 class ConcreteDebug : public Debug
 {
 private:
-	//Static constants
+	/// @brief Static constants
 	static const uint16_t buf_size = 256;
 
-	//Members
+	/// @brief Members
 	DrvStream transceiver;
 	Mutex     mutex;
 	bool      isReady;
@@ -28,15 +28,17 @@ private:
 	char      data[buf_size] = { 0 };
 	char      txBuffer[buf_size] = { 0 };
 
-	//Methods
+	/// @brief Methods
 	void Write(const char* data);
 	void Sending();
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteDebug();
 	~ConcreteDebug();
 	void Setup();
 	void Exit();
+
+	/// @brief Methods
 	void Log(const char* format, ...);
 	void Info(const char* format, ...);
 	void Error(const char* format, ...);
