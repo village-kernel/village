@@ -18,6 +18,7 @@ enum DriverID
 	_block,
 	_network,
 	_character,
+	_framebuffer,
 	_miscellaneous,
 	_dirverIdSize,
 };
@@ -61,19 +62,6 @@ static struct _Mod_##name {                                       \
 		kernel->feature.DeregisterModule(module);                 \
 	}                                                             \
 } const _mod_##name __attribute__((used,__section__(".modules")))
-
-
-///Executor register macro
-#define REGISTER_EXECUTOR(exec, name)                             \
-static struct _Exec_##name {                                      \
-	Executor* executor = exec;                                    \
-	_Exec_##name() {                                              \
-		kernel->process.RegisterExecutor(executor);               \
-	}                                                             \
-	~_Exec_##name() {                                             \
-		kernel->process.DeregisterExecutor(executor);             \
-	}                                                             \
-} const _exec_##name __attribute__((used,__section__(".executors")))
 
 
 ///Environment marco

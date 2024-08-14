@@ -47,7 +47,7 @@ void ConcreteThread::Start()
 {
 	for (tasks.Begin(); !tasks.IsEnd(); tasks.Next())
 	{
-		tasks.Item()->state = TaskState::Running;
+		tasks.Item()->state = TaskState::_Running;
 	}
 	tasks.Begin();
 }
@@ -127,7 +127,7 @@ bool ConcreteThread::StartTask(int tid)
 	//Check task is valid
 	if (NULL != task)
 	{
-		task->state = TaskState::Running;
+		task->state = TaskState::_Running;
 		return true;
 	}
 	return false;
@@ -145,7 +145,7 @@ bool ConcreteThread::StopTask(int tid)
 	//Check task is valid
 	if (NULL != task)
 	{
-		task->state = TaskState::Exited;
+		task->state = TaskState::_Exited;
 		return true;
 	}
 	return false;
@@ -164,7 +164,7 @@ bool ConcreteThread::WaitForTask(int tid)
 	if (NULL != task)
 	{
 		//Blocking wait
-		while(task->state != TaskState::Exited) {}
+		while(task->state != TaskState::_Exited) {}
 		return true;
 	}
 	return false;
@@ -198,7 +198,7 @@ bool ConcreteThread::IsTaskAlive(int tid)
 	Task* task = tasks.GetItem(tid);
 
 	//Returns true when the task is not null and the status is not exited
-	return ((NULL != task) && (task->state != TaskState::Exited));
+	return ((NULL != task) && (task->state != TaskState::_Exited));
 }
 
 
@@ -228,10 +228,10 @@ void ConcreteThread::Sleep(uint32_t ticks)
 {
 	if(tasks.GetNid() > 0)
 	{
-		tasks.Item()->state = TaskState::Suspend;
+		tasks.Item()->state = TaskState::_Suspend;
 		tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
 		scheduler->Sched();
-		while (TaskState::Suspend == tasks.Item()->state) {}
+		while (TaskState::_Suspend == tasks.Item()->state) {}
 	}
 }
 
@@ -241,7 +241,7 @@ void ConcreteThread::TaskExit()
 {
 	if(tasks.GetNid() > 0)
 	{
-		tasks.Item()->state = TaskState::Exited;
+		tasks.Item()->state = TaskState::_Exited;
 		DeleteTask(tasks.GetNid());
 		scheduler->Sched();
 	}
@@ -273,17 +273,17 @@ void ConcreteThread::SelectNextTask()
 		tasks.Next(); if (tasks.IsEnd()) tasks.Begin();
 
 		//Check current task state
-		if (TaskState::Suspend == tasks.Item()->state)
+		if (TaskState::_Suspend == tasks.Item()->state)
 		{
 			if(system->GetSysClkCounts() >= tasks.Item()->ticks)
 			{
-				tasks.Item()->state = TaskState::Running;
+				tasks.Item()->state = TaskState::_Running;
 				tasks.Item()->ticks = 0;
 			}
 		}
 
 		//Break when task state is running
-		if (TaskState::Running == tasks.Item()->state) break;
+		if (TaskState::_Running == tasks.Item()->state) break;
 	}
 }
 

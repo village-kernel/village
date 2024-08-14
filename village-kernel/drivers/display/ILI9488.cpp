@@ -10,7 +10,7 @@
 
 
 /// @brief ILI9488
-class ILI9488 : public FBDriver
+class ILI9488 : public FBDevice
 {
 public:
 	//Structures
@@ -236,9 +236,9 @@ public:
 		//lcd.width = 480;
 		//lcd.height = 320;
 
-		device.width = lcd.width;
-		device.height = lcd.height;
-		device.bitdepth = 16; // 16 bpp
+		fbinfo.width = lcd.width;
+		fbinfo.height = lcd.height;
+		fbinfo.bitdepth = 16; // 16 bpp
 	}
 
 
@@ -546,7 +546,7 @@ public:
 	/// @return 
 	int IOCtrl(uint8_t cmd, void* data)
 	{
-		FBDriver** fbdev = (FBDriver**)data;
+		FBDevice** fbdev = (FBDevice**)data;
 		
 		*fbdev = ili9488;
 
@@ -556,4 +556,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new ILI9488Drv(), DriverID::_miscellaneous, display0);
+REGISTER_DRIVER(new ILI9488Drv(), DriverID::_framebuffer, display0);

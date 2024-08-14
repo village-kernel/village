@@ -68,6 +68,27 @@ void ConcreteSystem::DelayMs(uint32_t millis)
 }
 
 
+/// @brief Enters Sleep mode
+void ConcreteSystem::Sleep()
+{
+
+}
+
+
+/// @brief Enters Standby mode
+void ConcreteSystem::Standby()
+{
+
+}
+
+
+/// @brief Enters Stop mode
+void ConcreteSystem::Shutdown()
+{
+
+}
+
+
 /// @brief Reset x86 core
 void ConcreteSystem::Reboot()
 {

@@ -7,7 +7,7 @@
 #ifndef __EXECUTOR_INTERFACE_H__
 #define __EXECUTOR_INTERFACE_H__
 
-#include "Defines.h"
+#include "ExecDefs.h"
 #include "Class.h"
 #include "List.h"
 

@@ -44,7 +44,7 @@
 
 
 /// @brief BochsVBE
-class BochsVBE : public FBDriver
+class BochsVBE : public FBDevice
 {
 private:
 	//Members
@@ -140,14 +140,14 @@ public:
 	/// @brief BochsVBE initialize
 	void Initialize()
 	{
-		device.width    = 1024;
-		device.height   = 768;
-		device.bitdepth = 0x10; // 16 bpp
+		fbinfo.width    = 1024;
+		fbinfo.height   = 768;
+		fbinfo.bitdepth = 0x10; // 16 bpp
 
 		if (IsBochsVBEAvailable())
 		{
 			//Set video mode
-			SetVideoMode(device.width, device.height, device.bitdepth, true, true);
+			SetVideoMode(fbinfo.width, fbinfo.height, fbinfo.bitdepth, true, true);
 			
 			//Get PCI device 0x1234:0x1111 BAR 0
 			vmap = (uint16_t*)pci.ReadBAR(0x1234, 0x1111, 0);
@@ -161,7 +161,7 @@ public:
 	/// @param color 
 	void DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 	{
-		uint32_t reg = (uint32_t)x + (uint32_t)y * device.width;
+		uint32_t reg = (uint32_t)x + (uint32_t)y * fbinfo.width;
 		WriteData(reg, color);
 	}
 
@@ -172,7 +172,7 @@ public:
 	/// @return 
 	uint32_t ReadPoint(uint32_t x, uint32_t y)
 	{
-		uint32_t reg = x + y * device.width;
+		uint32_t reg = x + y * fbinfo.width;
 		return ReadData(reg);
 	}
 
@@ -199,7 +199,7 @@ public:
 	/// @param color 
 	void Clear(uint32_t color = 0)
 	{
-		Fill(0, 0, device.width, device.height, color);
+		Fill(0, 0, fbinfo.width, fbinfo.height, color);
 	}
 };
 
@@ -250,7 +250,7 @@ public:
 	/// @return 
 	int IOCtrl(uint8_t cmd, void* data)
 	{
-		FBDriver** fbdev = (FBDriver**)data;
+		FBDevice** fbdev = (FBDevice**)data;
 		
 		*fbdev = bochsVBE;
 
@@ -260,4 +260,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new BochsVBEDrv(), DriverID::_miscellaneous, display0);
+REGISTER_DRIVER(new BochsVBEDrv(), DriverID::_framebuffer, display0);

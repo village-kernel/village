@@ -13,7 +13,7 @@
 int BinExecutor::Initiate()
 {
 	//Load, parser and execute bin file
-	if (!bin.Load(path)) return 0;
+	if (!bin.Load(path)) return -1;
 
 	//Create a sandboxed thread to run the app
 	return kernel->thread.CreateTask(path, (Method)&BinExecutor::Sandbox, this);

@@ -32,6 +32,7 @@ private:
 
 	//Members
 	void Prepare();
+	void Release();
 	void CalcFirstSector();
 	void CalcNextSector();
 	void ReadUnionEntries();

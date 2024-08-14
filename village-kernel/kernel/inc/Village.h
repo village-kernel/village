@@ -24,13 +24,14 @@
 #include "Process.h"
 #include "Timer.h"
 #include "Terminal.h"
+#include "Signal.h"
 
 
 /// @brief Village
 class Village : public Kernel
 {
 private:
-	//Members
+	/// @brief Members
 	ConcreteSystem      concreteSystem;
 	ConcreteMemory      concreteMemory;
 	ConcreteDebug       concreteDebug;
@@ -47,21 +48,30 @@ private:
 	ConcreteProcess     concreteProcess;
 	ConcreteTimer       concreteTimer;
 	ConcreteTerminal    concreteTerminal;
+	ConcreteSignal      concreteSignal;
 private:
-	//Methods
+	/// @brief Methods
 	Village();
 	~Village();
 public:
-	//Methods
+	/// @brief Kernel Methods
 	void Setup();
 	void Start();
 	void Exit();
+
+	/// @brief Power Methods
+	void Sleep();
+	void Standby();
+	void Shutdown();
+	void Reboot();
+
+	/// @brief Kernel build info 
 	const char* GetBuildDate();
 	const char* GetBuildTime();
 	const char* GetBuildVersion();
 	const char* GetBuildGitCommit();
 
-	//Static methods
+	/// @brief Static methods
 	static Village& Instance();
 };
 

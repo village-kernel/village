@@ -211,13 +211,7 @@ if KERNEL
 
 	menu "driver"
 
-	if CORTEX_M
-		source ./village-kernel/drivers/arm/cortex-m/Kconfig
-	endif
-
-	if IA32LEGACY
-		source ./village-kernel/drivers/ia32/legacy/Kconfig
-	endif
+	source ./village-kernel/drivers/Kconfig
 
 	endmenu
 

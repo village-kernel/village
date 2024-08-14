@@ -16,17 +16,21 @@
 class ConcreteFeature : public Feature
 {
 private:
-	//Members
+	/// @brief Members
 	bool isRuntime;
 	List<Module*> modules;
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteFeature();
 	~ConcreteFeature();
 	void Setup();
 	void Exit();
+
+	/// @brief Register Methods
 	void RegisterModule(Module* module);
 	void DeregisterModule(Module* module);
+
+	/// @brief Data Methods
 	Module* GetModule(const char* name);
 };
 

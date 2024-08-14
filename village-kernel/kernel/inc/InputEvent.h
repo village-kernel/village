@@ -17,33 +17,35 @@
 class ConcreteInputEvent : public InputEvent
 {
 private:
-	//Input members
+	/// @brief Input members
 	InputKey     inputKey;
 	InputAxis    inputAxis;
 	
-	//Output members
+	/// @brief Output members
 	OutputText   outputText;
 	OutputAxis   outputAxis;
 	OutFormat    outFormat;
 
-	//Model members
+	/// @brief Model members
 	ObserverModel observers[_AllType];
 public:
-	//Methods
+	/// @brief Methods
 	ConcreteInputEvent();
 	~ConcreteInputEvent();
 	void Setup();
 	void Exit();
+
+	/// @brief Attach Methods
 	void Attach(EventType type, Method method, Class* user);
 	void Attach(EventType type, Function func, void* user = NULL);
 	void Detach(EventType type, Method method, Class* user);
 	void Detach(EventType type, Function func, void* user = NULL);
 	
-	//Input Methods
+	/// @brief Input Methods
 	void ReportKey(int code, int status);
 	void ReportAxis(int axisX, int axisY, int axisZ);
 
-	//Output Methods
+	/// @brief Output Methods
 	void PushChar(char chr);
 	void PushString(char* data, int size);
 	void PushAxis(int axisX, int axisY, int axisZ);
