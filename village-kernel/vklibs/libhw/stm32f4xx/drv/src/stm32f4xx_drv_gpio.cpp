@@ -36,10 +36,10 @@ void Gpio::Initialize(Config config)
 	if (_Output == config.mode)
 		ConfigOutputType(_PushPull);
 	else if (_Input == config.mode)
-		ConfigInputType(_NoPull);
+		ConfigInputType(_PullUp);
 
 	//Set the correct value
-	if (_Alt == config.mode)
+	if (_Altera == config.mode)
 		ConfigAltFunc(config.altfun);
 	else if (_Output == config.mode)
 		Write((GpioState)config.value);

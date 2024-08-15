@@ -43,7 +43,7 @@ public:
 	{
 		_Input  = 0b00,
 		_Output = 0b01,
-		_Alt    = 0b10,
+		_Altera = 0b10,
 		_Analog = 0b11,
 	};
 
@@ -71,7 +71,7 @@ public:
 		_LowSpeed  = 0b00,
 		_MedSpeed  = 0b01,
 		_HighSpeed = 0b10,
-		_SuperHighSpeed = 0b11,
+		_SuperSpeed = 0b11,
 	};
 
 	struct Config
