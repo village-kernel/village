@@ -29,7 +29,7 @@ void DmaFifo::Open(Config config)
 	dma.ConfigRequest(config.request);
 	dma.SetPeriphAddr(config.periphAddr);
 
-	if (config.isReadFifo)
+	if (Dma::_PeriphToMemory == config.direction)
 	{	
 		dma.ConfigDirAndDataWidth(Dma::_PeriphToMemory, Dma::_8Bits);
 		dma.ConfigCircularMode(true);
