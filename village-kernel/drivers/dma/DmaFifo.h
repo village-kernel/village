@@ -23,7 +23,7 @@ public:
 		uint8_t stream;
 		uint8_t request;
 		void*   periphAddr;
-		bool    isReadFifo;
+		uint8_t direction;
 	};
 private:
 	//Static Constants
