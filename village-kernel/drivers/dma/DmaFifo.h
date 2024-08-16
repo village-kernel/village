@@ -31,10 +31,10 @@ private:
 
 	//Members
 	Dma dma;
-	uint8_t buffer[buffer_size] = { 0 };
-	uint32_t prevDmaDataCtr;
-	uint32_t dequeuePtr;
 	uint32_t length;
+	uint32_t dequeuePtr;
+	uint32_t prevDmaDataCtr;
+	uint8_t buffer[buffer_size] = { 0 };
 private:
 	//Methods
 	void Update();

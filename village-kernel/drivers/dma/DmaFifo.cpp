@@ -12,9 +12,9 @@
 
 /// @brief Constructor
 DmaFifo::DmaFifo()
-	:prevDmaDataCtr(buffer_size),
+	:length(0),
 	dequeuePtr(0),
-	length(0)
+	prevDmaDataCtr(buffer_size)
 {
 }
 
