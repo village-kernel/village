@@ -22,8 +22,8 @@ public:
 		uint8_t group;
 		uint8_t stream;
 		uint8_t request;
-		void*   periphAddr;
 		uint8_t direction;
+		void*   periphAddr;
 	};
 private:
 	//Static Constants
