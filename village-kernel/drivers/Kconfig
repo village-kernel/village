@@ -68,8 +68,8 @@ endmenu
 
 menu "timer"
 
-config GENERALTIMER
-	tristate "Enable general timer support"
+config PIT32TIMER
+	tristate "Enable pit32 timer support"
 	default n
 
 endmenu

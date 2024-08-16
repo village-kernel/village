@@ -76,7 +76,7 @@ objs-$(CONFIG_SERIALUART)             += SerialUart.o
 inc-y                                 += village-kernel/drivers/timer
 src-y                                 += village-kernel/drivers/timer
 
-objs-$(CONFIG_GENERALTIMER)           += GeneralTimer.o
+objs-$(CONFIG_PIT32TIMER)             += Pit32Timer.o
 
 
 ######################################

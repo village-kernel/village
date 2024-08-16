@@ -1,6 +1,6 @@
  //###########################################################################
-// GeneralTimer.cpp
-// Definitions of the functions that manage general timer
+// Pit32Timer.cpp
+// Definitions of the functions that manage pit32 timer
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -9,8 +9,8 @@
 #include "Hardware.h"
 
 
-/// @brief GeneralTimer
-class GeneralTimer : public Driver
+/// @brief Pit32Timer
+class Pit32Timer : public Driver
 {
 private:
 	//Members
@@ -19,7 +19,7 @@ private:
 public:
 	/// @brief Constructor
 	/// @param timer 
-	GeneralTimer(uint32_t timer = 0)
+	Pit32Timer(uint32_t timer = 0)
 		:timer(0)
 	{
 		if (timer >= 0 && timer <= 2) this->timer = timer;
@@ -49,4 +49,4 @@ public:
 
 
 ///Register driver
-REGISTER_DRIVER(new GeneralTimer(), DriverID::_miscellaneous, timer0);
+REGISTER_DRIVER(new Pit32Timer(), DriverID::_miscellaneous, timer0);
