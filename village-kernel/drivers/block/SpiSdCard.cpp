@@ -11,7 +11,7 @@
 
 
 /// @brief SpiSdCard
-class SpiSdCard : public Driver
+class SpiSdCard : public BlockDevice
 {
 public:
 	//Enumerations
@@ -648,5 +648,5 @@ public:
 };
 
 
-///Register driver
-REGISTER_DRIVER(new SpiSdCard(), DriverID::_block, spiSdCard);
+///Register device
+REGISTER_BLOCK_DEVICE(new SpiSdCard(), spiSdCard);

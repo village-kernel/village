@@ -11,7 +11,7 @@
 
 
 /// @brief SdioSdCard
-class SdioSdCard : public Driver
+class SdioSdCard : public BlockDevice
 {
 public:
 	//Structures
@@ -265,5 +265,5 @@ public:
 };
 
 
-///Register driver
-REGISTER_DRIVER(new SdioSdCard(), DriverID::_block, sdioSdCard);
+///Register device
+REGISTER_BLOCK_DEVICE(new SdioSdCard(), sdioSdCard);

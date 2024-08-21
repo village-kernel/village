@@ -11,7 +11,7 @@
 
 
 /// @brief AtaLbaDisk
-class AtaLbaDisk : public Driver
+class AtaLbaDisk : public BlockDevice
 {
 private:
 	//Members
@@ -141,5 +141,5 @@ public:
 };
 
 
-///Register driver
-REGISTER_DRIVER(new AtaLbaDisk(), DriverID::_block, ataLbaDisk);
+///Register device
+REGISTER_BLOCK_DEVICE(new AtaLbaDisk(), ataLbaDisk);

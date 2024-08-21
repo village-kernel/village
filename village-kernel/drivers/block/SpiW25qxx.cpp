@@ -11,7 +11,7 @@
 
 
 /// @brief SpiW25qxx
-class SpiW25qxx : public Driver
+class SpiW25qxx : public BlockDevice
 {
 public:
 	//Enumerations
@@ -485,5 +485,5 @@ public:
 };
 
 
-///Register driver
-REGISTER_DRIVER(new SpiW25qxx(), DriverID::_block, spiW25qxx);
+///Register device
+REGISTER_BLOCK_DEVICE(new SpiW25qxx(), spiW25qxx);
