@@ -14,7 +14,7 @@
 
 
 /// @brief SerialUart
-class SerialUart : public Driver
+class SerialUart : public CharDevice
 {
 public:
 	//Structures
@@ -162,5 +162,5 @@ public:
 };
 
 
-///Register driver
-REGISTER_DRIVER(new SerialUart(), DriverID::_character, serial0);
+///Register device
+REGISTER_CHAR_DEVICE(new SerialUart(), serial0);

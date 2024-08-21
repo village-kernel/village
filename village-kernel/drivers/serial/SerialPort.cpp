@@ -11,7 +11,7 @@
 
 
 /// @brief SerialPort
-class SerialPort : public Driver
+class SerialPort : public CharDevice
 {
 public:
 	//Enumerations
@@ -138,5 +138,5 @@ public:
 };
 
 
-///Register driver
-REGISTER_DRIVER(new SerialPort(), DriverID::_character, serial0);
+///Register device
+REGISTER_CHAR_DEVICE(new SerialPort(), serial0);
