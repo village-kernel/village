@@ -28,7 +28,7 @@ void Desktop::Setup(const char* screen)
 
 	SetID(DriverID::_character);
 	SetName((char*)"desktop");
-	kernel->device.RegisterDriver(this);
+	kernel->device.RegisterCharDevice(this);
 
 	kernel->inputEvent.Attach(InputEvent::_OutputText, (Method)&Desktop::UpdateText, this);
 	kernel->inputEvent.Attach(InputEvent::_OutputAxis, (Method)&Desktop::UpdateAxis, this);

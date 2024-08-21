@@ -12,7 +12,7 @@
 
 
 ///Lanuch
-class Desktop : public Driver
+class Desktop : public CharDevice, public Class
 {
 private:
 	//Members
