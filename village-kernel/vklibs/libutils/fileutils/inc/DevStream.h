@@ -1,26 +1,26 @@
 //###########################################################################
-// DrvStream.h
+// DevStream.h
 // Declarations of the functions that manage file
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __DRV_STREAM_H__
-#define __DRV_STREAM_H__
+#ifndef __DEV_STREAM_H__
+#define __DEV_STREAM_H__
 
 #include "FileDefs.h"
 #include "Driver.h"
 
 
-/// @brief DrvStream
-class DrvStream
+/// @brief DevStream
+class DevStream
 {
 private:
 	//Members
-	Driver* driver;
+	Fopts* fopts;
 public:
 	//Methods
-	DrvStream(const char* name = NULL, int mode = 0);
-	~DrvStream();
+	DevStream(const char* name = NULL, int mode = 0);
+	~DevStream();
 	bool Open(const char* name, int mode = 0);
 	int Write(char* data, int size, int offset = 0);
 	int Read(char* data, int size, int offset = 0);
@@ -28,4 +28,4 @@ public:
 	void Close();
 };
 
-#endif //!__DRV_STREAM_H__
+#endif //!__DEV_STREAM_H__
