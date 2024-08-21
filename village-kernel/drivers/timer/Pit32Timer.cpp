@@ -10,7 +10,7 @@
 
 
 /// @brief Pit32Timer
-class Pit32Timer : public Driver
+class Pit32Timer : public CharDevice
 {
 private:
 	//Members
@@ -48,5 +48,5 @@ public:
 };
 
 
-///Register driver
-REGISTER_DRIVER(new Pit32Timer(), DriverID::_miscellaneous, timer0);
+///Register device
+REGISTER_MISC_DEVICE(new Pit32Timer(), pit32Timer);
