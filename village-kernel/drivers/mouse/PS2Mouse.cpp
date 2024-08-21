@@ -12,7 +12,7 @@
 
 
 /// @brief PS2Mouse
-class PS2Mouse : public Driver
+class PS2Mouse : public CharDevice, public Class
 {
 private:
 	//Packet union
@@ -269,5 +269,5 @@ public:
 };
 
 
-//Register driver
-REGISTER_DRIVER(new PS2Mouse(), DriverID::_character, ps2mouse);
+//Register device
+REGISTER_CHAR_DEVICE(new PS2Mouse(), ps2mouse);
