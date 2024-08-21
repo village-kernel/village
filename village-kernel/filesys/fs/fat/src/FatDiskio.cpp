@@ -9,14 +9,16 @@
 
 
 /// @brief Setup
-/// @param diskdrv 
+/// @param disk 
 /// @param fstSec 
-bool FatDiskio::Setup(DrvStream* diskdrv, uint32_t fstSec)
+bool FatDiskio::Setup(const char* disk, uint32_t fstSec)
 {
-	this->diskdrv = diskdrv;
 	this->fstSec  = fstSec;
 
-	if (CheckFileSystem()) return true;
+	if (device.Open(disk, FileMode::_ReadWrite))
+	{
+		if (CheckFileSystem()) return true;
+	}
 
 	kernel->debug.Error("Not filesystem found");
 	return false;
@@ -26,7 +28,7 @@ bool FatDiskio::Setup(DrvStream* diskdrv, uint32_t fstSec)
 /// @brief Exit
 void FatDiskio::Exit()
 {
-
+	device.Close();
 }
 
 
@@ -103,11 +105,7 @@ bool FatDiskio::CheckFileSystem()
 /// @return read sector size
 uint32_t FatDiskio::ReadSector(char* data, uint32_t sector, uint32_t secSize)
 {
-	if (NULL != diskdrv)
-	{
-		diskdrv->Read(data, secSize, sector + fstSec);
-	}
-	return secSize;
+	return device.Read(data, secSize, sector + fstSec);
 }
 
 
@@ -118,11 +116,7 @@ uint32_t FatDiskio::ReadSector(char* data, uint32_t sector, uint32_t secSize)
 /// @return 
 uint32_t FatDiskio::WriteSector(char* data, uint32_t sector, uint32_t secSize)
 {
-	if (NULL != diskdrv)
-	{
-		diskdrv->Write(data, secSize, sector + fstSec);
-	}
-	return secSize;
+	return device.Write(data, secSize, sector + fstSec);
 }
 
 
