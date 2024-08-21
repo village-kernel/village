@@ -188,13 +188,38 @@ public:
 class Device
 {
 public:
-	/// @brief Register Methods
-	virtual void RegisterDriver(Driver* driver) = 0;
-	virtual void DeregisterDriver(Driver* driver) = 0;
-	
-	/// @brief Data Methods
-	virtual Driver* GetDriver(const char* name) = 0;
-	virtual List<Driver*> GetDrivers(DriverID id) = 0;
+	/// @brief Block device methods
+	virtual void RegisterBlockDevice(BlockDevice* device) = 0;
+	virtual void DeregisterBlockDevice(BlockDevice* device) = 0;
+
+	/// @brief Char device methods
+	virtual void RegisterCharDevice(CharDevice* device) = 0;
+	virtual void DeregisterCharDevice(CharDevice* device) = 0;
+
+	/// @brief Framebuffer device methods
+	virtual void RegisterFBDevice(FBDevice* device) = 0;
+	virtual void DeregisterFBDevice(FBDevice* device) = 0;
+
+	/// @brief Netwrok device methods
+	virtual void RegisterNetworkDevice(NetworkDevice* device) = 0;
+	virtual void DeregisterNetworkDevice(NetworkDevice* device) = 0;
+
+	/// @brief Misc device methods
+	virtual void RegisterMiscDevice(MiscDevice* device) = 0;
+	virtual void DeregisterMiscDevice(MiscDevice* device) = 0;
+
+	/// @brief Platform device methods
+	virtual void RegisterPlatDevice(PlatDevice* device) = 0;
+	virtual void DeregisterPlatDevice(PlatDevice* device) = 0;
+
+	/// @brief Platform driver methods
+	virtual void RegisterPlatDriver(PlatDriver* driver) = 0;
+	virtual void DeregisterPlatDriver(PlatDriver* driver) = 0;
+
+	/// @brief Data methods
+	virtual FBDevice* GetDeviceFB(const char* name) = 0;
+	virtual Fopts* GetDeviceFopts(const char* name) = 0;
+	virtual List<Base*> GetDevices(DriverID id) = 0;
 };
 
 

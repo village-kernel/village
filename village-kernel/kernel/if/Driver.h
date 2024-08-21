@@ -11,16 +11,10 @@
 #include "Class.h"
 
 
-/// @brief Driver
-class Driver : public Base, public Class
+/// @brief Fopts
+class Fopts
 {
 public:
-	//Constructor
-	Driver() {}
-
-	//Destructor
-	virtual ~Driver() {}
-
 	//Opts methods
 	virtual bool Open() = 0;
 	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
@@ -30,8 +24,32 @@ public:
 };
 
 
+/// @brief BlockDevice
+class BlockDevice : public Base, public Fopts
+{
+public:
+	//Constructor
+	BlockDevice() {}
+
+	//Destructor
+	virtual ~BlockDevice() {}
+};
+
+
+/// @brief CharDevice
+class CharDevice : public Base, public Fopts
+{
+public:
+	//Constructor
+	CharDevice() {}
+
+	//Destructor
+	virtual ~CharDevice() {}
+};
+
+
 /// @brief FBDevice
-class FBDevice
+class FBDevice : public Base
 {
 public:
 	//Structures
@@ -52,10 +70,68 @@ public:
 	virtual ~FBDevice() {}
 
 	//Methods
+	virtual bool Setup() = 0;
 	virtual void DrawPoint(uint32_t x, uint32_t y, uint32_t color) = 0;
 	virtual uint32_t ReadPoint(uint32_t x, uint32_t y) = 0;
 	virtual void Fill(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color) = 0;
 	virtual void Clear(uint32_t color) = 0;
+	virtual void Exit() = 0;
 };
+
+
+/// @brief NetworkDevice
+class NetworkDevice : public Base
+{
+public:
+	//Constructor
+	NetworkDevice() {}
+
+	//Destructor
+	virtual ~NetworkDevice() {}
+};
+
+
+/// @brief MiscDevice
+class MiscDevice : public Base, public Fopts
+{
+public:
+	//Constructor
+	MiscDevice() {}
+
+	//Destructor
+	virtual ~MiscDevice() {}
+};
+
+
+/// @brief PlatDevice
+class PlatDevice : public Base
+{
+public:
+	//Constructor
+	PlatDevice() {}
+
+	//Destructor
+	virtual ~PlatDevice() {}
+
+	//Methods
+	virtual int Release() = 0; 
+};
+
+
+/// @brief PlatDriver
+class PlatDriver : public Base
+{
+public:
+	//Constructor
+	PlatDriver() {}
+
+	//Destructor
+	virtual ~PlatDriver() {}
+
+	//Methods
+	virtual int Probe(PlatDevice* device) = 0;
+	virtual int Remove(PlatDevice* device) = 0;
+};
+
 
 #endif // !__DRIVER_INTERFACE_H__

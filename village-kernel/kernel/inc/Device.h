@@ -17,7 +17,13 @@ class ConcreteDevice : public Device
 {
 private:
 	/// @brief Members
-	List<Driver*> drivers;
+	List<BlockDevice*>    blockDevs;
+	List<CharDevice*>     charDevs;
+	List<FBDevice*>       fbDevs;
+	List<NetworkDevice*>  ntDevs;
+	List<MiscDevice*>     miscDevs;
+	List<PlatDevice*>     platDevs;
+	List<PlatDriver*>     platDrvs;
 public:
 	/// @brief Methods
 	ConcreteDevice();
@@ -25,13 +31,38 @@ public:
 	void Setup();
 	void Exit();
 
-	/// @brief Register Methods
-	void RegisterDriver(Driver* driver);
-	void DeregisterDriver(Driver* driver);
-	
-	/// @brief Data Methods
-	Driver* GetDriver(const char* name);
-	List<Driver*> GetDrivers(DriverID id);
+	/// @brief Block device methods
+	void RegisterBlockDevice(BlockDevice* device);
+	void DeregisterBlockDevice(BlockDevice* device);
+
+	/// @brief Char device methods
+	void RegisterCharDevice(CharDevice* device);
+	void DeregisterCharDevice(CharDevice* device);
+
+	/// @brief Framebuffer device methods
+	void RegisterFBDevice(FBDevice* device);
+	void DeregisterFBDevice(FBDevice* device);
+
+	/// @brief Netwrok device methods
+	void RegisterNetworkDevice(NetworkDevice* device);
+	void DeregisterNetworkDevice(NetworkDevice* device);
+
+	/// @brief Misc device methods
+	void RegisterMiscDevice(MiscDevice* device);
+	void DeregisterMiscDevice(MiscDevice* device);
+
+	/// @brief Platform device methods
+	void RegisterPlatDevice(PlatDevice* device);
+	void DeregisterPlatDevice(PlatDevice* device);
+
+	/// @brief Platform driver methods
+	void RegisterPlatDriver(PlatDriver* driver);
+	void DeregisterPlatDriver(PlatDriver* driver);
+
+	/// @brief Data methods
+	FBDevice* GetDeviceFB(const char* name);
+	Fopts* GetDeviceFopts(const char* name);
+	List<Base*> GetDevices(DriverID id);
 };
 
 #endif // !__DEVICE_H__
