@@ -195,8 +195,8 @@ public:
 	}
 
 
-	/// @brief Initialize
-	void Initialize()
+	/// @brief ILI9488 Setup
+	bool Setup()
 	{
 		InitConfig();
 
@@ -213,7 +213,10 @@ public:
 			DisplayConfig();
 			Clear();
 			BackLightOn();
+			return true;
 		}
+
+		return false;
 	}
 
 
@@ -496,64 +499,15 @@ public:
 		uint32_t totalpoint = lcd.width * lcd.height;
 		Fill(totalpoint, color);
 	}
-};
 
 
-/// @brief ILI9488Drv
-class ILI9488Drv : public Driver
-{
-private:
-	//Members
-	ILI9488* ili9488;
-public:
-	/// @brief Constructor
-	ILI9488Drv()
-		:ili9488(NULL)
-	{
-	}
-
-
-	/// @brief Destructor
-	~ILI9488Drv()
-	{
-		delete ili9488;
-	}
-
-
-	/// @brief 
-	bool Open()
-	{
-		if (NULL == ili9488)
-		{
-			ili9488 = new ILI9488();
-			ili9488->Initialize();
-			return true;
-		}
-		return false;
-	}
-
-
-	/// @brief close
-	void Close()
+	/// @brief ILI9488 Exit
+	void Exit()
 	{
 
-	}
-
-
-	/// @brief IOCtrl
-	/// @param cmd 
-	/// @param data 
-	/// @return 
-	int IOCtrl(uint8_t cmd, void* data)
-	{
-		FBDevice** fbdev = (FBDevice**)data;
-		
-		*fbdev = ili9488;
-
-		return 0;
 	}
 };
 
 
-///Register driver
-REGISTER_DRIVER(new ILI9488Drv(), DriverID::_framebuffer, display0);
+///Register device
+REGISTER_FB_DEVICE(new ILI9488(), display0);

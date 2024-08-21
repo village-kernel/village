@@ -137,8 +137,8 @@ public:
 	}
 
 
-	/// @brief BochsVBE initialize
-	void Initialize()
+	/// @brief BochsVBE setup
+	bool Setup()
 	{
 		fbinfo.width    = 1024;
 		fbinfo.height   = 768;
@@ -151,7 +151,11 @@ public:
 			
 			//Get PCI device 0x1234:0x1111 BAR 0
 			vmap = (uint16_t*)pci.ReadBAR(0x1234, 0x1111, 0);
+
+			return true;
 		}
+
+		return false;
 	}
 
 
@@ -201,63 +205,15 @@ public:
 	{
 		Fill(0, 0, fbinfo.width, fbinfo.height, color);
 	}
-};
 
 
-/// @brief BochsVBEDrv
-class BochsVBEDrv : public Driver
-{
-private:
-	//Members
-	BochsVBE* bochsVBE;
-public:
-	/// @brief Constructor
-	BochsVBEDrv()
-		:bochsVBE(NULL)
-	{
-	}
-
-
-	/// @brief Destructor
-	~BochsVBEDrv()
-	{
-		delete bochsVBE;
-	}
-
-
-	/// @brief Open
-	bool Open()
-	{
-		if (NULL == bochsVBE)
-		{
-			bochsVBE = new BochsVBE;
-			bochsVBE->Initialize();
-		}
-		return true;
-	}
-
-
-	/// @brief Close
-	void Close()
+	/// @brief BochsVBE exit
+	void Exit()
 	{
 
-	}
-
-
-	/// @brief IOCtrl
-	/// @param cmd 
-	/// @param data 
-	/// @return 
-	int IOCtrl(uint8_t cmd, void* data)
-	{
-		FBDevice** fbdev = (FBDevice**)data;
-		
-		*fbdev = bochsVBE;
-
-		return 0;
 	}
 };
 
 
-///Register driver
-REGISTER_DRIVER(new BochsVBEDrv(), DriverID::_framebuffer, display0);
+///Register device
+REGISTER_FB_DEVICE(new BochsVBE(), display0);
