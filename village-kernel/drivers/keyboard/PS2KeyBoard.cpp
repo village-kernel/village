@@ -10,7 +10,7 @@
 
 
 /// @brief PS2KeyBoard
-class PS2KeyBoard : public Driver
+class PS2KeyBoard : public CharDevice, public Class
 {
 private:
 	//Scan code set 1
@@ -101,5 +101,5 @@ public:
 };
 
 
-//Register driver
-REGISTER_DRIVER(new PS2KeyBoard(), DriverID::_character, ps2keyboard);
+//Register device
+REGISTER_CHAR_DEVICE(new PS2KeyBoard(), ps2keyboard);
