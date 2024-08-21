@@ -94,7 +94,7 @@ public:
 
 		mutex.Unlock();
 
-		return 0;
+		return count;
 	}
 
 
@@ -136,7 +136,7 @@ public:
 
 		mutex.Unlock();
 		
-		return 0;
+		return count;
 	}
 };
 
