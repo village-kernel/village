@@ -537,4 +537,4 @@ public:
 
 
 ///Register device
-REGISTER_FB_DEVICE(new ILI9488(), display0);
+REGISTER_FB_DEVICE(new ILI9488(), ili9488);
