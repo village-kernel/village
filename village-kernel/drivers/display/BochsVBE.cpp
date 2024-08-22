@@ -243,4 +243,4 @@ public:
 
 
 ///Register device
-REGISTER_FB_DEVICE(new BochsVBE(), display0);
+REGISTER_FB_DEVICE(new BochsVBE(), bochsVBE);
