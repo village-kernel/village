@@ -217,7 +217,6 @@ public:
 	virtual void DeregisterPlatDriver(PlatDriver* driver) = 0;
 
 	/// @brief Data methods
-	virtual FBDevice* GetDeviceFB(const char* name) = 0;
 	virtual Fopts* GetDeviceFopts(const char* name) = 0;
 	virtual List<Base*> GetDevices(DriverID id) = 0;
 };

@@ -152,15 +152,6 @@ void ConcreteDevice::DeregisterPlatDriver(PlatDriver* driver)
 }
 
 
-/// @brief Get the fb device
-/// @param name 
-/// @return 
-FBDevice* ConcreteDevice::GetDeviceFB(const char* name)
-{
-	return fbDevs.GetItemByName(name);
-}
-
-
 /// @brief Get the device fopts
 /// @param name 
 /// @return 
@@ -172,6 +163,9 @@ Fopts* ConcreteDevice::GetDeviceFopts(const char* name)
 	if (NULL != fopts) return fopts;
 
 	fopts = charDevs.GetItemByName(name);
+	if (NULL != fopts) return fopts;
+
+	fopts = fbDevs.GetItemByName(name);
 	if (NULL != fopts) return fopts;
 
 	fopts = miscDevs.GetItemByName(name);
