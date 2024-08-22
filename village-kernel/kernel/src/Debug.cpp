@@ -128,7 +128,7 @@ void ConcreteDebug::Info(const char* format, ...)
 	va_start(arg, format);
 	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
-	Write("\033[36mInfo: ");
+	Write("\033[36m[Info] ");
 	Write(data);
 	Write("\r\n\033[39m");
 	mutex.Unlock();
@@ -145,7 +145,7 @@ void ConcreteDebug::Error(const char* format, ...)
 	va_start(arg, format);
 	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
-	Write("\033[31mError: ");
+	Write("\033[31m[Error] ");
 	Write(data);
 	Write("\r\n\033[39m");
 	mutex.Unlock();
@@ -162,7 +162,7 @@ void ConcreteDebug::Warn(const char* format, ...)
 	va_start(arg, format);
 	vsnprintf(data, buf_size, format, arg);
 	va_end(arg);
-	Write("\033[33mWarning: ");
+	Write("\033[33m[Warning] ");
 	Write(data);
 	Write("\r\n\033[39m");
 	mutex.Unlock();
@@ -181,7 +181,7 @@ void ConcreteDebug::Output(int level, const char* format, ...)
 		va_start(arg, format);
 		vsnprintf(data, buf_size, format, arg);
 		va_end(arg);
-		Write("\033[36mDebug: ");
+		Write("\033[36m[Debug] ");
 		Write(data);
 		Write("\r\n\033[39m");
 		mutex.Unlock();
