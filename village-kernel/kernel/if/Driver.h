@@ -49,7 +49,7 @@ public:
 
 
 /// @brief FBDevice
-class FBDevice : public Base
+class FBDevice : public Base, public Fopts
 {
 public:
 	//Structures
