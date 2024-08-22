@@ -34,7 +34,7 @@ void Taichi::Execute()
 	kernel->process.Run(Process::_Background, "/applications/simpleInput.exec ps2keyboard ps2mouse");
 
 	//Execute desktop
-	kernel->process.Run(Process::_Background, "/applications/desktop.exec display0");
+	kernel->process.Run(Process::_Background, "/applications/desktop.exec");
 }
 
 
