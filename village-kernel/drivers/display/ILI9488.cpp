@@ -506,6 +506,33 @@ public:
 	{
 
 	}
+public:
+	/// @brief Open
+	bool Open()
+	{
+		return Setup();
+	}
+
+
+	/// @brief close
+	void Close()
+	{
+		Exit();
+	}
+
+
+	/// @brief IOCtrl
+	/// @param cmd 
+	/// @param data 
+	/// @return 
+	int IOCtrl(uint8_t cmd, void* data)
+	{
+		FBDevice** fbdev = (FBDevice**)data;
+
+		*fbdev = this;
+
+		return 0;
+	}
 };
 
 
