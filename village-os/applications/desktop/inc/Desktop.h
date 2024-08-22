@@ -33,17 +33,18 @@ private:
 	InputEvent::OutputText outText;
 
 	//Methods
-	bool SetupWin(const char* screen);
+	bool SetupWin();
 	void UpdateText(InputEvent::OutputText* input);
 	void UpdateAxis(InputEvent::OutputAxis* input);
 public:
 	//Methods
 	Desktop();
 	~Desktop();
-	void Setup(const char* screen);
+	void Setup();
 	void Execute();
+	void Exit();
 
-	//Driver
+	//Fopts
 	bool Open();
 	int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
 	int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0);
