@@ -195,6 +195,11 @@ public:
 	}
 
 
+	/// @brief Destructor
+	~ILI9488()
+	{
+	}
+public:
 	/// @brief ILI9488 Setup
 	bool Setup()
 	{
