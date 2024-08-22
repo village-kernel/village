@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Graphics.h"
+#include "DevStream.h"
 #include "Window.h"
 #include "Kernel.h"
 
@@ -32,15 +33,19 @@ Graphics::~Graphics()
 bool Graphics::Setup(const char* screen)
 {
 	//Get the universal driver by driver name
-	fbdev = kernel->device.GetDeviceFB(screen);
-
-	//Setup display
-	if (NULL != fbdev && fbdev->Setup())
+	DevStream screendrv;
+	if (screendrv.Open(screen, FileMode::_Read))
 	{
-		display = new Display();
-		display->Setup(fbdev);
-	}
+		//Get the specified lcd driver by driver ioctrl 
+		screendrv.IOCtrl(0, (void*)&fbdev);
 
+		//Setup display
+		if (NULL != fbdev)
+		{
+			display = new Display();
+			display->Setup(fbdev);
+		}
+	}
 	return (NULL != display);
 }
 
