@@ -23,7 +23,7 @@ Display::~Display()
 }
 
 
-///Display Setup
+/// @brief Display Setup
 void Display::Setup(FBDevice* fbdev)
 {
 	if (NULL != fbdev)
@@ -32,6 +32,13 @@ void Display::Setup(FBDevice* fbdev)
 		limitX = fbdev->fbinfo.width - 1;
 		limitY = fbdev->fbinfo.height - 1;
 	}
+	Clear();
+}
+
+
+/// @brief Display Exit
+void Display::Exit()
+{
 	Clear();
 }
 
