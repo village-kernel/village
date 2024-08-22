@@ -60,7 +60,6 @@ public:
 	void DeregisterPlatDriver(PlatDriver* driver);
 
 	/// @brief Data methods
-	FBDevice* GetDeviceFB(const char* name);
 	Fopts* GetDeviceFopts(const char* name);
 	List<Base*> GetDevices(DriverID id);
 };
