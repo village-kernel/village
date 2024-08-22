@@ -135,8 +135,7 @@ public:
 	~BochsVBE()
 	{
 	}
-
-
+public:
 	/// @brief BochsVBE setup
 	bool Setup()
 	{
