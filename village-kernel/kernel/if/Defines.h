@@ -103,10 +103,10 @@ static struct _Misc_Dev_##name {                                  \
 	_Misc_Dev_##name() {                                          \
 		device->SetID(DriverID::_miscellaneous);                  \
 		device->SetName((char*)#name);                            \
-		kernel->device.RegisterFBDevice(device);                  \
+		kernel->device.RegisterMiscDevice(device);                \
 	}                                                             \
 	~_Misc_Dev_##name() {                                         \
-		kernel->device.DeregisterFBDevice(device);                \
+		kernel->device.DeregisterMiscDevice(device);              \
 	}                                                             \
 } const _misc_dev_##name __attribute__((used,__section__(".devices")))
 
@@ -121,7 +121,7 @@ static struct _Plat_Drv_##name {                                  \
 		kernel->device.RegisterPlatDriver(driver);                \
 	}                                                             \
 	~_Plat_Drv_##name() {                                         \
-		kernel->device.DeregisterPlatDevice(driver);              \
+		kernel->device.DeregisterPlatDriver(driver);              \
 	}                                                             \
 } const _plat_drv_##name __attribute__((used,__section__(".devices")))
 
@@ -129,7 +129,7 @@ static struct _Plat_Drv_##name {                                  \
 ///Plat device register macro
 #define REGISTER_PLAT_DEVICE(dev, name)                           \
 static struct _Plat_Dev_##name {                                  \
-	MiscDevice* device = dev;                                     \
+	PlatDevice* device = dev;                                     \
 	_Plat_Dev_##name() {                                          \
 		device->SetID(DriverID::_platformDevice);                 \
 		device->SetName((char*)#name);                            \
