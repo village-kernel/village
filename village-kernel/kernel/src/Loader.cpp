@@ -70,7 +70,7 @@ void ConcreteLoader::Unload(int type, const char* filename)
 
 	List<char*>& runcmds = parser->GetRunCmds();
 
-	for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
+	for (runcmds.Begin(); !runcmds.IsEnd(); runcmds.Next())
 	{
 		if (!Uninstall(type, runcmds.Item())) break;
 	}
