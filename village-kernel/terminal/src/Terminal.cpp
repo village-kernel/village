@@ -23,11 +23,34 @@ ConcreteTerminal::~ConcreteTerminal()
 /// @brief Terminal Setup
 void ConcreteTerminal::Setup()
 {
-	//Create the default console
-	CreateConsole("serial0");
+	//Create terminal execute
+	kernel->thread.CreateTask("Terminal::Execute", (Method)&ConcreteTerminal::Execute, this);
 
 	//Output debug info
 	kernel->debug.Info("Terminal setup done!");
+}
+
+
+/// @brief Terminal Execute
+void ConcreteTerminal::Execute()
+{
+	const char* msg = "\r\nPlease press Enter to activate this console.\r\n";
+
+	//Open serial
+	DevStream serial;
+	serial.Open("serial0", FileMode::_ReadWrite);
+
+	//Output msg
+	serial.Write((char*)msg, strlen(msg));
+
+	//Wait for Enter
+	char key = 0; do { serial.Read((char*)&key, 1); } while (0x0d != key);
+
+	//Close serial
+	serial.Close();
+
+	//Create the default console
+	CreateConsole("serial0");
 }
 
 
