@@ -11,7 +11,7 @@
 #include "stdio.h"
 
 
-///vk.kernel console welcome string
+/// @brief Console welcome string
 const char* vk_welcome[] = {
 "\r\n",
 R"(        _ ____                    __                        __ )",
@@ -39,9 +39,6 @@ Console::~Console()
 /// @brief Console setup
 void Console::Setup(const char* driver)
 {
-	//Disable irq
-	kernel->system.DisableIRQ();
-
 	//Set default user
 	strcpy(user, "root@village");
 
@@ -52,18 +49,10 @@ void Console::Setup(const char* driver)
 	msgMgr.Setup(driver);
 
 	//Output welcome message
-	uint8_t sizeofstr = sizeof(vk_welcome) / sizeof(char*);
-	for (uint8_t i = 0; i < sizeofstr; i++)
-	{
-		msgMgr.Write((uint8_t*)vk_welcome[i]);
-		msgMgr.Write((uint8_t*)"\r\n");
-	}
+	ShowWelcomeMsg();
 
 	//Output console symbol
 	ShowUserAndPath();
-
-	//Enable irq
-	kernel->system.EnableIRQ();
 }
 
 
@@ -122,6 +111,25 @@ void Console::ExecuteCmd(CmdMsg msg)
 void Console::Exit()
 {
 	msgMgr.Exit();
+}
+
+
+/// @brief Console show welcome msg
+void Console::ShowWelcomeMsg()
+{
+	//Disable irq
+	kernel->system.DisableIRQ();
+
+	//Output welcome message
+	uint8_t sizeofstr = sizeof(vk_welcome) / sizeof(char*);
+	for (uint8_t i = 0; i < sizeofstr; i++)
+	{
+		msgMgr.Write((uint8_t*)vk_welcome[i]);
+		msgMgr.Write((uint8_t*)"\r\n");
+	}
+
+	//Enable irq
+	kernel->system.EnableIRQ();
 }
 
 
