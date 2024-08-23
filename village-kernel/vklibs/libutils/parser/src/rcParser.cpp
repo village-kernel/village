@@ -29,7 +29,7 @@ bool RcParser::Load(const char* filename)
 
 		if (file.Read((char*)text, size) == size)
 		{
-			Decode(text);
+			Decode(text, size);
 			res = true;
 		}
 		
@@ -43,7 +43,7 @@ bool RcParser::Load(const char* filename)
 
 
 ///Decode the rc data
-void RcParser::Decode(const char* rcString)
+void RcParser::Decode(const char* rcString, int size)
 {
 	const int32_t start_delimiter= -1;
 
@@ -51,7 +51,7 @@ void RcParser::Decode(const char* rcString)
 	int32_t startIndex  = start_delimiter;
 	int32_t recordBytes = 0;
 	
-	for (int32_t i = 0; ; i++)
+	for (int32_t i = 0; i < size; i++)
 	{
 		char byte = rcString[i];
 
