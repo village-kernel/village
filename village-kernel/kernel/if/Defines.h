@@ -116,8 +116,8 @@ static struct _Misc_Dev_##name {                                  \
 static struct _Plat_Drv_##name {                                  \
 	PlatDriver* driver = drv;                                     \
 	_Plat_Drv_##name() {                                          \
-		device->SetID(DriverID::_platformDriver);                 \
-		device->SetName((char*)#name);                            \
+		driver->SetID(DriverID::_platformDriver);                 \
+		driver->SetName((char*)#name);                            \
 		kernel->device.RegisterPlatDriver(driver);                \
 	}                                                             \
 	~_Plat_Drv_##name() {                                         \
