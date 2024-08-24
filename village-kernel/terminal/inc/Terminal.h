@@ -35,7 +35,7 @@ public:
 
 	//Cmd Methods
 	void RegisterCmd(Cmd* cmd, char* name);
-	void DeregisterCmd(Cmd* cmd, char* name);
+	void UnregisterCmd(Cmd* cmd, char* name);
 	List<Cmd*> GetCmds();
 
 	//Console Methods

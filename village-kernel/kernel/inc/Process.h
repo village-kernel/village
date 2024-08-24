@@ -36,7 +36,7 @@ public:
 
 	/// @brief Register Methods
 	void RegisterExecutor(Executor* executor);
-	void DeregisterExecutor(Executor* executor);
+	void UnregisterExecutor(Executor* executor);
 
 	/// @brief Run Methods
 	int Run(Behavior behavior, const char* args);

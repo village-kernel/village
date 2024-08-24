@@ -46,7 +46,7 @@ static struct _Block_Dev_##name {                                 \
 		kernel->device.RegisterBlockDevice(device);               \
 	}                                                             \
 	~_Block_Dev_##name() {                                        \
-		kernel->device.DeregisterBlockDevice(device);             \
+		kernel->device.UnregisterBlockDevice(device);             \
 	}                                                             \
 } const _block_dev_##name __attribute__((used,__section__(".devices")))
 
@@ -61,7 +61,7 @@ static struct _Char_Dev_##name {                                  \
 		kernel->device.RegisterCharDevice(device);                \
 	}                                                             \
 	~_Char_Dev_##name() {                                         \
-		kernel->device.DeregisterCharDevice(device);              \
+		kernel->device.UnregisterCharDevice(device);              \
 	}                                                             \
 } const _char_dev_##name __attribute__((used,__section__(".devices")))
 
@@ -76,7 +76,7 @@ static struct _FB_Dev_##name {                                    \
 		kernel->device.RegisterFBDevice(device);                  \
 	}                                                             \
 	~_FB_Dev_##name() {                                           \
-		kernel->device.DeregisterFBDevice(device);                \
+		kernel->device.UnregisterFBDevice(device);                \
 	}                                                             \
 } const _fb_dev_##name __attribute__((used,__section__(".devices")))
 
@@ -91,7 +91,7 @@ static struct _Network_Dev_##name {                               \
 		kernel->device.RegisterNetworkDevice(device);             \
 	}                                                             \
 	~_Network_Dev_##name() {                                      \
-		kernel->device.DeregisterNetworkDevice(device);           \
+		kernel->device.UnregisterNetworkDevice(device);           \
 	}                                                             \
 } const _network_dev_##name __attribute__((used,__section__(".devices")))
 
@@ -106,7 +106,7 @@ static struct _Misc_Dev_##name {                                  \
 		kernel->device.RegisterMiscDevice(device);                \
 	}                                                             \
 	~_Misc_Dev_##name() {                                         \
-		kernel->device.DeregisterMiscDevice(device);              \
+		kernel->device.UnregisterMiscDevice(device);              \
 	}                                                             \
 } const _misc_dev_##name __attribute__((used,__section__(".devices")))
 
@@ -121,7 +121,7 @@ static struct _Plat_Drv_##name {                                  \
 		kernel->device.RegisterPlatDriver(driver);                \
 	}                                                             \
 	~_Plat_Drv_##name() {                                         \
-		kernel->device.DeregisterPlatDriver(driver);              \
+		kernel->device.UnregisterPlatDriver(driver);              \
 	}                                                             \
 } const _plat_drv_##name __attribute__((used,__section__(".devices")))
 
@@ -136,7 +136,7 @@ static struct _Plat_Dev_##name {                                  \
 		kernel->device.RegisterPlatDevice(device);                \
 	}                                                             \
 	~_Plat_Dev_##name() {                                         \
-		kernel->device.DeregisterPlatDevice(device);              \
+		kernel->device.UnregisterPlatDevice(device);              \
 	}                                                             \
 } const _plat_dev_##name __attribute__((used,__section__(".devices")))
 
@@ -151,7 +151,7 @@ static struct _Mod_##name {                                       \
 		kernel->feature.RegisterModule(module);                   \
 	}                                                             \
 	~_Mod_##name() {                                              \
-		kernel->feature.DeregisterModule(module);                 \
+		kernel->feature.UnregisterModule(module);                 \
 	}                                                             \
 } const _mod_##name __attribute__((used,__section__(".modules")))
 

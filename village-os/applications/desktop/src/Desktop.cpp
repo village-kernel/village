@@ -42,7 +42,7 @@ void Desktop::Exit()
 	kernel->inputEvent.Detach(InputEvent::_OutputAxis, (Method)&Desktop::UpdateAxis, this);
 	kernel->inputEvent.Detach(InputEvent::_OutputText, (Method)&Desktop::UpdateText, this);
 
-	kernel->device.DeregisterCharDevice(this);
+	kernel->device.UnregisterCharDevice(this);
 
 	graphics.Exit();
 }

@@ -63,7 +63,7 @@ public:
 	
 	/// @brief Register Methods
 	void RegisterFS(FileSys* fs, const char* name);
-	void DeregisterFS(FileSys* fs, const char* name);
+	void UnregisterFS(FileSys* fs, const char* name);
 	
 	/// @brief Volume Methods
 	int AttachVolume(FileVol* volume);

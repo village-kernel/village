@@ -33,31 +33,31 @@ public:
 
 	/// @brief Block device methods
 	void RegisterBlockDevice(BlockDevice* device);
-	void DeregisterBlockDevice(BlockDevice* device);
+	void UnregisterBlockDevice(BlockDevice* device);
 
 	/// @brief Char device methods
 	void RegisterCharDevice(CharDevice* device);
-	void DeregisterCharDevice(CharDevice* device);
+	void UnregisterCharDevice(CharDevice* device);
 
 	/// @brief Framebuffer device methods
 	void RegisterFBDevice(FBDevice* device);
-	void DeregisterFBDevice(FBDevice* device);
+	void UnregisterFBDevice(FBDevice* device);
 
 	/// @brief Netwrok device methods
 	void RegisterNetworkDevice(NetworkDevice* device);
-	void DeregisterNetworkDevice(NetworkDevice* device);
+	void UnregisterNetworkDevice(NetworkDevice* device);
 
 	/// @brief Misc device methods
 	void RegisterMiscDevice(MiscDevice* device);
-	void DeregisterMiscDevice(MiscDevice* device);
+	void UnregisterMiscDevice(MiscDevice* device);
 
 	/// @brief Platform device methods
 	void RegisterPlatDevice(PlatDevice* device);
-	void DeregisterPlatDevice(PlatDevice* device);
+	void UnregisterPlatDevice(PlatDevice* device);
 
 	/// @brief Platform driver methods
 	void RegisterPlatDriver(PlatDriver* driver);
-	void DeregisterPlatDriver(PlatDriver* driver);
+	void UnregisterPlatDriver(PlatDriver* driver);
 
 	/// @brief Data methods
 	Fopts* GetDeviceFopts(const char* name);
