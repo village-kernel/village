@@ -68,9 +68,9 @@ void ConcreteFeature::RegisterModule(Module* module)
 }
 
 
-/// @brief Deregister module object
+/// @brief Unregister module object
 /// @param module module pointer
-void ConcreteFeature::DeregisterModule(Module* module)
+void ConcreteFeature::UnregisterModule(Module* module)
 {
 	if (isRuntime) module->Exit();
 	modules.Remove(module);

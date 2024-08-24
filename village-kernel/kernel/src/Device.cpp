@@ -48,9 +48,9 @@ void ConcreteDevice::RegisterBlockDevice(BlockDevice* device)
 }
 
 
-/// @brief Deregister block device object
+/// @brief Unregister block device object
 /// @param device device pointer
-void ConcreteDevice::DeregisterBlockDevice(BlockDevice* device)
+void ConcreteDevice::UnregisterBlockDevice(BlockDevice* device)
 {
 	blockDevs.Remove(device);
 }
@@ -64,9 +64,9 @@ void ConcreteDevice::RegisterCharDevice(CharDevice* device)
 }
 
 
-/// @brief Deregister char device object
+/// @brief Unregister char device object
 /// @param device device pointer
-void ConcreteDevice::DeregisterCharDevice(CharDevice* device)
+void ConcreteDevice::UnregisterCharDevice(CharDevice* device)
 {
 	charDevs.Remove(device);
 }
@@ -80,9 +80,9 @@ void ConcreteDevice::RegisterFBDevice(FBDevice* device)
 }
 
 
-/// @brief Deregister fb device object
+/// @brief Unregister fb device object
 /// @param device device pointer
-void ConcreteDevice::DeregisterFBDevice(FBDevice* device)
+void ConcreteDevice::UnregisterFBDevice(FBDevice* device)
 {
 	fbDevs.Remove(device);
 }
@@ -96,9 +96,9 @@ void ConcreteDevice::RegisterNetworkDevice(NetworkDevice* device)
 }
 
 
-/// @brief Deregister nt device object
+/// @brief Unregister nt device object
 /// @param device device pointer
-void ConcreteDevice::DeregisterNetworkDevice(NetworkDevice* device)
+void ConcreteDevice::UnregisterNetworkDevice(NetworkDevice* device)
 {
 	ntDevs.Remove(device);
 }
@@ -112,9 +112,9 @@ void ConcreteDevice::RegisterMiscDevice(MiscDevice* device)
 }
 
 
-/// @brief Deregister misc device object
+/// @brief Unregister misc device object
 /// @param device device pointer
-void ConcreteDevice::DeregisterMiscDevice(MiscDevice* device)
+void ConcreteDevice::UnregisterMiscDevice(MiscDevice* device)
 {
 	miscDevs.Remove(device);
 }
@@ -128,9 +128,9 @@ void ConcreteDevice::RegisterPlatDevice(PlatDevice* device)
 }
 
 
-/// @brief Deregister plat device object
+/// @brief Unregister plat device object
 /// @param device device pointer
-void ConcreteDevice::DeregisterPlatDevice(PlatDevice* device)
+void ConcreteDevice::UnregisterPlatDevice(PlatDevice* device)
 {
 	platDevs.Remove(device);
 }
@@ -144,9 +144,9 @@ void ConcreteDevice::RegisterPlatDriver(PlatDriver* driver)
 }
 
 
-/// @brief Deregister plat device object
+/// @brief Unregister plat device object
 /// @param driver driver pointer
-void ConcreteDevice::DeregisterPlatDriver(PlatDriver* driver)
+void ConcreteDevice::UnregisterPlatDriver(PlatDriver* driver)
 {
 	platDrvs.Remove(driver);
 }

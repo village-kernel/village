@@ -19,7 +19,7 @@ static struct _Exec_##name {                                      \
 		kernel->process.RegisterExecutor(executor);               \
 	}                                                             \
 	~_Exec_##name() {                                             \
-		kernel->process.DeregisterExecutor(executor);             \
+		kernel->process.UnregisterExecutor(executor);             \
 	}                                                             \
 } const _exec_##name __attribute__((used,__section__(".executors")))
 

@@ -89,7 +89,7 @@ static struct _FS_##name {                                    \
 		kernel->filesys.RegisterFS(filesystem, #name);        \
 	}                                                         \
 	~_FS_##name() {                                           \
-		kernel->filesys.DeregisterFS(filesystem, #name);      \
+		kernel->filesys.UnregisterFS(filesystem, #name);      \
 	}                                                         \
 } const _fs_##name __attribute__((used,__section__(".fs")))
 

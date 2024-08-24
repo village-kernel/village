@@ -71,10 +71,10 @@ void ConcreteTerminal::RegisterCmd(Cmd* cmd, char* name)
 }
 
 
-/// @brief Deregister cmd object
+/// @brief Unregister cmd object
 /// @param cmd console command pointer
 /// @param name console command name 
-void ConcreteTerminal::DeregisterCmd(Cmd* cmd, char* name)
+void ConcreteTerminal::UnregisterCmd(Cmd* cmd, char* name)
 {
 	cmds.RemoveByName(cmd, name);
 }

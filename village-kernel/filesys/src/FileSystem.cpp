@@ -137,10 +137,10 @@ void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
 }
 
 
-/// @brief Deregister file system
+/// @brief Unregister file system
 /// @param fs file system
 /// @param name file system name
-void ConcreteFileSystem::DeregisterFS(FileSys* fs, const char* name)
+void ConcreteFileSystem::UnregisterFS(FileSys* fs, const char* name)
 {
 	fileSys.RemoveByName(fs, (char*)name);
 }
