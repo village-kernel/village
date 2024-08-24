@@ -24,6 +24,12 @@ private:
 	List<MiscDevice*>     miscDevs;
 	List<PlatDevice*>     platDevs;
 	List<PlatDriver*>     platDrvs;
+
+	/// @brief Methods
+	PlatDriver* PlatformMatch(PlatDevice* device);
+	void PlatformProbe();
+	void PlatformRemove();
+	void DevicesRelease();
 public:
 	/// @brief Methods
 	ConcreteDevice();

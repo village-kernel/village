@@ -22,6 +22,9 @@ ConcreteDevice::~ConcreteDevice()
 /// @brief Device Setup
 void ConcreteDevice::Setup()
 {
+	//Platform probe
+	PlatformProbe();
+
 	//Output debug info
 	kernel->debug.Info("Device setup done!");
 }
@@ -29,6 +32,64 @@ void ConcreteDevice::Setup()
 
 /// @brief Device Exit
 void ConcreteDevice::Exit()
+{
+	//Platform remove
+	PlatformRemove();
+
+	//Release devices
+	DevicesRelease();
+}
+
+
+/// @brief Platform match
+/// @param device 
+/// @return 
+PlatDriver* ConcreteDevice::PlatformMatch(PlatDevice* device)
+{
+	return platDrvs.GetItemByName(device->GetName());
+}
+
+
+/// @brief Platform probe
+void ConcreteDevice::PlatformProbe()
+{
+	for (platDevs.Begin(); !platDevs.IsEnd(); platDevs.Next())
+	{
+		PlatDevice* device = platDevs.Item();
+		PlatDriver* driver = PlatformMatch(device);
+		
+		if (NULL != driver)
+		{
+			device->Allocate();
+			
+			if (!driver->Probe(device))
+			{
+				device->Release();
+			}
+		}
+	}
+}
+
+
+/// @brief Platform remove
+void ConcreteDevice::PlatformRemove()
+{
+	for (platDevs.End(); !platDevs.IsBegin(); platDevs.Prev())
+	{
+		PlatDevice* device = platDevs.Item();
+		PlatDriver* driver = PlatformMatch(device);
+	
+		if (NULL != driver)
+		{
+			driver->Remove(device);
+			device->Release();
+		}
+	}
+}
+
+
+/// @brief Release devices
+void ConcreteDevice::DevicesRelease()
 {
 	blockDevs.Release();
 	charDevs.Release();
