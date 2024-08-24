@@ -106,6 +106,18 @@ public:
 /// @brief PlatDevice
 class PlatDevice : public Base
 {
+private:
+	//Members
+	void* data;
+	void* driver;
+public:
+	//Data Methods
+	void SetData(void* data)     { this->data = data; }
+	void* GetData()              { return this->data; }
+
+	//Driver Methods
+	void SetDriver(void* driver) { this->driver = driver; }
+	void* GetDriver()            { return this->driver;   }
 public:
 	//Constructor
 	PlatDevice() {}
@@ -114,7 +126,8 @@ public:
 	virtual ~PlatDevice() {}
 
 	//Methods
-	virtual int Release() = 0; 
+	virtual void Allocate() = 0;
+	virtual void Release() = 0;
 };
 
 
@@ -129,8 +142,8 @@ public:
 	virtual ~PlatDriver() {}
 
 	//Methods
-	virtual int Probe(PlatDevice* device) = 0;
-	virtual int Remove(PlatDevice* device) = 0;
+	virtual bool Probe(PlatDevice* device) = 0;
+	virtual bool Remove(PlatDevice* device) = 0;
 };
 
 
