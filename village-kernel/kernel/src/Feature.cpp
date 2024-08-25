@@ -45,6 +45,8 @@ void ConcreteFeature::Setup()
 /// @brief Execute module object->Exit
 void ConcreteFeature::Exit()
 {
+	isRuntime = false;
+
 	for (int id = _dirverIdSize - 1; id >= 0; id--)
 	{
 		for (modules.End(); !modules.IsBegin(); modules.Prev())
