@@ -335,7 +335,7 @@ bool SpiW25qxx::Open()
 	spi.Enable();
 
 	//Check if the device id is correct
-	if (GetDeviceID() != DeviceID) flashError = true;
+	if (GetDeviceID() != config.deviceID) flashError = true;
 
 	return !flashError;
 }
