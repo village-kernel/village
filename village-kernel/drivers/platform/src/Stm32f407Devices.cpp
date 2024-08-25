@@ -22,7 +22,7 @@ void SpiSdCardDev::Config()
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"disk0");
 }
-REGISTER_PLAT_DEVICE(new SpiSdCardDev(), spiSdCard);
+REGISTER_PLAT_DEVICE(new SpiSdCardDev(), spiSdCard, spiSdCardDev);
 
 
 /// @brief SpiW25Q64Dev
@@ -40,7 +40,7 @@ void SpiW25Q64Dev::Config()
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"disk1");
 }
-REGISTER_PLAT_DEVICE(new SpiW25Q64Dev(), spiW25qxx);
+REGISTER_PLAT_DEVICE(new SpiW25Q64Dev(), spiW25qxx, spiW25Q64Dev);
 
 
 /// @brief ILI9488Dev
@@ -72,7 +72,7 @@ void ILI9488Dev::Config()
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"display0");
 }
-REGISTER_PLAT_DEVICE(new ILI9488Dev(), ili9488);
+REGISTER_PLAT_DEVICE(new ILI9488Dev(), ili9488, ili9488Dev);
 
 
 /// @brief Stm32UartDev
@@ -94,4 +94,4 @@ void Stm32UartDev::Config()
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"serial0");
 }
-REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart);
+REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart, stm32uartDev);

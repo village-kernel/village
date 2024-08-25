@@ -162,4 +162,4 @@ bool Stm32UartDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new Stm32UartDrv(), stm32uart);
+REGISTER_PLAT_DRIVER(new Stm32UartDrv(), stm32uart, stm32uartDrv);

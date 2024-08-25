@@ -264,4 +264,4 @@ bool SdioSdCardDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new SdioSdCardDrv(), sdioSdCard);
+REGISTER_PLAT_DRIVER(new SdioSdCardDrv(), sdioSdCard, sdioSdCardDrv);

@@ -268,4 +268,4 @@ bool BochsVBEDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new BochsVBEDrv(), bochsVBE);
+REGISTER_PLAT_DRIVER(new BochsVBEDrv(), bochsVBE, bochsVBEDrv);

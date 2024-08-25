@@ -22,7 +22,7 @@ void SdioSdCardDev::Config()
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"disk0");
 }
-REGISTER_PLAT_DEVICE(new SdioSdCardDev(), sdioSdCard);
+REGISTER_PLAT_DEVICE(new SdioSdCardDev(), sdioSdCard, sdioSdCardDev);
 
 
 /// @brief Stm32UartDev
@@ -44,4 +44,4 @@ void Stm32UartDev::Config()
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"serial0");
 }
-REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart);
+REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart, stm32uartDev);

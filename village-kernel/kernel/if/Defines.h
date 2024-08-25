@@ -128,33 +128,33 @@ static struct _Misc_Dev_##name {                                  \
 
 
 ///Plat driver register macro
-#define REGISTER_PLAT_DRIVER(drv, name)                           \
-static struct _Plat_Drv_##name {                                  \
+#define REGISTER_PLAT_DRIVER(drv, machname, drvname)              \
+static struct _Plat_Drv_##drvname {                               \
 	PlatDriver* driver = drv;                                     \
-	_Plat_Drv_##name() {                                          \
+	_Plat_Drv_##drvname() {                                       \
 		driver->SetID(DriverID::_platformDriver);                 \
-		driver->SetName((char*)#name);                            \
+		driver->SetName((char*)#machname);                        \
 		kernel->device.RegisterPlatDriver(driver);                \
 	}                                                             \
-	~_Plat_Drv_##name() {                                         \
+	~_Plat_Drv_##drvname() {                                      \
 		kernel->device.UnregisterPlatDriver(driver);              \
 	}                                                             \
-} const _plat_drv_##name __attribute__((used,__section__(".devices")))
+} const _plat_drv_##drvname __attribute__((used,__section__(".devices")))
 
 
 ///Plat device register macro
-#define REGISTER_PLAT_DEVICE(dev, name)                           \
-static struct _Plat_Dev_##name {                                  \
+#define REGISTER_PLAT_DEVICE(dev, machname, devname)              \
+static struct _Plat_Dev_##devname {                               \
 	PlatDevice* device = dev;                                     \
-	_Plat_Dev_##name() {                                          \
+	_Plat_Dev_##devname() {                                       \
 		device->SetID(DriverID::_platformDevice);                 \
-		device->SetName((char*)#name);                            \
+		device->SetName((char*)#machname);                        \
 		kernel->device.RegisterPlatDevice(device);                \
 	}                                                             \
-	~_Plat_Dev_##name() {                                         \
+	~_Plat_Dev_##devname() {                                      \
 		kernel->device.UnregisterPlatDevice(device);              \
 	}                                                             \
-} const _plat_dev_##name __attribute__((used,__section__(".devices")))
+} const _plat_dev_##devname __attribute__((used,__section__(".devices")))
 
 
 ///Module register macro

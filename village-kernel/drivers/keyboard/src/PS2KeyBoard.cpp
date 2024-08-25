@@ -131,4 +131,4 @@ bool PS2KeyBoardDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new PS2KeyBoardDrv(), ps2keyboard);
+REGISTER_PLAT_DRIVER(new PS2KeyBoardDrv(), ps2keyboard, ps2keyboardDrv);

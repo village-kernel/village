@@ -148,4 +148,4 @@ bool Pic32UartDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new Pic32UartDrv(), pic32uart);
+REGISTER_PLAT_DRIVER(new Pic32UartDrv(), pic32uart, pic32uartDrv);
