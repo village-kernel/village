@@ -344,16 +344,16 @@ bool SpiW25qxx::Open()
 /// @brief Writes a specified number of bytes of writeData into provided address
 /// @param txData 
 /// @param blkSize 
-/// @param sector 
+/// @param blk 
 /// @return 
-int SpiW25qxx::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
+int SpiW25qxx::Write(uint8_t *txData, uint32_t blkSize, uint32_t blk)
 {
 	//return if there are any problems with the flash;
-	if (flashError) return -1;
+	if (flashError) return 0;
 
 	//Adapte fatfs
 	uint32_t bytesRemain = blkSize * sector_size;
-	uint32_t writeAddr = sector * sector_size;
+	uint32_t writeAddr = blk * sector_size;
 	uint8_t* writeData = txData;
 
 	while (bytesRemain)
@@ -375,22 +375,22 @@ int SpiW25qxx::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 		writeData += writeSize;
 	}
 
-	return flashError ? -1 : 0;
+	return flashError ? 0 : blkSize;
 }
 
 
 /// @brief Reads a specified number of bytes of writeData into the provided address
 /// @param rxData 
 /// @param blkSize 
-/// @param sector 
+/// @param blk 
 /// @return 
-int SpiW25qxx::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
+int SpiW25qxx::Read(uint8_t* rxData, uint32_t blkSize, uint32_t blk)
 {
 	//return if there are any problems with the flash;
-	if (flashError) return -1;
+	if (flashError) return 0;
 
 	//Adapte fatfs
-	uint32_t readAddr = sector * sector_size;
+	uint32_t readAddr = blk * sector_size;
 	uint32_t readSize = blkSize * sector_size;
 
 	SelectChip();
@@ -405,7 +405,7 @@ int SpiW25qxx::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 
 	UnselectChip();
 
-	return flashError ? -1 : 0;;
+	return flashError ? 0 : blkSize;
 }
 
 

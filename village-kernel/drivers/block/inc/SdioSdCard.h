@@ -65,8 +65,8 @@ public:
 
 	/// @brief Fopts Methods
 	bool Open();
-	int Write(uint8_t* data, uint32_t blkSize, uint32_t sector);
-	int Read(uint8_t* data, uint32_t blkSize, uint32_t sector);
+	int Write(uint8_t* data, uint32_t blkSize, uint32_t blk);
+	int Read(uint8_t* data, uint32_t blkSize, uint32_t blk);
 	int IOCtrl(uint8_t cmd, void *data);
 	void Close();
 };

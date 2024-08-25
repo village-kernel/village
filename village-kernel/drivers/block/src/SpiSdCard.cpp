@@ -425,11 +425,12 @@ bool SpiSdCard::Open()
 /// @brief Spi sd card write data
 /// @param txData 
 /// @param blkSize 
-/// @param sector 
+/// @param blk 
 /// @return 
-int SpiSdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
+int SpiSdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t blk)
 {
-	uint8_t res = 0;
+	uint8_t  res = 0;
+	uint32_t sector = blk;
 
 	if (SdCardType::_V2HC != sdcardType) sector = sector * sectorSize;
 
@@ -469,18 +470,19 @@ int SpiSdCard::Write(uint8_t *txData, uint32_t blkSize, uint32_t sector)
 
 	UnselectCard();
 
-	return res;
+	return (res == _ResponseNoErr) ? blkSize : 0;
 }
 
 
 /// @brief Spi sd card read data
 /// @param rxData 
 /// @param blkSize 
-/// @param sector 
+/// @param blk 
 /// @return 
-int SpiSdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
+int SpiSdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t blk)
 {
-	uint8_t res = 0;
+	uint8_t  res = 0;
+	uint32_t sector = blk;
 
 	if (SdCardType::_V2HC != sdcardType) sector = sector << 9;
 
@@ -513,7 +515,7 @@ int SpiSdCard::Read(uint8_t* rxData, uint32_t blkSize, uint32_t sector)
 
 	UnselectCard();
 
-	return res;
+	return (res == _ResponseNoErr) ? blkSize : 0;
 }
 
 
