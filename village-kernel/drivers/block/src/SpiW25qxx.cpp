@@ -460,6 +460,7 @@ bool SpiW25qxxDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterBlockDevice((BlockDevice*)device->GetDriver());
 	delete (SpiW25qxx*)device->GetDriver();
+	device->SetDriver(NULL);
 	return true;
 }
 

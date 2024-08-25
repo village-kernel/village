@@ -251,6 +251,7 @@ bool PS2MouseDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterInputDevice((InputDevice*)device->GetDriver());
 	delete (PS2Mouse*)device->GetDriver();
+	device->SetDriver(NULL);
 	return true;
 }
 
