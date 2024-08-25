@@ -79,6 +79,18 @@ public:
 };
 
 
+/// @brief InputDevice
+class InputDevice : public Base, public Fopts
+{
+public:
+	//Constructor
+	InputDevice() {}
+
+	//Destructor
+	virtual ~InputDevice() {}
+};
+
+
 /// @brief NetworkDevice
 class NetworkDevice : public Base
 {

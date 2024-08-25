@@ -200,6 +200,10 @@ public:
 	virtual void RegisterFBDevice(FBDevice* device) = 0;
 	virtual void UnregisterFBDevice(FBDevice* device) = 0;
 
+	/// @brief Input device methods
+	virtual void RegisterInputDevice(InputDevice* device) = 0;
+	virtual void UnregisterInputDevice(InputDevice* device) = 0;
+
 	/// @brief Netwrok device methods
 	virtual void RegisterNetworkDevice(NetworkDevice* device) = 0;
 	virtual void UnregisterNetworkDevice(NetworkDevice* device) = 0;
