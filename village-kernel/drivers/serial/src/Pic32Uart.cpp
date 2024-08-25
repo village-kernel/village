@@ -143,6 +143,7 @@ bool Pic32UartDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterCharDevice((CharDevice*)device->GetDriver());
 	delete (Pic32Uart*)device->GetDriver();
+	device->SetDriver(NULL);
 	return true;
 }
 

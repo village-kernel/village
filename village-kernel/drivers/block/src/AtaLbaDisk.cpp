@@ -159,6 +159,7 @@ bool AtaLbaDiskDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterBlockDevice((BlockDevice*)device->GetDriver());
 	delete (AtaLbaDisk*)device->GetDriver();
+	device->SetDriver(NULL);
 	return true;
 }
 

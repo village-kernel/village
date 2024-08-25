@@ -263,6 +263,7 @@ bool BochsVBEDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterFBDevice((FBDevice*)device->GetDriver());
 	delete (BochsVBE*)device->GetDriver();
+	device->SetDriver(NULL);
 	return true;
 }
 

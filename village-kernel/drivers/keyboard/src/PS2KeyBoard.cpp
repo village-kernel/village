@@ -126,6 +126,7 @@ bool PS2KeyBoardDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterInputDevice((InputDevice*)device->GetDriver());
 	delete (PS2KeyBoard*)device->GetDriver();
+	device->SetDriver(NULL);
 	return true;
 }
 
