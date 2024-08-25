@@ -41,7 +41,7 @@ void ConcreteTerminal::Execute()
 	serial.Open("serial0", FileMode::_ReadWrite);
 
 	//Output msg
-	serial.Write((char*)msg, strlen(msg));
+	while (strlen(msg) != serial.Write((char*)msg, strlen(msg))) {}
 
 	//Wait for Enter
 	char key = 0; do { serial.Read((char*)&key, 1); } while (0x0d != key);
