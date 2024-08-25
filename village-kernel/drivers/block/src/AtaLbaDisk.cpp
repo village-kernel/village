@@ -164,4 +164,4 @@ bool AtaLbaDiskDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new AtaLbaDiskDrv(), ataLbaDisk);
+REGISTER_PLAT_DRIVER(new AtaLbaDiskDrv(), ataLbaDisk, ataLbaDiskDrv);

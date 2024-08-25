@@ -596,4 +596,4 @@ bool SpiSdCardDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new SpiSdCardDrv(), spiSdCard);
+REGISTER_PLAT_DRIVER(new SpiSdCardDrv(), spiSdCard, spiSdCardDrv);

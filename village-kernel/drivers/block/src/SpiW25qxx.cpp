@@ -465,4 +465,4 @@ bool SpiW25qxxDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new SpiW25qxxDrv(), spiW25qxx);
+REGISTER_PLAT_DRIVER(new SpiW25qxxDrv(), spiW25qxx, spiW25qxxDrv);

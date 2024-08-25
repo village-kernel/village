@@ -503,4 +503,4 @@ bool ILI9488Drv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new ILI9488Drv(), ili9488);
+REGISTER_PLAT_DRIVER(new ILI9488Drv(), ili9488, ili9488Drv);

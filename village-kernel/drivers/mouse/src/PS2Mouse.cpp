@@ -256,4 +256,4 @@ bool PS2MouseDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new PS2MouseDrv(), ps2mouse);
+REGISTER_PLAT_DRIVER(new PS2MouseDrv(), ps2mouse, ps2mouseDrv);
