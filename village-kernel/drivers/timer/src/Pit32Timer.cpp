@@ -80,4 +80,4 @@ bool Pit32TimerDrv::Remove(PlatDevice* device)
 
 
 ///Register driver
-REGISTER_PLAT_DRIVER(new Pit32TimerDrv(), pit32Timer);
+REGISTER_PLAT_DRIVER(new Pit32TimerDrv(), pit32timer);
