@@ -98,9 +98,10 @@ bool SdioSdCard::Open()
 /// @param blkSize 
 /// @param sector 
 /// @return 
-int SdioSdCard::Write(uint8_t* data, uint32_t blkSize, uint32_t sector)
+int SdioSdCard::Write(uint8_t* data, uint32_t blkSize, uint32_t blk)
 {
-	uint32_t count = 0;
+	uint32_t sector  = blk;
+	uint32_t count   = 0;
 	uint32_t timeout = 0;
 
 	sdio.ClearWriteStatus();
@@ -146,9 +147,10 @@ int SdioSdCard::Write(uint8_t* data, uint32_t blkSize, uint32_t sector)
 /// @param blkSize 
 /// @param sector 
 /// @return 
-int SdioSdCard::Read(uint8_t* data, uint32_t blkSize, uint32_t sector)
+int SdioSdCard::Read(uint8_t* data, uint32_t blkSize, uint32_t blk)
 {
-	uint32_t count = 0;
+	uint32_t sector  = blk;
+	uint32_t count   = 0;
 	uint32_t timeout = 0;
 
 	//ensure the SDCard is ready for a new operation
