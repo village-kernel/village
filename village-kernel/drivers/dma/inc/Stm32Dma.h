@@ -1,5 +1,5 @@
 //###########################################################################
-// DmaFifo.h
+// Stm32Dma.h
 // Works with an underlying DMA channel to create a circular FIFO for
 // Asynchronous reception of bytes from a peripheral
 // Note that this class is *not* thread safe due to shared resource <length>.
@@ -12,8 +12,8 @@
 #include "Hardware.h"
 
 
-/// @brief DmaFifo
-class DmaFifo
+/// @brief Stm32Dma
+class Stm32Dma
 {
 public:
 	//Structures
@@ -43,7 +43,7 @@ private:
 	void CopyTxData(uint8_t* data, uint16_t length);
 public:
 	//Methods
-	DmaFifo();
+	Stm32Dma();
 	void Open(Config config);
 	int Write(uint8_t* data, uint32_t size, uint32_t offset = 0);
 	int Read(uint8_t* data, uint32_t size, uint32_t offset = 0);
