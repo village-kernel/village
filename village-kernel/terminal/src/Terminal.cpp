@@ -35,13 +35,14 @@ void ConcreteTerminal::Setup()
 void ConcreteTerminal::Execute()
 {
 	const char* msg = "\r\nPlease press Enter to activate this console.\r\n";
+	const int   msglen = strlen(msg);
 
 	//Open serial
 	DevStream serial;
 	serial.Open("serial0", FileMode::_ReadWrite);
 
 	//Output msg
-	while (strlen(msg) != serial.Write((char*)msg, strlen(msg))) {}
+	while (msglen != serial.Write((char*)msg, msglen)) {}
 
 	//Wait for Enter
 	char key = 0; do { serial.Read((char*)&key, 1); } while (0x0d != key);
