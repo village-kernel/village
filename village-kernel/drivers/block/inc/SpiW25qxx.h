@@ -24,6 +24,7 @@ public:
 		Gpio::Config mosiGpio;
 		Gpio::Config csGpio;
 		Gpio::Config wpGpio;
+		uint16_t deviceID;
 	};
 
 	//Enumerations
@@ -38,7 +39,6 @@ private:
 	static const uint16_t OneSectorByteSize = 4096;
 	static const uint16_t OneSectorPageSize = 16;
 	static const uint16_t OnePageByteSize = 256;
-	static const uint16_t DeviceID = 0xEF16;
 	static const uint16_t sector_count = 16384;
 	static const uint16_t sector_size = 512;
 	static const uint16_t block_size = 1;
