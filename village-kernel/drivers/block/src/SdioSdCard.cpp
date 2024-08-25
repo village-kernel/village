@@ -258,6 +258,7 @@ bool SdioSdCardDrv::Probe(PlatDevice* device)
 bool SdioSdCardDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterBlockDevice((BlockDevice*)device->GetDriver());
+	delete (SdioSdCard*)device->GetDriver();
 	return true;
 }
 

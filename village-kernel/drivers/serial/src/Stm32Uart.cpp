@@ -156,6 +156,7 @@ bool Stm32UartDrv::Probe(PlatDevice* device)
 bool Stm32UartDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterCharDevice((CharDevice*)device->GetDriver());
+	delete (Stm32Uart*)device->GetDriver();
 	return true;
 }
 

@@ -497,6 +497,7 @@ bool ILI9488Drv::Probe(PlatDevice* device)
 bool ILI9488Drv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterFBDevice((FBDevice*)device->GetDriver());
+	delete (ILI9488*)device->GetDriver();
 	return true;
 }
 

@@ -590,6 +590,7 @@ bool SpiSdCardDrv::Probe(PlatDevice* device)
 bool SpiSdCardDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterBlockDevice((BlockDevice*)device->GetDriver());
+	delete (SpiSdCard*)device->GetDriver();
 	return true;
 }
 
