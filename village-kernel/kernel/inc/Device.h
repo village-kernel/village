@@ -17,6 +17,7 @@ class ConcreteDevice : public Device
 {
 private:
 	/// @brief Members
+	bool isRuntime;
 	List<BlockDevice*>    blockDevs;
 	List<CharDevice*>     charDevs;
 	List<FBDevice*>       fbDevs;
@@ -27,12 +28,18 @@ private:
 	List<PlatDriver*>     platDrvs;
 
 	/// @brief Methods
-	PlatDriver* PlatformMatch(PlatDevice* device);
+	bool PlatformMatch(PlatDevice* device, PlatDriver* driver);
+	bool PlatformProbe(PlatDevice* device, PlatDriver* driver);
+	bool PlatformRemove(PlatDevice* device, PlatDriver* driver);
+	void PlatformDeviceProbe(PlatDriver* driver);
+	void PlatformDeviceRemove(PlatDriver* driver);
+	void PlatformDriverProbe(PlatDevice* device);
+	void PlatformDriverRemove(PlatDevice* device);
 	void PlatformProbe();
 	void PlatformRemove();
-	void DevicesRelease();
 	void InputDevSetup();
 	void InputDevExit();
+	void DevicesRelease();
 public:
 	/// @brief Methods
 	ConcreteDevice();
