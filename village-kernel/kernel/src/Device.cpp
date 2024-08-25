@@ -60,7 +60,7 @@ void ConcreteDevice::PlatformProbe()
 		
 		if (NULL != driver)
 		{
-			device->Allocate();
+			device->Config();
 			
 			if (!driver->Probe(device))
 			{

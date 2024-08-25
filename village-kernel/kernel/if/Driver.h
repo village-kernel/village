@@ -108,16 +108,21 @@ class PlatDevice : public Base
 {
 private:
 	//Members
-	void* data;
 	void* driver;
+	char* driverName;
+	void* driverData;
 public:
-	//Data Methods
-	void SetData(void* data)     { this->data = data; }
-	void* GetData()              { return this->data; }
-
 	//Driver Methods
-	void SetDriver(void* driver) { this->driver = driver; }
-	void* GetDriver()            { return this->driver;   }
+	void SetDriver(void* driver)   { this->driver = driver; }
+	void* GetDriver()              { return this->driver;   }
+
+	//Driver Name Methods
+	void SetDriverName(char* name) { this->driverName = name; }
+	char* GetDriverName()          { return this->driverName; }
+
+	//Driver Data Methods
+	void SetDriverData(void* data) { this->driverData = data; }
+	void* GetDriverData()          { return this->driverData; }
 public:
 	//Constructor
 	PlatDevice() {}
@@ -126,8 +131,8 @@ public:
 	virtual ~PlatDevice() {}
 
 	//Methods
-	virtual void Allocate() = 0;
-	virtual void Release() = 0;
+	virtual void Config()  {};
+	virtual void Release() {};
 };
 
 
