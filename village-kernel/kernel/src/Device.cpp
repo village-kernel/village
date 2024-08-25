@@ -9,6 +9,7 @@
 
 /// @brief Constructor
 ConcreteDevice::ConcreteDevice()
+	:isRuntime(false)
 {
 }
 
@@ -22,11 +23,17 @@ ConcreteDevice::~ConcreteDevice()
 /// @brief Device Setup
 void ConcreteDevice::Setup()
 {
+	//Clear flag
+	isRuntime = false;
+
 	//Platform probe
 	PlatformProbe();
 
 	//Input device setup
 	InputDevSetup();
+
+	//Set flag
+	isRuntime = true;
 
 	//Output debug info
 	kernel->debug.Info("Device setup done!");
@@ -49,53 +56,122 @@ void ConcreteDevice::Exit()
 
 /// @brief Platform match
 /// @param device 
+/// @param driver 
 /// @return 
-PlatDriver* ConcreteDevice::PlatformMatch(PlatDevice* device)
+inline bool ConcreteDevice::PlatformMatch(PlatDevice* device, PlatDriver* driver)
 {
-	return platDrvs.GetItemByName(device->GetName());
+	return (0 == strcmp(device->GetName(), driver->GetName()));
 }
 
 
 /// @brief Platform probe
-void ConcreteDevice::PlatformProbe()
+/// @param device 
+/// @param driver 
+/// @return 
+inline bool ConcreteDevice::PlatformProbe(PlatDevice* device, PlatDriver* driver)
 {
-	for (platDevs.Begin(); !platDevs.IsEnd(); platDevs.Next())
+	if (PlatformMatch(device, driver))
 	{
-		PlatDevice* device = platDevs.Item();
-		PlatDriver* driver = PlatformMatch(device);
-		
-		if (NULL != driver)
+		if (NULL == device->GetDriver())
 		{
 			device->Config();
-			
+	
 			if (!driver->Probe(device))
 			{
 				device->Release();
 			}
 		}
+		return true;
+	}
+	return false;
+}
+
+
+/// @brief Platform remove
+/// @param device 
+/// @param driver 
+/// @return 
+inline bool ConcreteDevice::PlatformRemove(PlatDevice* device, PlatDriver* driver)
+{
+	if (PlatformMatch(device, driver))
+	{
+		if (NULL != device->GetDriver())
+		{
+			driver->Remove(device);
+			device->Release();
+		}
+		return true;
+	}
+	return false;
+}
+
+
+/// @brief Platform device probe
+/// @param driver 
+inline void ConcreteDevice::PlatformDeviceProbe(PlatDriver* driver)
+{
+	for (platDevs.Begin(); !platDevs.IsEnd(); platDevs.Next())
+	{
+		PlatformProbe(platDevs.Item(), driver);
+	}
+}
+
+
+/// @brief Platform device remove
+/// @param driver 
+inline void ConcreteDevice::PlatformDeviceRemove(PlatDriver* driver)
+{
+	for (platDevs.Begin(); !platDevs.IsEnd(); platDevs.Next())
+	{
+		PlatformRemove(platDevs.Item(), driver);
+	}
+}
+
+
+/// @brief Platform driver probe
+/// @param device 
+inline void ConcreteDevice::PlatformDriverProbe(PlatDevice* device)
+{
+	for (platDrvs.Begin(); !platDrvs.IsEnd(); platDrvs.Next())
+	{
+		if (PlatformProbe(device, platDrvs.Item())) break;
+	}
+}
+
+
+/// @brief Platform driver remove
+/// @param device 
+inline void ConcreteDevice::PlatformDriverRemove(PlatDevice* device)
+{
+	for (platDrvs.Begin(); !platDrvs.IsEnd(); platDrvs.Next())
+	{
+		if (PlatformRemove(device, platDrvs.Item())) break;
+	}
+}
+
+
+/// @brief Platform probe
+inline void ConcreteDevice::PlatformProbe()
+{
+	for (platDevs.Begin(); !platDevs.IsEnd(); platDevs.Next())
+	{
+		PlatformDriverProbe(platDevs.Item());
 	}
 }
 
 
 /// @brief Platform remove
-void ConcreteDevice::PlatformRemove()
+inline void ConcreteDevice::PlatformRemove()
 {
 	for (platDevs.End(); !platDevs.IsBegin(); platDevs.Prev())
 	{
-		PlatDevice* device = platDevs.Item();
-		PlatDriver* driver = PlatformMatch(device);
-	
-		if (NULL != driver)
-		{
-			driver->Remove(device);
-			device->Release();
-		}
+		PlatformDriverRemove(platDevs.Item());
 	}
 }
 
 
 /// @brief Input device setup
-void ConcreteDevice::InputDevSetup()
+inline void ConcreteDevice::InputDevSetup()
 {
 	for (inDevs.Begin(); !inDevs.IsEnd(); inDevs.Next())
 	{
@@ -105,7 +181,7 @@ void ConcreteDevice::InputDevSetup()
 
 
 /// @brief Input device exit
-void ConcreteDevice::InputDevExit()
+inline void ConcreteDevice::InputDevExit()
 {
 	for (inDevs.End(); !inDevs.IsBegin(); inDevs.Prev())
 	{
@@ -115,7 +191,7 @@ void ConcreteDevice::InputDevExit()
 
 
 /// @brief Release devices
-void ConcreteDevice::DevicesRelease()
+inline void ConcreteDevice::DevicesRelease()
 {
 	blockDevs.Release();
 	charDevs.Release();
@@ -181,6 +257,7 @@ void ConcreteDevice::UnregisterFBDevice(FBDevice* device)
 void ConcreteDevice::RegisterInputDevice(InputDevice* device)
 {
 	inDevs.Add(device, device->GetName());
+	if (isRuntime) device->Open();
 }
 
 
@@ -188,6 +265,7 @@ void ConcreteDevice::RegisterInputDevice(InputDevice* device)
 /// @param device device pointer
 void ConcreteDevice::UnregisterInputDevice(InputDevice* device)
 {
+	if (isRuntime) device->Close();
 	inDevs.Remove(device);
 }
 
@@ -229,6 +307,7 @@ void ConcreteDevice::UnregisterMiscDevice(MiscDevice* device)
 void ConcreteDevice::RegisterPlatDevice(PlatDevice* device)
 {
 	platDevs.Add(device, device->GetName());
+	if (isRuntime) PlatformDriverProbe(device);
 }
 
 
@@ -236,6 +315,7 @@ void ConcreteDevice::RegisterPlatDevice(PlatDevice* device)
 /// @param device device pointer
 void ConcreteDevice::UnregisterPlatDevice(PlatDevice* device)
 {
+	if (isRuntime) PlatformDriverRemove(device);
 	platDevs.Remove(device);
 }
 
@@ -245,6 +325,7 @@ void ConcreteDevice::UnregisterPlatDevice(PlatDevice* device)
 void ConcreteDevice::RegisterPlatDriver(PlatDriver* driver)
 {
 	platDrvs.Add(driver, driver->GetName());
+	if (isRuntime) PlatformDeviceProbe(driver);
 }
 
 
@@ -252,6 +333,7 @@ void ConcreteDevice::RegisterPlatDriver(PlatDriver* driver)
 /// @param driver driver pointer
 void ConcreteDevice::UnregisterPlatDriver(PlatDriver* driver)
 {
+	if (isRuntime) PlatformDeviceRemove(driver);
 	platDrvs.Remove(driver);
 }
 
