@@ -1,17 +1,17 @@
 //###########################################################################
-// DmaFifo.h
+// Stm32Dma.h
 // Works with an underlying DMA channel to create a circular FIFO for
 // Asynchronous reception of bytes from a peripheral.
 // Note that this class is *not* thread safe due to shared resource <length>.
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "DmaFifo.h"
+#include "Stm32Dma.h"
 #include "string.h"
 
 
 /// @brief Constructor
-DmaFifo::DmaFifo()
+Stm32Dma::Stm32Dma()
 	:length(0),
 	dequeuePtr(0),
 	prevDmaDataCtr(buffer_size)
@@ -21,7 +21,7 @@ DmaFifo::DmaFifo()
 
 /// @brief Open the underlying DMA module
 /// @param config 
-void DmaFifo::Open(Config config)
+void Stm32Dma::Open(Config config)
 {
 	dma.Initialize(config.group, config.stream);
 	dma.ConfigPriority(Dma::_VeryHigh);
@@ -48,7 +48,7 @@ void DmaFifo::Open(Config config)
 /// @brief Copy the sent data to the send buffer to avoid accidentally modifying the sent data.
 /// @param txData 
 /// @param length 
-inline void DmaFifo::CopyTxData(uint8_t* data, uint16_t length)
+inline void Stm32Dma::CopyTxData(uint8_t* data, uint16_t length)
 {
 	memcpy((uint8_t*)buffer, (uint8_t*)data, length);
 }
@@ -59,7 +59,7 @@ inline void DmaFifo::CopyTxData(uint8_t* data, uint16_t length)
 /// @param size 
 /// @param offset 
 /// @return 
-int DmaFifo::Write(uint8_t* data, uint32_t size, uint32_t offset)
+int Stm32Dma::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	if (dma.IsReady())
 	{
@@ -83,7 +83,7 @@ int DmaFifo::Write(uint8_t* data, uint32_t size, uint32_t offset)
 /// @brief Checks DMA counter and updates FIFO to reflect the latest data size
 ///        Must be executed periodically to ensure FIFO does not become corrupt
 ///        from multiple over pointer rollovers
-void DmaFifo::Update()
+void Stm32Dma::Update()
 {
 	uint32_t dmaDataCtr = dma.GetDataCounter();
 
@@ -99,7 +99,7 @@ void DmaFifo::Update()
 /// @brief Dequeues a single byte from the FIFO
 ///        Caller should check Length() before calling this function
 /// @return 
-uint8_t DmaFifo::Dequeue()
+uint8_t Stm32Dma::Dequeue()
 {
 	uint8_t b = buffer[dequeuePtr];
 	if (length)
@@ -112,7 +112,7 @@ uint8_t DmaFifo::Dequeue()
 
 
 /// @brief Clears the FIFO of all existing data, can be called without disabling the DMA
-void DmaFifo::Clear()
+void Stm32Dma::Clear()
 { 
 	prevDmaDataCtr = dma.GetDataCounter();
 	dequeuePtr = buffer_size - prevDmaDataCtr;
@@ -125,7 +125,7 @@ void DmaFifo::Clear()
 /// @param size 
 /// @param offset 
 /// @return 
-int DmaFifo::Read(uint8_t* data, uint32_t size, uint32_t offset)
+int Stm32Dma::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
 	uint32_t readSize = 0;
 
@@ -143,7 +143,7 @@ int DmaFifo::Read(uint8_t* data, uint32_t size, uint32_t offset)
 
 
 /// @brief Close
-void DmaFifo::Close()
+void Stm32Dma::Close()
 {
 	dma.Disable();
 }
