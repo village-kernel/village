@@ -75,6 +75,7 @@ bool Pit32TimerDrv::Probe(PlatDevice* device)
 bool Pit32TimerDrv::Remove(PlatDevice* device)
 {
 	kernel->device.UnregisterMiscDevice((MiscDevice*)device->GetDriver());
+	delete (Pit32Timer*)device->GetDriver();
 	return true;
 }
 
