@@ -31,7 +31,7 @@ void Taichi::Setup()
 void Taichi::Execute()
 {
 	//Execute simple input method
-	kernel->process.Run(Process::_Background, "/applications/simpleInput.exec keyboard0 mouse0");
+	kernel->process.Run(Process::_Background, "/applications/simpleInput.exec");
 
 	//Execute desktop
 	kernel->process.Run(Process::_Background, "/applications/desktop.exec");
