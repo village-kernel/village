@@ -137,14 +137,14 @@ public:
 	void* GetDriverData()          { return this->driverData; }
 public:
 	//Constructor
-	PlatDevice() {}
+	PlatDevice() :driver(NULL) {}
 
 	//Destructor
 	virtual ~PlatDevice() {}
 
 	//Methods
-	virtual void Config()  {};
-	virtual void Release() {};
+	virtual void Config()  {}
+	virtual void Release() {}
 };
 
 
