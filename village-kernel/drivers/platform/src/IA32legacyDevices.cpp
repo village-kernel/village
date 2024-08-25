@@ -77,4 +77,4 @@ void Pit32TimerDev::Config()
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"timer0");
 }
-REGISTER_PLAT_DEVICE(new Pit32TimerDev(), pit32Timer);
+REGISTER_PLAT_DEVICE(new Pit32TimerDev(), pit32timer);
