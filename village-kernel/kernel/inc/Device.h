@@ -20,6 +20,7 @@ private:
 	List<BlockDevice*>    blockDevs;
 	List<CharDevice*>     charDevs;
 	List<FBDevice*>       fbDevs;
+	List<InputDevice*>    inDevs;
 	List<NetworkDevice*>  ntDevs;
 	List<MiscDevice*>     miscDevs;
 	List<PlatDevice*>     platDevs;
@@ -30,6 +31,8 @@ private:
 	void PlatformProbe();
 	void PlatformRemove();
 	void DevicesRelease();
+	void InputDevSetup();
+	void InputDevExit();
 public:
 	/// @brief Methods
 	ConcreteDevice();
@@ -48,6 +51,10 @@ public:
 	/// @brief Framebuffer device methods
 	void RegisterFBDevice(FBDevice* device);
 	void UnregisterFBDevice(FBDevice* device);
+
+	/// @brief Input device methods
+	void RegisterInputDevice(InputDevice* device);
+	void UnregisterInputDevice(InputDevice* device);
 
 	/// @brief Netwrok device methods
 	void RegisterNetworkDevice(NetworkDevice* device);

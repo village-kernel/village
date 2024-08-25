@@ -25,6 +25,9 @@ void ConcreteDevice::Setup()
 	//Platform probe
 	PlatformProbe();
 
+	//Input device setup
+	InputDevSetup();
+
 	//Output debug info
 	kernel->debug.Info("Device setup done!");
 }
@@ -33,6 +36,9 @@ void ConcreteDevice::Setup()
 /// @brief Device Exit
 void ConcreteDevice::Exit()
 {
+	//Input device exit
+	InputDevExit();
+
 	//Platform remove
 	PlatformRemove();
 
@@ -88,12 +94,33 @@ void ConcreteDevice::PlatformRemove()
 }
 
 
+/// @brief Input device setup
+void ConcreteDevice::InputDevSetup()
+{
+	for (inDevs.Begin(); !inDevs.IsEnd(); inDevs.Next())
+	{
+		inDevs.Item()->Open();
+	}
+}
+
+
+/// @brief Input device exit
+void ConcreteDevice::InputDevExit()
+{
+	for (inDevs.End(); !inDevs.IsBegin(); inDevs.Prev())
+	{
+		inDevs.Item()->Close();
+	}
+}
+
+
 /// @brief Release devices
 void ConcreteDevice::DevicesRelease()
 {
 	blockDevs.Release();
 	charDevs.Release();
 	fbDevs.Release();
+	inDevs.Release();
 	ntDevs.Release();
 	miscDevs.Release();
 	platDevs.Release();
@@ -146,6 +173,22 @@ void ConcreteDevice::RegisterFBDevice(FBDevice* device)
 void ConcreteDevice::UnregisterFBDevice(FBDevice* device)
 {
 	fbDevs.Remove(device);
+}
+
+
+/// @brief Register input device object
+/// @param device device pointer
+void ConcreteDevice::RegisterInputDevice(InputDevice* device)
+{
+	inDevs.Add(device, device->GetName());
+}
+
+
+/// @brief Unregister input device object
+/// @param device device pointer
+void ConcreteDevice::UnregisterInputDevice(InputDevice* device)
+{
+	inDevs.Remove(device);
 }
 
 
@@ -244,12 +287,13 @@ List<Base*> ConcreteDevice::GetDevices(DriverID id)
 	if (id >= DriverID::_block && id < DriverID::_dirverIdSize)
 	{
 		List<Base*> lists[DriverID::_dirverIdSize] = {
-			(List<Base*>&)blockDevs, 
-			(List<Base*>&)charDevs, 
-			(List<Base*>&)fbDevs, 
-			(List<Base*>&)ntDevs, 
-			(List<Base*>&)miscDevs, 
-			(List<Base*>&)platDevs, 
+			(List<Base*>&)blockDevs,
+			(List<Base*>&)charDevs,
+			(List<Base*>&)fbDevs,
+			(List<Base*>&)inDevs,
+			(List<Base*>&)ntDevs,
+			(List<Base*>&)miscDevs,
+			(List<Base*>&)platDevs,
 			(List<Base*>&)platDrvs
 		};
 

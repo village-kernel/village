@@ -18,6 +18,7 @@ enum DriverID
 	_block,
 	_character,
 	_framebuffer,
+	_input,
 	_network,
 	_miscellaneous,
 	_platformDevice,
@@ -79,6 +80,21 @@ static struct _FB_Dev_##name {                                    \
 		kernel->device.UnregisterFBDevice(device);                \
 	}                                                             \
 } const _fb_dev_##name __attribute__((used,__section__(".devices")))
+
+
+///Input device register macro
+#define REGISTER_INPUT_DEVICE(dev, name)                          \
+static struct _Input_Dev_##name {                                 \
+	InputDevice* device = dev;                                    \
+	_Input_Dev_##name() {                                         \
+		device->SetID(DriverID::_input);                          \
+		device->SetName((char*)#name);                            \
+		kernel->device.RegisterInputDevice(device);               \
+	}                                                             \
+	~_Input_Dev_##name() {                                        \
+		kernel->device.UnregisterInputDevice(device);             \
+	}                                                             \
+} const _input_dev_##name __attribute__((used,__section__(".devices")))
 
 
 ///Network device register macro
