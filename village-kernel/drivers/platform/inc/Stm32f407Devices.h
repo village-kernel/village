@@ -25,8 +25,8 @@ public:
 };
 
 
-/// @brief SpiW25qxxDev
-class SpiW25qxxDev : public PlatDevice
+/// @brief SpiW25Q64Dev
+class SpiW25Q64Dev : public PlatDevice
 {
 private:
 	/// @brief Members

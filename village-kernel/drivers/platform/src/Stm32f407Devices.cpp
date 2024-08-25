@@ -13,7 +13,6 @@ void SpiSdCardDev::Config()
 {
 	config = {
 		.spiCh    = Spi::_Spi3,
-
 		.sckGpio  = { Gpio::_ChC, 10, Gpio::_Altera, 6, 0 },
 		.misoGpio = { Gpio::_ChC, 11, Gpio::_Altera, 6, 0 },
 		.mosiGpio = { Gpio::_ChC, 12, Gpio::_Altera, 6, 0 },
@@ -26,22 +25,22 @@ void SpiSdCardDev::Config()
 REGISTER_PLAT_DEVICE(new SpiSdCardDev(), spiSdCard);
 
 
-/// @brief SpiW25qxxDev
-void SpiW25qxxDev::Config()
+/// @brief SpiW25Q64Dev
+void SpiW25Q64Dev::Config()
 {
 	config = {
 		.spiCh    = Spi::_Spi2,
-
 		.sckGpio  = { Gpio::_ChB, 13,  Gpio::_Altera, 5,  0 },
 		.misoGpio = { Gpio::_ChB, 14,  Gpio::_Altera, 5,  0 },
 		.mosiGpio = { Gpio::_ChB, 15,  Gpio::_Altera, 5,  0 },
 		.csGpio   = { Gpio::_ChB, 12,  Gpio::_Output, 0,  1 },
 		.wpGpio   = { Gpio::_ChF, 15,  Gpio::_Output, 0,  1 },
+		.deviceID = 0xEF16,
 	};
 	SetDriverData((void*)&config);
 	SetDriverName((char*)"disk1");
 }
-REGISTER_PLAT_DEVICE(new SpiW25qxxDev(), spiW25qxx);
+REGISTER_PLAT_DEVICE(new SpiW25Q64Dev(), spiW25qxx);
 
 
 /// @brief ILI9488Dev
