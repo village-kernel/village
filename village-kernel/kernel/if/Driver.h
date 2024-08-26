@@ -118,26 +118,20 @@ public:
 /// @brief PlatDevice
 class PlatDevice : public Base
 {
-private:
+protected:
 	//Members
 	void* driver;
-	char* driverName;
 	void* driverData;
+	char* driverName;
 public:
-	//Driver Methods
-	void SetDriver(void* driver)   { this->driver = driver; }
+	//Driver Methods, platform driver using
+	void  SetDriver(void* driver)  { this->driver = driver; }
 	void* GetDriver()              { return this->driver;   }
-
-	//Driver Name Methods
-	void SetDriverName(char* name) { this->driverName = name; }
-	char* GetDriverName()          { return this->driverName; }
-
-	//Driver Data Methods
-	void SetDriverData(void* data) { this->driverData = data; }
 	void* GetDriverData()          { return this->driverData; }
+	char* GetDriverName()          { return this->driverName; }
 public:
 	//Constructor
-	PlatDevice() :driver(NULL) {}
+	PlatDevice() :driver(NULL), driverData(NULL), driverName(NULL) {}
 
 	//Destructor
 	virtual ~PlatDevice() {}
