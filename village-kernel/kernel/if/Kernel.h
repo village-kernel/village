@@ -189,28 +189,28 @@ class Device
 {
 public:
 	/// @brief Block device methods
-	virtual void RegisterBlockDevice(BlockDevice* device) = 0;
-	virtual void UnregisterBlockDevice(BlockDevice* device) = 0;
+	virtual void RegisterBlockDevice(BlockDriver* driver) = 0;
+	virtual void UnregisterBlockDevice(BlockDriver* driver) = 0;
 
 	/// @brief Char device methods
-	virtual void RegisterCharDevice(CharDevice* device) = 0;
-	virtual void UnregisterCharDevice(CharDevice* device) = 0;
+	virtual void RegisterCharDevice(CharDriver* driver) = 0;
+	virtual void UnregisterCharDevice(CharDriver* driver) = 0;
 
 	/// @brief Framebuffer device methods
-	virtual void RegisterFBDevice(FBDevice* device) = 0;
-	virtual void UnregisterFBDevice(FBDevice* device) = 0;
+	virtual void RegisterFBDevice(FBDriver* driver) = 0;
+	virtual void UnregisterFBDevice(FBDriver* driver) = 0;
 
 	/// @brief Input device methods
-	virtual void RegisterInputDevice(InputDevice* device) = 0;
-	virtual void UnregisterInputDevice(InputDevice* device) = 0;
+	virtual void RegisterInputDevice(InputDriver* driver) = 0;
+	virtual void UnregisterInputDevice(InputDriver* driver) = 0;
 
 	/// @brief Netwrok device methods
-	virtual void RegisterNetworkDevice(NetworkDevice* device) = 0;
-	virtual void UnregisterNetworkDevice(NetworkDevice* device) = 0;
+	virtual void RegisterNetworkDevice(NetworkDriver* driver) = 0;
+	virtual void UnregisterNetworkDevice(NetworkDriver* driver) = 0;
 
 	/// @brief Misc device methods
-	virtual void RegisterMiscDevice(MiscDevice* device) = 0;
-	virtual void UnregisterMiscDevice(MiscDevice* device) = 0;
+	virtual void RegisterMiscDevice(MiscDriver* driver) = 0;
+	virtual void UnregisterMiscDevice(MiscDriver* driver) = 0;
 
 	/// @brief Platform device methods
 	virtual void RegisterPlatDevice(PlatDevice* device) = 0;

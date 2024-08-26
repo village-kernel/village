@@ -18,12 +18,12 @@ class ConcreteDevice : public Device
 private:
 	/// @brief Members
 	bool isRuntime;
-	List<BlockDevice*>    blockDevs;
-	List<CharDevice*>     charDevs;
-	List<FBDevice*>       fbDevs;
-	List<InputDevice*>    inDevs;
-	List<NetworkDevice*>  ntDevs;
-	List<MiscDevice*>     miscDevs;
+	List<BlockDriver*>    blockDevs;
+	List<CharDriver*>     charDevs;
+	List<FBDriver*>       fbDevs;
+	List<InputDriver*>    inDevs;
+	List<NetworkDriver*>  ntDevs;
+	List<MiscDriver*>     miscDevs;
 	List<PlatDevice*>     platDevs;
 	List<PlatDriver*>     platDrvs;
 
@@ -48,28 +48,28 @@ public:
 	void Exit();
 
 	/// @brief Block device methods
-	void RegisterBlockDevice(BlockDevice* device);
-	void UnregisterBlockDevice(BlockDevice* device);
+	void RegisterBlockDevice(BlockDriver* driver);
+	void UnregisterBlockDevice(BlockDriver* driver);
 
 	/// @brief Char device methods
-	void RegisterCharDevice(CharDevice* device);
-	void UnregisterCharDevice(CharDevice* device);
+	void RegisterCharDevice(CharDriver* driver);
+	void UnregisterCharDevice(CharDriver* driver);
 
 	/// @brief Framebuffer device methods
-	void RegisterFBDevice(FBDevice* device);
-	void UnregisterFBDevice(FBDevice* device);
+	void RegisterFBDevice(FBDriver* driver);
+	void UnregisterFBDevice(FBDriver* driver);
 
 	/// @brief Input device methods
-	void RegisterInputDevice(InputDevice* device);
-	void UnregisterInputDevice(InputDevice* device);
+	void RegisterInputDevice(InputDriver* driver);
+	void UnregisterInputDevice(InputDriver* driver);
 
 	/// @brief Netwrok device methods
-	void RegisterNetworkDevice(NetworkDevice* device);
-	void UnregisterNetworkDevice(NetworkDevice* device);
+	void RegisterNetworkDevice(NetworkDriver* driver);
+	void UnregisterNetworkDevice(NetworkDriver* driver);
 
 	/// @brief Misc device methods
-	void RegisterMiscDevice(MiscDevice* device);
-	void UnregisterMiscDevice(MiscDevice* device);
+	void RegisterMiscDevice(MiscDriver* driver);
+	void UnregisterMiscDevice(MiscDriver* driver);
 
 	/// @brief Platform device methods
 	void RegisterPlatDevice(PlatDevice* device);

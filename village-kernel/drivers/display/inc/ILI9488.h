@@ -12,7 +12,7 @@
 
 
 /// @brief ILI9488
-class ILI9488 : public FBDevice
+class ILI9488 : public FBDriver
 {
 public:
 	//Structures

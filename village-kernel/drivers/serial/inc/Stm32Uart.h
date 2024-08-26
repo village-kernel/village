@@ -13,7 +13,7 @@
 
 
 /// @brief Stm32Uart
-class Stm32Uart : public CharDevice
+class Stm32Uart : public CharDriver
 {
 public:
 	//Structures

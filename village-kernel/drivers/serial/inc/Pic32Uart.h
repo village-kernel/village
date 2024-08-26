@@ -13,7 +13,7 @@
 
 
 /// @brief Pic32Uart
-class Pic32Uart : public CharDevice
+class Pic32Uart : public CharDriver
 {
 public:
 	/// @brief Config

@@ -7,12 +7,12 @@
 #ifndef __SDIO_SD_CARD_H__
 #define __SDIO_SD_CARD_H__
 
-#include "Driver.h"
 #include "Hardware.h"
+#include "Driver.h"
 
 
 /// @brief SdioSdCard
-class SdioSdCard : public BlockDevice
+class SdioSdCard : public BlockDriver
 {
 public:
 	//Structures

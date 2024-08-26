@@ -114,7 +114,7 @@ bool PS2KeyBoardDrv::Probe(PlatDevice* device)
 	ps2keyboard->SetName(device->GetDriverName());
 	ps2keyboard->SetData(device->GetDriverData());
 	device->SetDriver(ps2keyboard);
-	kernel->device.RegisterInputDevice((InputDevice*)device->GetDriver());
+	kernel->device.RegisterInputDevice((InputDriver*)device->GetDriver());
 	return true;
 }
 
@@ -124,7 +124,7 @@ bool PS2KeyBoardDrv::Probe(PlatDevice* device)
 /// @return 
 bool PS2KeyBoardDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterInputDevice((InputDevice*)device->GetDriver());
+	kernel->device.UnregisterInputDevice((InputDriver*)device->GetDriver());
 	delete (PS2KeyBoard*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

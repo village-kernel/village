@@ -14,7 +14,7 @@
 
 
 /// @brief PS2Mouse
-class PS2Mouse : public CharDevice, public Class
+class PS2Mouse : public CharDriver, public Class
 {
 public:
 	//Structures

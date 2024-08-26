@@ -147,7 +147,7 @@ bool AtaLbaDiskDrv::Probe(PlatDevice* device)
 	ataLbaDisk->SetName(device->GetDriverName());
 	ataLbaDisk->SetData(device->GetDriverData());
 	device->SetDriver(ataLbaDisk);
-	kernel->device.RegisterBlockDevice((BlockDevice*)device->GetDriver());
+	kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
 	return true;
 }
 
@@ -157,7 +157,7 @@ bool AtaLbaDiskDrv::Probe(PlatDevice* device)
 /// @return 
 bool AtaLbaDiskDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterBlockDevice((BlockDevice*)device->GetDriver());
+	kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
 	delete (AtaLbaDisk*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

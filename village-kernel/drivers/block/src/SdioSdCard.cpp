@@ -247,7 +247,7 @@ bool SdioSdCardDrv::Probe(PlatDevice* device)
 	sdioSdCard->SetName(device->GetDriverName());
 	sdioSdCard->SetData(device->GetDriverData());
 	device->SetDriver(sdioSdCard);
-	kernel->device.RegisterBlockDevice((BlockDevice*)device->GetDriver());
+	kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
 	return true;
 }
 
@@ -257,7 +257,7 @@ bool SdioSdCardDrv::Probe(PlatDevice* device)
 /// @return 
 bool SdioSdCardDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterBlockDevice((BlockDevice*)device->GetDriver());
+	kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
 	delete (SdioSdCard*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

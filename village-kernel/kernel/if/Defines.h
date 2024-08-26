@@ -40,7 +40,7 @@ enum ModuleID
 ///Block device register macro
 #define REGISTER_BLOCK_DEVICE(dev, name)                          \
 static struct _Block_Dev_##name {                                 \
-	BlockDevice* device = dev;                                    \
+	BlockDriver* device = dev;                                    \
 	_Block_Dev_##name() {                                         \
 		device->SetID(DriverID::_block);                          \
 		device->SetName((char*)#name);                            \
@@ -55,7 +55,7 @@ static struct _Block_Dev_##name {                                 \
 ///Char device register macro
 #define REGISTER_CHAR_DEVICE(dev, name)                           \
 static struct _Char_Dev_##name {                                  \
-	CharDevice* device = dev;                                     \
+	CharDriver* device = dev;                                     \
 	_Char_Dev_##name() {                                          \
 		device->SetID(DriverID::_character);                      \
 		device->SetName((char*)#name);                            \
@@ -70,7 +70,7 @@ static struct _Char_Dev_##name {                                  \
 ///Framebuffer device register macro
 #define REGISTER_FB_DEVICE(dev, name)                             \
 static struct _FB_Dev_##name {                                    \
-	FBDevice* device = dev;                                       \
+	FBDriver* device = dev;                                       \
 	_FB_Dev_##name() {                                            \
 		device->SetID(DriverID::_framebuffer);                    \
 		device->SetName((char*)#name);                            \
@@ -85,7 +85,7 @@ static struct _FB_Dev_##name {                                    \
 ///Input device register macro
 #define REGISTER_INPUT_DEVICE(dev, name)                          \
 static struct _Input_Dev_##name {                                 \
-	InputDevice* device = dev;                                    \
+	InputDriver* device = dev;                                    \
 	_Input_Dev_##name() {                                         \
 		device->SetID(DriverID::_input);                          \
 		device->SetName((char*)#name);                            \
@@ -100,7 +100,7 @@ static struct _Input_Dev_##name {                                 \
 ///Network device register macro
 #define REGISTER_NETWORK_DEVICE(dev, name)                        \
 static struct _Network_Dev_##name {                               \
-	NetworkDevice* device = dev;                                  \
+	NetworkDriver* device = dev;                                  \
 	_Network_Dev_##name() {                                       \
 		device->SetID(DriverID::_network);                        \
 		device->SetName((char*)#name);                            \
@@ -115,7 +115,7 @@ static struct _Network_Dev_##name {                               \
 ///Misc device register macro
 #define REGISTER_MISC_DEVICE(dev, name)                           \
 static struct _Misc_Dev_##name {                                  \
-	MiscDevice* device = dev;                                     \
+	MiscDriver* device = dev;                                     \
 	_Misc_Dev_##name() {                                          \
 		device->SetID(DriverID::_miscellaneous);                  \
 		device->SetName((char*)#name);                            \

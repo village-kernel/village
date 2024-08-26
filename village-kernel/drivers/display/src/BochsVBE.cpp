@@ -226,7 +226,7 @@ bool BochsVBE::Open()
 /// @return 
 int BochsVBE::IOCtrl(uint8_t cmd, void* data)
 {
-	FBDevice** fbdev = (FBDevice**)data;
+	FBDriver** fbdev = (FBDriver**)data;
 
 	*fbdev = this;
 
@@ -251,7 +251,7 @@ bool BochsVBEDrv::Probe(PlatDevice* device)
 	bochsVBE->SetName(device->GetDriverName());
 	bochsVBE->SetData(device->GetDriverData());
 	device->SetDriver(bochsVBE);
-	kernel->device.RegisterFBDevice((FBDevice*)device->GetDriver());
+	kernel->device.RegisterFBDevice((FBDriver*)device->GetDriver());
 	return true;
 }
 
@@ -261,7 +261,7 @@ bool BochsVBEDrv::Probe(PlatDevice* device)
 /// @return 
 bool BochsVBEDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterFBDevice((FBDevice*)device->GetDriver());
+	kernel->device.UnregisterFBDevice((FBDriver*)device->GetDriver());
 	delete (BochsVBE*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

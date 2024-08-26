@@ -12,7 +12,7 @@
 
 
 /// @brief PS2KeyBoard
-class PS2KeyBoard : public CharDevice, public Class
+class PS2KeyBoard : public CharDriver, public Class
 {
 public:
 	//Structures

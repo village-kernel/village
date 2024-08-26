@@ -461,7 +461,7 @@ bool ILI9488::Open()
 /// @return 
 int ILI9488::IOCtrl(uint8_t cmd, void* data)
 {
-	FBDevice** fbdev = (FBDevice**)data;
+	FBDriver** fbdev = (FBDriver**)data;
 
 	*fbdev = this;
 
@@ -486,7 +486,7 @@ bool ILI9488Drv::Probe(PlatDevice* device)
 	ili9488->SetName(device->GetDriverName());
 	ili9488->SetData(device->GetDriverData());
 	device->SetDriver(ili9488);
-	kernel->device.RegisterFBDevice((FBDevice*)device->GetDriver());
+	kernel->device.RegisterFBDevice((FBDriver*)device->GetDriver());
 	return true;
 }
 
@@ -496,7 +496,7 @@ bool ILI9488Drv::Probe(PlatDevice* device)
 /// @return 
 bool ILI9488Drv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterFBDevice((FBDevice*)device->GetDriver());
+	kernel->device.UnregisterFBDevice((FBDriver*)device->GetDriver());
 	delete (ILI9488*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

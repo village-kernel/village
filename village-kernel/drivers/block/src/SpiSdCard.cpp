@@ -579,7 +579,7 @@ bool SpiSdCardDrv::Probe(PlatDevice* device)
 	spiSdCard->SetName(device->GetDriverName());
 	spiSdCard->SetData(device->GetDriverData());
 	device->SetDriver(spiSdCard);
-	kernel->device.RegisterBlockDevice((BlockDevice*)device->GetDriver());
+	kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
 	return true;
 }
 
@@ -589,7 +589,7 @@ bool SpiSdCardDrv::Probe(PlatDevice* device)
 /// @return 
 bool SpiSdCardDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterBlockDevice((BlockDevice*)device->GetDriver());
+	kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
 	delete (SpiSdCard*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

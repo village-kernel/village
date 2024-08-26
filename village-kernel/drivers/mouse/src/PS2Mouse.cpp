@@ -239,7 +239,7 @@ bool PS2MouseDrv::Probe(PlatDevice* device)
 	ps2mouse->SetName(device->GetDriverName());
 	ps2mouse->SetData(device->GetDriverData());
 	device->SetDriver(ps2mouse);
-	kernel->device.RegisterInputDevice((InputDevice*)device->GetDriver());
+	kernel->device.RegisterInputDevice((InputDriver*)device->GetDriver());
 	return true;
 }
 
@@ -249,7 +249,7 @@ bool PS2MouseDrv::Probe(PlatDevice* device)
 /// @return 
 bool PS2MouseDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterInputDevice((InputDevice*)device->GetDriver());
+	kernel->device.UnregisterInputDevice((InputDriver*)device->GetDriver());
 	delete (PS2Mouse*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

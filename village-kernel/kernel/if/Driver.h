@@ -24,32 +24,32 @@ public:
 };
 
 
-/// @brief BlockDevice
-class BlockDevice : public Base, public Fopts
+/// @brief BlockDriver
+class BlockDriver : public Base, public Fopts
 {
 public:
 	//Constructor
-	BlockDevice() {}
+	BlockDriver() {}
 
 	//Destructor
-	virtual ~BlockDevice() {}
+	virtual ~BlockDriver() {}
 };
 
 
-/// @brief CharDevice
-class CharDevice : public Base, public Fopts
+/// @brief CharDriver
+class CharDriver : public Base, public Fopts
 {
 public:
 	//Constructor
-	CharDevice() {}
+	CharDriver() {}
 
 	//Destructor
-	virtual ~CharDevice() {}
+	virtual ~CharDriver() {}
 };
 
 
-/// @brief FBDevice
-class FBDevice : public Base, public Fopts
+/// @brief FBDriver
+class FBDriver : public Base, public Fopts
 {
 public:
 	//Structures
@@ -64,10 +64,10 @@ public:
 	FBInfo fbinfo;
 public:
 	//Constructor
-	FBDevice()  {}
+	FBDriver()  {}
 
 	//Destructor
-	virtual ~FBDevice() {}
+	virtual ~FBDriver() {}
 
 	//Methods
 	virtual bool Setup() = 0;
@@ -79,39 +79,39 @@ public:
 };
 
 
-/// @brief InputDevice
-class InputDevice : public Base, public Fopts
+/// @brief InputDriver
+class InputDriver : public Base, public Fopts
 {
 public:
 	//Constructor
-	InputDevice() {}
+	InputDriver() {}
 
 	//Destructor
-	virtual ~InputDevice() {}
+	virtual ~InputDriver() {}
 };
 
 
-/// @brief NetworkDevice
-class NetworkDevice : public Base
+/// @brief NetworkDriver
+class NetworkDriver : public Base
 {
 public:
 	//Constructor
-	NetworkDevice() {}
+	NetworkDriver() {}
 
 	//Destructor
-	virtual ~NetworkDevice() {}
+	virtual ~NetworkDriver() {}
 };
 
 
-/// @brief MiscDevice
-class MiscDevice : public Base, public Fopts
+/// @brief MiscDriver
+class MiscDriver : public Base, public Fopts
 {
 public:
 	//Constructor
-	MiscDevice() {}
+	MiscDriver() {}
 
 	//Destructor
-	virtual ~MiscDevice() {}
+	virtual ~MiscDriver() {}
 };
 
 
