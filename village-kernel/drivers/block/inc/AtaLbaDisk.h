@@ -13,7 +13,7 @@
 
 
 /// @brief AtaLbaDisk
-class AtaLbaDisk : public BlockDevice
+class AtaLbaDisk : public BlockDriver
 {
 public:
 	//Config

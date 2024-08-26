@@ -13,7 +13,7 @@
 
 
 /// @brief BochsVBE
-class BochsVBE : public FBDevice
+class BochsVBE : public FBDriver
 {
 public:
 	//Config

@@ -12,7 +12,7 @@
 
 
 /// @brief SpiW25qxx
-class SpiW25qxx : public BlockDevice
+class SpiW25qxx : public BlockDriver
 {
 public:
 	//Structures

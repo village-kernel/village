@@ -12,7 +12,7 @@
 
 
 /// @brief SpiSdCard
-class SpiSdCard : public BlockDevice
+class SpiSdCard : public BlockDriver
 {
 public:
 	//Structures

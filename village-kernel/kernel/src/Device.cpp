@@ -205,100 +205,100 @@ inline void ConcreteDevice::DevicesRelease()
 
 
 /// @brief Register block device object
-/// @param device device pointer
-void ConcreteDevice::RegisterBlockDevice(BlockDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::RegisterBlockDevice(BlockDriver* driver)
 {
-	blockDevs.Add(device, device->GetName());
+	blockDevs.Add(driver, driver->GetName());
 }
 
 
 /// @brief Unregister block device object
-/// @param device device pointer
-void ConcreteDevice::UnregisterBlockDevice(BlockDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::UnregisterBlockDevice(BlockDriver* driver)
 {
-	blockDevs.Remove(device);
+	blockDevs.Remove(driver);
 }
 
 
 /// @brief Register char device object
-/// @param device device pointer
-void ConcreteDevice::RegisterCharDevice(CharDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::RegisterCharDevice(CharDriver* driver)
 {
-	charDevs.Add(device, device->GetName());
+	charDevs.Add(driver, driver->GetName());
 }
 
 
 /// @brief Unregister char device object
-/// @param device device pointer
-void ConcreteDevice::UnregisterCharDevice(CharDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::UnregisterCharDevice(CharDriver* driver)
 {
-	charDevs.Remove(device);
+	charDevs.Remove(driver);
 }
 
 
 /// @brief Register fb device object
-/// @param device device pointer
-void ConcreteDevice::RegisterFBDevice(FBDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::RegisterFBDevice(FBDriver* driver)
 {
-	fbDevs.Add(device, device->GetName());
+	fbDevs.Add(driver, driver->GetName());
 }
 
 
 /// @brief Unregister fb device object
-/// @param device device pointer
-void ConcreteDevice::UnregisterFBDevice(FBDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::UnregisterFBDevice(FBDriver* driver)
 {
-	fbDevs.Remove(device);
+	fbDevs.Remove(driver);
 }
 
 
 /// @brief Register input device object
-/// @param device device pointer
-void ConcreteDevice::RegisterInputDevice(InputDevice* device)
+/// @param driver device pointer
+void ConcreteDevice::RegisterInputDevice(InputDriver* driver)
 {
-	inDevs.Add(device, device->GetName());
-	if (isRuntime) device->Open();
+	inDevs.Add(driver, driver->GetName());
+	if (isRuntime) driver->Open();
 }
 
 
 /// @brief Unregister input device object
-/// @param device device pointer
-void ConcreteDevice::UnregisterInputDevice(InputDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::UnregisterInputDevice(InputDriver* driver)
 {
-	if (isRuntime) device->Close();
-	inDevs.Remove(device);
+	if (isRuntime) driver->Close();
+	inDevs.Remove(driver);
 }
 
 
 /// @brief Register nt device object
-/// @param device device pointer
-void ConcreteDevice::RegisterNetworkDevice(NetworkDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::RegisterNetworkDevice(NetworkDriver* driver)
 {
-	ntDevs.Add(device, device->GetName());
+	ntDevs.Add(driver, driver->GetName());
 }
 
 
 /// @brief Unregister nt device object
-/// @param device device pointer
-void ConcreteDevice::UnregisterNetworkDevice(NetworkDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::UnregisterNetworkDevice(NetworkDriver* driver)
 {
-	ntDevs.Remove(device);
+	ntDevs.Remove(driver);
 }
 
 
 /// @brief Register misc device object
-/// @param device device pointer
-void ConcreteDevice::RegisterMiscDevice(MiscDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::RegisterMiscDevice(MiscDriver* driver)
 {
-	miscDevs.Add(device, device->GetName());
+	miscDevs.Add(driver, driver->GetName());
 }
 
 
 /// @brief Unregister misc device object
-/// @param device device pointer
-void ConcreteDevice::UnregisterMiscDevice(MiscDevice* device)
+/// @param driver driver pointer
+void ConcreteDevice::UnregisterMiscDevice(MiscDriver* driver)
 {
-	miscDevs.Remove(device);
+	miscDevs.Remove(driver);
 }
 
 

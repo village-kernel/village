@@ -131,7 +131,7 @@ bool Pic32UartDrv::Probe(PlatDevice* device)
 	serial->SetName(device->GetDriverName());
 	serial->SetData(device->GetDriverData());
 	device->SetDriver(serial);
-	kernel->device.RegisterCharDevice((CharDevice*)device->GetDriver());
+	kernel->device.RegisterCharDevice((CharDriver*)device->GetDriver());
 	return true;
 }
 
@@ -141,7 +141,7 @@ bool Pic32UartDrv::Probe(PlatDevice* device)
 /// @return 
 bool Pic32UartDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterCharDevice((CharDevice*)device->GetDriver());
+	kernel->device.UnregisterCharDevice((CharDriver*)device->GetDriver());
 	delete (Pic32Uart*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

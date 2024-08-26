@@ -12,7 +12,7 @@
 
 
 /// @brief Pit32Timer
-class Pit32Timer : public MiscDevice
+class Pit32Timer : public MiscDriver
 {
 public:
 	/// @brief Config

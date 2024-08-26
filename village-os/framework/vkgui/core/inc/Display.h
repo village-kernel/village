@@ -59,7 +59,7 @@ private:
 	static const uint32_t defBackgroundColor = Color16::White;
 
 	//Members
-	FBDevice*  fbdev;
+	FBDriver*  fbdev;
 	Mutex      lock;
 	uint32_t   limitX;
 	uint32_t   limitY;
@@ -68,7 +68,7 @@ public:
 	//Methods
 	Display();
 	~Display();
-	void Setup(FBDevice* fbdev);
+	void Setup(FBDriver* fbdev);
 	void Exit();
 	
 	void DrawPoint(uint32_t x, uint32_t y, uint32_t color = defStrokeColor);

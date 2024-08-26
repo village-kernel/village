@@ -64,7 +64,7 @@ bool Pit32TimerDrv::Probe(PlatDevice* device)
 	pit32Timer->SetName(device->GetDriverName());
 	pit32Timer->SetData(device->GetDriverData());
 	device->SetDriver(pit32Timer);
-	kernel->device.RegisterMiscDevice((MiscDevice*)device->GetDriver());
+	kernel->device.RegisterMiscDevice((MiscDriver*)device->GetDriver());
 	return true;
 }
 
@@ -74,7 +74,7 @@ bool Pit32TimerDrv::Probe(PlatDevice* device)
 /// @return 
 bool Pit32TimerDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterMiscDevice((MiscDevice*)device->GetDriver());
+	kernel->device.UnregisterMiscDevice((MiscDriver*)device->GetDriver());
 	delete (Pit32Timer*)device->GetDriver();
 	device->SetDriver(NULL);
 	return true;

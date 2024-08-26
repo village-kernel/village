@@ -24,7 +24,7 @@ Display::~Display()
 
 
 /// @brief Display Setup
-void Display::Setup(FBDevice* fbdev)
+void Display::Setup(FBDriver* fbdev)
 {
 	if (NULL != fbdev)
 	{
