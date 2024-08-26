@@ -19,8 +19,8 @@ void SdioSdCardDev::Config()
 		.ckGpio  = { Gpio::_ChC, 12, Gpio::_Altera, 12, 0 },
 		.cmdGpio = { Gpio::_ChD, 2,  Gpio::_Altera, 12, 0 },
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"disk0");
+	driverData = (void*)&config;
+	driverName = (char*)"disk0";
 }
 REGISTER_PLAT_DEVICE(new SdioSdCardDev(), sdioSdCard, sdioSdCardDev);
 
@@ -41,7 +41,7 @@ void Stm32UartDev::Config()
 		.txDma = { Dma::_Group2, Dma::_Stream7, 4, Dma::_MemoryToPeriph, 0 },
 		.rxDma = { Dma::_Group2, Dma::_Stream2, 4, Dma::_PeriphToMemory, 0 },
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"serial0");
+	driverData = (void*)&config;
+	driverName = (char*)"serial0";
 }
 REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart, stm32uartDev);

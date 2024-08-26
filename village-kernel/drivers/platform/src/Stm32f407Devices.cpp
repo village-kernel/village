@@ -19,8 +19,8 @@ void SpiSdCardDev::Config()
 		.csGpio   = { Gpio::_ChB, 5,  Gpio::_Output, 0, 1 },
 		.dtGpio   = { Gpio::_ChB, 6,  Gpio::_Output, 0, 0 },
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"disk0");
+	driverData = (void*)&config;
+	driverName = (char*)"disk0";
 }
 REGISTER_PLAT_DEVICE(new SpiSdCardDev(), spiSdCard, spiSdCardDev);
 
@@ -37,8 +37,8 @@ void SpiW25Q64Dev::Config()
 		.wpGpio   = { Gpio::_ChF, 15,  Gpio::_Output, 0,  1 },
 		.deviceID = 0xEF16,
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"disk1");
+	driverData = (void*)&config;
+	driverName = (char*)"disk1";
 }
 REGISTER_PLAT_DEVICE(new SpiW25Q64Dev(), spiW25qxx, spiW25Q64Dev);
 
@@ -69,8 +69,8 @@ void ILI9488Dev::Config()
 		.db14Gpio = { Gpio::_ChD, 9,  Gpio::_Altera, 12, 0 },
 		.db15Gpio = { Gpio::_ChD, 10, Gpio::_Altera, 12, 0 },
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"display0");
+	driverData = (void*)&config;
+	driverName = (char*)"display0";
 }
 REGISTER_PLAT_DEVICE(new ILI9488Dev(), ili9488, ili9488Dev);
 
@@ -91,7 +91,7 @@ void Stm32UartDev::Config()
 		.txDma = { Dma::_Group2, Dma::_Stream7, 4, Dma::_MemoryToPeriph, 0 },
 		.rxDma = { Dma::_Group2, Dma::_Stream2, 4, Dma::_PeriphToMemory, 0 },
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"serial0");
+	driverData = (void*)&config;
+	driverName = (char*)"serial0";
 }
 REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart, stm32uartDev);

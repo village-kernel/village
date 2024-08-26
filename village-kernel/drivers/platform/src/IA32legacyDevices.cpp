@@ -14,8 +14,8 @@ void AtaLbaDiskDev::Config()
 	config = {
 		.drv = 1,
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"disk0");
+	driverData = (void*)&config;
+	driverName = (char*)"disk0";
 }
 REGISTER_PLAT_DEVICE(new AtaLbaDiskDev(), ataLbaDisk, ataLbaDiskDev);
 
@@ -26,8 +26,8 @@ void BochsVBEDev::Config()
 	config = {
 		.vmap = (uint16_t*)0xA00000,
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"display0");
+	driverData = (void*)&config;
+	driverName = (char*)"display0";
 }
 REGISTER_PLAT_DEVICE(new BochsVBEDev(), bochsVBE, bochsVBEDev);
 
@@ -38,8 +38,8 @@ void PS2KeyBoardDev::Config()
 	config = {
 		.irq = Keyboard_Controller_IRQn,
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"keyboard0");
+	driverData = (void*)&config;
+	driverName = (char*)"keyboard0";
 }
 REGISTER_PLAT_DEVICE(new PS2KeyBoardDev(), ps2keyboard, ps2keyboardDev);
 
@@ -50,8 +50,8 @@ void PS2MouseDev::Config()
 	config = {
 		.irq = Mouse_Controller_IRQn,
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"mouse0");
+	driverData = (void*)&config;
+	driverName = (char*)"mouse0";
 }
 REGISTER_PLAT_DEVICE(new PS2MouseDev(), ps2mouse, ps2mouseDev);
 
@@ -62,8 +62,8 @@ void Pic32UartDev::Config()
 	config = {
 		.port = 0,
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"serial0");
+	driverData = (void*)&config;
+	driverName = (char*)"serial0";
 }
 REGISTER_PLAT_DEVICE(new Pic32UartDev(), pic32uart, pic32uartDev);
 
@@ -74,7 +74,7 @@ void Pit32TimerDev::Config()
 	config = {
 		.timer = 0,
 	};
-	SetDriverData((void*)&config);
-	SetDriverName((char*)"timer0");
+	driverData = (void*)&config;
+	driverName = (char*)"timer0";
 }
 REGISTER_PLAT_DEVICE(new Pit32TimerDev(), pit32timer, pit32timerDev);
