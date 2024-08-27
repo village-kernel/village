@@ -33,12 +33,15 @@ private:
 	char       path[path_size];
 	
 	//Methods
+	void ShowWelcomeMsg();
 	void ShowUserAndPath();
 	void ExecuteCmd(CmdMsg msg);
 public:
 	//Methods
 	Console();
 	~Console();
+
+	//Class Methods
 	void Setup(const char* driver);
 	void Execute();
 	void Exit();

@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "Graphics.h"
-#include "DrvStream.h"
+#include "DevStream.h"
 #include "Window.h"
 #include "Kernel.h"
 
@@ -29,16 +29,20 @@ Graphics::~Graphics()
 
 
 /// @brief Setup
-/// @param drvname 
-bool Graphics::Setup(const char* screen)
+bool Graphics::Setup()
 {
+	//Get all block device blockDevs
+	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
+
 	//Get the universal driver by driver name
-	DrvStream screendrv;
-	if (screendrv.Open(screen, FileMode::_Read))
+	DevStream screen;
+
+	//Open the first screen 
+	if (screen.Open(fbDevs.Begin()->GetName(), FileMode::_Read))
 	{
 		//Get the specified lcd driver by driver ioctrl 
-		screendrv.IOCtrl(0, (void*)&fbdev);
-		
+		screen.IOCtrl(0, (void*)&fbdev);
+
 		//Setup display
 		if (NULL != fbdev)
 		{
@@ -47,6 +51,17 @@ bool Graphics::Setup(const char* screen)
 		}
 	}
 	return (NULL != display);
+}
+
+
+/// @brief Exit
+void Graphics::Exit()
+{
+	if (NULL != display)
+	{
+		display->Exit();
+		delete display;
+	}
 }
 
 

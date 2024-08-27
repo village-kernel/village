@@ -39,7 +39,7 @@ public:
 	{
 		_Input  = 0b00,
 		_Output = 0b01,
-		_Alt    = 0b10,
+		_Altera = 0b10,
 		_Analog = 0b11,
 	};
 

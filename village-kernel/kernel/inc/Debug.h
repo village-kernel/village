@@ -9,7 +9,7 @@
 
 #include "Kernel.h"
 #include "Mutex.h"
-#include "DrvStream.h"
+#include "DevStream.h"
 
 
 /// @brief ConcreteDebug
@@ -20,7 +20,7 @@ private:
 	static const uint16_t buf_size = 256;
 
 	/// @brief Members
-	DrvStream transceiver;
+	DevStream transceiver;
 	Mutex     mutex;
 	bool      isReady;
 	uint8_t   debugLevel;

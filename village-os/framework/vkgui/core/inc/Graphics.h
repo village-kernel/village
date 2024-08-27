@@ -15,14 +15,15 @@ class Graphics
 {
 private:
 	//Members
-	FBDevice*   fbdev;
+	FBDriver*   fbdev;
 	Display*    display;
 	Wedget*     mainwin;
 public:
 	//Methods
 	Graphics();
 	~Graphics();
-	bool Setup(const char* screen);
+	bool Setup();
+	void Exit();
 	Wedget* CreateMainWindow();
 };
 

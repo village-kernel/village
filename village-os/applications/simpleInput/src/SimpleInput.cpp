@@ -51,12 +51,8 @@ SimpleInput::~SimpleInput()
 
 
 /// @brief Setup
-void SimpleInput::Setup(const char* keyboard, const char* mouse)
+void SimpleInput::Setup()
 {
-	//Open keyboard and mouse
-	keyboarddrv.Open(keyboard, FileMode::_Read);
-	mousedrv.Open(mouse, FileMode::_Read);
-
 	//Attach input event
 	kernel->inputEvent.Attach(InputEvent::_InputKey, (Method)&SimpleInput::InputKeyHandler, this);
 	kernel->inputEvent.Attach(InputEvent::_InputAxis, (Method)&SimpleInput::InputAxisHandler, this);
@@ -187,15 +183,8 @@ void SimpleInput::Execute()
 /// @brief main
 int main(int argc, char* argv[])
 {
-	if (argc < 3)
-	{
-		return -1;
-	}
-	else
-	{
-		SimpleInput input;
-		input.Setup(argv[1], argv[2]);
-		input.Execute();
-		return 0;
-	}
+	SimpleInput input;
+	input.Setup();
+	input.Execute();
+	return 0;
 }

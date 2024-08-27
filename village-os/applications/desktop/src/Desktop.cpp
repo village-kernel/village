@@ -18,27 +18,40 @@ Desktop::Desktop()
 /// @brief Deconstructor
 Desktop::~Desktop()
 {
+	Exit();
 }
 
 
 /// @brief Setup
-void Desktop::Setup(const char* screen)
+void Desktop::Setup()
 {
-	if (false == SetupWin(screen)) return;
+	if (false == SetupWin()) return;
 
 	SetID(DriverID::_character);
 	SetName((char*)"desktop");
-	kernel->device.RegisterDriver(this);
+	kernel->device.RegisterCharDevice(this);
 
 	kernel->inputEvent.Attach(InputEvent::_OutputText, (Method)&Desktop::UpdateText, this);
 	kernel->inputEvent.Attach(InputEvent::_OutputAxis, (Method)&Desktop::UpdateAxis, this);
 }
 
 
-/// @brief SetupWin
-bool Desktop::SetupWin(const char* screen)
+/// @brief Exit
+void Desktop::Exit()
 {
-	if (false == graphics.Setup(screen)) return false;
+	kernel->inputEvent.Detach(InputEvent::_OutputAxis, (Method)&Desktop::UpdateAxis, this);
+	kernel->inputEvent.Detach(InputEvent::_OutputText, (Method)&Desktop::UpdateText, this);
+
+	kernel->device.UnregisterCharDevice(this);
+
+	graphics.Exit();
+}
+
+
+/// @brief SetupWin
+bool Desktop::SetupWin()
+{
+	if (false == graphics.Setup()) return false;
 
 	mainwin = (Window*)graphics.CreateMainWindow();
 
@@ -157,15 +170,9 @@ void Desktop::Close()
 /// @brief main
 int main(int argc, char* argv[])
 {
-	if (argc < 2)
-	{
-		return -1;
-	}
-	else
-	{
-		Desktop desktop;
-		desktop.Setup(argv[1]);
-		desktop.Execute();
-		return 0;
-	}
+	Desktop desktop;
+	desktop.Setup();
+	desktop.Execute();
+	desktop.Exit();
+	return 0;
 }

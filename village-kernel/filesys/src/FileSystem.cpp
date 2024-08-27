@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FileSystem.h"
+#include "DevStream.h"
 
 
 /// @brief Constructor
@@ -22,13 +23,13 @@ ConcreteFileSystem::~ConcreteFileSystem()
 /// @brief File system setup
 void ConcreteFileSystem::Setup()
 {
-	//Get all block device drivers
-	List<Driver*> drivers = kernel->device.GetDrivers(DriverID::_block);
+	//Get all block device blockDevs
+	List<Base*> blockDevs = kernel->device.GetDevices(DriverID::_block);
 
 	//Initialize all hard disk
-	for (drivers.Begin(); !drivers.IsEnd(); drivers.Next())
+	for (blockDevs.Begin(); !blockDevs.IsEnd(); blockDevs.Next())
 	{
-		InitMBRDisk(drivers.Item()->GetName());
+		InitMBRDisk(blockDevs.Item()->GetName());
 	}
 
 	//Mount system node
@@ -53,35 +54,35 @@ void ConcreteFileSystem::Exit()
 }
 
 
-/// @brief Init disk driver
+/// @brief Init disk device
 /// @return 
-bool ConcreteFileSystem::InitMBRDisk(const char* diskdrv)
+bool ConcreteFileSystem::InitMBRDisk(const char* disk)
 {
 	static const uint16_t magic = 0xaa55;
 	static const uint16_t mbr_sector = 0;
 
-	kernel->debug.Info("Try to setup the hard drive (%s) by using MBR format", diskdrv);
+	kernel->debug.Info("Try to setup the hard drive (%s) by using MBR format", disk);
 
-	//Create an drvstream object
-	DrvStream* driver = new DrvStream();
+	//Create an devstream object
+	DevStream device;
 
-	//Open the disk driver
-	if (!driver->Open(diskdrv, FileMode::_ReadWrite))
+	//Open the disk device
+	if (!device.Open(disk, FileMode::_ReadWrite))
 	{
-		kernel->debug.Error("hard drive (%s) open failed", diskdrv);
-		delete driver;
+		kernel->debug.Error("hard drive (%s) open failed", disk);
 		return false;
 	}
 
 	//Read the master boot record
 	MBR* mbr = new MBR();
 
-	driver->Read((char*)mbr, 1, mbr_sector);
+	device.Read((char*)mbr, 1, mbr_sector);
 
 	if (magic != mbr->magic)
 	{
 		kernel->debug.Error("Not a valid disk");
-		delete driver;
+		device.Close();
+		delete mbr;
 		return false;
 	}
 
@@ -94,7 +95,7 @@ bool ConcreteFileSystem::InitMBRDisk(const char* diskdrv)
 		{
 			FileVol* volume = fs->CreateVolume();
 
-			if (volume->Setup(driver, mbr->dpt[i].relativeSectors))
+			if (volume->Setup(disk, mbr->dpt[i].relativeSectors))
 			{
 				AttachVolume(volume);
 			}
@@ -102,8 +103,9 @@ bool ConcreteFileSystem::InitMBRDisk(const char* diskdrv)
 		}
 	}
 
+	//Leave
+	device.Close();
 	delete mbr;
-
 	return true;
 }
 
@@ -135,10 +137,10 @@ void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
 }
 
 
-/// @brief Deregister file system
+/// @brief Unregister file system
 /// @param fs file system
 /// @param name file system name
-void ConcreteFileSystem::DeregisterFS(FileSys* fs, const char* name)
+void ConcreteFileSystem::UnregisterFS(FileSys* fs, const char* name)
 {
 	fileSys.RemoveByName(fs, (char*)name);
 }

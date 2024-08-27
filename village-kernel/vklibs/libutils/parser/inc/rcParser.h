@@ -26,7 +26,7 @@ private:
 	List<char*> runcmds;
 
 	//Methods
-	void Decode(const char* rcString);
+	void Decode(const char* rcString, int size);
 public:
 	//Methods
 	RcParser(const char* filename = NULL);

@@ -7,7 +7,6 @@
 #ifndef __SIMPLE_INPUT_METHOD_H__
 #define __SIMPLE_INPUT_METHOD_H__
 
-#include "DrvStream.h"
 #include "Kernel.h"
 
 
@@ -15,10 +14,6 @@
 class SimpleInput : public Class
 {
 private:
-	//Members
-	DrvStream keyboarddrv;
-	DrvStream mousedrv;
-
 	//Members
 	bool isCapsLock;
 	bool isAltPressed;
@@ -35,7 +30,7 @@ public:
 	//Methods
 	SimpleInput();
 	~SimpleInput();
-	void Setup(const char* keyboard, const char* mouse);
+	void Setup();
 	void Execute();
 };
 

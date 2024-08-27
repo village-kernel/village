@@ -23,6 +23,7 @@ private:
 	List<Sandbox*> sandboxes;
 
 	//Methods
+	void Execute();
 	char* ThreadName(const char* driver);
 	void ConsoleSandbox(Sandbox* sandbox);
 public:
@@ -34,7 +35,7 @@ public:
 
 	//Cmd Methods
 	void RegisterCmd(Cmd* cmd, char* name);
-	void DeregisterCmd(Cmd* cmd, char* name);
+	void UnregisterCmd(Cmd* cmd, char* name);
 	List<Cmd*> GetCmds();
 
 	//Console Methods

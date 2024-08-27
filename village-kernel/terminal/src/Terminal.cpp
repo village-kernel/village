@@ -23,11 +23,35 @@ ConcreteTerminal::~ConcreteTerminal()
 /// @brief Terminal Setup
 void ConcreteTerminal::Setup()
 {
-	//Create the default console
-	CreateConsole("serial0");
+	//Create terminal execute
+	kernel->thread.CreateTask("Terminal::Execute", (Method)&ConcreteTerminal::Execute, this);
 
 	//Output debug info
 	kernel->debug.Info("Terminal setup done!");
+}
+
+
+/// @brief Terminal Execute
+void ConcreteTerminal::Execute()
+{
+	const char* msg = "\r\nPlease press Enter to activate this console.\r\n";
+	const int   msglen = strlen(msg);
+
+	//Open serial
+	DevStream serial;
+	serial.Open("serial0", FileMode::_ReadWrite);
+
+	//Output msg
+	while (msglen != serial.Write((char*)msg, msglen)) {}
+
+	//Wait for Enter
+	char key = 0; do { serial.Read((char*)&key, 1); } while (0x0d != key);
+
+	//Close serial
+	serial.Close();
+
+	//Create the default console
+	CreateConsole("serial0");
 }
 
 
@@ -48,10 +72,10 @@ void ConcreteTerminal::RegisterCmd(Cmd* cmd, char* name)
 }
 
 
-/// @brief Deregister cmd object
+/// @brief Unregister cmd object
 /// @param cmd console command pointer
 /// @param name console command name 
-void ConcreteTerminal::DeregisterCmd(Cmd* cmd, char* name)
+void ConcreteTerminal::UnregisterCmd(Cmd* cmd, char* name)
 {
 	cmds.RemoveByName(cmd, name);
 }

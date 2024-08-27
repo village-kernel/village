@@ -45,6 +45,8 @@ void ConcreteFeature::Setup()
 /// @brief Execute module object->Exit
 void ConcreteFeature::Exit()
 {
+	isRuntime = false;
+
 	for (int id = _dirverIdSize - 1; id >= 0; id--)
 	{
 		for (modules.End(); !modules.IsBegin(); modules.Prev())
@@ -68,9 +70,9 @@ void ConcreteFeature::RegisterModule(Module* module)
 }
 
 
-/// @brief Deregister module object
+/// @brief Unregister module object
 /// @param module module pointer
-void ConcreteFeature::DeregisterModule(Module* module)
+void ConcreteFeature::UnregisterModule(Module* module)
 {
 	if (isRuntime) module->Exit();
 	modules.Remove(module);

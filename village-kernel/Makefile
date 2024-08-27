@@ -104,8 +104,8 @@ src-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/src
 src-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/src
 src-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/src
 
+objs-utils-$(CONFIG_DEVSTREAM)      += DevStream.o
 objs-utils-$(CONFIG_DIRSTREAM)      += DirStream.o
-objs-utils-$(CONFIG_DRVSTREAM)      += DrvStream.o
 objs-utils-$(CONFIG_FILESTREAM)     += FileStream.o
 objs-utils-$(CONFIG_FILESYSOPT)     += FileSysOpt.o
 

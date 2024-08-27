@@ -27,15 +27,15 @@ FatVolume::~FatVolume()
 
 
 /// @brief FatVolume Setup
-/// @param diskdrv 
+/// @param disk 
 /// @param fstSec 
 /// @return 
-bool FatVolume::Setup(DrvStream* diskdrv, uint32_t fstSec)
+bool FatVolume::Setup(const char* disk, uint32_t fstSec)
 {
-	if (disk.Setup(diskdrv, fstSec))
+	if (fatdisk.Setup(disk, fstSec))
 	{
-		bytesPerSec = disk.GetInfo().bytesPerSec;
-		secPerClust = disk.GetInfo().secPerClust;
+		bytesPerSec = fatdisk.GetInfo().bytesPerSec;
+		secPerClust = fatdisk.GetInfo().secPerClust;
 		return true;
 	}
 	return false;
@@ -45,7 +45,7 @@ bool FatVolume::Setup(DrvStream* diskdrv, uint32_t fstSec)
 /// @brief FatVolume Exit
 void FatVolume::Exit()
 {
-	disk.Exit();
+	fatdisk.Exit();
 }
 
 
@@ -95,7 +95,7 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 /// @return 
 FatObject* FatVolume::SearchDir(FatObject* obj, const char* name)
 {
-	FatEntry entry(disk, obj);
+	FatEntry entry(fatdisk, obj);
 
 	for (entry.Begin(); !entry.IsEnd(); entry.Next())
 	{
@@ -129,7 +129,7 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 	
 	if (FileType::_Diretory == obj->GetObjectType())
 	{
-		obj = FatEntry(disk, obj).Create(BaseName(path), attr);
+		obj = FatEntry(fatdisk, obj).Create(BaseName(path), attr);
 	}
 
 	return obj;
@@ -141,13 +141,13 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 /// @return 
 bool FatVolume::SetVolumeLabel(const char* label)
 {
-	FatObject* obj = FatEntry(disk).Item();
+	FatObject* obj = FatEntry(fatdisk).Item();
 
 	if (FileType::_Volume == obj->GetObjectType())
 	{
 		obj->SetRawName(label);
 
-		FatEntry(disk, obj).Update();
+		FatEntry(fatdisk, obj).Update();
 	}
 
 	return true;
@@ -158,7 +158,7 @@ bool FatVolume::SetVolumeLabel(const char* label)
 /// @return 
 char* FatVolume::GetVolumeLabel()
 {
-	FatObject* obj = FatEntry(disk).Item();
+	FatObject* obj = FatEntry(fatdisk).Item();
 
 	char* label = (char*)"NONAME";
 
@@ -212,7 +212,7 @@ int FatVolume::Write(int fd, char* data, int size, int offset)
 	
 	memcpy((void*)allocBuff, (const void*)data, size);
 
-	if (clusSize == disk.WriteCluster(allocBuff, fstClust, clusSize))
+	if (clusSize == fatdisk.WriteCluster(allocBuff, fstClust, clusSize))
 	{
 		delete[] allocBuff;
 		return size;
@@ -243,7 +243,7 @@ int FatVolume::Read(int fd, char* data, int size, int offset)
 
 	char* allocBuff = (char*)new char[allocSize]();
 	
-	if (clusSize == disk.ReadCluster(allocBuff, fstClust, clusSize))
+	if (clusSize == fatdisk.ReadCluster(allocBuff, fstClust, clusSize))
 	{
 		memcpy((void*)data, (const void*)allocBuff, size);
 		delete[] allocBuff;
@@ -315,7 +315,7 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 
 	int index = 0;
 
-	FatEntry entry(disk, obj);
+	FatEntry entry(fatdisk, obj);
 
 	for (entry.Begin(); !entry.IsEnd(); entry.Next())
 	{
@@ -344,7 +344,7 @@ int FatVolume::SizeDir(int fd)
 
 	if (NULL == obj) return 0;
 
-	return FatEntry(disk, obj).GetSize();
+	return FatEntry(fatdisk, obj).GetSize();
 }
 
 
@@ -414,7 +414,7 @@ bool FatVolume::Remove(const char* name)
 		if (FileType::_File     == obj->GetObjectType() ||
 			FileType::_Diretory == obj->GetObjectType())
 		{
-			FatEntry(disk, obj).Remove();
+			FatEntry(fatdisk, obj).Remove();
 			delete obj;
 			return true;
 		}

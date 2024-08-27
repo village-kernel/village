@@ -32,8 +32,8 @@ endmenu
 
 menu "dma"
 
-config DMAFIFO
-	tristate "Enable dma fifo support"
+config STM32DMA
+	tristate "Enable stm32 dma fifo support"
 	default n
 
 endmenu
@@ -56,28 +56,20 @@ endmenu
 
 menu "serial"
 
-config SERIALPORT
-	tristate "Enable serial port support"
+config PIC32UART
+	tristate "Enable pic32 uart support"
 	default n
 
-config SERIALUART
-	tristate "Enable serial uart support"
+config STM32UART
+	tristate "Enable stm32 uart support"
 	default n
 
 endmenu
 
 menu "timer"
 
-config GENERALTIMER
-	tristate "Enable general timer support"
-	default n
-
-endmenu
-
-menu "usb"
-
-config USBSTORAGE
-	tristate "Enable USB storage support"
+config PIT32TIMER
+	tristate "Enable pit32 timer support"
 	default n
 
 endmenu
