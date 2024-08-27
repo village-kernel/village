@@ -66,21 +66,6 @@ struct FileDir
 };
 
 
-/// @brief MountNode
-struct MountNode
-{
-	char*    target;
-	char*    source;
-	uint16_t access;
-
-	MountNode(char* target, char* source, uint16_t access)
-		:target(target),
-		source(source),
-		access(access)
-	{}
-};
-
-
 ///Filesystem register macro
 #define REGISTER_FS(fs, name)                                 \
 static struct _FS_##name {                                    \
