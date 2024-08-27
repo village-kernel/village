@@ -9,7 +9,6 @@
 
 #include "stdint.h"
 #include "stddef.h"
-#include "DrvStream.h"
 
 
 /// @brief FileVol
@@ -23,7 +22,7 @@ public:
 	virtual ~FileVol() {};
 
 	//Methods
-	virtual bool Setup(DrvStream* diskdrv, uint32_t fstSec)          = 0;
+	virtual bool Setup(const char* disk, uint32_t fstSec)            = 0;
 	virtual void Exit()                                              = 0;
 
 	//Volume methods

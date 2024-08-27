@@ -18,7 +18,7 @@ class FatVolume : public FileVol
 {
 private:
 	//Members
-	FatDiskio        disk;
+	FatDiskio        fatdisk;
 	List<FatObject*> objs;
 
 	//Members
@@ -55,7 +55,7 @@ public:
 	~FatVolume();
 
 	//Methods
-	bool Setup(DrvStream* diskdrv, uint32_t fstSec);
+	bool Setup(const char* disk, uint32_t fstSec);
 	void Exit();
 };
 

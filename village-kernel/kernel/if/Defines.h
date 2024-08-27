@@ -16,10 +16,13 @@
 enum DriverID
 {
 	_block,
-	_network,
 	_character,
 	_framebuffer,
+	_input,
+	_network,
 	_miscellaneous,
+	_platformDevice,
+	_platformDriver,
 	_dirverIdSize,
 };
 
@@ -34,19 +37,124 @@ enum ModuleID
 };
 
 
-///Driver register macro
-#define REGISTER_DRIVER(drv, id, name)                            \
-static struct _Drv_##name {                                       \
-	Driver* driver = drv;                                         \
-	_Drv_##name() {                                               \
-		driver->SetID(id);                                        \
-		driver->SetName((char*)#name);                            \
-		kernel->device.RegisterDriver(driver);                    \
+///Block device register macro
+#define REGISTER_BLOCK_DEVICE(dev, name)                          \
+static struct _Block_Dev_##name {                                 \
+	BlockDriver* device = dev;                                    \
+	_Block_Dev_##name() {                                         \
+		device->SetID(DriverID::_block);                          \
+		device->SetName((char*)#name);                            \
+		kernel->device.RegisterBlockDevice(device);               \
 	}                                                             \
-	~_Drv_##name() {                                              \
-		kernel->device.DeregisterDriver(driver);                  \
+	~_Block_Dev_##name() {                                        \
+		kernel->device.UnregisterBlockDevice(device);             \
 	}                                                             \
-} const _drv_##name __attribute__((used,__section__(".drivers")))
+} const _block_dev_##name __attribute__((used,__section__(".devices")))
+
+
+///Char device register macro
+#define REGISTER_CHAR_DEVICE(dev, name)                           \
+static struct _Char_Dev_##name {                                  \
+	CharDriver* device = dev;                                     \
+	_Char_Dev_##name() {                                          \
+		device->SetID(DriverID::_character);                      \
+		device->SetName((char*)#name);                            \
+		kernel->device.RegisterCharDevice(device);                \
+	}                                                             \
+	~_Char_Dev_##name() {                                         \
+		kernel->device.UnregisterCharDevice(device);              \
+	}                                                             \
+} const _char_dev_##name __attribute__((used,__section__(".devices")))
+
+
+///Framebuffer device register macro
+#define REGISTER_FB_DEVICE(dev, name)                             \
+static struct _FB_Dev_##name {                                    \
+	FBDriver* device = dev;                                       \
+	_FB_Dev_##name() {                                            \
+		device->SetID(DriverID::_framebuffer);                    \
+		device->SetName((char*)#name);                            \
+		kernel->device.RegisterFBDevice(device);                  \
+	}                                                             \
+	~_FB_Dev_##name() {                                           \
+		kernel->device.UnregisterFBDevice(device);                \
+	}                                                             \
+} const _fb_dev_##name __attribute__((used,__section__(".devices")))
+
+
+///Input device register macro
+#define REGISTER_INPUT_DEVICE(dev, name)                          \
+static struct _Input_Dev_##name {                                 \
+	InputDriver* device = dev;                                    \
+	_Input_Dev_##name() {                                         \
+		device->SetID(DriverID::_input);                          \
+		device->SetName((char*)#name);                            \
+		kernel->device.RegisterInputDevice(device);               \
+	}                                                             \
+	~_Input_Dev_##name() {                                        \
+		kernel->device.UnregisterInputDevice(device);             \
+	}                                                             \
+} const _input_dev_##name __attribute__((used,__section__(".devices")))
+
+
+///Network device register macro
+#define REGISTER_NETWORK_DEVICE(dev, name)                        \
+static struct _Network_Dev_##name {                               \
+	NetworkDriver* device = dev;                                  \
+	_Network_Dev_##name() {                                       \
+		device->SetID(DriverID::_network);                        \
+		device->SetName((char*)#name);                            \
+		kernel->device.RegisterNetworkDevice(device);             \
+	}                                                             \
+	~_Network_Dev_##name() {                                      \
+		kernel->device.UnregisterNetworkDevice(device);           \
+	}                                                             \
+} const _network_dev_##name __attribute__((used,__section__(".devices")))
+
+
+///Misc device register macro
+#define REGISTER_MISC_DEVICE(dev, name)                           \
+static struct _Misc_Dev_##name {                                  \
+	MiscDriver* device = dev;                                     \
+	_Misc_Dev_##name() {                                          \
+		device->SetID(DriverID::_miscellaneous);                  \
+		device->SetName((char*)#name);                            \
+		kernel->device.RegisterMiscDevice(device);                \
+	}                                                             \
+	~_Misc_Dev_##name() {                                         \
+		kernel->device.UnregisterMiscDevice(device);              \
+	}                                                             \
+} const _misc_dev_##name __attribute__((used,__section__(".devices")))
+
+
+///Plat driver register macro
+#define REGISTER_PLAT_DRIVER(drv, machname, drvname)              \
+static struct _Plat_Drv_##drvname {                               \
+	PlatDriver* driver = drv;                                     \
+	_Plat_Drv_##drvname() {                                       \
+		driver->SetID(DriverID::_platformDriver);                 \
+		driver->SetName((char*)#machname);                        \
+		kernel->device.RegisterPlatDriver(driver);                \
+	}                                                             \
+	~_Plat_Drv_##drvname() {                                      \
+		kernel->device.UnregisterPlatDriver(driver);              \
+	}                                                             \
+} const _plat_drv_##drvname __attribute__((used,__section__(".devices")))
+
+
+///Plat device register macro
+#define REGISTER_PLAT_DEVICE(dev, machname, devname)              \
+static struct _Plat_Dev_##devname {                               \
+	PlatDevice* device = dev;                                     \
+	_Plat_Dev_##devname() {                                       \
+		device->SetID(DriverID::_platformDevice);                 \
+		device->SetName((char*)#machname);                        \
+		kernel->device.RegisterPlatDevice(device);                \
+	}                                                             \
+	~_Plat_Dev_##devname() {                                      \
+		kernel->device.UnregisterPlatDevice(device);              \
+	}                                                             \
+} const _plat_dev_##devname __attribute__((used,__section__(".devices")))
 
 
 ///Module register macro
@@ -59,7 +167,7 @@ static struct _Mod_##name {                                       \
 		kernel->feature.RegisterModule(module);                   \
 	}                                                             \
 	~_Mod_##name() {                                              \
-		kernel->feature.DeregisterModule(module);                 \
+		kernel->feature.UnregisterModule(module);                 \
 	}                                                             \
 } const _mod_##name __attribute__((used,__section__(".modules")))
 

@@ -16,7 +16,7 @@ static struct _CMD_##name {                                       \
 		kernel->terminal.RegisterCmd(command, (char*)#name);      \
 	}                                                             \
 	~_CMD_##name() {                                              \
-		kernel->terminal.DeregisterCmd(command, (char*)#name);    \
+		kernel->terminal.UnregisterCmd(command, (char*)#name);    \
 	}                                                             \
 } const _cmd_##name __attribute__((used,__section__(".cmds")))
 

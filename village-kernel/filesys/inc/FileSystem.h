@@ -7,7 +7,6 @@
 #ifndef __FILE_SYSTEM_H__
 #define __FILE_SYSTEM_H__
 
-#include "DrvStream.h"
 #include "FileDefs.h"
 #include "FileSys.h"
 #include "List.h"
@@ -53,7 +52,7 @@ private:
 	List<MountNode*>  mounts;
 
 	/// @brief Methods
-	bool InitMBRDisk(const char* diskdrv);
+	bool InitMBRDisk(const char* disk);
 	bool MountSystemNode();
 public:
 	/// @brief Methods
@@ -64,7 +63,7 @@ public:
 	
 	/// @brief Register Methods
 	void RegisterFS(FileSys* fs, const char* name);
-	void DeregisterFS(FileSys* fs, const char* name);
+	void UnregisterFS(FileSys* fs, const char* name);
 	
 	/// @brief Volume Methods
 	int AttachVolume(FileVol* volume);

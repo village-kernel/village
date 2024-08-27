@@ -431,14 +431,14 @@ if KERNEL
 				bool "Enable file utils support"
 				default n
 
+			config DEVSTREAM
+				depends on FILEUTILS
+				bool "Enable devstream function"
+				default n
+
 			config DIRSTREAM
 				depends on FILEUTILS
 				bool "Enable dirstream function"
-				default n
-
-			config DRVSTREAM
-				depends on FILEUTILS
-				bool "Enable drvstream function"
 				default n
 
 			config FILESTREAM

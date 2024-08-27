@@ -80,9 +80,9 @@ void ConcreteProcess::RegisterExecutor(Executor* executor)
 }
 
 
-/// @brief Deregister executor object
+/// @brief Unregister executor object
 /// @param executor executor pointer
-void ConcreteProcess::DeregisterExecutor(Executor* executor)
+void ConcreteProcess::UnregisterExecutor(Executor* executor)
 {
 	executors.Remove(executor);
 }

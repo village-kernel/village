@@ -28,7 +28,7 @@ public:
 
 	/// @brief Register Methods
 	void RegisterModule(Module* module);
-	void DeregisterModule(Module* module);
+	void UnregisterModule(Module* module);
 
 	/// @brief Data Methods
 	Module* GetModule(const char* name);

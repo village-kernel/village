@@ -188,13 +188,41 @@ public:
 class Device
 {
 public:
-	/// @brief Register Methods
-	virtual void RegisterDriver(Driver* driver) = 0;
-	virtual void DeregisterDriver(Driver* driver) = 0;
-	
-	/// @brief Data Methods
-	virtual Driver* GetDriver(const char* name) = 0;
-	virtual List<Driver*> GetDrivers(DriverID id) = 0;
+	/// @brief Block device methods
+	virtual void RegisterBlockDevice(BlockDriver* driver) = 0;
+	virtual void UnregisterBlockDevice(BlockDriver* driver) = 0;
+
+	/// @brief Char device methods
+	virtual void RegisterCharDevice(CharDriver* driver) = 0;
+	virtual void UnregisterCharDevice(CharDriver* driver) = 0;
+
+	/// @brief Framebuffer device methods
+	virtual void RegisterFBDevice(FBDriver* driver) = 0;
+	virtual void UnregisterFBDevice(FBDriver* driver) = 0;
+
+	/// @brief Input device methods
+	virtual void RegisterInputDevice(InputDriver* driver) = 0;
+	virtual void UnregisterInputDevice(InputDriver* driver) = 0;
+
+	/// @brief Netwrok device methods
+	virtual void RegisterNetworkDevice(NetworkDriver* driver) = 0;
+	virtual void UnregisterNetworkDevice(NetworkDriver* driver) = 0;
+
+	/// @brief Misc device methods
+	virtual void RegisterMiscDevice(MiscDriver* driver) = 0;
+	virtual void UnregisterMiscDevice(MiscDriver* driver) = 0;
+
+	/// @brief Platform device methods
+	virtual void RegisterPlatDevice(PlatDevice* device) = 0;
+	virtual void UnregisterPlatDevice(PlatDevice* device) = 0;
+
+	/// @brief Platform driver methods
+	virtual void RegisterPlatDriver(PlatDriver* driver) = 0;
+	virtual void UnregisterPlatDriver(PlatDriver* driver) = 0;
+
+	/// @brief Data methods
+	virtual Fopts* GetDeviceFopts(const char* name) = 0;
+	virtual List<Base*> GetDevices(DriverID id) = 0;
 };
 
 
@@ -204,7 +232,7 @@ class Feature
 public:
 	/// @brief Register Methods
 	virtual void RegisterModule(Module* module) = 0;
-	virtual void DeregisterModule(Module* module) = 0;
+	virtual void UnregisterModule(Module* module) = 0;
 	
 	/// @brief Data Methods
 	virtual Module* GetModule(const char* name) = 0;
@@ -223,7 +251,7 @@ class FileSystem
 public:
 	/// @brief Register Methods
 	virtual void RegisterFS(FileSys* fs, const char* name) = 0;
-	virtual void DeregisterFS(FileSys* fs, const char* name) = 0;
+	virtual void UnregisterFS(FileSys* fs, const char* name) = 0;
 	
 	/// @brief Volume Methods
 	virtual int AttachVolume(FileVol* volume) = 0;
@@ -428,7 +456,7 @@ public:
 public:
 	/// @brief Register Methods
 	virtual void RegisterExecutor(Executor* executor) = 0;
-	virtual void DeregisterExecutor(Executor* executor) = 0;
+	virtual void UnregisterExecutor(Executor* executor) = 0;
 	
 	/// @brief Run Methods
 	virtual int Run(Behavior behavior, const char* args) = 0;
@@ -510,7 +538,7 @@ public:
 public:
 	/// @brief Cmd Methods
 	virtual void RegisterCmd(Cmd* cmd, char* name) = 0;
-	virtual void DeregisterCmd(Cmd* cmd, char* name) = 0;
+	virtual void UnregisterCmd(Cmd* cmd, char* name) = 0;
 	virtual List<Cmd*> GetCmds() = 0;
 
 	/// @brief Console Methods
