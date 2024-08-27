@@ -249,13 +249,15 @@ class FileVol;
 class FileSystem
 {
 public:
+	/// @brief Hard Drive Methods
+	virtual bool MountHardDrive(const char* disk) = 0;
+	virtual bool UnmountHardDrive(const char* disk) = 0;
+
 	/// @brief Register Methods
 	virtual void RegisterFS(FileSys* fs, const char* name) = 0;
 	virtual void UnregisterFS(FileSys* fs, const char* name) = 0;
-	
+
 	/// @brief Volume Methods
-	virtual int AttachVolume(FileVol* volume) = 0;
-	virtual int DetachVolume(FileVol* volume) = 0;
 	virtual FileVol* GetVolume(const char* name) = 0;
 };
 

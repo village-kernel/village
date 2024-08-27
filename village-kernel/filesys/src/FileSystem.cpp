@@ -29,7 +29,7 @@ void ConcreteFileSystem::Setup()
 	//Initialize all hard disk
 	for (blockDevs.Begin(); !blockDevs.IsEnd(); blockDevs.Next())
 	{
-		InitMBRDisk(blockDevs.Item()->GetName());
+		MountHardDrive(blockDevs.Item()->GetName());
 	}
 
 	//Mount system node
@@ -43,20 +43,45 @@ void ConcreteFileSystem::Setup()
 /// @brief File system exit
 void ConcreteFileSystem::Exit()
 {
-	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+	//Exit hard drive
+	for (medias.Begin(); !medias.IsEnd(); medias.Next())
 	{
-		FileVol* volume = volumes.Item();
-
-		volume->Exit();
+		UnmountHardDrive(medias.GetName());
 	}
 
+	//Release medias
+	medias.Release();
+
+	//Release file system
 	fileSys.Release();
+
+	//Release mount node
+	mounts.Release();
 }
 
 
-/// @brief Init disk device
+/// @brief Register file system
+/// @param fs 
+/// @param name 
+void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
+{
+	fileSys.Insert(fs, fs->GetSystemID(), (char*)name);
+}
+
+
+/// @brief Unregister file system
+/// @param fs 
+/// @param name 
+void ConcreteFileSystem::UnregisterFS(FileSys* fs, const char* name)
+{
+	fileSys.RemoveByName(fs, (char*)name);
+}
+
+
+/// @brief Init Hard Drive
+/// @param disk 
 /// @return 
-bool ConcreteFileSystem::InitMBRDisk(const char* disk)
+bool ConcreteFileSystem::MountHardDrive(const char* disk)
 {
 	static const uint16_t magic = 0xaa55;
 	static const uint16_t mbr_sector = 0;
@@ -86,6 +111,12 @@ bool ConcreteFileSystem::InitMBRDisk(const char* disk)
 		return false;
 	}
 
+	//Create an new disk media
+	DiskMedia* media = new DiskMedia(PartitionType::_MBR, (char*)disk);
+
+	//Add to medias list
+	medias.Add(media, media->name);
+
 	//Attach the volumes
 	for (uint8_t i = 0; i < 4; i++)
 	{
@@ -97,7 +128,7 @@ bool ConcreteFileSystem::InitMBRDisk(const char* disk)
 
 			if (volume->Setup(disk, mbr->dpt[i].relativeSectors))
 			{
-				AttachVolume(volume);
+				AttachVolume(media, volume);
 			}
 			else delete volume;
 		}
@@ -110,60 +141,55 @@ bool ConcreteFileSystem::InitMBRDisk(const char* disk)
 }
 
 
-/// @brief Mount node
-bool ConcreteFileSystem::MountSystemNode()
+/// @brief Exit Hard Drive
+/// @param disk 
+/// @return 
+bool ConcreteFileSystem::UnmountHardDrive(const char* disk)
 {
-	//Mount root node "/"
-	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+	//Gets the disk media
+	DiskMedia* media = medias.GetItemByName(disk);
+
+	if (NULL != media)
 	{
-		char* volumelab = volumes.GetName();
-		if (0 == strcmp(volumelab, "/media/VILLAGE OS"))
+		//Exit volumes
+		for (media->vols.Begin(); !media->vols.IsEnd(); media->vols.Next())
 		{
-			mounts.Add(new MountNode((char*)"/", volumelab, 0755));
-			return true;
+			FileVol* volume = media->vols.Item();
+			volume->Exit();
+			delete volume;
 		}
+
+		//Release volumes
+		media->vols.Release();
+
+		//Remove media
+		medias.Remove(media);
+		delete media;
+		return true;
 	}
-	kernel->debug.Output(Debug::_Lv2, "Mount system node failed, '/media/VILLAGE OS' not found");
+
 	return false;
-}
-
-
-/// @brief Register file system
-/// @param fs file system
-/// @param name file system name
-void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
-{
-	fileSys.Insert(fs, fs->GetSystemID(), (char*)name);
-}
-
-
-/// @brief Unregister file system
-/// @param fs file system
-/// @param name file system name
-void ConcreteFileSystem::UnregisterFS(FileSys* fs, const char* name)
-{
-	fileSys.RemoveByName(fs, (char*)name);
 }
 
 
 /// @brief Attach volume
 /// @param volume
-int ConcreteFileSystem::AttachVolume(FileVol* volume)
+int ConcreteFileSystem::AttachVolume(DiskMedia* media, FileVol* volume)
 {
 	char* prefix = (char*)"/media/";
 	char* label  = volume->GetVolumeLabel();
 	char* name   = new char[strlen(prefix) + strlen(label) + 1]();
 	strcat(name, prefix);
 	strcat(name, label);
-	return volumes.InsertByName(volume, name);
+	return media->vols.InsertByName(volume, name);
 }
 
 
 /// @brief Detach volume
 /// @param volume
-int ConcreteFileSystem::DetachVolume(FileVol* volume)
+int ConcreteFileSystem::DetachVolume(DiskMedia* media, FileVol* volume)
 {
-	return volumes.Remove(volume);
+	return media->vols.Remove(volume);
 }
 
 
@@ -172,12 +198,42 @@ int ConcreteFileSystem::DetachVolume(FileVol* volume)
 /// @return 
 FileVol* ConcreteFileSystem::GetVolume(const char* name)
 {
-	for (MountNode* mount = mounts.Begin(); !mounts.IsEnd(); mount = mounts.Next())
+	for (mounts.Begin(); !mounts.IsEnd(); mounts.Next())
 	{
+		MountNode* mount = mounts.Item();
+
 		if (0 == strncmp(mount->target, name, strlen(mount->target)))
 		{
-			return volumes.GetItemByName(mount->source);
+			for (medias.Begin(); !medias.IsEnd(); medias.Next())
+			{
+				FileVol* volume = medias.Item()->vols.GetItemByName(mount->source);
+				if (NULL != volume) return volume;
+			}
 		}
 	}
 	return NULL;
+}
+
+
+/// @brief Mount node
+bool ConcreteFileSystem::MountSystemNode()
+{
+	for (medias.Begin(); !medias.IsEnd(); medias.Next())
+	{
+		//Gets the volumes
+		List<FileVol*> volumes = medias.Item()->vols;
+
+		//Mount root node "/"
+		for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+		{
+			char* volumelab = volumes.GetName();
+			if (0 == strcmp(volumelab, "/media/VILLAGE OS"))
+			{
+				mounts.Add(new MountNode((char*)"/", volumelab, 0755));
+				return true;
+			}
+		}
+	}
+	kernel->debug.Output(Debug::_Lv2, "Mount system node failed, '/media/VILLAGE OS' not found");
+	return false;
 }
