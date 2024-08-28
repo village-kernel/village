@@ -37,8 +37,6 @@ private:
 	void PlatformDriverRemove(PlatDevice* device);
 	void PlatformProbe();
 	void PlatformRemove();
-	void InputDevSetup();
-	void InputDevExit();
 	void DevicesRelease();
 public:
 	/// @brief Methods

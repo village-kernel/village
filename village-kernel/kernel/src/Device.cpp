@@ -29,9 +29,6 @@ void ConcreteDevice::Setup()
 	//Platform probe
 	PlatformProbe();
 
-	//Input device setup
-	InputDevSetup();
-
 	//Set flag
 	isRuntime = true;
 
@@ -43,9 +40,6 @@ void ConcreteDevice::Setup()
 /// @brief Device Exit
 void ConcreteDevice::Exit()
 {
-	//Input device exit
-	InputDevExit();
-
 	//Platform remove
 	PlatformRemove();
 
@@ -170,26 +164,6 @@ inline void ConcreteDevice::PlatformRemove()
 }
 
 
-/// @brief Input device setup
-inline void ConcreteDevice::InputDevSetup()
-{
-	for (inDevs.Begin(); !inDevs.IsEnd(); inDevs.Next())
-	{
-		inDevs.Item()->Open();
-	}
-}
-
-
-/// @brief Input device exit
-inline void ConcreteDevice::InputDevExit()
-{
-	for (inDevs.End(); !inDevs.IsBegin(); inDevs.Prev())
-	{
-		inDevs.Item()->Close();
-	}
-}
-
-
 /// @brief Release devices
 inline void ConcreteDevice::DevicesRelease()
 {
@@ -259,7 +233,7 @@ void ConcreteDevice::UnregisterFBDevice(FBDriver* driver)
 void ConcreteDevice::RegisterInputDevice(InputDriver* driver)
 {
 	inDevs.Add(driver, driver->GetName());
-	if (isRuntime) driver->Open();
+	if (isRuntime) kernel->inputEvent.InitInputDevice(driver->GetName());
 }
 
 
@@ -267,7 +241,7 @@ void ConcreteDevice::RegisterInputDevice(InputDriver* driver)
 /// @param driver driver pointer
 void ConcreteDevice::UnregisterInputDevice(InputDriver* driver)
 {
-	if (isRuntime) driver->Close();
+	if (isRuntime) kernel->inputEvent.ExitInputDevice(driver->GetName());
 	inDevs.Remove(driver);
 }
 
@@ -354,6 +328,9 @@ Fopts* ConcreteDevice::GetDeviceFopts(const char* name)
 	if (NULL != fopts) return fopts;
 
 	fopts = fbDevs.GetItemByName(name);
+	if (NULL != fopts) return fopts;
+
+	fopts = inDevs.GetItemByName(name);
 	if (NULL != fopts) return fopts;
 
 	fopts = miscDevs.GetItemByName(name);
