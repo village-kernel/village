@@ -51,6 +51,9 @@ void ConcreteInputEvent::Exit()
 		ExitInputDevice(devices.Item()->GetName());
 	}
 
+	//Release all input devices
+	inDevs.Release();
+
 	//Release all observers
 	for (int i = 0; i < _AllType; i++)
 	{
