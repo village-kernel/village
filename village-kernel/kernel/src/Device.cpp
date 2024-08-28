@@ -209,6 +209,7 @@ inline void ConcreteDevice::DevicesRelease()
 void ConcreteDevice::RegisterBlockDevice(BlockDriver* driver)
 {
 	blockDevs.Add(driver, driver->GetName());
+	if (isRuntime) kernel->filesys.MountHardDrive(driver->GetName());
 }
 
 
@@ -216,6 +217,7 @@ void ConcreteDevice::RegisterBlockDevice(BlockDriver* driver)
 /// @param driver driver pointer
 void ConcreteDevice::UnregisterBlockDevice(BlockDriver* driver)
 {
+	if (isRuntime) kernel->filesys.UnmountHardDrive(driver->GetName());
 	blockDevs.Remove(driver);
 }
 
