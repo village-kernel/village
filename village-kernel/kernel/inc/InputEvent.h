@@ -8,6 +8,7 @@
 #define __INPUT_EVENT_H__
 
 #include "ObserverModel.h"
+#include "DevStream.h"
 #include "Kernel.h"
 #include "List.h"
 #include "Cast.h"
@@ -27,6 +28,7 @@ private:
 	OutFormat    outFormat;
 
 	/// @brief Model members
+	List<DevStream*> inDevs;
 	ObserverModel observers[_AllType];
 public:
 	/// @brief Methods
@@ -34,6 +36,10 @@ public:
 	~ConcreteInputEvent();
 	void Setup();
 	void Exit();
+
+	/// @brief Device Methods
+	void InitInputDevice(const char* input);
+	void ExitInputDevice(const char* input);
 
 	/// @brief Attach Methods
 	void Attach(EventType type, Method method, Class* user);

@@ -376,6 +376,10 @@ public:
 		{}
 	};
 public:
+	/// @brief Device Methods
+	virtual void InitInputDevice(const char* input) = 0;
+	virtual void ExitInputDevice(const char* input) = 0;
+
 	/// @brief Attach Methods
 	virtual void Attach(EventType type, Method method, Class* user) = 0;
 	virtual void Attach(EventType type, Function func, void* user = NULL) = 0;

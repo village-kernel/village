@@ -22,6 +22,16 @@ ConcreteInputEvent::~ConcreteInputEvent()
 /// @brief InputEvent Setup
 void ConcreteInputEvent::Setup()
 {
+	//Get all input devices
+	List<Base*> devices = kernel->device.GetDevices(DriverID::_input);
+
+	//Init all input devices
+	for (devices.Begin(); !devices.IsEnd(); devices.Next())
+	{
+		InitInputDevice(devices.Item()->GetName());
+	}
+
+	//Set default output format
 	outFormat = _Noraml;
 
 	//Output debug info
@@ -32,9 +42,51 @@ void ConcreteInputEvent::Setup()
 /// @brief InputEvent Exit
 void ConcreteInputEvent::Exit()
 {
+	//Get all input devices
+	List<Base*> devices = kernel->device.GetDevices(DriverID::_input);
+
+	//Exit all input devices
+	for (devices.End(); !devices.IsBegin(); devices.Prev())
+	{
+		ExitInputDevice(devices.Item()->GetName());
+	}
+
+	//Release all observers
 	for (int i = 0; i < _AllType; i++)
 	{
 		observers[i].Release();
+	}
+}
+
+
+/// @brief Init Input Device
+/// @param input 
+void ConcreteInputEvent::InitInputDevice(const char* input)
+{
+	//Create an input device object
+	DevStream* device = new DevStream();
+	
+	//Open and add into inDevs list
+	if (device->Open(input, FileMode::_Read))
+	{
+		inDevs.Add(device, (char*)input);
+	}
+}
+
+
+/// @brief Exit Input Device
+/// @param input 
+void ConcreteInputEvent::ExitInputDevice(const char* input)
+{
+	//Gets the input device from inDevs list
+	DevStream* device = inDevs.GetItemByName(input);
+	
+	//Close and remove from inDevs list
+	if (NULL != device)
+	{
+		device->Close();
+		inDevs.Remove(device);
+		delete device;
 	}
 }
 
