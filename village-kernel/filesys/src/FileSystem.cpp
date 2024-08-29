@@ -53,7 +53,7 @@ void ConcreteFileSystem::Exit()
 	medias.Release();
 
 	//Release file system
-	fileSys.Release();
+	filesyses.Release();
 
 	//Release mount node
 	mounts.Release();
@@ -65,7 +65,7 @@ void ConcreteFileSystem::Exit()
 /// @param name 
 void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
 {
-	fileSys.Insert(fs, fs->GetSystemID(), (char*)name);
+	filesyses.Insert(fs, fs->GetSystemID(), (char*)name);
 }
 
 
@@ -74,7 +74,7 @@ void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
 /// @param name 
 void ConcreteFileSystem::UnregisterFS(FileSys* fs, const char* name)
 {
-	fileSys.RemoveByName(fs, (char*)name);
+	filesyses.Remove(fs, (char*)name);
 }
 
 
@@ -117,21 +117,10 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 	//Add to medias list
 	medias.Add(media, media->name);
 
-	//Attach the volumes
+	//Setup the volumes
 	for (uint8_t i = 0; i < 4; i++)
 	{
-		FileSys* fs = fileSys.GetItem(mbr->dpt[i].systemID);
-
-		if (NULL != fs)
-		{
-			FileVol* volume = fs->CreateVolume();
-
-			if (volume->Setup(disk, mbr->dpt[i].relativeSectors))
-			{
-				AttachVolume(media, volume);
-			}
-			else delete volume;
-		}
+		SetupVolume(media, mbr->partition[i]);
 	}
 
 	//Leave
@@ -147,7 +136,7 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 bool ConcreteFileSystem::UnmountHardDrive(const char* disk)
 {
 	//Gets the disk media
-	DiskMedia* media = medias.GetItemByName(disk);
+	DiskMedia* media = medias.GetItem(disk);
 
 	if (NULL != media)
 	{
@@ -172,24 +161,52 @@ bool ConcreteFileSystem::UnmountHardDrive(const char* disk)
 }
 
 
-/// @brief Attach volume
-/// @param volume
-int ConcreteFileSystem::AttachVolume(DiskMedia* media, FileVol* volume)
+/// @brief Setup Volume
+/// @param media 
+/// @param partition 
+/// @return 
+int ConcreteFileSystem::SetupVolume(DiskMedia* media, DPT partition)
 {
-	char* prefix = (char*)"/media/";
-	char* label  = volume->GetVolumeLabel();
-	char* name   = new char[strlen(prefix) + strlen(label) + 1]();
-	strcat(name, prefix);
-	strcat(name, label);
-	return media->vols.InsertByName(volume, name);
+	if ((0 != partition.systemID) && (0 != partition.sizeInLBA))
+	{
+		FileSys* filesys = filesyses.GetItem(partition.systemID);
+
+		if (NULL != filesys)
+		{
+			FileVol* volume = filesys->CreateVolume();
+
+			if (volume->Setup(media->name, partition.startingLBA))
+			{
+				return media->vols.Insert(volume, volume->GetName());
+			}
+			else delete volume;
+		}
+	}
+	return -1;
 }
 
 
-/// @brief Detach volume
-/// @param volume
-int ConcreteFileSystem::DetachVolume(DiskMedia* media, FileVol* volume)
+/// @brief Mount node
+bool ConcreteFileSystem::MountSystemNode()
 {
-	return media->vols.Remove(volume);
+	for (medias.Begin(); !medias.IsEnd(); medias.Next())
+	{
+		//Gets the volumes
+		List<FileVol*> volumes = medias.Item()->vols;
+
+		//Mount root node "/"
+		for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+		{
+			char* name = volumes.GetName();
+			if (0 == strcmp(name, "VILLAGE OS"))
+			{
+				mounts.Add(new MountNode((char*)"/", name, 0755));
+				return true;
+			}
+		}
+	}
+	kernel->debug.Output(Debug::_Lv2, "Mount system node failed, 'VILLAGE OS' not found");
+	return false;
 }
 
 
@@ -206,34 +223,10 @@ FileVol* ConcreteFileSystem::GetVolume(const char* name)
 		{
 			for (medias.Begin(); !medias.IsEnd(); medias.Next())
 			{
-				FileVol* volume = medias.Item()->vols.GetItemByName(mount->source);
+				FileVol* volume = medias.Item()->vols.GetItem(mount->source);
 				if (NULL != volume) return volume;
 			}
 		}
 	}
 	return NULL;
-}
-
-
-/// @brief Mount node
-bool ConcreteFileSystem::MountSystemNode()
-{
-	for (medias.Begin(); !medias.IsEnd(); medias.Next())
-	{
-		//Gets the volumes
-		List<FileVol*> volumes = medias.Item()->vols;
-
-		//Mount root node "/"
-		for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
-		{
-			char* volumelab = volumes.GetName();
-			if (0 == strcmp(volumelab, "/media/VILLAGE OS"))
-			{
-				mounts.Add(new MountNode((char*)"/", volumelab, 0755));
-				return true;
-			}
-		}
-	}
-	kernel->debug.Output(Debug::_Lv2, "Mount system node failed, '/media/VILLAGE OS' not found");
-	return false;
 }
