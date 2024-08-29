@@ -10,10 +10,10 @@
 
 /// @brief Setup
 /// @param disk 
-/// @param fstSec 
-bool FatDiskio::Setup(const char* disk, uint32_t fstSec)
+/// @param startingLBA 
+bool FatDiskio::Setup(const char* disk, uint32_t startingLBA)
 {
-	this->fstSec  = fstSec;
+	this->startingLBA = startingLBA;
 
 	if (device.Open(disk, FileMode::_ReadWrite))
 	{
@@ -105,7 +105,7 @@ bool FatDiskio::CheckFileSystem()
 /// @return read sector size
 uint32_t FatDiskio::ReadSector(char* data, uint32_t sector, uint32_t secSize)
 {
-	return device.Read(data, secSize, sector + fstSec);
+	return device.Read(data, secSize, sector + startingLBA);
 }
 
 
@@ -116,7 +116,7 @@ uint32_t FatDiskio::ReadSector(char* data, uint32_t sector, uint32_t secSize)
 /// @return 
 uint32_t FatDiskio::WriteSector(char* data, uint32_t sector, uint32_t secSize)
 {
-	return device.Write(data, secSize, sector + fstSec);
+	return device.Write(data, secSize, sector + startingLBA);
 }
 
 

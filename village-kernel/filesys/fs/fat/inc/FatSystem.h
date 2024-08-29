@@ -55,7 +55,7 @@ public:
 	~FatVolume();
 
 	//Methods
-	bool Setup(const char* disk, uint32_t fstSec);
+	bool Setup(const char* disk, uint32_t startingLBA);
 	void Exit();
 };
 

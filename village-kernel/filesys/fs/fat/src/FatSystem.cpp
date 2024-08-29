@@ -28,11 +28,11 @@ FatVolume::~FatVolume()
 
 /// @brief FatVolume Setup
 /// @param disk 
-/// @param fstSec 
+/// @param startingLBA 
 /// @return 
-bool FatVolume::Setup(const char* disk, uint32_t fstSec)
+bool FatVolume::Setup(const char* disk, uint32_t startingLBA)
 {
-	if (fatdisk.Setup(disk, fstSec))
+	if (fatdisk.Setup(disk, startingLBA))
 	{
 		bytesPerSec = fatdisk.GetInfo().bytesPerSec;
 		secPerClust = fatdisk.GetInfo().secPerClust;
