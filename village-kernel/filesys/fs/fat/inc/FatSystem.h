@@ -31,9 +31,9 @@ private:
 	FatObject* SearchDir(FatObject* obj, const char* name);
 	FatObject* CreateDir(const char* path, int attr);
 public:
-	//FileVolume Methods
-	bool SetVolumeLabel(const char* label);
-	char* GetVolumeLabel();
+	//File Volume Methods
+	bool SetName(const char* name);
+	char* GetName();
 	
 	int Open(const char* name, int mode);
 	int Write(int fd, char* data, int size, int offset);
