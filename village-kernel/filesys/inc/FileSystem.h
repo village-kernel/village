@@ -24,6 +24,7 @@ private:
 		_Bootable    = 0x80,
 	};
 
+
 	/// @brief PartitionTableType
 	enum PartitionType
 	{
@@ -32,7 +33,8 @@ private:
 		_GPT,
 	};
 
-	/// @brief DPT
+
+	/// @brief MBR Partition record
 	struct DPT
 	{
 		uint32_t bootIndicator : 8;
@@ -43,17 +45,56 @@ private:
 		uint32_t endingHead : 8;
 		uint32_t endingSector : 6;
 		uint32_t endingCylinder : 10;
-		uint32_t relativeSectors;
-		uint32_t totalSectors;
+		uint32_t startingLBA;
+		uint32_t sizeInLBA;
 	} __attribute__((packed));
 
-	/// @brief MBR
+
+	/// @brief MBR Partition table
 	struct MBR
 	{
-		uint8_t  boot[446];
-		DPT      dpt[4];
+		uint8_t  boot[424];
+		uint8_t  reserved[16];
+		uint32_t uniqueMBRDiskSignature;
+		uint16_t unknown;
+		DPT      partition[4];
 		uint16_t magic;
 	} __attribute__((packed));
+
+
+	/// @brief GPT
+	struct GPT
+	{
+		char     signature[8];
+		uint32_t revision;
+		uint32_t headerSize;
+		uint32_t headerCRC32;
+		uint32_t reserved0;
+		uint64_t myLBA;
+		uint64_t alternateLBA;
+		uint64_t firstUsableLBA;
+		uint64_t lastUsableLBA;
+		char     diskGUID[16];
+		uint64_t PartitionEntryLBA;
+		uint32_t numberOfPartitionEntries;
+		uint32_t sizeOfPartitionEntry;
+		uint32_t partitionEntryArrayCRC32;
+		char     reserved1[420];
+	};
+
+
+	/// @brief GPT Entry
+	struct GPTEntry
+	{
+		char     partitionTypeGUID[16];
+		char     uniquePartitionGUID[16];
+		uint64_t startingLBA;
+		uint64_t endingLBA;
+		uint64_t attributes;
+		char     partitionName[72];
+		char     reserved[384];
+	};
+
 
 	/// @brief MountNode
 	struct MountNode
@@ -69,6 +110,7 @@ private:
 		{}
 	};
 
+
 	/// @brief DiskMedia
 	struct DiskMedia
 	{
@@ -83,13 +125,12 @@ private:
 	};
 private:
 	/// @brief Members
-	List<FileSys*>    fileSys;
+	List<FileSys*>    filesyses;
 	List<DiskMedia*>  medias;
 	List<MountNode*>  mounts;
 
 	/// @brief Methods
-	int  AttachVolume(DiskMedia* media, FileVol* volume);
-	int  DetachVolume(DiskMedia* media, FileVol* volume);
+	int  SetupVolume(DiskMedia* media, DPT partition);
 	bool MountSystemNode();
 public:
 	/// @brief Methods
