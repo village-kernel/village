@@ -136,16 +136,16 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 }
 
 
-/// @brief Set volume label
-/// @param label 
+/// @brief Set volume name
+/// @param name 
 /// @return 
-bool FatVolume::SetVolumeLabel(const char* label)
+bool FatVolume::SetName(const char* name)
 {
 	FatObject* obj = FatEntry(fatdisk).Item();
 
 	if (FileType::_Volume == obj->GetObjectType())
 	{
-		obj->SetRawName(label);
+		obj->SetRawName(name);
 
 		FatEntry(fatdisk, obj).Update();
 	}
@@ -154,20 +154,20 @@ bool FatVolume::SetVolumeLabel(const char* label)
 }
 
 
-/// @brief Get volume label
+/// @brief Get volume name
 /// @return 
-char* FatVolume::GetVolumeLabel()
+char* FatVolume::GetName()
 {
 	FatObject* obj = FatEntry(fatdisk).Item();
 
-	char* label = (char*)"NONAME";
+	char* name = (char*)"NONAME";
 
 	if (FileType::_Volume == obj->GetObjectType())
 	{
-		label = obj->GetRawName();
+		name = obj->GetRawName();
 	}
 	
-	return label;
+	return name;
 }
 
 

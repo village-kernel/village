@@ -26,8 +26,8 @@ public:
 	virtual void Exit()                                              = 0;
 
 	//Volume methods
-	virtual bool SetVolumeLabel(const char* name)                    = 0;
-	virtual char* GetVolumeLabel()                                   = 0;
+	virtual bool SetName(const char* name)                           = 0;
+	virtual char* GetName()                                          = 0;
 
 	//File methods
 	virtual int Open(const char* name, int mode)                     = 0;
