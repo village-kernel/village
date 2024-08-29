@@ -68,7 +68,7 @@ void ConcreteTerminal::Exit()
 /// @param name console command name
 void ConcreteTerminal::RegisterCmd(Cmd* cmd, char* name)
 {
-	cmds.InsertByName(cmd, name);
+	cmds.Insert(cmd, name);
 }
 
 
@@ -77,7 +77,7 @@ void ConcreteTerminal::RegisterCmd(Cmd* cmd, char* name)
 /// @param name console command name 
 void ConcreteTerminal::UnregisterCmd(Cmd* cmd, char* name)
 {
-	cmds.RemoveByName(cmd, name);
+	cmds.Remove(cmd, name);
 }
 
 
@@ -146,7 +146,7 @@ int ConcreteTerminal::CreateConsole(const char* driver)
 /// @param driver 
 bool ConcreteTerminal::DestroyConsole(const char* driver)
 {
-	Sandbox* sandbox = sandboxes.GetItemByName(driver);
+	Sandbox* sandbox = sandboxes.GetItem(driver);
 
 	if (NULL != sandbox)
 	{

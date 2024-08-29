@@ -246,7 +246,7 @@ public:
 	/// @param obj object pointer
 	/// @param nid object node id
 	/// @return result
-	int InsertByName(Object obj, char* name)
+	int Insert(Object obj, char* name)
 	{
 		if (NULL == obj) return -1;
 
@@ -351,7 +351,7 @@ public:
 	/// @param obj object pointer
 	/// @param nid node id
 	/// @return result
-	bool RemoveByName(Object obj, char* name)
+	bool Remove(Object obj, char* name)
 	{
 		for (Node* node = head; NULL != node; node = node->next)
 		{
@@ -389,10 +389,10 @@ public:
 		return NULL;
 	}
 
-	/// @brief List GetItemByName
+	/// @brief List GetItem
 	/// @param nid node name
 	/// @return object pointer
-	Object GetItemByName(const char* name)
+	Object GetItem(const char* name)
 	{
 		for (Node* node = head; NULL != node; node = node->next)
 		{
