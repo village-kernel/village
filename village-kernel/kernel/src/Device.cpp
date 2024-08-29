@@ -321,19 +321,19 @@ Fopts* ConcreteDevice::GetDeviceFopts(const char* name)
 {
 	Fopts* fopts = NULL;
 
-	fopts = blockDevs.GetItemByName(name);
+	fopts = blockDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
-	fopts = charDevs.GetItemByName(name);
+	fopts = charDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
-	fopts = fbDevs.GetItemByName(name);
+	fopts = fbDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
-	fopts = inDevs.GetItemByName(name);
+	fopts = inDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
-	fopts = miscDevs.GetItemByName(name);
+	fopts = miscDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
 	return fopts;

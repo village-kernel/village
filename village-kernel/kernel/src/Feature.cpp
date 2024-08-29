@@ -84,5 +84,5 @@ void ConcreteFeature::UnregisterModule(Module* module)
 /// @return module
 Module* ConcreteFeature::GetModule(const char* name)
 {
-	return modules.GetItemByName(name);
+	return modules.GetItem(name);
 }

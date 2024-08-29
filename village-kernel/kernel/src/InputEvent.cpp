@@ -82,7 +82,7 @@ void ConcreteInputEvent::InitInputDevice(const char* input)
 void ConcreteInputEvent::ExitInputDevice(const char* input)
 {
 	//Gets the input device from inDevs list
-	DevStream* device = inDevs.GetItemByName(input);
+	DevStream* device = inDevs.GetItem(input);
 	
 	//Close and remove from inDevs list
 	if (NULL != device)
