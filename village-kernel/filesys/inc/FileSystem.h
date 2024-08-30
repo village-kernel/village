@@ -34,14 +34,14 @@ private:
 	};
 
 
-	/// @brief MBR Partition record
-	struct DPT
+	/// @brief MBR partition record
+	struct MBRPartition
 	{
 		uint32_t bootIndicator : 8;
 		uint32_t startingHead : 8;
 		uint32_t startingSector : 6;
 		uint32_t startingCylinder: 10;
-		uint32_t systemID : 8;
+		uint32_t OSType : 8;
 		uint32_t endingHead : 8;
 		uint32_t endingSector : 6;
 		uint32_t endingCylinder : 10;
@@ -50,19 +50,32 @@ private:
 	} __attribute__((packed));
 
 
-	/// @brief MBR Partition table
+	/// @brief MBR partition table
 	struct MBR
 	{
-		uint8_t  boot[424];
-		uint8_t  reserved[16];
-		uint32_t uniqueMBRDiskSignature;
-		uint16_t unknown;
-		DPT      partition[4];
-		uint16_t magic;
+		uint8_t      boot[424];
+		uint8_t      reserved[16];
+		uint32_t     uniqueMBRDiskSignature;
+		uint16_t     unknown;
+		MBRPartition partition[4];
+		uint16_t     magic;
 	} __attribute__((packed));
 
+	
+	/// @brief GPT partition entry array
+	struct GPTPartition
+	{
+		char     partitionTypeGUID[16];
+		char     uniquePartitionGUID[16];
+		uint64_t startingLBA;
+		uint64_t endingLBA;
+		uint64_t attributes;
+		char     partitionName[72];
+		char     reserved[384];
+	};
 
-	/// @brief GPT
+
+	/// @brief GPT header
 	struct GPT
 	{
 		char     signature[8];
@@ -75,24 +88,11 @@ private:
 		uint64_t firstUsableLBA;
 		uint64_t lastUsableLBA;
 		char     diskGUID[16];
-		uint64_t PartitionEntryLBA;
+		uint64_t partitionEntryLBA;
 		uint32_t numberOfPartitionEntries;
 		uint32_t sizeOfPartitionEntry;
 		uint32_t partitionEntryArrayCRC32;
 		char     reserved1[420];
-	};
-
-
-	/// @brief GPT Entry
-	struct GPTEntry
-	{
-		char     partitionTypeGUID[16];
-		char     uniquePartitionGUID[16];
-		uint64_t startingLBA;
-		uint64_t endingLBA;
-		uint64_t attributes;
-		char     partitionName[72];
-		char     reserved[384];
 	};
 
 
@@ -130,7 +130,7 @@ private:
 	List<MountNode*>  mounts;
 
 	/// @brief Methods
-	int  SetupVolume(DiskMedia* media, DPT partition);
+	int  SetupVolume(DiskMedia* media, uint32_t startingLBA);
 	bool MountSystemNode();
 public:
 	/// @brief Methods
