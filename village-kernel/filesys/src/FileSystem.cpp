@@ -86,7 +86,7 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 	static const uint16_t magic = 0xaa55;
 	static const uint16_t mbr_sector = 0;
 
-	kernel->debug.Info("Try to setup the hard drive (%s) by using MBR format", disk);
+	kernel->debug.Info("Setup the hard drive (%s)", disk);
 
 	//Create an devstream object
 	DevStream device;
@@ -112,15 +112,66 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 	}
 
 	//Create an new disk media
-	DiskMedia* media = new DiskMedia(PartitionType::_MBR, (char*)disk);
+	DiskMedia* media = new DiskMedia(PartitionType::_None, (char*)disk);
 
 	//Add to medias list
 	medias.Add(media, media->name);
-
-	//Setup the volumes
-	for (uint8_t i = 0; i < 4; i++)
+	
+	//Media with partition table
+	if ((0 != mbr->partition[0].OSType) && (0 != mbr->partition[0].sizeInLBA))
 	{
-		SetupVolume(media, mbr->partition[i]);
+		//Set the media for GPT partition format
+		if (0xee == mbr->partition[0].OSType)
+		{
+			//Set media partition type as GPT
+			media->type = PartitionType::_GPT;
+
+			//Create GPT object
+			GPT* gpt = new GPT();
+
+			//Read GPT header
+			device.Read((char*)gpt, 1, mbr->partition[0].startingLBA);
+
+			//Calculate the size of volume
+			uint8_t size = gpt->numberOfPartitionEntries / gpt->sizeOfPartitionEntry;
+
+			//Create GPT partition table object
+			GPTPartition* partition = new GPTPartition();
+
+			//Setup partitions
+			for (uint8_t i = 0; i < size; i++)
+			{
+				//Read partition record
+				device.Read((char*)partition, 1, gpt->partitionEntryLBA + i);
+
+				//Setup GPT volume
+				SetupVolume(media, partition->startingLBA);
+			}
+
+			//Leave
+			delete gpt;
+			delete partition;
+		}
+		//Set the media for MBR partition format
+		else
+		{
+			//Set media partition type as MBR
+			media->type = PartitionType::_MBR;
+
+			//Setup MBR partitions
+			for (uint8_t i = 0; i < 4; i++)
+			{
+				if (0 != mbr->partition[i].sizeInLBA)
+				{
+					SetupVolume(media, mbr->partition[i].startingLBA);
+				}
+			}
+		}
+	}
+	else
+	{
+		//Setup single partition
+		SetupVolume(media, 0);
 	}
 
 	//Leave
@@ -165,22 +216,17 @@ bool ConcreteFileSystem::UnmountHardDrive(const char* disk)
 /// @param media 
 /// @param partition 
 /// @return 
-int ConcreteFileSystem::SetupVolume(DiskMedia* media, DPT partition)
+int ConcreteFileSystem::SetupVolume(DiskMedia* media, uint32_t startingLBA)
 {
-	if ((0 != partition.systemID) && (0 != partition.sizeInLBA))
+	for (filesyses.Begin(); !filesyses.IsEnd(); filesyses.Next())
 	{
-		FileSys* filesys = filesyses.GetItem(partition.systemID);
+		FileVol* volume = filesyses.Item()->CreateVolume();
 
-		if (NULL != filesys)
+		if (volume->Setup(media->name, startingLBA))
 		{
-			FileVol* volume = filesys->CreateVolume();
-
-			if (volume->Setup(media->name, partition.startingLBA))
-			{
-				return media->vols.Insert(volume, volume->GetName());
-			}
-			else delete volume;
+			return media->vols.Insert(volume, volume->GetName());
 		}
+		else delete volume;
 	}
 	return -1;
 }
@@ -191,10 +237,8 @@ bool ConcreteFileSystem::MountSystemNode()
 {
 	for (medias.Begin(); !medias.IsEnd(); medias.Next())
 	{
-		//Gets the volumes
 		List<FileVol*> volumes = medias.Item()->vols;
 
-		//Mount root node "/"
 		for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
 		{
 			char* name = volumes.GetName();
