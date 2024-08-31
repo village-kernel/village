@@ -59,7 +59,7 @@ objs-y                              += Exception.o
 
 objs-y                              += FileSystem.o
 objs-$(CONFIG_FATFS)                += FatDiskio.o
-objs-$(CONFIG_FATFS)                += FatEntry.o
+objs-$(CONFIG_FATFS)                += FatEntries.o
 objs-$(CONFIG_FATFS)                += FatObject.o
 objs-$(CONFIG_FATFS)                += FatSystem.o
 
