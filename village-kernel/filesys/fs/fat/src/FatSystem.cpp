@@ -30,9 +30,9 @@ FatVolume::~FatVolume()
 /// @param disk 
 /// @param startingLBA 
 /// @return 
-bool FatVolume::Setup(const char* disk, uint32_t startingLBA)
+bool FatVolume::Setup(DevStream* device, uint32_t startingLBA)
 {
-	if (fatdisk.Setup(disk, startingLBA))
+	if (fatdisk.Setup(device, startingLBA))
 	{
 		bytesPerSec = fatdisk.GetInfo().bytesPerSec;
 		secPerClust = fatdisk.GetInfo().secPerClust;

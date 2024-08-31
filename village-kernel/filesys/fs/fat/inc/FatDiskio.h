@@ -130,7 +130,7 @@ private:
 	static const uint32_t fat32_eoc_flag = 0xffffff8;
 
 	//Driver Members
-	DevStream  device;
+	DevStream* device;
 	uint32_t   startingLBA;
 	Info       info;
 
@@ -138,7 +138,7 @@ private:
 	bool CheckFileSystem();
 public:
 	//Method
-	bool Setup(const char* disk, uint32_t startingLBA);
+	bool Setup(DevStream* device, uint32_t startingLBA);
 	void Exit();
 
 	uint32_t WriteSector(char* data, uint32_t sector, uint32_t secSize = 1);

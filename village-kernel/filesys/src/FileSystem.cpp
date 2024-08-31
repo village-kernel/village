@@ -89,10 +89,10 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 	kernel->debug.Info("Setup the hard drive (%s)", disk);
 
 	//Create an devstream object
-	DevStream device;
+	DevStream* device = new DevStream();
 
 	//Open the disk device
-	if (!device.Open(disk, FileMode::_ReadWrite))
+	if (!device->Open(disk, FileMode::_ReadWrite))
 	{
 		kernel->debug.Error("hard drive (%s) open failed", disk);
 		return false;
@@ -101,18 +101,19 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 	//Read the master boot record
 	MBR* mbr = new MBR();
 
-	device.Read((char*)mbr, 1, mbr_sector);
+	device->Read((char*)mbr, 1, mbr_sector);
 
 	if (magic != mbr->magic)
 	{
 		kernel->debug.Error("Not a valid disk");
-		device.Close();
+		device->Close();
+		delete device;
 		delete mbr;
 		return false;
 	}
 
 	//Create an new disk media
-	DiskMedia* media = new DiskMedia(PartitionType::_None, (char*)disk);
+	DiskMedia* media = new DiskMedia((char*)disk, device);
 
 	//Add to medias list
 	medias.Add(media, media->name);
@@ -130,7 +131,7 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 			GPT* gpt = new GPT();
 
 			//Read GPT header
-			device.Read((char*)gpt, 1, mbr->partition[0].startingLBA);
+			device->Read((char*)gpt, 1, mbr->partition[0].startingLBA);
 
 			//Calculate the size of volume
 			uint8_t size = gpt->numberOfPartitionEntries / gpt->sizeOfPartitionEntry;
@@ -142,7 +143,7 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 			for (uint8_t i = 0; i < size; i++)
 			{
 				//Read partition record
-				device.Read((char*)partition, 1, gpt->partitionEntryLBA + i);
+				device->Read((char*)partition, 1, gpt->partitionEntryLBA + i);
 
 				//Setup GPT volume
 				SetupVolume(media, partition->startingLBA);
@@ -175,7 +176,6 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 	}
 
 	//Leave
-	device.Close();
 	delete mbr;
 	return true;
 }
@@ -201,6 +201,9 @@ bool ConcreteFileSystem::UnmountHardDrive(const char* disk)
 
 		//Release volumes
 		media->vols.Release();
+
+		//Close device
+		media->dev->Close();
 
 		//Remove media
 		medias.Remove(media);
@@ -242,7 +245,7 @@ int ConcreteFileSystem::SetupVolume(DiskMedia* media, uint32_t startingLBA)
 	{
 		FileVol* volume = filesyses.Item()->CreateVolume();
 
-		if (volume->Setup(media->name, startingLBA))
+		if (volume->Setup(media->dev, startingLBA))
 		{
 			return media->vols.Insert(volume, volume->GetName());
 		}
