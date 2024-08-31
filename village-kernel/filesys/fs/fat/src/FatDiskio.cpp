@@ -128,6 +128,7 @@ uint32_t FatDiskio::WriteSector(char* data, uint32_t sector, uint32_t secSize)
 	{
 		return device->Write(data, secSize, sector + startingLBA);
 	}
+	return 0;
 }
 
 

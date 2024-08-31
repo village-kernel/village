@@ -1,23 +1,24 @@
 //###########################################################################
-// FatEntry.h
+// FatEntries.h
 // Declarations of the functions that manage fat file system
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __FAT_ENTRY_H__
-#define __FAT_ENTRY_H__
+#ifndef __FAT_ENTRIES_H__
+#define __FAT_ENTRIES_H__
 
 #include "List.h"
 #include "FatObject.h"
 #include "FatDiskio.h"
 
-/// @brief FatEntry
-class FatEntry
+
+/// @brief FatEntries
+class FatEntries
 {
 private:
 	//Members
-	FatDiskio&       disk;
-	FatDiskio::Info& info;
+	FatDiskio&        fatDisk;
+	FatDiskio::Info&  volInfo;
 
 	//Dirent Members
 	uint32_t          index;
@@ -47,8 +48,8 @@ private:
 	bool CheckDirName(FatObject* object);
 public:
 	//Methods
-	FatEntry(FatDiskio& disk, FatObject* object = NULL);
-	~FatEntry();
+	FatEntries(FatDiskio& fatDisk, FatObject* object = NULL);
+	~FatEntries();
 
 	void Begin();
 	void Next();
@@ -57,10 +58,10 @@ public:
 	uint32_t GetSize();
 
 	FatObject* Create(const char* name, int attr);
-	uint32_t Write(FatObject* objs, uint32_t size);
-	uint32_t Read(FatObject* objs, uint32_t size);
+	uint32_t Write(FatObject* objects, uint32_t size);
+	uint32_t Read(FatObject* objects, uint32_t size);
 	void Remove();
 	void Update();
 };
 
-#endif //!__FAT_ENTRY_H__
+#endif //!__FAT_ENTRIES_H__

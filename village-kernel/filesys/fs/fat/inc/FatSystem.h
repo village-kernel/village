@@ -18,8 +18,8 @@ class FatVolume : public FileVol
 {
 private:
 	//Members
-	FatDiskio        fatdisk;
-	List<FatObject*> objs;
+	FatDiskio        fatDisk;
+	List<FatObject*> fatObjs;
 
 	//Members
 	uint32_t bytesPerSec;
@@ -28,7 +28,7 @@ private:
 	//Directory Methods
 	char* BaseName(const char* path);
 	FatObject* SearchPath(const char* path, int reserve = 0);
-	FatObject* SearchDir(FatObject* obj, const char* name);
+	FatObject* SearchDir(FatObject* fatObj, const char* name);
 	FatObject* CreateDir(const char* path, int attr);
 public:
 	//File Volume Methods
