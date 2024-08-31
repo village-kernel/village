@@ -113,11 +113,13 @@ private:
 	{
 		int            type;
 		char*          name;
+		DevStream*     dev;
 		List<FileVol*> vols;
 
-		DiskMedia(int type, char* name)
-			:type(type),
-			name(name)
+		DiskMedia(char* name, DevStream* dev)
+			:type(_None),
+			name(name),
+			dev(dev)
 		{}
 	};
 private:

@@ -9,6 +9,7 @@
 
 #include "stdint.h"
 #include "stddef.h"
+#include "DevStream.h"
 
 
 /// @brief FileVol
@@ -22,7 +23,7 @@ public:
 	virtual ~FileVol() {};
 
 	//Methods
-	virtual bool Setup(const char* disk, uint32_t startingLBA)       = 0;
+	virtual bool Setup(DevStream* device, uint32_t startingLBA)      = 0;
 	virtual void Exit()                                              = 0;
 
 	//Volume methods
