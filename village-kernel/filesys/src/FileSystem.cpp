@@ -118,10 +118,10 @@ bool ConcreteFileSystem::MountHardDrive(const char* disk)
 	medias.Add(media, media->name);
 	
 	//Media with partition table
-	if ((0 != mbr->partition[0].OSType) && (0 != mbr->partition[0].sizeInLBA))
+	if (CheckPartiionTable(mbr->partition[0]))
 	{
 		//Set the media for GPT partition format
-		if (0xee == mbr->partition[0].OSType)
+		if (0xee == mbr->partition[0].OSIndicator)
 		{
 			//Set media partition type as GPT
 			media->type = PartitionType::_GPT;
@@ -206,6 +206,26 @@ bool ConcreteFileSystem::UnmountHardDrive(const char* disk)
 		medias.Remove(media);
 		delete media;
 		return true;
+	}
+
+	return false;
+}
+
+
+/// @brief Determine whether partition table exists
+/// @param partition 
+/// @return 
+bool ConcreteFileSystem::CheckPartiionTable(MBRPartition partition)
+{
+	if ((0 != partition.OSIndicator) && (0 != partition.sizeInLBA))
+	{
+		uint8_t  size = sizeof(MBRPartition);
+		uint8_t* data = (uint8_t*)&partition;
+
+		for (uint8_t i = 0; i < size; i++)
+		{
+			if (data[0] != data[i]) return true;
+		}
 	}
 
 	return false;

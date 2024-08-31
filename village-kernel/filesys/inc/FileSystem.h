@@ -37,14 +37,14 @@ private:
 	/// @brief MBR partition record
 	struct MBRPartition
 	{
-		uint32_t bootIndicator : 8;
-		uint32_t startingHead : 8;
-		uint32_t startingSector : 6;
-		uint32_t startingCylinder: 10;
-		uint32_t OSType : 8;
-		uint32_t endingHead : 8;
-		uint32_t endingSector : 6;
-		uint32_t endingCylinder : 10;
+		uint8_t  bootIndicator;
+		uint8_t  startingHead;
+		uint16_t startingSector : 6;
+		uint16_t startingCylinder: 10;
+		uint8_t  OSIndicator;
+		uint8_t  endingHead;
+		uint16_t endingSector : 6;
+		uint16_t endingCylinder : 10;
 		uint32_t startingLBA;
 		uint32_t sizeInLBA;
 	} __attribute__((packed));
@@ -53,16 +53,13 @@ private:
 	/// @brief MBR partition table
 	struct MBR
 	{
-		uint8_t      boot[424];
-		uint8_t      reserved[16];
-		uint32_t     uniqueMBRDiskSignature;
-		uint16_t     unknown;
+		uint8_t      boot[446];
 		MBRPartition partition[4];
 		uint16_t     magic;
 	} __attribute__((packed));
 
 	
-	/// @brief GPT partition entry array
+	/// @brief GPT partition record
 	struct GPTPartition
 	{
 		char     partitionTypeGUID[16];
@@ -75,7 +72,7 @@ private:
 	};
 
 
-	/// @brief GPT header
+	/// @brief GPT partition table
 	struct GPT
 	{
 		char     signature[8];
@@ -130,6 +127,7 @@ private:
 	List<MountNode*>  mounts;
 
 	/// @brief Methods
+	bool CheckPartiionTable(MBRPartition partition);
 	int  SetupVolume(DiskMedia* media, uint32_t startingLBA);
 	bool MountSystemNode();
 public:
