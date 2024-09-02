@@ -24,7 +24,7 @@ private:
 	uint32_t          index;
 	uint32_t          clust;
 	uint32_t          sector;
-	FatUnionEntry*    unients;
+	FatEntry*         fatEnts;
 	FatObject*        self;
 
 	//Fatent Members
@@ -36,15 +36,18 @@ private:
 	void Release();
 	void CalcFirstSector();
 	void CalcNextSector();
-	void ReadUnionEntries();
-	void WriteUnionEntries();
+	void ReadFatEnts();
+	void WriteFatEnts();
+
 	bool ReadBegin();
 	bool ReadNext();
 	bool WriteNext();
 	bool IsReadEnd();
+	
 	bool Find(uint32_t size);
-	uint32_t Pop(FatUnionEntry* pop, uint32_t size);
-	uint32_t Push(FatUnionEntry* push, uint32_t size);
+	uint32_t Pop(FatEntry* pop, uint32_t size);
+	uint32_t Push(FatEntry* push, uint32_t size);
+
 	bool CheckDirName(FatObject* object);
 public:
 	//Methods

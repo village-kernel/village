@@ -30,7 +30,7 @@ FatShortEntry::FatShortEntry()
 
 
 /// @brief UnionEntry constructor
-FatUnionEntry::FatUnionEntry()
+FatEntry::FatEntry()
 {
 	memset((void*)this, 0, 32);
 }
@@ -38,7 +38,7 @@ FatUnionEntry::FatUnionEntry()
 
 /// @brief UnionEntry is valid
 /// @return 
-bool FatUnionEntry::IsValid()
+bool FatEntry::IsValid()
 {
 	if (lfe.ord != dir_free_flag && lfe.ord >= dir_valid_flag)
 	{
@@ -55,22 +55,22 @@ bool FatUnionEntry::IsValid()
 }
 
 
+/// @brief UnionEntry set store size
+/// @param size 
+void FatEntry::SetStoreSize(uint8_t size)
+{
+	if (size > 1) lfe.ord = dir_seq_flag + size - 1;
+}
+
+
 /// @brief UnionEntry get store size
 /// @return 
-uint8_t FatUnionEntry::GetStoreSize()
+uint8_t FatEntry::GetStoreSize()
 {
 	if ((lfe.attr & _FAT_ATTR_LONG_NAME_MASK) == _FAT_ATTR_LONG_NAME)
 		return (lfe.ord - dir_seq_flag + 1);
 	else
 		return 1;
-}
-
-
-/// @brief UnionEntry set store size
-/// @param size 
-void FatUnionEntry::SetStoreSize(uint8_t size)
-{
-	if (size > 1) lfe.ord = dir_seq_flag + size - 1;
 }
 
 
@@ -81,85 +81,46 @@ FatObject::FatObject()
 	sector(0),
 	lfe(NULL),
 	sfe(NULL),
-	ufe(NULL)
+	fatEnts(NULL)
 {
 }
 
 
 /// @brief FatObject Constructor
-FatObject::FatObject(FatUnionEntry* ufe)
-	:index(0),
-	clust(0),
-	sector(0),
-	lfe(NULL),
-	sfe(NULL),
-	ufe(ufe)
+FatObject::FatObject(const char* name)
+	:FatObject()
 {
-	if (NULL != ufe) Setup(ufe);
+	if (NULL != fatEnts) Setup(name);
 }
 
 
 /// @brief FatObject Constructor
-/// @param obj 
-FatObject::FatObject(FatObject* obj)
-	:index(0),
-	clust(0),
-	sector(0),
-	lfe(NULL),
-	sfe(NULL),
-	ufe(NULL)
+/// @param fatObj 
+FatObject::FatObject(FatObject* fatObj)
+	:FatObject()
 {
-	if (NULL != obj) Clone(obj);
+	if (NULL != fatObj) Setup(fatObj);
+}
+
+
+/// @brief FatObject Constructor
+FatObject::FatObject(FatEntry* fatEnts)
+	:FatObject()
+{
+	if (NULL != fatEnts) Setup(fatEnts);
 }
 
 
 /// @brief Destructor
 FatObject::~FatObject()
 {
-	delete[] this->ufe;
-}
-
-
-/// @brief FatObject clone
-/// @param obj 
-void FatObject::Clone(FatObject* obj)
-{
-	uint8_t        size = obj->GetStoreSize();
-	FatUnionEntry* raw  = obj->GetUnionEntry();
-
-	ufe = new FatUnionEntry[size];
-
-	for (uint8_t i = 0; i < size; i++)
-	{
-		ufe[i] = raw[i];
-	}
-
-	Setup(ufe);
-
-	obj->GetEntryLocInfo(index, clust, sector);
-}
-
-
-/// @brief FatObject setup
-/// @param ufe 
-void FatObject::Setup(FatUnionEntry* ufe)
-{
-	this->lfe = (FatLongEntry*)ufe;
-	this->sfe = (FatShortEntry*)ufe;
-	this->ufe = (FatUnionEntry*)ufe;
-
-	if (ufe->IsValid() && IsLongName())
-	{
-		uint8_t n = lfe->ord - dir_seq_flag;
-		lfe = (FatLongEntry*)ufe;
-		sfe = (FatShortEntry*)ufe + n;
-	}
+	delete[] this->fatEnts;
 }
 
 
 /// @brief Setup by name
 /// @param name 
-void FatObject::SetupByName(const char* name)
+void FatObject::Setup(const char* name)
 {
 	//Cal the size of entries
 	uint8_t namelen = strlen(name);
@@ -171,11 +132,11 @@ void FatObject::SetupByName(const char* name)
 	uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
 
 	//Alloc entires space
-	uint8_t size = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
-	FatUnionEntry* ufe = new FatUnionEntry[size]();
+	uint8_t   size = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
+	FatEntry* fatEnts = new FatEntry[size]();
 
 	//Setup short name
-	Setup(ufe);
+	Setup(fatEnts);
 	SetShortName(name);
 	SetStoreSize(size);
 
@@ -188,30 +149,67 @@ void FatObject::SetupByName(const char* name)
 }
 
 
-/// @brief Setup dot entry
-/// @param obj 
-void FatObject::SetupDot(FatObject* obj)
+/// @brief FatObject clone
+/// @param fatObj 
+void FatObject::Setup(FatObject* fatObj)
 {
-	Setup(new FatUnionEntry());
+	uint8_t   size = fatObj->GetStoreSize();
+	FatEntry* raw  = fatObj->GetFatEntry();
+
+	fatEnts = new FatEntry[size];
+
+	for (uint8_t i = 0; i < size; i++)
+	{
+		fatEnts[i] = raw[i];
+	}
+
+	Setup(fatEnts);
+
+	fatObj->GetEntryLocInfo(index, clust, sector);
+}
+
+
+/// @brief FatObject setup
+/// @param fatEnts
+void FatObject::Setup(FatEntry* fatEnts)
+{
+	this->lfe  = (FatLongEntry*)fatEnts;
+	this->sfe  = (FatShortEntry*)fatEnts;
+	this->fatEnts = (FatEntry*)fatEnts;
+
+	if (fatEnts->IsValid() && IsLongName())
+	{
+		uint8_t n = lfe->ord - dir_seq_flag;
+		lfe = (FatLongEntry*)fatEnts;
+		sfe = (FatShortEntry*)fatEnts + n;
+	}
+}
+
+
+/// @brief Setup dot entry
+/// @param fatObj 
+void FatObject::SetupDot(FatObject* fatObj)
+{
+	Setup(new FatEntry());
 	SetRawName(".");
-	SetFirstCluster(obj->GetFirstCluster());
+	SetFirstCluster(fatObj->GetFirstCluster());
 	SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
 }
 
 
 /// @brief Setup dot dot entry
-/// @param obj 
-void FatObject::SetupDotDot(FatObject* obj)
+/// @param fatObj 
+void FatObject::SetupDotDot(FatObject* fatObj)
 {
-	Setup(new FatUnionEntry());
+	Setup(new FatEntry());
 	SetRawName("..");
-	SetFirstCluster(obj->GetFirstCluster());
+	SetFirstCluster(fatObj->GetFirstCluster());
 	SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
 }
 
 
 /// @brief FatObject set entry free flag
-void FatObject::SetEntryFree()
+void FatObject::SetOjectFree()
 {
 	sfe->name[0] = dir_free_flag;
 
@@ -270,18 +268,18 @@ FileAttr FatObject::GetObjectAttr()
 
 
 /// @brief Set union entry
-/// @param ufe 
-void FatObject::SetUnionEntry(FatUnionEntry* ufe)
+/// @param fatEnts 
+void FatObject::SetFatEntry(FatEntry* fatEnts)
 {
-	Setup(ufe);
+	Setup(fatEnts);
 }
 
 
 /// @brief Get union entry
 /// @return 
-FatUnionEntry* FatObject::GetUnionEntry()
+FatEntry* FatObject::GetFatEntry()
 {
-	return ufe;
+	return fatEnts;
 }
 
 
@@ -289,7 +287,7 @@ FatUnionEntry* FatObject::GetUnionEntry()
 /// @param size 
 void FatObject::SetStoreSize(uint8_t size)
 {
-	ufe->SetStoreSize(size);
+	fatEnts->SetStoreSize(size);
 }
 
 
@@ -297,7 +295,7 @@ void FatObject::SetStoreSize(uint8_t size)
 /// @return 
 uint8_t FatObject::GetStoreSize()
 {
-	return ufe->GetStoreSize();
+	return fatEnts->GetStoreSize();
 }
 
 
@@ -699,7 +697,7 @@ void FatObject::SetCreateTime(uint16_t time)
 /// @return 
 uint16_t FatObject::GetCreateTime()
 {
-	return  sfe->crtTime;
+	return sfe->crtTime;
 }
 
 
