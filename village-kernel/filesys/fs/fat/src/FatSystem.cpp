@@ -68,22 +68,17 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 	Regex regex;
 	regex.Split(path, '/');
 	char** names = regex.ToArray();
-	int8_t size  = regex.Size() - reserve;
+	int8_t deep  = regex.Size() - reserve;
 
-	FatObject* fatObj = NULL;
+	//Create an directory fat object
+	FatObject* fatObj = new FatObject(new FatEntry());
+	fatObj->SetAttribute(FatDirAttr::_FAT_ATTR_DIRECTORY);
 
-	if (0 == size)
+	//Search directory
+	for (int8_t i = 0; i < deep; i++)
 	{
-		fatObj = new FatObject(new FatUnionEntry());
-		fatObj->SetAttribute(FatDirAttr::_FAT_ATTR_DIRECTORY);
-	}
-	else
-	{
-		for (int8_t i = 0; i < size; i++)
-		{
-			fatObj = SearchDir(fatObj, names[i]);
-			if (NULL == fatObj) return NULL;
-		}
+		fatObj = SearchDir(fatObj, names[i]);
+		if (NULL == fatObj) return NULL;
 	}
 
 	return fatObj;
@@ -102,18 +97,13 @@ FatObject* FatVolume::SearchDir(FatObject* fatObj, const char* name)
 	{
 		char* dirname = entries.Item()->GetObjectName();
 
-		int isSame = strcmp(dirname, name);
-
-		delete dirname;
-		
-		if (0 == isSame)
+		if (0 == strcmp(dirname, name))
 		{
-			delete fatObj;
-			return new FatObject(entries.Item());
+			fatObj->Setup(entries.Item());
+			return fatObj;
 		}
 	}
 
-	delete fatObj;
 	return NULL;
 }
 
@@ -193,7 +183,7 @@ int FatVolume::Open(const char* name, int mode)
 		return fatObjs.Add(fatObj);
 	}
 
-	return 0;
+	return -1;
 }
 
 
@@ -315,7 +305,7 @@ int FatVolume::OpenDir(const char* path, int mode)
 		return fatObjs.Add(fatObj);
 	}
 
-	return 0;
+	return -1;
 }
 
 

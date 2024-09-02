@@ -83,8 +83,8 @@ struct FatShortEntry
 } __attribute__((packed));
 
 
-/// @brief FatUnionEntry
-union FatUnionEntry
+/// @brief FatEntry
+union FatEntry
 {
 	//static constants
 	static const uint8_t dir_seq_flag = 0x40;
@@ -96,10 +96,10 @@ union FatUnionEntry
 	FatShortEntry sfe;
 	
 	//Methods
-	FatUnionEntry();
-	bool IsValid();
+	FatEntry();
+	bool    IsValid();
+	void    SetStoreSize(uint8_t size);
 	uint8_t GetStoreSize();
-	void SetStoreSize(uint8_t size);
 } __attribute__((packed));
 
 
@@ -121,30 +121,36 @@ private:
 	//Members
 	FatLongEntry*   lfe;
 	FatShortEntry*  sfe;
-	FatUnionEntry*  ufe;
+	FatEntry*       fatEnts;
 
 	//Methods
 	uint8_t ChkSum(const char* name);
 public:
 	//Methods
 	FatObject();
-	FatObject(FatUnionEntry* ufe);
-	FatObject(FatObject* obj);
+	FatObject(const char* name);
+	FatObject(FatObject* fatObj);
+	FatObject(FatEntry* fatEnts);
 	~FatObject();
 
-	void Clone(FatObject* obj);
-	void Setup(FatUnionEntry* ufe);
-	void SetupByName(const char* name);
-	void SetupDot(FatObject* obj);
-	void SetupDotDot(FatObject* obj);
-	void SetEntryFree();
+	void Setup(const char* name);
+	void Setup(FatObject* fatObj);
+	void Setup(FatEntry* fatEnts);
+
+	void SetupDot(FatObject* fatObj);
+	void SetupDotDot(FatObject* fatObj);
+	
+	void SetOjectFree();
+
 	char* GetObjectName();
 	FileType GetObjectType();
 	FileAttr GetObjectAttr();
-	void SetUnionEntry(FatUnionEntry* ufe);
-	FatUnionEntry* GetUnionEntry();
+
+	void SetFatEntry(FatEntry* fatEnts);
+	FatEntry* GetFatEntry();
 	void SetStoreSize(uint8_t size);
 	uint8_t GetStoreSize();
+	
 	void SetEntryLocInfo(uint32_t index, uint32_t clust, uint32_t sector);
 	void GetEntryLocInfo(uint32_t& index, uint32_t& clust, uint32_t& sector);
 

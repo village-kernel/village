@@ -31,25 +31,6 @@ private:
 	FatObject* SearchDir(FatObject* fatObj, const char* name);
 	FatObject* CreateDir(const char* path, int attr);
 public:
-	//File Volume Methods
-	bool SetName(const char* name);
-	char* GetName();
-	
-	int Open(const char* name, int mode);
-	int Write(int fd, char* data, int size, int offset);
-	int Read(int fd, char* data, int size, int offset);
-	int Size(int fd);
-	void Close(int fd);
-
-	int OpenDir(const char* path, int mode);
-	int ReadDir(int fd, FileDir* dirs, int size, int offset);
-	int SizeDir(int fd);
-	void CloseDir(int fd);
-
-	FileType GetFileType(const char* name);
-	bool IsExist(const char* name, FileType type);
-	bool Remove(const char* name);
-public:
 	//Methods
 	FatVolume();
 	~FatVolume();
@@ -57,6 +38,28 @@ public:
 	//Methods
 	bool Setup(DevStream* device, uint32_t startingLBA);
 	void Exit();
+public:
+	//File Volume Methods
+	bool  SetName(const char* name);
+	char* GetName();
+	
+	//File methods
+	int  Open(const char* name, int mode);
+	int  Write(int fd, char* data, int size, int offset);
+	int  Read(int fd, char* data, int size, int offset);
+	int  Size(int fd);
+	void Close(int fd);
+
+	//Dir methods
+	int  OpenDir(const char* path, int mode);
+	int  ReadDir(int fd, FileDir* dirs, int size, int offset);
+	int  SizeDir(int fd);
+	void CloseDir(int fd);
+
+	//Opt methods
+	FileType GetFileType(const char* name);
+	bool IsExist(const char* name, FileType type);
+	bool Remove(const char* name);
 };
 
 
