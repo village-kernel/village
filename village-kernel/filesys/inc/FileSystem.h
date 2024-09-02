@@ -131,7 +131,8 @@ private:
 	/// @brief Methods
 	bool CheckPartiionTable(MBRPartition partition);
 	int  SetupVolume(DiskMedia* media, uint32_t startingLBA);
-	bool MountSystemNode();
+	bool MountSystemNode(List<FileVol*> volumes, MountNode* mount);
+	bool MountRootNode();
 public:
 	/// @brief Methods
 	ConcreteFileSystem();
@@ -149,6 +150,7 @@ public:
 	
 	/// @brief Volume Methods
 	FileVol* GetVolume(const char* name);
+	FileVol* GetVolume(const char* name, MountNode* mount);
 };
 
 #endif //!__FILE_SYSTEM_H__
