@@ -32,8 +32,8 @@ void ConcreteFileSystem::Setup()
 		MountHardDrive(blockDevs.Item()->GetName());
 	}
 
-	//Mount system node
-	if (MountSystemNode())
+	//Mount root node
+	if (MountRootNode())
 		kernel->debug.Info("File system setup completed!");
 	else
 		kernel->debug.Error("File system setup failed!");
@@ -255,24 +255,40 @@ int ConcreteFileSystem::SetupVolume(DiskMedia* media, uint32_t startingLBA)
 }
 
 
-/// @brief Mount node
-bool ConcreteFileSystem::MountSystemNode()
+/// @brief Mount root node
+bool ConcreteFileSystem::MountRootNode()
 {
+	//Create root mount node
+	MountNode* mount = new MountNode((char*)"/", (char*)"VILLAGE OS", 0755);
+
+	//Try to mount root node
 	for (medias.Begin(); !medias.IsEnd(); medias.Next())
 	{
-		List<FileVol*> volumes = medias.Item()->vols;
+		if (MountSystemNode(medias.Item()->vols, mount)) return true;
+	}
 
-		for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+	//Output info
+	kernel->debug.Error("Mount root node failed, 'VILLAGE OS' not found");
+
+	//Leave
+	delete mount;
+	return false;
+}
+
+
+/// @brief Mount system node
+/// @param volumes 
+/// @return 
+bool ConcreteFileSystem::MountSystemNode(List<FileVol*> volumes, MountNode* mount)
+{
+	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+	{
+		if (0 == strcmp(volumes.GetName(), mount->source))
 		{
-			char* name = volumes.GetName();
-			if (0 == strcmp(name, "VILLAGE OS"))
-			{
-				mounts.Add(new MountNode((char*)"/", name, 0755));
-				return true;
-			}
+			mounts.Add(mount);
+			return true;
 		}
 	}
-	kernel->debug.Output(Debug::_Lv2, "Mount system node failed, 'VILLAGE OS' not found");
 	return false;
 }
 
@@ -284,15 +300,24 @@ FileVol* ConcreteFileSystem::GetVolume(const char* name)
 {
 	for (mounts.Begin(); !mounts.IsEnd(); mounts.Next())
 	{
-		MountNode* mount = mounts.Item();
+		return GetVolume(name, mounts.Item());
+	}
+	return NULL;
+}
 
-		if (0 == strncmp(mount->target, name, strlen(mount->target)))
+
+/// @brief Get volume
+/// @param name 
+/// @param mount 
+/// @return 
+FileVol* ConcreteFileSystem::GetVolume(const char* name, MountNode* mount)
+{
+	if (0 == strncmp(mount->target, name, strlen(mount->target)))
+	{
+		for (medias.Begin(); !medias.IsEnd(); medias.Next())
 		{
-			for (medias.Begin(); !medias.IsEnd(); medias.Next())
-			{
-				FileVol* volume = medias.Item()->vols.GetItem(mount->source);
-				if (NULL != volume) return volume;
-			}
+			FileVol* volume = medias.Item()->vols.GetItem(mount->source);
+			if (NULL != volume) return volume;
 		}
 	}
 	return NULL;
