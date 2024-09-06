@@ -87,10 +87,15 @@ extern "C" int memcmp(const void* s1, const void* s2, size_t n)
 /// @return the original value of dst
 extern "C" char* strcpy(char* dst, const char* src)
 {
-    for (int i = 0; '\0' != src[i]; i++)
+	volatile size_t size = 0;
+	
+    for (size = 0; '\0' != src[size]; size++)
 	{
-        dst[i] = src[i];
+        dst[size] = src[size];
     }
+
+	dst[size] = '\0';
+
 	return dst;
 }
 
