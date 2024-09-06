@@ -48,7 +48,7 @@ private:
 	bool CheckDirName(FatObject* fatObj);
 public:
 	//Methods
-	FatFolder(FatDiskio& fatDisk, FatObject* fatObj);
+	FatFolder(FatDiskio& fatDisk, FatObject* fatObj = NULL);
 	~FatFolder();
 
 	void Open(FatObject* fatObj);
