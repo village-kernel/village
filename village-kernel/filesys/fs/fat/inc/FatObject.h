@@ -121,7 +121,7 @@ private:
 	//Members
 	FatLongEntry*   lfe;
 	FatShortEntry*  sfe;
-	FatEntry*       fatEnts;
+	FatEntry*       ufe;
 
 	//Methods
 	uint8_t ChkSum(const char* name);
@@ -130,12 +130,12 @@ public:
 	FatObject();
 	FatObject(const char* name);
 	FatObject(FatObject* fatObj);
-	FatObject(FatEntry* fatEnts);
+	FatObject(FatEntry* ufe);
 	~FatObject();
 
 	void Setup(const char* name);
 	void Setup(FatObject* fatObj);
-	void Setup(FatEntry* fatEnts);
+	void Setup(FatEntry* ufe);
 
 	void SetupDot(FatObject* fatObj);
 	void SetupDotDot(FatObject* fatObj);
@@ -146,12 +146,11 @@ public:
 	FileType GetObjectType();
 	FileAttr GetObjectAttr();
 
-	void SetFatEntry(FatEntry* fatEnts);
-	FatEntry* GetFatEntry();
+	FatEntry* GetEntries();
 	void SetStoreSize(uint8_t size);
 	uint8_t GetStoreSize();
 	
-	void SetEntryLocInfo(uint32_t index, uint32_t clust, uint32_t sector);
+	void SetEntryLocInfo(uint32_t  index, uint32_t  clust, uint32_t  sector);
 	void GetEntryLocInfo(uint32_t& index, uint32_t& clust, uint32_t& sector);
 
 	bool IsLongName();

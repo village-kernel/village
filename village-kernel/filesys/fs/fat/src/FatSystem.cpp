@@ -5,7 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "FatSystem.h"
-#include "FatEntries.h"
+#include "FatFolder.h"
 #include "FileSys.h"
 #include "Regex.h"
 #include "Debug.h"
@@ -77,34 +77,12 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 	//Search directory
 	for (int8_t i = 0; i < deep; i++)
 	{
-		fatObj = SearchDir(fatObj, names[i]);
-		if (NULL == fatObj) return NULL;
+		FatFolder folder(fatDisk, fatObj);
+		fatObj = folder.Search(names[i]);
+		if (fatObj == NULL) break;
 	}
 
 	return fatObj;
-}
-
-
-/// @brief Search dir
-/// @param fatObj 
-/// @param name
-/// @return 
-FatObject* FatVolume::SearchDir(FatObject* fatObj, const char* name)
-{
-	FatEntries entries(fatDisk, fatObj);
-
-	for (entries.Begin(); !entries.IsEnd(); entries.Next())
-	{
-		char* dirname = entries.Item()->GetObjectName();
-
-		if (0 == strcmp(dirname, name))
-		{
-			fatObj->Setup(entries.Item());
-			return fatObj;
-		}
-	}
-
-	return NULL;
 }
 
 
@@ -120,7 +98,7 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 	{
 		if (FileType::_Diretory == fatObj->GetObjectType())
 		{
-			fatObj = FatEntries(fatDisk, fatObj).Create(BaseName(path), attr);
+			fatObj = FatFolder(fatDisk, fatObj).Create(BaseName(path), attr);
 		}
 
 		return fatObj;
@@ -135,13 +113,15 @@ FatObject* FatVolume::CreateDir(const char* path, int attr)
 /// @return 
 bool FatVolume::SetName(const char* name)
 {
-	FatObject* fatObj = FatEntries(fatDisk).Item();
+	FatFolder folder(fatDisk, SearchPath("/"));
+
+	FatObject* fatObj = folder.GetLists().Begin();
 
 	if (FileType::_Volume == fatObj->GetObjectType())
 	{
 		fatObj->SetRawName(name);
 
-		FatEntries(fatDisk, fatObj).Update();
+		folder.Update(fatObj);
 	}
 
 	return true;
@@ -152,7 +132,9 @@ bool FatVolume::SetName(const char* name)
 /// @return 
 char* FatVolume::GetName()
 {
-	FatObject* fatObj = FatEntries(fatDisk).Item();
+	FatFolder folder(fatDisk, SearchPath("/"));
+
+	FatObject* fatObj = folder.GetLists().Begin();
 
 	char* name = (char*)"NONAME";
 
@@ -323,11 +305,11 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 	{
 		int index = 0;
 
-		FatEntries entries(fatDisk, fatObj);
+		List<FatObject*> fatObjs = FatFolder(fatDisk, fatObj).GetLists();
 
-		for (entries.Begin(); !entries.IsEnd(); entries.Next())
+		for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
 		{
-			FatObject* sub = entries.Item();
+			FatObject* sub = fatObjs.Item();
 
 			if (index < size && NULL != sub)
 			{
@@ -354,14 +336,17 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 /// @return 
 int FatVolume::SizeDir(int fd)
 {
+	int size = 0;
+
 	FatObject* fatObj = fatObjs.GetItem(fd);
 
 	if (NULL != fatObj)
 	{
-		return FatEntries(fatDisk, fatObj).GetSize();
+		FatFolder folder(fatDisk, fatObj);
+		size = folder.GetLists().GetSize();
 	}
 
-	return 0;
+	return size;
 }
 
 
@@ -413,14 +398,16 @@ bool FatVolume::IsExist(const char* name, FileType type)
 /// @return 
 bool FatVolume::Remove(const char* name)
 {
-	FatObject* fatObj = SearchPath(name);
+	FatObject* fatObj = SearchPath(name, 1);
 
 	if (NULL != fatObj)
 	{
 		if (FileType::_File     == fatObj->GetObjectType() ||
 			FileType::_Diretory == fatObj->GetObjectType())
 		{
-			FatEntries(fatDisk, fatObj).Remove();
+			FatFolder folder(fatDisk, fatObj);
+			fatObj = folder.Search(BaseName(name));
+			folder.Remove(fatObj);
 			delete fatObj;
 			return true;
 		}

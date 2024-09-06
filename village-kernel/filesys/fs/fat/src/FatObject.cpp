@@ -81,7 +81,7 @@ FatObject::FatObject()
 	sector(0),
 	lfe(NULL),
 	sfe(NULL),
-	fatEnts(NULL)
+	ufe(NULL)
 {
 }
 
@@ -90,7 +90,7 @@ FatObject::FatObject()
 FatObject::FatObject(const char* name)
 	:FatObject()
 {
-	if (NULL != fatEnts) Setup(name);
+	if (NULL != ufe) Setup(name);
 }
 
 
@@ -104,17 +104,17 @@ FatObject::FatObject(FatObject* fatObj)
 
 
 /// @brief FatObject Constructor
-FatObject::FatObject(FatEntry* fatEnts)
+FatObject::FatObject(FatEntry* ufe)
 	:FatObject()
 {
-	if (NULL != fatEnts) Setup(fatEnts);
+	if (NULL != ufe) Setup(ufe);
 }
 
 
 /// @brief Destructor
 FatObject::~FatObject()
 {
-	delete[] this->fatEnts;
+	delete[] this->ufe;
 }
 
 
@@ -122,7 +122,7 @@ FatObject::~FatObject()
 /// @param name 
 void FatObject::Setup(const char* name)
 {
-	//Cal the size of entries
+	//Cal the size of ufe
 	uint8_t namelen = strlen(name);
 	uint8_t dotpos = namelen;
 	while ('.' != name[--dotpos] && dotpos);
@@ -133,10 +133,10 @@ void FatObject::Setup(const char* name)
 
 	//Alloc entires space
 	uint8_t   size = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
-	FatEntry* fatEnts = new FatEntry[size]();
+	FatEntry* ufe = new FatEntry[size]();
 
 	//Setup short name
-	Setup(fatEnts);
+	Setup(ufe);
 	SetShortName(name);
 	SetStoreSize(size);
 
@@ -153,35 +153,35 @@ void FatObject::Setup(const char* name)
 /// @param fatObj 
 void FatObject::Setup(FatObject* fatObj)
 {
-	uint8_t   size = fatObj->GetStoreSize();
-	FatEntry* raw  = fatObj->GetFatEntry();
+	uint8_t size = fatObj->GetStoreSize();
+	FatEntry* raw = fatObj->GetEntries();
 
-	fatEnts = new FatEntry[size];
+	ufe = new FatEntry[size];
 
 	for (uint8_t i = 0; i < size; i++)
 	{
-		fatEnts[i] = raw[i];
+		ufe[i] = raw[i];
 	}
 
-	Setup(fatEnts);
+	Setup(ufe);
 
 	fatObj->GetEntryLocInfo(index, clust, sector);
 }
 
 
 /// @brief FatObject setup
-/// @param fatEnts
-void FatObject::Setup(FatEntry* fatEnts)
+/// @param ufe
+void FatObject::Setup(FatEntry* ufe)
 {
-	this->lfe  = (FatLongEntry*)fatEnts;
-	this->sfe  = (FatShortEntry*)fatEnts;
-	this->fatEnts = (FatEntry*)fatEnts;
+	this->lfe = (FatLongEntry*)ufe;
+	this->sfe = (FatShortEntry*)ufe;
+	this->ufe = (FatEntry*)ufe;
 
-	if (fatEnts->IsValid() && IsLongName())
+	if (ufe->IsValid() && IsLongName())
 	{
 		uint8_t n = lfe->ord - dir_seq_flag;
-		lfe = (FatLongEntry*)fatEnts;
-		sfe = (FatShortEntry*)fatEnts + n;
+		lfe = (FatLongEntry*)ufe;
+		sfe = (FatShortEntry*)ufe + n;
 	}
 }
 
@@ -267,19 +267,11 @@ FileAttr FatObject::GetObjectAttr()
 }
 
 
-/// @brief Set union entry
-/// @param fatEnts 
-void FatObject::SetFatEntry(FatEntry* fatEnts)
-{
-	Setup(fatEnts);
-}
-
-
 /// @brief Get union entry
 /// @return 
-FatEntry* FatObject::GetFatEntry()
+FatEntry* FatObject::GetEntries()
 {
-	return fatEnts;
+	return ufe;
 }
 
 
@@ -287,7 +279,7 @@ FatEntry* FatObject::GetFatEntry()
 /// @param size 
 void FatObject::SetStoreSize(uint8_t size)
 {
-	fatEnts->SetStoreSize(size);
+	ufe->SetStoreSize(size);
 }
 
 
@@ -295,7 +287,7 @@ void FatObject::SetStoreSize(uint8_t size)
 /// @return 
 uint8_t FatObject::GetStoreSize()
 {
-	return fatEnts->GetStoreSize();
+	return ufe->GetStoreSize();
 }
 
 
@@ -530,7 +522,7 @@ void FatObject::SetLongName(const char* name)
 	uint8_t n = size;
 	uint8_t chksum = ChkSum(sfe->name);
 
-	//Loop for sequence of long directory entries
+	//Loop for sequence of long directory ufe
 	while (n--)
 	{
 		if (n) lfe[n].ord = size - n;
@@ -592,7 +584,7 @@ char* FatObject::GetLongName()
 	uint8_t chksum = ChkSum(sfe->name);
 	char*   lfn = new char[long_name_size * n + 1]();
 	
-	//Loop for sequence of long directory entries
+	//Loop for sequence of long directory ufe
 	while (n--)
 	{
 		//Chksum

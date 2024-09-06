@@ -1,43 +1,40 @@
 //###########################################################################
-// FatEntries.h
+// FatFolder.h
 // Declarations of the functions that manage fat file system
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __FAT_ENTRIES_H__
-#define __FAT_ENTRIES_H__
+#ifndef __FAT_FOLDER_H__
+#define __FAT_FOLDER_H__
 
 #include "List.h"
 #include "FatObject.h"
 #include "FatDiskio.h"
 
 
-/// @brief FatEntries
-class FatEntries
+/// @brief FatFolder
+class FatFolder
 {
 private:
 	//Members
 	FatDiskio&        fatDisk;
-	FatDiskio::Info&  volInfo;
+	FatDiskio::Info&  fatInfo;
 
 	//Dirent Members
 	uint32_t          index;
 	uint32_t          clust;
 	uint32_t          sector;
-	FatEntry*         fatEnts;
-	FatObject*        self;
+	FatEntry*         buffer;
+	FatObject*        parent;
 
-	//Fatent Members
-	uint32_t          objIdx;
-	List<FatObject*>  objects;
+	//FatObject Members
+	List<FatObject*>  fatObjs;
 
 	//Members
-	void Prepare();
-	void Release();
 	void CalcFirstSector();
 	void CalcNextSector();
-	void ReadFatEnts();
-	void WriteFatEnts();
+	void ReadEntries();
+	void WriteEntries();
 
 	bool ReadBegin();
 	bool ReadNext();
@@ -48,23 +45,22 @@ private:
 	uint32_t Pop(FatEntry* pop, uint32_t size);
 	uint32_t Push(FatEntry* push, uint32_t size);
 
-	bool CheckDirName(FatObject* object);
+	bool CheckDirName(FatObject* fatObj);
 public:
 	//Methods
-	FatEntries(FatDiskio& fatDisk, FatObject* object = NULL);
-	~FatEntries();
+	FatFolder(FatDiskio& fatDisk, FatObject* fatObj);
+	~FatFolder();
 
-	void Begin();
-	void Next();
-	bool IsEnd();
-	FatObject* Item();
-	uint32_t GetSize();
-
+	void Open(FatObject* fatObj);
+	FatObject* Search(const char* name);
 	FatObject* Create(const char* name, int attr);
-	uint32_t Write(FatObject* objects, uint32_t size);
-	uint32_t Read(FatObject* objects, uint32_t size);
-	void Remove();
-	void Update();
+	uint32_t Write(FatObject* fatObjs, uint32_t size);
+	uint32_t Read(FatObject* fatObjs, uint32_t size);
+	void Remove(FatObject* fatObjs);
+	void Update(FatObject* fatObjs);
+	void Close();
+
+	List<FatObject*> GetLists();
 };
 
-#endif //!__FAT_ENTRIES_H__
+#endif //!__FAT_FOLDER_H__
