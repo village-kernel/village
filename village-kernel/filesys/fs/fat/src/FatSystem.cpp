@@ -77,8 +77,7 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 	//Search directory
 	for (int8_t i = 0; i < deep; i++)
 	{
-		FatFolder folder(fatDisk, fatObj);
-		fatObj = folder.Search(names[i]);
+		fatObj = FatFolder(fatDisk, fatObj).Search(names[i]);
 		if (fatObj == NULL) break;
 	}
 
@@ -86,11 +85,11 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 }
 
 
-/// @brief Create dir
+/// @brief Create path
 /// @param path 
 /// @param attr 
 /// @return 
-FatObject* FatVolume::CreateDir(const char* path, int attr)
+FatObject* FatVolume::CreatePath(const char* path, int attr)
 {
 	FatObject* fatObj = SearchPath(path, 1);
 	
@@ -155,9 +154,12 @@ int FatVolume::Open(const char* name, int mode)
 {
 	FatObject* fatObj = SearchPath(name);
 
-	if ((NULL == fatObj) && ((mode & FileMode::_CreateNew) == FileMode::_CreateNew))
+	if (NULL == fatObj)
 	{
-		fatObj = CreateDir(name, FatDirAttr::_FAT_ATTR_FILE);
+		if ((mode & FileMode::_CreateNew) == FileMode::_CreateNew)
+		{
+			fatObj = CreatePath(name, FatDirAttr::_FAT_ATTR_FILE);
+		}
 	}
 
 	if (NULL != fatObj)
@@ -181,7 +183,7 @@ int FatVolume::Write(int fd, char* data, int size, int offset)
 
 	if (NULL != fatObj)
 	{
-		uint32_t fileSize = fatObj->GetFileSize();
+		uint32_t fileSize = fatObj->GetFileSize() + size;
 		uint32_t fstClust = fatObj->GetFirstCluster();
 		uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
 		uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
@@ -193,6 +195,8 @@ int FatVolume::Write(int fd, char* data, int size, int offset)
 
 		if (clusSize == fatDisk.WriteCluster(allocBuff, fstClust, clusSize))
 		{
+			fatObj->SetFileSize(fileSize);
+			FatFolder(fatDisk).Update(fatObj);
 			delete[] allocBuff;
 			return size;
 		}
@@ -277,9 +281,12 @@ int FatVolume::OpenDir(const char* path, int mode)
 {
 	FatObject* fatObj = SearchPath(path);
 	
-	if ((NULL == fatObj) && ((mode & FileMode::_CreateNew) == FileMode::_CreateNew))
+	if (NULL == fatObj)
 	{
-		fatObj = CreateDir(path, FatDirAttr::_FAT_ATTR_DIRECTORY);
+		if ((mode & FileMode::_CreateNew) == FileMode::_CreateNew)
+		{
+			fatObj = CreatePath(path, FatDirAttr::_FAT_ATTR_DIRECTORY);
+		}
 	}
 
 	if (NULL != fatObj)
@@ -398,16 +405,14 @@ bool FatVolume::IsExist(const char* name, FileType type)
 /// @return 
 bool FatVolume::Remove(const char* name)
 {
-	FatObject* fatObj = SearchPath(name, 1);
+	FatObject* fatObj = SearchPath(name);
 
 	if (NULL != fatObj)
 	{
 		if (FileType::_File     == fatObj->GetObjectType() ||
 			FileType::_Diretory == fatObj->GetObjectType())
 		{
-			FatFolder folder(fatDisk, fatObj);
-			fatObj = folder.Search(BaseName(name));
-			folder.Remove(fatObj);
+			FatFolder(fatDisk).Remove(fatObj);
 			delete fatObj;
 			return true;
 		}

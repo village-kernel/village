@@ -17,7 +17,7 @@ FatFolder::FatFolder(FatDiskio& fatDisk, FatObject* fatObj)
 	buffer(NULL),
 	parent(NULL)
 {
-	Open(fatObj);
+	if (NULL != fatObj) Open(fatObj);
 }
 
 
@@ -408,7 +408,7 @@ void FatFolder::Update(FatObject* fatObjs)
 /// @brief Close
 void FatFolder::Close()
 {
-	delete[] buffer;
+	if (NULL != buffer) delete[] buffer;
 
 	for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
 	{
