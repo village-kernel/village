@@ -265,3 +265,27 @@ const char* Console::GetPath()
 {
 	return path;
 }
+
+
+/// @brief AbsolutePath
+/// @param filename 
+/// @return 
+const char* Console::AbsolutePath(const char* path)
+{
+	char* res = NULL;
+
+	if ('/' != path[0])
+	{
+		res = new char[strlen(this->path) + strlen(path) + 2]();
+		strcat(res, this->path);
+		if ('/' != res[strlen(this->path) - 1]) strcat(res, "/");
+		strcat(res, path);
+	}
+	else
+	{
+		res = new char[strlen(path) + 1]();
+		strcat(res, path);
+	}
+
+	return res;
+}

@@ -57,6 +57,7 @@ public:
 	//Path Methods
 	void SetPath(const char* path);
 	const char* GetPath();
+	const char* AbsolutePath(const char* path);
 };
 
 #endif // !__CONSOLE_H__
