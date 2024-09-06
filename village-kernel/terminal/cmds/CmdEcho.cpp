@@ -35,8 +35,16 @@ private:
 			//Write data
 			if (file.Open(filepath, filemode))
 			{
-				file.Write((char*)data, strlen(data));
+				int   size   = strlen(data) + 2;
+				char* buffer = new char[size]();
+				
+				strcpy(buffer, data);
+				strcat(buffer, "\r\n");
+
+				file.Write((char*)buffer, size);
 				file.Close();
+
+				delete[] buffer;
 			}
 
 			delete path;
