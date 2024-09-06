@@ -77,6 +77,7 @@ objs-y                              += CmdMsgMgr.o
 objs-y                              += Console.o
 objs-y                              += Terminal.o
 objs-$(CONFIG_CMD_ABOUT)            += CmdAbout.o
+objs-$(CONFIG_CMD_CAT)              += CmdCat.o
 objs-$(CONFIG_CMD_DEBUG)            += CmdDebug.o
 objs-$(CONFIG_CMD_FILESYS)          += CmdFileSys.o
 objs-$(CONFIG_CMD_HELP)             += CmdHelp.o
