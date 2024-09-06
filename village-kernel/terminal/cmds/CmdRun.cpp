@@ -19,7 +19,7 @@ public:
 	{
 		if (argc < 2)
 		{
-			console->Output("Usage: run <program> [arg1] [arg2] [...] [&]");
+			console->Println("Usage: run <program> [arg1] [arg2] [...] [&]");
 			return;
 		}
 
@@ -37,7 +37,7 @@ public:
 	/// @brief Cmd run help
 	void Help()
 	{
-		console->Output("cmd run: execute application");
+		console->Println("cmd run: execute application");
 	}
 };
 
