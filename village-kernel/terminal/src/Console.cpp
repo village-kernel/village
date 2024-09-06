@@ -213,10 +213,25 @@ void Console::Warn(const char* format, ...)
 }
 
 
-/// @brief Console output
+/// @brief Console print
 /// @param format 
 /// @param  
-void Console::Output(const char* format, ...)
+void Console::Print(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsnprintf(data, buf_size, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)data);
+	mutex.Unlock();
+}
+
+
+/// @brief Console print line
+/// @param format 
+/// @param  
+void Console::Println(const char* format, ...)
 {
 	mutex.Lock();
 	va_list arg;
@@ -229,17 +244,13 @@ void Console::Output(const char* format, ...)
 }
 
 
-/// @brief Console output
-/// @param format 
-/// @param  
-void Console::OutputRAW(const char* format, ...)
+/// @brief Console Output
+/// @param data 
+/// @param size 
+void Console::Output(const char* data, int size)
 {
 	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)data);
+	msgMgr.Write((uint8_t*)data, size);
 	mutex.Unlock();
 }
 

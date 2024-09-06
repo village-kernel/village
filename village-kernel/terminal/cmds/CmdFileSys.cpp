@@ -52,7 +52,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: cd <directory>");
+			console->Println("Usage: cd <directory>");
 			return;
 		}
 
@@ -65,7 +65,7 @@ public:
 	/// @brief Cmd cd help
 	void Help()
 	{
-		console->Output("cmd cd: change directory");
+		console->Println("cmd cd: change directory");
 	}
 };
 
@@ -95,11 +95,11 @@ private:
 						if ((FileType::_Diretory == dirs[i].type) ||
 							(FileType::_File     == dirs[i].type))
 						{
-							console->OutputRAW("%s  ", dirs[i].name);
+							console->Print("%s  ", dirs[i].name);
 						}
 					}
 				}
-				if (size) console->OutputRAW("\r\n");
+				if (size) console->Print("\r\n");
 			}
 
 			delete[] dirs;
@@ -119,7 +119,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: ls [directory]");
+			console->Println("Usage: ls [directory]");
 			return;
 		}
 		ListDirectory((argc == 1) ? console->GetPath() : argv[1]);
@@ -129,7 +129,7 @@ public:
 	/// @brief Cmd list help
 	void Help()
 	{
-		console->Output("cmd ls: list directory");
+		console->Println("cmd ls: list directory");
 	}
 };
 
@@ -166,7 +166,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: touch <filename>");
+			console->Println("Usage: touch <filename>");
 			return;
 		}
 
@@ -179,7 +179,7 @@ public:
 	/// @brief Cmd touch help
 	void Help()
 	{
-		console->Output("cmd touch: create file");
+		console->Println("cmd touch: create file");
 	}
 };
 
@@ -216,7 +216,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: mkdir <dirname>");
+			console->Println("Usage: mkdir <dirname>");
 			return;
 		}
 
@@ -229,7 +229,7 @@ public:
 	/// @brief Cmd mkdir help
 	void Help()
 	{
-		console->Output("cmd mkdir: create directory");
+		console->Println("cmd mkdir: create directory");
 	}
 };
 
@@ -253,7 +253,7 @@ public:
 	{
 		if (argc < 3)
 		{
-			console->Output("Usage: mv <source> <target>");
+			console->Println("Usage: mv <source> <target>");
 			return;
 		}
 
@@ -268,7 +268,7 @@ public:
 	/// @brief Cmd move help
 	void Help()
 	{
-		console->Output("cmd mv: move file or directory");
+		console->Println("cmd mv: move file or directory");
 	}
 };
 
@@ -292,7 +292,7 @@ public:
 	{
 		if (argc < 2)
 		{
-			console->Output("Usage: cp <source> <target>");
+			console->Println("Usage: cp <source> <target>");
 			return;
 		}
 
@@ -307,7 +307,7 @@ public:
 	/// @brief Cmd cp help
 	void Help()
 	{
-		console->Output("cmd cp: copy file or directory");
+		console->Println("cmd cp: copy file or directory");
 	}
 };
 
@@ -331,7 +331,7 @@ public:
 	{
 		if (argc < 2)
 		{
-			console->Output("Usage: rm <file/directory>");
+			console->Println("Usage: rm <file/directory>");
 			return;
 		}
 
@@ -344,7 +344,7 @@ public:
 	/// @brief Cmd remove help
 	void Help()
 	{
-		console->Output("cmd rm: remove file or directory");
+		console->Println("cmd rm: remove file or directory");
 	}
 };
 

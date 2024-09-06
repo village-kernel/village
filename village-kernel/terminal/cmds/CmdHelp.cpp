@@ -32,7 +32,7 @@ public:
 	/// @brief Cmd help help
 	void Help()
 	{
-		console->Output("cmd help: display cmd help");
+		console->Println("cmd help: display cmd help");
 	}
 };
 

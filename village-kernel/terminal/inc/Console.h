@@ -51,8 +51,9 @@ public:
 	void Info(const char* format, ...);
 	void Error(const char* format, ...);
 	void Warn(const char* format, ...);
-	void Output(const char* format, ...);
-	void OutputRAW(const char* format, ...);
+	void Print(const char* format, ...);
+	void Println(const char* format, ...);
+	void Output(const char* data, int size);
 	
 	//Path Methods
 	void SetPath(const char* path);
