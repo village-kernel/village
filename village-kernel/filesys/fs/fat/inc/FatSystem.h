@@ -28,7 +28,6 @@ private:
 	//Directory Methods
 	char* BaseName(const char* path);
 	FatObject* SearchPath(const char* path, int reserve = 0);
-	FatObject* SearchDir(FatObject* fatObj, const char* name);
 	FatObject* CreateDir(const char* path, int attr);
 public:
 	//Methods
