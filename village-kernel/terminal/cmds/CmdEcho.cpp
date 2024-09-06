@@ -52,7 +52,7 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		if (argc < 1)
+		if (argc < 2)
 		{
 			console->Println("Usage: echo <string> [>]|[>>] [path]");
 			return;
