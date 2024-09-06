@@ -335,6 +335,10 @@ if KERNEL
 		bool "Add debug system cmd to terminal support list"
 		default y
 
+	config CMD_ECHO
+		bool "Add echo system cmd to terminal support list"
+		default y
+
 	config CMD_FILESYS
 		bool "Add file system cmd to terminal support list"
 		default y

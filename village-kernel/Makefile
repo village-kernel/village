@@ -79,6 +79,7 @@ objs-y                              += Terminal.o
 objs-$(CONFIG_CMD_ABOUT)            += CmdAbout.o
 objs-$(CONFIG_CMD_CAT)              += CmdCat.o
 objs-$(CONFIG_CMD_DEBUG)            += CmdDebug.o
+objs-$(CONFIG_CMD_ECHO)             += CmdEcho.o
 objs-$(CONFIG_CMD_FILESYS)          += CmdFileSys.o
 objs-$(CONFIG_CMD_HELP)             += CmdHelp.o
 objs-$(CONFIG_CMD_KILL)             += CmdKill.o
