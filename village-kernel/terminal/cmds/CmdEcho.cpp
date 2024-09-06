@@ -35,7 +35,7 @@ private:
 			//Write data
 			if (file.Open(filepath, filemode))
 			{
-				file.Write((char*)data, sizeof(data));
+				file.Write((char*)data, strlen(data));
 				file.Close();
 			}
 
