@@ -12,30 +12,6 @@
 #include "string.h"
 
 
-/// @brief AbsolutePath
-/// @param path 
-/// @return 
-static char* AbsolutePath(Console* console, char* path)
-{
-	char* res = NULL;
-
-	if ('/' != path[0])
-	{
-		res = new char[strlen(console->GetPath()) + strlen(path) + 2]();
-		strcat(res, console->GetPath());
-		if ('/' != res[strlen(console->GetPath()) - 1]) strcat(res, "/");
-		strcat(res, path);
-	}
-	else
-	{
-		res = new char[strlen(path) + 1]();
-		strcat(res, path);
-	}
-
-	return res;
-}
-
-
 /// @brief CmdCd
 class CmdCd : public Cmd
 {
@@ -80,7 +56,7 @@ public:
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		ChangeDirectory(path);
 		delete path;
 	}
@@ -194,7 +170,7 @@ public:
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		CreateFile(path);
 		delete path;
 	}
@@ -244,7 +220,7 @@ public:
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		CreateDir(path);
 		delete path;
 	}
@@ -281,8 +257,8 @@ public:
 			return;
 		}
 
-		char* path1 = AbsolutePath(console, argv[1]);
-		char* path2 = AbsolutePath(console, argv[2]);
+		const char* path1 = console->AbsolutePath(argv[1]);
+		const char* path2 = console->AbsolutePath(argv[2]);
 		Move(path1, path2);
 		delete path1;
 		delete path2;
@@ -320,8 +296,8 @@ public:
 			return;
 		}
 
-		char* path1 = AbsolutePath(console, argv[1]);
-		char* path2 = AbsolutePath(console, argv[2]);
+		const char* path1 = console->AbsolutePath(argv[1]);
+		const char* path2 = console->AbsolutePath(argv[2]);
 		Copy(path1, path2);
 		delete path1;
 		delete path2;
@@ -359,7 +335,7 @@ public:
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		Remove(path);
 		delete path;
 	}
