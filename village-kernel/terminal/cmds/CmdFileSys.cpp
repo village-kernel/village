@@ -122,7 +122,8 @@ public:
 			console->Println("Usage: ls [directory]");
 			return;
 		}
-		ListDirectory((argc == 1) ? console->GetPath() : argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
+		ListDirectory((argc == 1) ? console->GetPath() : path);
 	}
 
 
