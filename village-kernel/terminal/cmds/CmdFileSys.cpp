@@ -245,6 +245,11 @@ private:
 	{
 		FileSysOpt fileSysOpt;
 		fileSysOpt.Move(source, target);
+
+		if (!fileSysOpt.Move(source, target))
+		{
+			console->Error("move %s to %s failed!", source, target);
+		}
 	}
 public:
 	/// @brief Cmd move execute
@@ -283,7 +288,11 @@ private:
 	void Copy(const char* source, const char* target)
 	{
 		FileSysOpt fileSysOpt;
-		fileSysOpt.Copy(source, target);
+
+		if (!fileSysOpt.Copy(source, target))
+		{
+			console->Error("copy %s to %s failed!", source, target);
+		}
 	}
 public:
 	/// @brief Cmd copy execute
@@ -322,7 +331,11 @@ private:
 	void Remove(const char* name)
 	{
 		FileSysOpt fileSysOpt;
-		fileSysOpt.Remove(name);
+
+		if (!fileSysOpt.Remove(name))
+		{
+			console->Error("Remove %s failed!", name);
+		}
 	}
 public:
 	/// @brief Cmd remove execute
