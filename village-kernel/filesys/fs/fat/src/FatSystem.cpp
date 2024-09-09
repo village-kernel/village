@@ -164,6 +164,7 @@ int FatVolume::Open(const char* name, int mode)
 
 	if (NULL != fatObj)
 	{
+		fatObj->SetOpenMode(mode);
 		return fatObjs.Add(fatObj);
 	}
 
@@ -183,15 +184,27 @@ int FatVolume::Write(int fd, char* data, int size, int offset)
 
 	if (NULL != fatObj)
 	{
-		uint32_t fileSize = fatObj->GetFileSize() + size;
-		uint32_t fstClust = fatObj->GetFirstCluster();
-		uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
-		uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
-		uint32_t allocSize = clusSize * secPerClust * bytesPerSec;
+		uint32_t dataSize  = 0;
 
-		char* allocBuff = (char*)new char[allocSize]();
-		
-		memcpy((void*)allocBuff, (const void*)(data + offset), size);
+		if ((fatObj->GetOpenMode() & FileMode::_Write) == FileMode::_Write)
+		{
+			dataSize = 0;
+		}
+		else if ((fatObj->GetOpenMode() & FileMode::_OpenAppend) == FileMode::_OpenAppend)
+		{
+			dataSize = fatObj->GetFileSize();
+		}
+
+		uint32_t fileSize  = dataSize + size;
+		uint32_t fstClust  = fatObj->GetFirstCluster();
+		uint32_t secSize   = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
+		uint32_t clusSize  = (secSize  + (secPerClust - 1)) / secPerClust;
+		uint32_t allocSize = (clusSize * secPerClust * bytesPerSec);
+		char*    allocBuff = (char*)new char[allocSize]();
+
+		if (dataSize) Read(fd, allocBuff, dataSize, offset);
+
+		memcpy((void*)(allocBuff + dataSize), (const void*)(data + offset), size);
 
 		if (clusSize == fatDisk.WriteCluster(allocBuff, fstClust, clusSize))
 		{
@@ -220,13 +233,12 @@ int FatVolume::Read(int fd, char* data, int size, int offset)
 
 	if (NULL != fatObj)
 	{
-		uint32_t fileSize = fatObj->GetFileSize();
-		uint32_t fstClust = fatObj->GetFirstCluster();
-		uint32_t secSize = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
-		uint32_t clusSize = (secSize + (secPerClust - 1)) / secPerClust;
+		uint32_t fileSize  = fatObj->GetFileSize();
+		uint32_t fstClust  = fatObj->GetFirstCluster();
+		uint32_t secSize   = (fileSize + (bytesPerSec - 1)) / bytesPerSec;
+		uint32_t clusSize  = (secSize  + (secPerClust - 1)) / secPerClust;
 		uint32_t allocSize = clusSize * secPerClust * bytesPerSec;
-
-		char* allocBuff = (char*)new char[allocSize]();
+		char*    allocBuff = (char*)new char[allocSize]();
 		
 		if (clusSize == fatDisk.ReadCluster(allocBuff, fstClust, clusSize))
 		{
@@ -267,7 +279,6 @@ void FatVolume::Close(int fd)
 	if (NULL != fatObj)
 	{
 		fatObjs.Remove(fatObj, fd);
-
 		delete fatObj;
 	}
 }
@@ -291,6 +302,8 @@ int FatVolume::OpenDir(const char* path, int mode)
 
 	if (NULL != fatObj)
 	{
+		fatObj->SetOpenMode(mode);
+		fatObj->SetFolder(new FatFolder(fatDisk, fatObj));
 		return fatObjs.Add(fatObj);
 	}
 
@@ -312,7 +325,7 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 	{
 		int index = 0;
 
-		List<FatObject*> fatObjs = FatFolder(fatDisk, fatObj).GetLists();
+		List<FatObject*> fatObjs = fatObj->GetFolder()->GetLists();
 
 		for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
 		{
@@ -343,17 +356,14 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 /// @return 
 int FatVolume::SizeDir(int fd)
 {
-	int size = 0;
-
 	FatObject* fatObj = fatObjs.GetItem(fd);
 
 	if (NULL != fatObj)
 	{
-		FatFolder folder(fatDisk, fatObj);
-		size = folder.GetLists().GetSize();
+		return fatObj->GetFolder()->GetLists().GetSize();
 	}
 
-	return size;
+	return 0;
 }
 
 
@@ -366,6 +376,8 @@ void FatVolume::CloseDir(int fd)
 	if (NULL != fatObj)
 	{
 		fatObjs.Remove(fatObj, fd);
+		fatObj->GetFolder()->Close();
+		delete fatObj->GetFolder();
 		delete fatObj;
 	}
 }

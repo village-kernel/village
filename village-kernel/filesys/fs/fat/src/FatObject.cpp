@@ -79,6 +79,7 @@ FatObject::FatObject()
 	:index(0),
 	clust(0),
 	sector(0),
+	mode(0),
 	lfe(NULL),
 	sfe(NULL),
 	ufe(NULL)
@@ -193,7 +194,7 @@ void FatObject::SetupDot(FatObject* fatObj)
 	Setup(new FatEntry());
 	SetRawName(".");
 	SetFirstCluster(fatObj->GetFirstCluster());
-	SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
+	SetAttribute(_FAT_ATTR_DIRECTORY);
 }
 
 
@@ -204,7 +205,7 @@ void FatObject::SetupDotDot(FatObject* fatObj)
 	Setup(new FatEntry());
 	SetRawName("..");
 	SetFirstCluster(fatObj->GetFirstCluster());
-	SetAttribute(_FAT_ATTR_DIRECTORY | _FAT_ATTR_HIDDEN);
+	SetAttribute(_FAT_ATTR_DIRECTORY);
 }
 
 
@@ -787,4 +788,36 @@ void FatObject::SetFileSize(uint32_t size)
 uint32_t FatObject::GetFileSize()
 {
 	return sfe->fileSize;
+}
+
+
+/// @brief FatObject set open mode
+/// @param mode 
+void FatObject::SetOpenMode(int mode)
+{
+	this->mode = mode;
+}
+
+
+/// @brief FatObject get open mode
+/// @return 
+int FatObject::GetOpenMode()
+{
+	return mode;
+}
+
+
+/// @brief FatObject set folder
+/// @param floder 
+void FatObject::SetFolder(FatFolder* folder)
+{
+	this->folder = folder;
+}
+
+
+/// @brief FatObject get folder
+/// @return 
+FatFolder* FatObject::GetFolder()
+{
+	return folder;
 }
