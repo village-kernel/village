@@ -103,6 +103,10 @@ union FatEntry
 } __attribute__((packed));
 
 
+/// @brief FatFolder
+class FatFolder;
+
+
 /// @brief FatObject
 class FatObject
 {
@@ -117,11 +121,13 @@ private:
 	uint32_t index;
 	uint32_t clust;
 	uint32_t sector;
+	int      mode;
 
 	//Members
 	FatLongEntry*   lfe;
 	FatShortEntry*  sfe;
 	FatEntry*       ufe;
+	FatFolder*      folder;
 
 	//Methods
 	uint8_t ChkSum(const char* name);
@@ -139,7 +145,7 @@ public:
 
 	void SetupDot(FatObject* fatObj);
 	void SetupDotDot(FatObject* fatObj);
-	
+
 	void SetOjectFree();
 
 	char* GetObjectName();
@@ -181,6 +187,10 @@ public:
 	uint32_t GetFirstCluster();
 	void SetFileSize(uint32_t size);
 	uint32_t GetFileSize();
+	void SetOpenMode(int mode);
+	int GetOpenMode();
+	void SetFolder(FatFolder* folder);
+	FatFolder* GetFolder();
 };
 
 #endif //!__FAT_OBJECT_H__

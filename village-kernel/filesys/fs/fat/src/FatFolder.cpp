@@ -247,7 +247,7 @@ bool FatFolder::CheckDirName(FatObject* fatObj)
 /// @param fatObj 
 void FatFolder::Open(FatObject* fatObj)
 {
-	this->parent  = fatObj;
+	this->parent = fatObj;
 
 	buffer = (FatEntry*)new char[fatInfo.bytesPerSec]();
 
