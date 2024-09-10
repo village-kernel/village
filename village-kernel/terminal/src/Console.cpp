@@ -75,13 +75,6 @@ void Console::ExecuteCmd(CmdMsg msg)
 {
 	msgMgr.Write((uint8_t*)"\r\n");
 
-	//Skip null command
-	if (0 == strcmp("null", (const char*)msg.cmd))
-	{
-		ShowUserAndPath();
-		return;
-	}
-
 	//Gets all terminal commands
 	List<Cmd*> cmds = kernel->terminal.GetCmds();
 

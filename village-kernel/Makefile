@@ -85,6 +85,7 @@ objs-$(CONFIG_CMD_HELP)             += CmdHelp.o
 objs-$(CONFIG_CMD_KILL)             += CmdKill.o
 objs-$(CONFIG_CMD_MEM)              += CmdMem.o
 objs-$(CONFIG_CMD_MOD)              += CmdMod.o
+objs-$(CONFIG_CMD_NULL)             += CmdNull.o
 objs-$(CONFIG_CMD_POWER)            += CmdPower.o
 objs-$(CONFIG_CMD_PROCESS)          += CmdProcess.o
 objs-$(CONFIG_CMD_RUN)              += CmdRun.o
