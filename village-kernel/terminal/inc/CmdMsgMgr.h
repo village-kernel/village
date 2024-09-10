@@ -40,16 +40,19 @@ private:
 	static const uint16_t arg_buffer_size = 256;
 
 	//Members
-	CmdMsg rxMsg;
+	bool      hasMessage;
+	InputMode inputMode;
+	DevStream transceiver;
+
+	//Members
+	CmdMsg   rxMsg;
 	uint16_t txBufPos;
 	uint16_t rxBufPos;
-	uint8_t history;
-	uint8_t cmdBuffer[cmd_buffer_size] = { 0 };
-	uint8_t txBuffer[arg_buffer_size] = { 0 };
-	uint8_t rxBuffer[arg_buffer_size] = { 0 };
+	uint8_t  history;
+	uint8_t  cmdBuffer[cmd_buffer_size] = { 0 };
+	uint8_t  txBuffer[arg_buffer_size] = { 0 };
+	uint8_t  rxBuffer[arg_buffer_size] = { 0 };
 	uint8_t* cmdHistory[cmd_history_size] = { NULL };
-	DevStream transceiver;
-	InputMode inputMode;
 
 	//Methods
 	void Sending();
@@ -57,6 +60,12 @@ private:
 	void RecordHistory();
 	void RestoredHistory();
 	bool Receiving();
+	bool InsertMode(uint8_t byte);
+	void EditMode(uint8_t byte);
+	void ANSIMode(uint8_t byte);
+	void DCSMode(uint8_t byte);
+	void CSIMode(uint8_t byte);
+	void OSCMode(uint8_t byte);
 public:
 	//Methods
 	CmdMsgMgr();
