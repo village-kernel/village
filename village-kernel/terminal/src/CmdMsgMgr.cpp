@@ -276,8 +276,8 @@ bool CmdMsgMgr::Receiving()
 					//ASCII CR
 					else if (0x0d == byte)
 					{
-						//Check rxBuffer length
-						if (strlen((const char*)rxBuffer) <= 0)
+						//Check is null cmd 
+						if (rxBufPos <= 0)
 						{
 							strcpy((char*)cmdBuffer, "null");
 							return true;
