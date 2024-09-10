@@ -360,6 +360,10 @@ if KERNEL
 		bool "Add insmod and rmmod cmd to terminal support list"
 		default y
 
+	config CMD_NULL
+		bool "Add null cmd to terminal support list"
+		default y
+
 	config CMD_POWER
 		bool "Add power cmd to terminal support list"
 		default y
