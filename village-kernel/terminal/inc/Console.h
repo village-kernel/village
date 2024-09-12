@@ -22,6 +22,7 @@ private:
 	//Static constants
 	static const uint16_t buf_size = 256;
 	static const uint16_t user_size = 50;
+	static const uint16_t mach_size = 50;
 	static const uint16_t path_size = 100;
 
 	//Members
@@ -30,6 +31,7 @@ private:
 	CmdMsgMgr  msgMgr;
 	char       data[buf_size];
 	char       user[user_size];
+	char       mach[mach_size];
 	char       path[path_size];
 	
 	//Methods

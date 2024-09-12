@@ -40,7 +40,10 @@ Console::~Console()
 void Console::Setup(const char* driver)
 {
 	//Set default user
-	strcpy(user, "root@village");
+	strcpy(user, "root");
+
+	//Set default machine
+	strcpy(mach, "village");
 
 	//Set default path
 	strcpy(path, "/");
@@ -129,12 +132,7 @@ void Console::ShowWelcomeMsg()
 /// @brief Console show user and path
 void Console::ShowUserAndPath()
 {
-	mutex.Lock();
-	msgMgr.Write((uint8_t*)user);
-	msgMgr.Write((uint8_t*)" ");
-	msgMgr.Write((uint8_t*)path);
-	msgMgr.Write((uint8_t*)" # ");
-	mutex.Unlock();
+	Print("%s@%s %s # ", user, mach, path);
 }
 
 
