@@ -42,13 +42,13 @@ bool FatEntry::IsValid()
 {
 	if (lfe.ord != dir_free_flag && lfe.ord >= dir_valid_flag)
 	{
-		if ((sfe.attr & (_FAT_ATTR_DIRECTORY | _FAT_ATTR_VOLUME_ID)) == _FAT_ATTR_FILE)
+		if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
 			return true;
-		else if ((sfe.attr & (_FAT_ATTR_DIRECTORY | _FAT_ATTR_VOLUME_ID)) == _FAT_ATTR_DIRECTORY)
+		else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
 			return true;
-		else if ((sfe.attr & (_FAT_ATTR_DIRECTORY | _FAT_ATTR_VOLUME_ID)) == _FAT_ATTR_VOLUME_ID)
+		else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
 			return true;
-		else if ((sfe.attr & _FAT_ATTR_LONG_NAME_MASK) == _FAT_ATTR_LONG_NAME)
+		else if ((sfe.attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName)
 			return true;
 	}
 	return false;
@@ -67,7 +67,7 @@ void FatEntry::SetStoreSize(uint8_t size)
 /// @return 
 uint8_t FatEntry::GetStoreSize()
 {
-	if ((lfe.attr & _FAT_ATTR_LONG_NAME_MASK) == _FAT_ATTR_LONG_NAME)
+	if ((lfe.attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName)
 		return (lfe.ord - dir_seq_flag + 1);
 	else
 		return 1;
@@ -144,7 +144,7 @@ void FatObject::Setup(const char* name)
 	//Set long name
 	if (isNameLoss)
 	{
-		sfe->NTRes |= _FAT_NS_LOSS;
+		sfe->NTRes |= FatDefs::_NsLoss;
 		SetLongName(name);
 	}
 }
@@ -194,7 +194,7 @@ void FatObject::SetupDot(FatObject* fatObj)
 	Setup(new FatEntry());
 	SetRawName(".");
 	SetFirstCluster(fatObj->GetFirstCluster());
-	SetAttribute(_FAT_ATTR_DIRECTORY);
+	SetAttribute(FatDefs::_AttrDirectory);
 }
 
 
@@ -205,7 +205,7 @@ void FatObject::SetupDotDot(FatObject* fatObj)
 	Setup(new FatEntry());
 	SetRawName("..");
 	SetFirstCluster(fatObj->GetFirstCluster());
-	SetAttribute(_FAT_ATTR_DIRECTORY);
+	SetAttribute(FatDefs::_AttrDirectory);
 }
 
 
@@ -230,7 +230,7 @@ void FatObject::SetOjectFree()
 /// @return 
 bool FatObject::IsLongName()
 {
-	return ((lfe->attr & _FAT_ATTR_LONG_NAME_MASK) == _FAT_ATTR_LONG_NAME);
+	return ((lfe->attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName);
 }
 
 
@@ -246,11 +246,11 @@ char* FatObject::GetObjectName()
 /// @return type
 FileType FatObject::GetObjectType()
 {
-	if ((sfe->attr & (_FAT_ATTR_DIRECTORY | _FAT_ATTR_VOLUME_ID)) == _FAT_ATTR_FILE)
+	if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
 		return FileType::_File;
-	else if ((sfe->attr & (_FAT_ATTR_DIRECTORY | _FAT_ATTR_VOLUME_ID)) == _FAT_ATTR_DIRECTORY)
+	else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
 		return FileType::_Diretory;
-	else if ((sfe->attr & (_FAT_ATTR_DIRECTORY | _FAT_ATTR_VOLUME_ID)) == _FAT_ATTR_VOLUME_ID)
+	else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
 		return FileType::_Volume;
 	else
 		return FileType::_Unknown;
@@ -261,7 +261,7 @@ FileType FatObject::GetObjectType()
 /// @return attr
 FileAttr FatObject::GetObjectAttr()
 {
-	if ((sfe->attr & _FAT_ATTR_HIDDEN) == _FAT_ATTR_HIDDEN)
+	if ((sfe->attr & FatDefs::_AttrHidden) == FatDefs::_AttrHidden)
 		return FileAttr::_Hidden;
 	else
 		return FileAttr::_Visible;
@@ -463,8 +463,8 @@ void FatObject::SetShortName(const char* name)
 	}
 
 	//Set NTRes
-	if (isBodyLowedCase) sfe->NTRes |= _FAT_NS_BODY;
-	if (isExtLowedCase)  sfe->NTRes |= _FAT_NS_EXT;
+	if (isBodyLowedCase) sfe->NTRes |= FatDefs::_NsBody;
+	if (isExtLowedCase)  sfe->NTRes |= FatDefs::_NsExt;
 }
 
 
@@ -475,8 +475,8 @@ char* FatObject::GetShortName()
 	uint8_t pos = 0;
 	char*   name = sfe->name;
 	char*   sfn = new char[short_name_size + 2]();
-	bool    isBodyLowedCase = (sfe->NTRes & _FAT_NS_BODY) == _FAT_NS_BODY;
-	bool    isExtLowedCase  = (sfe->NTRes & _FAT_NS_EXT ) == _FAT_NS_EXT;
+	bool    isBodyLowedCase = (sfe->NTRes & FatDefs::_NsBody) == FatDefs::_NsBody;
+	bool    isExtLowedCase  = (sfe->NTRes & FatDefs::_NsExt ) == FatDefs::_NsExt;
 	
 	//8.3 name body
 	for (uint8_t i = 0; i < 8; i++)
@@ -527,7 +527,7 @@ void FatObject::SetLongName(const char* name)
 	while (n--)
 	{
 		if (n) lfe[n].ord = size - n;
-		lfe[n].attr = _FAT_ATTR_LONG_NAME;
+		lfe[n].attr = FatDefs::_AttrLongName;
 		lfe[n].chksum = chksum;
 		lfe[n].Fill();
 
