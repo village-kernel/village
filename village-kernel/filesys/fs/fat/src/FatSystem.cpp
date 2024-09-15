@@ -72,7 +72,7 @@ FatObject* FatVolume::SearchPath(const char* path, int reserve)
 
 	//Create an directory fat object
 	FatObject* fatObj = new FatObject(new FatEntry());
-	fatObj->SetAttribute(FatDirAttr::_FAT_ATTR_DIRECTORY);
+	fatObj->SetAttribute(FatDefs::_AttrDirectory);
 
 	//Search directory
 	for (int8_t i = 0; i < deep; i++)
@@ -158,7 +158,7 @@ int FatVolume::Open(const char* name, int mode)
 	{
 		if ((mode & FileMode::_CreateNew) == FileMode::_CreateNew)
 		{
-			fatObj = CreatePath(name, FatDirAttr::_FAT_ATTR_FILE);
+			fatObj = CreatePath(name, FatDefs::_AttrFile);
 		}
 	}
 
@@ -296,7 +296,7 @@ int FatVolume::OpenDir(const char* path, int mode)
 	{
 		if ((mode & FileMode::_CreateNew) == FileMode::_CreateNew)
 		{
-			fatObj = CreatePath(path, FatDirAttr::_FAT_ATTR_DIRECTORY);
+			fatObj = CreatePath(path, FatDefs::_AttrDirectory);
 		}
 	}
 

@@ -12,33 +12,38 @@
 #include "FileDefs.h"
 
 
-/// @brief FatDirAttr
-enum FatDirAttr
+/// @brief FatDefs
+class FatDefs
 {
-	_FAT_ATTR_FILE           = 0x00,
-	_FAT_ATTR_READ_ONLY      = 0x01,
-	_FAT_ATTR_HIDDEN         = 0x02,
-	_FAT_ATTR_SYSTEM         = 0x04,
-	_FAT_ATTR_VOLUME_ID      = 0x08,
-	_FAT_ATTR_DIRECTORY      = 0x10,
-	_FAT_ATTR_ARCHIVE        = 0x20,
-	_FAT_ATTR_LONG_NAME      = _FAT_ATTR_READ_ONLY | _FAT_ATTR_HIDDEN | _FAT_ATTR_SYSTEM | _FAT_ATTR_VOLUME_ID,
-	_FAT_ATTR_LONG_NAME_MASK = _FAT_ATTR_READ_ONLY | _FAT_ATTR_HIDDEN | _FAT_ATTR_SYSTEM | _FAT_ATTR_VOLUME_ID | _FAT_ATTR_DIRECTORY | _FAT_ATTR_ARCHIVE,
-};
+public:
+	/// @brief EntryAttr
+	enum EntryAttr
+	{
+		_AttrFile           = 0x00,
+		_AttrReadOnly       = 0x01,
+		_AttrHidden         = 0x02,
+		_AttrSystem         = 0x04,
+		_AttrVolumeID       = 0x08,
+		_AttrDirectory      = 0x10,
+		_AttrArchive        = 0x20,
+		_AttrLongName       = _AttrReadOnly | _AttrHidden | _AttrSystem | _AttrVolumeID,
+		_AttrLongNameMask   = _AttrReadOnly | _AttrHidden | _AttrSystem | _AttrVolumeID | _AttrDirectory | _AttrArchive,
+	};
 
 
-/// @brief FatNSFlag
-enum FatNSFlag
-{
-	_FAT_NS_NONE         = 0x00,
-	_FAT_NS_LOSS         = 0x01,   /* Out of 8.3 format */
-	_FAT_NS_LFN          = 0x02,   /* Force to create LFN entry */
-	_FAT_NS_LAST         = 0x04,   /* Last segment */
-	_FAT_NS_BODY         = 0x08,   /* Lower case flag (body) */
-	_FAT_NS_EXT          = 0x10,   /* Lower case flag (ext) */
-	_FAT_NS_DOT          = 0x20,   /* Dot entry */
-	_FAT_NS_NOLFN        = 0x40,   /* Do not find LFN */
-	_FAT_NS_NONAME       = 0x80,   /* Not followed */
+	/// @brief NSFlag
+	enum NSFlag
+	{
+		_NsNoe          = 0x00,
+		_NsLoss         = 0x01,   /* Out of 8.3 format */
+		_NsLfn          = 0x02,   /* Force to create LFN entry */
+		_NsLast         = 0x04,   /* Last segment */
+		_NsBody         = 0x08,   /* Lower case flag (body) */
+		_NsExt          = 0x10,   /* Lower case flag (ext) */
+		_NsDot          = 0x20,   /* Dot entry */
+		_NsNolfn        = 0x40,   /* Do not find LFN */
+		_NsNoname       = 0x80,   /* Not followed */
+	};
 };
 
 
