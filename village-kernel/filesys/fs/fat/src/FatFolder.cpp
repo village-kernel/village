@@ -318,25 +318,17 @@ FatObject* FatFolder::Create(const char* name, int attr)
 		}
 	}
 
-	//Get store size
-	uint32_t size = child->GetStoreSize();
-
-	//Put to disk
-	if (Find(size))
+	//Stored child object
+	if (1 == Write(child, 1))
 	{
-		child->SetEntryLocInfo(index, clust, sector);
-		
-		if (Push(child->GetEntries(), size) == size)
+		if (FatDefs::_AttrDirectory == attr)
 		{
-			if (FileType::_Diretory == child->GetObjectType())
-			{
-				FatObject objs[2];
-				objs[0].SetupDot(child);
-				objs[1].SetupDotDot(parent);
-				FatFolder(fatDisk, child).Write(objs, 2);
-			}
-			return child;
+			FatObject objs[2];
+			objs[0].SetupDot(child);
+			objs[1].SetupDotDot(parent);
+			FatFolder(fatDisk, child).Write(objs, 2);
 		}
+		return child;
 	}
 
 	return NULL;
@@ -353,9 +345,14 @@ uint32_t FatFolder::Write(FatObject* objs, uint32_t size)
 	{
 		uint32_t storeSize = objs[i].GetStoreSize();
 
-		if (Find(storeSize) && Push(objs[i].GetEntries(), storeSize) == storeSize)
+		if (Find(storeSize))
 		{
-			fatObjs.Add(&objs[i]);
+			objs[i].SetEntryLocInfo(index, clust, sector);
+
+			if (storeSize == Push(objs[i].GetEntries(), storeSize))
+			{
+				fatObjs.Add(&objs[i]);
+			}
 		}
 		else return i;
 	}
