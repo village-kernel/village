@@ -147,6 +147,14 @@ bool FatFolder::IsReadEnd()
 }
 
 
+/// @brief Iterator item
+/// @return 
+FatEntry& FatFolder::Item()
+{
+	return buffer[entloc.index];
+}
+
+
 /// @brief Find free space
 /// @param size 
 /// @return res
@@ -158,7 +166,7 @@ bool FatFolder::Find(uint32_t size)
 
 	for (ReadBegin(); !IsReadEnd(); ReadNext())
 	{
-		if (!buffer[entloc.index].IsValid())
+		if (!Item().IsValid())
 		{
 			if (true == isStart)
 			{
@@ -246,9 +254,9 @@ void FatFolder::Open(FatObject* fatObj)
 		{
 			for (ReadBegin(); !IsReadEnd(); ReadNext())
 			{
-				if (buffer[entloc.index].IsValid())
+				if (Item().IsValid())
 				{
-					uint8_t size = buffer[entloc.index].GetStoreSize();
+					uint8_t size = Item().GetStoreSize();
 					FatEntry* entries = new FatEntry[size]();
 					FatObject* fatObj = new FatObject(entries);
 					fatObj->SetFatEntryLoc(entloc);

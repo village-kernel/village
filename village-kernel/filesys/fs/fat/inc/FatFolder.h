@@ -39,6 +39,7 @@ private:
 	bool ReadNext();
 	bool WriteNext();
 	bool IsReadEnd();
+	FatEntry& Item();
 	
 	//IO Methods
 	bool Find(uint32_t size);
