@@ -11,13 +11,10 @@
 FatFolder::FatFolder(FatDiskio& fatDisk, FatObject* fatObj)
 	:fatDisk(fatDisk),
 	fatInfo(fatDisk.GetInfo()),
-	index(0),
-	clust(0),
-	sector(0),
 	buffer(NULL),
 	parent(NULL)
 {
-	if (NULL != fatObj) Open(fatObj);
+	Open(fatObj);
 }
 
 
@@ -39,19 +36,19 @@ void FatFolder::CalcFirstSector()
 		{
 			if (FatDiskio::_FAT16 == fatInfo.fatType)
 			{
-				clust  = 0;
-				sector = fatInfo.firstRootSector;
+				entloc.clust  = 0;
+				entloc.sector = fatInfo.firstRootSector;
 			}
 			else if (FatDiskio::_FAT32 == fatInfo.fatType)
 			{
-				clust  = fatInfo.rootClust;
-				sector = fatDisk.ClusterToSector(clust);
+				entloc.clust  = fatInfo.rootClust;
+				entloc.sector = fatDisk.ClusterToSector(entloc.clust);
 			}
 		}
 		else
 		{
-			clust  = parent->GetFirstCluster();
-			sector = fatDisk.ClusterToSector(clust);
+			entloc.clust  = parent->GetFirstCluster();
+			entloc.sector = fatDisk.ClusterToSector(entloc.clust);
 		}
 	}
 }
@@ -63,18 +60,18 @@ void FatFolder::CalcFirstSector()
 void FatFolder::CalcNextSector()
 {
 	//FAT16 root dir
-	if (clust < 2)
+	if (entloc.clust < 2)
 	{
 		uint32_t dirEndedSec = fatInfo.firstRootSector + fatInfo.countOfRootSecs;
-		sector = (++sector < dirEndedSec) ? sector : 0;
+		entloc.sector = (++entloc.sector < dirEndedSec) ? entloc.sector : 0;
 	}
 	//FAT data dir
 	else
 	{ 
-		if ((++sector - fatDisk.ClusterToSector(clust)) >= fatInfo.secPerClust)
+		if ((++entloc.sector - fatDisk.ClusterToSector(entloc.clust)) >= fatInfo.secPerClust)
 		{
-			clust = fatDisk.GetNextCluster(clust);
-			sector = (0 != clust) ? fatDisk.ClusterToSector(clust) : 0;
+			entloc.clust = fatDisk.GetNextCluster(entloc.clust);
+			entloc.sector = (0 != entloc.clust) ? fatDisk.ClusterToSector(entloc.clust) : 0;
 		}
 	}
 }
@@ -83,23 +80,21 @@ void FatFolder::CalcNextSector()
 /// @brief Read union entries
 void FatFolder::ReadEntries()
 {
-	fatDisk.ReadSector((char*)buffer, sector);
+	fatDisk.ReadSector((char*)buffer, entloc.sector);
 }
 
 
 /// @brief Write union entries
 void FatFolder::WriteEntries()
 {
-	fatDisk.WriteSector((char*)buffer, sector);
+	fatDisk.WriteSector((char*)buffer, entloc.sector);
 }
 
 
 /// @brief Iterator begin
 bool FatFolder::ReadBegin()
 {
-	index  = 0;
-	clust  = 0;
-	sector = 0;
+	entloc = FatEntryLoc();
 
 	CalcFirstSector();
 	ReadEntries();
@@ -111,13 +106,13 @@ bool FatFolder::ReadBegin()
 /// @brief Iterator next
 bool FatFolder::ReadNext()
 {
-	if (++index >= fatInfo.entriesPerSec)
+	if (++entloc.index >= fatInfo.entriesPerSec)
 	{
 		CalcNextSector();
-		if (0 != sector)
+		if (0 != entloc.sector)
 		{
 			ReadEntries();
-			index = 0;
+			entloc.index = 0;
 		}
 		else return false;
 	}
@@ -128,15 +123,15 @@ bool FatFolder::ReadNext()
 /// @brief Iterator next
 bool FatFolder::WriteNext()
 {
-	if (++index >= fatInfo.entriesPerSec)
+	if (++entloc.index >= fatInfo.entriesPerSec)
 	{
 		WriteEntries();
 
 		CalcNextSector();
-		if (0 != sector)
+		if (0 != entloc.sector)
 		{
 			ReadEntries();
-			index = 0;
+			entloc.index = 0;
 		}
 		else return false;
 	}
@@ -148,7 +143,7 @@ bool FatFolder::WriteNext()
 /// @return res
 bool FatFolder::IsReadEnd()
 {
-	return 0 == sector;
+	return 0 == entloc.sector;
 }
 
 
@@ -157,35 +152,29 @@ bool FatFolder::IsReadEnd()
 /// @return res
 bool FatFolder::Find(uint32_t size)
 {
-	bool      isBackup  = true;
-	uint32_t  bakIndex  = 0;
-	uint32_t  bakClust  = 0;
-	uint32_t  bakSector = 0;
-	uint32_t  freeCount = 0;
+	bool        isStart = true;
+	uint32_t    freeCnt = 0;
+	FatEntryLoc backup;
 
 	for (ReadBegin(); !IsReadEnd(); ReadNext())
 	{
-		if (!buffer[index].IsValid())
+		if (!buffer[entloc.index].IsValid())
 		{
-			if (true == isBackup)
+			if (true == isStart)
 			{
-				isBackup  = false;
-				bakIndex  = index;
-				bakClust  = clust;
-				bakSector = sector;
+				isStart = false;
+				backup = entloc;
 			}
-			if (++freeCount >= size)
+			if (++freeCnt >= size)
 			{
-				index  = bakIndex;
-				clust  = bakClust;
-				sector = bakSector;
+				entloc = backup;
 				return true;
 			}
 		}
 		else
 		{
-			isBackup  = true;
-			freeCount = 0;
+			isStart = true;
+			freeCnt = 0;
 		}
 	}
 
@@ -201,7 +190,7 @@ uint32_t FatFolder::Pop(FatEntry* pop, uint32_t size)
 {
 	for (uint32_t i = 0; i < size; i++)
 	{
-		pop[i] = buffer[index];
+		pop[i] = buffer[entloc.index];
 	
 		if ((i < size - 1) && !ReadNext()) return i;
 	}
@@ -219,7 +208,7 @@ uint32_t FatFolder::Push(FatEntry* push, uint32_t size)
 
 	for (uint32_t i = 0; i < size; i++)
 	{
-		buffer[index] = push[i];
+		buffer[entloc.index] = push[i];
 
 		if ((i < size - 1) && !WriteNext()) return i;
 	}
@@ -257,12 +246,12 @@ void FatFolder::Open(FatObject* fatObj)
 		{
 			for (ReadBegin(); !IsReadEnd(); ReadNext())
 			{
-				if (buffer[index].IsValid())
+				if (buffer[entloc.index].IsValid())
 				{
-					uint8_t size = buffer[index].GetStoreSize();
+					uint8_t size = buffer[entloc.index].GetStoreSize();
 					FatEntry* entries = new FatEntry[size]();
 					FatObject* fatObj = new FatObject(entries);
-					fatObj->SetEntryLocInfo(index, clust, sector);
+					fatObj->SetFatEntryLoc(entloc);
 
 					if (Pop(entries, size) == size)
 					{
@@ -347,7 +336,7 @@ uint32_t FatFolder::Write(FatObject* objs, uint32_t size)
 
 		if (Find(storeSize))
 		{
-			objs[i].SetEntryLocInfo(index, clust, sector);
+			objs[i].SetFatEntryLoc(entloc);
 
 			if (storeSize == Push(objs[i].GetEntries(), storeSize))
 			{
@@ -380,24 +369,24 @@ uint32_t FatFolder::Read(FatObject* objs, uint32_t size)
 
 
 /// @brief Remove
-void FatFolder::Remove(FatObject* fatObjs)
+void FatFolder::Remove(FatObject* fatObj)
 {
-	if (NULL != fatObjs)
+	if (NULL != fatObj)
 	{
-		fatObjs->SetOjectFree();
-		fatObjs->GetEntryLocInfo(index, clust, sector);
-		Push(fatObjs->GetEntries(), fatObjs->GetStoreSize());
+		fatObj->SetOjectFree();
+		entloc = fatObj->GetFatEntryLoc();
+		Push(fatObj->GetEntries(), fatObj->GetStoreSize());
 	}
 }
 
 
 /// @brief Update
-void FatFolder::Update(FatObject* fatObjs)
+void FatFolder::Update(FatObject* fatObj)
 {
-	if (NULL != fatObjs)
+	if (NULL != fatObj)
 	{
-		fatObjs->GetEntryLocInfo(index, clust, sector);
-		Push(fatObjs->GetEntries(), fatObjs->GetStoreSize());
+		entloc = fatObj->GetFatEntryLoc();
+		Push(fatObj->GetEntries(), fatObj->GetStoreSize());
 	}
 }
 

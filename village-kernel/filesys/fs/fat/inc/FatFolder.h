@@ -21,9 +21,7 @@ private:
 	FatDiskio::Info&  fatInfo;
 
 	//Dirent Members
-	uint32_t          index;
-	uint32_t          clust;
-	uint32_t          sector;
+	FatEntryLoc       entloc;
 	FatEntry*         buffer;
 	FatObject*        parent;
 
@@ -56,8 +54,8 @@ public:
 	FatObject* Create(const char* name, int attr);
 	uint32_t Write(FatObject* fatObjs, uint32_t size);
 	uint32_t Read(FatObject* fatObjs, uint32_t size);
-	void Remove(FatObject* fatObjs);
-	void Update(FatObject* fatObjs);
+	void Remove(FatObject* fatObj);
+	void Update(FatObject* fatObj);
 	void Close();
 
 	List<FatObject*> GetLists();
