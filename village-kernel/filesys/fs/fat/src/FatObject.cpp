@@ -7,6 +7,15 @@
 #include "FatObject.h"
 
 
+/// @brief FatEntryLoc constructor
+FatEntryLoc::FatEntryLoc()
+	:index(0),
+	clust(0),
+	sector(0)
+{
+}
+
+
 /// @brief LongEntry constructor
 FatLongEntry::FatLongEntry()
 {
@@ -76,10 +85,8 @@ uint8_t FatEntry::GetStoreSize()
 
 /// @brief FatObject Constructor
 FatObject::FatObject()
-	:index(0),
-	clust(0),
-	sector(0),
-	mode(0),
+	:mode(0),
+	folder(NULL),
 	lfe(NULL),
 	sfe(NULL),
 	ufe(NULL)
@@ -129,12 +136,12 @@ void FatObject::Setup(const char* name)
 	while ('.' != name[--dotpos] && dotpos);
 	uint8_t extlen  = dotpos ? (namelen - dotpos - 1) : 0;
 	uint8_t bodylen = dotpos ? dotpos : namelen;
-	bool isNameLoss = (bodylen > 8 || extlen > 3);
+	bool    isNameLoss = (bodylen > 8 || extlen > 3);
 	uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
 
 	//Alloc entires space
 	uint8_t   size = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
-	FatEntry* ufe = new FatEntry[size]();
+	FatEntry* ufe  = new FatEntry[size]();
 
 	//Setup short name
 	Setup(ufe);
@@ -166,7 +173,7 @@ void FatObject::Setup(FatObject* fatObj)
 
 	Setup(ufe);
 
-	fatObj->GetEntryLocInfo(index, clust, sector);
+	entloc = fatObj->GetFatEntryLoc();
 }
 
 
@@ -289,30 +296,6 @@ void FatObject::SetStoreSize(uint8_t size)
 uint8_t FatObject::GetStoreSize()
 {
 	return ufe->GetStoreSize();
-}
-
-
-/// @brief Set entry location info
-/// @param index 
-/// @param clust 
-/// @param sector 
-void FatObject::SetEntryLocInfo(uint32_t index, uint32_t clust, uint32_t sector)
-{
-	this->index  = index;
-	this->clust  = clust;
-	this->sector = sector;
-}
-
-
-/// @brief Get entry location info
-/// @param index 
-/// @param clust 
-/// @param sector 
-void FatObject::GetEntryLocInfo(uint32_t& index, uint32_t& clust, uint32_t& sector)
-{
-	index  = this->index;
-	clust  = this->clust;
-	sector = this->sector;
 }
 
 
@@ -804,6 +787,22 @@ void FatObject::SetOpenMode(int mode)
 int FatObject::GetOpenMode()
 {
 	return mode;
+}
+
+
+/// @brief Set entry location info
+/// @param loc 
+void FatObject::SetFatEntryLoc(FatEntryLoc loc)
+{
+	entloc = loc;
+}
+
+
+/// @brief Get entry location info
+/// @return 
+FatEntryLoc FatObject::GetFatEntryLoc()
+{
+	return entloc;
 }
 
 

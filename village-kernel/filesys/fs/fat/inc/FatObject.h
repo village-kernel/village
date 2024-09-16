@@ -47,6 +47,19 @@ public:
 };
 
 
+/// @brief FatEntryLoc
+struct FatEntryLoc
+{
+	//Members
+	uint32_t index;
+	uint32_t clust;
+	uint32_t sector;
+
+	//Methods
+	FatEntryLoc();
+};
+
+
 /// @brief FatLongEntry
 struct FatLongEntry
 {
@@ -123,16 +136,14 @@ private:
 	static const uint8_t dir_free_flag = 0xe5;
 
 	//Members
-	uint32_t index;
-	uint32_t clust;
-	uint32_t sector;
-	int      mode;
+	int             mode;
+	FatEntryLoc     entloc;
+	FatFolder*      folder;
 
 	//Members
 	FatLongEntry*   lfe;
 	FatShortEntry*  sfe;
 	FatEntry*       ufe;
-	FatFolder*      folder;
 
 	//Methods
 	uint8_t ChkSum(const char* name);
@@ -160,9 +171,6 @@ public:
 	FatEntry* GetEntries();
 	void SetStoreSize(uint8_t size);
 	uint8_t GetStoreSize();
-	
-	void SetEntryLocInfo(uint32_t  index, uint32_t  clust, uint32_t  sector);
-	void GetEntryLocInfo(uint32_t& index, uint32_t& clust, uint32_t& sector);
 
 	bool IsLongName();
 	void GenNumName(int num);
@@ -192,8 +200,11 @@ public:
 	uint32_t GetFirstCluster();
 	void SetFileSize(uint32_t size);
 	uint32_t GetFileSize();
+
 	void SetOpenMode(int mode);
 	int GetOpenMode();
+	void SetFatEntryLoc(FatEntryLoc loc);
+	FatEntryLoc GetFatEntryLoc();
 	void SetFolder(FatFolder* folder);
 	FatFolder* GetFolder();
 };
