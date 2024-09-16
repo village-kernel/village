@@ -126,16 +126,20 @@ bool FatVolume::SetName(const char* name)
 {
 	FatFolder folder(fatDisk, SearchPath("/"));
 
-	FatObject* fatObj = folder.GetLists().Begin();
+	FatObject* fatObj = new FatObject();
 
-	if (FileType::_Volume == fatObj->GetObjectType())
+	if (1 == folder.Read(fatObj, 1))
 	{
-		fatObj->SetRawName(name);
+		if (FileType::_Volume == fatObj->GetObjectType())
+		{
+			fatObj->SetRawName(name);
 
-		folder.Update(fatObj);
+			folder.Update(fatObj);
+		}
 	}
 
-	return true;
+	delete fatObj;
+	return (0 == strcmp(GetName(), name));
 }
 
 
@@ -143,17 +147,21 @@ bool FatVolume::SetName(const char* name)
 /// @return 
 char* FatVolume::GetName()
 {
-	FatFolder folder(fatDisk, SearchPath("/"));
-
-	FatObject* fatObj = folder.GetLists().Begin();
-
 	char* name = (char*)"NONAME";
 
-	if (FileType::_Volume == fatObj->GetObjectType())
+	FatFolder folder(fatDisk, SearchPath("/"));	
+
+	FatObject* fatObj = new FatObject();
+
+	if (1 == folder.Read(fatObj, 1))
 	{
-		name = fatObj->GetRawName();
+		if (FileType::_Volume == fatObj->GetObjectType())
+		{
+			name = fatObj->GetRawName();
+		}
 	}
-	
+
+	delete fatObj;
 	return name;
 }
 
@@ -343,31 +351,21 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 	
 	if (NULL != fatObj)
 	{
-		int index = 0;
+		FatObject* subObjs = new FatObject[size]();
 
-		List<FatObject*> fatObjs = fatObj->GetFolder()->GetLists();
-
-		for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
+		size = fatObj->GetFolder()->Read(subObjs, size);
+		
+		for (int i = 0; i < size; i++)
 		{
-			FatObject* sub = fatObjs.Item();
-
-			if (index < size && NULL != sub)
-			{
-				dirs[index].name = sub->GetObjectName();
-				dirs[index].type = sub->GetObjectType();
-				dirs[index].attr = sub->GetObjectAttr();
-				index++;
-			}
-			else
-			{
-				break;
-			}
+			dirs[i].name = subObjs[i].GetObjectName();
+			dirs[i].type = subObjs[i].GetObjectType();
+			dirs[i].attr = subObjs[i].GetObjectAttr();
 		}
 
-		return index;
+		delete[] subObjs;
 	}
 
-	return 0;
+	return size;
 }
 
 
@@ -380,7 +378,7 @@ int FatVolume::SizeDir(int fd)
 
 	if (NULL != fatObj)
 	{
-		return fatObj->GetFolder()->GetLists().GetSize();
+		return fatObj->GetFolder()->Size();
 	}
 
 	return 0;

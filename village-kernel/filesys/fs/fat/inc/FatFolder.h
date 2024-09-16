@@ -28,21 +28,24 @@ private:
 	//FatObject Members
 	List<FatObject*>  fatObjs;
 
-	//Members
+	//Disk Methods
 	void CalcFirstSector();
 	void CalcNextSector();
 	void ReadEntries();
 	void WriteEntries();
 
+	//Iterator Methods
 	bool ReadBegin();
 	bool ReadNext();
 	bool WriteNext();
 	bool IsReadEnd();
 	
+	//IO Methods
 	bool Find(uint32_t size);
 	uint32_t Pop(FatEntry* pop, uint32_t size);
 	uint32_t Push(FatEntry* push, uint32_t size);
 
+	//Methods
 	bool CheckDirName(FatObject* fatObj);
 public:
 	//Methods
@@ -52,13 +55,12 @@ public:
 	void Open(FatObject* fatObj);
 	FatObject* Search(const char* name);
 	FatObject* Create(const char* name, int attr);
-	uint32_t Write(FatObject* fatObjs, uint32_t size);
-	uint32_t Read(FatObject* fatObjs, uint32_t size);
+	int  Write(FatObject* fatObjs, int size);
+	int  Read(FatObject* fatObjs, int size);
 	void Remove(FatObject* fatObj);
 	void Update(FatObject* fatObj);
+	int  Size();
 	void Close();
-
-	List<FatObject*> GetLists();
 };
 
 #endif //!__FAT_FOLDER_H__

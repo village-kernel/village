@@ -232,7 +232,7 @@ bool FatFolder::CheckDirName(FatObject* fatObj)
 }
 
 
-/// @brief 
+/// @brief Open
 /// @param fatObj 
 void FatFolder::Open(FatObject* fatObj)
 {
@@ -328,9 +328,9 @@ FatObject* FatFolder::Create(const char* name, int attr)
 /// @param objs 
 /// @param size 
 /// @return 
-uint32_t FatFolder::Write(FatObject* objs, uint32_t size)
+int FatFolder::Write(FatObject* objs, int size)
 {
-	for (uint32_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		uint32_t storeSize = objs[i].GetStoreSize();
 
@@ -353,13 +353,13 @@ uint32_t FatFolder::Write(FatObject* objs, uint32_t size)
 /// @param objs 
 /// @param size 
 /// @return 
-uint32_t FatFolder::Read(FatObject* objs, uint32_t size)
+int FatFolder::Read(FatObject* objs, int size)
 {
-	uint32_t fatSize = fatObjs.GetSize();
+	int objSize = fatObjs.GetSize();
 
-	size = (fatSize > size) ? fatSize : size;
+	if (size > objSize) size = objSize;
 
-	for (uint32_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		objs[i] = *fatObjs.GetItem(i);
 	}
@@ -391,6 +391,14 @@ void FatFolder::Update(FatObject* fatObj)
 }
 
 
+/// @brief Size
+/// @return 
+int FatFolder::Size()
+{
+	return fatObjs.GetSize();
+}
+
+
 /// @brief Close
 void FatFolder::Close()
 {
@@ -402,12 +410,4 @@ void FatFolder::Close()
 	}
 
 	fatObjs.Release();
-}
-
-
-/// @brief GetLists
-/// @return 
-List<FatObject*> FatFolder::GetLists()
-{
-	return fatObjs;
 }
