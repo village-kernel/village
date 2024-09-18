@@ -16,42 +16,54 @@ class CmdEcho : public Cmd
 private:
 	/// @brief echo
 	/// @param path 
-	void Echo(const char* data, const char* mode, const char* path)
+	void Echo(int size, char* data[], char* mode, char* path)
 	{
 		if (NULL != path)
 		{
-			FileStream file;
-
 			//Set mode
 			int filemode = FileMode::_CreateNew;
+
 			if (0 == strcmp(">", mode))
+			{
 				filemode |= FileMode::_Write;
+			}
 			else if (0 == strcmp(">>", mode))
+			{
 				filemode |= FileMode::_OpenAppend;
+			}
+			else
+			{
+				console->Error("parse error near \'\n\'");
+				return;
+			}
 
 			//Set path
 			const char* filepath = console->AbsolutePath(path);
 
 			//Write data
+			FileStream file;
+
 			if (file.Open(filepath, filemode))
 			{
-				int   size   = strlen(data) + 2;
-				char* buffer = new char[size]();
+				if (file.Size() && (filemode & FileMode::_OpenAppend))
+				{
+					file.Write((char*)"\r\n", 3);
+				}
 				
-				strcpy(buffer, data);
-				strcat(buffer, "\r\n");
-
-				file.Write((char*)buffer, size);
+				for (int i = 0; i < size; i++)
+				{
+					file.Write(data[i], strlen(data[i]));
+					file.Write((char*)" ", 2);
+				}
+				
 				file.Close();
-
-				delete[] buffer;
 			}
 
-			delete path;
+			delete filepath;
 		}
 		else
 		{
-			console->Println(data);
+			console->Println(data[0]);
 		}
 	}
 public:
@@ -66,13 +78,13 @@ public:
 			return;
 		}
 
-		if (argc == 4)
+		if (argc >= 4)
 		{
-			Echo(argv[1], argv[2], argv[3]);
+			Echo(argc - 3, argv + 1, argv[argc - 2], argv[argc - 1]);
 		}
 		else
 		{
-			Echo(argv[1], NULL, NULL);
+			Echo(argc - 1, argv + 1, NULL, NULL);
 		}
 	}
 
