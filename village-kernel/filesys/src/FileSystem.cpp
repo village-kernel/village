@@ -247,7 +247,12 @@ int ConcreteFileSystem::SetupVolume(DiskMedia* media, uint32_t startingLBA)
 
 		if (volume->Setup(media->dev, startingLBA))
 		{
-			return media->vols.Insert(volume, volume->GetName());
+			char* prefix = (char*)"/media/";
+			char* label  = volume->GetName();
+			char* name   = new char[strlen(prefix) + strlen(label) + 1]();
+			strcat(name, prefix);
+			strcat(name, label);
+			return media->vols.Insert(volume, name);
 		}
 		else delete volume;
 	}
@@ -259,7 +264,7 @@ int ConcreteFileSystem::SetupVolume(DiskMedia* media, uint32_t startingLBA)
 bool ConcreteFileSystem::MountRootNode()
 {
 	//Create root mount node
-	MountNode* mount = new MountNode((char*)"/", (char*)"VILLAGE OS", 0755);
+	MountNode* mount = new MountNode((char*)"/", (char*)"/media/VILLAGE OS", 0755);
 
 	//Try to mount root node
 	for (medias.Begin(); !medias.IsEnd(); medias.Next())
