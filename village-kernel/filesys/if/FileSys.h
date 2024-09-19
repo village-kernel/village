@@ -9,7 +9,11 @@
 
 #include "stdint.h"
 #include "stddef.h"
-#include "DevStream.h"
+#include "FileDefs.h"
+
+
+/// @brief DevStream
+class DevStream;
 
 
 /// @brief FileVol
@@ -35,6 +39,7 @@ public:
 	virtual int  Write(int fd, char* data, int size, int offset)     = 0;
 	virtual int  Read(int fd, char* data, int size, int offset)      = 0;
 	virtual int  Size(int fd)                                        = 0;
+	virtual void Flush(int fd)                                       = 0;
 	virtual void Close(int fd)                                       = 0;
 
 	//Dir methods

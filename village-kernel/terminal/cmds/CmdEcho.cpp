@@ -56,6 +56,7 @@ private:
 					file.Write((char*)" ", 2);
 				}
 				
+				file.Flush();
 				file.Close();
 			}
 
