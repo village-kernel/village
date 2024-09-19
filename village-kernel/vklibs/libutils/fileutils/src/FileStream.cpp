@@ -98,6 +98,16 @@ int FileStream::Size()
 }
 
 
+/// @brief FileStream flush
+void FileStream::Flush()
+{
+	if (NULL != volume)
+	{
+		volume->Flush(fd);
+	}
+}
+
+
 /// @brief FileStream close
 void FileStream::Close()
 {
