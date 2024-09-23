@@ -774,22 +774,6 @@ uint32_t FatObject::GetFileSize()
 }
 
 
-/// @brief FatObject set open mode
-/// @param mode 
-void FatObject::SetOpenMode(int mode)
-{
-	this->mode = mode;
-}
-
-
-/// @brief FatObject get open mode
-/// @return 
-int FatObject::GetOpenMode()
-{
-	return mode;
-}
-
-
 /// @brief Set entry location info
 /// @param loc 
 void FatObject::SetFatEntryLoc(FatEntryLoc loc)
@@ -803,20 +787,4 @@ void FatObject::SetFatEntryLoc(FatEntryLoc loc)
 FatEntryLoc FatObject::GetFatEntryLoc()
 {
 	return entloc;
-}
-
-
-/// @brief FatObject set folder
-/// @param floder 
-void FatObject::SetFolder(FatFolder* folder)
-{
-	this->folder = folder;
-}
-
-
-/// @brief FatObject get folder
-/// @return 
-FatFolder* FatObject::GetFolder()
-{
-	return folder;
 }

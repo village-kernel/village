@@ -200,13 +200,8 @@ public:
 	uint32_t GetFirstCluster();
 	void SetFileSize(uint32_t size);
 	uint32_t GetFileSize();
-
-	void SetOpenMode(int mode);
-	int GetOpenMode();
 	void SetFatEntryLoc(FatEntryLoc loc);
 	FatEntryLoc GetFatEntryLoc();
-	void SetFolder(FatFolder* folder);
-	FatFolder* GetFolder();
 };
 
 #endif //!__FAT_OBJECT_H__
