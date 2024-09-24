@@ -26,6 +26,7 @@ public:
 	int Write(char* data, int size, int offset = 0);
 	int Read(char* data, int size, int offset = 0);
 	int Size();
+	void Flush();
 	void Close();
 };
 

@@ -178,7 +178,7 @@ int ConcreteProcess::Run(Behavior behavior, const char* path, int argc, char* ar
 /// @return 
 bool ConcreteProcess::Kill(const char* path)
 {
-	return datum.GetItemByName(path)->exec->Kill();
+	return datum.GetItem(path)->exec->Kill();
 }
 
 

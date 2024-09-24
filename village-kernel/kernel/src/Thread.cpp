@@ -289,8 +289,10 @@ void ConcreteThread::SelectNextTask()
 
 
 /// @brief Idle task
-#if defined(ARCH_X86)
-void ConcreteThread::IdleTask() { while (1) { __asm volatile ("hlt" ::: "memory"); }}
-#else
-void ConcreteThread::IdleTask() { while (1) { __asm volatile("NOP"); } }
-#endif
+void ConcreteThread::IdleTask()
+{
+	while (1)
+	{
+		__asm volatile("NOP");
+	} 
+}

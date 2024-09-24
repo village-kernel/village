@@ -22,7 +22,7 @@ public:
 
 		for (data.Begin(); !data.IsEnd(); data.Next())
 		{
-			console->Output("pid %d, tid %d, name %s", 
+			console->Println("pid %d, tid %d, name %s", 
 							data.Item()->pid,
 							data.Item()->tid,
 							data.Item()->name);
@@ -33,7 +33,7 @@ public:
 	/// @brief Cmd ps help
 	void Help()
 	{
-		console->Output("cmd ps: list process data");
+		console->Println("cmd ps: list process data");
 	}
 };
 

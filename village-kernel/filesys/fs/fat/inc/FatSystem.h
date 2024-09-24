@@ -17,9 +17,32 @@
 class FatVolume : public FileVol
 {
 private:
+	//DirLayer
+	struct DirLayer
+	{
+		FatObject* object;
+		int        dirMode;
+		int        subSize;
+		FatObject* subObjs;
+	};
+
+	//FileLayer
+	struct FileLayer
+	{
+		FatObject* object;
+		int        fileMode;
+		int        fileSize;
+		uint32_t   fstClust;
+		uint32_t   secSize;
+		uint32_t   clusSize;
+		int        buffSize;
+		char*      buffer;
+	};
+
 	//Members
-	FatDiskio        fatdisk;
-	List<FatObject*> objs;
+	FatDiskio         fatDisk;
+	List<DirLayer*>   dirLayers;
+	List<FileLayer*>  fileLayers;
 
 	//Members
 	uint32_t bytesPerSec;
@@ -28,35 +51,38 @@ private:
 	//Directory Methods
 	char* BaseName(const char* path);
 	FatObject* SearchPath(const char* path, int reserve = 0);
-	FatObject* SearchDir(FatObject* obj, const char* name);
-	FatObject* CreateDir(const char* path, int attr);
-public:
-	//FileVolume Methods
-	bool SetVolumeLabel(const char* label);
-	char* GetVolumeLabel();
-	
-	int Open(const char* name, int mode);
-	int Write(int fd, char* data, int size, int offset);
-	int Read(int fd, char* data, int size, int offset);
-	int Size(int fd);
-	void Close(int fd);
-
-	int OpenDir(const char* path, int mode);
-	int ReadDir(int fd, FileDir* dirs, int size, int offset);
-	int SizeDir(int fd);
-	void CloseDir(int fd);
-
-	FileType GetFileType(const char* name);
-	bool IsExist(const char* name, FileType type);
-	bool Remove(const char* name);
+	FatObject* CreatePath(const char* path, int attr);
 public:
 	//Methods
 	FatVolume();
 	~FatVolume();
 
 	//Methods
-	bool Setup(const char* disk, uint32_t fstSec);
+	bool Setup(DevStream* device, uint32_t startingLBA);
 	void Exit();
+public:
+	//File Volume Methods
+	bool  SetName(const char* name);
+	char* GetName();
+	
+	//File methods
+	int  Open(const char* name, int mode);
+	int  Write(int fd, char* data, int size, int offset);
+	int  Read(int fd, char* data, int size, int offset);
+	int  Size(int fd);
+	void Flush(int fd);
+	void Close(int fd);
+
+	//Dir methods
+	int  OpenDir(const char* path, int mode);
+	int  ReadDir(int fd, FileDir* dirs, int size, int offset);
+	int  SizeDir(int fd);
+	void CloseDir(int fd);
+
+	//Opt methods
+	FileType GetFileType(const char* name);
+	bool IsExist(const char* name, FileType type);
+	bool Remove(const char* name);
 };
 
 

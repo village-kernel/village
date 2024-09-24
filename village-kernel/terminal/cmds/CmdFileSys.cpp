@@ -12,30 +12,6 @@
 #include "string.h"
 
 
-/// @brief AbsolutePath
-/// @param path 
-/// @return 
-static char* AbsolutePath(Console* console, char* path)
-{
-	char* res = NULL;
-
-	if ('/' != path[0])
-	{
-		res = new char[strlen(console->GetPath()) + strlen(path) + 2]();
-		strcat(res, console->GetPath());
-		if ('/' != res[strlen(console->GetPath()) - 1]) strcat(res, "/");
-		strcat(res, path);
-	}
-	else
-	{
-		res = new char[strlen(path) + 1]();
-		strcat(res, path);
-	}
-
-	return res;
-}
-
-
 /// @brief CmdCd
 class CmdCd : public Cmd
 {
@@ -76,11 +52,11 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: cd <directory>");
+			console->Println("Usage: cd <directory>");
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		ChangeDirectory(path);
 		delete path;
 	}
@@ -89,7 +65,7 @@ public:
 	/// @brief Cmd cd help
 	void Help()
 	{
-		console->Output("cmd cd: change directory");
+		console->Println("cmd cd: change directory");
 	}
 };
 
@@ -119,11 +95,11 @@ private:
 						if ((FileType::_Diretory == dirs[i].type) ||
 							(FileType::_File     == dirs[i].type))
 						{
-							console->OutputRAW("%s  ", dirs[i].name);
+							console->Print("%s  ", dirs[i].name);
 						}
 					}
 				}
-				if (size) console->OutputRAW("\r\n");
+				if (size) console->Print("\r\n");
 			}
 
 			delete[] dirs;
@@ -143,17 +119,18 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: ls [directory]");
+			console->Println("Usage: ls [directory]");
 			return;
 		}
-		ListDirectory((argc == 1) ? console->GetPath() : argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
+		ListDirectory((argc == 1) ? console->GetPath() : path);
 	}
 
 
 	/// @brief Cmd list help
 	void Help()
 	{
-		console->Output("cmd ls: list directory");
+		console->Println("cmd ls: list directory");
 	}
 };
 
@@ -190,11 +167,11 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: touch <filename>");
+			console->Println("Usage: touch <filename>");
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		CreateFile(path);
 		delete path;
 	}
@@ -203,7 +180,7 @@ public:
 	/// @brief Cmd touch help
 	void Help()
 	{
-		console->Output("cmd touch: create file");
+		console->Println("cmd touch: create file");
 	}
 };
 
@@ -240,11 +217,11 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: mkdir <dirname>");
+			console->Println("Usage: mkdir <dirname>");
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		CreateDir(path);
 		delete path;
 	}
@@ -253,7 +230,7 @@ public:
 	/// @brief Cmd mkdir help
 	void Help()
 	{
-		console->Output("cmd mkdir: create directory");
+		console->Println("cmd mkdir: create directory");
 	}
 };
 
@@ -268,6 +245,11 @@ private:
 	{
 		FileSysOpt fileSysOpt;
 		fileSysOpt.Move(source, target);
+
+		if (!fileSysOpt.Move(source, target))
+		{
+			console->Error("move %s to %s failed!", source, target);
+		}
 	}
 public:
 	/// @brief Cmd move execute
@@ -277,12 +259,12 @@ public:
 	{
 		if (argc < 3)
 		{
-			console->Output("Usage: mv <source> <target>");
+			console->Println("Usage: mv <source> <target>");
 			return;
 		}
 
-		char* path1 = AbsolutePath(console, argv[1]);
-		char* path2 = AbsolutePath(console, argv[2]);
+		const char* path1 = console->AbsolutePath(argv[1]);
+		const char* path2 = console->AbsolutePath(argv[2]);
 		Move(path1, path2);
 		delete path1;
 		delete path2;
@@ -292,7 +274,7 @@ public:
 	/// @brief Cmd move help
 	void Help()
 	{
-		console->Output("cmd mv: move file or directory");
+		console->Println("cmd mv: move file or directory");
 	}
 };
 
@@ -306,7 +288,11 @@ private:
 	void Copy(const char* source, const char* target)
 	{
 		FileSysOpt fileSysOpt;
-		fileSysOpt.Copy(source, target);
+
+		if (!fileSysOpt.Copy(source, target))
+		{
+			console->Error("copy %s to %s failed!", source, target);
+		}
 	}
 public:
 	/// @brief Cmd copy execute
@@ -316,12 +302,12 @@ public:
 	{
 		if (argc < 2)
 		{
-			console->Output("Usage: cp <source> <target>");
+			console->Println("Usage: cp <source> <target>");
 			return;
 		}
 
-		char* path1 = AbsolutePath(console, argv[1]);
-		char* path2 = AbsolutePath(console, argv[2]);
+		const char* path1 = console->AbsolutePath(argv[1]);
+		const char* path2 = console->AbsolutePath(argv[2]);
 		Copy(path1, path2);
 		delete path1;
 		delete path2;
@@ -331,7 +317,7 @@ public:
 	/// @brief Cmd cp help
 	void Help()
 	{
-		console->Output("cmd cp: copy file or directory");
+		console->Println("cmd cp: copy file or directory");
 	}
 };
 
@@ -345,7 +331,11 @@ private:
 	void Remove(const char* name)
 	{
 		FileSysOpt fileSysOpt;
-		fileSysOpt.Remove(name);
+
+		if (!fileSysOpt.Remove(name))
+		{
+			console->Error("Remove %s failed!", name);
+		}
 	}
 public:
 	/// @brief Cmd remove execute
@@ -355,11 +345,11 @@ public:
 	{
 		if (argc < 2)
 		{
-			console->Output("Usage: rm <file/directory>");
+			console->Println("Usage: rm <file/directory>");
 			return;
 		}
 
-		char* path = AbsolutePath(console, argv[1]);
+		const char* path = console->AbsolutePath(argv[1]);
 		Remove(path);
 		delete path;
 	}
@@ -368,7 +358,7 @@ public:
 	/// @brief Cmd remove help
 	void Help()
 	{
-		console->Output("cmd rm: remove file or directory");
+		console->Println("cmd rm: remove file or directory");
 	}
 };
 

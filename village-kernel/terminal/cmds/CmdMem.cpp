@@ -21,14 +21,14 @@ public:
 		uint32_t size = kernel->memory.GetSize();
 		uint32_t used = kernel->memory.GetUsed();
 		uint32_t per  = used * 100 / size;
-		console->Output("memory size: %d Byte, memory used: %d Byte, percentage used: %d %", size, used, per);
+		console->Println("memory size: %d Byte, memory used: %d Byte, percentage used: %d %", size, used, per);
 	}
 
 
 	/// @brief Cmd memory help
 	void Help()
 	{
-		console->Output("cmd memory: show memory used information");
+		console->Println("cmd memory: show memory used information");
 	}
 };
 

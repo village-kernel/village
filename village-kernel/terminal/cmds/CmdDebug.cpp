@@ -20,7 +20,7 @@ public:
 	{
 		if (argc < 1)
 		{
-			console->Output("Usage: debug [level]");
+			console->Println("Usage: debug [level]");
 			return;
 		}
 		kernel->debug.SetDebugLevel(argv[1][0] - '0');
@@ -30,7 +30,7 @@ public:
 	/// @brief Cmd debug help
 	void Help()
 	{
-		console->Output("cmd debug: settings debug output level");
+		console->Println("cmd debug: settings debug output level");
 	}
 };
 

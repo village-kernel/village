@@ -9,6 +9,11 @@
 
 #include "stdint.h"
 #include "stddef.h"
+#include "FileDefs.h"
+
+
+/// @brief DevStream
+class DevStream;
 
 
 /// @brief FileVol
@@ -22,24 +27,25 @@ public:
 	virtual ~FileVol() {};
 
 	//Methods
-	virtual bool Setup(const char* disk, uint32_t fstSec)            = 0;
+	virtual bool Setup(DevStream* device, uint32_t startingLBA)      = 0;
 	virtual void Exit()                                              = 0;
 
 	//Volume methods
-	virtual bool SetVolumeLabel(const char* name)                    = 0;
-	virtual char* GetVolumeLabel()                                   = 0;
+	virtual bool  SetName(const char* name)                          = 0;
+	virtual char* GetName()                                          = 0;
 
 	//File methods
-	virtual int Open(const char* name, int mode)                     = 0;
-	virtual int Write(int fd, char* data, int size, int offset)      = 0;
-	virtual int Read(int fd, char* data, int size, int offset)       = 0;
-	virtual int Size(int fd)                                         = 0;
+	virtual int  Open(const char* name, int mode)                    = 0;
+	virtual int  Write(int fd, char* data, int size, int offset)     = 0;
+	virtual int  Read(int fd, char* data, int size, int offset)      = 0;
+	virtual int  Size(int fd)                                        = 0;
+	virtual void Flush(int fd)                                       = 0;
 	virtual void Close(int fd)                                       = 0;
 
 	//Dir methods
-	virtual int OpenDir(const char* name, int mode)                  = 0;
-	virtual int ReadDir(int fd, FileDir* dirs, int size, int offset) = 0;
-	virtual int SizeDir(int fd)                                      = 0;
+	virtual int  OpenDir(const char* name, int mode)                 = 0;
+	virtual int  ReadDir(int fd, FileDir* dirs, int size, int offset)= 0;
+	virtual int  SizeDir(int fd)                                     = 0;
 	virtual void CloseDir(int fd)                                    = 0;
 
 	//Opt methods
