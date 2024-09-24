@@ -126,19 +126,18 @@ bool FatVolume::SetName(const char* name)
 {
 	FatFolder folder(fatDisk, SearchPath("/"));
 
-	FatObject* fatObj = new FatObject();
+	FatObject fatObj;
 
-	if (1 == folder.Read(fatObj, 1))
+	if (1 == folder.Read(&fatObj, 1))
 	{
-		if (FileType::_Volume == fatObj->GetObjectType())
+		if (FileType::_Volume == fatObj.GetObjectType())
 		{
-			fatObj->SetRawName(name);
+			fatObj.SetRawName(name);
 
-			folder.Update(fatObj);
+			folder.Update(&fatObj);
 		}
 	}
 
-	delete fatObj;
 	return (0 == strcmp(GetName(), name));
 }
 
@@ -149,19 +148,18 @@ char* FatVolume::GetName()
 {
 	char* name = (char*)"NONAME";
 
-	FatFolder folder(fatDisk, SearchPath("/"));	
+	FatFolder folder(fatDisk, SearchPath("/"));
 
-	FatObject* fatObj = new FatObject();
+	FatObject fatObj;
 
-	if (1 == folder.Read(fatObj, 1))
+	if (1 == folder.Read(&fatObj, 1))
 	{
-		if (FileType::_Volume == fatObj->GetObjectType())
+		if (FileType::_Volume == fatObj.GetObjectType())
 		{
-			name = fatObj->GetRawName();
+			name = fatObj.GetRawName();
 		}
 	}
 
-	delete fatObj;
 	return name;
 }
 
@@ -181,22 +179,22 @@ int FatVolume::Open(const char* name, int mode)
 
 	if (NULL != fatObj)
 	{
-		FileLayer* fl  = new FileLayer();
-		fl->object     = fatObj;
-		fl->openMode   = mode;
-		fl->fileSize   = fatObj->GetFileSize();
+		FileLayer* layer = new FileLayer();
+		layer->object    = fatObj;
+		layer->fileMode  = mode;
+		layer->fileSize  = fatObj->GetFileSize();
 
-		if (fl->fileSize)
+		if (layer->fileSize)
 		{
-			fl->fstClust  = fatObj->GetFirstCluster();
-			fl->secSize   = (fl->fileSize + (bytesPerSec - 1)) / bytesPerSec;
-			fl->clusSize  = (fl->secSize  + (secPerClust - 1)) / secPerClust;
-			fl->allocSize =  fl->clusSize *  secPerClust * bytesPerSec;
-			fl->allocBuff = (char*)new char[fl->allocSize]();
-			fl->clusSize  = fatDisk.ReadCluster(fl->allocBuff, fl->fstClust, fl->clusSize);
+			layer->fstClust = fatObj->GetFirstCluster();
+			layer->secSize  = (layer->fileSize + (bytesPerSec - 1)) / bytesPerSec;
+			layer->clusSize = (layer->secSize  + (secPerClust - 1)) / secPerClust;
+			layer->buffSize =  layer->clusSize *  secPerClust * bytesPerSec;
+			layer->buffer   = (char*)new char[layer->buffSize]();
+			layer->clusSize = fatDisk.ReadCluster(layer->buffer, layer->fstClust, layer->clusSize);
 		}
 
-		return fls.Add(fl);
+		return fileLayers.Add(layer);
 	}
 
 	return -1;
@@ -211,35 +209,36 @@ int FatVolume::Open(const char* name, int mode)
 /// @return 
 int FatVolume::Write(int fd, char* data, int size, int offset)
 {
-	FileLayer* fl = fls.GetItem(fd);
+	FileLayer* layer = fileLayers.GetItem(fd);
 
-	if (NULL != fl)
+	if (NULL != layer)
 	{
 		int buffOffset = 0;
 
-		if (fl->openMode & FileMode::_Write)
+		if (layer->fileMode & FileMode::_OpenAppend)
+			buffOffset = layer->fileSize;
+		else if (layer->fileMode & FileMode::_Write)
 			buffOffset = 0;
-		else if (fl->openMode & FileMode::_OpenAppend)
-			buffOffset = fl->fileSize;
 
-		fl->fileSize = buffOffset + size;
+		layer->fileSize = buffOffset + size;
 
-		if (fl->fileSize > fl->allocSize)
+		if (layer->fileSize > layer->buffSize)
 		{
-			fl->secSize     = (fl->fileSize + (bytesPerSec - 1)) / bytesPerSec;
-			fl->clusSize    = (fl->secSize  + (secPerClust - 1)) / secPerClust;
-			int   allocSize = (fl->clusSize *  secPerClust * bytesPerSec);
-			char* allocBuff = (char*)new char[fl->allocSize]();
+			layer->secSize  = (layer->fileSize + (bytesPerSec - 1)) / bytesPerSec;
+			layer->clusSize = (layer->secSize  + (secPerClust - 1)) / secPerClust;
+			int    buffSize = (layer->clusSize *  secPerClust * bytesPerSec);
+			char*  buffer   = (char*)new char[layer->buffSize]();
 
-			if (buffOffset) memcpy((void*)allocBuff, (const void*)fl->allocBuff, fl->allocSize);
-			delete[] fl->allocBuff;
-			fl->allocSize = allocSize;
-			fl->allocBuff = allocBuff;
+			if (buffOffset) memcpy((void*)buffer, (const void*)layer->buffer, layer->buffSize);
+			delete[] layer->buffer;
+			layer->buffSize = buffSize;
+			layer->buffer   = buffer;
 		}
 
-		memcpy((void*)(fl->allocBuff + buffOffset), (const void*)(data + offset), size);
+		memcpy((void*)(layer->buffer + buffOffset), (const void*)(data + offset), size);
 
-		fl->openMode = FileMode::_OpenAppend;
+		layer->fileMode = FileMode::_OpenAppend;
+
 		return size;
 	}
 
@@ -255,18 +254,15 @@ int FatVolume::Write(int fd, char* data, int size, int offset)
 /// @return 
 int FatVolume::Read(int fd, char* data, int size, int offset)
 {
-	FileLayer* fl = fls.GetItem(fd);
+	FileLayer* layer = fileLayers.GetItem(fd);
 
-	if (NULL != fl)
+	if ((NULL != layer) && (layer->fileSize))
 	{
-		if (fl->fileSize)
-		{
-			if (fl->fileSize < size) size = fl->fileSize;
+		if (layer->fileSize < size) size = layer->fileSize;
 
-			memcpy((void*)(data + offset), (const void*)fl->allocBuff, size);
-			
-			return size;
-		}
+		memcpy((void*)(data + offset), (const void*)layer->buffer, size);
+		
+		return size;
 	}
 
 	return 0;
@@ -278,9 +274,9 @@ int FatVolume::Read(int fd, char* data, int size, int offset)
 /// @return 
 int FatVolume::Size(int fd)
 {
-	FileLayer* fl = fls.GetItem(fd);
+	FileLayer* layer = fileLayers.GetItem(fd);
 
-	return (NULL != fl) ? fl->fileSize : 0;
+	return (NULL != layer) ? layer->fileSize : 0;
 }
 
 
@@ -288,14 +284,14 @@ int FatVolume::Size(int fd)
 /// @param fd 
 void FatVolume::Flush(int fd)
 {
-	FileLayer* fl = fls.GetItem(fd);
+	FileLayer* layer = fileLayers.GetItem(fd);
 	
-	if (NULL != fl)
+	if (NULL != layer)
 	{
-		if (fl->clusSize == fatDisk.WriteCluster(fl->allocBuff, fl->fstClust, fl->clusSize))
+		if (layer->clusSize == fatDisk.WriteCluster(layer->buffer, layer->fstClust, layer->clusSize))
 		{
-			fl->object->SetFileSize(fl->fileSize);
-			FatFolder(fatDisk).Update(fl->object);
+			layer->object->SetFileSize(layer->fileSize);
+			FatFolder(fatDisk).Update(layer->object);
 		}
 	}
 }
@@ -305,13 +301,13 @@ void FatVolume::Flush(int fd)
 /// @param fd 
 void FatVolume::Close(int fd)
 {
-	FileLayer* fl = fls.GetItem(fd);
+	FileLayer* layer = fileLayers.GetItem(fd);
 	
-	if (NULL != fl)
+	if (NULL != layer)
 	{
-		delete[] fl->allocBuff;
-		fls.Remove(fl, fd);
-		delete fl;
+		delete[] layer->buffer;
+		fileLayers.Remove(layer, fd);
+		delete layer;
 	}
 }
 
@@ -332,16 +328,17 @@ int FatVolume::OpenDir(const char* path, int mode)
 	if (NULL != fatObj)
 	{
 		FatFolder* folder = new FatFolder(fatDisk, fatObj);
-		DirLayer* dl      = new DirLayer();
-		dl->object        = fatObj;
-		dl->openMode      = mode;
-		dl->subSize       = folder->Size();
-		dl->subObjs       = new FatObject[dl->subSize]();
-		dl->subSize       = folder->Read(dl->subObjs, dl->subSize);
+
+		DirLayer* layer   = new DirLayer();
+		layer->object     = fatObj;
+		layer->dirMode    = mode;
+		layer->subSize    = folder->Size();
+		layer->subObjs    = new FatObject[layer->subSize]();
+		layer->subSize    = folder->Read(layer->subObjs, layer->subSize);
 		
 		folder->Close();
 		delete folder;
-		return dls.Add(dl);
+		return dirLayers.Add(layer);
 	}
 
 	return -1;
@@ -356,17 +353,17 @@ int FatVolume::OpenDir(const char* path, int mode)
 /// @return 
 int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 {
-	DirLayer* dl = dls.GetItem(fd);
+	DirLayer* layer = dirLayers.GetItem(fd);
 	
-	if (NULL != dl)
+	if (NULL != layer)
 	{
-		if (dl->subSize < size) size = dl->subSize;
+		if (layer->subSize < size) size = layer->subSize;
 
 		for (int i = 0; i < size; i++)
 		{
-			dirs[i].name = dl->subObjs[i].GetObjectName();
-			dirs[i].type = dl->subObjs[i].GetObjectType();
-			dirs[i].attr = dl->subObjs[i].GetObjectAttr();
+			dirs[i].name = layer->subObjs[i].GetObjectName();
+			dirs[i].type = layer->subObjs[i].GetObjectType();
+			dirs[i].attr = layer->subObjs[i].GetObjectAttr();
 		}
 	}
 
@@ -379,9 +376,9 @@ int FatVolume::ReadDir(int fd, FileDir* dirs, int size, int offset)
 /// @return 
 int FatVolume::SizeDir(int fd)
 {
-	DirLayer* dl = dls.GetItem(fd);
+	DirLayer* layer = dirLayers.GetItem(fd);
 	
-	return (NULL != dl) ? dl->subSize : 0;
+	return (NULL != layer) ? layer->subSize : 0;
 }
 
 
@@ -389,13 +386,13 @@ int FatVolume::SizeDir(int fd)
 /// @param fd 
 void FatVolume::CloseDir(int fd)
 {
-	DirLayer* dl = dls.GetItem(fd);
+	DirLayer* layer = dirLayers.GetItem(fd);
 	
-	if (NULL != dl)
+	if (NULL != layer)
 	{
-		delete[] dl->subObjs;
-		dls.Remove(dl, fd);
-		delete dl;
+		delete[] layer->subObjs;
+		dirLayers.Remove(layer, fd);
+		delete layer;
 	}
 }
 
