@@ -563,6 +563,19 @@ public:
 };
 
 
+/// @brief Stack
+class Stack;
+
+/// @brief Protocol
+class Protocol
+{
+public:
+	/// @brief Stack Methods
+	virtual void RegisterStack(Stack* stack) = 0;
+	virtual void UnregisterStack(Stack* stack) = 0;
+};
+
+
 /// @brief Kernel
 class Kernel
 {
@@ -585,6 +598,7 @@ public:
 	Timer&       timer;
 	Terminal&    terminal;
 	Signal&      signal;
+	Protocol&    protocol;
 public:
 	/// @brief constructor
 	Kernel(
@@ -604,7 +618,8 @@ public:
 		Process&     process,
 		Timer&       timer,
 		Terminal&    terminal,
-		Signal&      signal
+		Signal&      signal,
+		Protocol&    protocol
 	)
 		:system(system),
 		memory(memory),
@@ -622,7 +637,8 @@ public:
 		process(process),
 		timer(timer),
 		terminal(terminal),
-		signal(signal)
+		signal(signal),
+		protocol(protocol)
 	{}
 
 	/// @brief Destructor

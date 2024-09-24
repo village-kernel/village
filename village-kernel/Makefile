@@ -16,6 +16,15 @@ inc-y                               += village-kernel/filesys/if
 inc-y                               += village-kernel/filesys/inc
 src-y                               += village-kernel/filesys/src
 
+inc-y                               += village-kernel/protocol/if
+inc-y                               += village-kernel/protocol/inc
+src-y                               += village-kernel/protocol/src
+
+inc-$(CONFIG_USBD)                  += village-kernel/protocol/stack/usb/device/inc
+src-$(CONFIG_USBD)                  += village-kernel/protocol/stack/usb/device/src
+inc-$(CONFIG_USBH)                  += village-kernel/protocol/stack/usb/host/inc
+src-$(CONFIG_USBH)                  += village-kernel/protocol/stack/usb/host/src
+
 inc-y                               += village-kernel/terminal/if
 inc-y                               += village-kernel/terminal/inc
 src-y                               += village-kernel/terminal/src
@@ -72,6 +81,10 @@ objs-$(CONFIG_ELFLOADER)            += ElfLoader.o
 objs-$(CONFIG_HEXLOADER)            += HexLoader.o
 objs-$(CONFIG_LIBTOOL)              += LibraryTool.o
 objs-$(CONFIG_MODTOOL)              += ModuleTool.o
+
+objs-y                              += Protocol.o
+objs-$(CONFIG_USBD)                 += UsbDevice.o
+objs-$(CONFIG_USBH)                 += UsbHost.o
 
 objs-y                              += CmdMsgMgr.o
 objs-y                              += Console.o

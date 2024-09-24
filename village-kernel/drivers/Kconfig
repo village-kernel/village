@@ -73,3 +73,11 @@ config PIT32TIMER
 	default n
 
 endmenu
+
+menu "usb"
+
+config STM32USBDFS
+	tristate "Enable stm32 usbd fs support"
+	default n
+
+endmenu
