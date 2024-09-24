@@ -82,3 +82,12 @@ inc-y                                 += village-kernel/drivers/timer/inc
 src-y                                 += village-kernel/drivers/timer/src
 
 objs-$(CONFIG_PIT32TIMER)             += Pit32Timer.o
+
+
+######################################
+# usb
+######################################
+inc-y                                 += village-kernel/drivers/usb/inc
+src-y                                 += village-kernel/drivers/usb/src
+
+objs-$(CONFIG_STM32USBDFS)            += Stm32UsbdFS.o

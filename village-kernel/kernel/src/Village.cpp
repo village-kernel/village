@@ -26,7 +26,8 @@ Village::Village() : Kernel
 	concreteProcess,
 	concreteTimer,
 	concreteTerminal,
-	concreteSignal
+	concreteSignal,
+	concreteProtocol
 )
 {
 }
@@ -91,6 +92,9 @@ void Village::Setup()
 
 	//Setup signal
 	concreteSignal.Setup();
+
+	//Setup protocol
+	concreteProtocol.Setup();
 }
 
 
@@ -111,6 +115,9 @@ void Village::Start()
 /// @brief Kernel exit
 void Village::Exit()
 {
+	//Exit protocol
+	concreteProtocol.Exit();
+
 	//Exit signal
 	concreteSignal.Exit();
 
