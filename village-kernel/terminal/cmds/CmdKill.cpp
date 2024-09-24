@@ -33,9 +33,9 @@ public:
 		}
 		else
 		{
-			console->Output("Usage: ");
-			console->Output("kill -p <pid>");
-			console->Output("kill -t <tid>");
+			console->Println("Usage: ");
+			console->Println("kill -p <pid>");
+			console->Println("kill -t <tid>");
 		}
 	}
 
@@ -43,7 +43,7 @@ public:
 	/// @brief Cmd kill help
 	void Help()
 	{
-		console->Output("cmd kill: kill process");
+		console->Println("cmd kill: kill process");
 	}
 };
 

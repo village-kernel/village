@@ -12,33 +12,51 @@
 #include "FileDefs.h"
 
 
-/// @brief FatDirAttr
-enum FatDirAttr
+/// @brief FatDefs
+class FatDefs
 {
-	_FAT_ATTR_FILE           = 0x00,
-	_FAT_ATTR_READ_ONLY      = 0x01,
-	_FAT_ATTR_HIDDEN         = 0x02,
-	_FAT_ATTR_SYSTEM         = 0x04,
-	_FAT_ATTR_VOLUME_ID      = 0x08,
-	_FAT_ATTR_DIRECTORY      = 0x10,
-	_FAT_ATTR_ARCHIVE        = 0x20,
-	_FAT_ATTR_LONG_NAME      = _FAT_ATTR_READ_ONLY | _FAT_ATTR_HIDDEN | _FAT_ATTR_SYSTEM | _FAT_ATTR_VOLUME_ID,
-	_FAT_ATTR_LONG_NAME_MASK = _FAT_ATTR_READ_ONLY | _FAT_ATTR_HIDDEN | _FAT_ATTR_SYSTEM | _FAT_ATTR_VOLUME_ID | _FAT_ATTR_DIRECTORY | _FAT_ATTR_ARCHIVE,
+public:
+	/// @brief EntryAttr
+	enum EntryAttr
+	{
+		_AttrFile           = 0x00,
+		_AttrReadOnly       = 0x01,
+		_AttrHidden         = 0x02,
+		_AttrSystem         = 0x04,
+		_AttrVolumeID       = 0x08,
+		_AttrDirectory      = 0x10,
+		_AttrArchive        = 0x20,
+		_AttrLongName       = _AttrReadOnly | _AttrHidden | _AttrSystem | _AttrVolumeID,
+		_AttrLongNameMask   = _AttrReadOnly | _AttrHidden | _AttrSystem | _AttrVolumeID | _AttrDirectory | _AttrArchive,
+	};
+
+
+	/// @brief NSFlag
+	enum NSFlag
+	{
+		_NsNoe          = 0x00,
+		_NsLoss         = 0x01,   /* Out of 8.3 format */
+		_NsLfn          = 0x02,   /* Force to create LFN entry */
+		_NsLast         = 0x04,   /* Last segment */
+		_NsBody         = 0x08,   /* Lower case flag (body) */
+		_NsExt          = 0x10,   /* Lower case flag (ext) */
+		_NsDot          = 0x20,   /* Dot entry */
+		_NsNolfn        = 0x40,   /* Do not find LFN */
+		_NsNoname       = 0x80,   /* Not followed */
+	};
 };
 
 
-/// @brief FatNSFlag
-enum FatNSFlag
+/// @brief FatEntryLoc
+struct FatEntryLoc
 {
-	_FAT_NS_NONE         = 0x00,
-	_FAT_NS_LOSS         = 0x01,   /* Out of 8.3 format */
-	_FAT_NS_LFN          = 0x02,   /* Force to create LFN entry */
-	_FAT_NS_LAST         = 0x04,   /* Last segment */
-	_FAT_NS_BODY         = 0x08,   /* Lower case flag (body) */
-	_FAT_NS_EXT          = 0x10,   /* Lower case flag (ext) */
-	_FAT_NS_DOT          = 0x20,   /* Dot entry */
-	_FAT_NS_NOLFN        = 0x40,   /* Do not find LFN */
-	_FAT_NS_NONAME       = 0x80,   /* Not followed */
+	//Members
+	uint32_t index;
+	uint32_t clust;
+	uint32_t sector;
+
+	//Methods
+	FatEntryLoc();
 };
 
 
@@ -83,8 +101,8 @@ struct FatShortEntry
 } __attribute__((packed));
 
 
-/// @brief FatUnionEntry
-union FatUnionEntry
+/// @brief FatEntry
+union FatEntry
 {
 	//static constants
 	static const uint8_t dir_seq_flag = 0x40;
@@ -96,11 +114,15 @@ union FatUnionEntry
 	FatShortEntry sfe;
 	
 	//Methods
-	FatUnionEntry();
-	bool IsValid();
+	FatEntry();
+	bool    IsValid();
+	void    SetStoreSize(uint8_t size);
 	uint8_t GetStoreSize();
-	void SetStoreSize(uint8_t size);
 } __attribute__((packed));
+
+
+/// @brief FatFolder
+class FatFolder;
 
 
 /// @brief FatObject
@@ -114,39 +136,41 @@ private:
 	static const uint8_t dir_free_flag = 0xe5;
 
 	//Members
-	uint32_t index;
-	uint32_t clust;
-	uint32_t sector;
+	int             mode;
+	FatEntryLoc     entloc;
+	FatFolder*      folder;
 
 	//Members
 	FatLongEntry*   lfe;
 	FatShortEntry*  sfe;
-	FatUnionEntry*  ufe;
+	FatEntry*       ufe;
 
 	//Methods
 	uint8_t ChkSum(const char* name);
 public:
 	//Methods
 	FatObject();
-	FatObject(FatUnionEntry* ufe);
-	FatObject(FatObject* obj);
+	FatObject(const char* name);
+	FatObject(FatObject* fatObj);
+	FatObject(FatEntry* ufe);
 	~FatObject();
 
-	void Clone(FatObject* obj);
-	void Setup(FatUnionEntry* ufe);
-	void SetupByName(const char* name);
-	void SetupDot(FatObject* obj);
-	void SetupDotDot(FatObject* obj);
-	void SetEntryFree();
+	void Setup(const char* name);
+	void Setup(FatObject* fatObj);
+	void Setup(FatEntry* ufe);
+
+	void SetupDot(FatObject* fatObj);
+	void SetupDotDot(FatObject* fatObj);
+
+	void SetOjectFree();
+
 	char* GetObjectName();
 	FileType GetObjectType();
 	FileAttr GetObjectAttr();
-	void SetUnionEntry(FatUnionEntry* ufe);
-	FatUnionEntry* GetUnionEntry();
+
+	FatEntry* GetEntries();
 	void SetStoreSize(uint8_t size);
 	uint8_t GetStoreSize();
-	void SetEntryLocInfo(uint32_t index, uint32_t clust, uint32_t sector);
-	void GetEntryLocInfo(uint32_t& index, uint32_t& clust, uint32_t& sector);
 
 	bool IsLongName();
 	void GenNumName(int num);
@@ -176,6 +200,8 @@ public:
 	uint32_t GetFirstCluster();
 	void SetFileSize(uint32_t size);
 	uint32_t GetFileSize();
+	void SetFatEntryLoc(FatEntryLoc loc);
+	FatEntryLoc GetFatEntryLoc();
 };
 
 #endif //!__FAT_OBJECT_H__

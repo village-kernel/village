@@ -29,11 +29,11 @@ void ConcreteFileSystem::Setup()
 	//Initialize all hard disk
 	for (blockDevs.Begin(); !blockDevs.IsEnd(); blockDevs.Next())
 	{
-		InitMBRDisk(blockDevs.Item()->GetName());
+		MountHardDrive(blockDevs.Item()->GetName());
 	}
 
-	//Mount system node
-	if (MountSystemNode())
+	//Mount root node
+	if (MountRootNode())
 		kernel->debug.Info("File system setup completed!");
 	else
 		kernel->debug.Error("File system setup failed!");
@@ -43,31 +43,56 @@ void ConcreteFileSystem::Setup()
 /// @brief File system exit
 void ConcreteFileSystem::Exit()
 {
-	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+	//Exit hard drive
+	for (medias.Begin(); !medias.IsEnd(); medias.Next())
 	{
-		FileVol* volume = volumes.Item();
-
-		volume->Exit();
+		UnmountHardDrive(medias.GetName());
 	}
 
-	fileSys.Release();
+	//Release medias
+	medias.Release();
+
+	//Release file system
+	filesyses.Release();
+
+	//Release mount node
+	mounts.Release();
 }
 
 
-/// @brief Init disk device
+/// @brief Register file system
+/// @param fs 
+/// @param name 
+void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
+{
+	filesyses.Insert(fs, fs->GetSystemID(), (char*)name);
+}
+
+
+/// @brief Unregister file system
+/// @param fs 
+/// @param name 
+void ConcreteFileSystem::UnregisterFS(FileSys* fs, const char* name)
+{
+	filesyses.Remove(fs, (char*)name);
+}
+
+
+/// @brief Init Hard Drive
+/// @param disk 
 /// @return 
-bool ConcreteFileSystem::InitMBRDisk(const char* disk)
+bool ConcreteFileSystem::MountHardDrive(const char* disk)
 {
 	static const uint16_t magic = 0xaa55;
 	static const uint16_t mbr_sector = 0;
 
-	kernel->debug.Info("Try to setup the hard drive (%s) by using MBR format", disk);
+	kernel->debug.Info("Setup the hard drive (%s)", disk);
 
 	//Create an devstream object
-	DevStream device;
+	DevStream* device = new DevStream();
 
 	//Open the disk device
-	if (!device.Open(disk, FileMode::_ReadWrite))
+	if (!device->Open(disk, FileMode::_ReadWrite))
 	{
 		kernel->debug.Error("hard drive (%s) open failed", disk);
 		return false;
@@ -76,94 +101,200 @@ bool ConcreteFileSystem::InitMBRDisk(const char* disk)
 	//Read the master boot record
 	MBR* mbr = new MBR();
 
-	device.Read((char*)mbr, 1, mbr_sector);
+	device->Read((char*)mbr, 1, mbr_sector);
 
 	if (magic != mbr->magic)
 	{
 		kernel->debug.Error("Not a valid disk");
-		device.Close();
+		device->Close();
+		delete device;
 		delete mbr;
 		return false;
 	}
 
-	//Attach the volumes
-	for (uint8_t i = 0; i < 4; i++)
+	//Create an new disk media
+	DiskMedia* media = new DiskMedia((char*)disk, device);
+
+	//Add to medias list
+	medias.Add(media, media->name);
+	
+	//Media with partition table
+	if (CheckPartiionTable(mbr->partition[0]))
 	{
-		FileSys* fs = fileSys.GetItem(mbr->dpt[i].systemID);
-
-		if (NULL != fs)
+		//Set the media for GPT partition format
+		if (0xee == mbr->partition[0].OSIndicator)
 		{
-			FileVol* volume = fs->CreateVolume();
+			//Set media partition type as GPT
+			media->type = PartitionType::_GPT;
 
-			if (volume->Setup(disk, mbr->dpt[i].relativeSectors))
+			//Create GPT object
+			GPT* gpt = new GPT();
+
+			//Read GPT header
+			device->Read((char*)gpt, 1, mbr->partition[0].startingLBA);
+
+			//Calculate the size of volume
+			uint8_t size = gpt->numberOfPartitionEntries / gpt->sizeOfPartitionEntry;
+
+			//Create GPT partition table object
+			GPTPartition* partition = new GPTPartition();
+
+			//Setup partitions
+			for (uint8_t i = 0; i < size; i++)
 			{
-				AttachVolume(volume);
+				//Read partition record
+				device->Read((char*)partition, 1, gpt->partitionEntryLBA + i);
+
+				//Setup GPT volume
+				SetupVolume(media, partition->startingLBA);
 			}
-			else delete volume;
+
+			//Leave
+			delete gpt;
+			delete partition;
 		}
+		//Set the media for MBR partition format
+		else
+		{
+			//Set media partition type as MBR
+			media->type = PartitionType::_MBR;
+
+			//Setup MBR partitions
+			for (uint8_t i = 0; i < 4; i++)
+			{
+				if (0 != mbr->partition[i].sizeInLBA)
+				{
+					SetupVolume(media, mbr->partition[i].startingLBA);
+				}
+			}
+		}
+	}
+	else
+	{
+		//Setup single partition
+		SetupVolume(media, 0);
 	}
 
 	//Leave
-	device.Close();
 	delete mbr;
 	return true;
 }
 
 
-/// @brief Mount node
-bool ConcreteFileSystem::MountSystemNode()
+/// @brief Exit Hard Drive
+/// @param disk 
+/// @return 
+bool ConcreteFileSystem::UnmountHardDrive(const char* disk)
 {
-	//Mount root node "/"
-	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+	//Gets the disk media
+	DiskMedia* media = medias.GetItem(disk);
+
+	if (NULL != media)
 	{
-		char* volumelab = volumes.GetName();
-		if (0 == strcmp(volumelab, "/media/VILLAGE OS"))
+		//Exit volumes
+		for (media->vols.Begin(); !media->vols.IsEnd(); media->vols.Next())
 		{
-			mounts.Add(new MountNode((char*)"/", volumelab, 0755));
-			return true;
+			FileVol* volume = media->vols.Item();
+			volume->Exit();
+			delete volume;
 		}
+
+		//Release volumes
+		media->vols.Release();
+
+		//Close device
+		media->dev->Close();
+
+		//Remove media
+		medias.Remove(media);
+		delete media;
+		return true;
 	}
-	kernel->debug.Output(Debug::_Lv2, "Mount system node failed, '/media/VILLAGE OS' not found");
+
 	return false;
 }
 
 
-/// @brief Register file system
-/// @param fs file system
-/// @param name file system name
-void ConcreteFileSystem::RegisterFS(FileSys* fs, const char* name)
+/// @brief Determine whether partition table exists
+/// @param partition 
+/// @return 
+bool ConcreteFileSystem::CheckPartiionTable(MBRPartition partition)
 {
-	fileSys.Insert(fs, fs->GetSystemID(), (char*)name);
+	if ((0 != partition.OSIndicator) && (0 != partition.sizeInLBA))
+	{
+		uint8_t  size = sizeof(MBRPartition);
+		uint8_t* data = (uint8_t*)&partition;
+
+		for (uint8_t i = 0; i < size; i++)
+		{
+			if (data[0] != data[i]) return true;
+		}
+	}
+
+	return false;
 }
 
 
-/// @brief Unregister file system
-/// @param fs file system
-/// @param name file system name
-void ConcreteFileSystem::UnregisterFS(FileSys* fs, const char* name)
+/// @brief Setup Volume
+/// @param media 
+/// @param partition 
+/// @return 
+int ConcreteFileSystem::SetupVolume(DiskMedia* media, uint32_t startingLBA)
 {
-	fileSys.RemoveByName(fs, (char*)name);
+	for (filesyses.Begin(); !filesyses.IsEnd(); filesyses.Next())
+	{
+		FileVol* volume = filesyses.Item()->CreateVolume();
+
+		if (volume->Setup(media->dev, startingLBA))
+		{
+			char* prefix = (char*)"/media/";
+			char* label  = volume->GetName();
+			char* name   = new char[strlen(prefix) + strlen(label) + 1]();
+			strcat(name, prefix);
+			strcat(name, label);
+			return media->vols.Insert(volume, name);
+		}
+		else delete volume;
+	}
+	return -1;
 }
 
 
-/// @brief Attach volume
-/// @param volume
-int ConcreteFileSystem::AttachVolume(FileVol* volume)
+/// @brief Mount root node
+bool ConcreteFileSystem::MountRootNode()
 {
-	char* prefix = (char*)"/media/";
-	char* label  = volume->GetVolumeLabel();
-	char* name   = new char[strlen(prefix) + strlen(label) + 1]();
-	strcat(name, prefix);
-	strcat(name, label);
-	return volumes.InsertByName(volume, name);
+	//Create root mount node
+	MountNode* mount = new MountNode((char*)"/", (char*)"/media/VILLAGE OS", 0755);
+
+	//Try to mount root node
+	for (medias.Begin(); !medias.IsEnd(); medias.Next())
+	{
+		if (MountSystemNode(medias.Item()->vols, mount)) return true;
+	}
+
+	//Output info
+	kernel->debug.Error("Mount root node failed, 'VILLAGE OS' not found");
+
+	//Leave
+	delete mount;
+	return false;
 }
 
 
-/// @brief Detach volume
-/// @param volume
-int ConcreteFileSystem::DetachVolume(FileVol* volume)
+/// @brief Mount system node
+/// @param volumes 
+/// @return 
+bool ConcreteFileSystem::MountSystemNode(List<FileVol*> volumes, MountNode* mount)
 {
-	return volumes.Remove(volume);
+	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
+	{
+		if (0 == strcmp(volumes.GetName(), mount->source))
+		{
+			mounts.Add(mount);
+			return true;
+		}
+	}
+	return false;
 }
 
 
@@ -172,11 +303,26 @@ int ConcreteFileSystem::DetachVolume(FileVol* volume)
 /// @return 
 FileVol* ConcreteFileSystem::GetVolume(const char* name)
 {
-	for (MountNode* mount = mounts.Begin(); !mounts.IsEnd(); mount = mounts.Next())
+	for (mounts.Begin(); !mounts.IsEnd(); mounts.Next())
 	{
-		if (0 == strncmp(mount->target, name, strlen(mount->target)))
+		return GetVolume(name, mounts.Item());
+	}
+	return NULL;
+}
+
+
+/// @brief Get volume
+/// @param name 
+/// @param mount 
+/// @return 
+FileVol* ConcreteFileSystem::GetVolume(const char* name, MountNode* mount)
+{
+	if (0 == strncmp(mount->target, name, strlen(mount->target)))
+	{
+		for (medias.Begin(); !medias.IsEnd(); medias.Next())
 		{
-			return volumes.GetItemByName(mount->source);
+			FileVol* volume = medias.Item()->vols.GetItem(mount->source);
+			if (NULL != volume) return volume;
 		}
 	}
 	return NULL;

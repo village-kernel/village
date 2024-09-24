@@ -59,7 +59,7 @@ objs-y                              += Exception.o
 
 objs-y                              += FileSystem.o
 objs-$(CONFIG_FATFS)                += FatDiskio.o
-objs-$(CONFIG_FATFS)                += FatEntry.o
+objs-$(CONFIG_FATFS)                += FatFolder.o
 objs-$(CONFIG_FATFS)                += FatObject.o
 objs-$(CONFIG_FATFS)                += FatSystem.o
 
@@ -77,12 +77,15 @@ objs-y                              += CmdMsgMgr.o
 objs-y                              += Console.o
 objs-y                              += Terminal.o
 objs-$(CONFIG_CMD_ABOUT)            += CmdAbout.o
+objs-$(CONFIG_CMD_CAT)              += CmdCat.o
 objs-$(CONFIG_CMD_DEBUG)            += CmdDebug.o
+objs-$(CONFIG_CMD_ECHO)             += CmdEcho.o
 objs-$(CONFIG_CMD_FILESYS)          += CmdFileSys.o
 objs-$(CONFIG_CMD_HELP)             += CmdHelp.o
 objs-$(CONFIG_CMD_KILL)             += CmdKill.o
 objs-$(CONFIG_CMD_MEM)              += CmdMem.o
 objs-$(CONFIG_CMD_MOD)              += CmdMod.o
+objs-$(CONFIG_CMD_NULL)             += CmdNull.o
 objs-$(CONFIG_CMD_POWER)            += CmdPower.o
 objs-$(CONFIG_CMD_PROCESS)          += CmdProcess.o
 objs-$(CONFIG_CMD_RUN)              += CmdRun.o

@@ -128,17 +128,17 @@ private:
 	static const uint16_t fat12_eoc_flag = 0xff8;
 	static const uint16_t fat16_eoc_flag = 0xfff8;
 	static const uint32_t fat32_eoc_flag = 0xffffff8;
-		
+
 	//Driver Members
-	DevStream  device;
-	uint32_t   fstSec;
+	DevStream* device;
+	uint32_t   startingLBA;
 	Info       info;
 
 	//Methods
 	bool CheckFileSystem();
 public:
 	//Method
-	bool Setup(const char* disk, uint32_t fstSec);
+	bool Setup(DevStream* device, uint32_t startingLBA);
 	void Exit();
 
 	uint32_t WriteSector(char* data, uint32_t sector, uint32_t secSize = 1);

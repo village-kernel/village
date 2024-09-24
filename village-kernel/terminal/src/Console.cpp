@@ -40,7 +40,10 @@ Console::~Console()
 void Console::Setup(const char* driver)
 {
 	//Set default user
-	strcpy(user, "root@village");
+	strcpy(user, "root");
+
+	//Set default machine
+	strcpy(mach, "village");
 
 	//Set default path
 	strcpy(path, "/");
@@ -74,13 +77,6 @@ void Console::Execute()
 void Console::ExecuteCmd(CmdMsg msg)
 {
 	msgMgr.Write((uint8_t*)"\r\n");
-
-	//Skip null command
-	if (0 == strcmp("null", (const char*)msg.cmd))
-	{
-		ShowUserAndPath();
-		return;
-	}
 
 	//Gets all terminal commands
 	List<Cmd*> cmds = kernel->terminal.GetCmds();
@@ -136,12 +132,7 @@ void Console::ShowWelcomeMsg()
 /// @brief Console show user and path
 void Console::ShowUserAndPath()
 {
-	mutex.Lock();
-	msgMgr.Write((uint8_t*)user);
-	msgMgr.Write((uint8_t*)" ");
-	msgMgr.Write((uint8_t*)path);
-	msgMgr.Write((uint8_t*)" # ");
-	mutex.Unlock();
+	Print("%s@%s %s # ", user, mach, path);
 }
 
 
@@ -213,10 +204,25 @@ void Console::Warn(const char* format, ...)
 }
 
 
-/// @brief Console output
+/// @brief Console print
 /// @param format 
 /// @param  
-void Console::Output(const char* format, ...)
+void Console::Print(const char* format, ...)
+{
+	mutex.Lock();
+	va_list arg;
+	va_start(arg, format);
+	vsnprintf(data, buf_size, format, arg);
+	va_end(arg);
+	msgMgr.Write((uint8_t*)data);
+	mutex.Unlock();
+}
+
+
+/// @brief Console print line
+/// @param format 
+/// @param  
+void Console::Println(const char* format, ...)
 {
 	mutex.Lock();
 	va_list arg;
@@ -229,17 +235,13 @@ void Console::Output(const char* format, ...)
 }
 
 
-/// @brief Console output
-/// @param format 
-/// @param  
-void Console::OutputRAW(const char* format, ...)
+/// @brief Console Output
+/// @param data 
+/// @param size 
+void Console::Output(const char* data, int size)
 {
 	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)data);
+	msgMgr.Write((uint8_t*)data, size);
 	mutex.Unlock();
 }
 
@@ -264,4 +266,28 @@ void Console::SetPath(const char* path)
 const char* Console::GetPath()
 {
 	return path;
+}
+
+
+/// @brief AbsolutePath
+/// @param filename 
+/// @return 
+const char* Console::AbsolutePath(const char* path)
+{
+	char* res = NULL;
+
+	if ('/' != path[0])
+	{
+		res = new char[strlen(this->path) + strlen(path) + 2]();
+		strcat(res, this->path);
+		if ('/' != res[strlen(this->path) - 1]) strcat(res, "/");
+		strcat(res, path);
+	}
+	else
+	{
+		res = new char[strlen(path) + 1]();
+		strcat(res, path);
+	}
+
+	return res;
 }

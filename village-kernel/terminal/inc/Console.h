@@ -22,6 +22,7 @@ private:
 	//Static constants
 	static const uint16_t buf_size = 256;
 	static const uint16_t user_size = 50;
+	static const uint16_t mach_size = 50;
 	static const uint16_t path_size = 100;
 
 	//Members
@@ -30,6 +31,7 @@ private:
 	CmdMsgMgr  msgMgr;
 	char       data[buf_size];
 	char       user[user_size];
+	char       mach[mach_size];
 	char       path[path_size];
 	
 	//Methods
@@ -51,12 +53,14 @@ public:
 	void Info(const char* format, ...);
 	void Error(const char* format, ...);
 	void Warn(const char* format, ...);
-	void Output(const char* format, ...);
-	void OutputRAW(const char* format, ...);
+	void Print(const char* format, ...);
+	void Println(const char* format, ...);
+	void Output(const char* data, int size);
 	
 	//Path Methods
 	void SetPath(const char* path);
 	const char* GetPath();
+	const char* AbsolutePath(const char* path);
 };
 
 #endif // !__CONSOLE_H__

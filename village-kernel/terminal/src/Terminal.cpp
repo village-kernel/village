@@ -34,24 +34,26 @@ void ConcreteTerminal::Setup()
 /// @brief Terminal Execute
 void ConcreteTerminal::Execute()
 {
-	const char* msg = "\r\nPlease press Enter to activate this console.\r\n";
-	const int   msglen = strlen(msg);
-
-	//Open serial
 	DevStream serial;
-	serial.Open("serial0", FileMode::_ReadWrite);
+	
+	//Open serial
+	if (serial.Open("serial0", FileMode::_ReadWrite))
+	{
+		const char* msg = "\r\nPlease press Enter to activate this console.\r\n";
+		const int   msglen = strlen(msg);
 
-	//Output msg
-	while (msglen != serial.Write((char*)msg, msglen)) {}
+		//Output msg
+		while (msglen != serial.Write((char*)msg, msglen)) {}
 
-	//Wait for Enter
-	char key = 0; do { serial.Read((char*)&key, 1); } while (0x0d != key);
+		//Wait for Enter
+		char key = 0; do { serial.Read((char*)&key, 1); } while (0x0d != key);
 
-	//Close serial
-	serial.Close();
+		//Close serial
+		serial.Close();
 
-	//Create the default console
-	CreateConsole("serial0");
+		//Create the default console
+		CreateConsole("serial0");
+	}
 }
 
 
@@ -68,7 +70,7 @@ void ConcreteTerminal::Exit()
 /// @param name console command name
 void ConcreteTerminal::RegisterCmd(Cmd* cmd, char* name)
 {
-	cmds.InsertByName(cmd, name);
+	cmds.Insert(cmd, name);
 }
 
 
@@ -77,7 +79,7 @@ void ConcreteTerminal::RegisterCmd(Cmd* cmd, char* name)
 /// @param name console command name 
 void ConcreteTerminal::UnregisterCmd(Cmd* cmd, char* name)
 {
-	cmds.RemoveByName(cmd, name);
+	cmds.Remove(cmd, name);
 }
 
 
@@ -146,7 +148,7 @@ int ConcreteTerminal::CreateConsole(const char* driver)
 /// @param driver 
 bool ConcreteTerminal::DestroyConsole(const char* driver)
 {
-	Sandbox* sandbox = sandboxes.GetItemByName(driver);
+	Sandbox* sandbox = sandboxes.GetItem(driver);
 
 	if (NULL != sandbox)
 	{

@@ -25,7 +25,7 @@ public:
 	/// @brief Cmd sleep help
 	void Help()
 	{
-		console->Output("cmd sleep: enter sleep mode");
+		console->Println("cmd sleep: enter sleep mode");
 	}
 };
 
@@ -46,7 +46,7 @@ public:
 	/// @brief Cmd standby help
 	void Help()
 	{
-		console->Output("cmd standby: enter standby mode");
+		console->Println("cmd standby: enter standby mode");
 	}
 };
 
@@ -67,7 +67,7 @@ public:
 	/// @brief Cmd shutdown help
 	void Help()
 	{
-		console->Output("cmd shutdown: shutdown device");
+		console->Println("cmd shutdown: shutdown device");
 	}
 };
 
@@ -88,7 +88,7 @@ public:
 	/// @brief Cmd reboot help
 	void Help()
 	{
-		console->Output("cmd reboot: reboot device");
+		console->Println("cmd reboot: reboot device");
 	}
 };
 

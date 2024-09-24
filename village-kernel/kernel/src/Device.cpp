@@ -29,9 +29,6 @@ void ConcreteDevice::Setup()
 	//Platform probe
 	PlatformProbe();
 
-	//Input device setup
-	InputDevSetup();
-
 	//Set flag
 	isRuntime = true;
 
@@ -43,9 +40,6 @@ void ConcreteDevice::Setup()
 /// @brief Device Exit
 void ConcreteDevice::Exit()
 {
-	//Input device exit
-	InputDevExit();
-
 	//Platform remove
 	PlatformRemove();
 
@@ -170,26 +164,6 @@ inline void ConcreteDevice::PlatformRemove()
 }
 
 
-/// @brief Input device setup
-inline void ConcreteDevice::InputDevSetup()
-{
-	for (inDevs.Begin(); !inDevs.IsEnd(); inDevs.Next())
-	{
-		inDevs.Item()->Open();
-	}
-}
-
-
-/// @brief Input device exit
-inline void ConcreteDevice::InputDevExit()
-{
-	for (inDevs.End(); !inDevs.IsBegin(); inDevs.Prev())
-	{
-		inDevs.Item()->Close();
-	}
-}
-
-
 /// @brief Release devices
 inline void ConcreteDevice::DevicesRelease()
 {
@@ -209,6 +183,7 @@ inline void ConcreteDevice::DevicesRelease()
 void ConcreteDevice::RegisterBlockDevice(BlockDriver* driver)
 {
 	blockDevs.Add(driver, driver->GetName());
+	if (isRuntime) kernel->filesys.MountHardDrive(driver->GetName());
 }
 
 
@@ -216,6 +191,7 @@ void ConcreteDevice::RegisterBlockDevice(BlockDriver* driver)
 /// @param driver driver pointer
 void ConcreteDevice::UnregisterBlockDevice(BlockDriver* driver)
 {
+	if (isRuntime) kernel->filesys.UnmountHardDrive(driver->GetName());
 	blockDevs.Remove(driver);
 }
 
@@ -257,7 +233,7 @@ void ConcreteDevice::UnregisterFBDevice(FBDriver* driver)
 void ConcreteDevice::RegisterInputDevice(InputDriver* driver)
 {
 	inDevs.Add(driver, driver->GetName());
-	if (isRuntime) driver->Open();
+	if (isRuntime) kernel->inputEvent.InitInputDevice(driver->GetName());
 }
 
 
@@ -265,7 +241,7 @@ void ConcreteDevice::RegisterInputDevice(InputDriver* driver)
 /// @param driver driver pointer
 void ConcreteDevice::UnregisterInputDevice(InputDriver* driver)
 {
-	if (isRuntime) driver->Close();
+	if (isRuntime) kernel->inputEvent.ExitInputDevice(driver->GetName());
 	inDevs.Remove(driver);
 }
 
@@ -345,16 +321,19 @@ Fopts* ConcreteDevice::GetDeviceFopts(const char* name)
 {
 	Fopts* fopts = NULL;
 
-	fopts = blockDevs.GetItemByName(name);
+	fopts = blockDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
-	fopts = charDevs.GetItemByName(name);
+	fopts = charDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
-	fopts = fbDevs.GetItemByName(name);
+	fopts = fbDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
-	fopts = miscDevs.GetItemByName(name);
+	fopts = inDevs.GetItem(name);
+	if (NULL != fopts) return fopts;
+
+	fopts = miscDevs.GetItem(name);
 	if (NULL != fopts) return fopts;
 
 	return fopts;
