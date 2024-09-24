@@ -17,32 +17,32 @@
 class FatVolume : public FileVol
 {
 private:
-	//FileLayer
-	struct FileLayer
-	{
-		FatObject* object;
-		int        openMode;
-		int        fileSize;
-		uint32_t   fstClust;
-		uint32_t   secSize;
-		uint32_t   clusSize;
-		int        allocSize;
-		char*      allocBuff;
-	};
-
 	//DirLayer
 	struct DirLayer
 	{
 		FatObject* object;
-		int        openMode;
+		int        dirMode;
 		int        subSize;
 		FatObject* subObjs;
 	};
 
+	//FileLayer
+	struct FileLayer
+	{
+		FatObject* object;
+		int        fileMode;
+		int        fileSize;
+		uint32_t   fstClust;
+		uint32_t   secSize;
+		uint32_t   clusSize;
+		int        buffSize;
+		char*      buffer;
+	};
+
 	//Members
 	FatDiskio         fatDisk;
-	List<FileLayer*>  fls;
-	List<DirLayer*>   dls;
+	List<DirLayer*>   dirLayers;
+	List<FileLayer*>  fileLayers;
 
 	//Members
 	uint32_t bytesPerSec;
