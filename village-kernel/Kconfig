@@ -319,6 +319,27 @@ if KERNEL
 	endmenu
 
 
+	# config protocol stack
+
+	menu "protocol"
+
+	config USB
+		bool "Enable usb stack support"
+		default n
+
+	config USBD
+		depends on USB
+		bool "Enable usb device stack support"
+		default n
+
+	config USBH
+		depends on USB
+		bool "Enable usb host stack support"
+		default n
+
+	endmenu
+
+
 	# terminal menu
 
 	menu "terminal"

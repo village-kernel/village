@@ -25,6 +25,7 @@
 #include "Timer.h"
 #include "Terminal.h"
 #include "Signal.h"
+#include "Protocol.h"
 
 
 /// @brief Village
@@ -49,6 +50,7 @@ private:
 	ConcreteTimer       concreteTimer;
 	ConcreteTerminal    concreteTerminal;
 	ConcreteSignal      concreteSignal;
+	ConcreteProtocol    concreteProtocol;
 private:
 	/// @brief Methods
 	Village();
