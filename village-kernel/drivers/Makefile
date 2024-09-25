@@ -60,8 +60,8 @@ endif
 ######################################
 # block
 ######################################
-inc-y                                 += village-kernel/drivers/block/inc
-src-y                                 += village-kernel/drivers/block/src
+inc-y                                 += village-kernel/drivers/peripheral/block/inc
+src-y                                 += village-kernel/drivers/peripheral/block/src
 
 objs-$(CONFIG_ATALBADISK)             += AtaLbaDisk.o
 objs-$(CONFIG_SDIOSDCARD)             += SdioSdCard.o
@@ -72,8 +72,8 @@ objs-$(CONFIG_SPIW25QXX)              += SpiW25qxx.o
 ######################################
 # display
 ######################################
-inc-y                                 += village-kernel/drivers/display/inc
-src-y                                 += village-kernel/drivers/display/src
+inc-y                                 += village-kernel/drivers/peripheral/display/inc
+src-y                                 += village-kernel/drivers/peripheral/display/src
 
 objs-$(CONFIG_BOCHSVBE)               += BochsVBE.o
 objs-$(CONFIG_ILI9488)                += ILI9488.o
@@ -82,8 +82,8 @@ objs-$(CONFIG_ILI9488)                += ILI9488.o
 ######################################
 # dma
 ######################################
-inc-y                                 += village-kernel/drivers/dma/inc
-src-y                                 += village-kernel/drivers/dma/src
+inc-y                                 += village-kernel/drivers/peripheral/dma/inc
+src-y                                 += village-kernel/drivers/peripheral/dma/src
 
 objs-$(CONFIG_STM32DMA)               += Stm32Dma.o
 
@@ -91,8 +91,8 @@ objs-$(CONFIG_STM32DMA)               += Stm32Dma.o
 ######################################
 # keyboard
 ######################################
-inc-y                                 += village-kernel/drivers/keyboard/inc
-src-y                                 += village-kernel/drivers/keyboard/src
+inc-y                                 += village-kernel/drivers/peripheral/keyboard/inc
+src-y                                 += village-kernel/drivers/peripheral/keyboard/src
 
 objs-$(CONFIG_PS2KEYBOARD)            += PS2KeyBoard.o
 
@@ -100,8 +100,8 @@ objs-$(CONFIG_PS2KEYBOARD)            += PS2KeyBoard.o
 ######################################
 # mouse
 ######################################
-inc-y                                 += village-kernel/drivers/mouse/inc
-src-y                                 += village-kernel/drivers/mouse/src
+inc-y                                 += village-kernel/drivers/peripheral/mouse/inc
+src-y                                 += village-kernel/drivers/peripheral/mouse/src
 
 objs-$(CONFIG_PS2MOUSE)               += PS2Mouse.o
 
@@ -109,8 +109,8 @@ objs-$(CONFIG_PS2MOUSE)               += PS2Mouse.o
 ######################################
 # serial
 ######################################
-inc-y                                 += village-kernel/drivers/serial/inc
-src-y                                 += village-kernel/drivers/serial/src
+inc-y                                 += village-kernel/drivers/peripheral/serial/inc
+src-y                                 += village-kernel/drivers/peripheral/serial/src
 
 objs-$(CONFIG_PIC32UART)              += Pic32Uart.o
 objs-$(CONFIG_STM32UART)              += Stm32Uart.o
@@ -119,8 +119,8 @@ objs-$(CONFIG_STM32UART)              += Stm32Uart.o
 ######################################
 # timer
 ######################################
-inc-y                                 += village-kernel/drivers/timer/inc
-src-y                                 += village-kernel/drivers/timer/src
+inc-y                                 += village-kernel/drivers/peripheral/timer/inc
+src-y                                 += village-kernel/drivers/peripheral/timer/src
 
 objs-$(CONFIG_PIT32TIMER)             += Pit32Timer.o
 
@@ -128,7 +128,7 @@ objs-$(CONFIG_PIT32TIMER)             += Pit32Timer.o
 ######################################
 # usb
 ######################################
-inc-y                                 += village-kernel/drivers/usb/inc
-src-y                                 += village-kernel/drivers/usb/src
+inc-y                                 += village-kernel/drivers/peripheral/usb/inc
+src-y                                 += village-kernel/drivers/peripheral/usb/src
 
 objs-$(CONFIG_STM32USBDFS)            += Stm32UsbdFS.o
