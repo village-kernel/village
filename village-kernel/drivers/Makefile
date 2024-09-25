@@ -8,8 +8,8 @@
 ######################################
 # paths
 ######################################
-inc-y                                 += village-kernel/drivers/mach/inc
-src-y                                 += village-kernel/drivers/mach/src
+inc-y                                 += village-kernel/drivers/machine/inc
+src-y                                 += village-kernel/drivers/machine/src
 
 objs-$(CONFIG_IA32LEGACY)             += IA32legacyDevices.o
 objs-$(CONFIG_STM32F4xx)              += Stm32f407Devices.o
