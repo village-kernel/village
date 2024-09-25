@@ -50,10 +50,5 @@ libs-y                                += hw
 inc-y                                 += village-kernel/vklibs/libhw/ia32legacy/core
 src-y                                 += village-kernel/vklibs/libhw/ia32legacy/core 
 
-inc-y                                 += village-kernel/vklibs/libhw/ia32legacy/drv/inc
-src-y                                 += village-kernel/vklibs/libhw/ia32legacy/drv/src
-
 objs-hw-y                             += i386.o
 objs-hw-y                             += div64.o
-objs-hw-$(CONFIG_DRV_PCI_CONTROLLER)  += PCIController.o
-objs-hw-$(CONFIG_DRV_PS2_CONTROLLER)  += PS2Controller.o

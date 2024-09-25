@@ -7,8 +7,9 @@
 #ifndef __SPI_W25QXX_H__
 #define __SPI_W25QXX_H__
 
-#include "Hardware.h"
 #include "Driver.h"
+#include "Gpio.h"
+#include "Spi.h"
 
 
 /// @brief SpiW25qxx

@@ -8,12 +8,53 @@
 ######################################
 # paths
 ######################################
-inc-y                                 += village-kernel/drivers/platform/inc
-src-y                                 += village-kernel/drivers/platform/src
+inc-y                                 += village-kernel/drivers/mach/inc
+src-y                                 += village-kernel/drivers/mach/src
 
 objs-$(CONFIG_IA32LEGACY)             += IA32legacyDevices.o
 objs-$(CONFIG_STM32F4xx)              += Stm32f407Devices.o
 objs-$(CONFIG_STM32H7xx)              += Stm32h743Devices.o
+
+
+######################################
+# platform
+######################################
+ifeq ($(CONFIG_IA32LEGACY), y)
+inc-y                                 += village-kernel/drivers/platform/ia32legacy/inc
+src-y                                 += village-kernel/drivers/platform/ia32legacy/src
+
+objs-$(CONFIG_IA32LEGACY_DRV_PCI)     += PCIController.o
+objs-$(CONFIG_IA32LEGACY_DRV_PS2)     += PS2Controller.o
+
+else ifeq ($(CONFIG_STM32F4xx), y)
+inc-y                                 += village-kernel/drivers/platform/stm32f4xx/inc
+src-y                                 += village-kernel/drivers/platform/stm32f4xx/src
+
+objs-$(CONFIG_STM32F4XX_DRV_HAL)      += Hal.o
+objs-$(CONFIG_STM32F4XX_DRV_GPIO)     += Gpio.o
+objs-$(CONFIG_STM32F4XX_DRV_NVIC)     += Nvic.o
+objs-$(CONFIG_STM32F4XX_DRV_USART)    += Usart.o
+objs-$(CONFIG_STM32F4XX_DRV_SPI)      += Spi.o
+objs-$(CONFIG_STM32F4XX_DRV_I2C)      += I2c.o
+objs-$(CONFIG_STM32F4XX_DRV_DMA)      += Dma.o
+objs-$(CONFIG_STM32F4XX_DRV_FSMC)     += Fsmc.o
+objs-$(CONFIG_STM32F4XX_DRV_EXTI)     += Exti.o
+
+else ifeq ($(CONFIG_STM32H7xx), y)
+inc-y                                 += village-kernel/drivers/platform/stm32h7xx/inc
+src-y                                 += village-kernel/drivers/platform/stm32h7xx/src
+
+objs-$(CONFIG_STM32H7XX_DRV_HAL)      += Hal.o
+objs-$(CONFIG_STM32H7XX_DRV_GPIO)     += Gpio.o
+objs-$(CONFIG_STM32H7XX_DRV_LTDC)     += Ltdc.o
+objs-$(CONFIG_STM32H7XX_DRV_NVIC)     += Nvic.o
+objs-$(CONFIG_STM32H7XX_DRV_USART)    += Usart.o
+objs-$(CONFIG_STM32H7XX_DRV_SDIO)     += Sdio.o
+objs-$(CONFIG_STM32H7XX_DRV_SPI)      += Spi.o
+objs-$(CONFIG_STM32H7XX_DRV_I2C)      += I2c.o
+objs-$(CONFIG_STM32H7XX_DRV_DMA)      += Dma.o
+objs-$(CONFIG_STM32H7XX_DRV_FSMC)     += Fsmc.o
+endif
 
 
 ######################################

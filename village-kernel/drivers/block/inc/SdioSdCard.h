@@ -7,8 +7,9 @@
 #ifndef __SDIO_SD_CARD_H__
 #define __SDIO_SD_CARD_H__
 
-#include "Hardware.h"
 #include "Driver.h"
+#include "Gpio.h"
+#include "Sdio.h"
 
 
 /// @brief SdioSdCard

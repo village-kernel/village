@@ -7,8 +7,9 @@
 #ifndef __ILI9488_H__
 #define __ILI9488_H__
 
-#include "Hardware.h"
 #include "Driver.h"
+#include "Gpio.h"
+#include "Fsmc.h"
 
 
 /// @brief ILI9488
