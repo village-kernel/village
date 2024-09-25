@@ -9,7 +9,7 @@
 #ifndef __DMA_FIFO_H__
 #define __DMA_FIFO_H__
 
-#include "Hardware.h"
+#include "Dma.h"
 
 
 /// @brief Stm32Dma

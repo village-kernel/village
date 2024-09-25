@@ -7,8 +7,9 @@
 #ifndef __SPI_SD_CARD_H__
 #define __SPI_SD_CARD_H__
 
-#include "Hardware.h"
 #include "Driver.h"
+#include "Gpio.h"
+#include "Spi.h"
 
 
 /// @brief SpiSdCard

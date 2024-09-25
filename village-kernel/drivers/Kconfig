@@ -1,3 +1,121 @@
+menu "platform"
+
+# IA32Legacy hal drv
+
+if IA32LEGACY
+
+config IA32LEGACY_DRV_PCI
+	bool "Enable pci controller class"
+	default y
+
+config IA32LEGACY_DRV_PS2
+	bool "Enable ps2 controller class"
+	default y
+
+endif
+
+# STM32F4xx hal drv
+
+if STM32F4xx
+
+config STM32F4XX_DRV_HAL
+	bool "Enable Hal drv class"
+	default n
+
+config STM32F4XX_DRV_GPIO
+	bool "Enable GPIO drv class"
+	default y
+
+config STM32F4XX_DRV_NVIC
+	bool "Enalbe NVIC drv class"
+	default y
+
+config STM32F4XX_DRV_USART
+	select STM32F4XX_DRV_GPIO
+	bool "Enable USART drv clas"
+	default n
+
+config STM32F4XX_DRV_SPI
+	select STM32F4XX_DRV_GPIO
+	bool "Enable SPI drv class"
+	default n
+
+config STM32F4XX_DRV_I2C
+	select STM32F4XX_DRV_GPIO
+	bool "Enable I2C drv class"
+	default n
+
+config STM32F4XX_DRV_DMA
+	bool "Enable dma drv class"
+	default n
+
+config STM32F4XX_DRV_FSMC
+	select STM32F4XX_DRV_GPIO
+	bool "Enable FSMC drv class"
+	default n
+
+config STM32F4XX_DRV_EXTI
+	select STM32F4XX_DRV_GPIO
+	select STM32F4XX_DRV_NVIC
+	bool "Enable EXTI drv class"
+	default n
+
+endif
+
+# STM32H7xx hal drv
+
+if STM32H7xx
+
+config STM32H7XX_DRV_HAL
+	bool "Enable Hal drv class"
+	default n
+
+config STM32H7XX_DRV_GPIO
+	bool "Enable GPIO drv class"
+	default y
+
+config STM32H7XX_DRV_LTDC
+	select STM32H7XX_DRV_GPIO
+	bool "Enalbe LTDC drv class"
+	default y
+
+config STM32H7XX_DRV_NVIC
+	bool "Enalbe NVIC drv class"
+	default y
+
+config STM32H7XX_DRV_USART
+	select STM32H7XX_DRV_GPIO
+	bool "Enable USART drv clas"
+	default n
+
+config STM32H7XX_DRV_SDIO
+	select STM32H7XX_DRV_GPIO
+	bool "Enable SDIO drv class"
+	default n
+
+config STM32H7XX_DRV_SPI
+	select STM32H7XX_DRV_GPIO
+	bool "Enable SPI drv class"
+	default n
+
+config STM32H7XX_DRV_I2C
+	select STM32H7XX_DRV_GPIO
+	bool "Enable I2C drv class"
+	default n
+
+config STM32H7XX_DRV_DMA
+	bool "Enable DMA drv class"
+	default n
+
+config STM32H7XX_DRV_FSMC
+	select STM32H7XX_DRV_GPIO
+	bool "Enable FSMC drv class"
+	default n
+
+endif
+
+endmenu
+
 menu "block"
 
 config ATALBADISK

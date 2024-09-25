@@ -7,9 +7,10 @@
 #ifndef __STM32_UART_H__
 #define __STM32_UART_H__
 
-#include "Hardware.h"
 #include "Stm32Dma.h"
 #include "Driver.h"
+#include "Gpio.h"
+#include "Usart.h"
 
 
 /// @brief Stm32Uart

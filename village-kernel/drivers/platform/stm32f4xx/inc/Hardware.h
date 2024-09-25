@@ -7,8 +7,7 @@
 #ifndef __HARDWARE_H__
 #define __HARDWARE_H__
 
-#include "stdint.h"
-#include "stdio.h"
-#include "village_drv_hw.h"
+#include <stdio.h>
+#include "stm32f4xx.h"
 
 #endif //!__HARDWARE_H__
