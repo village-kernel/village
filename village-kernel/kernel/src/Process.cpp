@@ -37,7 +37,7 @@ void ConcreteProcess::Setup()
 /// @brief Process Taichi
 void ConcreteProcess::Taichi()
 {
-	const char* taichi = "/applications/taichi.exec";
+	const char* taichi = "/services/taichi.exec";
 	
 	if (0 > Run(Process::_Background, taichi))
 	{
