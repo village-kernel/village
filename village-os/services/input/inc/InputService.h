@@ -1,17 +1,17 @@
 //###########################################################################
-// SimpleInput.h
-// The overall framework of the simple input method
+// InputService.h
+// Declarations of the input service
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __SIMPLE_INPUT_METHOD_H__
-#define __SIMPLE_INPUT_METHOD_H__
+#ifndef __INPUT_SERVICE_H__
+#define __INPUT_SERVICE_H__
 
 #include "Kernel.h"
 
 
-/// @brief SimpleInput
-class SimpleInput : public Class
+/// @brief InputService
+class InputService : public Class
 {
 private:
 	//Members
@@ -24,14 +24,14 @@ private:
 	void SpecialKeysPressed(int code);
 	void SpecialKeysReleased(int code);
 	void CharacterKeys(int code);
-	void InputKeyHandler(InputEvent::InputKey* input);
-	void InputAxisHandler(InputEvent::InputAxis* input);
+	void InputKeyCallBack(InputEvent::InputKey* input);
+	void InputAxisCallBack(InputEvent::InputAxis* input);
 public:
 	//Methods
-	SimpleInput();
-	~SimpleInput();
+	InputService();
+	~InputService();
 	void Setup();
 	void Execute();
 };
 
-#endif //!__SIMPLE_INPUT_METHOD_H__
+#endif //!__INPUT_SERVICE_H__

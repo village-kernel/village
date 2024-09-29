@@ -1,22 +1,22 @@
 //###########################################################################
 // Taichi.h
-// The overall framework of the taichi
+// Declarations of the taichi service
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __TAICHI_H__
-#define __TAICHI_H__
+#ifndef __TAICHI_SERVICE_H__
+#define __TAICHI_SERVICE_H__
 
 
-///Taichi
-class Taichi
+/// @brief TaichiService
+class TaichiService
 {
 public:
 	//Methods
-	Taichi();
-	~Taichi();
+	TaichiService();
+	~TaichiService();
 	void Setup();
 	void Execute();
 };
 
-#endif //!__TAICHI_H__
+#endif //!__TAICHI_SERVICE_H__

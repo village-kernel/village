@@ -1,33 +1,33 @@
 ###########################################################################
 # Makefile
-# The Makefile of settings
+# The Makefile of input service
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_TAICHI), y)
+ifeq ($(CONFIG_INPUT_SERVICE), y)
 
 ######################################
-# applications
+# services
 ######################################
-apps-y                                += taichi
+svcs-y                                += input
 
 
 ######################################
 # paths
 ######################################
-inc-taichi-y                          += village-os/applications/taichi/inc
-src-taichi-y                          += village-os/applications/taichi/src
+inc-input-y                           += village-os/services/input/inc
+src-input-y                           += village-os/services/input/src
 
 
 ######################################
 # objects
 ######################################
-objs-taichi-y                         += Taichi.o
+objs-input-y                          += InputService.o
 
 
 ######################################
 # libraries
 ######################################
-libs-taichi-y                         += utils stdc++ c
+libs-input-y                          += utils c
 
 endif

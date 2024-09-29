@@ -1,33 +1,33 @@
 ###########################################################################
 # Makefile
-# The Makefile of simple input
+# The Makefile of taichi service
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_SIMPLE_INPUT_APP), y)
+ifeq ($(CONFIG_TAICHI_SERVICE), y)
 
 ######################################
-# applications
+# services
 ######################################
-apps-y                                += simpleInput
+svcs-y                                += taichi
 
 
 ######################################
 # paths
 ######################################
-inc-simpleInput-y                     += village-os/applications/simpleInput/inc
-src-simpleInput-y                     += village-os/applications/simpleInput/src
+inc-taichi-y                          += village-os/services/taichi/inc
+src-taichi-y                          += village-os/services/taichi/src
 
 
 ######################################
 # objects
 ######################################
-objs-simpleInput-y                    += SimpleInput.o
+objs-taichi-y                         += TaichiService.o
 
 
 ######################################
 # libraries
 ######################################
-libs-simpleInput-y                    += utils c
+libs-taichi-y                         += utils stdc++ c
 
 endif

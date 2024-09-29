@@ -1,0 +1,9 @@
+# keyboinputard menu
+
+menu "input"
+
+config INPUT_SERVICE
+	bool "Build input method service"
+	default y
+
+endmenu

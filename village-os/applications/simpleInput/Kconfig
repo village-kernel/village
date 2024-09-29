@@ -1,9 +1,0 @@
-# keyboinputard menu
-
-menu "simple input"
-
-config SIMPLE_INPUT_APP
-	bool "Build simple input method application"
-	default y
-
-endmenu

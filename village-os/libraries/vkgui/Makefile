@@ -14,12 +14,12 @@ oslibs-$(CONFIG_GUI)                    += vkgui
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_GUI)                       += village-os/framework/vkgui/core/inc
-inc-$(CONFIG_GUI)                       += village-os/framework/vkgui/font/inc
-inc-$(CONFIG_GUI)                       += village-os/framework/vkgui/wedget/inc
+inc-$(CONFIG_GUI)                       += village-os/libraries/vkgui/core/inc
+inc-$(CONFIG_GUI)                       += village-os/libraries/vkgui/font/inc
+inc-$(CONFIG_GUI)                       += village-os/libraries/vkgui/wedget/inc
 
-src-$(CONFIG_GUI)                       += village-os/framework/vkgui/core/src
-src-$(CONFIG_GUI)                       += village-os/framework/vkgui/wedget/src
+src-$(CONFIG_GUI)                       += village-os/libraries/vkgui/core/src
+src-$(CONFIG_GUI)                       += village-os/libraries/vkgui/wedget/src
 
 
 ######################################

@@ -1,5 +1,3 @@
-comment "This is using to configure graphics library"
-
 # config GUI
 
 config GUI

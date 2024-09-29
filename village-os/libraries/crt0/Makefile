@@ -8,7 +8,7 @@
 ######################################
 # paths
 ######################################
-src-y        += village-os/framework/crt0
+src-y        += village-os/libraries/crt0
 
 
 ######################################
@@ -20,7 +20,7 @@ C_RUNTIME_ZERO := crt0_app.o
 ######################################
 # link script
 ######################################
-LDSCRIPT-APP := -T village-os/framework/crt0/crt0_app.lds
+LDSCRIPT-APP := -T village-os/libraries/crt0/crt0_app.lds
 
 
 #######################################
@@ -39,6 +39,6 @@ ifeq ($(CONFIG_IA32), y)
 LDFLAGS-APP  += -Wl,-m,elf_i386
 endif
 
-ifeq ($(CONFIG_GENERATED_STATIC_APP), y)
+ifeq ($(CONFIG_GENERATED_STATIC_PROG), y)
 LDFLAGS-APP  += -Wl,-static
 endif

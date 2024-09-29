@@ -1,37 +1,37 @@
 //###########################################################################
 // Taichi.cpp
-// The overall framework of the taichi
+// Definitions of the functions that manage taichi service
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "TaichiService.h"
 #include "Kernel.h"
-#include "Taichi.h"
 
 
 /// @brief Constructor
-Taichi::Taichi()
+TaichiService::TaichiService()
 {
 }
 
 
 /// @brief Destructor
-Taichi::~Taichi()
+TaichiService::~TaichiService()
 {
 }
 
 
 /// @brief Setup
-void Taichi::Setup()
+void TaichiService::Setup()
 {
 
 }
 
 
 /// @brief Execute
-void Taichi::Execute()
+void TaichiService::Execute()
 {
-	//Execute simple input method
-	kernel->process.Run(Process::_Background, "/applications/simpleInput.exec");
+	//Execute input service
+	kernel->process.Run(Process::_Background, "/services/input.exec");
 
 	//Execute desktop
 	kernel->process.Run(Process::_Background, "/applications/desktop.exec");
@@ -41,7 +41,7 @@ void Taichi::Execute()
 /// @brief main
 int main(void)
 {
-	Taichi taichi;
+	TaichiService taichi;
 	taichi.Setup();
 	taichi.Execute();
 	return 0;

@@ -1,10 +1,10 @@
 //###########################################################################
-// SimpleInput.cpp
-// The overall framework of the simple input method
+// InputService.cpp
+// Definitions of the functions that manage input service
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "SimpleInput.h"
+#include "InputService.h"
 #include "EventCodes.h"
 
 
@@ -35,7 +35,7 @@ static const char upperCodes[0x3A] = {
 
 
 /// @brief Constructor
-SimpleInput::SimpleInput()
+InputService::InputService()
 	:isCapsLock(false),
 	isAltPressed(false),
 	isCtrlPressed(false),
@@ -45,23 +45,23 @@ SimpleInput::SimpleInput()
 
 
 /// @brief Destructor
-SimpleInput::~SimpleInput()
+InputService::~InputService()
 {
 }
 
 
 /// @brief Setup
-void SimpleInput::Setup()
+void InputService::Setup()
 {
 	//Attach input event
-	kernel->inputEvent.Attach(InputEvent::_InputKey, (Method)&SimpleInput::InputKeyHandler, this);
-	kernel->inputEvent.Attach(InputEvent::_InputAxis, (Method)&SimpleInput::InputAxisHandler, this);
+	kernel->inputEvent.Attach(InputEvent::_InputKey, (Method)&InputService::InputKeyCallBack, this);
+	kernel->inputEvent.Attach(InputEvent::_InputAxis, (Method)&InputService::InputAxisCallBack, this);
 }
 
 
 /// @brief SpecialKeysPressed
 /// @param code 
-void SimpleInput::SpecialKeysPressed(int code)
+void InputService::SpecialKeysPressed(int code)
 {
 	switch (code)
 	{
@@ -100,7 +100,7 @@ void SimpleInput::SpecialKeysPressed(int code)
 
 /// @brief SpecialKeysReleased
 /// @param code 
-void SimpleInput::SpecialKeysReleased(int code)
+void InputService::SpecialKeysReleased(int code)
 {
 	switch (code)
 	{
@@ -124,7 +124,7 @@ void SimpleInput::SpecialKeysReleased(int code)
 
 /// @brief CharacterKeys
 /// @param code 
-void SimpleInput::CharacterKeys(int code)
+void InputService::CharacterKeys(int code)
 {
 	if ((code > EventCode::_KeyReserved) && 
 		(code <= EventCode:: _KeySpace))
@@ -146,7 +146,7 @@ void SimpleInput::CharacterKeys(int code)
 
 
 /// @brief Input key handler
-void SimpleInput::InputKeyHandler(InputEvent::InputKey* input)
+void InputService::InputKeyCallBack(InputEvent::InputKey* input)
 {
 	if (KeyStatus::_KeyPressed == input->status)
 	{
@@ -165,14 +165,14 @@ void SimpleInput::InputKeyHandler(InputEvent::InputKey* input)
 
 
 /// @brief Input axis handler
-void SimpleInput::InputAxisHandler(InputEvent::InputAxis* input)
+void InputService::InputAxisCallBack(InputEvent::InputAxis* input)
 {
 	kernel->inputEvent.PushAxis(input->axisX, input->axisY, input->axisZ);
 }
 
 
 /// @brief Execute
-void SimpleInput::Execute()
+void InputService::Execute()
 {
 	kernel->thread.ChangeState(Thread::_Blocked);
 
@@ -183,7 +183,7 @@ void SimpleInput::Execute()
 /// @brief main
 int main(int argc, char* argv[])
 {
-	SimpleInput input;
+	InputService input;
 	input.Setup();
 	input.Execute();
 	return 0;
