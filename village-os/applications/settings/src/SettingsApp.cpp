@@ -1,49 +1,51 @@
 //###########################################################################
-// Settings.cpp
-// The overall framework of the Settings
+// SettingsApp.cpp
+// Definitions of the functions that manage settings app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
-#include "Settings.h"
+#include "SettingsApp.h"
 
 
 /// @brief Constructor
-Settings::Settings()
+SettingsApp::SettingsApp()
 {
 }
 
 
 /// @brief Destructor
-Settings::~Settings()
+SettingsApp::~SettingsApp()
 {
 }
 
 
 /// @brief Setup
-void Settings::Setup()
+void SettingsApp::Setup()
 {
-
+	ui.Setup();
 }
 
 
 /// @brief Execute
-void Settings::Execute()
+void SettingsApp::Execute()
 {
-	int counter = 0;
-	while (1) 
-	{
-		kernel->debug.Log("hello settings counter %d", counter++);
-		kernel->thread.Sleep(2000);
-	}
+	while(1) ui.Execute();
+}
+
+
+/// @brief Exit
+void SettingsApp::Exit()
+{
+	ui.Exit();
 }
 
 
 /// @brief main
 int main(void)
 {
-	Settings settings;
+	SettingsApp settings;
 	settings.Setup();
 	settings.Execute();
+	settings.Exit();
 	return 0;
 }

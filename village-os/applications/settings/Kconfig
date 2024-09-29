@@ -2,11 +2,11 @@
 
 menu "settings"
 
-config SETTINGS
+config SETTINGS_APP
 	bool "Build settings application"
 	default y
 
-if SETTINGS
+if SETTINGS_APP
 
 endif
 

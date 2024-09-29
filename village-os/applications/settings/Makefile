@@ -4,7 +4,7 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_SETTINGS), y)
+ifeq ($(CONFIG_SETTINGS_APP), y)
 
 ######################################
 # applications
@@ -22,7 +22,8 @@ src-settings-y                        += village-os/applications/settings/src
 ######################################
 # objects
 ######################################
-objs-settings-y                       += Settings.o
+objs-settings-y                       += SettingsUI.o
+objs-settings-y                       += SettingsApp.o
 
 
 ######################################
