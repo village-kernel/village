@@ -2,7 +2,7 @@
 
 menu "desktop"
 
-config DESKTOP
+config DESKTOP_APP
 	bool "Build desktop application"
 	default y
 

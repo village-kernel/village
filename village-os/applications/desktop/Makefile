@@ -4,7 +4,7 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_DESKTOP), y)
+ifeq ($(CONFIG_DESKTOP_APP), y)
 
 ######################################
 # applications
@@ -22,7 +22,8 @@ src-desktop-y                         += village-os/applications/desktop/src
 ######################################
 # objects
 ######################################
-objs-desktop-y                        += Desktop.o
+objs-desktop-y                        += DesktopUI.o
+objs-desktop-y                        += DesktopApp.o
 
 
 ######################################
