@@ -4,7 +4,7 @@
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_SIMPLE_INPUT), y)
+ifeq ($(CONFIG_SIMPLE_INPUT_APP), y)
 
 ######################################
 # applications
