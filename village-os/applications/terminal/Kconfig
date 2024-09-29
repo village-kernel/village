@@ -1,0 +1,13 @@
+# terminal menu
+
+menu "terminal"
+
+config TERMINAL_APP
+	bool "Build terminal application"
+	default y
+
+if TERMINAL_APP
+
+endif
+
+endmenu

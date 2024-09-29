@@ -2,12 +2,14 @@ comment "This is using to configure application"
 
 if GENERATED_APP
 
-source ./village-os/applications/taichi/Kconfig
-
 source ./village-os/applications/desktop/Kconfig
 
 source ./village-os/applications/settings/Kconfig
 
 source ./village-os/applications/simpleInput/Kconfig
+
+source ./village-os/applications/taichi/Kconfig
+
+source ./village-os/applications/terminal/Kconfig
 
 endif
