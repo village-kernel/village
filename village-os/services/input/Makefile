@@ -9,25 +9,25 @@ ifeq ($(CONFIG_INPUT_SERVICE), y)
 ######################################
 # services
 ######################################
-svcs-y                                += input
+svcs-y                                += inputsvc
 
 
 ######################################
 # paths
 ######################################
-inc-input-y                           += village-os/services/input/inc
-src-input-y                           += village-os/services/input/src
+inc-inputsvc-y                        += village-os/services/input/inc
+src-inputsvc-y                        += village-os/services/input/src
 
 
 ######################################
 # objects
 ######################################
-objs-input-y                          += InputService.o
+objs-inputsvc-y                       += InputService.o
 
 
 ######################################
 # libraries
 ######################################
-libs-input-y                          += utils c
+libs-inputsvc-y                       += utils c
 
 endif
