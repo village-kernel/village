@@ -7,7 +7,7 @@
 #ifndef __DESKTOP_UI_H__
 #define __DESKTOP_UI_H__
 
-#include "Graphics.h"
+#include "VkGUI.h"
 #include "Kernel.h"
 
 
@@ -16,7 +16,6 @@ class DesktopUI : public Class
 {
 private:
 	//Members
-	Graphics graphics;
 	Window*  mainwin;
 	Toolbar* toolbar;
 	Tabbar*  tabbar;

@@ -8,7 +8,6 @@
 #define __DESKTOP_APP_H__
 
 #include "DesktopUI.h"
-#include "Kernel.h"
 
 
 /// @brief DesktopApp

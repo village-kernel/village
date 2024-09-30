@@ -5,7 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "DesktopApp.h"
-#include "Kernel.h"
 
 
 /// @brief Constructor
