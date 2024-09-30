@@ -1,17 +1,19 @@
 //###########################################################################
-// Graphics.h
-// Declarations of the functions that manage Graphics
+// VkGUI.h
+// Declarations of the functions that manage VkGUI
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __GRAPHICS_H__
-#define __GRAPHICS_H__
+#ifndef __VK_GUI_H__
+#define __VK_GUI_H__
 
+#include "Module.h"
 #include "Display.h"
 #include "Wedgets.h"
 
-/// @brief Graphics
-class Graphics
+
+/// @brief VkGUI
+class VkGUI : public Module
 {
 private:
 	//Members
@@ -20,11 +22,11 @@ private:
 	Wedget*     mainwin;
 public:
 	//Methods
-	Graphics();
-	~Graphics();
+	VkGUI();
+	~VkGUI();
 	bool Setup();
 	void Exit();
 	Wedget* CreateMainWindow();
 };
 
-#endif //!__GRAPHICS_H__
+#endif //!__VK_GUI_H__

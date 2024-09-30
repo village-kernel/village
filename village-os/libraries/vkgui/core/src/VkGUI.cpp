@@ -1,17 +1,17 @@
 //###########################################################################
-// Graphics.cpp
+// VkGUI.cpp
 // Definitions of the functions that manage graphics
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Graphics.h"
+#include "VkGUI.h"
 #include "DevStream.h"
 #include "Window.h"
 #include "Kernel.h"
 
 
 /// @brief Constructor
-Graphics::Graphics()
+VkGUI::VkGUI()
 	:fbdev(NULL),
 	display(NULL),
 	mainwin(NULL)
@@ -20,7 +20,7 @@ Graphics::Graphics()
 
 
 /// @brief Destructor
-Graphics::~Graphics()
+VkGUI::~VkGUI()
 {
 	if (fbdev)   delete fbdev;
 	if (display) delete display;
@@ -29,7 +29,7 @@ Graphics::~Graphics()
 
 
 /// @brief Setup
-bool Graphics::Setup()
+bool VkGUI::Setup()
 {
 	//Get all block device blockDevs
 	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
@@ -55,7 +55,7 @@ bool Graphics::Setup()
 
 
 /// @brief Exit
-void Graphics::Exit()
+void VkGUI::Exit()
 {
 	if (NULL != display)
 	{
@@ -67,7 +67,7 @@ void Graphics::Exit()
 
 /// @brief Create main window
 /// @return 
-Wedget* Graphics::CreateMainWindow()
+Wedget* VkGUI::CreateMainWindow()
 {
 	if (NULL != display)
 	{
