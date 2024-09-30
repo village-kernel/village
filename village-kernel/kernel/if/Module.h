@@ -22,7 +22,7 @@ public:
 	virtual ~Module() { }
 
 	//Methods
-	virtual void Setup() = 0;
+	virtual bool Setup() = 0;
 	virtual void Exit()  = 0;
 };
 
