@@ -30,6 +30,9 @@ void TaichiService::Setup()
 /// @brief Execute
 void TaichiService::Execute()
 {
+	//Execute gui service
+	kernel->process.Run(Process::_Background, "/services/gui.exec");
+
 	//Execute input service
 	kernel->process.Run(Process::_Background, "/services/input.exec");
 
