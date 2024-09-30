@@ -1,33 +1,33 @@
 ###########################################################################
 # Makefile
-# The Makefile of gui service
+# The Makefile of vkgui service
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_GUI_SERVICE), y)
+ifeq ($(CONFIG_VKGUI_SERVICE), y)
 
 ######################################
 # services
 ######################################
-svcs-y                                += gui
+svcs-y                                += vkguisvc
 
 
 ######################################
 # paths
 ######################################
-inc-gui-y                             += village-os/services/gui/inc
-src-gui-y                             += village-os/services/gui/src
+inc-vkguisvc-y                        += village-os/services/vkgui/inc
+src-vkguisvc-y                        += village-os/services/vkgui/src
 
 
 ######################################
 # objects
 ######################################
-objs-gui-y                            += GuiService.o
+objs-vkguisvc-y                       += VkGuiService.o
 
 
 ######################################
 # libraries
 ######################################
-libs-gui-y                            += vkgui utils stdc++ c
+libs-vkguisvc-y                       += vkgui utils stdc++ c
 
 endif

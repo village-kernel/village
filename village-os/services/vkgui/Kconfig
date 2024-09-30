@@ -1,0 +1,9 @@
+# gui menu
+
+menu "vkgui"
+
+config VKGUI_SERVICE
+	bool "Build village GUI service"
+	default y
+
+endmenu
