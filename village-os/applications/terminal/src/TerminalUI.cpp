@@ -43,26 +43,29 @@ void TerminalUI::Execute()
 void TerminalUI::Exit()
 {
 	kernel->inputEvent.Detach(InputEvent::_OutputText, (Method)&TerminalUI::UpdateText, this);
-	graphics.Exit();
 }
 
 
 /// @brief SetupWin
 bool TerminalUI::SetupWin()
 {
-	if (false == graphics.Setup()) return false;
+	VkGUI* vkgui = (VkGUI*)kernel->feature.GetModule("vkgui");
 
-	mainwin = (Window*)graphics.CreateMainWindow();
+	if (NULL != vkgui)
+	{
+		mainwin = (Window*)vkgui->CreateMainWindow();
 
-	frame = (Frame*)mainwin->CreateWedget(Wedget::_Frame);
-	frame->SetLocation(20, 20, mainwin->GetWidth() - 40, mainwin->GetHeight() - 78);
+		frame = (Frame*)mainwin->CreateWedget(Wedget::_Frame);
+		frame->SetLocation(20, 20, mainwin->GetWidth(), mainwin->GetHeight());
 
-	textbox = (TextBox*)frame->CreateWedget(Wedget::_TextBox);
-	textbox->SetLocation(1, 21, frame->GetWidth() - 2, frame->GetHeight() - 22);
+		textbox = (TextBox*)frame->CreateWedget(Wedget::_TextBox);
+		textbox->SetLocation(1, 21, frame->GetWidth() - 2, frame->GetHeight() - 22);
 
-	mainwin->Show();
+		mainwin->Show();
 
-	return true;
+		return true;
+	}
+	return false;
 }
 
 

@@ -7,7 +7,7 @@
 #ifndef __TERMINAL_UI_H__
 #define __TERMINAL_UI_H__
 
-#include "Graphics.h"
+#include "VkGUI.h"
 #include "Kernel.h"
 
 
@@ -16,7 +16,6 @@ class TerminalUI : public Class
 {
 private:
 	//Members
-	Graphics graphics;
 	Window*  mainwin;
 	Frame*   frame;
 	TextBox* textbox;
