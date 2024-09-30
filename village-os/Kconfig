@@ -20,6 +20,7 @@ if VKOS
 
 	menu "services"
 		comment "This is using to configure service"
+		source ./village-os/services/gui/Kconfig
 		source ./village-os/services/input/Kconfig
 		source ./village-os/services/taichi/Kconfig
 	endmenu

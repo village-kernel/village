@@ -1,0 +1,9 @@
+# gui menu
+
+menu "gui"
+
+config GUI_SERVICE
+	bool "Build GUI service"
+	default y
+
+endmenu

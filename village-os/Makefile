@@ -17,5 +17,6 @@ include village-os/libraries/vkgui/Makefile
 
 
 # services
+include village-os/services/gui/Makefile
 include village-os/services/input/Makefile
 include village-os/services/taichi/Makefile
