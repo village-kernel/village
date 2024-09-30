@@ -163,6 +163,7 @@ public:
 	/// @brief State Methods
 	virtual void ChangeState(TaskState state) = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
+	virtual void Blocked() = 0;
 	virtual void TaskExit() = 0;
 
 	/// @brief Scheduler Methods

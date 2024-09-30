@@ -236,6 +236,18 @@ void ConcreteThread::Sleep(uint32_t ticks)
 }
 
 
+/// @brief Thread Blocked
+void ConcreteThread::Blocked()
+{
+	if(tasks.GetNid() > 0)
+	{
+		tasks.Item()->state = TaskState::_Blocked;
+		scheduler->Sched();
+		while (TaskState::_Blocked == tasks.Item()->state) {}
+	}
+}
+
+
 /// @brief Thread Exit
 void ConcreteThread::TaskExit()
 {
