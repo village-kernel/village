@@ -183,9 +183,7 @@ void InputService::InputAxisCallBack(InputEvent::InputAxis* input)
 /// @brief Execute
 void InputService::Execute()
 {
-	kernel->thread.ChangeState(Thread::_Blocked);
-
-	while(1) {}
+	kernel->thread.Blocked();
 }
 
 
