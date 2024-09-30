@@ -32,6 +32,7 @@ public:
 	~InputService();
 	void Setup();
 	void Execute();
+	void Exit();
 };
 
 #endif //!__INPUT_SERVICE_H__

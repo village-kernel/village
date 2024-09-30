@@ -59,6 +59,15 @@ void InputService::Setup()
 }
 
 
+/// @brief Exit
+void InputService::Exit()
+{
+	//Detach input event
+	kernel->inputEvent.Detach(InputEvent::_InputKey, (Method)&InputService::InputKeyCallBack, this);
+	kernel->inputEvent.Detach(InputEvent::_InputAxis, (Method)&InputService::InputAxisCallBack, this);
+}
+
+
 /// @brief SpecialKeysPressed
 /// @param code 
 void InputService::SpecialKeysPressed(int code)
@@ -186,5 +195,6 @@ int main(int argc, char* argv[])
 	InputService input;
 	input.Setup();
 	input.Execute();
+	input.Exit();
 	return 0;
 }
