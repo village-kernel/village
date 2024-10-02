@@ -30,6 +30,6 @@ objs-terminal-y                       += TerminalApp.o
 ######################################
 # libraries
 ######################################
-libs-terminal-y                       += vkgui utils stdc++ c
+libs-terminal-y                       += vkgui utils vkc++ vkc
 
 endif
