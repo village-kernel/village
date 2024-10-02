@@ -212,6 +212,7 @@ oslibs:
 #######################################
 ossvcs:
 	$(Q)mkdir -p $(SVCS_DIR)
+	$(Q)echo "#prepare services" > $(SVCS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(svcs-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
@@ -229,6 +230,9 @@ ossvcs:
 			$(MAKE) $(SVCS_DIR)/$(name).bin;                      \
 		fi;                                                       \
 		$(MAKE) $(SVCS_DIR)/$(name).exec;                         \
+		if [[ "$(settings-$(name))" =~ "power_up" ]]; then        \
+			echo /services/$(name).exec >> $(SVCS_DIR)/_load_.rc; \
+		fi;                                                       \
 	)
 
 
@@ -237,6 +241,7 @@ ossvcs:
 #######################################
 osapps:
 	$(Q)mkdir -p $(APPS_DIR) 
+	$(Q)echo "#prepare applications" > $(APPS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(apps-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
@@ -254,6 +259,9 @@ osapps:
 			$(MAKE) $(APPS_DIR)/$(name).bin;                      \
 		fi;                                                       \
 		$(MAKE) $(APPS_DIR)/$(name).exec;                         \
+		if [[ "$(settings-$(name))" =~ "power_up" ]]; then        \
+			echo /applications/$(name).exec >> $(APPS_DIR)/_load_.rc;\
+		fi;                                                       \
 	)
 
 
