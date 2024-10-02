@@ -11,12 +11,17 @@
 /// @brief TaichiService
 class TaichiService
 {
+private:
+	//Methods
+	void Load(const char* filename);
+	void Unload(const char* filename);
 public:
 	//Methods
 	TaichiService();
 	~TaichiService();
 	void Setup();
 	void Execute();
+	void Exit();
 };
 
 #endif //!__TAICHI_SERVICE_H__
