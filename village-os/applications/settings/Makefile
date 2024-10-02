@@ -29,6 +29,6 @@ objs-settings-y                       += SettingsApp.o
 ######################################
 # libraries
 ######################################
-libs-settings-y                       += c
+libs-settings-y                       += vkc
 
 endif
