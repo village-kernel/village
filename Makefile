@@ -60,7 +60,7 @@ endif
 #######################################
 # Phony rules
 #######################################
-PHONY += all boot libs kernel modules oslibs osapps ossvcs osImage rootfs
+PHONY += all boot libs kernel modules vkos oslibs osapps ossvcs osImage rootfs
 PHONY += clean clean-boot clean-libs clean-mods clean-vkos distclean
 PHONY += menuconfig silentoldconfig
 .PHONY: $(PHONY)
@@ -84,7 +84,7 @@ ifeq ($(CONFIG_GENERATED_MOD), y)
 	$(Q)$(MAKE) modules
 endif
 ifeq ($(CONFIG_GENERATED_VKOS), y)
-	$(Q)$(MAKE) oslibs osapps ossvcs
+	$(Q)$(MAKE) vkos
 endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
@@ -180,6 +180,12 @@ modules:
 
 
 #######################################
+# build the vkos
+#######################################
+vkos: oslibs ossvcs osapps 
+
+
+#######################################
 # build the vkos oslibs
 #######################################
 oslibs:
@@ -198,6 +204,31 @@ oslibs:
 				INCS="$(inc-y)"                                   \
 				SRCS="$(src-y)"                                   \
 				OBJS="$(objs-$(name)-y)";                         \
+	)
+
+
+#######################################
+# build the vkos svcs
+#######################################
+ossvcs:
+	$(Q)mkdir -p $(SVCS_DIR)
+	$(Q)$(foreach name, $(svcs-y),                                \
+		$(MAKE) $(objs-$(name)-y)                                 \
+				INCS="$(inc-$(name)-y)   $(inc-y)"                \
+				SRCS="$(src-$(name)-y)   $(src-y)";               \
+		$(MAKE) $(SVCS_DIR)/$(name).elf                           \
+				INCS="$(inc-$(name)-y)   $(inc-y)"                \
+				SRCS="$(src-$(name)-y)   $(src-y)"                \
+				OBJS="$(objs-$(name)-y)  $(C_RUNTIME_ZERO)"       \
+				LIBS="$(libs-$(name)-y)"                          \
+				LDFLAGS="$(LDFLAGS-SVC)";                         \
+		if [ "$(CONFIG_CREATE_PROG_HEX_FILE)" = "y" ]; then       \
+			$(MAKE) $(SVCS_DIR)/$(name).hex;                      \
+		fi;                                                       \
+		if [ "$(CONFIG_CREATE_PROG_BIN_FILE)" = "y" ]; then       \
+			$(MAKE) $(SVCS_DIR)/$(name).bin;                      \
+		fi;                                                       \
+		$(MAKE) $(SVCS_DIR)/$(name).exec;                         \
 	)
 
 
@@ -223,31 +254,6 @@ osapps:
 			$(MAKE) $(APPS_DIR)/$(name).bin;                      \
 		fi;                                                       \
 		$(MAKE) $(APPS_DIR)/$(name).exec;                         \
-	)
-
-
-#######################################
-# build the vkos svcs
-#######################################
-ossvcs:
-	$(Q)mkdir -p $(SVCS_DIR)
-	$(Q)$(foreach name, $(svcs-y),                                \
-		$(MAKE) $(objs-$(name)-y)                                 \
-				INCS="$(inc-$(name)-y)   $(inc-y)"                \
-				SRCS="$(src-$(name)-y)   $(src-y)";               \
-		$(MAKE) $(SVCS_DIR)/$(name).elf                           \
-				INCS="$(inc-$(name)-y)   $(inc-y)"                \
-				SRCS="$(src-$(name)-y)   $(src-y)"                \
-				OBJS="$(objs-$(name)-y)  $(C_RUNTIME_ZERO)"       \
-				LIBS="$(libs-$(name)-y)"                          \
-				LDFLAGS="$(LDFLAGS-APP)";                         \
-		if [ "$(CONFIG_CREATE_PROG_HEX_FILE)" = "y" ]; then       \
-			$(MAKE) $(SVCS_DIR)/$(name).hex;                      \
-		fi;                                                       \
-		if [ "$(CONFIG_CREATE_PROG_BIN_FILE)" = "y" ]; then       \
-			$(MAKE) $(SVCS_DIR)/$(name).bin;                      \
-		fi;                                                       \
-		$(MAKE) $(SVCS_DIR)/$(name).exec;                         \
 	)
 
 
