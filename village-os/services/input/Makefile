@@ -28,6 +28,6 @@ objs-inputsvc-y                       += InputService.o
 ######################################
 # libraries
 ######################################
-libs-inputsvc-y                       += utils c
+libs-inputsvc-y                       += utils vkc
 
 endif
