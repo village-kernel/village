@@ -28,6 +28,6 @@ objs-taichi-y                         += TaichiService.o
 ######################################
 # libraries
 ######################################
-libs-taichi-y                         += utils stdc++ c
+libs-taichi-y                         += utils vkc++ vkc
 
 endif
