@@ -28,6 +28,6 @@ objs-vkguisvc-y                       += VkGuiService.o
 ######################################
 # libraries
 ######################################
-libs-vkguisvc-y                       += vkgui utils stdc++ c
+libs-vkguisvc-y                       += vkgui utils vkc++ vkc
 
 endif
