@@ -29,6 +29,6 @@ objs-desktop-y                        += DesktopApp.o
 ######################################
 # libraries
 ######################################
-libs-desktop-y                        += vkgui utils stdc++ c
+libs-desktop-y                        += vkgui utils vkc++ vkc
 
 endif
