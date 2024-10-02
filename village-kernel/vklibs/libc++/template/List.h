@@ -10,7 +10,6 @@
 #include "stdint.h"
 #include "stddef.h"
 #include "string.h"
-#include "Defines.h"
 
 
 /// @brief List class template 
