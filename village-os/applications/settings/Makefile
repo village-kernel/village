@@ -32,3 +32,11 @@ objs-settings-y                       += SettingsApp.o
 libs-settings-y                       += vkc
 
 endif
+
+
+######################################
+# settings
+######################################
+ifeq ($(CONFIG_SETTINGS_POWER_UP), y)
+settings-settings                     += 
+endif

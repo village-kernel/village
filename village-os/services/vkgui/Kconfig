@@ -6,4 +6,12 @@ config VKGUI_SERVICE
 	bool "Build village GUI service"
 	default y
 
+if VKGUI_SERVICE
+
+config VKGUI_POWER_UP
+	bool "Running when power up"
+	default n
+
+endif
+
 endmenu

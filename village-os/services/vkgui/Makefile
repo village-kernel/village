@@ -31,3 +31,11 @@ objs-vkguisvc-y                       += VkGuiService.o
 libs-vkguisvc-y                       += vkgui utils vkc++ vkc
 
 endif
+
+
+######################################
+# settings
+######################################
+ifeq ($(CONFIG_VKGUI_POWER_UP), y)
+settings-vkguisvc                     += power_up
+endif

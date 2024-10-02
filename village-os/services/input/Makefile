@@ -31,3 +31,11 @@ objs-inputsvc-y                       += InputService.o
 libs-inputsvc-y                       += utils vkc
 
 endif
+
+
+######################################
+# settings
+######################################
+ifeq ($(CONFIG_INPUT_POWER_UP), y)
+settings-inputsvc                     += power_up
+endif

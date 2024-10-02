@@ -8,6 +8,10 @@ config SETTINGS_APP
 
 if SETTINGS_APP
 
+config SETTINGS_POWER_UP
+	bool "Running when power up"
+	default n
+
 endif
 
 endmenu

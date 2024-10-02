@@ -32,3 +32,11 @@ objs-desktop-y                        += DesktopApp.o
 libs-desktop-y                        += vkgui utils vkc++ vkc
 
 endif
+
+
+######################################
+# settings
+######################################
+ifeq ($(CONFIG_DESKTOP_POWER_UP), y)
+settings-desktop                      += power_up
+endif

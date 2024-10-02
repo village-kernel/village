@@ -33,3 +33,11 @@ objs-terminal-y                       += TerminalApp.o
 libs-terminal-y                       += vkgui utils vkc++ vkc
 
 endif
+
+
+######################################
+# settings
+######################################
+ifeq ($(CONFIG_TERMINAL_POWER_UP), y)
+settings-terminal                     += power_up
+endif
