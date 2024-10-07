@@ -37,6 +37,14 @@ config VKGUI_MSGBOX
 	bool "Enable message box support"
 	default y
 
+config VKGUI_NAVBAR
+	bool "Enable nav bar support"
+	default y
+
+config VKGUI_SCROLLBAR
+	bool "Enable scroll bar support"
+	default y
+
 config VKGUI_TABBAR
 	bool "Enable tab bar support"
 	default y

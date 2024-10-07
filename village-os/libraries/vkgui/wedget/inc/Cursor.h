@@ -9,6 +9,7 @@
 
 #include "Wedget.h"
 
+
 /// @brief Cursor
 class Cursor : public Wedget
 {
@@ -23,9 +24,9 @@ private:
 public:
 	//Methods
 	Cursor();
-	void Setup();
-	void Show();
-	void Update(int axisX, int axisY);
+	void InitContent();
+	void DrawContent();
+	void InputAxis(int axisX, int axisY, int axisZ);
 };
 
 #endif //!__VK_CURSOR_H__

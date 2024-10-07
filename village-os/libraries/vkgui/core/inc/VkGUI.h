@@ -7,26 +7,39 @@
 #ifndef __VK_GUI_H__
 #define __VK_GUI_H__
 
-#include "Module.h"
-#include "Display.h"
 #include "Wedgets.h"
+#include "Drawing.h"
+#include "Indev.h"
+#include "List.h"
 
 
 /// @brief VkGUI
-class VkGUI : public Module
+class VkGUI
 {
 private:
 	//Members
-	FBDriver*   fbdev;
-	Display*    display;
-	Wedget*     mainwin;
+	FBDriver*     fbdev;
+	Drawing*      drawing;
+	Indev*        indev;
+	Wedget*       cursor;
+	List<Wedget*> wedgets;
 public:
 	//Methods
 	VkGUI();
 	~VkGUI();
-	bool Setup();
+	bool Setup(FBDriver* fbdev);
+	void Execute();
 	void Exit();
+
+	//Input Methods
+	void InputText(char* data, int size);
+	void InputAxis(int axisX, int axisY, int axisZ);
+
+	//GUI Methods
 	Wedget* CreateMainWindow();
+	bool DestroyMainWindow(Wedget* mainwin);
+	void EnableCursor();
+	void DisableCursor();
 };
 
 #endif //!__VK_GUI_H__

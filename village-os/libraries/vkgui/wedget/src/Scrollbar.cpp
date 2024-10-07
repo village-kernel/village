@@ -1,0 +1,31 @@
+//###########################################################################
+// Scrollbar.cpp
+// Definitions of the functions that manage scroll bar
+//
+// $Copyright: Copyright (C) village
+//###########################################################################
+#include "Scrollbar.h"
+
+
+/// @brief 
+Scrollbar::Scrollbar()
+	:dir(_Vertical),
+	scrollbtn(NULL)
+{
+}
+
+
+/// @brief 
+/// @param dir 
+void Scrollbar::SetDirection(Direction dir)
+{
+	this->dir = dir;
+}
+
+
+/// @brief 
+void Scrollbar::InitContent()
+{
+	//scrollbtn = (Button*)CreateWedget(WedgetID::_Button);
+	//scrollbtn->Resize(40, 0, 20, 20);
+}

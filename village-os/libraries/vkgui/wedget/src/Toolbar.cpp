@@ -7,18 +7,25 @@
 #include "Toolbar.h"
 
 
-/// @brief 
-void Toolbar::Setup()
+/// @brief Constructor
+Toolbar::Toolbar()
+	:itemSize(0)
 {
-
 }
 
 
-/// @brief 
-void Toolbar::Show()
+/// @brief Destructor
+Toolbar::~Toolbar()
 {
-	int locX = GetLocX();
-	int locY = GetLocY();
-	display->DrawRectangle(locX, locY, locX + width, locY + height);
-	Wedget::Show();
+}
+
+
+/// @brief Create item
+/// @param name 
+void Toolbar::CreateItem(const char* name)
+{
+	Button* item = (Button*)CreateWedget(Wedget::_Button);
+	item->Resize((itemSize * 40) + 10, 5, 30, 30);
+	item->SetText((char*)name);
+	itemSize++;
 }

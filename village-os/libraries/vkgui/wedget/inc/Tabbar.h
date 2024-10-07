@@ -8,14 +8,20 @@
 #define __VK_TAB_BAR_H__
 
 #include "Wedget.h"
+#include "Button.h"
 
-///Tabbar
+
+/// @brief Tabbar
 class Tabbar : public Wedget
 {
+private:
+	//Members
+	int itemSize;
 public:
 	//Methods
-	void Setup();
-	void Show();
+	Tabbar();
+	~Tabbar();
+	void CreateItem(const char* name);
 };
 
 #endif //!__VK_TAB_BAR_H__

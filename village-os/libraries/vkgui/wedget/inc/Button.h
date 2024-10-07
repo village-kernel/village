@@ -9,19 +9,22 @@
 
 #include "Wedget.h"
 
-///Button
+
+/// @brief Button
 class Button : public Wedget
 {
 private:
 	//Members
+	int   x0;
+	int   y0;
 	char* text;
 public:
 	//Methods
 	Button();
 	~Button();
-	void Setup();
-	void Show();
 	void SetText(char* text);
+	void InitContent();
+	void DrawContent();
 };
 
 #endif //!__VK_BUTTON_H__

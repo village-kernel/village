@@ -9,15 +9,21 @@
 
 #include "Wedget.h"
 #include "Mutex.h"
+#include "Fifo.h"
+#include "Scrollbar.h"
 
-///TextBox
+
+/// @brief TextBox
 class TextBox : public Wedget
 {
 private:
+	static const int fifo_size = 100;
+
 	Mutex lock;
 	bool isOverflow;
 	int locX;
 	int locY;
+	int limitX;
 	int colSize;
 	int rowSize;
 	int buffCol;
@@ -26,18 +32,28 @@ private:
 	int dispRow;
 	char** buff;
 
+	Fifo<char> fifo;
+
+	//Members
+	Scrollbar* vertScrollbar;
+	Scrollbar* horiScrollbar;
+
+	//Methods
 	void AllocBuff();
 	void FreeBuff();
 	void ClearBuff();
-	void ShowString(uint32_t x, uint32_t y, char* str, uint32_t size);
+	void ShowString(int x, int y, char* str, int size);
 public:
+	//Methods
 	TextBox();
 	~TextBox();
-	void Setup();
-	void Show();
-	void SetText(char* text);
-	void AppendText(char* text);
-	void Refresh();
+	void InitContent();
+	void DrawContent();
+	int SetText(char* text, int size = 0);
+	int AppendText(char* text, int size = 0);
+
+	void InputData(char* data, int size = 0);
+	int OutputData(char* data, int size = 0);
 };
 
 #endif //!__VK_TEXT_BOX_H__

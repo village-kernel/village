@@ -9,7 +9,8 @@
 
 #include "Wedget.h"
 
-///ListBox
+
+/// @brief ListBox
 class ListBox : public Wedget
 {
 

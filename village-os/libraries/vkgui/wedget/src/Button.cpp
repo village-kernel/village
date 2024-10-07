@@ -9,7 +9,9 @@
 
 /// @brief 
 Button::Button()
-	:text(NULL)
+	:x0(0),
+	y0(0),
+	text(NULL)
 {
 }
 
@@ -21,28 +23,23 @@ Button::~Button()
 
 
 /// @brief 
-void Button::Setup()
-{
-
-}
-
-
-/// @brief 
-void Button::Show()
-{
-	int locX = GetLocX();
-	int locY = GetLocY();
-	int textX = locX + (width / 2) - (strlen(text) * Display::Font16 / 4);
-	int textY = locY + (height / 2 - Display::Font16 / 2);
-	display->ShowString(textX, textY, (uint8_t*)text);
-	display->DrawRectangle(locX, locY, locX + width, locY + height);
-	Wedget::Show();
-}
-
-
-/// @brief 
 /// @param text 
 void Button::SetText(char* text)
 {
 	this->text = text;
+}
+
+
+/// @brief 
+void Button::InitContent()
+{
+	x0 = GetLocX() + (GetWidth() / 2) - (strlen(text) * Drawing::Font16 / 4);
+	y0 = GetLocY() + (GetHeight() / 2 - Drawing::Font16 / 2);
+}
+
+
+/// @brief 
+void Button::DrawContent()
+{
+	drawing->DrawingString(x0, y0, text);
 }

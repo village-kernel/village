@@ -9,7 +9,8 @@
 
 #include "Wedget.h"
 
-///MsgBox
+
+/// @brief MsgBox
 class MsgBox : public Wedget
 {
 

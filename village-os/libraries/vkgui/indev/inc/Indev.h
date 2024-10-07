@@ -1,19 +1,21 @@
 //###########################################################################
-// Menu.h
-// Declarations of the functions that manage menu
+// Indev.h
+// Declarations of the functions that manage indev
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_MENU_H__
-#define __VK_MENU_H__
-
-#include "Wedget.h"
+#ifndef __INDEV_H__
+#define __INDEV_H__
 
 
-/// @brief Menu
-class Menu : public Wedget
+
+/// @brief Indev
+class Indev
 {
-
+public:
+	//Methods
+	bool Setup();
+	void Exit();
 };
 
-#endif //!__VK_MENU_H__
+#endif //!__INDEV_H__

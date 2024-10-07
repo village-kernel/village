@@ -8,7 +8,7 @@
 
 
 /// @brief cursor data
-const uint32_t cursordat[] = {
+const uint32_t cursorDat[] = {
 	0x0000, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
 	0x0000, 0x0000, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
 	0x0000, 0x0000, 0x0000, 0xffff, 0xffff, 0xffff, 0xffff, 0xffff,
@@ -39,13 +39,6 @@ Cursor::Cursor()
 {}
 
 
-/// @brief Setup
-void Cursor::Setup()
-{
-
-}
-
-
 /// @brief Cursor Read
 /// @param x 
 /// @param y 
@@ -56,9 +49,9 @@ void Cursor::Read(uint32_t x, uint32_t y, uint32_t* data)
 	{
 		for (uint32_t j = 0; j < 8; j++)
 		{
-			if (cursordat[i * 8 + j] != 0xffff)
+			if (cursorDat[i * 8 + j] != 0xffff)
 			{
-				data[i * 8 + j] = display->ReadPoint(x + j, y + i);
+				data[i * 8 + j] = drawing->ReadingPoint(x + j, y + i);
 			}
 		}
 	}
@@ -75,30 +68,51 @@ void Cursor::Draw(uint32_t x, uint32_t y, uint32_t* data)
 	{
 		for (uint32_t j = 0; j < 8; j++)
 		{
-			if (cursordat[i * 8 + j] != 0xffff)
+			if (cursorDat[i * 8 + j] != 0xffff)
 			{
-				display->DrawPoint(x + j, y + i, data[i * 8 + j]);
+				drawing->DrawingPoint(x + j, y + i, data[i * 8 + j]);
 			}
 		}
 	}
 }
 
 
-/// @brief Cursor Show
-void Cursor::Show()
+/// @brief 
+void Cursor::InitContent()
 {
 	locX = GetLocX();
 	locY = GetLocY();
-	Read(locX, locY, (uint32_t*)colorBits);
-	Draw(locX, locY, (uint32_t*)cursordat);
+}
+
+
+/// @brief Cursor Show
+void Cursor::DrawContent()
+{
+	static int lastLocX = 0;
+	static int lastLocY = 0;
+	static bool isRevert = false;
+
+	if (lastLocX != locX || lastLocY != locY)
+	{
+		if (true == isRevert)
+		{
+			Draw(lastLocX, lastLocY, colorBits);
+		}
+
+		Read(locX, locY, (uint32_t*)colorBits);
+		Draw(locX, locY, (uint32_t*)cursorDat);
+		
+		lastLocX = locX;
+		lastLocY = locY;
+
+		isRevert = true;
+	}
 }
 
 
 /// @brief Cursor Update
-void Cursor::Update(int axisX, int axisY)
+void Cursor::InputAxis(int axisX, int axisY, int axisZ)
 {
-	Draw(locX, locY, (uint32_t*)colorBits);
-
 	locX += axisX;
 	locY -= axisY;
 
@@ -107,6 +121,5 @@ void Cursor::Update(int axisX, int axisY)
 	if (locY < 0) locY = 0;
 	else if (locY > height) locY = height;
 
-	Read(locX, locY, (uint32_t*)colorBits);
-	Draw(locX, locY, (uint32_t*)cursordat);
+	isChange = true;
 }

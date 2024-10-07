@@ -1,27 +1,28 @@
 //###########################################################################
-// Toolbar.h
-// Declarations of the functions that manage tool bar
+// Navbar.h
+// Declarations of the functions that manage nav bar
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_TOOL_BAR_H__
-#define __VK_TOOL_BAR_H__
+#ifndef __VK_NAV_BAR_H__
+#define __VK_NAV_BAR_H__
 
 #include "Wedget.h"
 #include "Button.h"
 
 
-/// @brief Toolbar
-class Toolbar : public Wedget
+/// @brief Navbar
+class Navbar : public Wedget
 {
 private:
 	//Members
-	int itemSize;
+	Button* minbtn;
+	Button* maxbtn;
+	Button* exitbtn;
 public:
 	//Methods
-	Toolbar();
-	~Toolbar();
-	void CreateItem(const char* name);
+	Navbar();
+	void InitContent();
 };
 
-#endif //!__VK_TOOL_BAR_H__
+#endif //!__VK_NAV_BAR_H__

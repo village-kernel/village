@@ -1,20 +1,18 @@
 //###########################################################################
 // VkGUI.cpp
-// Definitions of the functions that manage graphics
+// Definitions of the functions that manage vkgui
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "VkGUI.h"
-#include "DevStream.h"
 #include "Window.h"
-#include "Kernel.h"
 
 
 /// @brief Constructor
 VkGUI::VkGUI()
 	:fbdev(NULL),
-	display(NULL),
-	mainwin(NULL)
+	drawing(NULL),
+	cursor(NULL)
 {
 }
 
@@ -22,45 +20,78 @@ VkGUI::VkGUI()
 /// @brief Destructor
 VkGUI::~VkGUI()
 {
-	if (fbdev)   delete fbdev;
-	if (display) delete display;
-	if (mainwin) delete mainwin;
+	if (drawing) delete drawing;
 }
 
 
 /// @brief Setup
-bool VkGUI::Setup()
+bool VkGUI::Setup(FBDriver* fbdev)
 {
-	//Get all block device blockDevs
-	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
+	this->fbdev = fbdev;
 
-	//Get the universal driver by driver name
-	DevStream screen;
-
-	//Open the first screen 
-	if (screen.Open(fbDevs.Begin()->GetName(), FileMode::_Read))
+	if (NULL != fbdev)
 	{
-		//Get the specified lcd driver by driver ioctrl 
-		screen.IOCtrl(0, (void*)&fbdev);
+		//Setup drawing
+		drawing = new Drawing();
+		drawing->Setup(fbdev);
 
-		//Setup display
-		if (NULL != fbdev)
-		{
-			display = new Display();
-			display->Setup(fbdev);
-		}
+		//Setup indev
+		indev = new Indev();
+		indev->Setup();
 	}
-	return (NULL != display);
+
+	return (NULL != fbdev);
+}
+
+
+/// @brief Execute
+void VkGUI::Execute()
+{
+	if (NULL != cursor)
+	{
+		cursor->Refresh();
+	}
 }
 
 
 /// @brief Exit
 void VkGUI::Exit()
 {
-	if (NULL != display)
+	if (NULL != drawing)
 	{
-		display->Exit();
-		delete display;
+		drawing->Exit();
+		delete drawing;
+	}
+
+	if (NULL != indev)
+	{
+		indev->Exit();
+		delete indev;
+	}
+}
+
+
+/// @brief Input text
+/// @param data 
+/// @param size 
+void VkGUI::InputText(char* data, int size)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->InputData(data, size);
+	}
+}
+
+
+/// @brief Input axis
+/// @param axisX 
+/// @param axisY 
+/// @param axisZ 
+void VkGUI::InputAxis(int axisX, int axisY, int axisZ)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->InputAxis(axisX, axisY, axisZ);
 	}
 }
 
@@ -69,13 +100,56 @@ void VkGUI::Exit()
 /// @return 
 Wedget* VkGUI::CreateMainWindow()
 {
-	if (NULL != display)
+	if (NULL != drawing)
 	{
-		mainwin = new Window();
-		mainwin->SetDisplay(display);
-		mainwin->Setup();
-		mainwin->SetLocation(0, 0, fbdev->fbinfo.width, fbdev->fbinfo.height);
+		Wedget* mainwin = new Window();
+		mainwin->Setup(drawing, indev);
+		mainwin->Resize(0, 0, fbdev->info.width, fbdev->info.height);
+		wedgets.Add(mainwin);
 		return mainwin;
 	}
 	return NULL;
+}
+
+
+/// @brief Destory main window
+/// @param mainwin 
+/// @return 
+bool VkGUI::DestroyMainWindow(Wedget* mainwin)
+{
+	if (NULL != mainwin)
+	{
+		wedgets.Remove(mainwin);
+		delete mainwin;
+		return true;
+	}
+	return false;
+}
+
+
+/// @brief Create cursor
+/// @return 
+void VkGUI::EnableCursor()
+{
+	if (NULL != drawing && NULL == cursor)
+	{
+		cursor = new Cursor();
+		cursor->Setup(drawing, indev);
+		cursor->Resize(0, 0, fbdev->info.width, fbdev->info.height);
+		cursor->InitContent();
+		wedgets.Add(cursor);
+	}
+}
+
+
+/// @brief Destory cursor
+/// @param cursor 
+/// @return 
+void VkGUI::DisableCursor()
+{
+	if (NULL != cursor)
+	{
+		wedgets.Remove(cursor);
+		delete cursor;
+	}
 }

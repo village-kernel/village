@@ -20,8 +20,11 @@ TextBox::TextBox()
 	buffRow(0),
 	dispCol(0),
 	dispRow(0),
-	buff(NULL)
+	buff(NULL),
+	vertScrollbar(NULL),
+	horiScrollbar(NULL)
 {
+	fifo.Setup(fifo_size);
 }
 
 
@@ -29,72 +32,7 @@ TextBox::TextBox()
 TextBox::~TextBox()
 {
 	FreeBuff();
-}
-
-
-/// @brief 
-void TextBox::Setup()
-{
-	isOverflow = false;
-	locX = 0;
-	locY = 0;
-	colSize = 0;
-	rowSize = 0;
-	buffCol = 0;
-	buffRow = 0;
-	dispCol = 0;
-	dispRow = 0;
-}
-
-
-/// @brief 
-/// @param text 
-void TextBox::SetText(char* text)
-{
-	if (NULL != buff)
-	{
-		ClearBuff();
-		AppendText(text);
-	}
-}
-
-
-/// @brief 
-/// @param text 
-void TextBox::AppendText(char* text)
-{
-	int size = 0;
-
-	if (NULL != text)
-	{
-		while ('\0' != text[size])
-		{
-			if ((text[size] <= '~') && (text[size] >= ' '))
-			{
-				buff[buffRow][buffCol] = text[size];
-			}
-			else if (text[size] == '\n')
-			{
-				buff[buffRow][buffCol] = '\0';
-			}
-
-			if ((text[size] == '\b'))
-			{
-				buffCol--;
-			}
-			else
-			{
-				if ((++buffCol >= colSize) || (text[size] == '\n'))
-				{
-					buffCol = 0;
-					if (++buffRow >= rowSize) { buffRow = 0; isOverflow = true; }
-					if (isOverflow) { memset(buff[buffRow], ' ', 120); }
-				}
-			}
-
-			size++;
-		}
-	}
+	fifo.Exit();
 }
 
 
@@ -137,27 +75,38 @@ void TextBox::ClearBuff()
 }
 
 
-/// @brief Show
-void TextBox::Show()
+/// @brief InitContent
+void TextBox::InitContent()
 {
-	locX = GetLocX();
-	locY = GetLocY();
-	colSize = width / 8;
-	rowSize = height / 16;
+	vertScrollbar = (Scrollbar*)CreateWedget(WedgetID::_Scrollbar);
+	vertScrollbar->SetDirection(Scrollbar::_Vertical);
+	vertScrollbar->Resize(0, GetHeight() - 5, GetWidth(), 5);	
+	
+	horiScrollbar = (Scrollbar*)CreateWedget(WedgetID::_Scrollbar);
+	horiScrollbar->SetDirection(Scrollbar::_Horizontal);
+	horiScrollbar->Resize(GetWidth() - 5, 0, 5, GetHeight());
+	
+	isOverflow = false;
+	buffCol = 0;
+	buffRow = 0;
+	dispCol = 0;
+	dispRow = 0;
+
+	locX = GetLocX() + 1;
+	locY = GetLocY() + 1;
+	limitX = GetLocX() + GetWidth() - 8;
+	colSize = (GetWidth() - 2) / 8;
+	rowSize = (GetHeight() - 2) / 16;
 
 	AllocBuff();
 	ClearBuff();
-
-	Wedget::Show();
 }
 
 
-/// @brief Refresh
-void TextBox::Refresh()
+/// @brief DrawContent
+void TextBox::DrawContent()
 {
-	static const int fontSize = Display::Font16;
-
-	lock.Lock();
+	static const int fontSize = Drawing::Font16;
 
 	int dethaRow = buffRow - dispRow;
 
@@ -186,10 +135,6 @@ void TextBox::Refresh()
 
 		dispCol = buffCol;
 	}
-
-	lock.Unlock();
-
-	Wedget::Refresh();
 }
 
 
@@ -198,15 +143,14 @@ void TextBox::Refresh()
 /// @param y 
 /// @param str 
 /// @param size 
-void TextBox::ShowString(uint32_t x, uint32_t y, char* str, uint32_t size)
+void TextBox::ShowString(int x, int y, char* str, int size)
 {
 	bool isVaild = true;
-	uint32_t xOffset = x;
-	uint32_t yOffset = y;
-	uint32_t limitX = GetLocX() + GetWidth();
-	Display::FontSize fontSize = Display::Font16;
+	int xOffset = x;
+	int yOffset = y;
+	Drawing::FontSize fontSize = Drawing::Font16;
 
-	for (uint32_t i = 0; i < size; i++)
+	for (int i = 0; i < size; i++)
 	{
 		char chr = (str[i] <= '~') && (str[i] >= ' ') ? str[i] : ' ';
 
@@ -214,7 +158,7 @@ void TextBox::ShowString(uint32_t x, uint32_t y, char* str, uint32_t size)
 
 		if (false == isVaild) chr = ' ';
 
-		display->ShowChar(xOffset, yOffset, chr, fontSize, Display::NotMultiply, Display::Black);
+		drawing->DrawingChar(xOffset, yOffset, chr, fontSize, Drawing::NotMultiply, Drawing::Black);
 
 		xOffset += fontSize >> 1;
 
@@ -224,4 +168,74 @@ void TextBox::ShowString(uint32_t x, uint32_t y, char* str, uint32_t size)
 			yOffset += fontSize;
 		}
 	}
+}
+
+
+/// @brief 
+/// @param text 
+int TextBox::SetText(char* text, int size)
+{
+	if (NULL != buff)
+	{
+		ClearBuff();
+		return AppendText(text, size);
+	}
+	return 0;
+}
+
+
+/// @brief 
+/// @param text 
+int TextBox::AppendText(char* text, int size)
+{
+	if (0 == size) size = strlen(text);
+
+	for (int i = 0; i < size; i++)
+	{
+		if ((text[i] <= '~') && (text[i] >= ' '))
+		{
+			buff[buffRow][buffCol] = text[i];
+		}
+		else if (text[i] == '\n')
+		{
+			buff[buffRow][buffCol] = '\0';
+		}
+
+		if ((text[i] == '\b'))
+		{
+			buffCol--;
+		}
+		else
+		{
+			if ((++buffCol >= colSize) || (text[i] == '\n'))
+			{
+				buffCol = 0;
+				if (++buffRow >= rowSize) { buffRow = 0; isOverflow = true; }
+				if (isOverflow) { memset(buff[buffRow], ' ', 120); }
+			}
+		}
+	}
+
+	isChange = (0 != size);
+
+	return size;
+}
+
+
+/// @brief 
+/// @param data 
+/// @param size 
+void TextBox::InputData(char* data, int size)
+{
+	fifo.Put(data, size);
+}
+
+
+/// @brief 
+/// @param data 
+/// @param size 
+/// @return 
+int TextBox::OutputData(char* data, int size)
+{
+	return fifo.Pop(data, size);
 }

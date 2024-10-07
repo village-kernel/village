@@ -9,14 +9,11 @@
 
 #include "Wedget.h"
 
-///Window
+
+/// @brief Window
 class Window : public Wedget
 {
-public:
-	//Methods
-	Window();
-	void Setup();
-	void Show();
+
 };
 
 #endif //!__VK_WINDOW_H__

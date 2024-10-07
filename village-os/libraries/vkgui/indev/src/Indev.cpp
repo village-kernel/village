@@ -1,8 +1,22 @@
 //###########################################################################
-// StackFrame.cpp
-// Definitions of the functions that manage stack frame
+// Indev.cpp
+// Definitions of the functions that manage indev
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Frame.h"
+#include "Indev.h"
 
+
+/// @brief 
+/// @return 
+bool Indev::Setup()
+{
+	return true;
+}
+
+
+/// @brief 
+void Indev::Exit()
+{
+	
+}

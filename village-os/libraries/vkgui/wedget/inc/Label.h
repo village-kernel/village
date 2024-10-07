@@ -9,7 +9,8 @@
 
 #include "Wedget.h"
 
-///Label
+
+/// @brief Label
 class Label : public Wedget
 {
 private:
@@ -17,9 +18,8 @@ private:
 	char* label;
 public:
 	//Methods
-	void Setup();
-	void Show();
-	void SetLabel(char* label);
+	void DrawContent();
+	void SetText(char* text);
 };
 
 #endif //!__VK_LABEL_H__

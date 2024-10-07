@@ -8,25 +8,17 @@
 
 
 /// @brief 
-void Label::Setup()
-{
-
-}
-
-
-/// @brief 
-void Label::Show()
+void Label::DrawContent()
 {
 	int locX = GetLocX();
 	int locY = GetLocY();
-	display->ShowString(locX, locY, (uint8_t*)label);
-	Wedget::Show();
+	drawing->DrawingString(locX, locY, label);
 }
 
 
 /// @brief 
-/// @param label 
-void Label::SetLabel(char* label)
+/// @param text 
+void Label::SetText(char* text)
 {
-	this->label = label;
+	this->label = text;
 }
