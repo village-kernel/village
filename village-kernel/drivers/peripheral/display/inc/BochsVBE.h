@@ -19,7 +19,7 @@ public:
 	//Config
 	struct Config
 	{
-		uint16_t* vmap;
+		volatile uint16_t* vmap;
 	};
 private:
 	//Members
