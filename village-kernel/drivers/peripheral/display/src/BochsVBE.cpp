@@ -67,8 +67,7 @@ void BochsVBE::SetData(void* data)
 /// @param value 
 inline void BochsVBE::WriteData(uint32_t reg, uint16_t value)
 {
-	volatile uint16_t* videos = (uint16_t*)config.vmap;
-	videos[reg] = value;
+	config.vmap[reg] = value;
 }
 
 
@@ -77,8 +76,7 @@ inline void BochsVBE::WriteData(uint32_t reg, uint16_t value)
 /// @return 
 inline uint16_t BochsVBE::ReadData(uint32_t reg)
 {
-	volatile uint16_t* videos = (uint16_t*)config.vmap;
-	return videos[reg];
+	return config.vmap[reg];
 }
 
 
