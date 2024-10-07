@@ -22,9 +22,9 @@ TerminalDrv::~TerminalDrv()
 
 
 /// @brief Setup
-void TerminalDrv::Setup(TerminalUI* ui)
+void TerminalDrv::Setup(TerminalView* view)
 {
-	this->ui = ui;
+	this->view = view;
 	this->SetID(DriverID::_character);
 	this->SetName((char*)"terminal");
 	kernel->device.RegisterCharDevice(this);
@@ -52,7 +52,7 @@ bool TerminalDrv::Open()
 /// @return 
 int TerminalDrv::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
-	return ui->Write(data, size);
+	return view->Input(data, size);
 }
 
 
@@ -63,7 +63,7 @@ int TerminalDrv::Write(uint8_t* data, uint32_t size, uint32_t offset)
 /// @return 
 int TerminalDrv::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
-	return ui->Read(data, size);
+	return view->Output(data, size);
 }
 
 

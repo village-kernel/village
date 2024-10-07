@@ -23,8 +23,8 @@ TerminalAPP::~TerminalAPP()
 /// @brief Setup
 void TerminalAPP::Setup()
 {
-	ui.Setup();
-	drv.Setup(&ui);
+	view.Setup();
+	drv.Setup(&view);
 }
 
 
@@ -33,14 +33,14 @@ void TerminalAPP::Execute()
 {
 	kernel->terminal.CreateConsole(drv.GetName());
 
-	while (1) ui.Execute();
+	while (1) view.Execute();
 }
 
 
 /// @brief Exit
 void TerminalAPP::Exit()
 {
-	ui.Exit();
+	view.Exit();
 	drv.Exit();
 }
 

@@ -22,8 +22,8 @@ src-settings-y                        += village-os/applications/settings/src
 ######################################
 # objects
 ######################################
-objs-settings-y                       += SettingsUI.o
 objs-settings-y                       += SettingsApp.o
+objs-settings-y                       += SettingsView.o
 
 
 ######################################

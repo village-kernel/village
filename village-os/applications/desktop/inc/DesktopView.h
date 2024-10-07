@@ -1,28 +1,30 @@
 //###########################################################################
-// DesktopApp.h
-// Declarations of the desktop app
+// DesktopView.h
+// Declarations of the desktop view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __DESKTOP_APP_H__
-#define __DESKTOP_APP_H__
+#ifndef __DESKTOP_VIEW_H__
+#define __DESKTOP_VIEW_H__
 
-#include "DesktopView.h"
+#include "VkGUI.h"
 
 
-/// @brief DesktopApp
-class DesktopApp
+/// @brief DesktopView
+class DesktopView
 {
 private:
 	//Members
-	DesktopView view;
+	Window*  mainwin;
+	Button*  startBtn;
+	Toolbar* toolbar;
 public:
 	//Methods
-	DesktopApp();
-	~DesktopApp();
+	DesktopView();
+	~DesktopView();
 	void Setup();
 	void Execute();
 	void Exit();
 };
 
-#endif //!__DESKTOP_APP_H__
+#endif //!__DESKTOP_VIEW_H__

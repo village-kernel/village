@@ -22,9 +22,9 @@ src-terminal-y                        += village-os/applications/terminal/src
 ######################################
 # objects
 ######################################
-objs-terminal-y                       += TerminalUI.o
-objs-terminal-y                       += TerminalDrv.o
 objs-terminal-y                       += TerminalApp.o
+objs-terminal-y                       += TerminalDrv.o
+objs-terminal-y                       += TerminalView.o
 
 
 ######################################

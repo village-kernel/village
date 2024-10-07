@@ -22,8 +22,8 @@ src-desktop-y                         += village-os/applications/desktop/src
 ######################################
 # objects
 ######################################
-objs-desktop-y                        += DesktopUI.o
 objs-desktop-y                        += DesktopApp.o
+objs-desktop-y                        += DesktopView.o
 
 
 ######################################

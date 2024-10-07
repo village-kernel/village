@@ -7,7 +7,7 @@
 #ifndef __SETTINGS_APP_H__
 #define __SETTINGS_APP_H__
 
-#include "SettingsUI.h"
+#include "SettingsView.h"
 
 
 /// @brief SettingsApp
@@ -15,7 +15,7 @@ class SettingsApp
 {
 private:
 	//Members
-	SettingsUI ui;
+	SettingsView view;
 public:
 	//Methods
 	SettingsApp();

@@ -22,21 +22,21 @@ SettingsApp::~SettingsApp()
 /// @brief Setup
 void SettingsApp::Setup()
 {
-	ui.Setup();
+	view.Setup();
 }
 
 
 /// @brief Execute
 void SettingsApp::Execute()
 {
-	while(1) ui.Execute();
+	while(1) view.Execute();
 }
 
 
 /// @brief Exit
 void SettingsApp::Exit()
 {
-	ui.Exit();
+	view.Exit();
 }
 
 

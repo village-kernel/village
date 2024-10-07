@@ -7,7 +7,7 @@
 #ifndef __TERMINAL_DRV_H__
 #define __TERMINAL_DRV_H__
 
-#include "TerminalUI.h"
+#include "TerminalView.h"
 #include "Kernel.h"
 
 
@@ -16,12 +16,12 @@ class TerminalDrv : public CharDriver
 {
 private:
 	//Members
-	TerminalUI* ui;
+	TerminalView* view;
 public:
 	//Methods
 	TerminalDrv();
 	~TerminalDrv();
-	void Setup(TerminalUI* ui);
+	void Setup(TerminalView* view);
 	void Exit();
 
 	//Fopts

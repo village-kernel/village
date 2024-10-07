@@ -1,23 +1,23 @@
 //###########################################################################
-// SettingsUI.h
-// Declarations of the settings ui
+// SettingsView.h
+// Declarations of the settings view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __SETTINGS_UI_H__
-#define __SETTINGS_UI_H__
+#ifndef __SETTINGS_VIEW_H__
+#define __SETTINGS_VIEW_H__
 
 
-/// @brief SettingsUI
-class SettingsUI
+/// @brief SettingsView
+class SettingsView
 {
 public:
 	//Methods
-	SettingsUI();
-	~SettingsUI();
+	SettingsView();
+	~SettingsView();
 	void Setup();
 	void Execute();
 	void Exit();
 };
 
-#endif //!__SETTINGS_UI_H__
+#endif //!__SETTINGS_VIEW_H__

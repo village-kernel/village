@@ -1,40 +1,40 @@
 //###########################################################################
-// SettingsUI.cpp
-// Definitions of the functions that manage settings ui
+// SettingsView.cpp
+// Definitions of the functions that manage settings view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "SettingsUI.h"
+#include "SettingsView.h"
 
 
 /// @brief Constructor
-SettingsUI::SettingsUI()
+SettingsView::SettingsView()
 {
 }
 
 
 /// @brief Destructor
-SettingsUI::~SettingsUI()
+SettingsView::~SettingsView()
 {
 }
 
 
 /// @brief Setup
-void SettingsUI::Setup()
+void SettingsView::Setup()
 {
 
 }
 
 
 /// @brief Execute
-void SettingsUI::Execute()
+void SettingsView::Execute()
 {
 
 }
 
 
 /// @brief Exit
-void SettingsUI::Exit()
+void SettingsView::Exit()
 {
 
 }

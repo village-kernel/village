@@ -23,21 +23,21 @@ DesktopApp::~DesktopApp()
 /// @brief Setup
 void DesktopApp::Setup()
 {
-	ui.Setup();
+	view.Setup();
 }
 
 
 /// @brief Execute
 void DesktopApp::Execute()
 {
-	while (1) ui.Execute();
+	while (1) view.Execute();
 }
 
 
 /// @brief Exit
 void DesktopApp::Exit()
 {
-	ui.Exit();
+	view.Exit();
 }
 
 

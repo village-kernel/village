@@ -8,7 +8,7 @@
 #define __TERMINAL_APP_H__
 
 #include "TerminalDrv.h"
-#include "TerminalUI.h"
+#include "TerminalView.h"
 
 
 /// @brief TerminalAPP
@@ -17,7 +17,7 @@ class TerminalAPP
 private:
 	//Members
 	TerminalDrv drv;
-	TerminalUI  ui;
+	TerminalView view;
 public:
 	//Methods
 	TerminalAPP();
