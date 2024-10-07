@@ -106,7 +106,7 @@ void TextBox::InitContent()
 /// @brief DrawContent
 void TextBox::DrawContent()
 {
-	static const int fontSize = Drawing::Font16;
+	static const int fontSize = DrawingDefs::Font16;
 
 	int dethaRow = buffRow - dispRow;
 
@@ -148,7 +148,7 @@ void TextBox::ShowString(int x, int y, char* str, int size)
 	bool isVaild = true;
 	int xOffset = x;
 	int yOffset = y;
-	Drawing::FontSize fontSize = Drawing::Font16;
+	DrawingDefs::FontSize fontSize = DrawingDefs::Font16;
 
 	for (int i = 0; i < size; i++)
 	{
@@ -158,7 +158,7 @@ void TextBox::ShowString(int x, int y, char* str, int size)
 
 		if (false == isVaild) chr = ' ';
 
-		drawing->DrawingChar(xOffset, yOffset, chr, fontSize, Drawing::NotMultiply, Drawing::Black);
+		drawing->chr.Set(xOffset, yOffset, chr, fontSize, DrawingDefs::NotMultiply, DrawingDefs::Black);
 
 		xOffset += fontSize >> 1;
 

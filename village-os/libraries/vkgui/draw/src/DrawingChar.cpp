@@ -1,31 +1,33 @@
 //###########################################################################
 // DrawingChar.cpp
-// Definitions of the functions that manage drawing
+// Definitions of the functions that manage drawing char
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "DrawingChar.h"
 #include "Drawing.h"
+#include "ASCIIFont.h"
 
 
-/// @brief Display draw char
+/// @brief drawing char set
 /// @param x 
 /// @param y 
-/// @param charVal 
+/// @param chr 
 /// @param fontSize 
 /// @param mode 
 /// @param color 
-void Drawing::DrawingChar(int x, int y, char charVal, FontSize fontSize, DisplayMode mode, int color)
+void DrawingChar::Set(int x, int y, char chr, DrawingDefs::FontSize fontSize, DrawingDefs::DrawingMode mode, int color)
 {
 	const uint16_t PointMask = 0x0001;
 
 	uint16_t charLine = 0;
-	uint16_t charIndex = charVal - ' ';
+	uint16_t charIndex = chr - ' ';
 	uint8_t rowSize = fontSize;
 	uint8_t colSize = fontSize >> 1;
 
 	for (uint8_t row = 0; row < rowSize; row++)
 	{
-		if (Font16 == fontSize)
+		if (DrawingDefs::Font16 == fontSize)
 		{
 			charLine = ASCII_16[charIndex][row];
 		}
@@ -39,11 +41,11 @@ void Drawing::DrawingChar(int x, int y, char charVal, FontSize fontSize, Display
 		{
 			if (charLine & PointMask)
 			{
-				DrawingPoint(x + col, y + row, color);
+				drawing->point.Set(x + col, y + row, color);
 			}
-			else if (NotMultiply == mode)
+			else if (DrawingDefs::NotMultiply == mode)
 			{ 
-				DrawingPoint(x + col, y + row, defBackgroundColor);
+				drawing->point.Set(x + col, y + row, DrawingDefs::defBgColor);
 			}
 
 			charLine >>= 1;

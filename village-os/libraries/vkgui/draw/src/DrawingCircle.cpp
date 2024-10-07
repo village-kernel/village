@@ -1,18 +1,19 @@
 //###########################################################################
 // DrawingCircle.cpp
-// Definitions of the functions that manage drawing
+// Definitions of the functions that manage drawing circle
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "DrawingCircle.h"
 #include "Drawing.h"
 
 
-/// @brief Display draw circle
+/// @brief Drawing circle
 /// @param x 
 /// @param y 
 /// @param r 
 /// @param color 
-void Drawing::DrawingCircle(int x, int y, int r, int* colors)
+void DrawingCircle::Set(int x, int y, int r, int* colors)
 {
 	int xOffset = 0;
 	int yOffset = r;
@@ -23,25 +24,25 @@ void Drawing::DrawingCircle(int x, int y, int r, int* colors)
 	{
 		if (colors != NULL)
 		{
-			DrawingPoint(x + xOffset, y - yOffset, colors[index++]);             //5
-			DrawingPoint(x + yOffset, y - xOffset, colors[index++]);             //0
-			DrawingPoint(x + yOffset, y + xOffset, colors[index++]);             //4
-			DrawingPoint(x + xOffset, y + yOffset, colors[index++]);             //6
-			DrawingPoint(x - xOffset, y + yOffset, colors[index++]);             //1
-			DrawingPoint(x - yOffset, y + xOffset, colors[index++]);             //3
-			DrawingPoint(x - xOffset, y - yOffset, colors[index++]);             //2
-			DrawingPoint(x - yOffset, y - xOffset, colors[index++]);             //7
+			drawing->point.Set(x + xOffset, y - yOffset, colors[index++]);             //5
+			drawing->point.Set(x + yOffset, y - xOffset, colors[index++]);             //0
+			drawing->point.Set(x + yOffset, y + xOffset, colors[index++]);             //4
+			drawing->point.Set(x + xOffset, y + yOffset, colors[index++]);             //6
+			drawing->point.Set(x - xOffset, y + yOffset, colors[index++]);             //1
+			drawing->point.Set(x - yOffset, y + xOffset, colors[index++]);             //3
+			drawing->point.Set(x - xOffset, y - yOffset, colors[index++]);             //2
+			drawing->point.Set(x - yOffset, y - xOffset, colors[index++]);             //7
 		}
 		else
 		{
-			DrawingPoint(x + xOffset, y - yOffset, defStrokeColor);             //5
-			DrawingPoint(x + yOffset, y - xOffset, defStrokeColor);             //0
-			DrawingPoint(x + yOffset, y + xOffset, defStrokeColor);             //4
-			DrawingPoint(x + xOffset, y + yOffset, defStrokeColor);             //6
-			DrawingPoint(x - xOffset, y + yOffset, defStrokeColor);             //1
-			DrawingPoint(x - yOffset, y + xOffset, defStrokeColor);             //3
-			DrawingPoint(x - xOffset, y - yOffset, defStrokeColor);             //2
-			DrawingPoint(x - yOffset, y - xOffset, defStrokeColor);             //7
+			drawing->point.Set(x + xOffset, y - yOffset, DrawingDefs::defStrokeColor);             //5
+			drawing->point.Set(x + yOffset, y - xOffset, DrawingDefs::defStrokeColor);             //0
+			drawing->point.Set(x + yOffset, y + xOffset, DrawingDefs::defStrokeColor);             //4
+			drawing->point.Set(x + xOffset, y + yOffset, DrawingDefs::defStrokeColor);             //6
+			drawing->point.Set(x - xOffset, y + yOffset, DrawingDefs::defStrokeColor);             //1
+			drawing->point.Set(x - yOffset, y + xOffset, DrawingDefs::defStrokeColor);             //3
+			drawing->point.Set(x - xOffset, y - yOffset, DrawingDefs::defStrokeColor);             //2
+			drawing->point.Set(x - yOffset, y - xOffset, DrawingDefs::defStrokeColor);             //7
 		}
 
 		xOffset++;
@@ -64,7 +65,7 @@ void Drawing::DrawingCircle(int x, int y, int r, int* colors)
 /// @param y 
 /// @param r 
 /// @param color 
-void Drawing::ReadingCircle(int x, int y, int r, int* colors)
+void DrawingCircle::Get(int x, int y, int r, int* colors)
 {
 	int xOffset = 0;
 	int yOffset = r;
@@ -73,14 +74,14 @@ void Drawing::ReadingCircle(int x, int y, int r, int* colors)
 
 	while (xOffset <= yOffset)
 	{
-		colors[index++] = ReadingPoint(x + xOffset, y - yOffset);             //5
-		colors[index++] = ReadingPoint(x + yOffset, y - xOffset);             //0
-		colors[index++] = ReadingPoint(x + yOffset, y + xOffset);             //4
-		colors[index++] = ReadingPoint(x + xOffset, y + yOffset);             //6
-		colors[index++] = ReadingPoint(x - xOffset, y + yOffset);             //1
-		colors[index++] = ReadingPoint(x - yOffset, y + xOffset);             //3
-		colors[index++] = ReadingPoint(x - xOffset, y - yOffset);             //2
-		colors[index++] = ReadingPoint(x - yOffset, y - xOffset);             //7
+		colors[index++] = drawing->point.Get(x + xOffset, y - yOffset);             //5
+		colors[index++] = drawing->point.Get(x + yOffset, y - xOffset);             //0
+		colors[index++] = drawing->point.Get(x + yOffset, y + xOffset);             //4
+		colors[index++] = drawing->point.Get(x + xOffset, y + yOffset);             //6
+		colors[index++] = drawing->point.Get(x - xOffset, y + yOffset);             //1
+		colors[index++] = drawing->point.Get(x - yOffset, y + xOffset);             //3
+		colors[index++] = drawing->point.Get(x - xOffset, y - yOffset);             //2
+		colors[index++] = drawing->point.Get(x - yOffset, y - xOffset);             //7
 		xOffset++;
 		
 		if (nextPoint < 0)

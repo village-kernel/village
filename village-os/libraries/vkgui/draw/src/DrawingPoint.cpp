@@ -1,53 +1,35 @@
 //###########################################################################
 // DrawingPoint.cpp
-// Definitions of the functions that manage drawing
+// Definitions of the functions that manage drawing point
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "DrawingPoint.h"
 #include "Drawing.h"
 
 
-/// @brief Display draw point
+/// @brief Drawing point set
 /// @param x 
 /// @param y 
 /// @param color 
-void Drawing::DrawingPoint(int x, int y, int color)
+void DrawingPoint::Set(int x, int y, int color)
 {
-	if (NULL != fbdev)
+	if (NULL != drawing->fbdev)
 	{
-		fbdev->DrawPoint(x, y, color);
+		drawing->fbdev->DrawPoint(x, y, color);
 	}
 }
 
 
-/// @brief Display read point
+/// @brief Drawing point get
 /// @param x 
 /// @param y 
 /// @return 
-int Drawing::ReadingPoint(int x, int y)
+int DrawingPoint::Get(int x, int y)
 {
-	if (NULL != fbdev)
+	if (NULL != drawing->fbdev)
 	{
-		return fbdev->ReadPoint(x, y);
+		return drawing->fbdev->ReadPoint(x, y);
 	}
 	return 0;
-}
-
-
-/// @brief Dislplay read and draw point
-/// @param x 
-/// @param y
-/// @param color 
-/// @return 
-int Drawing::ReadDrawPoint(int x, int y, int color)
-{
-	int ret = 0;
-
-	if (NULL != fbdev)
-	{
-		ret = fbdev->ReadPoint(x, y);
-		fbdev->DrawPoint(x, y, color);
-	}
-	
-	return ret;
 }

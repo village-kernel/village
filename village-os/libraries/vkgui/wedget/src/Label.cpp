@@ -12,7 +12,7 @@ void Label::DrawContent()
 {
 	int locX = GetLocX();
 	int locY = GetLocY();
-	drawing->DrawingString(locX, locY, label);
+	drawing->string.Set(locX, locY, label);
 }
 
 

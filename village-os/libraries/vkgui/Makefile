@@ -33,11 +33,13 @@ objs-vkgui-$(CONFIG_VKGUI)              += VkGUI.o
 
 objs-vkgui-$(CONFIG_VKGUI)              += Drawing.o
 objs-vkgui-$(CONFIG_VKGUI)              += DrawingArea.o
+objs-vkgui-$(CONFIG_VKGUI)              += DrawingBase.o
 objs-vkgui-$(CONFIG_VKGUI)              += DrawingChar.o
 objs-vkgui-$(CONFIG_VKGUI)              += DrawingCircle.o
+objs-vkgui-$(CONFIG_VKGUI)              += DrawingClear.o
 objs-vkgui-$(CONFIG_VKGUI)              += DrawingLine.o
 objs-vkgui-$(CONFIG_VKGUI)              += DrawingPoint.o
-objs-vkgui-$(CONFIG_VKGUI)              += DrawingRectangle.o
+objs-vkgui-$(CONFIG_VKGUI)              += DrawingRect.o
 objs-vkgui-$(CONFIG_VKGUI)              += DrawingString.o
 
 objs-vkgui-$(CONFIG_VKGUI)              += Indev.o

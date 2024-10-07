@@ -114,5 +114,5 @@ void Wedget::DrawBorder()
 	int y0 = GetLocY();
 	int x1 = x0 + GetWidth() - 1;
 	int y1 = y0 + GetHeight() - 1;
-	drawing->DrawingRectangle(x0, y0, x1, y1);
+	drawing->rect.Set(x0, y0, x1, y1);
 }

@@ -1,19 +1,20 @@
 //###########################################################################
 // DrawingLine.cpp
-// Definitions of the functions that manage drawing
+// Definitions of the functions that manage drawing line
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
+#include "DrawingLine.h"
 #include "Drawing.h"
 
 
-/// @brief Display draw line
+/// @brief Drawing line set
 /// @param x0 
 /// @param y0 
 /// @param x1 
 /// @param y1 
 /// @param color 
-void Drawing::DrawingLine(int x0, int y0, int x1, int y1, int color)
+void DrawingLine::Set(int x0, int y0, int x1, int y1, int color)
 {
 	int xError = 0, yError = 0, distance = 0;
 	int xIncrease = 0, yIncrease = 0;
@@ -62,7 +63,7 @@ void Drawing::DrawingLine(int x0, int y0, int x1, int y1, int color)
 
 	for (int i = 0; i <= (distance + 1); i++)
 	{
-		DrawingPoint(pointX, pointY, color);
+		drawing->point.Set(pointX, pointY, color);
 		xError += xDelta;
 		yError += yDelta;
 		if (xError > distance)

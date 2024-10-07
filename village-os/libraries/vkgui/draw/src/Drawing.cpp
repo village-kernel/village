@@ -11,8 +11,7 @@
 
 /// @brief Constructor
 Drawing::Drawing()
-	:limitX(0),
-	limitY(0)
+	:fbdev(NULL)
 {
 }
 
@@ -26,29 +25,62 @@ Drawing::~Drawing()
 /// @brief Display Setup
 void Drawing::Setup(FBDriver* fbdev)
 {
-	if (NULL != fbdev)
-	{
-		this->fbdev = fbdev;
-		limitX = fbdev->info.width - 1;
-		limitY = fbdev->info.height - 1;
-	}
-	Clear();
+	//Set fbdev
+	this->fbdev = fbdev;
+
+	//Setup point
+	point.Setup(this);
+
+	//Setup line
+	line.Setup(this);
+
+	//Setup rect
+	rect.Setup(this);
+
+	//Setup circle
+	circle.Setup(this);
+
+	//Setup area
+	area.Setup(this);
+
+	//Setup char
+	chr.Setup(this);
+
+	//Setup string
+	string.Setup(this);
+
+	//Setup clear
+	clear.Setup(this);
+
+	//Clear screen
+	clear.Set();
 }
 
 
 /// @brief Display Exit
 void Drawing::Exit()
 {
-	Clear();
-}
+	//Exit point
+	point.Exit();
 
+	//Exit line
+	line.Exit();
 
-/// @brief Display clear
-/// @param color 
-void Drawing::Clear(int color)
-{
-	if (NULL != fbdev)
-	{
-		fbdev->Clear(color);
-	}
+	//Exit rect
+	rect.Exit();
+
+	//Exit circle
+	circle.Exit();
+
+	//Exit area
+	area.Exit();
+
+	//Exit char
+	chr.Exit();
+
+	//Exit string
+	string.Exit();
+
+	//Exit clear
+	clear.Exit();
 }

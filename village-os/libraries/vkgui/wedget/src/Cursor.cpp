@@ -51,7 +51,7 @@ void Cursor::Read(uint32_t x, uint32_t y, uint32_t* data)
 		{
 			if (cursorDat[i * 8 + j] != 0xffff)
 			{
-				data[i * 8 + j] = drawing->ReadingPoint(x + j, y + i);
+				data[i * 8 + j] = drawing->point.Get(x + j, y + i);
 			}
 		}
 	}
@@ -70,7 +70,7 @@ void Cursor::Draw(uint32_t x, uint32_t y, uint32_t* data)
 		{
 			if (cursorDat[i * 8 + j] != 0xffff)
 			{
-				drawing->DrawingPoint(x + j, y + i, data[i * 8 + j]);
+				drawing->point.Set(x + j, y + i, data[i * 8 + j]);
 			}
 		}
 	}
