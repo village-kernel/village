@@ -26,8 +26,9 @@ public:
 	//Methods
 	VkGuiService();
 	~VkGuiService();
-	bool  Setup();
-	void  Exit();
+	bool Setup();
+	void Execute();
+	void Exit();
 	void* GetData();
 };
 

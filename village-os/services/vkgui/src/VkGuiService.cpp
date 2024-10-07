@@ -5,6 +5,8 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "VkGuiService.h"
+#include "DevStream.h"
+#include "Kernel.h"
 
 
 /// @brief Constructor
@@ -22,9 +24,31 @@ VkGuiService::~VkGuiService()
 /// @brief Setup
 bool VkGuiService::Setup()
 {
-	if (false == vkgui.Setup()) return false;
+	//Get all display device fbDevs
+	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
+
+	//Get the universal driver by name
+	DevStream screen;
+
+	//Open the first screen 
+	if (screen.Open(fbDevs.Begin()->GetName(), FileMode::_Read))
+	{
+		FBDriver* fbdev = NULL;
+
+		//Get the specified lcd driver by ioctrl 
+		screen.IOCtrl(0, (void*)&fbdev);
+
+		//Setup vkgui
+		if (false == vkgui.Setup(fbdev)) return false;
+
+		//Enable cursor
+		vkgui.EnableCursor();
+	}
+
+	//Attach input event
 	kernel->inputEvent.Attach(InputEvent::_OutputText, (Method)&VkGuiService::TextReceiver, this);
 	kernel->inputEvent.Attach(InputEvent::_OutputAxis, (Method)&VkGuiService::AxisReceiver, this);
+
 	return true;
 }
 
@@ -32,8 +56,11 @@ bool VkGuiService::Setup()
 /// @brief Exit
 void VkGuiService::Exit()
 {
+	//Detach input event
 	kernel->inputEvent.Detach(InputEvent::_OutputText, (Method)&VkGuiService::TextReceiver, this);
 	kernel->inputEvent.Detach(InputEvent::_OutputAxis, (Method)&VkGuiService::AxisReceiver, this);
+
+	//Exit vkgui
 	vkgui.Exit();
 }
 
@@ -43,6 +70,17 @@ void VkGuiService::Exit()
 void* VkGuiService::GetData()
 {
 	return (void*)(&vkgui);
+}
+
+
+/// @brief vkgui execute
+void VkGuiService::Execute()
+{
+	while (1)
+	{
+		vkgui.Execute();
+		kernel->thread.Sleep(1);
+	}
 }
 
 
@@ -67,7 +105,7 @@ int main(int argc, char* argv[])
 	vkgui.SetID(ModuleID::_serivce);
 	vkgui.SetName((char*)"vkgui");
 	kernel->feature.RegisterModule(&vkgui);
-	kernel->thread.Blocked();
+	vkgui.Execute();
 	kernel->feature.UnregisterModule(&vkgui);
 	return 0;
 }
