@@ -36,10 +36,10 @@ void ConcreteLoader::Setup()
 /// @brief Loader Exit
 void ConcreteLoader::Exit()
 {
-	//Loading modules
+	//Unloading modules
 	Unload(Loader::_Mod, "/modules/_load_.rc");
 
-	//Loading libraries
+	//Unloading libraries
 	Unload(Loader::_Lib, "/libraries/_load_.rc");
 }
 

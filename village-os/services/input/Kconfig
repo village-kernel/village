@@ -1,0 +1,17 @@
+# input menu
+
+menu "input"
+
+config INPUT_SERVICE
+	bool "Build input method service"
+	default y
+
+if INPUT_SERVICE
+
+config INPUT_POWER_UP
+	bool "Running when power up"
+	default n
+
+endif
+
+endmenu

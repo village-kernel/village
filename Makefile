@@ -21,6 +21,7 @@ BUILD_DIR     := $(WORKSPACE)/build
 MODS_DIR      := $(BUILD_DIR)/output/modules
 LIBS_DIR      := $(BUILD_DIR)/output/libraries
 APPS_DIR      := $(BUILD_DIR)/output/applications
+SVCS_DIR      := $(BUILD_DIR)/output/services
 
 
 #######################################
@@ -59,8 +60,8 @@ endif
 #######################################
 # Phony rules
 #######################################
-PHONY += all boot libs kernel modules apps osImage rootfs
-PHONY += clean clean-boot clean-libs clean-mods clean-apps distclean
+PHONY += all boot libs kernel modules vkos oslibs osapps ossvcs osImage rootfs
+PHONY += clean clean-boot clean-libs clean-mods clean-vkos distclean
 PHONY += menuconfig silentoldconfig
 .PHONY: $(PHONY)
 
@@ -82,8 +83,8 @@ endif
 ifeq ($(CONFIG_GENERATED_MOD), y)
 	$(Q)$(MAKE) modules
 endif
-ifeq ($(CONFIG_GENERATED_APP), y)
-	$(Q)$(MAKE) apps
+ifeq ($(CONFIG_GENERATED_VKOS), y)
+	$(Q)$(MAKE) vkos
 endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
@@ -141,19 +142,6 @@ libs:
 			echo /libraries/lib$(name).so >> $(LIBS_DIR)/_load_.rc;\
 		fi;                                                       \
 	)
-	$(Q)$(foreach name, $(oslibs-y),                              \
-		$(MAKE) $(objs-$(name)-y)                                 \
-				INCS="$(inc-y)"                                   \
-				SRCS="$(src-y)";                                  \
-		$(MAKE) $(LIBS_DIR)/lib$(name).a                          \
-				INCS="$(inc-y)"                                   \
-				SRCS="$(src-y)"                                   \
-				OBJS="$(objs-$(name)-y)";                         \
-		$(MAKE) $(LIBS_DIR)/lib$(name).so                         \
-				INCS="$(inc-y)"                                   \
-				SRCS="$(src-y)"                                   \
-				OBJS="$(objs-$(name)-y)";                         \
-	)
 
 
 #######################################
@@ -192,13 +180,68 @@ modules:
 
 
 #######################################
-# build the applications
+# build the vkos
 #######################################
-apps:
-	$(Q)mkdir -p $(APPS_DIR)
+vkos: oslibs ossvcs osapps 
+
+
+#######################################
+# build the vkos oslibs
+#######################################
+oslibs:
 	$(Q)$(MAKE) $(C_RUNTIME_ZERO)                                 \
 				INCS="$(inc-y)"                                   \
 				SRCS="$(src-y)";
+	$(Q)$(foreach name, $(oslibs-y),                              \
+		$(MAKE) $(objs-$(name)-y)                                 \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)";                                  \
+		$(MAKE) $(LIBS_DIR)/lib$(name).a                          \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(objs-$(name)-y)";                         \
+		$(MAKE) $(LIBS_DIR)/lib$(name).so                         \
+				INCS="$(inc-y)"                                   \
+				SRCS="$(src-y)"                                   \
+				OBJS="$(objs-$(name)-y)";                         \
+	)
+
+
+#######################################
+# build the vkos svcs
+#######################################
+ossvcs:
+	$(Q)mkdir -p $(SVCS_DIR)
+	$(Q)echo "#prepare services" > $(SVCS_DIR)/_load_.rc;
+	$(Q)$(foreach name, $(svcs-y),                                \
+		$(MAKE) $(objs-$(name)-y)                                 \
+				INCS="$(inc-$(name)-y)   $(inc-y)"                \
+				SRCS="$(src-$(name)-y)   $(src-y)";               \
+		$(MAKE) $(SVCS_DIR)/$(name).elf                           \
+				INCS="$(inc-$(name)-y)   $(inc-y)"                \
+				SRCS="$(src-$(name)-y)   $(src-y)"                \
+				OBJS="$(objs-$(name)-y)  $(C_RUNTIME_ZERO)"       \
+				LIBS="$(libs-$(name)-y)"                          \
+				LDFLAGS="$(LDFLAGS-SVC)";                         \
+		if [ "$(CONFIG_CREATE_PROG_HEX_FILE)" = "y" ]; then       \
+			$(MAKE) $(SVCS_DIR)/$(name).hex;                      \
+		fi;                                                       \
+		if [ "$(CONFIG_CREATE_PROG_BIN_FILE)" = "y" ]; then       \
+			$(MAKE) $(SVCS_DIR)/$(name).bin;                      \
+		fi;                                                       \
+		$(MAKE) $(SVCS_DIR)/$(name).exec;                         \
+		if [[ "$(settings-$(name))" =~ "power_up" ]]; then        \
+			echo /services/$(name).exec >> $(SVCS_DIR)/_load_.rc; \
+		fi;                                                       \
+	)
+
+
+#######################################
+# build the vkos apps
+#######################################
+osapps:
+	$(Q)mkdir -p $(APPS_DIR) 
+	$(Q)echo "#prepare applications" > $(APPS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(apps-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
@@ -209,13 +252,16 @@ apps:
 				OBJS="$(objs-$(name)-y)  $(C_RUNTIME_ZERO)"       \
 				LIBS="$(libs-$(name)-y)"                          \
 				LDFLAGS="$(LDFLAGS-APP)";                         \
-		if [ "$(CONFIG_CREATE_APP_HEX_FILE)" = "y" ]; then        \
+		if [ "$(CONFIG_CREATE_PROG_HEX_FILE)" = "y" ]; then       \
 			$(MAKE) $(APPS_DIR)/$(name).hex;                      \
 		fi;                                                       \
-		if [ "$(CONFIG_CREATE_APP_BIN_FILE)" = "y" ]; then        \
+		if [ "$(CONFIG_CREATE_PROG_BIN_FILE)" = "y" ]; then       \
 			$(MAKE) $(APPS_DIR)/$(name).bin;                      \
 		fi;                                                       \
 		$(MAKE) $(APPS_DIR)/$(name).exec;                         \
+		if [[ "$(settings-$(name))" =~ "power_up" ]]; then        \
+			echo /applications/$(name).exec >> $(APPS_DIR)/_load_.rc;\
+		fi;                                                       \
 	)
 
 
@@ -281,9 +327,10 @@ ifneq ($(M), )
 	$(Q)rm -rf $(BUILD_DIR)/$(M)
 endif
 
-clean-apps:
+clean-vkos:
 	$(Q)rm -rf $(APPS_DIR)
-	$(Q)rm -rf $(BUILD_DIR)/village-os/applications
+	$(Q)rm -rf $(SVCS_DIR)
+	$(Q)rm -rf $(BUILD_DIR)/village-os
 ifneq ($(A), )
 	$(Q)rm -rf $(BUILD_DIR)/$(A)
 endif

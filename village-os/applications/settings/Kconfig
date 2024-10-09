@@ -2,11 +2,15 @@
 
 menu "settings"
 
-config SETTINGS
+config SETTINGS_APP
 	bool "Build settings application"
 	default y
 
-if SETTINGS
+if SETTINGS_APP
+
+config SETTINGS_POWER_UP
+	bool "Running when power up"
+	default n
 
 endif
 

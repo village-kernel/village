@@ -61,7 +61,7 @@ public:
 	};
 
 	//Members
-	FBInfo fbinfo;
+	FBInfo info;
 public:
 	//Constructor
 	FBDriver()  {}

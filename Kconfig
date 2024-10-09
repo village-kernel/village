@@ -48,27 +48,27 @@ config GENERATED_MOD
 	select MODULE
 	default n
 
-config GENERATED_APP
-	bool "generated apps"
+config GENERATED_VKOS
+	bool "generated vkos"
 	default y
 
-config GENERATED_STATIC_APP
-	depends on GENERATED_APP
+config GENERATED_STATIC_PROG
+	depends on GENERATED_VKOS
 	bool "build with static"
 	default n
 
-config CREATE_APP_HEX_FILE
-	depends on GENERATED_STATIC_APP
+config CREATE_PROG_HEX_FILE
+	depends on GENERATED_STATIC_PROG
 	bool "create *.hex file"
 	default n
 
-config CREATE_APP_BIN_FILE
-	depends on GENERATED_STATIC_APP
+config CREATE_PROG_BIN_FILE
+	depends on GENERATED_STATIC_PROG
 	bool "create *.bin file"
 	default n
 
 config ASSOCIATED_EXEC
-	depends on GENERATED_APP
+	depends on GENERATED_VKOS
 	string "Associated with .exec"
 	default ".elf"
 

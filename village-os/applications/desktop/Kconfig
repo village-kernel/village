@@ -2,8 +2,16 @@
 
 menu "desktop"
 
-config DESKTOP
+config DESKTOP_APP
 	bool "Build desktop application"
 	default y
+
+if DESKTOP_APP
+
+config DESKTOP_POWER_UP
+	bool "Running when power up"
+	default n
+
+endif
 
 endmenu

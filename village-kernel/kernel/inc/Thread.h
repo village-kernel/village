@@ -57,6 +57,7 @@ public:
 	/// @brief State Methods
 	void ChangeState(TaskState state);
 	void Sleep(uint32_t ticks);
+	void Blocked();
 	void TaskExit();
 
 	/// @brief Scheduler Methods

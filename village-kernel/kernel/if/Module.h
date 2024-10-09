@@ -22,8 +22,10 @@ public:
 	virtual ~Module() { }
 
 	//Methods
-	virtual void Setup() = 0;
-	virtual void Exit()  = 0;
+	virtual bool  Setup() = 0;
+	virtual void  Exit()  = 0;
+	virtual void  SetData(void* data) { }
+	virtual void* GetData() { return NULL; }
 };
 
 #endif // !__MODULE_INTERFACE_H__

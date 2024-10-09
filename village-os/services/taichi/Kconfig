@@ -1,0 +1,9 @@
+# taichi menu
+
+menu "taichi"
+
+config TAICHI_SERVICE
+	bool "Build taichi service"
+	default y
+
+endmenu
