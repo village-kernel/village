@@ -22,7 +22,7 @@ private:
 	Drawing*      drawing;
 	Indev*        indev;
 	Wedget*       cursor;
-	List<Wedget*> wedgets;
+	List<Wedget*> mainwins;
 public:
 	//Methods
 	VkGUI();

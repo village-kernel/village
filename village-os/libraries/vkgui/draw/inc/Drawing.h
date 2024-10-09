@@ -8,13 +8,13 @@
 #define __DRAWING_H__
 
 #include "Driver.h"
-#include "DrawingArea.h"
-#include "DrawingChar.h"
-#include "DrawingCircle.h"
-#include "DrawingClear.h"
-#include "DrawingLine.h"
 #include "DrawingPoint.h"
+#include "DrawingLine.h"
 #include "DrawingRect.h"
+#include "DrawingCircle.h"
+#include "DrawingArea.h"
+#include "DrawingClear.h"
+#include "DrawingChar.h"
 #include "DrawingString.h"
 
 
@@ -24,15 +24,15 @@ class Drawing
 public:
 	//Members
 	FBDriver*      fbdev;
-	DrawingArea    area;
-	DrawingChar    chr;
-	DrawingCircle  circle;
-	DrawingClear   clear;
-	DrawingLine    line;
 	DrawingPoint   point;
+	DrawingLine    line;
 	DrawingRect    rect;
+	DrawingCircle  circle;
+	DrawingArea    area;
+	DrawingClear   clear;
+	DrawingChar    chr;
 	DrawingString  string;
-
+public:
 	//Methods
 	Drawing();
 	~Drawing();

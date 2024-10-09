@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of vk.kernel
+# The Makefile of vkgui
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -45,7 +45,6 @@ objs-vkgui-$(CONFIG_VKGUI)              += DrawingString.o
 objs-vkgui-$(CONFIG_VKGUI)              += Indev.o
 
 objs-vkgui-$(CONFIG_VKGUI)              += Wedget.o
-objs-vkgui-$(CONFIG_VKGUI)              += Wedgets.o
 objs-vkgui-$(CONFIG_VKGUI_BUTTON)       += Button.o
 objs-vkgui-$(CONFIG_VKGUI_CURSOR)       += Cursor.o
 objs-vkgui-$(CONFIG_VKGUI_FRAME)        += Frame.o

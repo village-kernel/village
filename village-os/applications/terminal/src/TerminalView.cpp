@@ -26,21 +26,30 @@ TerminalView::~TerminalView()
 /// @brief Setup
 void TerminalView::Setup()
 {
+	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
 	if (NULL == module) return;
 
+	//Gets the vkgui pointer
 	VkGUI* vkgui = (VkGUI*)module->GetData();
 	if (NULL == vkgui) return;
 
+	//Create mainwin
 	mainwin = (Window*)vkgui->CreateMainWindow();
-	mainwin->Resize(20, 20, mainwin->GetWidth() - 40, mainwin->GetHeight() - 100);
+	mainwin->SetSize(20, 20, mainwin->GetWidth() - 40, mainwin->GetHeight() - 100);
 	
-	navbar = (Navbar*)mainwin->CreateWedget(Wedget::_Navbar);
-	navbar->Resize(0, 0, mainwin->GetWidth(), 20);
+	//Create navbar
+	navbar = new Navbar();
+	navbar->SetSize(0, 0, mainwin->GetWidth(), 20);
+	navbar->SetTitile((char*)"terminal");
+	mainwin->AddWedget(navbar);
 
-	textbox = (TextBox*)mainwin->CreateWedget(Wedget::_TextBox);
-	textbox->Resize(0, 20, mainwin->GetWidth(), mainwin->GetHeight() - 20);
+	//Create textbox
+	textbox = new TextBox();
+	textbox->SetSize(0, 20, mainwin->GetWidth(), mainwin->GetHeight() - 20);
+	mainwin->AddWedget(textbox);
 
+	//Showing
 	mainwin->Showing();
 }
 

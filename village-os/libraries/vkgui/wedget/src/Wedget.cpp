@@ -9,14 +9,15 @@
 
 /// @brief Constructor
 Wedget::Wedget()
-	:drawing(NULL),
-	x(0),
+	:x(0),
 	y(0),
 	xoff(0),
 	yoff(0),
 	width(0),
 	height(0),
-	isChange(false)
+	isChange(false),
+	indev(NULL),
+	drawing(NULL)
 {
 }
 
@@ -28,31 +29,32 @@ Wedget::~Wedget()
 }
 
 
+/// @brief 
+/// @return 
+int Wedget::GetLocX() { return x + xoff; }
+
+
+/// @brief 
+/// @return 
+int Wedget::GetLocY() { return y + yoff; }
+
+
+/// @brief 
+/// @return 
+int Wedget::GetWidth() { return width; }
+
+
+/// @brief 
+/// @return 
+int Wedget::GetHeight() { return height; }
+
+
 /// @brief Wedget Setup
-/// @param drawing 
-void Wedget::Setup(Drawing* drawing, Indev* indev)
-{
-	this->drawing = drawing;
-	this->indev = indev;
-}
-
-
-/// @brief Wedget Offset
-/// @param xoff 
-/// @param yoff 
-void Wedget::Offset(int xoff, int yoff)
-{
-	this->xoff = xoff;
-	this->yoff = yoff;
-}
-
-
-/// @brief Wedget Resize
 /// @param x 
 /// @param y 
 /// @param width 
 /// @param height 
-void Wedget::Resize(int x, int y, int width, int height)
+void Wedget::SetSize(int x, int y, int width, int height)
 {
 	this->x = x;
 	this->y = y;
@@ -61,35 +63,29 @@ void Wedget::Resize(int x, int y, int width, int height)
 }
 
 
-/// @brief 
-/// @return 
-int Wedget::GetLocX()
+/// @brief Wedget indev
+/// @param drawing 
+void Wedget::SetIndev(Indev* indev)
 {
-	return x + xoff;
+	this->indev = indev;
 }
 
 
-/// @brief 
-/// @return 
-int Wedget::GetLocY()
+/// @brief Wedget drawing
+/// @param drawing 
+void Wedget::SetDrawing(Drawing* drawing)
 {
-	return y + yoff;
+	this->drawing = drawing;
 }
 
 
-/// @brief 
-/// @return 
-int Wedget::GetWidth()
+/// @brief Wedget Offset
+/// @param xoff 
+/// @param yoff 
+void Wedget::SetOffset(int xoff, int yoff)
 {
-	return width;
-}
-
-
-/// @brief 
-/// @return 
-int Wedget::GetHeight()
-{
-	return height;
+	this->xoff = xoff;
+	this->yoff = yoff;
 }
 
 
@@ -115,4 +111,78 @@ void Wedget::DrawBorder()
 	int x1 = x0 + GetWidth() - 1;
 	int y1 = y0 + GetHeight() - 1;
 	drawing->rect.Set(x0, y0, x1, y1);
+}
+
+
+/// @brief Add Wedget
+/// @param wedget 
+/// @return 
+void Wedget::AddWedget(Wedget* wedget)
+{
+	if (NULL != wedget) 
+	{
+		wedgets.Add(wedget);
+	}
+}
+
+
+/// @brief Wedget showing
+void Wedget::Showing()
+{
+	if ((NULL != indev) && (NULL != drawing))
+	{
+		InitContent();
+		DrawBorder();
+		DrawContent();
+	}
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* wedget = wedgets.Item();
+		wedget->SetIndev(indev);
+		wedget->SetDrawing(drawing);
+		wedget->SetOffset(GetLocX(), GetLocY());
+		wedget->Showing();
+	}
+}
+
+
+/// @brief Wedget refresh
+void Wedget::Refresh()
+{
+	if (true == isChange)
+	{
+		DrawContent();
+		isChange = false;
+	}
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->Refresh();
+	}
+}
+
+
+/// @brief Wedget input text
+/// @param data 
+/// @param size 
+void Wedget::InputData(char* data, int size)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->InputData(data, size);
+	}
+}
+
+
+/// @brief Wedget input axis
+/// @param axisX 
+/// @param axisY 
+/// @param axisZ 
+void Wedget::InputAxis(int axisX, int axisY, int axisZ)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->InputAxis(axisX, axisY, axisZ);
+	}
 }

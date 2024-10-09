@@ -27,25 +27,33 @@ DesktopView::~DesktopView()
 /// @brief Setup
 void DesktopView::Setup()
 {
+	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
 	if (NULL == module) return;
 
+	//Gets the vkgui pointer
 	VkGUI* vkgui = (VkGUI*)module->GetData();
 	if (NULL == vkgui) return;
 	
+	//Create mainwin
 	mainwin = (Window*)vkgui->CreateMainWindow();
 
-	startBtn = (Button*)mainwin->CreateWedget(Wedget::_Button);
-	startBtn->Resize(0, mainwin->GetHeight() - 40, 40, 40);
+	//Create start button
+	startBtn = new Button();
+	startBtn->SetSize(0, mainwin->GetHeight() - 40, 40, 40);
 	startBtn->SetText((char*)"Start");
+	mainwin->AddWedget(startBtn);
 
-	toolbar = (Toolbar*)mainwin->CreateWedget(Wedget::_Toolbar);
-	toolbar->Resize(40, mainwin->GetHeight() - 40, mainwin->GetWidth() - 40, 40);
-	toolbar->CreateItem("A");
-	toolbar->CreateItem("B");
-	toolbar->CreateItem("C");
-	toolbar->CreateItem("D");
+	//Create tool bar
+	toolbar = new Toolbar();
+	toolbar->SetSize(40, mainwin->GetHeight() - 40, mainwin->GetWidth() - 40, 40);
+	toolbar->AddItem("A");
+	toolbar->AddItem("B");
+	toolbar->AddItem("C");
+	toolbar->AddItem("D");
+	mainwin->AddWedget(toolbar);
 
+	//Showing
 	mainwin->Showing();
 }
 

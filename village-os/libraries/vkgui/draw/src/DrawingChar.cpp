@@ -13,21 +13,21 @@
 /// @param x 
 /// @param y 
 /// @param chr 
-/// @param fontSize 
+/// @param font 
 /// @param mode 
 /// @param color 
-void DrawingChar::Set(int x, int y, char chr, DrawingDefs::FontSize fontSize, DrawingDefs::DrawingMode mode, int color)
+void DrawingChar::Set(int x, int y, char chr, int font, int mode, int color)
 {
 	const uint16_t PointMask = 0x0001;
 
 	uint16_t charLine = 0;
 	uint16_t charIndex = chr - ' ';
-	uint8_t rowSize = fontSize;
-	uint8_t colSize = fontSize >> 1;
+	uint8_t rowSize = font;
+	uint8_t colSize = font >> 1;
 
 	for (uint8_t row = 0; row < rowSize; row++)
 	{
-		if (DrawingDefs::Font16 == fontSize)
+		if (DrawingDefs::Font16 == font)
 		{
 			charLine = ASCII_16[charIndex][row];
 		}

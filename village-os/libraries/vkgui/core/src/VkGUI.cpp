@@ -76,9 +76,9 @@ void VkGUI::Exit()
 /// @param size 
 void VkGUI::InputText(char* data, int size)
 {
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	for (mainwins.Begin(); !mainwins.IsEnd(); mainwins.Next())
 	{
-		wedgets.Item()->InputData(data, size);
+		mainwins.Item()->InputData(data, size);
 	}
 }
 
@@ -89,9 +89,9 @@ void VkGUI::InputText(char* data, int size)
 /// @param axisZ 
 void VkGUI::InputAxis(int axisX, int axisY, int axisZ)
 {
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	for (mainwins.Begin(); !mainwins.IsEnd(); mainwins.Next())
 	{
-		wedgets.Item()->InputAxis(axisX, axisY, axisZ);
+		mainwins.Item()->InputAxis(axisX, axisY, axisZ);
 	}
 }
 
@@ -103,9 +103,10 @@ Wedget* VkGUI::CreateMainWindow()
 	if (NULL != drawing)
 	{
 		Wedget* mainwin = new Window();
-		mainwin->Setup(drawing, indev);
-		mainwin->Resize(0, 0, fbdev->info.width, fbdev->info.height);
-		wedgets.Add(mainwin);
+		mainwin->SetIndev(indev);
+		mainwin->SetDrawing(drawing);
+		mainwin->SetSize(0, 0, fbdev->info.width, fbdev->info.height);
+		mainwins.Add(mainwin);
 		return mainwin;
 	}
 	return NULL;
@@ -119,7 +120,7 @@ bool VkGUI::DestroyMainWindow(Wedget* mainwin)
 {
 	if (NULL != mainwin)
 	{
-		wedgets.Remove(mainwin);
+		mainwins.Remove(mainwin);
 		delete mainwin;
 		return true;
 	}
@@ -134,10 +135,11 @@ void VkGUI::EnableCursor()
 	if (NULL != drawing && NULL == cursor)
 	{
 		cursor = new Cursor();
-		cursor->Setup(drawing, indev);
-		cursor->Resize(0, 0, fbdev->info.width, fbdev->info.height);
+		cursor->SetIndev(indev);
+		cursor->SetDrawing(drawing);
+		cursor->SetSize(0, 0, fbdev->info.width, fbdev->info.height);
 		cursor->InitContent();
-		wedgets.Add(cursor);
+		mainwins.Add(cursor);
 	}
 }
 
@@ -149,7 +151,7 @@ void VkGUI::DisableCursor()
 {
 	if (NULL != cursor)
 	{
-		wedgets.Remove(cursor);
+		mainwins.Remove(cursor);
 		delete cursor;
 	}
 }

@@ -8,17 +8,20 @@
 
 
 /// @brief 
-void Label::DrawContent()
-{
-	int locX = GetLocX();
-	int locY = GetLocY();
-	drawing->string.Set(locX, locY, label);
-}
-
-
-/// @brief 
 /// @param text 
 void Label::SetText(char* text)
 {
 	this->label = text;
+}
+
+
+/// @brief 
+void Label::DrawContent()
+{
+	if (NULL != label)
+	{
+		int locX = GetLocX();
+		int locY = GetLocY();
+		drawing->string.Set(locX, locY, label);
+	}
 }

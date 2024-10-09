@@ -21,7 +21,7 @@ public:
 	//Methods
 	Tabbar();
 	~Tabbar();
-	void CreateItem(const char* name);
+	void AddItem(const char* name);
 };
 
 #endif //!__VK_TAB_BAR_H__

@@ -21,7 +21,7 @@ public:
 	//Methods
 	Toolbar();
 	~Toolbar();
-	void CreateItem(const char* name);
+	void AddItem(const char* name);
 };
 
 #endif //!__VK_TOOL_BAR_H__

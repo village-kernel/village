@@ -28,5 +28,6 @@ bool DrawingBase::Setup(Drawing* drawing)
 /// @brief Exit
 void DrawingBase::Exit()
 {
-
+	limitX = 0;
+	limitY = 0;
 }

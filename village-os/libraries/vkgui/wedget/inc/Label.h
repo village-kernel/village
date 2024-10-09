@@ -18,8 +18,8 @@ private:
 	char* label;
 public:
 	//Methods
-	void DrawContent();
 	void SetText(char* text);
+	void DrawContent();
 };
 
 #endif //!__VK_LABEL_H__

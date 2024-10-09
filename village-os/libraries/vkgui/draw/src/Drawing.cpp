@@ -43,14 +43,14 @@ void Drawing::Setup(FBDriver* fbdev)
 	//Setup area
 	area.Setup(this);
 
+	//Setup clear
+	clear.Setup(this);
+
 	//Setup char
 	chr.Setup(this);
 
 	//Setup string
 	string.Setup(this);
-
-	//Setup clear
-	clear.Setup(this);
 
 	//Clear screen
 	clear.Set();
@@ -75,12 +75,12 @@ void Drawing::Exit()
 	//Exit area
 	area.Exit();
 
+	//Exit clear
+	clear.Exit();
+
 	//Exit char
 	chr.Exit();
 
 	//Exit string
 	string.Exit();
-
-	//Exit clear
-	clear.Exit();
 }

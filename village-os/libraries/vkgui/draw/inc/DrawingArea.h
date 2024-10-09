@@ -17,11 +17,20 @@ public:
 	//Methods
 	void Set
 	(
-		int* area,
-		int x = 0,
-		int y = 0,
-		int width = 0,
-		int height = 0
+		int x,
+		int y,
+		int width,
+		int height,
+		int* area
+	);
+
+	void Get
+	(
+		int x,
+		int y,
+		int width,
+		int height,
+		int* area
 	);
 };
 

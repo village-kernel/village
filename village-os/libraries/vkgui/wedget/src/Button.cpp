@@ -31,15 +31,12 @@ void Button::SetText(char* text)
 
 
 /// @brief 
-void Button::InitContent()
-{
-	x0 = GetLocX() + (GetWidth() / 2) - (strlen(text) * DrawingDefs::Font16 / 4);
-	y0 = GetLocY() + (GetHeight() / 2 - DrawingDefs::Font16 / 2);
-}
-
-
-/// @brief 
 void Button::DrawContent()
 {
-	drawing->string.Set(x0, y0, text);
+	if (NULL != text)
+	{
+		int x0 = GetLocX() + (GetWidth() / 2) - (strlen(text) * DrawingDefs::Font16 / 4);
+		int y0 = GetLocY() + (GetHeight() / 2 - DrawingDefs::Font16 / 2);
+		drawing->string.Set(x0, y0, text);
+	}
 }

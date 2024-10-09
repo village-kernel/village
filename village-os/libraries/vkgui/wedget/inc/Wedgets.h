@@ -7,8 +7,6 @@
 #ifndef __VK_WEDGETS_H__
 #define __VK_WEDGETS_H__
 
-#include "List.h"
-#include "Wedget.h"
 #include "Button.h"
 #include "Cursor.h"
 #include "Frame.h"

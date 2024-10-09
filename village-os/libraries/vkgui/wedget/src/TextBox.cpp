@@ -78,13 +78,15 @@ void TextBox::ClearBuff()
 /// @brief InitContent
 void TextBox::InitContent()
 {
-	vertScrollbar = (Scrollbar*)CreateWedget(WedgetID::_Scrollbar);
+	vertScrollbar = new Scrollbar();
+	vertScrollbar->SetSize(0, GetHeight() - 5, GetWidth(), 5);	
 	vertScrollbar->SetDirection(Scrollbar::_Vertical);
-	vertScrollbar->Resize(0, GetHeight() - 5, GetWidth(), 5);	
+	AddWedget(vertScrollbar);
 	
-	horiScrollbar = (Scrollbar*)CreateWedget(WedgetID::_Scrollbar);
+	horiScrollbar = new Scrollbar();
+	horiScrollbar->SetSize(GetWidth() - 5, 0, 5, GetHeight());
 	horiScrollbar->SetDirection(Scrollbar::_Horizontal);
-	horiScrollbar->Resize(GetWidth() - 5, 0, 5, GetHeight());
+	AddWedget(horiScrollbar);
 	
 	isOverflow = false;
 	buffCol = 0;

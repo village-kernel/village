@@ -13,10 +13,10 @@
 /// @param x 
 /// @param y 
 /// @param str 
-/// @param fontSize 
+/// @param font 
 /// @param mode 
 /// @param color 
-void DrawingString::Set(int x, int y, char* str, DrawingDefs::FontSize fontSize, DrawingDefs::DrawingMode mode, int color)
+void DrawingString::Set(int x, int y, char* str, int font, int mode, int color)
 {
 	int xOffset = x;
 	int yOffset = y;
@@ -25,14 +25,14 @@ void DrawingString::Set(int x, int y, char* str, DrawingDefs::FontSize fontSize,
 	{
 		while ((*str <= '~') && (*str >= ' '))
 		{
-			drawing->chr.Set(xOffset, yOffset, *str, fontSize, mode, color);
+			drawing->chr.Set(xOffset, yOffset, *str, font, mode, color);
 
-			xOffset += fontSize >> 1;
+			xOffset += font >> 1;
 
 			if (xOffset > limitX)
 			{
 				xOffset = 0;
-				yOffset += fontSize;
+				yOffset += font;
 			}
 
 			str++;

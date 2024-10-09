@@ -26,6 +26,7 @@ void Scrollbar::SetDirection(Direction dir)
 /// @brief 
 void Scrollbar::InitContent()
 {
-	//scrollbtn = (Button*)CreateWedget(WedgetID::_Button);
-	//scrollbtn->Resize(40, 0, 20, 20);
+	//scrollbtn = new Button();
+	//scrollbtn->SetSize(40, 0, 20, 20);
+	//AddWedget(scrollbtn);
 }

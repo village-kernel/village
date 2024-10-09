@@ -23,7 +23,6 @@ public:
 	Button();
 	~Button();
 	void SetText(char* text);
-	void InitContent();
 	void DrawContent();
 };
 

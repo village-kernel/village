@@ -20,12 +20,13 @@ Tabbar::~Tabbar()
 }
 
 
-/// @brief Create item
+/// @brief Add item
 /// @param name 
-void Tabbar::CreateItem(const char* name)
+void Tabbar::AddItem(const char* name)
 {
-	Button* item = (Button*)CreateWedget(Wedget::_Button);
-	item->Resize((itemSize * 40) + 10, 5, 30, 30);
+	Button* item = new Button();
+	item->SetSize((itemSize * 40) + 10, 5, 30, 30);
 	item->SetText((char*)name);
 	itemSize++;
+	AddWedget(item);
 }
