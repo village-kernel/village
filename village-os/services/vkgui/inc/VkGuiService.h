@@ -17,6 +17,7 @@ class VkGuiService : public Module
 {
 private:
 	//Members
+	bool isReady;
 	VkGUI vkgui;
 
 	//Methods

@@ -11,6 +11,7 @@
 
 /// @brief Constructor
 VkGuiService::VkGuiService()
+	:isReady(false)
 {
 } 
 
@@ -24,6 +25,9 @@ VkGuiService::~VkGuiService()
 /// @brief Setup
 bool VkGuiService::Setup()
 {
+	//Clear ready flag
+	isReady = false;
+
 	//Get all display device fbDevs
 	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
 
@@ -49,6 +53,9 @@ bool VkGuiService::Setup()
 	kernel->inputEvent.Attach(InputEvent::_OutputText, (Method)&VkGuiService::TextReceiver, this);
 	kernel->inputEvent.Attach(InputEvent::_OutputAxis, (Method)&VkGuiService::AxisReceiver, this);
 
+	//Set ready flag
+	isReady = true;
+
 	return true;
 }
 
@@ -69,6 +76,7 @@ void VkGuiService::Exit()
 /// @return 
 void* VkGuiService::GetData()
 {
+	while (!isReady) {}
 	return (void*)(&vkgui);
 }
 
