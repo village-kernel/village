@@ -7,7 +7,7 @@
 #include "Button.h"
 
 
-/// @brief 
+/// @brief Constructor
 Button::Button()
 	:x0(0),
 	y0(0),
@@ -16,21 +16,20 @@ Button::Button()
 }
 
 
-/// @brief 
+/// @brief Destructor
 Button::~Button()
 {
 }
 
 
-/// @brief 
-/// @param text 
-void Button::SetText(char* text)
+/// @brief Init content
+void Button::InitContent()
 {
-	this->text = text;
+
 }
 
 
-/// @brief 
+/// @brief Draw content
 void Button::DrawContent()
 {
 	if (NULL != text)
@@ -39,4 +38,12 @@ void Button::DrawContent()
 		int y0 = GetLocY() + (GetHeight() / 2 - DrawingDefs::Font16 / 2);
 		drawing->string.Set(x0, y0, text);
 	}
+}
+
+
+/// @brief 
+/// @param text 
+void Button::SetText(char* text)
+{
+	this->text = text;
 }

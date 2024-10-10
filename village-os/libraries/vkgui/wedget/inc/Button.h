@@ -22,8 +22,11 @@ public:
 	//Methods
 	Button();
 	~Button();
-	void SetText(char* text);
+	
+	void InitContent();
 	void DrawContent();
+
+	void SetText(char* text);
 };
 
 #endif //!__VK_BUTTON_H__

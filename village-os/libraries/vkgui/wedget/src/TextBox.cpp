@@ -75,7 +75,7 @@ void TextBox::ClearBuff()
 }
 
 
-/// @brief InitContent
+/// @brief Init content
 void TextBox::InitContent()
 {
 	vertScrollbar = new Scrollbar();
@@ -105,7 +105,7 @@ void TextBox::InitContent()
 }
 
 
-/// @brief DrawContent
+/// @brief Draw content
 void TextBox::DrawContent()
 {
 	static const int fontSize = DrawingDefs::Font16;

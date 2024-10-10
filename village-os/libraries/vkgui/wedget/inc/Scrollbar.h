@@ -28,8 +28,12 @@ private:
 public:
 	//Methods
 	Scrollbar();
-	void SetDirection(Direction dir);
+	~Scrollbar();
+	
 	void InitContent();
+	void DrawContent();
+
+	void SetDirection(Direction dir);
 };
 
 #endif //!__VK_SCROLL_BAR_H__

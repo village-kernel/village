@@ -33,17 +33,12 @@ protected:
 	List<Wedget*> wedgets;
 public:
 	//Wedget methods
-	virtual int GetLocX();
-	virtual int GetLocY();
-	virtual int GetWidth();
-	virtual int GetHeight();
+	int GetLocX();
+	int GetLocY();
+	int GetWidth();
+	int GetHeight();
 public:
-	//Methods
-	Wedget();
-	virtual ~Wedget();
-
 	//Wedget methods
-	virtual void SetIndev(Indev* indev);
 	virtual void SetDrawing(Drawing* drawing);
 	virtual void SetSize(int x, int y, int width, int height);
 	virtual void SetOffset(int xoff, int yoff);
@@ -52,15 +47,20 @@ public:
 	virtual void InitContent();
 	virtual void DrawContent();
 	virtual void DrawBorder();
+public:
+	//Input methods
+	void SetIndev(Indev* indev);
+	void InputData(char* data, int size);
+	void InputAxis(int axisX, int axisY, int axisZ);
+public:
+	//Methods
+	Wedget();
+	virtual ~Wedget();
 
 	//Wedgets methods
-	virtual void AddWedget(Wedget* wedget);
-	virtual void Showing();
-	virtual void Refresh();
-
-	//Input methods
-	virtual void InputData(char* data, int size);
-	virtual void InputAxis(int axisX, int axisY, int axisZ);
+	void AddWedget(Wedget* wedget);
+	void Showing();
+	void Refresh();
 };
 
 #endif //!__VK_WEDGET_H__

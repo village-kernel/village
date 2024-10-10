@@ -47,8 +47,10 @@ public:
 	//Methods
 	TextBox();
 	~TextBox();
+	
 	void InitContent();
 	void DrawContent();
+
 	int SetText(char* text, int size = 0);
 	int AppendText(char* text, int size = 0);
 

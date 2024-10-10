@@ -20,6 +20,20 @@ Tabbar::~Tabbar()
 }
 
 
+/// @brief Init content
+void Tabbar::InitContent()
+{
+
+}
+
+
+/// @brief Draw content
+void Tabbar::DrawContent()
+{
+
+}
+
+
 /// @brief Add item
 /// @param name 
 void Tabbar::AddItem(const char* name)

@@ -13,7 +13,13 @@
 /// @brief MsgBox
 class MsgBox : public Wedget
 {
+public:
+	//Methods
+	MsgBox();
+	~MsgBox();
 
+	void InitContent();
+	void DrawContent();
 };
 
 #endif //!__VK_MSG_BOX_H__

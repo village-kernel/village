@@ -24,8 +24,11 @@ private:
 public:
 	//Methods
 	Cursor();
+	~Cursor();
+	
 	void InitContent();
 	void DrawContent();
+
 	void InputAxis(int axisX, int axisY, int axisZ);
 };
 

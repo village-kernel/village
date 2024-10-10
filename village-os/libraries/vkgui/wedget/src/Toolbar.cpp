@@ -20,6 +20,20 @@ Toolbar::~Toolbar()
 }
 
 
+/// @brief Init content
+void Toolbar::InitContent()
+{
+
+}
+
+
+/// @brief Draw content
+void Toolbar::DrawContent()
+{
+
+}
+
+
 /// @brief Add item
 /// @param name 
 void Toolbar::AddItem(const char* name)

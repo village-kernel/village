@@ -23,10 +23,13 @@ private:
 public:
 	//Methods
 	Navbar();
-	void SetTitile(char* title);
-	char* GetTitle();
+	~Navbar();
+
 	void InitContent();
 	void DrawContent();
+
+	void SetTitile(char* title);
+	char* GetTitle();
 };
 
 #endif //!__VK_NAV_BAR_H__

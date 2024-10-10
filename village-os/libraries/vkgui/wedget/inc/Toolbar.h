@@ -21,6 +21,10 @@ public:
 	//Methods
 	Toolbar();
 	~Toolbar();
+
+	void InitContent();
+	void DrawContent();
+
 	void AddItem(const char* name);
 };
 

@@ -29,22 +29,22 @@ Wedget::~Wedget()
 }
 
 
-/// @brief 
+/// @brief GetLocX
 /// @return 
 int Wedget::GetLocX() { return x + xoff; }
 
 
-/// @brief 
+/// @brief GetLocY
 /// @return 
 int Wedget::GetLocY() { return y + yoff; }
 
 
-/// @brief 
+/// @brief GetWidth
 /// @return 
 int Wedget::GetWidth() { return width; }
 
 
-/// @brief 
+/// @brief GetHeight
 /// @return 
 int Wedget::GetHeight() { return height; }
 
@@ -60,14 +60,6 @@ void Wedget::SetSize(int x, int y, int width, int height)
 	this->y = y;
 	this->width = width;
 	this->height = height;
-}
-
-
-/// @brief Wedget indev
-/// @param drawing 
-void Wedget::SetIndev(Indev* indev)
-{
-	this->indev = indev;
 }
 
 
@@ -89,21 +81,21 @@ void Wedget::SetOffset(int xoff, int yoff)
 }
 
 
-/// @brief 
+/// @brief Wedget Init Content
 void Wedget::InitContent()
 {
 
 }
 
 
-/// @brief 
+/// @brief Wedget Draw Content
 void Wedget::DrawContent()
 {
 
 }
 
 
-/// @brief 
+/// @brief Wedget Draw Border
 void Wedget::DrawBorder()
 {
 	int x0 = GetLocX();
@@ -111,6 +103,39 @@ void Wedget::DrawBorder()
 	int x1 = x0 + GetWidth() - 1;
 	int y1 = y0 + GetHeight() - 1;
 	drawing->rect.Set(x0, y0, x1, y1);
+}
+
+
+/// @brief Wedget indev
+/// @param drawing 
+void Wedget::SetIndev(Indev* indev)
+{
+	this->indev = indev;
+}
+
+
+/// @brief Wedget input text
+/// @param data 
+/// @param size 
+void Wedget::InputData(char* data, int size)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->InputData(data, size);
+	}
+}
+
+
+/// @brief Wedget input axis
+/// @param axisX 
+/// @param axisY 
+/// @param axisZ 
+void Wedget::InputAxis(int axisX, int axisY, int axisZ)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		wedgets.Item()->InputAxis(axisX, axisY, axisZ);
+	}
 }
 
 
@@ -159,30 +184,5 @@ void Wedget::Refresh()
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
 		wedgets.Item()->Refresh();
-	}
-}
-
-
-/// @brief Wedget input text
-/// @param data 
-/// @param size 
-void Wedget::InputData(char* data, int size)
-{
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		wedgets.Item()->InputData(data, size);
-	}
-}
-
-
-/// @brief Wedget input axis
-/// @param axisX 
-/// @param axisY 
-/// @param axisZ 
-void Wedget::InputAxis(int axisX, int axisY, int axisZ)
-{
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		wedgets.Item()->InputAxis(axisX, axisY, axisZ);
 	}
 }

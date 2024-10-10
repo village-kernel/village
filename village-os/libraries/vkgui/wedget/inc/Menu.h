@@ -13,7 +13,13 @@
 /// @brief Menu
 class Menu : public Wedget
 {
+public:
+	//Methods
+	Menu();
+	~Menu();
 
+	void InitContent();
+	void DrawContent();
 };
 
 #endif //!__VK_MENU_H__

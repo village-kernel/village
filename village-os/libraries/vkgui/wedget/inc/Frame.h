@@ -13,7 +13,13 @@
 /// @brief Frame
 class Frame : public Wedget
 {
+public:
+	//Methods
+	Frame();
+	~Frame();
 
+	void InitContent();
+	void DrawContent();
 };
 
 #endif //!__VK_FRAME_H__

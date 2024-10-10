@@ -21,6 +21,10 @@ public:
 	//Methods
 	Tabbar();
 	~Tabbar();
+
+	void InitContent();
+	void DrawContent();
+
 	void AddItem(const char* name);
 };
 

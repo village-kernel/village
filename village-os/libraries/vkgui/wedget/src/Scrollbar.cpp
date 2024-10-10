@@ -7,11 +7,33 @@
 #include "Scrollbar.h"
 
 
-/// @brief 
+/// @brief Constructor
 Scrollbar::Scrollbar()
 	:dir(_Vertical),
 	scrollbtn(NULL)
 {
+}
+
+
+/// @brief Destructor
+Scrollbar::~Scrollbar()
+{
+}
+
+
+/// @brief Init content
+void Scrollbar::InitContent()
+{
+	//scrollbtn = new Button();
+	//scrollbtn->SetSize(40, 0, 20, 20);
+	//AddWedget(scrollbtn);
+}
+
+
+/// @brief Draw content
+void Scrollbar::DrawContent()
+{
+
 }
 
 
@@ -20,13 +42,4 @@ Scrollbar::Scrollbar()
 void Scrollbar::SetDirection(Direction dir)
 {
 	this->dir = dir;
-}
-
-
-/// @brief 
-void Scrollbar::InitContent()
-{
-	//scrollbtn = new Button();
-	//scrollbtn->SetSize(40, 0, 20, 20);
-	//AddWedget(scrollbtn);
 }

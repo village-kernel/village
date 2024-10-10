@@ -13,7 +13,13 @@
 /// @brief Window
 class Window : public Wedget
 {
+public:
+	//Methods
+	Window();
+	~Window();
 
+	void InitContent();
+	void DrawContent();
 };
 
 #endif //!__VK_WINDOW_H__

@@ -7,7 +7,7 @@
 #include "Navbar.h"
 
 
-/// @brief 
+/// @brief Constructor
 Navbar::Navbar()
 	:title(NULL),
 	minbtn(NULL),
@@ -17,26 +17,13 @@ Navbar::Navbar()
 }
 
 
-/// @brief 
-/// @param title 
-void Navbar::SetTitile(char* title)
+/// @brief Destructor
+Navbar::~Navbar()
 {
-	this->title = title;
 }
 
 
-/// @brief 
-/// @return 
-char* Navbar::GetTitle()
-{
-	return this->title;
-}
-
-
-/// @brief 
-/// @param drawing 
-/// @param x 
-/// @param y 
+/// @brief Init content
 void Navbar::InitContent()
 {
 	minbtn = new Button();
@@ -56,7 +43,7 @@ void Navbar::InitContent()
 }
 
 
-/// @brief 
+/// @brief Draw content
 void Navbar::DrawContent()
 {
 	if (NULL != title)
@@ -65,4 +52,20 @@ void Navbar::DrawContent()
 		int locY = GetLocY() + (GetHeight() / 2 - DrawingDefs::Font16 / 2);
 		drawing->string.Set(locX, locY, title);
 	}
+}
+
+
+/// @brief 
+/// @param title 
+void Navbar::SetTitile(char* title)
+{
+	this->title = title;
+}
+
+
+/// @brief 
+/// @return 
+char* Navbar::GetTitle()
+{
+	return this->title;
 }

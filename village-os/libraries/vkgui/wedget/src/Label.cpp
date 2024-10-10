@@ -7,15 +7,27 @@
 #include "Label.h"
 
 
-/// @brief 
-/// @param text 
-void Label::SetText(char* text)
+/// @brief Constructor
+Label::Label()
+	:label(NULL)
 {
-	this->label = text;
 }
 
 
-/// @brief 
+/// @brief Destructor
+Label::~Label()
+{
+}
+
+
+/// @brief Init content
+void Label::InitContent()
+{
+
+}
+
+
+/// @brief Draw content
 void Label::DrawContent()
 {
 	if (NULL != label)
@@ -24,4 +36,12 @@ void Label::DrawContent()
 		int locY = GetLocY();
 		drawing->string.Set(locX, locY, label);
 	}
+}
+
+
+/// @brief 
+/// @param text 
+void Label::SetText(char* text)
+{
+	this->label = text;
 }

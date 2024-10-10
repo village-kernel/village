@@ -39,6 +39,12 @@ Cursor::Cursor()
 {}
 
 
+/// @brief Destructor
+Cursor::~Cursor()
+{
+}
+
+
 /// @brief Cursor Read
 /// @param x 
 /// @param y 
@@ -77,7 +83,7 @@ void Cursor::Draw(uint32_t x, uint32_t y, uint32_t* data)
 }
 
 
-/// @brief 
+/// @brief Init content
 void Cursor::InitContent()
 {
 	locX = GetLocX();
@@ -85,7 +91,7 @@ void Cursor::InitContent()
 }
 
 
-/// @brief Cursor Show
+/// @brief Draw content
 void Cursor::DrawContent()
 {
 	static int lastLocX = 0;
@@ -110,7 +116,7 @@ void Cursor::DrawContent()
 }
 
 
-/// @brief Cursor Update
+/// @brief 
 void Cursor::InputAxis(int axisX, int axisY, int axisZ)
 {
 	locX += axisX;
