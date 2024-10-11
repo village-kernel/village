@@ -1,26 +1,26 @@
 //###########################################################################
-// InputEvent.cpp
-// Definitions of the functions that manage input event
+// Event.cpp
+// Definitions of the functions that manage event
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "InputEvent.h"
+#include "Event.h"
 
 
 /// @brief Constructor
-ConcreteInputEvent::ConcreteInputEvent()
+ConcreteEvent::ConcreteEvent()
 {
 }
 
 
 /// @brief Desturctor
-ConcreteInputEvent::~ConcreteInputEvent()
+ConcreteEvent::~ConcreteEvent()
 {
 }
 
 
-/// @brief InputEvent Setup
-void ConcreteInputEvent::Setup()
+/// @brief Event Setup
+void ConcreteEvent::Setup()
 {
 	//Get all input devices
 	List<Base*> devices = kernel->device.GetDevices(DriverID::_input);
@@ -32,15 +32,15 @@ void ConcreteInputEvent::Setup()
 	}
 
 	//Set default output format
-	outFormat = _Noraml;
+	outFormat = OutFormat::_Noraml;
 
 	//Output debug info
 	kernel->debug.Info("Input event setup done!");
 }
 
 
-/// @brief InputEvent Exit
-void ConcreteInputEvent::Exit()
+/// @brief Event Exit
+void ConcreteEvent::Exit()
 {
 	//Get all input devices
 	List<Base*> devices = kernel->device.GetDevices(DriverID::_input);
@@ -55,7 +55,7 @@ void ConcreteInputEvent::Exit()
 	inDevs.Release();
 
 	//Release all observers
-	for (int i = 0; i < _AllType; i++)
+	for (int i = 0; i < EventType::_AllType; i++)
 	{
 		observers[i].Release();
 	}
@@ -64,7 +64,7 @@ void ConcreteInputEvent::Exit()
 
 /// @brief Init Input Device
 /// @param input 
-void ConcreteInputEvent::InitInputDevice(const char* input)
+void ConcreteEvent::InitInputDevice(const char* input)
 {
 	//Create an input device object
 	DevStream* device = new DevStream();
@@ -79,7 +79,7 @@ void ConcreteInputEvent::InitInputDevice(const char* input)
 
 /// @brief Exit Input Device
 /// @param input 
-void ConcreteInputEvent::ExitInputDevice(const char* input)
+void ConcreteEvent::ExitInputDevice(const char* input)
 {
 	//Gets the input device from inDevs list
 	DevStream* device = inDevs.GetItem(input);
@@ -97,7 +97,7 @@ void ConcreteInputEvent::ExitInputDevice(const char* input)
 /// @brief Input attach
 /// @param method 
 /// @param user 
-void ConcreteInputEvent::Attach(EventType type, Method method, Class* user)
+void ConcreteEvent::Attach(EventType type, Method method, Class* user)
 {
 	observers[type].Attach(method, user);
 }
@@ -106,7 +106,7 @@ void ConcreteInputEvent::Attach(EventType type, Method method, Class* user)
 /// @brief Input Attach
 /// @param func 
 /// @param user 
-void ConcreteInputEvent::Attach(EventType type, Function func, void* user)
+void ConcreteEvent::Attach(EventType type, Function func, void* user)
 {
 	observers[type].Attach(func, user);
 }
@@ -115,7 +115,7 @@ void ConcreteInputEvent::Attach(EventType type, Function func, void* user)
 /// @brief Input Detach
 /// @param method 
 /// @param user 
-void ConcreteInputEvent::Detach(EventType type, Method method, Class* user)
+void ConcreteEvent::Detach(EventType type, Method method, Class* user)
 {
 	observers[type].Detach(method, user);
 }
@@ -124,7 +124,7 @@ void ConcreteInputEvent::Detach(EventType type, Method method, Class* user)
 /// @brief Input Detach
 /// @param func 
 /// @param user 
-void ConcreteInputEvent::Detach(EventType type, Function func, void* user)
+void ConcreteEvent::Detach(EventType type, Function func, void* user)
 {
 	observers[type].Detach(func, user);
 }
@@ -133,7 +133,7 @@ void ConcreteInputEvent::Detach(EventType type, Function func, void* user)
 /// @brief Input report key
 /// @param code 
 /// @param status 
-void ConcreteInputEvent::ReportKey(int code, int status)
+void ConcreteEvent::ReportKey(int code, int status)
 {
 	inputKey.code = code;
 	inputKey.status = status;
@@ -145,7 +145,7 @@ void ConcreteInputEvent::ReportKey(int code, int status)
 /// @param axisX 
 /// @param axisY 
 /// @param axisZ 
-void ConcreteInputEvent::ReportAxis(int axisX, int axisY, int axisZ)
+void ConcreteEvent::ReportAxis(int axisX, int axisY, int axisZ)
 {
 	inputAxis.axisX = axisX;
 	inputAxis.axisY = axisY;
@@ -157,7 +157,7 @@ void ConcreteInputEvent::ReportAxis(int axisX, int axisY, int axisZ)
 /// @brief Input PushChar
 /// @param data 
 /// @param size 
-void ConcreteInputEvent::PushChar(char chr)
+void ConcreteEvent::PushChar(char chr)
 {
 	static char data[2] = {0}; data[0] = chr;
 	outputText.data = data;
@@ -169,7 +169,7 @@ void ConcreteInputEvent::PushChar(char chr)
 /// @brief Input PushString
 /// @param data 
 /// @param size 
-void ConcreteInputEvent::PushString(char* data, int size)
+void ConcreteEvent::PushString(char* data, int size)
 {
 	outputText.data = data;
 	outputText.size = size;
@@ -181,7 +181,7 @@ void ConcreteInputEvent::PushString(char* data, int size)
 /// @param axisX 
 /// @param axisY 
 /// @param axisZ 
-void ConcreteInputEvent::PushAxis(int axisX, int axisY, int axisZ)
+void ConcreteEvent::PushAxis(int axisX, int axisY, int axisZ)
 {
 	outputAxis.axisX = axisX;
 	outputAxis.axisY = axisY;
@@ -192,7 +192,7 @@ void ConcreteInputEvent::PushAxis(int axisX, int axisY, int axisZ)
 
 /// @brief Input SetOutFormat
 /// @param format 
-void ConcreteInputEvent::SetOutFormat(OutFormat format)
+void ConcreteEvent::SetOutFormat(OutFormat format)
 {
 	this->outFormat = format;
 }
@@ -200,7 +200,7 @@ void ConcreteInputEvent::SetOutFormat(OutFormat format)
 
 /// @brief Input GetOutFormat
 /// @return 
-ConcreteInputEvent::OutFormat ConcreteInputEvent::GetOutFormat()
+ConcreteEvent::OutFormat ConcreteEvent::GetOutFormat()
 {
 	return outFormat;
 }

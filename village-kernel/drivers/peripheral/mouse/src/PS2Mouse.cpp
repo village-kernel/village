@@ -17,9 +17,6 @@ PS2Mouse::PS2Mouse()
 	isLeftBtnPressed(false),
 	isRightBtnPressed(false),
 	isMiddleBtnPressed(false),
-	inputEvent(NULL),
-	interrupt(NULL),
-	workQueue(NULL),
 	work(NULL)
 {
 }
@@ -143,7 +140,7 @@ void PS2Mouse::InputHandler()
 		if (++count >= mouseid)
 		{
 			count = 0;
-			workQueue->Sched(work);
+			kernel->workQueue.Sched(work);
 		}
 	}
 }
@@ -156,63 +153,55 @@ void PS2Mouse::ReportHandler()
 	if (packet.leftBtn && !isLeftBtnPressed)
 	{
 		isLeftBtnPressed = true;
-		inputEvent->ReportKey(_BtnLeft, _KeyPressed);
+		kernel->event.ReportKey(_BtnLeft, _KeyPressed);
 	}
 	else if (!packet.leftBtn && isLeftBtnPressed)
 	{
 		isLeftBtnPressed = false;
-		inputEvent->ReportKey(_BtnLeft, _KeyReleased);
+		kernel->event.ReportKey(_BtnLeft, _KeyReleased);
 	}
 
 	//Report right button
 	if (packet.rightBtn && !isRightBtnPressed)
 	{
 		isRightBtnPressed = true;
-		inputEvent->ReportKey(_BtnRight, _KeyPressed);
+		kernel->event.ReportKey(_BtnRight, _KeyPressed);
 	}
 	else if (!packet.rightBtn && isRightBtnPressed)
 	{
 		isRightBtnPressed = false;
-		inputEvent->ReportKey(_BtnRight, _KeyReleased);
+		kernel->event.ReportKey(_BtnRight, _KeyReleased);
 	}
 
 	//Report middle button
 	if (packet.middleBtn && !isMiddleBtnPressed)
 	{
 		isMiddleBtnPressed = true;
-		inputEvent->ReportKey(_BtnMiddle, _KeyPressed);
+		kernel->event.ReportKey(_BtnMiddle, _KeyPressed);
 	}
 	else if (!packet.middleBtn && isMiddleBtnPressed)
 	{
 		isMiddleBtnPressed = false;
-		inputEvent->ReportKey(_BtnMiddle, _KeyReleased);
+		kernel->event.ReportKey(_BtnMiddle, _KeyReleased);
 	}
 
 	//Report axis x, y, z movement value
 	int axisX = (int16_t)packet.x - (packet.xSignBit ? 0x100 : 0);
 	int axisY = (int16_t)packet.y - (packet.ySignBit ? 0x100 : 0);
 	int axisZ = (int8_t)packet.z;
-	inputEvent->ReportAxis(axisX, axisY, axisZ);
+	kernel->event.ReportAxis(axisX, axisY, axisZ);
 }
 
 
 /// @brief Mouse open
 bool PS2Mouse::Open()
 {
-	//Get the inputEvent pointer
-	inputEvent = &kernel->inputEvent;
-
-	//Get the interrupt pointer
-	interrupt = &kernel->interrupt;
-
-	//Get the work queue pointer
-	workQueue = &kernel->workQueue;
 
 	//Create work
-	work = workQueue->Create((Method)&PS2Mouse::ReportHandler, this);
+	work = kernel->workQueue.Create((Method)&PS2Mouse::ReportHandler, this);
 
 	//Set interrupt service
-	interrupt->SetISR(config.irq, (Method)&PS2Mouse::InputHandler, this);
+	kernel->interrupt.SetISR(config.irq, (Method)&PS2Mouse::InputHandler, this);
 
 	//Config
 	ConfigureMouse();
@@ -224,8 +213,8 @@ bool PS2Mouse::Open()
 /// @brief Mouse close
 void PS2Mouse::Close()
 {
-	interrupt->RemoveISR(config.irq, (Method)(&PS2Mouse::InputHandler), this);
-	workQueue->Delete(work);
+	kernel->interrupt.RemoveISR(config.irq, (Method)(&PS2Mouse::InputHandler), this);
+	kernel->workQueue.Delete(work);
 }
 
 
