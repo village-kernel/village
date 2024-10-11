@@ -24,8 +24,8 @@ private:
 	void SpecialKeysPressed(int code);
 	void SpecialKeysReleased(int code);
 	void CharacterKeys(int code);
-	void InputKeyCallBack(InputEvent::InputKey* input);
-	void InputAxisCallBack(InputEvent::InputAxis* input);
+	void InputKeyCallBack(Event::InputKey* input);
+	void InputAxisCallBack(Event::InputAxis* input);
 public:
 	//Methods
 	InputService();

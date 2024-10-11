@@ -54,8 +54,8 @@ InputService::~InputService()
 void InputService::Setup()
 {
 	//Attach input event
-	kernel->inputEvent.Attach(InputEvent::_InputKey, (Method)&InputService::InputKeyCallBack, this);
-	kernel->inputEvent.Attach(InputEvent::_InputAxis, (Method)&InputService::InputAxisCallBack, this);
+	kernel->event.Attach(Event::_InputKey, (Method)&InputService::InputKeyCallBack, this);
+	kernel->event.Attach(Event::_InputAxis, (Method)&InputService::InputAxisCallBack, this);
 }
 
 
@@ -63,8 +63,8 @@ void InputService::Setup()
 void InputService::Exit()
 {
 	//Detach input event
-	kernel->inputEvent.Detach(InputEvent::_InputKey, (Method)&InputService::InputKeyCallBack, this);
-	kernel->inputEvent.Detach(InputEvent::_InputAxis, (Method)&InputService::InputAxisCallBack, this);
+	kernel->event.Detach(Event::_InputKey, (Method)&InputService::InputKeyCallBack, this);
+	kernel->event.Detach(Event::_InputAxis, (Method)&InputService::InputAxisCallBack, this);
 }
 
 
@@ -75,16 +75,16 @@ void InputService::SpecialKeysPressed(int code)
 	switch (code)
 	{
 		case EventCode::_KeyUp:
-			kernel->inputEvent.PushString((char*)"\033[A", 3);
+			kernel->event.PushString((char*)"\033[A", 3);
 			break;
 		case EventCode::_KeyDown:
-			kernel->inputEvent.PushString((char*)"\033[B", 3);
+			kernel->event.PushString((char*)"\033[B", 3);
 			break;
 		case EventCode::_KeyRight:
-			kernel->inputEvent.PushString((char*)"\033[C", 3);
+			kernel->event.PushString((char*)"\033[C", 3);
 			break;
 		case EventCode::_KeyLeft:
-			kernel->inputEvent.PushString((char*)"\033[D", 3);
+			kernel->event.PushString((char*)"\033[D", 3);
 			break;
 		case EventCode::_KeyCapsLock:
 			isCapsLock = !isCapsLock;
@@ -149,13 +149,13 @@ void InputService::CharacterKeys(int code)
 			if (isShiftPressed) chr = upperCodes[code];
 		}
 
-		kernel->inputEvent.PushChar(chr);
+		kernel->event.PushChar(chr);
 	}
 }
 
 
 /// @brief Input key handler
-void InputService::InputKeyCallBack(InputEvent::InputKey* input)
+void InputService::InputKeyCallBack(Event::InputKey* input)
 {
 	if (KeyStatus::_KeyPressed == input->status)
 	{
@@ -174,9 +174,9 @@ void InputService::InputKeyCallBack(InputEvent::InputKey* input)
 
 
 /// @brief Input axis handler
-void InputService::InputAxisCallBack(InputEvent::InputAxis* input)
+void InputService::InputAxisCallBack(Event::InputAxis* input)
 {
-	kernel->inputEvent.PushAxis(input->axisX, input->axisY, input->axisZ);
+	kernel->event.PushAxis(input->axisX, input->axisY, input->axisZ);
 }
 
 
