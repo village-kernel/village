@@ -17,7 +17,7 @@ Village::Village() : Kernel
 	concreteScheduler,
 	concreteThread,
 	concreteWorkQueue,
-	concreteInputEvent,
+	concreteEvent,
 	concreteSymbol,
 	concreteDevice,
 	concreteFeature,
@@ -66,8 +66,8 @@ void Village::Setup()
 	//Setup work queue
 	concreteWorkQueue.Setup();
 
-	//Setup input event
-	concreteInputEvent.Setup();
+	//Setup event
+	concreteEvent.Setup();
 	
 	//Setup symbol
 	concreteSymbol.Setup();
@@ -142,8 +142,8 @@ void Village::Exit()
 	//Exit symbol
 	concreteSymbol.Exit();
 
-	//Exit input event
-	concreteInputEvent.Exit();
+	//Exit event
+	concreteEvent.Exit();
 
 	//Exit work queue
 	concreteWorkQueue.Exit();

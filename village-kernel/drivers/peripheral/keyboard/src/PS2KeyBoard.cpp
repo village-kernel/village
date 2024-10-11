@@ -79,9 +79,9 @@ void PS2KeyBoard::InputHandler()
 
 		//Report key event
 		if (scancode > 0 && scancode <= 0x58)
-			kernel->inputEvent.ReportKey(pKeyCodes[scancode], _KeyPressed);
+			kernel->event.ReportKey(pKeyCodes[scancode], _KeyPressed);
 		else if (scancode > 0x80 && scancode <= 0xd8)
-			kernel->inputEvent.ReportKey(pKeyCodes[scancode - 0x80], _KeyReleased);
+			kernel->event.ReportKey(pKeyCodes[scancode - 0x80], _KeyReleased);
 
 		//Clear the isExtended flag
 		isExtended = false;

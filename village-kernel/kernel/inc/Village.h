@@ -15,7 +15,7 @@
 #include "Scheduler.h"
 #include "Thread.h"
 #include "WorkQueue.h"
-#include "InputEvent.h"
+#include "Event.h"
 #include "Symbol.h"
 #include "Device.h"
 #include "Feature.h"
@@ -40,7 +40,7 @@ private:
 	ConcreteScheduler   concreteScheduler;
 	ConcreteThread      concreteThread;
 	ConcreteWorkQueue   concreteWorkQueue;
-	ConcreteInputEvent  concreteInputEvent;
+	ConcreteEvent       concreteEvent;
 	ConcreteSymbol      concreteSymbol;
 	ConcreteDevice      concreteDevice;
 	ConcreteFeature     concreteFeature;
