@@ -50,8 +50,8 @@ bool VkGuiService::Setup()
 	}
 
 	//Attach input event
-	kernel->inputEvent.Attach(InputEvent::_OutputText, (Method)&VkGuiService::TextReceiver, this);
-	kernel->inputEvent.Attach(InputEvent::_OutputAxis, (Method)&VkGuiService::AxisReceiver, this);
+	kernel->event.Attach(Event::_OutputText, (Method)&VkGuiService::TextReceiver, this);
+	kernel->event.Attach(Event::_OutputAxis, (Method)&VkGuiService::AxisReceiver, this);
 
 	//Set ready flag
 	isReady = true;
@@ -64,8 +64,8 @@ bool VkGuiService::Setup()
 void VkGuiService::Exit()
 {
 	//Detach input event
-	kernel->inputEvent.Detach(InputEvent::_OutputText, (Method)&VkGuiService::TextReceiver, this);
-	kernel->inputEvent.Detach(InputEvent::_OutputAxis, (Method)&VkGuiService::AxisReceiver, this);
+	kernel->event.Detach(Event::_OutputText, (Method)&VkGuiService::TextReceiver, this);
+	kernel->event.Detach(Event::_OutputAxis, (Method)&VkGuiService::AxisReceiver, this);
 
 	//Exit vkgui
 	vkgui.Exit();
@@ -93,14 +93,14 @@ void VkGuiService::Execute()
 
 
 /// @brief Text input receiver
-void VkGuiService::TextReceiver(InputEvent::OutputText* input)
+void VkGuiService::TextReceiver(Event::OutputText* input)
 {
 	vkgui.InputText(input->data, input->size);
 }
 
 
 /// @brief Axis input receiver
-void VkGuiService::AxisReceiver(InputEvent::OutputAxis* input)
+void VkGuiService::AxisReceiver(Event::OutputAxis* input)
 {
 	vkgui.InputAxis(input->axisX, input->axisY, input->axisZ);
 }

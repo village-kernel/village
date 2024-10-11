@@ -21,8 +21,8 @@ private:
 	VkGUI vkgui;
 
 	//Methods
-	void TextReceiver(InputEvent::OutputText* input);
-	void AxisReceiver(InputEvent::OutputAxis* input);
+	void TextReceiver(Event::OutputText* input);
+	void AxisReceiver(Event::OutputAxis* input);
 public:
 	//Methods
 	VkGuiService();
