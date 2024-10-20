@@ -67,8 +67,7 @@ void BochsVBE::SetData(void* data)
 /// @param value 
 inline void BochsVBE::WriteData(uint32_t reg, uint16_t value)
 {
-	uint16_t* videos = (uint16_t*)config.vmap;
-	videos[reg] = value;
+	config.vmap[reg] = value;
 }
 
 
@@ -77,8 +76,7 @@ inline void BochsVBE::WriteData(uint32_t reg, uint16_t value)
 /// @return 
 inline uint16_t BochsVBE::ReadData(uint32_t reg)
 {
-	uint16_t* videos = (uint16_t*)config.vmap;
-	return videos[reg];
+	return config.vmap[reg];
 }
 
 
@@ -139,14 +137,14 @@ void BochsVBE::SetBank(uint16_t bankNumber)
 /// @brief BochsVBE setup
 bool BochsVBE::Setup()
 {
-	fbinfo.width    = 1024;
-	fbinfo.height   = 768;
-	fbinfo.bitdepth = 0x10; // 16 bpp
+	info.width    = 1024;
+	info.height   = 768;
+	info.bitdepth = 0x10; // 16 bpp
 
 	if (IsBochsVBEAvailable())
 	{
 		//Set video mode
-		SetVideoMode(fbinfo.width, fbinfo.height, fbinfo.bitdepth, true, true);
+		SetVideoMode(info.width, info.height, info.bitdepth, true, true);
 		
 		//Get PCI device 0x1234:0x1111 BAR 0
 		config.vmap = (uint16_t*)pci.ReadBAR(0x1234, 0x1111, 0);
@@ -164,7 +162,7 @@ bool BochsVBE::Setup()
 /// @param color 
 void BochsVBE::DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 {
-	uint32_t reg = (uint32_t)x + (uint32_t)y * fbinfo.width;
+	uint32_t reg = x + y * info.width;
 	WriteData(reg, color);
 }
 
@@ -175,7 +173,7 @@ void BochsVBE::DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 /// @return 
 uint32_t BochsVBE::ReadPoint(uint32_t x, uint32_t y)
 {
-	uint32_t reg = x + y * fbinfo.width;
+	uint32_t reg = x + y * info.width;
 	return ReadData(reg);
 }
 
@@ -202,7 +200,7 @@ void BochsVBE::Fill(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t
 /// @param color 
 void BochsVBE::Clear(uint32_t color)
 {
-	Fill(0, 0, fbinfo.width, fbinfo.height, color);
+	Fill(0, 0, info.width, info.height, color);
 }
 
 

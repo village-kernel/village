@@ -5,7 +5,18 @@
 # $Copyright: Copyright (C) village
 ############################################################################
 
-# includes
--include village-os/applications/Makefile
--include village-os/framework/crt0/Makefile
--include village-os/framework/vkgui/Makefile
+# applications
+include village-os/applications/desktop/Makefile
+include village-os/applications/settings/Makefile
+include village-os/applications/terminal/Makefile
+
+
+# libraries
+include village-os/libraries/crt0/Makefile
+include village-os/libraries/vkgui/Makefile
+
+
+# services
+include village-os/services/taichi/Makefile
+include village-os/services/input/Makefile
+include village-os/services/vkgui/Makefile

@@ -179,9 +179,9 @@ void ILI9488::DeviceConfig()
 	//lcd.width = 480;
 	//lcd.height = 320;
 
-	fbinfo.width = lcd.width;
-	fbinfo.height = lcd.height;
-	fbinfo.bitdepth = 16; // 16 bpp
+	info.width = lcd.width;
+	info.height = lcd.height;
+	info.bitdepth = 16; // 16 bpp
 }
 
 

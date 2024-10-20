@@ -64,9 +64,6 @@ private:
 	PS2Controller ps2;
 	
 	//Work
-	InputEvent* inputEvent;
-	Interrupt*  interrupt;
-	WorkQueue*  workQueue;
 	WorkQueue::Work* work;
 
 	/// @brief Methods

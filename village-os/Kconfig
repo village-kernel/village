@@ -1,8 +1,28 @@
+comment "This is using to configure vkos"
 
-menu "applications"
-	source ./village-os/applications/Kconfig
-endmenu
+config VKOS
+	bool "Enable building vkos"
+	default y
 
-menu "framework"
-	source ./village-os/framework/vkgui/Kconfig
-endmenu
+if VKOS
+
+	menu "applications"
+		comment "This is using to configure application"
+		source ./village-os/applications/desktop/Kconfig
+		source ./village-os/applications/settings/Kconfig
+		source ./village-os/applications/terminal/Kconfig
+	endmenu
+
+	menu "libraries"
+		comment "This is using to configure libraries"
+		source ./village-os/libraries/vkgui/Kconfig
+	endmenu
+
+	menu "services"
+		comment "This is using to configure service"
+		source ./village-os/services/taichi/Kconfig
+		source ./village-os/services/input/Kconfig
+		source ./village-os/services/vkgui/Kconfig
+	endmenu
+
+endif
