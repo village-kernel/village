@@ -55,7 +55,7 @@ objs-y                              += Device.o
 objs-y                              += Memory.o
 objs-y                              += Thread.o
 objs-y                              += Interrupt.o
-objs-y                              += InputEvent.o
+objs-y                              += Event.o
 objs-y                              += WorkQueue.o
 objs-y                              += Loader.o
 objs-y                              += Process.o
@@ -141,12 +141,12 @@ objs-utils-$(CONFIG_MODEL)          += ObserverModel.o
 # libm
 ######################################
 ifeq ($(CONFIG_VKLIBM), y)
-libs-y                              += m
+libs-y                              += vkm
 
 inc-y                               += village-kernel/vklibs/libm/inc
 src-y                               += village-kernel/vklibs/libm/src
 
-objs-m-y                            += math.o
+objs-vkm-y                          += math.o
 endif
 
 
@@ -154,13 +154,14 @@ endif
 # libstdc++
 ######################################
 ifeq ($(CONFIG_VKLIBCPP), y)
-libs-y                              += stdc++
+libs-y                              += vkc++
 
+inc-y                               += village-kernel/vklibs/libc++/template
 inc-y                               += village-kernel/vklibs/libc++/inc
 src-y                               += village-kernel/vklibs/libc++/src
 
-objs-stdc++-y                       += icxxabi.o
-objs-stdc++-y                       += operator.o
+objs-vkc++-y                        += icxxabi.o
+objs-vkc++-y                        += operator.o
 endif
 
 
@@ -168,16 +169,16 @@ endif
 # libc
 ######################################
 ifeq ($(CONFIG_VKLIBC), y)
-libs-y                              += c
+libs-y                              += vkc
 
 inc-y                               += village-kernel/vklibs/libc/inc
 src-y                               += village-kernel/vklibs/libc/src
 src-y                               += village-kernel/vklibs/libc/stdio
 src-y                               += village-kernel/vklibs/libc/string
 
-objs-c-y                            += stdio.o
-objs-c-y                            += stdlib.o
-objs-c-y                            += string.o
+objs-vkc-y                          += stdio.o
+objs-vkc-y                          += stdlib.o
+objs-vkc-y                          += string.o
 endif
 
 

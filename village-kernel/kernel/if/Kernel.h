@@ -163,6 +163,7 @@ public:
 	/// @brief State Methods
 	virtual void ChangeState(TaskState state) = 0;
 	virtual void Sleep(uint32_t ticks) = 0;
+	virtual void Blocked() = 0;
 	virtual void TaskExit() = 0;
 
 	/// @brief Scheduler Methods
@@ -303,8 +304,8 @@ public:
 };
 
 
-/// @brief InputEvent
-class InputEvent
+/// @brief Event
+class Event
 {
 public:
 	/// @brief Types
@@ -588,7 +589,7 @@ public:
 	Scheduler&   scheduler;
 	Thread&      thread;
 	WorkQueue&   workQueue;
-	InputEvent&  inputEvent;
+	Event&       event;
 	Symbol&      symbol;
 	Device&      device;
 	Feature&     feature;
@@ -609,7 +610,7 @@ public:
 		Scheduler&   scheduler,
 		Thread&      thread,
 		WorkQueue&   workQueue,
-		InputEvent&  inputEvent,
+		Event&       event,
 		Symbol&      symbol,
 		Device&      device,
 		Feature&     feature,
@@ -628,7 +629,7 @@ public:
 		scheduler(scheduler),
 		thread(thread),
 		workQueue(workQueue),
-		inputEvent(inputEvent),
+		event(event),
 		symbol(symbol),
 		device(device),
 		feature(feature),

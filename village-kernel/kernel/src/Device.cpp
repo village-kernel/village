@@ -233,7 +233,7 @@ void ConcreteDevice::UnregisterFBDevice(FBDriver* driver)
 void ConcreteDevice::RegisterInputDevice(InputDriver* driver)
 {
 	inDevs.Add(driver, driver->GetName());
-	if (isRuntime) kernel->inputEvent.InitInputDevice(driver->GetName());
+	if (isRuntime) kernel->event.InitInputDevice(driver->GetName());
 }
 
 
@@ -241,7 +241,7 @@ void ConcreteDevice::RegisterInputDevice(InputDriver* driver)
 /// @param driver driver pointer
 void ConcreteDevice::UnregisterInputDevice(InputDriver* driver)
 {
-	if (isRuntime) kernel->inputEvent.ExitInputDevice(driver->GetName());
+	if (isRuntime) kernel->event.ExitInputDevice(driver->GetName());
 	inDevs.Remove(driver);
 }
 

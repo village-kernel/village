@@ -1,11 +1,11 @@
 //###########################################################################
-// InputEvent.h
-// Declarations of the functions that manage input event
+// Event.h
+// Declarations of the functions that manage event
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __INPUT_EVENT_H__
-#define __INPUT_EVENT_H__
+#ifndef __EVENT_H__
+#define __EVENT_H__
 
 #include "ObserverModel.h"
 #include "DevStream.h"
@@ -14,8 +14,8 @@
 #include "Cast.h"
 
 
-/// @brief ConcreteInputEvent
-class ConcreteInputEvent : public InputEvent
+/// @brief ConcreteEvent
+class ConcreteEvent : public Event
 {
 private:
 	/// @brief Input members
@@ -32,8 +32,8 @@ private:
 	ObserverModel observers[_AllType];
 public:
 	/// @brief Methods
-	ConcreteInputEvent();
-	~ConcreteInputEvent();
+	ConcreteEvent();
+	~ConcreteEvent();
 	void Setup();
 	void Exit();
 
@@ -59,4 +59,4 @@ public:
 	OutFormat GetOutFormat();
 };
 
-#endif //!__INPUT_EVENT_H__
+#endif //!__EVENT_H__
