@@ -7,7 +7,7 @@
 ifeq ($(CONFIG_SETTINGS_APP), y)
 
 ######################################
-# applications
+# programs
 ######################################
 apps-y                                += settings
 
@@ -15,15 +15,15 @@ apps-y                                += settings
 ######################################
 # paths
 ######################################
-inc-settings-y                        += village-os/applications/settings/inc
-src-settings-y                        += village-os/applications/settings/src
+inc-settings-y                        += village-os/programs/settings/inc
+src-settings-y                        += village-os/programs/settings/src
 
 
 ######################################
 # objects
 ######################################
-objs-settings-y                       += SettingsApp.o
-objs-settings-y                       += SettingsView.o
+objs-settings-y                       += settings_app.o
+objs-settings-y                       += settings_view.o
 
 
 ######################################

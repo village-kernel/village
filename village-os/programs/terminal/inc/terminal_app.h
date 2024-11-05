@@ -1,30 +1,28 @@
 //###########################################################################
-// DesktopView.h
-// Declarations of the desktop view
+// TerminalApp.h
+// Declarations of the terminal app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __DESKTOP_VIEW_H__
-#define __DESKTOP_VIEW_H__
+#ifndef __TERMINAL_APP_H__
+#define __TERMINAL_APP_H__
 
-#include "VkGUI.h"
+#include "terminal_view.h"
 
 
-/// @brief DesktopView
-class DesktopView
+/// @brief TerminalAPP
+class TerminalAPP
 {
 private:
 	//Members
-	Window*  mainwin;
-	Button*  startBtn;
-	Toolbar* toolbar;
+	TerminalView view;
 public:
 	//Methods
-	DesktopView();
-	~DesktopView();
+	TerminalAPP();
+	~TerminalAPP();
 	void Setup();
 	void Execute();
 	void Exit();
 };
 
-#endif //!__DESKTOP_VIEW_H__
+#endif //!__TERMINAL_APP_H__

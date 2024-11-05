@@ -4,8 +4,8 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "TerminalAPP.h"
-#include "Kernel.h"
+#include "terminal_app.h"
+#include "vk_kernel.h"
 
 
 /// @brief Constructor
@@ -24,15 +24,12 @@ TerminalAPP::~TerminalAPP()
 void TerminalAPP::Setup()
 {
 	view.Setup();
-	drv.Setup(&view);
 }
 
 
 /// @brief Execute
 void TerminalAPP::Execute()
 {
-	kernel->terminal.CreateConsole(drv.GetName());
-
 	while (1) view.Execute();
 }
 
@@ -41,7 +38,6 @@ void TerminalAPP::Execute()
 void TerminalAPP::Exit()
 {
 	view.Exit();
-	drv.Exit();
 }
 
 

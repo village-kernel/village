@@ -4,9 +4,9 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "TaichiService.h"
-#include "rcParser.h"
-#include "Kernel.h"
+#include "taichi_service.h"
+#include "vk_rc_parser.h"
+#include "vk_kernel.h"
 
 
 /// @brief Constructor
@@ -63,8 +63,8 @@ void TaichiService::Setup()
 	//Load services
 	Load("/services/_load_.rc");
 
-	//Load applications
-	Load("/applications/_load_.rc");
+	//Load programs
+	Load("/programs/_load_.rc");
 }
 
 
@@ -78,8 +78,8 @@ void TaichiService::Execute()
 /// @brief Exit
 void TaichiService::Exit()
 {
-	//Unload applications
-	Unload("applications/_load_.rc");
+	//Unload programs
+	Unload("programs/_load_.rc");
 
 	//Unload services
 	Unload("services/_load_.rc");

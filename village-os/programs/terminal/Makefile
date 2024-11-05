@@ -1,35 +1,35 @@
 ###########################################################################
 # Makefile
-# The Makefile of desktop
+# The Makefile of terminal
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_DESKTOP_APP), y)
+ifeq ($(CONFIG_TERMINAL_APP), y)
 
 ######################################
-# applications
+# programs
 ######################################
-apps-y                                += desktop
+apps-y                                += terminal
 
 
 ######################################
 # paths
 ######################################
-inc-desktop-y                         += village-os/applications/desktop/inc
-src-desktop-y                         += village-os/applications/desktop/src
+inc-terminal-y                        += village-os/programs/terminal/inc
+src-terminal-y                        += village-os/programs/terminal/src
 
 
 ######################################
 # objects
 ######################################
-objs-desktop-y                        += DesktopApp.o
-objs-desktop-y                        += DesktopView.o
+objs-terminal-y                       += terminal_app.o
+objs-terminal-y                       += terminal_view.o
 
 
 ######################################
 # libraries
 ######################################
-libs-desktop-y                        += vkgui utils vkc++ vkc
+libs-terminal-y                       += vkgui utils vkc++ vkc
 
 endif
 
@@ -37,6 +37,6 @@ endif
 ######################################
 # settings
 ######################################
-ifeq ($(CONFIG_DESKTOP_POWER_UP), y)
-settings-desktop                      += power_up
+ifeq ($(CONFIG_TERMINAL_POWER_UP), y)
+settings-terminal                     += power_up
 endif

@@ -4,8 +4,8 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "InputService.h"
-#include "EventCodes.h"
+#include "input_service.h"
+#include "vk_event_codes.h"
 
 
 /// @brief lower code table

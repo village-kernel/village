@@ -4,7 +4,7 @@
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "Kernel.h"
+#include "vk_kernel.h"
 
 /// @brief Kernel
 Kernel* kernel;

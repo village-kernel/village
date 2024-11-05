@@ -7,7 +7,7 @@
 #ifndef __INPUT_SERVICE_H__
 #define __INPUT_SERVICE_H__
 
-#include "Kernel.h"
+#include "vk_kernel.h"
 
 
 /// @brief InputService

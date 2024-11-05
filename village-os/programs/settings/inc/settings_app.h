@@ -7,7 +7,7 @@
 #ifndef __SETTINGS_APP_H__
 #define __SETTINGS_APP_H__
 
-#include "SettingsView.h"
+#include "settings_view.h"
 
 
 /// @brief SettingsApp

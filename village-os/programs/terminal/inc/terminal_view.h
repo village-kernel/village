@@ -1,28 +1,23 @@
 //###########################################################################
-// DesktopApp.h
-// Declarations of the desktop app
+// TerminalView.h
+// Declarations of the terminal view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __DESKTOP_APP_H__
-#define __DESKTOP_APP_H__
-
-#include "DesktopView.h"
+#ifndef __TERMINAL_VIEW_H__
+#define __TERMINAL_VIEW_H__
 
 
-/// @brief DesktopApp
-class DesktopApp
+/// @brief TerminalView
+class TerminalView
 {
-private:
-	//Members
-	DesktopView view;
 public:
 	//Methods
-	DesktopApp();
-	~DesktopApp();
+	TerminalView();
+	~TerminalView();
 	void Setup();
 	void Execute();
 	void Exit();
 };
 
-#endif //!__DESKTOP_APP_H__
+#endif //!__TERMINAL_VIEW_H__
