@@ -86,6 +86,10 @@ menu "village-boot"
 	source ./village-boot/Kconfig
 endmenu
 
+menu "village-gui"
+	source ./village-gui/Kconfig
+endmenu
+
 menu "village-kernel"
 	source ./village-kernel/Kconfig
 endmenu
