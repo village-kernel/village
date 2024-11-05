@@ -39,7 +39,7 @@ public:
 	/// @brief Put data into fifo buffer
 	/// @param data 
 	/// @param size 
-	int Put(Object *data, int size)
+	int Put(Object *data, int size = 1)
 	{
 		for (int index = 0; index < size; index++)
 		{
@@ -57,7 +57,7 @@ public:
 	/// @brief Pop data from fifo buffer
 	/// @param data 
 	/// @param size 
-	int Pop(Object *data, int size)
+	int Pop(Object *data, int size = 1)
 	{
 		for (int index = 0; index < size; index++)
 		{
