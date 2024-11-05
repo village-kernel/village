@@ -1,0 +1,66 @@
+comment "This is using to configure gui"
+
+# config GUI
+
+config VKGUI
+	bool "Enable village GUI support"
+	default n
+
+# config wedget
+
+menu "Wedget"
+	depends on VKGUI
+
+config VKGUI_BUTTON
+	bool "Enable button support"
+	default y
+
+config VKGUI_CURSOR
+	bool "Enable cursor support"
+	default y
+
+config VKGUI_LABEL
+	bool "Enable label support"
+	default y
+
+config VKGUI_LISTBOX
+	bool "Enable list box support"
+	default y
+
+config VKGUI_MENU
+	bool "Enable menu support"
+	default y
+
+config VKGUI_MSGBOX
+	bool "Enable message box support"
+	default y
+
+config VKGUI_NAVBAR
+	bool "Enable nav bar support"
+	default y
+
+config VKGUI_SCROLLBAR
+	bool "Enable scroll bar support"
+	default y
+
+config VKGUI_TABBAR
+	bool "Enable tab bar support"
+	default y
+
+config VKGUI_TABLE
+	bool "Enable table support"
+	default y
+
+config VKGUI_TEXTBOX
+	bool "Enable text box support"
+	default y
+
+config VKGUI_TOOLBAR
+	bool "Enable tool bar support"
+	default y
+
+config VKGUI_WINDOW
+	bool "Enable window support"
+	default y
+
+endmenu

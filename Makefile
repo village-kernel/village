@@ -20,7 +20,7 @@ WORKSPACE     := .
 BUILD_DIR     := $(WORKSPACE)/build
 MODS_DIR      := $(BUILD_DIR)/output/modules
 LIBS_DIR      := $(BUILD_DIR)/output/libraries
-APPS_DIR      := $(BUILD_DIR)/output/applications
+APPS_DIR      := $(BUILD_DIR)/output/programs
 SVCS_DIR      := $(BUILD_DIR)/output/services
 
 
@@ -29,6 +29,7 @@ SVCS_DIR      := $(BUILD_DIR)/output/services
 #######################################
 include $(WORKSPACE)/Makefile.rules
 include $(WORKSPACE)/village-boot/Makefile
+include $(WORKSPACE)/village-gui/Makefile
 include $(WORKSPACE)/village-kernel/Makefile
 include $(WORKSPACE)/village-os/Makefile
 
@@ -241,7 +242,7 @@ ossvcs:
 #######################################
 osapps:
 	$(Q)mkdir -p $(APPS_DIR) 
-	$(Q)echo "#prepare applications" > $(APPS_DIR)/_load_.rc;
+	$(Q)echo "#prepare programs" > $(APPS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(apps-y),                                \
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-$(name)-y)   $(inc-y)"                \
@@ -260,7 +261,7 @@ osapps:
 		fi;                                                       \
 		$(MAKE) $(APPS_DIR)/$(name).exec;                         \
 		if [[ "$(settings-$(name))" =~ "power_up" ]]; then        \
-			echo /applications/$(name).exec >> $(APPS_DIR)/_load_.rc;\
+			echo /programs/$(name).exec >> $(APPS_DIR)/_load_.rc; \
 		fi;                                                       \
 	)
 
