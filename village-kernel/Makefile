@@ -47,62 +47,62 @@ src-$(CONFIG_BINUTILS)              += village-kernel/binutils/src
 inc-$(CONFIG_FATFS)                 += village-kernel/filesys/fs/fat/inc
 src-$(CONFIG_FATFS)                 += village-kernel/filesys/fs/fat/src
 
-objs-y                              += Village.o
-objs-y                              += Debug.o
-objs-y                              += Symbol.o
-objs-y                              += Feature.o
-objs-y                              += Device.o
-objs-y                              += Memory.o
-objs-y                              += Thread.o
-objs-y                              += Interrupt.o
-objs-y                              += Event.o
-objs-y                              += WorkQueue.o
-objs-y                              += Loader.o
-objs-y                              += Process.o
-objs-y                              += Timer.o
-objs-y                              += Signal.o
+objs-y                              += vk_village.o
+objs-y                              += vk_debug.o
+objs-y                              += vk_symbol.o
+objs-y                              += vk_feature.o
+objs-y                              += vk_device.o
+objs-y                              += vk_memory.o
+objs-y                              += vk_thread.o
+objs-y                              += vk_interrupt.o
+objs-y                              += vk_event.o
+objs-y                              += vk_workqueue.o
+objs-y                              += vk_loader.o
+objs-y                              += vk_process.o
+objs-y                              += vk_timer.o
+objs-y                              += vk_signal.o
 
-objs-y                              += System.o
-objs-y                              += Scheduler.o
-objs-y                              += Exception.o
+objs-y                              += vk_system.o
+objs-y                              += vk_scheduler.o
+objs-y                              += vk_exception.o
 
-objs-y                              += FileSystem.o
-objs-$(CONFIG_FATFS)                += FatDiskio.o
-objs-$(CONFIG_FATFS)                += FatFolder.o
-objs-$(CONFIG_FATFS)                += FatObject.o
-objs-$(CONFIG_FATFS)                += FatSystem.o
+objs-y                              += vk_filesystem.o
+objs-$(CONFIG_FATFS)                += vk_fat_diskio.o
+objs-$(CONFIG_FATFS)                += vk_fat_folder.o
+objs-$(CONFIG_FATFS)                += vk_fat_object.o
+objs-$(CONFIG_FATFS)                += vk_fat_system.o
 
-objs-$(CONFIG_EXECUTOR)             += BaseExecutor.o
-objs-$(CONFIG_BINEXECUTOR)          += BinExecutor.o
-objs-$(CONFIG_ELFEXECUTOR)          += ElfExecutor.o
-objs-$(CONFIG_HEXEXECUTOR)          += HexExecutor.o
-objs-$(CONFIG_BINLOADER)            += BinLoader.o
-objs-$(CONFIG_ELFLOADER)            += ElfLoader.o
-objs-$(CONFIG_HEXLOADER)            += HexLoader.o
-objs-$(CONFIG_LIBTOOL)              += LibraryTool.o
-objs-$(CONFIG_MODTOOL)              += ModuleTool.o
+objs-$(CONFIG_EXECUTOR)             += vk_base_executor.o
+objs-$(CONFIG_BINEXECUTOR)          += vk_bin_executor.o
+objs-$(CONFIG_ELFEXECUTOR)          += vk_elf_executor.o
+objs-$(CONFIG_HEXEXECUTOR)          += vk_hex_executor.o
+objs-$(CONFIG_BINLOADER)            += vk_bin_loader.o
+objs-$(CONFIG_ELFLOADER)            += vk_elf_loader.o
+objs-$(CONFIG_HEXLOADER)            += vk_hex_loader.o
+objs-$(CONFIG_LIBTOOL)              += vk_library_tool.o
+objs-$(CONFIG_MODTOOL)              += vk_module_tool.o
 
-objs-y                              += Protocol.o
-objs-$(CONFIG_USBD)                 += UsbDevice.o
-objs-$(CONFIG_USBH)                 += UsbHost.o
+objs-y                              += vk_protocol.o
+objs-$(CONFIG_USBD)                 += vk_usb_device.o
+objs-$(CONFIG_USBH)                 += vk_usb_host.o
 
-objs-y                              += CmdMsgMgr.o
-objs-y                              += Console.o
-objs-y                              += Terminal.o
-objs-$(CONFIG_CMD_ABOUT)            += CmdAbout.o
-objs-$(CONFIG_CMD_CAT)              += CmdCat.o
-objs-$(CONFIG_CMD_DEBUG)            += CmdDebug.o
-objs-$(CONFIG_CMD_ECHO)             += CmdEcho.o
-objs-$(CONFIG_CMD_FILESYS)          += CmdFileSys.o
-objs-$(CONFIG_CMD_HELP)             += CmdHelp.o
-objs-$(CONFIG_CMD_KILL)             += CmdKill.o
-objs-$(CONFIG_CMD_MEM)              += CmdMem.o
-objs-$(CONFIG_CMD_MOD)              += CmdMod.o
-objs-$(CONFIG_CMD_NULL)             += CmdNull.o
-objs-$(CONFIG_CMD_POWER)            += CmdPower.o
-objs-$(CONFIG_CMD_PROCESS)          += CmdProcess.o
-objs-$(CONFIG_CMD_RUN)              += CmdRun.o
-objs-$(CONFIG_CMD_TASKER)           += CmdTasker.o
+objs-y                              += vk_cmdmsg.o
+objs-y                              += vk_console.o
+objs-y                              += vk_terminal.o
+objs-$(CONFIG_CMD_ABOUT)            += vk_cmd_about.o
+objs-$(CONFIG_CMD_CAT)              += vk_cmd_cat.o
+objs-$(CONFIG_CMD_DEBUG)            += vk_cmd_debug.o
+objs-$(CONFIG_CMD_ECHO)             += vk_cmd_echo.o
+objs-$(CONFIG_CMD_FILESYS)          += vk_cmd_filesys.o
+objs-$(CONFIG_CMD_HELP)             += vk_cmd_help.o
+objs-$(CONFIG_CMD_KILL)             += vk_cmd_kill.o
+objs-$(CONFIG_CMD_MEM)              += vk_cmd_memory.o
+objs-$(CONFIG_CMD_MOD)              += vk_cmd_mod.o
+objs-$(CONFIG_CMD_NULL)             += vk_cmd_null.o
+objs-$(CONFIG_CMD_POWER)            += vk_cmd_power.o
+objs-$(CONFIG_CMD_PROCESS)          += vk_cmd_process.o
+objs-$(CONFIG_CMD_RUN)              += vk_cmd_run.o
+objs-$(CONFIG_CMD_TASKER)           += vk_cmd_tasker.o
 
 
 ######################################
@@ -110,6 +110,7 @@ objs-$(CONFIG_CMD_TASKER)           += CmdTasker.o
 ######################################
 libs-y                              += utils
 
+inc-y                               += village-kernel/vklibs/libutils/template
 inc-$(CONFIG_FILEUTILS)             += village-kernel/vklibs/libutils/fileutils/inc
 inc-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/inc
 inc-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/inc
@@ -120,21 +121,20 @@ src-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/src
 src-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/src
 src-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/src
 
-objs-utils-$(CONFIG_DEVSTREAM)      += DevStream.o
-objs-utils-$(CONFIG_DIRSTREAM)      += DirStream.o
-objs-utils-$(CONFIG_FILESTREAM)     += FileStream.o
-objs-utils-$(CONFIG_FILESYSOPT)     += FileSysOpt.o
+objs-utils-$(CONFIG_DEVSTREAM)      += vk_dev_stream.o
+objs-utils-$(CONFIG_DIRSTREAM)      += vk_dir_stream.o
+objs-utils-$(CONFIG_FILESTREAM)     += vk_file_stream.o
+objs-utils-$(CONFIG_FILESYSOPT)     += vk_filesys_opt.o
 
-objs-utils-$(CONFIG_SPINLOCK)       += SpinLock.o
-objs-utils-$(CONFIG_MUTEX)          += Mutex.o
-objs-utils-$(CONFIG_SEMAPHORE)      += Semaphore.o
+objs-utils-$(CONFIG_SPINLOCK)       += vk_spinlock.o
+objs-utils-$(CONFIG_MUTEX)          += vk_mutex.o
+objs-utils-$(CONFIG_SEMAPHORE)      += vk_semaphore.o
 
-objs-utils-$(CONFIG_INIPARSER)      += iniParser.o
-objs-utils-$(CONFIG_PINPARSER)      += pinParser.o
-objs-utils-$(CONFIG_RCPARSER)       += rcParser.o
-objs-utils-$(CONFIG_REGEX)          += Regex.o
+objs-utils-$(CONFIG_INIPARSER)      += vk_ini_parser.o
+objs-utils-$(CONFIG_RCPARSER)       += vk_rc_parser.o
+objs-utils-$(CONFIG_REGEX)          += vk_regex.o
 
-objs-utils-$(CONFIG_MODEL)          += ObserverModel.o
+objs-utils-$(CONFIG_MODEL)          += vk_observer.o
 
 
 ######################################
@@ -156,7 +156,6 @@ endif
 ifeq ($(CONFIG_VKLIBCPP), y)
 libs-y                              += vkc++
 
-inc-y                               += village-kernel/vklibs/libc++/template
 inc-y                               += village-kernel/vklibs/libc++/inc
 src-y                               += village-kernel/vklibs/libc++/src
 

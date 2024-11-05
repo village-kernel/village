@@ -6,7 +6,7 @@
 //###########################################################################
 #include "stdint.h"
 #include "stddef.h"
-#include "kernel.h"
+#include "vk_kernel.h"
 
 
 /// @brief Override new

@@ -11,9 +11,9 @@
 inc-y                                 += village-kernel/drivers/machine/inc
 src-y                                 += village-kernel/drivers/machine/src
 
-objs-$(CONFIG_IA32LEGACY)             += IA32legacyDevices.o
-objs-$(CONFIG_STM32F4xx)              += Stm32f407Devices.o
-objs-$(CONFIG_STM32H7xx)              += Stm32h743Devices.o
+objs-$(CONFIG_IA32LEGACY)             += vk_ia32legacy_devices.o
+objs-$(CONFIG_STM32F4xx)              += vk_stm32f407_devices.o
+objs-$(CONFIG_STM32H7xx)              += vk_stm32h743_devices.o
 
 
 ######################################
@@ -23,37 +23,37 @@ ifeq ($(CONFIG_IA32LEGACY), y)
 inc-y                                 += village-kernel/drivers/platform/ia32legacy/inc
 src-y                                 += village-kernel/drivers/platform/ia32legacy/src
 
-objs-$(CONFIG_IA32LEGACY_DRV_PCI)     += PCIController.o
-objs-$(CONFIG_IA32LEGACY_DRV_PS2)     += PS2Controller.o
+objs-$(CONFIG_IA32LEGACY_DRV_PCI)     += vk_pci_controller.o
+objs-$(CONFIG_IA32LEGACY_DRV_PS2)     += vk_ps2_controller.o
 
 else ifeq ($(CONFIG_STM32F4xx), y)
 inc-y                                 += village-kernel/drivers/platform/stm32f4xx/inc
 src-y                                 += village-kernel/drivers/platform/stm32f4xx/src
 
-objs-$(CONFIG_STM32F4XX_DRV_HAL)      += Hal.o
-objs-$(CONFIG_STM32F4XX_DRV_GPIO)     += Gpio.o
-objs-$(CONFIG_STM32F4XX_DRV_NVIC)     += Nvic.o
-objs-$(CONFIG_STM32F4XX_DRV_USART)    += Usart.o
-objs-$(CONFIG_STM32F4XX_DRV_SPI)      += Spi.o
-objs-$(CONFIG_STM32F4XX_DRV_I2C)      += I2c.o
-objs-$(CONFIG_STM32F4XX_DRV_DMA)      += Dma.o
-objs-$(CONFIG_STM32F4XX_DRV_FSMC)     += Fsmc.o
-objs-$(CONFIG_STM32F4XX_DRV_EXTI)     += Exti.o
+objs-$(CONFIG_STM32F4XX_DRV_HAL)      += vk_drv_hal.o
+objs-$(CONFIG_STM32F4XX_DRV_GPIO)     += vk_drv_gpio.o
+objs-$(CONFIG_STM32F4XX_DRV_NVIC)     += vk_drv_nvic.o
+objs-$(CONFIG_STM32F4XX_DRV_USART)    += vk_drv_usart.o
+objs-$(CONFIG_STM32F4XX_DRV_SPI)      += vk_drv_spi.o
+objs-$(CONFIG_STM32F4XX_DRV_I2C)      += vk_drv_i2c.o
+objs-$(CONFIG_STM32F4XX_DRV_DMA)      += vk_drv_dma.o
+objs-$(CONFIG_STM32F4XX_DRV_FSMC)     += vk_drv_fsmc.o
+objs-$(CONFIG_STM32F4XX_DRV_EXTI)     += vk_drv_exti.o
 
 else ifeq ($(CONFIG_STM32H7xx), y)
 inc-y                                 += village-kernel/drivers/platform/stm32h7xx/inc
 src-y                                 += village-kernel/drivers/platform/stm32h7xx/src
 
-objs-$(CONFIG_STM32H7XX_DRV_HAL)      += Hal.o
-objs-$(CONFIG_STM32H7XX_DRV_GPIO)     += Gpio.o
-objs-$(CONFIG_STM32H7XX_DRV_LTDC)     += Ltdc.o
-objs-$(CONFIG_STM32H7XX_DRV_NVIC)     += Nvic.o
-objs-$(CONFIG_STM32H7XX_DRV_USART)    += Usart.o
-objs-$(CONFIG_STM32H7XX_DRV_SDIO)     += Sdio.o
-objs-$(CONFIG_STM32H7XX_DRV_SPI)      += Spi.o
-objs-$(CONFIG_STM32H7XX_DRV_I2C)      += I2c.o
-objs-$(CONFIG_STM32H7XX_DRV_DMA)      += Dma.o
-objs-$(CONFIG_STM32H7XX_DRV_FSMC)     += Fsmc.o
+objs-$(CONFIG_STM32H7XX_DRV_HAL)      += vk_drv_hal.o
+objs-$(CONFIG_STM32H7XX_DRV_GPIO)     += vk_drv_gpio.o
+objs-$(CONFIG_STM32H7XX_DRV_LTDC)     += vk_drv_ltdc.o
+objs-$(CONFIG_STM32H7XX_DRV_NVIC)     += vk_drv_nvic.o
+objs-$(CONFIG_STM32H7XX_DRV_USART)    += vk_drv_usart.o
+objs-$(CONFIG_STM32H7XX_DRV_SDIO)     += vk_drv_sdio.o
+objs-$(CONFIG_STM32H7XX_DRV_SPI)      += vk_drv_spi.o
+objs-$(CONFIG_STM32H7XX_DRV_I2C)      += vk_drv_i2c.o
+objs-$(CONFIG_STM32H7XX_DRV_DMA)      += vk_drv_dma.o
+objs-$(CONFIG_STM32H7XX_DRV_FSMC)     += vk_drv_fsmc.o
 endif
 
 
@@ -63,10 +63,10 @@ endif
 inc-y                                 += village-kernel/drivers/peripheral/block/inc
 src-y                                 += village-kernel/drivers/peripheral/block/src
 
-objs-$(CONFIG_ATALBADISK)             += AtaLbaDisk.o
-objs-$(CONFIG_SDIOSDCARD)             += SdioSdCard.o
-objs-$(CONFIG_SPISDCARD)              += SpiSdCard.o
-objs-$(CONFIG_SPIW25QXX)              += SpiW25qxx.o
+objs-$(CONFIG_ATALBADISK)             += vk_ata_lba_disk.o
+objs-$(CONFIG_SDIOSDCARD)             += vk_sdio_sdcard.o
+objs-$(CONFIG_SPISDCARD)              += vk_spi_sdcard.o
+objs-$(CONFIG_SPIW25QXX)              += vk_spi_w25qxx.o
 
 
 ######################################
@@ -75,8 +75,8 @@ objs-$(CONFIG_SPIW25QXX)              += SpiW25qxx.o
 inc-y                                 += village-kernel/drivers/peripheral/display/inc
 src-y                                 += village-kernel/drivers/peripheral/display/src
 
-objs-$(CONFIG_BOCHSVBE)               += BochsVBE.o
-objs-$(CONFIG_ILI9488)                += ILI9488.o
+objs-$(CONFIG_BOCHSVBE)               += vk_bochs_vbe.o
+objs-$(CONFIG_ILI9488)                += vk_ili9488.o
 
 
 ######################################
@@ -85,7 +85,7 @@ objs-$(CONFIG_ILI9488)                += ILI9488.o
 inc-y                                 += village-kernel/drivers/peripheral/dma/inc
 src-y                                 += village-kernel/drivers/peripheral/dma/src
 
-objs-$(CONFIG_STM32DMA)               += Stm32Dma.o
+objs-$(CONFIG_STM32DMA)               += vk_stm32_dma.o
 
 
 ######################################
@@ -94,7 +94,7 @@ objs-$(CONFIG_STM32DMA)               += Stm32Dma.o
 inc-y                                 += village-kernel/drivers/peripheral/keyboard/inc
 src-y                                 += village-kernel/drivers/peripheral/keyboard/src
 
-objs-$(CONFIG_PS2KEYBOARD)            += PS2KeyBoard.o
+objs-$(CONFIG_PS2KEYBOARD)            += vk_ps2_keyboard.o
 
 
 ######################################
@@ -103,7 +103,7 @@ objs-$(CONFIG_PS2KEYBOARD)            += PS2KeyBoard.o
 inc-y                                 += village-kernel/drivers/peripheral/mouse/inc
 src-y                                 += village-kernel/drivers/peripheral/mouse/src
 
-objs-$(CONFIG_PS2MOUSE)               += PS2Mouse.o
+objs-$(CONFIG_PS2MOUSE)               += vk_ps2_mouse.o
 
 
 ######################################
@@ -112,8 +112,8 @@ objs-$(CONFIG_PS2MOUSE)               += PS2Mouse.o
 inc-y                                 += village-kernel/drivers/peripheral/serial/inc
 src-y                                 += village-kernel/drivers/peripheral/serial/src
 
-objs-$(CONFIG_PIC32UART)              += Pic32Uart.o
-objs-$(CONFIG_STM32UART)              += Stm32Uart.o
+objs-$(CONFIG_PIC32UART)              += vk_pic32_uart.o
+objs-$(CONFIG_STM32UART)              += vk_stm32_uart.o
 
 
 ######################################
@@ -122,7 +122,7 @@ objs-$(CONFIG_STM32UART)              += Stm32Uart.o
 inc-y                                 += village-kernel/drivers/peripheral/timer/inc
 src-y                                 += village-kernel/drivers/peripheral/timer/src
 
-objs-$(CONFIG_PIT32TIMER)             += Pit32Timer.o
+objs-$(CONFIG_PIT32TIMER)             += vk_pit32_timer.o
 
 
 ######################################
@@ -131,4 +131,4 @@ objs-$(CONFIG_PIT32TIMER)             += Pit32Timer.o
 inc-y                                 += village-kernel/drivers/peripheral/usb/inc
 src-y                                 += village-kernel/drivers/peripheral/usb/src
 
-objs-$(CONFIG_STM32USBDFS)            += Stm32UsbdFS.o
+objs-$(CONFIG_STM32USBDFS)            += vk_stm32_usbd_fs.o
