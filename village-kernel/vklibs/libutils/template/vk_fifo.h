@@ -36,6 +36,11 @@ public:
 	}
 
 
+	/// @brief Get length
+	/// @return 
+	int GetLength() { return dataLength; }
+
+
 	/// @brief Put data into fifo buffer
 	/// @param data 
 	/// @param size 
