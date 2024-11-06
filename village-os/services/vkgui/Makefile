@@ -22,7 +22,7 @@ src-vkguisvc-y                        += village-os/services/vkgui/src
 ######################################
 # objects
 ######################################
-objs-vkguisvc-y                       += VkGuiService.o
+objs-vkguisvc-y                       += vk_gui_service.o
 
 
 ######################################

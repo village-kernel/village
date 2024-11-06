@@ -22,7 +22,7 @@ src-inputsvc-y                        += village-os/services/input/src
 ######################################
 # objects
 ######################################
-objs-inputsvc-y                       += InputService.o
+objs-inputsvc-y                       += input_service.o
 
 
 ######################################

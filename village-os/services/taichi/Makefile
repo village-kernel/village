@@ -22,7 +22,7 @@ src-taichi-y                          += village-os/services/taichi/src
 ######################################
 # objects
 ######################################
-objs-taichi-y                         += TaichiService.o
+objs-taichi-y                         += taichi_service.o
 
 
 ######################################
