@@ -500,12 +500,6 @@ if KERNEL
 				bool "Enable ini file parser function"
 				default n
 
-			config PINPARSER
-				depends on PARSER
-				select FILESTREAM
-				bool "Enable pin parser function"
-				default n
-
 			config RCPARSER
 				depends on PARSER
 				select FILESTREAM
