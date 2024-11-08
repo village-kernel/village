@@ -9,11 +9,11 @@
 
 #include "stddef.h"
 #include "stdint.h"
-#include "vk_list.h"
+#include "vk_fifo.h"
 
 
-/// @brief State
-enum State
+/// @brief KeyState
+enum KeyState
 {
 	_Released = 0,
 	_Pressed,
@@ -25,6 +25,11 @@ struct Point
 {
 	int32_t x;
 	int32_t y;
+
+	Point()
+		:x(0),
+		y(0)
+	{}
 };
 
 
@@ -35,7 +40,14 @@ struct IndevData
 	uint32_t key;
 	uint32_t btnid;
 	int16_t  encdiff;
-	State    state;
+	KeyState state;
+
+	IndevData()
+		:key(0),
+		btnid(0),
+		encdiff(0),
+		state(_Released)
+	{}
 };
 
 
@@ -77,13 +89,25 @@ struct DrawData
 /// @brief GraphicsData
 struct GraphicsData
 {
-	int             ticks;
-	IndevData       input;
-	List<DrawData*> draws;
+	/// @brief Members
+	int              ticks;
+	Fifo<IndevData>  input;
+	Fifo<DrawData>   draws;
 
+	/// @brief Constructor
 	GraphicsData()
 		:ticks(0)
-	{}
+	{
+		input.Setup(20);
+		draws.Setup(100);
+	}
+
+	/// @brief Destructor
+	~GraphicsData()
+	{
+		input.Exit();
+		draws.Exit();
+	}
 };
 
 #endif //!__VG_DATA_H__

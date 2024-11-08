@@ -23,6 +23,7 @@ inc-y                                   += village-gui/drivers/inc
 inc-y                                   += village-gui/font/inc
 inc-y                                   += village-gui/layout/inc
 inc-y                                   += village-gui/wedget/inc
+inc-y                                   += village-gui/misc/template
 
 src-y                                   += village-gui/binding/src
 src-y                                   += village-gui/core/src

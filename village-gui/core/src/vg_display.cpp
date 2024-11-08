@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsDisplay::GraphicsDisplay(GraphicsData& databus)
-	:databus(databus),
+GraphicsDisplay::GraphicsDisplay(GraphicsData& data)
+	:data(data),
 	isReady(false)
 {
 }
@@ -38,19 +38,17 @@ void GraphicsDisplay::Setup()
 /// @brief Display execute
 void GraphicsDisplay::Execute()
 {
-	List<DrawData*> draws = databus.draws;
+	static DrawData draw;
 
-	for (draws.Begin(); !draws.IsEnd(); draws.Next())
+	while (data.draws.Pop(&draw))
 	{
 		Lcddev* lcddev = lcddevs.Begin();
 
 		if (NULL != lcddev)
 		{
-			lcddev->Flush(draws.Item()->area, draws.Item()->pixels);
+			lcddev->Flush(draw.area, draw.pixels);
 		}
 	}
-
-	databus.draws.Release();
 }
 
 

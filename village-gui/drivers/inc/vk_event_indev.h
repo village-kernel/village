@@ -17,16 +17,19 @@
 class VkEvent : public Indev, public Class
 {
 private:
+	//Members
+	IndevData data;
+
 	//Methods
-	void TextReceiver(Event::OutputText* input);
-	void AxisReceiver(Event::OutputAxis* input);
+	void KeyReceiver(Event::InputKey* input);
+	void AxisReceiver(Event::InputAxis* input);
 public:
 	//Methods
 	void Setup();
 	void Exit();
 
 	//Data Methods
-	void Read(IndevData* data);
+	IndevData* Read();
 };
 
 #endif //!__VK_EVENT_INDEV_H__

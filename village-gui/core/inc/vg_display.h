@@ -17,12 +17,12 @@ class GraphicsDisplay
 {
 private:
 	//Members
+	GraphicsData&  data;
 	List<Lcddev*>  lcddevs;
-	GraphicsData&  databus;
 	bool           isReady;
 public:
 	//Methods
-	GraphicsDisplay(GraphicsData& databus);
+	GraphicsDisplay(GraphicsData& data);
 	~GraphicsDisplay();
 	void Setup();
 	void Execute();

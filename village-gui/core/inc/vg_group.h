@@ -17,12 +17,15 @@ class GraphicsGroup
 {
 private:
 	//Members
-	GraphicsData&  databus;
+	GraphicsData&  data;
 	List<Window*>  mainwins;
 	Window*        activedwin;
+private:
+	//Methods
+	void SelectWindow(IndevData& input);
 public:
 	//Methods
-	GraphicsGroup(GraphicsData& databus);
+	GraphicsGroup(GraphicsData& data);
 	~GraphicsGroup();
 	void Setup();
 	void Execute();

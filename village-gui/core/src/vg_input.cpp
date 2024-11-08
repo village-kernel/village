@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsInput::GraphicsInput(GraphicsData& databus)
-	:databus(databus),
+GraphicsInput::GraphicsInput(GraphicsData& data)
+	:data(data),
 	isReady(false)
 {
 }
@@ -38,14 +38,13 @@ void GraphicsInput::Setup()
 /// @brief Input execute
 void GraphicsInput::Execute()
 {
+	static IndevData input;
+
 	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
 	{
 		Indev* indev = indevs.Item();
 		
-		if (NULL != indev)
-		{
-			indev->Read(&databus.input);
-		}
+		data.input.Put(indev->Read());
 	}
 }
 

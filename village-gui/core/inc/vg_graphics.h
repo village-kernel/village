@@ -19,7 +19,7 @@ class VkGraphics
 {
 public:
 	//Members
-	GraphicsData     databus;
+	GraphicsData     data;
 	GraphicsTimer    timer;
 	GraphicsInput    input;
 	GraphicsGroup    group;

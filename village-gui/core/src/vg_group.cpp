@@ -5,11 +5,12 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vg_group.h"
+#include "vk_event_codes.h"
 
 
 /// @brief Constructor
-GraphicsGroup::GraphicsGroup(GraphicsData& databus)
-	:databus(databus)
+GraphicsGroup::GraphicsGroup(GraphicsData& data)
+	:data(data)
 {
 }
 
@@ -32,23 +33,10 @@ void GraphicsGroup::Execute()
 {
 	static IndevData input;
 
-	//if (input != databus->input)
+	while (data.input.Pop(&input))
 	{
-		input = databus.input;
-
-		if (!activedwin->IsCanSelecte(input.point.x, input.point.y))
-		{
-			for (mainwins.Begin(); !mainwins.IsEnd(); mainwins.Next())
-			{
-				Window* win = mainwins.Item();
-
-				if (win->IsCanSelecte(input.point.x, input.point.y))
-				{
-					activedwin = win;
-					break;
-				}
-			}
-		}
+		//Select activedwin
+		SelectWindow(input);
 
 		//activedwin->Execute(input);
 	}
@@ -59,6 +47,29 @@ void GraphicsGroup::Execute()
 void GraphicsGroup::Exit()
 {
 	mainwins.Release();
+}
+
+
+/// @brief Select Window
+/// @param input 
+void GraphicsGroup::SelectWindow(IndevData& input)
+{
+	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
+	{
+		if (!activedwin->IsCanSelecte(input.point.x, input.point.y))
+		{
+			for (mainwins.Begin(); !mainwins.IsEnd(); mainwins.Next())
+			{
+				Window* win = mainwins.Item();
+
+				if (win->IsCanSelecte(input.point.x, input.point.y))
+				{
+					activedwin = win;
+					return;
+				}
+			}
+		}
+	}
 }
 
 

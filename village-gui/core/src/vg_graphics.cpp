@@ -9,10 +9,10 @@
 
 /// @brief Constructor
 VkGraphics::VkGraphics()
-	:timer(databus),
-	input(databus),
-	group(databus),
-	display(databus)
+	:timer(data),
+	input(data),
+	group(data),
+	display(data)
 {
 }
 

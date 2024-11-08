@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsTimer::GraphicsTimer(GraphicsData& databus)
-	:databus(databus),
+GraphicsTimer::GraphicsTimer(GraphicsData& data)
+	:data(data),
 	ticks(NULL),
 	isReady(false)
 {
@@ -38,7 +38,7 @@ void GraphicsTimer::Execute()
 {
 	if (NULL != ticks)
 	{
-		databus.ticks = ticks->GetTicks();
+		data.ticks = ticks->GetTicks();
 	}
 }
 

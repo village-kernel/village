@@ -17,12 +17,12 @@ class GraphicsInput
 {
 private:
 	//Members
+	GraphicsData& data;
 	List<Indev*>  indevs;
-	GraphicsData& databus;
 	bool          isReady;
 public:
 	//Methods
-	GraphicsInput(GraphicsData& databus);
+	GraphicsInput(GraphicsData& data);
 	~GraphicsInput();
 	void Setup();
 	void Execute();
