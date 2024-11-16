@@ -9,7 +9,7 @@
 #include "vk_kernel.h"
 
 
-/// @brief 
+/// @brief Setup
 /// @return 
 void VkDisplay::Setup()
 {
@@ -22,22 +22,20 @@ void VkDisplay::Setup()
 	//Open the first screen 
 	if (screen.Open(fbDevs.Begin()->GetName(), FileMode::_Read))
 	{
-		FBDriver* fbdev = NULL;
-
 		//Get the specified lcd driver by ioctrl 
 		screen.IOCtrl(0, (void*)&fbdev);
 	}
 }
 
 
-/// @brief 
+/// @brief Exit
 void VkDisplay::Exit()
 {
 	
 }
 
 
-/// @brief 
+/// @brief Flush
 /// @param area 
 /// @param pixels 
 void VkDisplay::Flush(DrawArea area, uint8_t* pixels)
