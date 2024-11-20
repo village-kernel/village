@@ -69,7 +69,7 @@ void VkEvent::AxisReceiver(Event::InputAxis* input)
 
 
 /// @brief Read
-IndevData* VkEvent::Read()
+IndevData VkEvent::Read()
 {
-	return &data;
+	return data;
 }

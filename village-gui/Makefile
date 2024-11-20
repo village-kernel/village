@@ -22,14 +22,15 @@ inc-y                                   += village-gui/drivers/if
 inc-y                                   += village-gui/drivers/inc
 inc-y                                   += village-gui/font/inc
 inc-y                                   += village-gui/layout/inc
+inc-y                                   += village-gui/misc/inc
 inc-y                                   += village-gui/wedget/inc
-inc-y                                   += village-gui/misc/template
 
 src-y                                   += village-gui/binding/src
 src-y                                   += village-gui/core/src
 src-y                                   += village-gui/draw/src
 src-y                                   += village-gui/drivers/src
 src-y                                   += village-gui/layout/src
+src-y                                   += village-gui/misc/src
 src-y                                   += village-gui/wedget/src
 
 
@@ -39,10 +40,12 @@ src-y                                   += village-gui/wedget/src
 objs-vkgui-y                            += vg_graphics.o
 objs-vkgui-y                            += vg_timer.o
 objs-vkgui-y                            += vg_input.o
-objs-vkgui-y                            += vg_group.o
 objs-vkgui-y                            += vg_display.o
+objs-vkgui-y                            += vg_object.o
 
 objs-vkgui-y                            += vg_relay_cmd.o
+
+objs-vkgui-y                            += vg_layer.o
 
 objs-vkgui-y                            += vk_disp_lcddev.o
 objs-vkgui-y                            += vk_event_indev.o

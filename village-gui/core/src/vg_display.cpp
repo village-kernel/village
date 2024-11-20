@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsDisplay::GraphicsDisplay(GraphicsData& data)
-	:data(data),
+GraphicsDisplay::GraphicsDisplay(SystemInfo& sysinfo)
+	:sysinfo(sysinfo),
 	isReady(false)
 {
 }
@@ -38,15 +38,18 @@ void GraphicsDisplay::Setup()
 /// @brief Display execute
 void GraphicsDisplay::Execute()
 {
-	static DrawData draw;
-
-	while (data.draws.Pop(&draw))
+	if (sysinfo.input.isnew)
 	{
-		Lcddev* lcddev = lcddevs.Begin();
-
-		if (NULL != lcddev)
+		for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 		{
-			lcddev->Flush(draw.area, draw.pixels);
+			Lcddev* lcddev = lcddevs.Item();
+
+			if ((sysinfo.input.point.x <= lcddev->GetWidth()) &&
+				(sysinfo.input.point.y <= lcddev->GetHeight()))
+			{
+				sysinfo.lcddev = lcddev;
+				break;
+			}
 		}
 	}
 }

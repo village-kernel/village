@@ -19,6 +19,8 @@ public:
 	virtual void Exit() = 0;
 
 	//Draw methods
+	virtual int GetWidth() = 0;
+	virtual int GetHeight() = 0;
 	virtual void Flush(DrawArea area, uint8_t* pixels) = 0;
 };
 

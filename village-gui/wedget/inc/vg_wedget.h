@@ -9,6 +9,7 @@
 
 #include "vk_list.h"
 #include "vg_data.h"
+#include "vg_input_cmd.h"
 
 
 /// @brief Wedget
@@ -16,10 +17,10 @@ class Wedget
 {
 protected:
 	//Members
+	ICommand*     cmd;
+	DrawArea      area;
+	SystemInfo*   sysinfo;
 	List<Wedget*> wedgets;
-public:
-	//Members
-	DrawArea area;
 public:
 	//Content methods
 	virtual void InitContent() = 0;
@@ -28,11 +29,25 @@ public:
 	//Methods
 	Wedget();
 	virtual ~Wedget();
-	
-	//Wedgets methods
+
+	//Area methods
 	void SetSize(int x, int y, int width, int height);
-	bool IsCanSelecte(int x, int y);
+	int GetX();
+	int GetY();
+	int GetWidth();
+	int GetHeight();
+	DrawArea GetArea();
+
+	//Wedget methods
 	void AddWedget(Wedget* wedget);
+
+	//Binding methods
+	void SetCommand(ICommand* cmd);
+
+	//Methods
+	void Init(SystemInfo* sysinfo);
+	void Execute();
+	void Flush(List<DrawArea> areas);
 	void Show();
 };
 

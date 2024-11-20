@@ -16,12 +16,12 @@ class GraphicsTimer
 {
 private:
 	//Members
-	GraphicsData&  data;
+	SystemInfo&    sysinfo;
 	Ticks*         ticks;
 	bool           isReady;
 public:
 	//Methods
-	GraphicsTimer(GraphicsData& data);
+	GraphicsTimer(SystemInfo& sysinfo);
 	~GraphicsTimer();
 	void Setup();
 	void Execute();

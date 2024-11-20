@@ -10,8 +10,8 @@
 #include "vg_data.h"
 #include "vg_timer.h"
 #include "vg_input.h"
-#include "vg_group.h"
 #include "vg_display.h"
+#include "vg_object.h"
 
 
 /// @brief VkGraphics
@@ -19,11 +19,11 @@ class VkGraphics
 {
 public:
 	//Members
-	GraphicsData     data;
+	SystemInfo       sysinfo;
 	GraphicsTimer    timer;
 	GraphicsInput    input;
-	GraphicsGroup    group;
 	GraphicsDisplay  display;
+	GraphicsObject   object;
 public:
 	//Methods
 	VkGraphics();

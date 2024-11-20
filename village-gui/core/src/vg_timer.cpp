@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsTimer::GraphicsTimer(GraphicsData& data)
-	:data(data),
+GraphicsTimer::GraphicsTimer(SystemInfo& sysinfo)
+	:sysinfo(sysinfo),
 	ticks(NULL),
 	isReady(false)
 {
@@ -38,7 +38,7 @@ void GraphicsTimer::Execute()
 {
 	if (NULL != ticks)
 	{
-		data.ticks = ticks->GetTicks();
+		sysinfo.ticks = ticks->GetTicks();
 	}
 }
 

@@ -41,13 +41,17 @@ struct IndevData
 	uint32_t btnid;
 	int16_t  encdiff;
 	KeyState state;
+	bool     isnew;
 
 	IndevData()
 		:key(0),
 		btnid(0),
 		encdiff(0),
-		state(_Released)
+		state(_Released),
+		isnew(false)
 	{}
+
+	void Clear() { isnew = false; }
 };
 
 
@@ -86,28 +90,21 @@ struct DrawData
 };
 
 
-/// @brief GraphicsData
-struct GraphicsData
+/// @brief Lcddev
+class Lcddev;
+
+
+/// @brief SystemInfo
+struct SystemInfo
 {
-	/// @brief Members
-	int              ticks;
-	Fifo<IndevData>  input;
-	Fifo<DrawData>   draws;
+	int         ticks;
+	IndevData   input;
+	Lcddev*     lcddev;
 
-	/// @brief Constructor
-	GraphicsData()
-		:ticks(0)
-	{
-		input.Setup(20);
-		draws.Setup(100);
-	}
-
-	/// @brief Destructor
-	~GraphicsData()
-	{
-		input.Exit();
-		draws.Exit();
-	}
+	SystemInfo()
+		:ticks(0),
+		lcddev(NULL)
+	{}
 };
 
 #endif //!__VG_DATA_H__

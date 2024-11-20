@@ -19,7 +19,7 @@ public:
 	virtual void Exit() = 0;
 
 	//Data Methods
-	virtual IndevData* Read() = 0;
+	virtual IndevData Read() = 0;
 };
 
 #endif //!__VG_INDEV_H__

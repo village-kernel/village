@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsInput::GraphicsInput(GraphicsData& data)
-	:data(data),
+GraphicsInput::GraphicsInput(SystemInfo& sysinfo)
+	:sysinfo(sysinfo),
 	isReady(false)
 {
 }
@@ -38,13 +38,11 @@ void GraphicsInput::Setup()
 /// @brief Input execute
 void GraphicsInput::Execute()
 {
-	static IndevData input;
-
 	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
 	{
 		Indev* indev = indevs.Item();
 		
-		data.input.Put(indev->Read());
+		sysinfo.input = indev->Read();
 	}
 }
 

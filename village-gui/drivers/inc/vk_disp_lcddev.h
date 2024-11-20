@@ -23,6 +23,8 @@ public:
 	void Exit();
 
 	//Draw methods
+	int GetWidth();
+	int GetHeight();
 	void Flush(DrawArea area, uint8_t* pixels);
 };
 

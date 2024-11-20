@@ -29,7 +29,7 @@ public:
 	void Exit();
 
 	//Data Methods
-	IndevData* Read();
+	IndevData Read();
 };
 
 #endif //!__VK_EVENT_INDEV_H__

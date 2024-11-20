@@ -7,8 +7,7 @@
 #ifndef __DESKTOP_MODEL_H__
 #define __DESKTOP_MODEL_H__
 
-#include "vg_graphics.h"
-#include "vg_input_cmd.h"
+#include "vg_gui.h"
 
 
 /// @brief DesktopModel
@@ -22,12 +21,12 @@ public:
 	//Collection StartMenuLists;
 	//Collection TaskbarLists;
 
-	////Command
-	//ICommand*  ContextMenuCmd;
-	//ICommand*  ShortcutCmd;
-	//ICommand*  StartBtnCmd;
-	//ICommand*  StartMenuCmd;
-	//ICommand*  TaskbarCmd;
+	//Command
+	ICommand*  ContextMenuCmd;
+	ICommand*  ShortcutCmd;
+	ICommand*  StartBtnCmd;
+	ICommand*  StartMenuCmd;
+	ICommand*  TaskbarCmd;
 public:
 	//Methods
 	DesktopModel();

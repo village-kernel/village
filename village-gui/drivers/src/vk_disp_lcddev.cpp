@@ -35,6 +35,22 @@ void VkDisplay::Exit()
 }
 
 
+/// @brief GetWidth
+/// @return 
+int VkDisplay::GetWidth()
+{
+	return fbdev->info.width;
+}
+
+
+/// @brief 
+/// @return 
+int VkDisplay::GetHeight()
+{
+	return fbdev->info.height;
+}
+
+
 /// @brief Flush
 /// @param area 
 /// @param pixels 

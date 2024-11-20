@@ -9,10 +9,10 @@
 
 /// @brief Constructor
 VkGraphics::VkGraphics()
-	:timer(data),
-	input(data),
-	group(data),
-	display(data)
+	:timer(sysinfo),
+	input(sysinfo),
+	display(sysinfo),
+	object(sysinfo)
 {
 }
 
@@ -32,11 +32,11 @@ void VkGraphics::Setup()
 	//Setup input
 	input.Setup();
 
-	//Setup group
-	group.Setup();
-
 	//Setup display
 	display.Setup();
+
+	//Setup object
+	object.Setup();
 }
 
 
@@ -49,22 +49,22 @@ void VkGraphics::Execute()
 	//Execute input
 	input.Execute();
 
-	//Execute group
-	group.Execute();
-
 	//Execute display
 	display.Execute();
+
+	//Execute object
+	object.Execute();
 }
 
 
 /// @brief Exit
 void VkGraphics::Exit()
 {
+	//Exit object
+	object.Exit();
+
 	//Exit display
 	display.Exit();
-
-	//Exit group
-	group.Exit();
 
 	//Exit indev
 	input.Exit();

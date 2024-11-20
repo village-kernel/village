@@ -9,6 +9,7 @@
 
 /// @brief Constructor
 Wedget::Wedget()
+	:sysinfo(NULL)
 {
 }
 
@@ -32,12 +33,42 @@ void Wedget::SetSize(int x, int y, int width, int height)
 
 
 /// @brief 
-/// @param x 
-/// @param y 
 /// @return 
-bool Wedget::IsCanSelecte(int x, int y)
+int Wedget::GetX()
 {
-	return (x >= area.x0 && x <= area.x1 && y >= area.y0 && y <= area.y1);
+	return area.x0;
+}
+
+
+/// @brief 
+/// @return 
+int Wedget::GetY()
+{
+	return area.y0;
+}
+
+
+/// @brief GetWidth
+/// @return 
+int Wedget::GetWidth()
+{
+	return area.x1 - area.x0 + 1;
+}
+
+
+/// @brief GetHeight
+/// @return 
+int Wedget::GetHeight()
+{
+	return area.y1 - area.y0 + 1;
+}
+
+
+/// @brief GetArea
+/// @return 
+DrawArea Wedget::GetArea()
+{
+	return area;
 }
 
 
@@ -48,8 +79,42 @@ void Wedget::AddWedget(Wedget* wedget)
 {
 	if (NULL != wedget) 
 	{
+		wedget->Init(sysinfo);
 		wedgets.Add(wedget);
 	}
+}
+
+
+
+/// @brief SetCommand
+/// @param cmd 
+void Wedget::SetCommand(ICommand* cmd)
+{
+	this->cmd = cmd;
+}
+
+
+/// @brief Init
+/// @param sysinfo 
+void Wedget::Init(SystemInfo* sysinfo)
+{
+	this->sysinfo = sysinfo;
+}
+
+
+/// @brief Execute
+/// @param input 
+void Wedget::Execute()
+{
+
+}
+
+
+/// @brief Wedget Flush
+/// @param draws 
+void Wedget::Flush(List<DrawArea> areas)
+{
+
 }
 
 

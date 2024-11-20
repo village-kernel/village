@@ -5,7 +5,6 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "desktop_model.h"
-#include "vg_relay_cmd.h"
 
 
 /// @brief Constructor

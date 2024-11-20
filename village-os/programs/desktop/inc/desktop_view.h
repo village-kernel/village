@@ -7,7 +7,6 @@
 #ifndef __DESKTOP_VIEW_H__
 #define __DESKTOP_VIEW_H__
 
-#include "vg_graphics.h"
 #include "desktop_model.h"
 
 

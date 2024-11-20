@@ -17,12 +17,12 @@ class GraphicsDisplay
 {
 private:
 	//Members
-	GraphicsData&  data;
+	SystemInfo&    sysinfo;
 	List<Lcddev*>  lcddevs;
 	bool           isReady;
 public:
 	//Methods
-	GraphicsDisplay(GraphicsData& data);
+	GraphicsDisplay(SystemInfo& sysinfo);
 	~GraphicsDisplay();
 	void Setup();
 	void Execute();

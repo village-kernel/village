@@ -35,14 +35,14 @@ Window* DesktopApp::CreateWindow()
 	if (NULL == vkgui) return NULL;
 	
 	//Create mainwin
-	return vkgui->group.Create();
+	return vkgui->object.Create();
 }
 
 
 /// @brief Destroy Window
 void DesktopApp::DestroyWindow()
 {
-	vkgui->group.Destroy(mainwin);
+	vkgui->object.Destroy(mainwin);
 }
 
 
