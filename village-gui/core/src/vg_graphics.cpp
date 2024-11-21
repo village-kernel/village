@@ -11,8 +11,8 @@
 VkGraphics::VkGraphics()
 	:timer(sysinfo),
 	input(sysinfo),
-	display(sysinfo),
-	object(sysinfo)
+	object(sysinfo),
+	display(sysinfo)
 {
 }
 
@@ -32,11 +32,11 @@ void VkGraphics::Setup()
 	//Setup input
 	input.Setup();
 
-	//Setup display
-	display.Setup();
-
 	//Setup object
 	object.Setup();
+
+	//Setup display
+	display.Setup();
 }
 
 
@@ -49,22 +49,22 @@ void VkGraphics::Execute()
 	//Execute input
 	input.Execute();
 
-	//Execute display
-	display.Execute();
-
 	//Execute object
 	object.Execute();
+
+	//Execute display
+	display.Execute();
 }
 
 
 /// @brief Exit
 void VkGraphics::Exit()
 {
-	//Exit object
-	object.Exit();
-
 	//Exit display
 	display.Exit();
+
+	//Exit object
+	object.Exit();
 
 	//Exit indev
 	input.Exit();

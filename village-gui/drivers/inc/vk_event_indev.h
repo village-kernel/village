@@ -8,7 +8,6 @@
 #define __VK_EVENT_INDEV_H__
 
 #include "vg_indev.h"
-#include "vg_data.h"
 #include "vk_class.h"
 #include "vk_kernel.h"
 
@@ -29,7 +28,7 @@ public:
 	void Exit();
 
 	//Data Methods
-	IndevData Read();
+	IndevData* Read();
 };
 
 #endif //!__VK_EVENT_INDEV_H__

@@ -10,8 +10,8 @@
 #include "vg_data.h"
 #include "vg_timer.h"
 #include "vg_input.h"
-#include "vg_display.h"
 #include "vg_object.h"
+#include "vg_display.h"
 
 
 /// @brief VkGraphics
@@ -22,8 +22,8 @@ public:
 	SystemInfo       sysinfo;
 	GraphicsTimer    timer;
 	GraphicsInput    input;
-	GraphicsDisplay  display;
 	GraphicsObject   object;
+	GraphicsDisplay  display;
 public:
 	//Methods
 	VkGraphics();

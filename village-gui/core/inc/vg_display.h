@@ -19,7 +19,11 @@ private:
 	//Members
 	SystemInfo&    sysinfo;
 	List<Lcddev*>  lcddevs;
+	Lcddev*        activelcd;
 	bool           isReady;
+
+	//Methdos
+	bool SelectActivedLcddev(DrawArea area);
 public:
 	//Methods
 	GraphicsDisplay(SystemInfo& sysinfo);

@@ -25,7 +25,7 @@ public:
 	//Draw methods
 	int GetWidth();
 	int GetHeight();
-	void Flush(DrawArea area, uint8_t* pixels);
+	void Flush(DrawArea area, void* pixels);
 };
 
 #endif //!__VK_DISPLAY_LCDDEV_H__

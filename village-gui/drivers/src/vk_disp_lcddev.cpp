@@ -54,7 +54,7 @@ int VkDisplay::GetHeight()
 /// @brief Flush
 /// @param area 
 /// @param pixels 
-void VkDisplay::Flush(DrawArea area, uint8_t* pixels)
+void VkDisplay::Flush(DrawArea area, void* pixels)
 {
 	if (NULL != fbdev)
 	{

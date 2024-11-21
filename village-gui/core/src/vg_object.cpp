@@ -32,22 +32,24 @@ void GraphicsObject::Setup()
 /// @brief Execute
 void GraphicsObject::Execute()
 {
-	if (sysinfo.input.isnew)
+	IndevData input;
+
+	while (sysinfo.input.Pop(&input))
 	{
 		//Change actived window
-		if (IsActivedWinChange(sysinfo.input))
+		if (IsActivedWinChange(input))
 		{
 			RedrawActivedWinOverlapAreas();
 		}
 		//Move actived window
-		else if (IsActivedWinMove(sysinfo.input))
+		else if (IsActivedWinMove(input))
 		{
 			RedrawActivedWinOverlapAreas();
 		}
 		//Active win execute
 		else
 		{
-			activedwin->Execute();
+			activedwin->Execute(input);
 		}
 	}
 }
@@ -63,7 +65,7 @@ void GraphicsObject::Exit()
 /// @brief Is actived window change
 /// @param input 
 /// @return 
-bool GraphicsObject::IsActivedWinChange(IndevData& input)
+bool GraphicsObject::IsActivedWinChange(IndevData input)
 {
 	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
 	{
@@ -88,7 +90,7 @@ bool GraphicsObject::IsActivedWinChange(IndevData& input)
 /// @brief Is actived window move
 /// @param input 
 /// @return 
-bool GraphicsObject::IsActivedWinMove(IndevData& input)
+bool GraphicsObject::IsActivedWinMove(IndevData input)
 {
 	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
 	{

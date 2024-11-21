@@ -21,7 +21,7 @@ public:
 	//Draw methods
 	virtual int GetWidth() = 0;
 	virtual int GetHeight() = 0;
-	virtual void Flush(DrawArea area, uint8_t* pixels) = 0;
+	virtual void Flush(DrawArea area, void* pixels) = 0;
 };
 
 #endif //!__VG_LCD_DEV_H__

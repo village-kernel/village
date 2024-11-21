@@ -104,7 +104,7 @@ void Wedget::Init(SystemInfo* sysinfo)
 
 /// @brief Execute
 /// @param input 
-void Wedget::Execute()
+void Wedget::Execute(IndevData input)
 {
 
 }

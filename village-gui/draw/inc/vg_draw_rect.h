@@ -14,14 +14,15 @@
 class DrawRect
 {
 public:
+	//Members
+	DrawData Output;
+
 	//Methods
 	void Execute
 	(
-		int x0,
-		int y0,
-		int x1,
-		int y1,
-		int color = DrawDefs::defStrokeColor
+		DrawArea layerArea,
+		DrawArea drawArea,
+		int color
 	);
 };
 

@@ -10,6 +10,7 @@
 /// @brief Constructor
 GraphicsDisplay::GraphicsDisplay(SystemInfo& sysinfo)
 	:sysinfo(sysinfo),
+	activelcd(NULL),
 	isReady(false)
 {
 }
@@ -38,18 +39,13 @@ void GraphicsDisplay::Setup()
 /// @brief Display execute
 void GraphicsDisplay::Execute()
 {
-	if (sysinfo.input.isnew)
-	{
-		for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
-		{
-			Lcddev* lcddev = lcddevs.Item();
+	DrawData draw;
 
-			if ((sysinfo.input.point.x <= lcddev->GetWidth()) &&
-				(sysinfo.input.point.y <= lcddev->GetHeight()))
-			{
-				sysinfo.lcddev = lcddev;
-				break;
-			}
+	while (sysinfo.draws.Pop(&draw))
+	{
+		if (SelectActivedLcddev(draw.area))
+		{
+			activelcd->Flush(draw.area, draw.pixels);
 		}
 	}
 }
@@ -62,6 +58,25 @@ void GraphicsDisplay::Exit()
 	{
 		lcddevs.Item()->Exit();
 	}
+}
+
+
+/// @brief Display select actived lcddev
+/// @param arae 
+bool GraphicsDisplay::SelectActivedLcddev(DrawArea area)
+{
+	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
+	{
+		Lcddev* lcddev = lcddevs.Item();
+
+		if ((area.x0 <= lcddev->GetWidth()) &&
+			(area.y0 <= lcddev->GetHeight()))
+		{
+			activelcd = lcddev;
+			return true;
+		}
+	}
+	return false;
 }
 
 

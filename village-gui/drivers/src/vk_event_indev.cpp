@@ -39,6 +39,9 @@ void VkEvent::KeyReceiver(Event::InputKey* input)
 		data.state = KeyState::_Pressed;
 	else
 		data.state = KeyState::_Pressed;
+
+	//Set the ready flag
+	data.isReady = true;
 }
 
 
@@ -65,11 +68,14 @@ void VkEvent::AxisReceiver(Event::InputAxis* input)
 
 	//Set the data point
 	data.point = point;
+
+	//Set the ready flag
+	data.isReady = true;
 }
 
 
 /// @brief Read
-IndevData VkEvent::Read()
+IndevData* VkEvent::Read()
 {
-	return data;
+	return &data;
 }

@@ -7,13 +7,19 @@
 #include "vg_draw_rect.h"
 
 
-/// @brief Draw rect set
-/// @param x0 
-/// @param y0 
-/// @param x1 
-/// @param y1 
-/// @param color 
-void DrawRect::Execute(int x0, int y0, int x1, int y1, int color)
+/// @brief DrawRect Execute
+/// @param data 
+void DrawRect::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 {
+	int pixelsize = (drawArea.x1 - drawArea.x0) * (drawArea.y1 - drawArea.y0);
+	uint16_t* pixels = new uint16_t[pixelsize]();
 
+	for (uint16_t i = 0; i < pixelsize; i++)
+	{
+		pixels[i] = color;
+	}
+
+	delete[] (uint16_t*)Output.pixels;
+	Output.area = drawArea;
+	Output.pixels = pixels;
 }

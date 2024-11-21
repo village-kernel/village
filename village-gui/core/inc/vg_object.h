@@ -24,8 +24,8 @@ private:
 	Layer          layer;
 private:
 	//Methods
-	bool IsActivedWinChange(IndevData& input);
-	bool IsActivedWinMove(IndevData& input);
+	bool IsActivedWinChange(IndevData input);
+	bool IsActivedWinMove(IndevData input);
 	void RedrawActivedWinOverlapAreas();
 	List<DrawArea> GetActivedWinOverlapAreas();
 	List<DrawArea> CutActivedWinOverlapAreas(List<DrawArea> areas);

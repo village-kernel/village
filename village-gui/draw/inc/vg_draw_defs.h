@@ -11,6 +11,41 @@
 #include "stddef.h"
 
 
+/// @brief DrawArea
+struct DrawArea
+{
+	int x0;
+	int y0;
+	int x1;
+	int y1;
+
+	DrawArea
+	(
+		int x0 = 0,
+		int y0 = 0,
+		int x1 = 0,
+		int y1 = 0
+	):
+		x0(x0),
+		y0(y0),
+		x1(x1),
+		y1(y1)
+	{}
+};
+
+
+/// @brief DrawData
+struct DrawData
+{
+	DrawArea   area;
+	void*      pixels;
+
+	DrawData()
+		:pixels(NULL)
+	{}
+};
+
+
 /// @brief DrawDefs
 class DrawDefs
 {

@@ -22,14 +22,16 @@ Window::~Window()
 /// @brief Init content
 void Window::InitContent()
 {
-
+	
 }
 
 
 /// @brief Draw content
 void Window::DrawContent()
 {
-	rect.Execute(area.x0, area.y0, area.x1, area.y1);
+	rect.Execute(area, area, DrawDefs::White);
+
+	sysinfo->draws.Put(&rect.Output);
 }
 
 

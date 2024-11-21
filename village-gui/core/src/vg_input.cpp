@@ -40,9 +40,14 @@ void GraphicsInput::Execute()
 {
 	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
 	{
-		Indev* indev = indevs.Item();
-		
-		sysinfo.input = indev->Read();
+		IndevData* input = indevs.Item()->Read();
+
+		if (input->isReady)
+		{
+			sysinfo.input.Put(input);
+			
+			input->isReady = false;
+		}
 	}
 }
 

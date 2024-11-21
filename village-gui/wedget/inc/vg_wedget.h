@@ -46,7 +46,7 @@ public:
 
 	//Methods
 	void Init(SystemInfo* sysinfo);
-	void Execute();
+	void Execute(IndevData input);
 	void Flush(List<DrawArea> areas);
 	void Show();
 };

@@ -53,6 +53,9 @@ void DesktopApp::Setup()
 	mainwin = CreateWindow();
 	if (NULL == mainwin) return;
 
+	//Setup mainwin size
+	mainwin->SetSize(0, 0, 480, 320);
+
 	//Init view component
 	view.InitComponent(mainwin);
 }
