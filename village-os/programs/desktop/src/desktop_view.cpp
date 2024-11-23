@@ -22,7 +22,7 @@ void DesktopView::InitComponent(Wedget* parent)
 
 	//Create shortcut table
 	Table* shortcut = new Table();
-	shortcut->SetSize(0, 0, height - 40, width - 40);
+	shortcut->SetSize(0, 0, width, height - 40);
 	//shortcut->SetItemSource(model.ShortcutLists);
 	shortcut->SetCommand(model.ShortcutCmd);
 	parent->AddWedget(shortcut);
@@ -36,9 +36,9 @@ void DesktopView::InitComponent(Wedget* parent)
 
 	//Create start menu
 	Menu* startMenu = new Menu();
-	startBtn->SetSize(0, height - 520, 320, 480);
-	//startBtn->SetItemSource(model.StartMenuLists);
-	startBtn->SetCommand(model.StartMenuCmd);
+	startMenu->SetSize(0, height - 520, 320, 480);
+	//startMenu->SetItemSource(model.StartMenuLists);
+	startMenu->SetCommand(model.StartMenuCmd);
 	parent->AddWedget(startMenu);
 
 	//Create task bar

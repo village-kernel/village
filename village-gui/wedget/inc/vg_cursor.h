@@ -17,9 +17,6 @@ public:
 	//Methods
 	Cursor();
 	~Cursor();
-	
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_CURSOR_H__

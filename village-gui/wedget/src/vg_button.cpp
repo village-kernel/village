@@ -20,20 +20,6 @@ Button::~Button()
 }
 
 
-/// @brief Init content
-void Button::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Button::DrawContent()
-{
-
-}
-
-
 /// @brief 
 /// @param text 
 void Button::SetText(char* text)

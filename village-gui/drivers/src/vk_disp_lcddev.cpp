@@ -51,6 +51,19 @@ int VkDisplay::GetHeight()
 }
 
 
+/// @brief Point
+/// @param x 
+/// @param y 
+/// @param color 
+void VkDisplay::Point(int x, int y, int color)
+{
+	if (NULL != fbdev)
+	{
+		fbdev->DrawPoint(x, y, color);
+	}
+}
+
+
 /// @brief Flush
 /// @param area 
 /// @param pixels 

@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsInput::GraphicsInput(SystemInfo& sysinfo)
-	:sysinfo(sysinfo),
+GraphicsInput::GraphicsInput(GraphicsDevices& devices)
+	:devices(devices),
 	isReady(false)
 {
 }
@@ -31,6 +31,8 @@ void GraphicsInput::Setup()
 		indevs.Item()->Setup();
 	}
 
+	devices.indev = indevs.Begin();
+
 	isReady = true;
 }
 
@@ -38,15 +40,17 @@ void GraphicsInput::Setup()
 /// @brief Input execute
 void GraphicsInput::Execute()
 {
-	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
+	while (1)
 	{
-		IndevData* input = indevs.Item()->Read();
+		indevs.Next(); if (indevs.IsEnd()) indevs.Begin();
 
-		if (input->isReady)
+		if (indevs.Item()->IsReady())
 		{
-			sysinfo.input.Put(input);
+			devices.indev = indevs.Item();
 			
-			input->isReady = false;
+			indevs.Item()->ClearReady();
+
+			break;
 		}
 	}
 }

@@ -7,7 +7,7 @@
 #ifndef __VG_GRAPHICS_H__
 #define __VG_GRAPHICS_H__
 
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_timer.h"
 #include "vg_input.h"
 #include "vg_object.h"
@@ -19,11 +19,11 @@ class VkGraphics
 {
 public:
 	//Members
-	SystemInfo       sysinfo;
+	GraphicsDevices  devices;
 	GraphicsTimer    timer;
 	GraphicsInput    input;
-	GraphicsObject   object;
 	GraphicsDisplay  display;
+	GraphicsObject   object;
 public:
 	//Methods
 	VkGraphics();

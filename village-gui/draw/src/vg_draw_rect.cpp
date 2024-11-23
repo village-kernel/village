@@ -7,19 +7,30 @@
 #include "vg_draw_rect.h"
 
 
+/// @brief Initiate
+/// @param devices 
+void DrawRect::Initiate(GraphicsDevices* devices)
+{
+	this->devices = devices;
+}
+
+
 /// @brief DrawRect Execute
-/// @param data 
+/// @param devices 
+/// @param layerArea 
+/// @param drawArea 
+/// @param color 
 void DrawRect::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 {
-	int pixelsize = (drawArea.x1 - drawArea.x0) * (drawArea.y1 - drawArea.y0);
-	uint16_t* pixels = new uint16_t[pixelsize]();
-
-	for (uint16_t i = 0; i < pixelsize; i++)
+	for (int x = layerArea.x0; x < layerArea.x1; x++)
 	{
-		pixels[i] = color;
-	}
+		if (!(x >= drawArea.x0 && x <= drawArea.x1)) continue;
 
-	delete[] (uint16_t*)Output.pixels;
-	Output.area = drawArea;
-	Output.pixels = pixels;
+		for (int y = layerArea.y0; y < layerArea.y1; y++)
+		{
+			if (!(y >= drawArea.y0 && y <= drawArea.y1)) continue;
+
+			devices->lcddev->Point(x, y, color);
+		}
+	}
 }

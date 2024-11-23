@@ -9,7 +9,7 @@
 
 /// @brief Constructor
 Wedget::Wedget()
-	:sysinfo(NULL)
+	:devices(NULL)
 {
 }
 
@@ -25,10 +25,10 @@ Wedget::~Wedget()
 /// @param area 
 void Wedget::SetSize(int x, int y, int width, int height)
 {
-	area.x0 = x;
-	area.x1 = x + width - 1;
-	area.y0 = y;
-	area.y1 = y + height - 1;
+	layerArea.x0 = x;
+	layerArea.x1 = x + width - 1;
+	layerArea.y0 = y;
+	layerArea.y1 = y + height - 1;
 }
 
 
@@ -36,7 +36,7 @@ void Wedget::SetSize(int x, int y, int width, int height)
 /// @return 
 int Wedget::GetX()
 {
-	return area.x0;
+	return layerArea.x0;
 }
 
 
@@ -44,7 +44,7 @@ int Wedget::GetX()
 /// @return 
 int Wedget::GetY()
 {
-	return area.y0;
+	return layerArea.y0;
 }
 
 
@@ -52,7 +52,7 @@ int Wedget::GetY()
 /// @return 
 int Wedget::GetWidth()
 {
-	return area.x1 - area.x0 + 1;
+	return layerArea.x1 - layerArea.x0 + 1;
 }
 
 
@@ -60,7 +60,7 @@ int Wedget::GetWidth()
 /// @return 
 int Wedget::GetHeight()
 {
-	return area.y1 - area.y0 + 1;
+	return layerArea.y1 - layerArea.y0 + 1;
 }
 
 
@@ -68,25 +68,35 @@ int Wedget::GetHeight()
 /// @return 
 DrawArea Wedget::GetArea()
 {
-	return area;
+	return layerArea;
 }
 
 
-/// @brief Add Wedget
+/// @brief Add wedget
 /// @param wedget 
 /// @return 
 void Wedget::AddWedget(Wedget* wedget)
 {
 	if (NULL != wedget) 
 	{
-		wedget->Init(sysinfo);
+		wedget->Initiate(devices);
 		wedgets.Add(wedget);
 	}
 }
 
 
+/// @brief Show wedgets
+void Wedget::ShowWedgets()
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* wedget = wedgets.Item();
+		wedget->Show();
+	}
+}
 
-/// @brief SetCommand
+
+/// @brief Wedget SetCommand
 /// @param cmd 
 void Wedget::SetCommand(ICommand* cmd)
 {
@@ -94,25 +104,20 @@ void Wedget::SetCommand(ICommand* cmd)
 }
 
 
-/// @brief Init
-/// @param sysinfo 
-void Wedget::Init(SystemInfo* sysinfo)
+/// @brief Wedget Initiate
+/// @param devices 
+void Wedget::Initiate(GraphicsDevices* devices)
 {
-	this->sysinfo = sysinfo;
+	this->devices = devices;
+
+	rect.Initiate(devices);
+	mask.Initiate(devices);
 }
 
 
-/// @brief Execute
+/// @brief Wedget Execute
 /// @param input 
 void Wedget::Execute(IndevData input)
-{
-
-}
-
-
-/// @brief Wedget Flush
-/// @param draws 
-void Wedget::Flush(List<DrawArea> areas)
 {
 
 }
@@ -121,12 +126,15 @@ void Wedget::Flush(List<DrawArea> areas)
 /// @brief Wedget Show
 void Wedget::Show()
 {
-	InitContent();
-	DrawContent();
+	Drawing(layerArea);
+	ShowWedgets();
+}
 
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* wedget = wedgets.Item();
-		wedget->Show();
-	}
+
+/// @brief Wedget Drawing
+/// @param drawArea 
+void Wedget::Drawing(DrawArea drawArea)
+{
+	rect.Execute(layerArea, drawArea, DrawDefs::White);
+	mask.Execute(layerArea, drawArea, DrawDefs::Black);
 }

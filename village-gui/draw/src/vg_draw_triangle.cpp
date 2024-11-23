@@ -7,13 +7,19 @@
 #include "vg_draw_triangle.h"
 
 
-/// @brief Draw area set
-/// @param area 
-/// @param x 
-/// @param y 
-/// @param width 
-/// @param height 
-void DrawTriangle::Execute(int x, int y, int width, int height, int *area)
+/// @brief Initiate
+/// @param devices 
+void DrawTriangle::Initiate(GraphicsDevices* devices)
+{
+	this->devices = devices;
+}
+
+
+/// @brief Draw arc
+/// @param layerArea 
+/// @param drawArea 
+/// @param color 
+void DrawTriangle::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 {
 
 }

@@ -19,22 +19,6 @@ Window::~Window()
 }
 
 
-/// @brief Init content
-void Window::InitContent()
-{
-	
-}
-
-
-/// @brief Draw content
-void Window::DrawContent()
-{
-	rect.Execute(area, area, DrawDefs::White);
-
-	sysinfo->draws.Put(&rect.Output);
-}
-
-
 /// @brief Place on top
 void Window::PlaceOnTop()
 {
@@ -54,4 +38,20 @@ void Window::CancelOnTop()
 bool Window::IsOnTop()
 {
 	return isTop;
+}
+
+
+/// @brief Wedget Initiate
+/// @param devices 
+void Window::Initiate(GraphicsDevices* devices)
+{
+	Wedget::Initiate(devices);
+}
+
+
+/// @brief Wedget Execute
+/// @param input 
+void Window::Execute(IndevData input)
+{
+
 }

@@ -48,7 +48,8 @@ objs-vkgui-y                            += vg_relay_cmd.o
 objs-vkgui-y                            += vg_layer.o
 
 objs-vkgui-y                            += vk_disp_lcddev.o
-objs-vkgui-y                            += vk_event_indev.o
+objs-vkgui-y                            += vk_keyboard_indev.o
+objs-vkgui-y                            += vk_mouse_indev.o
 objs-vkgui-y                            += vk_timer_ticks.o
 
 objs-vkgui-y                            += vg_draw_arc.o

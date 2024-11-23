@@ -18,9 +18,6 @@ public:
 	//Methods
 	Table();
 	~Table();
-
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_TABLE_H__

@@ -7,23 +7,20 @@
 #ifndef __VG_DRAW_RECT_H__
 #define __VG_DRAW_RECT_H__
 
+#include "vg_devices.h"
 #include "vg_draw_defs.h"
 
 
 /// @brief DrawRect
 class DrawRect
 {
-public:
+private:
 	//Members
-	DrawData Output;
-
+	GraphicsDevices* devices;
+public:
 	//Methods
-	void Execute
-	(
-		DrawArea layerArea,
-		DrawArea drawArea,
-		int color
-	);
+	void Initiate(GraphicsDevices* devices);
+	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_RECT_H__

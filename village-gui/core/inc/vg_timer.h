@@ -7,7 +7,7 @@
 #ifndef __VG_TIMER_H__
 #define __VG_TIMER_H__
 
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_ticks.h"
 
 
@@ -16,12 +16,12 @@ class GraphicsTimer
 {
 private:
 	//Members
-	SystemInfo&    sysinfo;
-	Ticks*         ticks;
-	bool           isReady;
+	GraphicsDevices&  devices;
+	Ticks*            ticks;
+	bool              isReady;
 public:
 	//Methods
-	GraphicsTimer(SystemInfo& sysinfo);
+	GraphicsTimer(GraphicsDevices& devices);
 	~GraphicsTimer();
 	void Setup();
 	void Execute();

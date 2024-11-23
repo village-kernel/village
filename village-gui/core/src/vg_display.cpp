@@ -8,9 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsDisplay::GraphicsDisplay(SystemInfo& sysinfo)
-	:sysinfo(sysinfo),
-	activelcd(NULL),
+GraphicsDisplay::GraphicsDisplay(GraphicsDevices& devices)
+	:devices(devices),
 	isReady(false)
 {
 }
@@ -32,6 +31,8 @@ void GraphicsDisplay::Setup()
 		lcddevs.Item()->Setup();
 	}
 
+	devices.lcddev = lcddevs.Begin();
+
 	isReady = true;
 }
 
@@ -39,13 +40,20 @@ void GraphicsDisplay::Setup()
 /// @brief Display execute
 void GraphicsDisplay::Execute()
 {
-	DrawData draw;
-
-	while (sysinfo.draws.Pop(&draw))
+	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 	{
-		if (SelectActivedLcddev(draw.area))
+		Lcddev* lcddev = lcddevs.Item();
+
+		if (IndevType::_Mouse == devices.indev->GetType())
 		{
-			activelcd->Flush(draw.area, draw.pixels);
+			IndevData input = devices.indev->Read();
+
+			if ((input.point.x <= lcddev->GetWidth()) &&
+				(input.point.y <= lcddev->GetHeight()))
+			{
+				devices.lcddev = lcddev;
+				break;
+			}
 		}
 	}
 }
@@ -58,25 +66,6 @@ void GraphicsDisplay::Exit()
 	{
 		lcddevs.Item()->Exit();
 	}
-}
-
-
-/// @brief Display select actived lcddev
-/// @param arae 
-bool GraphicsDisplay::SelectActivedLcddev(DrawArea area)
-{
-	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
-	{
-		Lcddev* lcddev = lcddevs.Item();
-
-		if ((area.x0 <= lcddev->GetWidth()) &&
-			(area.y0 <= lcddev->GetHeight()))
-		{
-			activelcd = lcddev;
-			return true;
-		}
-	}
-	return false;
 }
 
 

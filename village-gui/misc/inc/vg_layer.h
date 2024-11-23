@@ -7,7 +7,7 @@
 #ifndef __VG_LAYER_H__
 #define __VG_LAYER_H__
 
-#include "vg_data.h"
+#include "vg_draw_defs.h"
 #include "vk_list.h"
 
 

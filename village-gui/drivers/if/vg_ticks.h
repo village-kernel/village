@@ -7,7 +7,8 @@
 #ifndef __VG_TICKS_H__
 #define __VG_TICKS_H__
 
-#include "vg_data.h"
+#include "stddef.h"
+#include "stdint.h"
 
 
 /// @brief Ticks

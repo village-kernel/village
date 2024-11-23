@@ -15,9 +15,6 @@
 class Window : public Wedget
 {
 private:
-	//Members
-	DrawRect rect;
-
 	//Attribute members
 	bool isTop;
 public:
@@ -25,14 +22,14 @@ public:
 	Window();
 	~Window();
 
-	//Draw methods
-	void InitContent();
-	void DrawContent();
-
 	//Attribute methods
 	void PlaceOnTop();
 	void CancelOnTop();
 	bool IsOnTop();
+
+	//Methods
+	void Initiate(GraphicsDevices* devices);
+	void Execute(IndevData input);
 };
 
 #endif //!__VG_WINDOW_H__

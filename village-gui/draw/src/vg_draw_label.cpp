@@ -8,6 +8,25 @@
 #include "vg_ascii_font.h"
 
 
+/// @brief Initiate
+/// @param devices 
+void DrawLabel::Initiate(GraphicsDevices* devices)
+{
+	this->devices = devices;
+}
+
+
+/// @brief Draw arc
+/// @param layerArea 
+/// @param drawArea 
+/// @param color 
+void DrawLabel::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+{
+
+}
+
+
+
 ///// @brief draw char set
 ///// @param x 
 ///// @param y 
@@ -64,8 +83,8 @@
 /// @param font 
 /// @param mode 
 /// @param color 
-void DrawLabel::Execute(int x, int y, char* str, int font, int mode, int color)
-{
+//void DrawLabel::Execute(int x, int y, char* str, int font, int mode, int color)
+//{
 	//int xOffset = x;
 	//int yOffset = y;
 
@@ -86,4 +105,4 @@ void DrawLabel::Execute(int x, int y, char* str, int font, int mode, int color)
 	//		str++;
 	//	}
 	//}
-}
+//}

@@ -20,10 +20,8 @@ public:
 	//Methods
 	Button();
 	~Button();
-	
-	void InitContent();
-	void DrawContent();
 
+	//Binding Methods
 	void SetText(char* text);
 };
 

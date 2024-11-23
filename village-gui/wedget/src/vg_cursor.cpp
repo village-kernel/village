@@ -38,17 +38,3 @@ Cursor::Cursor()
 Cursor::~Cursor()
 {
 }
-
-
-/// @brief Init content
-void Cursor::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Cursor::DrawContent()
-{
-
-}

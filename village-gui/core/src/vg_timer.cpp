@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsTimer::GraphicsTimer(SystemInfo& sysinfo)
-	:sysinfo(sysinfo),
+GraphicsTimer::GraphicsTimer(GraphicsDevices& devices)
+	:devices(devices),
 	ticks(NULL),
 	isReady(false)
 {
@@ -29,6 +29,8 @@ void GraphicsTimer::Setup()
 
 	if (NULL != ticks) ticks->Setup();
 
+	devices.ticks = ticks;
+
 	isReady = true;
 }
 
@@ -38,7 +40,7 @@ void GraphicsTimer::Execute()
 {
 	if (NULL != ticks)
 	{
-		sysinfo.ticks = ticks->GetTicks();
+		devices.ticks = ticks;
 	}
 }
 

@@ -7,22 +7,20 @@
 #ifndef __VG_DRAW_TRIANGLE_H__
 #define __VG_DRAW_TRIANGLE_H__
 
+#include "vg_devices.h"
 #include "vg_draw_defs.h"
 
 
 /// @brief DrawTriangle
 class DrawTriangle
 {
+private:
+	//Members
+	GraphicsDevices* devices;
 public:
 	//Methods
-	void Execute
-	(
-		int x,
-		int y,
-		int width,
-		int height,
-		int* area
-	);
+	void Initiate(GraphicsDevices* devices);
+	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_TRIANGLE_H__

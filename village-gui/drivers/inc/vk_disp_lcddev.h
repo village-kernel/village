@@ -25,6 +25,7 @@ public:
 	//Draw methods
 	int GetWidth();
 	int GetHeight();
+	void Point(int x, int y, int color);
 	void Flush(DrawArea area, void* pixels);
 };
 

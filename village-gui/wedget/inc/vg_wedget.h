@@ -8,8 +8,10 @@
 #define __VG_WEDGET_H__
 
 #include "vk_list.h"
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_input_cmd.h"
+#include "vg_draw_rect.h"
+#include "vg_draw_mask.h"
 
 
 /// @brief Wedget
@@ -17,14 +19,14 @@ class Wedget
 {
 protected:
 	//Members
-	ICommand*     cmd;
-	DrawArea      area;
-	SystemInfo*   sysinfo;
-	List<Wedget*> wedgets;
-public:
-	//Content methods
-	virtual void InitContent() = 0;
-	virtual void DrawContent() = 0;
+	GraphicsDevices*  devices;
+	DrawArea          layerArea;
+	List<Wedget*>     wedgets;
+	ICommand*         cmd;
+
+	//Members
+	DrawRect          rect;
+	DrawMask          mask;
 public:
 	//Methods
 	Wedget();
@@ -40,15 +42,16 @@ public:
 
 	//Wedget methods
 	void AddWedget(Wedget* wedget);
+	void ShowWedgets();
 
 	//Binding methods
 	void SetCommand(ICommand* cmd);
 
 	//Methods
-	void Init(SystemInfo* sysinfo);
-	void Execute(IndevData input);
-	void Flush(List<DrawArea> areas);
-	void Show();
+	virtual void Initiate(GraphicsDevices* devices);
+	virtual void Execute(IndevData input);
+	virtual void Drawing(DrawArea drawArea);
+	virtual void Show();
 };
 
 #endif //!__VG_WEDGET_H__

@@ -24,7 +24,7 @@ DesktopApp::~DesktopApp()
 
 /// @brief Create Window
 /// @return 
-Window* DesktopApp::CreateWindow()
+Wedget* DesktopApp::CreateWindow()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
@@ -54,7 +54,7 @@ void DesktopApp::Setup()
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
-	mainwin->SetSize(0, 0, 480, 320);
+	mainwin->SetSize(0, 0, 1024, 768);
 
 	//Init view component
 	view.InitComponent(mainwin);

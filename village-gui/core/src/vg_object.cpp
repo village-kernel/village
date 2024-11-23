@@ -9,8 +9,8 @@
 
 
 /// @brief Constructor
-GraphicsObject::GraphicsObject(SystemInfo& sysinfo)
-	:sysinfo(sysinfo)
+GraphicsObject::GraphicsObject(GraphicsDevices& devices)
+	:devices(devices)
 {
 }
 
@@ -25,32 +25,29 @@ GraphicsObject::~GraphicsObject()
 void GraphicsObject::Setup()
 {
 	//Create an default window as actived window
-	activedwin = Create();
+	actWedget = Create();
 }
 
 
 /// @brief Execute
 void GraphicsObject::Execute()
 {
-	IndevData input;
+	IndevData input = devices.indev->Read();
 
-	while (sysinfo.input.Pop(&input))
+	//Change actived window
+	if (IsActWedgetChange(input))
 	{
-		//Change actived window
-		if (IsActivedWinChange(input))
-		{
-			RedrawActivedWinOverlapAreas();
-		}
-		//Move actived window
-		else if (IsActivedWinMove(input))
-		{
-			RedrawActivedWinOverlapAreas();
-		}
-		//Active win execute
-		else
-		{
-			activedwin->Execute(input);
-		}
+		RedrawActWedgetOverlapAreas();
+	}
+	//Move actived window
+	else if (IsActWedgetMove(input))
+	{
+		RedrawActWedgetOverlapAreas();
+	}
+	//Active wedget execute
+	else
+	{
+		actWedget->Execute(input);
 	}
 }
 
@@ -58,26 +55,26 @@ void GraphicsObject::Execute()
 /// @brief Exit
 void GraphicsObject::Exit()
 {
-	mainwins.Release();
+	wedgets.Release();
 }
 
 
 /// @brief Is actived window change
 /// @param input 
 /// @return 
-bool GraphicsObject::IsActivedWinChange(IndevData input)
+bool GraphicsObject::IsActWedgetChange(IndevData input)
 {
 	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
 	{
-		if (!layer.IsCoordinateInArea(input.point.x, input.point.y, activedwin->GetArea()))
+		if (!layer.IsCoordinateInArea(input.point.x, input.point.y, actWedget->GetArea()))
 		{
-			for (mainwins.Begin(); !mainwins.IsEnd(); mainwins.Next())
+			for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 			{
-				Window* win = mainwins.Item();
+				Wedget* wedget = wedgets.Item();
 
-				if (layer.IsCoordinateInArea(input.point.x, input.point.y, win->GetArea()))
+				if (layer.IsCoordinateInArea(input.point.x, input.point.y, wedget->GetArea()))
 				{
-					activedwin = win;
+					actWedget = wedget;
 					return true;
 				}
 			}
@@ -87,10 +84,10 @@ bool GraphicsObject::IsActivedWinChange(IndevData input)
 }
 
 
-/// @brief Is actived window move
+/// @brief Is actived wedget move
 /// @param input 
 /// @return 
-bool GraphicsObject::IsActivedWinMove(IndevData input)
+bool GraphicsObject::IsActWedgetMove(IndevData input)
 {
 	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
 	{
@@ -100,40 +97,21 @@ bool GraphicsObject::IsActivedWinMove(IndevData input)
 }
 
 
-/// @brief Calc actived window redraw areas
-void GraphicsObject::RedrawActivedWinOverlapAreas()
-{
-	List<DrawArea> areas;
-	
-	//Get overlap areas
-	areas = GetActivedWinOverlapAreas();
-
-	//Cut overlap areas
-	areas = CutActivedWinOverlapAreas(areas);
-
-	//Incise overlap areas
-	areas = InciseActivedWinOverlapAreas(areas);
-
-	//Redraw overlap areas
-	activedwin->Flush(areas);
-}
-
-
-/// @brief Get actived window overlap areas
+/// @brief Get actived wedget overlap areas
 /// @return 
-List<DrawArea> GraphicsObject::GetActivedWinOverlapAreas()
+List<DrawArea> GraphicsObject::GetActWedgetOverlapAreas()
 {
 	List<DrawArea> getAreas;
 
-	for (mainwins.Begin(); !mainwins.IsEnd(); mainwins.Next())
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Window* win = mainwins.Item();
+		Wedget* wedget = wedgets.Item();
 
-		if (activedwin != win)
+		if (actWedget != wedget)
 		{
-			if (layer.IsAreaOverlap(activedwin->GetArea(), win->GetArea()))
+			if (layer.IsAreaOverlap(actWedget->GetArea(), wedget->GetArea()))
 			{
-				getAreas.Add(layer.GetOverlapArea(activedwin->GetArea(), win->GetArea()));
+				getAreas.Add(layer.GetOverlapArea(actWedget->GetArea(), wedget->GetArea()));
 			}
 		}
 	}
@@ -145,7 +123,7 @@ List<DrawArea> GraphicsObject::GetActivedWinOverlapAreas()
 /// @brief Cut actived window overlap areas
 /// @param areas 
 /// @return 
-List<DrawArea> GraphicsObject::CutActivedWinOverlapAreas(List<DrawArea> areas)
+List<DrawArea> GraphicsObject::CutActWedgetOverlapAreas(List<DrawArea> areas)
 {
 	List<DrawArea> cutAreas;
 	List<DrawArea> tempAreas = areas;
@@ -172,7 +150,7 @@ List<DrawArea> GraphicsObject::CutActivedWinOverlapAreas(List<DrawArea> areas)
 /// @brief Incise actived window overlap areas
 /// @param areas 
 /// @return 
-List<DrawArea> GraphicsObject::InciseActivedWinOverlapAreas(List<DrawArea> areas)
+List<DrawArea> GraphicsObject::InciseActWedgetOverlapAreas(List<DrawArea> areas)
 {
 	List<DrawArea> inciseAreas;
 	List<DrawArea> tempAreas = areas;
@@ -202,26 +180,56 @@ List<DrawArea> GraphicsObject::InciseActivedWinOverlapAreas(List<DrawArea> areas
 }
 
 
-/// @brief Create main window
-/// @return 
-Window* GraphicsObject::Create()
+/// @brief Redraw actived window areas
+/// @param areas 
+void GraphicsObject::RedrawActWedgetArea(List<DrawArea> areas)
 {
-	Window* win = new Window();
-	win->Init(&sysinfo);
-	mainwins.Add(win);
-	return win;
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		actWedget->Drawing(areas.Item());
+	}
 }
 
 
-/// @brief Destory main window
-/// @param mainwin 
-/// @return 
-bool GraphicsObject::Destroy(Window* win)
+/// @brief Redraw actived window overlap areas
+void GraphicsObject::RedrawActWedgetOverlapAreas()
 {
-	if (NULL != win)
+	List<DrawArea> areas;
+	
+	//Get overlap areas
+	areas = GetActWedgetOverlapAreas();
+
+	//Cut overlap areas
+	areas = CutActWedgetOverlapAreas(areas);
+
+	//Incise overlap areas
+	areas = InciseActWedgetOverlapAreas(areas);
+
+	//Redraw overlap areas
+	RedrawActWedgetArea(areas);
+}
+
+
+/// @brief Create wedget
+/// @return 
+Wedget* GraphicsObject::Create()
+{
+	Wedget* wedget = new Wedget();
+	wedget->Initiate(&devices);
+	wedgets.Add(wedget);
+	return wedget;
+}
+
+
+/// @brief Destory wedget
+/// @param wedget 
+/// @return 
+bool GraphicsObject::Destroy(Wedget* wedget)
+{
+	if (NULL != wedget)
 	{
-		mainwins.Remove(win);
-		delete win;
+		wedgets.Remove(wedget);
+		delete wedget;
 		return true;
 	}
 	return false;

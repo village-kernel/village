@@ -7,7 +7,7 @@
 #ifndef __VG_DISPLAY_H__
 #define __VG_DISPLAY_H__
 
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_lcddev.h"
 #include "vk_list.h"
 
@@ -17,16 +17,12 @@ class GraphicsDisplay
 {
 private:
 	//Members
-	SystemInfo&    sysinfo;
-	List<Lcddev*>  lcddevs;
-	Lcddev*        activelcd;
-	bool           isReady;
-
-	//Methdos
-	bool SelectActivedLcddev(DrawArea area);
+	GraphicsDevices&   devices;
+	List<Lcddev*>      lcddevs;
+	bool               isReady;
 public:
 	//Methods
-	GraphicsDisplay(SystemInfo& sysinfo);
+	GraphicsDisplay(GraphicsDevices& devices);
 	~GraphicsDisplay();
 	void Setup();
 	void Execute();

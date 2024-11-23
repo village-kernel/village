@@ -21,20 +21,6 @@ Scrollbar::~Scrollbar()
 }
 
 
-/// @brief Init content
-void Scrollbar::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Scrollbar::DrawContent()
-{
-
-}
-
-
 /// @brief 
 /// @param dir 
 void Scrollbar::SetDirection(Direction dir)

@@ -7,7 +7,7 @@
 #ifndef __VG_OBJECT_H__
 #define __VG_OBJECT_H__
 
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_layer.h"
 #include "vg_window.h"
 #include "vk_list.h"
@@ -18,29 +18,30 @@ class GraphicsObject
 {
 private:
 	//Members
-	SystemInfo&    sysinfo;
-	List<Window*>  mainwins;
-	Window*        activedwin;
-	Layer          layer;
+	GraphicsDevices&   devices;
+	List<Wedget*>      wedgets;
+	Wedget*            actWedget;
+	Layer              layer;
 private:
 	//Methods
-	bool IsActivedWinChange(IndevData input);
-	bool IsActivedWinMove(IndevData input);
-	void RedrawActivedWinOverlapAreas();
-	List<DrawArea> GetActivedWinOverlapAreas();
-	List<DrawArea> CutActivedWinOverlapAreas(List<DrawArea> areas);
-	List<DrawArea> InciseActivedWinOverlapAreas(List<DrawArea> areas);
+	bool IsActWedgetChange(IndevData input);
+	bool IsActWedgetMove(IndevData input);
+	List<DrawArea> GetActWedgetOverlapAreas();
+	List<DrawArea> CutActWedgetOverlapAreas(List<DrawArea> areas);
+	List<DrawArea> InciseActWedgetOverlapAreas(List<DrawArea> areas);
+	void RedrawActWedgetArea(List<DrawArea> areas);
+	void RedrawActWedgetOverlapAreas();
 public:
 	//Methods
-	GraphicsObject(SystemInfo& sysinfo);
+	GraphicsObject(GraphicsDevices& devices);
 	~GraphicsObject();
 	void Setup();
 	void Execute();
 	void Exit();
 
 	//Methods
-	Window* Create();
-	bool Destroy(Window* win);
+	Wedget* Create();
+	bool Destroy(Wedget* win);
 };
 
 #endif //!__VG_GROUP_H__
