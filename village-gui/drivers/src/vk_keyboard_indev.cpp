@@ -10,7 +10,7 @@
 
 
 /// @brief Setup
-void VkKeyBoard::Setup()
+void VkKeyBoard::Setup(GraphicsDevices* devices)
 {
 	//Set indev type
 	SetType(IndevType::_Keyboard);
@@ -31,17 +31,20 @@ void VkKeyBoard::Exit()
 /// @brief key input receiver
 void VkKeyBoard::KeyReceiver(Event::InputKey* input)
 {
-	//Get the current key
-	data.key = input->code;
+	if (input->code <= EventCode::_KeyMicMute)
+	{
+		//Get the current key
+		data.key = input->code;
 
-	//Get whether the keyboard button is pressed or released
-	if(KeyStatus::_KeyPressed == input->status)
-		data.state = KeyState::_Pressed;
-	else
-		data.state = KeyState::_Pressed;
+		//Get whether the keyboard button is pressed or released
+		if(KeyStatus::_KeyPressed == input->status)
+			data.state = KeyState::_Pressed;
+		else
+			data.state = KeyState::_Released;
 
-	//Set the ready flag
-	SetReady();
+		//Set the ready flag
+		SetReady();
+	}
 }
 
 

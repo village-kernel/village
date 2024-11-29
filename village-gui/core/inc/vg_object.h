@@ -9,7 +9,7 @@
 
 #include "vg_devices.h"
 #include "vg_layer.h"
-#include "vg_window.h"
+#include "vg_wedget.h"
 #include "vk_list.h"
 
 
@@ -20,17 +20,27 @@ private:
 	//Members
 	GraphicsDevices&   devices;
 	List<Wedget*>      wedgets;
+	Wedget*            defWedget;
 	Wedget*            actWedget;
 	Layer              layer;
+	IndevData          input;
+	IndevData          axis;
 private:
-	//Methods
-	bool IsActWedgetChange(IndevData input);
-	bool IsActWedgetMove(IndevData input);
+	//Focus Methods
+	bool IsActWedgetChange();
 	List<DrawArea> GetActWedgetOverlapAreas();
 	List<DrawArea> CutActWedgetOverlapAreas(List<DrawArea> areas);
 	List<DrawArea> InciseActWedgetOverlapAreas(List<DrawArea> areas);
 	void RedrawActWedgetArea(List<DrawArea> areas);
 	void RedrawActWedgetOverlapAreas();
+
+	//Move Methods
+	void UpdataInput();
+	bool IsCurWedgetMove();
+	bool IsActWedgetMove();
+	List<DrawArea> GetMoveWedgetOverlapAreas(Wedget* movWedget);
+	void RedrawMoveWedgetArea(Wedget* movWedget, List<DrawArea> areas);
+	void RedrawMoveWedgetOverlapAreas(Wedget* movWedget);
 public:
 	//Methods
 	GraphicsObject(GraphicsDevices& devices);

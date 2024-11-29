@@ -10,7 +10,9 @@
 
 /// @brief Constructor
 GraphicsObject::GraphicsObject(GraphicsDevices& devices)
-	:devices(devices)
+	:devices(devices),
+	defWedget(NULL),
+	actWedget(NULL)
 {
 }
 
@@ -24,25 +26,35 @@ GraphicsObject::~GraphicsObject()
 /// @brief Setup
 void GraphicsObject::Setup()
 {
-	//Create an default window as actived window
-	actWedget = Create();
+	//Create an default wedget
+	defWedget = new Wedget();
+
+	//Set default wedget as active wedget
+	actWedget = defWedget;
 }
 
 
 /// @brief Execute
 void GraphicsObject::Execute()
 {
-	IndevData input = devices.indev->Read();
+	//Update input
+	UpdataInput();
 
-	//Change actived window
-	if (IsActWedgetChange(input))
+	//Update mouse cursor
+	if (IsCurWedgetMove())
+	{
+		RedrawMoveWedgetOverlapAreas(devices.indev->Cursor());
+	}
+
+	//Change actived wedget
+	if (IsActWedgetChange())
 	{
 		RedrawActWedgetOverlapAreas();
 	}
-	//Move actived window
-	else if (IsActWedgetMove(input))
+	//Move actived wedget
+	else if (IsActWedgetMove())
 	{
-		RedrawActWedgetOverlapAreas();
+		RedrawMoveWedgetOverlapAreas(actWedget);
 	}
 	//Active wedget execute
 	else
@@ -59,39 +71,27 @@ void GraphicsObject::Exit()
 }
 
 
-/// @brief Is actived window change
+/// @brief Is actived wedget change
 /// @param input 
 /// @return 
-bool GraphicsObject::IsActWedgetChange(IndevData input)
+bool GraphicsObject::IsActWedgetChange()
 {
 	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
 	{
-		if (!layer.IsCoordinateInArea(input.point.x, input.point.y, actWedget->GetArea()))
+		for (wedgets.End(); !wedgets.IsBegin(); wedgets.Prev())
 		{
-			for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-			{
-				Wedget* wedget = wedgets.Item();
+			Wedget* wedget = wedgets.Item();
 
-				if (layer.IsCoordinateInArea(input.point.x, input.point.y, wedget->GetArea()))
+			if (layer.IsCoordinateInArea(input.point.x, input.point.y, wedget->GetArea()))
+			{
+				if (actWedget != wedget)
 				{
 					actWedget = wedget;
 					return true;
 				}
+				break;
 			}
 		}
-	}
-	return false;
-}
-
-
-/// @brief Is actived wedget move
-/// @param input 
-/// @return 
-bool GraphicsObject::IsActWedgetMove(IndevData input)
-{
-	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
-	{
-
 	}
 	return false;
 }
@@ -120,7 +120,7 @@ List<DrawArea> GraphicsObject::GetActWedgetOverlapAreas()
 }
 
 
-/// @brief Cut actived window overlap areas
+/// @brief Cut actived wedget overlap areas
 /// @param areas 
 /// @return 
 List<DrawArea> GraphicsObject::CutActWedgetOverlapAreas(List<DrawArea> areas)
@@ -147,7 +147,7 @@ List<DrawArea> GraphicsObject::CutActWedgetOverlapAreas(List<DrawArea> areas)
 }
 
 
-/// @brief Incise actived window overlap areas
+/// @brief Incise actived wedget overlap areas
 /// @param areas 
 /// @return 
 List<DrawArea> GraphicsObject::InciseActWedgetOverlapAreas(List<DrawArea> areas)
@@ -180,18 +180,18 @@ List<DrawArea> GraphicsObject::InciseActWedgetOverlapAreas(List<DrawArea> areas)
 }
 
 
-/// @brief Redraw actived window areas
+/// @brief Redraw actived wedget areas
 /// @param areas 
 void GraphicsObject::RedrawActWedgetArea(List<DrawArea> areas)
 {
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
-		actWedget->Drawing(areas.Item());
+		actWedget->Redraw(areas.Item());
 	}
 }
 
 
-/// @brief Redraw actived window overlap areas
+/// @brief Redraw actived wedget overlap areas
 void GraphicsObject::RedrawActWedgetOverlapAreas()
 {
 	List<DrawArea> areas;
@@ -207,6 +207,103 @@ void GraphicsObject::RedrawActWedgetOverlapAreas()
 
 	//Redraw overlap areas
 	RedrawActWedgetArea(areas);
+}
+
+
+/// @brief Updata input
+void GraphicsObject::UpdataInput()
+{
+	static IndevData last;
+
+	input = devices.indev->Read();
+
+	if (IndevType::_Mouse == devices.indev->GetType())
+	{
+		axis.point.x = input.point.x - last.point.x;
+		axis.point.y = input.point.y - last.point.y;
+		last = input;
+	}
+}
+
+
+/// @brief Is cursor wedget move
+/// @param input 
+/// @return 
+bool GraphicsObject::IsCurWedgetMove()
+{
+	return ((IndevType::_Mouse == devices.indev->GetType()) && (NULL != devices.indev->Cursor()));
+}
+
+
+/// @brief Is actived wedget move
+/// @param input 
+/// @return 
+bool GraphicsObject::IsActWedgetMove()
+{
+	if (actWedget->IsFixed()) return false;
+
+	if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
+	{
+		if (layer.IsCoordinateInArea(input.point.x, input.point.y, actWedget->GetArea()))
+		{
+			return (axis.point.x || axis.point.y);
+		}
+	}
+
+	return false;
+}
+
+
+/// @brief Get move wedget overlap areas
+/// @param input 
+/// @return 
+List<DrawArea> GraphicsObject::GetMoveWedgetOverlapAreas(Wedget* movWedget)
+{
+	DrawArea oldArea = movWedget->GetArea();
+	
+	movWedget->Move(axis.point.x, axis.point.y);
+	
+	DrawArea newArea = movWedget->GetArea();
+
+	return layer.MovedOverlapArea(oldArea, newArea);
+}
+
+
+/// @brief Redraw move wedget areas
+/// @param areas 
+void GraphicsObject::RedrawMoveWedgetArea(Wedget* movWedget, List<DrawArea> areas)
+{
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		DrawArea area = areas.Item();
+
+		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+		{
+			Wedget* wedget = wedgets.Item();
+
+			if (wedget == movWedget) continue;
+
+			if (layer.IsAreaOverlap(area, wedget->GetArea()))
+			{
+				wedget->Redraw(area);
+			}
+		}
+	}
+
+	movWedget->Show();
+}
+
+
+/// @brief Redraw move wedget overlap areas
+void GraphicsObject::RedrawMoveWedgetOverlapAreas(Wedget* movWedget)
+{
+	List<DrawArea> areas;
+
+	//Get move overlap areas
+	areas = GetMoveWedgetOverlapAreas(movWedget);
+
+	//Redraw overlap areas
+	RedrawMoveWedgetArea(movWedget, areas);
 }
 
 

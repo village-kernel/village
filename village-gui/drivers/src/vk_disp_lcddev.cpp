@@ -11,7 +11,7 @@
 
 /// @brief Setup
 /// @return 
-void VkDisplay::Setup()
+void VkDisplay::Setup(GraphicsDevices* devices)
 {
 	//Get all display device fbDevs
 	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
@@ -73,9 +73,9 @@ void VkDisplay::Flush(DrawArea area, void* pixels)
 	{
 		uint16_t* pixelsmap = (uint16_t*)pixels;
 
-		for (int y = area.y0; y < area.y1; y++)
+		for (int y = area.y0; y <= area.y1; y++)
 		{
-			for (int x = area.x0; x < area.x1; x++)
+			for (int x = area.x0; x <= area.x1; x++)
 			{
 				fbdev->DrawPoint(x, y, *pixelsmap++);
 			}

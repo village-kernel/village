@@ -8,12 +8,16 @@
 #define __VG_LAYER_H__
 
 #include "vg_draw_defs.h"
+#include "vg_math.h"
 #include "vk_list.h"
 
 
 /// @brief Layer
 class Layer
 {
+private:
+	//Members
+	Math math;
 public:
 	//Methods
 	Layer();
@@ -23,6 +27,7 @@ public:
 	DrawArea GetOverlapArea(DrawArea a0, DrawArea a1);
 	DrawArea CutOverlapArea(DrawArea a0, DrawArea a1);
 	List<DrawArea> InciseOverlapArea(DrawArea a0, DrawArea a1);
+	List<DrawArea> MovedOverlapArea(DrawArea oldArea, DrawArea newArea);
 };
 
 #endif //!__VG_LAYER_H__

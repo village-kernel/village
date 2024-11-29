@@ -53,10 +53,10 @@ DrawArea Layer::GetOverlapArea(DrawArea a0, DrawArea a1)
 {
 	DrawArea a;
 
-	a.x0 = (a0.x0 > a1.x0) ? a0.x0 : a1.x0; 
-	a.x1 = (a0.x1 < a1.x1) ? a0.x1 : a1.x1;
-	a.y0 = (a0.y0 > a1.y0) ? a0.y0 : a1.y0;
-	a.y1 = (a0.y1 < a1.y1) ? a0.y1 : a1.y1;
+	a.x0 = math.Max(a0.x0, a1.x0); 
+	a.x1 = math.Min(a0.x1, a1.x1);
+	a.y0 = math.Max(a0.y0, a1.y0);
+	a.y1 = math.Min(a0.y1, a1.y1);
 
 	return a;
 }
@@ -70,19 +70,19 @@ DrawArea Layer::CutOverlapArea(DrawArea a0, DrawArea a1)
 {
 	DrawArea a = a0;
 	
-	if (a.y0 >= a1.y0 && a.y1 <= a1.y1)
+	if (a0.y0 >= a1.y0 && a0.y1 <= a1.y1)
 	{
-		if (a.x0 >= a1.x0 && a.x0 < a1.x1)
+		if (a0.x0 >= a1.x0 && a0.x0 < a1.x1 && a0.x1 > a1.x1)
 			a.x0 = a1.x1;
-		if (a.x1 > a1.x0 && a.x1 <= a1.x1)
+		if (a0.x1 > a1.x0 && a0.x1 <= a1.x1 && a0.x0 < a1.x0)
 			a.x1 = a1.x0;
 	}
 
-	if (a.x0 >= a1.x0 && a.x1 <= a1.x1)
+	if (a0.x0 >= a1.x0 && a0.x1 <= a1.x1)
 	{
-		if (a.y0 >= a1.y0 && a.y0 < a1.y1)
+		if (a0.y0 >= a1.y0 && a0.y0 < a1.y1 && a0.y1 > a1.y1)
 			a.y0 = a1.y1;
-		if (a.y1 > a1.y0 && a.y1 <= a1.y1)
+		if (a0.y1 > a1.y0 && a0.y1 <= a1.y1 && a0.y0 < a1.y0)
 			a.y1 = a1.y0;	
 	}
 
@@ -126,8 +126,8 @@ List<DrawArea> Layer::InciseOverlapArea(DrawArea a0, DrawArea a1)
 		DrawArea a;
 		a.x0 = a0.x0;
 		a.x1 = a1.x0;
-		a.y0 = (a0.y0 > a1.y0) ? a0.y0 : a1.y0;
-		a.y1 = (a0.y1 < a1.y1) ? a0.y1 : a1.y1;
+		a.y0 = math.Max(a0.y0, a1.y0);
+		a.y1 = math.Min(a0.y1, a1.y1);
 		list.Add(a);
 	}
 
@@ -137,10 +137,27 @@ List<DrawArea> Layer::InciseOverlapArea(DrawArea a0, DrawArea a1)
 		DrawArea a;
 		a.x0 = a1.x1;
 		a.x1 = a0.x1;
-		a.y0 = (a0.y0 > a1.y0) ? a0.y0 : a1.y0;
-		a.y1 = (a0.y1 > a1.y1) ? a0.y1 : a1.y1;
+		a.y0 = math.Max(a0.y0, a1.y0);
+		a.y1 = math.Min(a0.y1, a1.y1);
 		list.Add(a);
 	}
+
+	return list;
+}
+
+
+/// @brief Layer moved the overlap area
+/// @param oldArea 
+/// @param newArea 
+/// @return 
+List<DrawArea> Layer::MovedOverlapArea(DrawArea oldArea, DrawArea newArea)
+{
+	List<DrawArea> list;
+
+	if (IsAreaOverlap(oldArea, newArea))
+		list = InciseOverlapArea(oldArea, newArea);
+	else
+		list.Add(oldArea);
 
 	return list;
 }

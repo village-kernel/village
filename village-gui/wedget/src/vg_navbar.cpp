@@ -70,9 +70,9 @@ void Navbar::Execute(IndevData input)
 }
 
 
-/// @brief Wedget Drawing
+/// @brief Wedget Draw
 /// @param area 
-void Navbar::Drawing(DrawArea area)
+void Navbar::Redraw(DrawArea area)
 {
 
 }

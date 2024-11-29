@@ -7,13 +7,35 @@
 #include "vk_mouse_indev.h"
 #include "vk_event_codes.h"
 #include "vk_kernel.h"
+#include "vg_wedget.h"
+
+
+/// @brief Constructor
+VkMouse::VkMouse()
+	:cursor(NULL)
+{
+}
+
+
+/// @brief Destructor
+VkMouse::~VkMouse()
+{
+}
 
 
 /// @brief Setup
-void VkMouse::Setup()
+void VkMouse::Setup(GraphicsDevices* devices)
 {
+	this->devices = devices;
+
 	//Set indev type
 	SetType(IndevType::_Mouse);
+
+	//Create an cursor
+	cursor = new Wedget();
+	cursor->Initiate(devices);
+	cursor->SetSize(0, 0, 8, 16);
+	cursor->SetBgColor(DrawDefs::Black);
 
 	//Attach input event
 	kernel->event.Attach(Event::_InputKey,  (Method)&VkMouse::KeyReceiver, this);
@@ -44,7 +66,7 @@ void VkMouse::KeyReceiver(Event::InputKey* input)
 		if(KeyStatus::_KeyPressed == input->status)
 			data.state = KeyState::_Pressed;
 		else
-			data.state = KeyState::_Pressed;
+			data.state = KeyState::_Released;
 
 		//Set the ready flag
 		SetReady();
@@ -57,27 +79,31 @@ void VkMouse::AxisReceiver(Event::InputAxis* input)
 {
 	static Point point;
 
-	//Get the current x and y coordinates
-	point.x += input->axisX;
-	point.y -= input->axisY;
+	//Get the limit x y
+	int maxX = devices->lcddev->GetWidth() - 1;
+	int maxY = devices->lcddev->GetHeight() - 1;
 
 	//Update point x
-	if (point.x < 0) 
-		point.x = 0;
-	else if (point.x > 1024)
-		point.x = 1024;
-
+	point.x += input->axisX;
+	point.x  = math.Sat(point.x, 0, maxX);
+	
 	//Update point y
-	if (point.y < 0)
-		point.y = 0;
-	else if (point.y > 768)
-		point.y = 768;
+	point.y -= input->axisY;
+	point.y  = math.Sat(point.y, 0, maxY);
 
 	//Set the data point
 	data.point = point;
 
 	//Set the ready flag
 	SetReady();
+}
+
+
+/// @brief Cursor
+/// @return 
+Wedget* VkMouse::Cursor()
+{
+	return cursor;
 }
 
 

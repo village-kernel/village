@@ -32,7 +32,7 @@ public:
 	//Methods
 	void Initiate(GraphicsDevices* devices);
 	void Execute(IndevData input);
-	void Drawing(DrawArea area);
+	void Redraw(DrawArea area);
 };
 
 #endif //!__VG_NAV_BAR_H__

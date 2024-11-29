@@ -28,7 +28,7 @@ void GraphicsInput::Setup()
 
 	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
 	{
-		indevs.Item()->Setup();
+		indevs.Item()->Setup(&devices);
 	}
 
 	devices.indev = indevs.Begin();
@@ -71,7 +71,7 @@ void GraphicsInput::Exit()
 void GraphicsInput::RegisterIndev(Indev* indev)
 {
 	indevs.Add(indev);
-	if (isReady) indev->Setup();
+	if (isReady) indev->Setup(&devices);
 }
 
 

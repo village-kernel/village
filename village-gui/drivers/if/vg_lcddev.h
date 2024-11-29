@@ -12,12 +12,16 @@
 #include "vg_draw_defs.h"
 
 
+/// @brief GraphicsDevices
+struct GraphicsDevices;
+
+
 /// @brief Lcddev
 class Lcddev
 {
 public:
 	//Methods
-	virtual void Setup() = 0;
+	virtual void Setup(GraphicsDevices* devices) = 0;
 	virtual void Exit() = 0;
 
 	//Draw methods

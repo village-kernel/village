@@ -19,28 +19,6 @@ Window::~Window()
 }
 
 
-/// @brief Place on top
-void Window::PlaceOnTop()
-{
-	isTop = true;
-}
-
-
-/// @brief Cancel on top
-void Window::CancelOnTop()
-{
-	isTop = false;
-}
-
-
-/// @brief Is on top
-/// @return 
-bool Window::IsOnTop()
-{
-	return isTop;
-}
-
-
 /// @brief Wedget Initiate
 /// @param devices 
 void Window::Initiate(GraphicsDevices* devices)

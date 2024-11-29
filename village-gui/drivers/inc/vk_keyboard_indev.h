@@ -23,7 +23,7 @@ private:
 	void KeyReceiver(Event::InputKey* input);
 public:
 	//Methods
-	void Setup();
+	void Setup(GraphicsDevices* devices);
 	void Exit();
 
 	//Data Methods

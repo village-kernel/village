@@ -11,12 +11,16 @@
 #include "stdint.h"
 
 
+/// @brief GraphicsDevices
+struct GraphicsDevices;
+
+
 /// @brief Ticks
 class Ticks
 {
 public:
 	//Methods
-	virtual void Setup() = 0;
+	virtual void Setup(GraphicsDevices* devices) = 0;
 	virtual void Exit() = 0;
 
 	//Ticks Methods

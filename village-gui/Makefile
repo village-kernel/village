@@ -46,6 +46,7 @@ objs-vkgui-y                            += vg_object.o
 objs-vkgui-y                            += vg_relay_cmd.o
 
 objs-vkgui-y                            += vg_layer.o
+objs-vkgui-y                            += vg_math.o
 
 objs-vkgui-y                            += vk_disp_lcddev.o
 objs-vkgui-y                            += vk_keyboard_indev.o
@@ -53,6 +54,7 @@ objs-vkgui-y                            += vk_mouse_indev.o
 objs-vkgui-y                            += vk_timer_ticks.o
 
 objs-vkgui-y                            += vg_draw_arc.o
+objs-vkgui-y                            += vg_draw_buff.o
 objs-vkgui-y                            += vg_draw_image.o
 objs-vkgui-y                            += vg_draw_label.o
 objs-vkgui-y                            += vg_draw_line.o
@@ -65,7 +67,6 @@ objs-vkgui-y                            += vg_grid.o
 
 objs-vkgui-y                            += vg_wedget.o
 objs-vkgui-$(CONFIG_VKGUI_BUTTON)       += vg_button.o
-objs-vkgui-$(CONFIG_VKGUI_CURSOR)       += vg_cursor.o
 objs-vkgui-$(CONFIG_VKGUI_LABEL)        += vg_label.o
 objs-vkgui-$(CONFIG_VKGUI_LISTBOX)      += vg_listbox.o
 objs-vkgui-$(CONFIG_VKGUI_MENU)         += vg_menu.o

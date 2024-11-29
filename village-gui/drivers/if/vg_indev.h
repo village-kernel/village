@@ -58,7 +58,24 @@ struct IndevData
 		encdiff(0),
 		state(_Released)
 	{}
+
+	void Reset()
+	{
+		point = Point();
+		key = 0;
+		btnid = 0;
+		encdiff = 0;
+		state = _Released;
+	}
 };
+
+
+/// @brief GraphicsDevices
+struct GraphicsDevices;
+
+
+/// @brief Wedget
+class Wedget;
 
 
 /// @brief Indev
@@ -70,17 +87,20 @@ protected:
 	bool      ready;
 public:
 	//Methods
-	virtual void Setup() = 0;
+	virtual void Setup(GraphicsDevices* devices) = 0;
 	virtual void Exit() = 0;
+
+	//Type Methods
+	virtual void SetType(IndevType type) { this->type = type; }
+	virtual IndevType GetType()          { return this->type; }
 
 	//Ready Methods
 	virtual bool IsReady()    { return this->ready; }
 	virtual void SetReady()   { this->ready = true; }
 	virtual void ClearReady() { this->ready = false; }
 
-	//Type Methods
-	virtual void SetType(IndevType type) { this->type = type; }
-	virtual IndevType GetType()          { return this->type; }
+	//Mouse Methods
+	virtual Wedget* Cursor() { return NULL; }
 
 	//Data Methods
 	virtual IndevData Read() = 0;

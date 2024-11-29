@@ -8,6 +8,7 @@
 #define __VK_MOUSE_INDEV_H__
 
 #include "vg_indev.h"
+#include "vg_math.h"
 #include "vk_class.h"
 #include "vk_kernel.h"
 
@@ -17,15 +18,27 @@ class VkMouse : public Indev, public Class
 {
 private:
 	//Members
+	GraphicsDevices* devices;
+
+	//Members
+	Math math;
+
+	//Members
 	IndevData data;
+	Wedget* cursor;
 
 	//Methods
 	void KeyReceiver(Event::InputKey* input);
 	void AxisReceiver(Event::InputAxis* input);
 public:
 	//Methods
-	void Setup();
+	VkMouse();
+	~VkMouse();
+	void Setup(GraphicsDevices* devices);
 	void Exit();
+
+	//Mouse Methods
+	Wedget* Cursor();
 
 	//Data Methods
 	IndevData Read();

@@ -28,7 +28,7 @@ void GraphicsDisplay::Setup()
 
 	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 	{
-		lcddevs.Item()->Setup();
+		lcddevs.Item()->Setup(&devices);
 	}
 
 	devices.lcddev = lcddevs.Begin();
@@ -74,7 +74,7 @@ void GraphicsDisplay::Exit()
 void GraphicsDisplay::RegisterLcddev(Lcddev* lcd)
 {
 	lcddevs.Add(lcd);
-	if (isReady) lcd->Setup();
+	if (isReady) lcd->Setup(&devices);
 }
 
 

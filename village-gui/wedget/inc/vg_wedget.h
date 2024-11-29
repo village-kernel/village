@@ -11,7 +11,6 @@
 #include "vg_devices.h"
 #include "vg_input_cmd.h"
 #include "vg_draw_rect.h"
-#include "vg_draw_mask.h"
 
 
 /// @brief Wedget
@@ -19,14 +18,28 @@ class Wedget
 {
 protected:
 	//Members
-	GraphicsDevices*  devices;
-	DrawArea          layerArea;
-	List<Wedget*>     wedgets;
-	ICommand*         cmd;
+	GraphicsDevices* devices;
+
+	//Area members
+	DrawArea layerArea;
+	
+	//Attribute members
+	char* title;
+	int bgColor;
+	bool hidden;
+	bool enable;
+	bool fixed;
+	bool bottom;
+	bool top;
+
+	//Binding members
+	ICommand* cmd;
+
+	//Wedget members
+	List<Wedget*> wedgets;
 
 	//Members
-	DrawRect          rect;
-	DrawMask          mask;
+	DrawRect rect;
 public:
 	//Methods
 	Wedget();
@@ -34,23 +47,47 @@ public:
 
 	//Area methods
 	void SetSize(int x, int y, int width, int height);
+	void Move(int axisx, int axisy);
 	int GetX();
 	int GetY();
 	int GetWidth();
 	int GetHeight();
 	DrawArea GetArea();
 
-	//Wedget methods
-	void AddWedget(Wedget* wedget);
-	void ShowWedgets();
+	//Attribute methods
+	void SetTitle(char* title);
+	char* GetTitle();
+
+	void SetBgColor(int color);
+	int GetBgColor();
+
+	void SetHidden(bool hidden);
+	bool IsHidden();
+	
+	void SetEnable(bool enable);
+	bool IsEnable();
+
+	void SetFixed(bool fixed);
+	bool IsFixed();
+
+	void SetOnBottom(bool bottom);
+	bool IsOnBottom();
+
+	void SetOnTop(bool top);
+	bool IsOnTop();
 
 	//Binding methods
-	void SetCommand(ICommand* cmd);
+	void BindingCommand(ICommand* cmd);
+
+	//Wedget methods
+	void AddWedget(Wedget* wedget);
+	void DrawWedgets(DrawArea drawArea);
+	void ShowWedgets();
 
 	//Methods
 	virtual void Initiate(GraphicsDevices* devices);
 	virtual void Execute(IndevData input);
-	virtual void Drawing(DrawArea drawArea);
+	virtual void Redraw(DrawArea drawArea);
 	virtual void Show();
 };
 

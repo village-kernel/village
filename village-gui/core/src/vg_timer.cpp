@@ -27,7 +27,7 @@ void GraphicsTimer::Setup()
 {
 	isReady = false;
 
-	if (NULL != ticks) ticks->Setup();
+	if (NULL != ticks) ticks->Setup(&devices);
 
 	devices.ticks = ticks;
 
@@ -63,7 +63,7 @@ void GraphicsTimer::RegisterTick(Ticks* ticks)
 	if (NULL != ticks && ticks != this->ticks)
 	{
 		this->ticks = ticks;
-		if (isReady) ticks->Setup();
+		if (isReady) ticks->Setup(&devices);
 	}
 }
 

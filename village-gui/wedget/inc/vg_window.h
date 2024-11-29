@@ -14,19 +14,11 @@
 /// @brief Window
 class Window : public Wedget
 {
-private:
-	//Attribute members
-	bool isTop;
 public:
 	//Methods
 	Window();
 	~Window();
-
-	//Attribute methods
-	void PlaceOnTop();
-	void CancelOnTop();
-	bool IsOnTop();
-
+	
 	//Methods
 	void Initiate(GraphicsDevices* devices);
 	void Execute(IndevData input);
