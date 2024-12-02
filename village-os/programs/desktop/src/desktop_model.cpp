@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "desktop_model.h"
+#include "vk_kernel.h"
 
 
 /// @brief Constructor
@@ -17,6 +18,8 @@ DesktopModel::DesktopModel()
 	//OpenAppCmd = new RelayCommand(this, (Method)&DesktopModel::OpenApplication);
 
 	//ExitAppCmd = new RelayCommand(this, (Method)&DesktopModel::ExitApplication);
+
+	StartBtnCmd = new RelayCommand(this, (Method)&DesktopModel::OpenApplication);
 }
 
 
@@ -30,7 +33,7 @@ DesktopModel::~DesktopModel()
 /// @param name 
 void DesktopModel::OpenApplication(const char* name)
 {
-
+	kernel->process.Run(Process::_Background, "/programs/terminal.exec");
 }
 
 

@@ -16,35 +16,41 @@ void DesktopView::InitComponent(Wedget* parent)
 	//Create context menu
 	Menu* contextMenu = new Menu();
 	contextMenu->SetSize(0, 0, 40, 40);
+	contextMenu->SetBgColor(DrawDefs::Blue);
 	//contextMenu->SetItemSource(model.ContextMenuLists);
-	contextMenu->SetCommand(model.ContextMenuCmd);
+	contextMenu->BindingCommand(model.ContextMenuCmd);
 	parent->AddWedget(contextMenu);
 
 	//Create shortcut table
 	Table* shortcut = new Table();
 	shortcut->SetSize(0, 0, width, height - 40);
+	shortcut->SetBgColor(DrawDefs::Yellow);
 	//shortcut->SetItemSource(model.ShortcutLists);
-	shortcut->SetCommand(model.ShortcutCmd);
+	shortcut->BindingCommand(model.ShortcutCmd);
 	parent->AddWedget(shortcut);
 
 	//Create start button
 	Button* startBtn = new Button();
 	startBtn->SetSize(0, height - 40, 40, 40);
+	startBtn->SetBgColor(DrawDefs::Brown);
 	//startBtn->SetText(model.StartText);
-	startBtn->SetCommand(model.StartBtnCmd);
+	startBtn->BindingCommand(model.StartBtnCmd);
 	parent->AddWedget(startBtn);
 
 	//Create start menu
 	Menu* startMenu = new Menu();
 	startMenu->SetSize(0, height - 520, 320, 480);
+	startMenu->SetBgColor(DrawDefs::Lgray);
+	startMenu->SetHidden(true);
 	//startMenu->SetItemSource(model.StartMenuLists);
-	startMenu->SetCommand(model.StartMenuCmd);
+	startMenu->BindingCommand(model.StartMenuCmd);
 	parent->AddWedget(startMenu);
 
 	//Create task bar
 	Toolbar* taskbar = new Toolbar();
 	taskbar->SetSize(40, height - 40, width - 40, 40);
+	taskbar->SetBgColor(DrawDefs::Cyan);
 	//taskbar->SetItemSource(model.TaskbarLists);
-	taskbar->SetCommand(model.TaskbarCmd);
+	taskbar->BindingCommand(model.TaskbarCmd);
 	parent->AddWedget(taskbar);
 }

@@ -55,6 +55,9 @@ void DesktopApp::Setup()
 
 	//Setup mainwin size
 	mainwin->SetSize(0, 0, 1024, 768);
+	mainwin->SetFixed(true);
+	mainwin->SetOnBottom(true);
+	mainwin->SetTitle((char*)"desktop");
 
 	//Init view component
 	view.InitComponent(mainwin);
