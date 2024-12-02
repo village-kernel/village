@@ -24,10 +24,10 @@ void DrawLine::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 	int xError = 0, yError = 0, distance = 0;
 	int xIncrease = 0, yIncrease = 0;
 	
-	int xDelta = layerArea.x1 - layerArea.x0;
-	int yDelta = layerArea.y1 - layerArea.y0;
-	int pointX = layerArea.x0;
-	int pointY = layerArea.y0;
+	int xDelta = layerArea.ex - layerArea.sx;
+	int yDelta = layerArea.ey - layerArea.sy;
+	int pointX = layerArea.sx;
+	int pointY = layerArea.sy;
 	
 	if (xDelta > 0)
 	{

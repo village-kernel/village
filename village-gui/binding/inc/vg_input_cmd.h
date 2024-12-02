@@ -15,7 +15,7 @@ class ICommand
 {
 public:
 	//Methods
-	virtual void Execute(void* args) = 0;
+	virtual void Execute(void* args = NULL) = 0;
 };
 
 #endif //!__VG_INPUT_COMMAND_H__

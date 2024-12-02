@@ -23,6 +23,9 @@ public:
 
 	//Binding Methods
 	void SetText(char* text);
+
+	//Methods
+	void Execute(IndevData input);
 };
 
 #endif //!__VG_BUTTON_H__

@@ -8,6 +8,7 @@
 #define __VG_WEDGET_H__
 
 #include "vk_list.h"
+#include "vg_layer.h"
 #include "vg_devices.h"
 #include "vg_input_cmd.h"
 #include "vg_draw_rect.h"
@@ -39,6 +40,7 @@ protected:
 	List<Wedget*> wedgets;
 
 	//Members
+	Layer    layer;
 	DrawRect rect;
 public:
 	//Methods
@@ -81,6 +83,7 @@ public:
 
 	//Wedget methods
 	void AddWedget(Wedget* wedget);
+	void ExecuteWedgets(IndevData input);
 	void DrawWedgets(DrawArea drawArea);
 	void ShowWedgets();
 
@@ -88,6 +91,7 @@ public:
 	virtual void Initiate(GraphicsDevices* devices);
 	virtual void Execute(IndevData input);
 	virtual void Redraw(DrawArea drawArea);
+	virtual void Redraw(List<DrawArea> drawAreas);
 	virtual void Show();
 };
 

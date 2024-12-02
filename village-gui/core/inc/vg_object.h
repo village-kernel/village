@@ -28,11 +28,9 @@ private:
 private:
 	//Focus Methods
 	bool IsActWedgetChange();
-	List<DrawArea> GetActWedgetOverlapAreas();
-	List<DrawArea> CutActWedgetOverlapAreas(List<DrawArea> areas);
-	List<DrawArea> InciseActWedgetOverlapAreas(List<DrawArea> areas);
-	void RedrawActWedgetArea(List<DrawArea> areas);
+	List<DrawArea> GetActWedgetUpperAreas();
 	void RedrawActWedgetOverlapAreas();
+	void SwapActWedgetListNode();
 
 	//Move Methods
 	void UpdataInput();

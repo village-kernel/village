@@ -25,27 +25,27 @@ void DrawMask::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 {
 	DrawArea lineArea;
 	
-	lineArea.x0 = layerArea.x0;
-	lineArea.x1 = layerArea.x1;
-	lineArea.y0 = layerArea.y0;
-	lineArea.y1 = layerArea.y0;
+	lineArea.sx = layerArea.sx;
+	lineArea.ex = layerArea.ex;
+	lineArea.sy = layerArea.sy;
+	lineArea.ey = layerArea.sy;
 	line.Execute(lineArea, drawArea, color);
 	
-	lineArea.x0 = layerArea.x0;
-	lineArea.x1 = layerArea.x0;
-	lineArea.y0 = layerArea.y0;
-	lineArea.y1 = layerArea.y1;
+	lineArea.sx = layerArea.sx;
+	lineArea.ex = layerArea.sx;
+	lineArea.sy = layerArea.sy;
+	lineArea.ey = layerArea.ey;
 	line.Execute(lineArea, drawArea, color);
 	
-	lineArea.x0 = layerArea.x0;
-	lineArea.x1 = layerArea.x1;
-	lineArea.y0 = layerArea.y1;
-	lineArea.y1 = layerArea.y1;
+	lineArea.sx = layerArea.sx;
+	lineArea.ex = layerArea.ex;
+	lineArea.sy = layerArea.ey;
+	lineArea.ey = layerArea.ey;
 	line.Execute(lineArea, drawArea, color);
 	
-	lineArea.x0 = layerArea.x1;
-	lineArea.x1 = layerArea.x1;
-	lineArea.y0 = layerArea.y0;
-	lineArea.y1 = layerArea.y1;
+	lineArea.sx = layerArea.ex;
+	lineArea.ex = layerArea.ex;
+	lineArea.sy = layerArea.sy;
+	lineArea.ey = layerArea.ey;
 	line.Execute(lineArea, drawArea, color);
 }

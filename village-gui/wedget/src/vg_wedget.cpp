@@ -32,10 +32,10 @@ Wedget::~Wedget()
 /// @param area 
 void Wedget::SetSize(int x, int y, int width, int height)
 {
-	layerArea.x0 = x;
-	layerArea.x1 = x + width - 1;
-	layerArea.y0 = y;
-	layerArea.y1 = y + height - 1;
+	layerArea.sx = x;
+	layerArea.ex = x + width - 1;
+	layerArea.sy = y;
+	layerArea.ey = y + height - 1;
 }
 
 
@@ -44,10 +44,10 @@ void Wedget::SetSize(int x, int y, int width, int height)
 /// @param y 
 void Wedget::Move(int axisx, int axisy)
 {
-	layerArea.x0 += axisx;
-	layerArea.x1 += axisx;
-	layerArea.y0 += axisy;
-	layerArea.y1 += axisy;
+	layerArea.sx += axisx;
+	layerArea.ex += axisx;
+	layerArea.sy += axisy;
+	layerArea.ey += axisy;
 }
 
 
@@ -55,7 +55,7 @@ void Wedget::Move(int axisx, int axisy)
 /// @return 
 int Wedget::GetX()
 {
-	return layerArea.x0;
+	return layerArea.sx;
 }
 
 
@@ -63,7 +63,7 @@ int Wedget::GetX()
 /// @return 
 int Wedget::GetY()
 {
-	return layerArea.y0;
+	return layerArea.sy;
 }
 
 
@@ -71,7 +71,7 @@ int Wedget::GetY()
 /// @return 
 int Wedget::GetWidth()
 {
-	return layerArea.x1 - layerArea.x0 + 1;
+	return layerArea.ex - layerArea.sx + 1;
 }
 
 
@@ -79,7 +79,7 @@ int Wedget::GetWidth()
 /// @return 
 int Wedget::GetHeight()
 {
-	return layerArea.y1 - layerArea.y0 + 1;
+	return layerArea.ey - layerArea.sy + 1;
 }
 
 
@@ -222,6 +222,19 @@ void Wedget::AddWedget(Wedget* wedget)
 }
 
 
+/// @brief Execite wedgets
+/// @param input 
+void Wedget::ExecuteWedgets(IndevData input)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* wedget = wedgets.Item();
+		
+		wedget->Execute(input);
+	}
+}
+
+
 /// @brief Draw wedgets
 void Wedget::DrawWedgets(DrawArea drawArea)
 {
@@ -260,7 +273,12 @@ void Wedget::Initiate(GraphicsDevices* devices)
 /// @param input 
 void Wedget::Execute(IndevData input)
 {
+	if (true == hidden) return;
 
+	if (layer.IsCoordinateInArea(input.point.x, input.point.y, layerArea))
+	{
+		ExecuteWedgets(input);
+	}
 }
 
 
@@ -273,6 +291,17 @@ void Wedget::Redraw(DrawArea drawArea)
 	rect.Execute(layerArea, drawArea, bgColor);
 
 	DrawWedgets(drawArea);
+}
+
+
+/// @brief Wedget Draw
+/// @param drawAreas 
+void Wedget::Redraw(List<DrawArea> drawAreas)
+{
+	for (drawAreas.Begin(); !drawAreas.IsEnd(); drawAreas.Next())
+	{
+		Redraw(drawAreas.Item());
+	}
 }
 
 

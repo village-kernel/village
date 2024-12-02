@@ -14,22 +14,22 @@
 /// @brief DrawArea
 struct DrawArea
 {
-	int x0;
-	int y0;
-	int x1;
-	int y1;
+	int sx;
+	int ex;
+	int sy;
+	int ey;
 
 	DrawArea
 	(
-		int x0 = 0,
-		int y0 = 0,
-		int x1 = 0,
-		int y1 = 0
+		int sx = 0,
+		int ex = 0,
+		int sy = 0,
+		int ey = 0
 	):
-		x0(x0),
-		y0(y0),
-		x1(x1),
-		y1(y1)
+		sx(sx),
+		ex(ex),
+		sy(sy),
+		ey(ey)
 	{}
 };
 

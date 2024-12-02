@@ -24,14 +24,14 @@ void DrawRect::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 {
 	int maxX = devices->lcddev->GetWidth() - 1;
 	int maxY = devices->lcddev->GetHeight() - 1;
-	int x0 = math.Sat(math.Max(drawArea.x0, layerArea.x0), 0, maxX);
-	int x1 = math.Sat(math.Min(drawArea.x1, layerArea.x1), 0, maxX);
-	int y0 = math.Sat(math.Max(drawArea.y0, layerArea.y0), 0, maxY);
-	int y1 = math.Sat(math.Min(drawArea.y1, layerArea.y1), 0, maxY);
+	int sx = math.Sat(math.Max(drawArea.sx, layerArea.sx), 0, maxX);
+	int ex = math.Sat(math.Min(drawArea.ex, layerArea.ex), 0, maxX);
+	int sy = math.Sat(math.Max(drawArea.sy, layerArea.sy), 0, maxY);
+	int ey = math.Sat(math.Min(drawArea.ey, layerArea.ey), 0, maxY);
 
-	for (int y = y0; y <= y1; y++)
+	for (int y = sy; y <= ey; y++)
 	{
-		for (int x = x0; x <= x1; x++)
+		for (int x = sx; x <= ex; x++)
 		{
 			devices->lcddev->Point(x, y, color);
 		}

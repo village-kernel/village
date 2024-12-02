@@ -18,7 +18,8 @@ public:
 	//Methods
 	int Max(int a, int b);
 	int Min(int a, int b);
-	int Sat(int a, int max, int min);
+	int Sat(int a, int min, int max);
+	bool IsInRange(int a, int min, int max);
 };
 
 #endif //!__VG_MATH_H__
