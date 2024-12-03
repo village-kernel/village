@@ -124,7 +124,7 @@
 		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 	### 安装交叉编译工具
-		brew install make gcc gcc-arm-embedded openocd
+		brew install make openocd gcc arm-none-eabi-binutils arm-none-eabi-gcc arm-none-eabi-gdb
 
 - ## 3.克隆village-kernel项目
 	- ### ssh方式：
