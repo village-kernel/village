@@ -35,7 +35,7 @@ void VkMouse::Setup(GraphicsDevices* devices)
 	cursor = new Wedget();
 	cursor->Initiate(devices);
 	cursor->SetSize(0, 0, 8, 8);
-	cursor->SetBgColor(DrawDefs::Black);
+	cursor->SetBgColor(DrawDefs::_Black);
 
 	//Attach input event
 	kernel->event.Attach(Event::_InputKey,  (Method)&VkMouse::KeyReceiver, this);

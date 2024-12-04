@@ -53,46 +53,46 @@ public:
 	//Color16
 	enum Color16
 	{
-		White      = 0xFFFF,
-		Black      = 0x0000,
-		Blue       = 0x001F,
-		Bred       = 0XF81F,
-		Gred       = 0XFFE0,
-		Gblue      = 0X07FF,
-		Red        = 0xF800,
-		Magenta    = 0xF81F,
-		Green      = 0x07E0,
-		Cyan       = 0x7FFF,
-		Yellow     = 0xFFE0,
-		Brown      = 0XBC40,
-		Brred      = 0XFC07,
-		Gray       = 0X8430,
-		Darkblue   = 0X01CF,
-		Lightblue  = 0X7D7C,
-		Grayblue   = 0X5458,
-		Lightgreen = 0X841F,
-		Lgray      = 0XC618,
-		Lgrayblue  = 0XA651,
-		Lbblue     = 0X2B12,
+		_Black      = 0x0000,
+		_Blue       = 0x001F,
+		_Bred       = 0XF81F,
+		_Gred       = 0XFFE0,
+		_Gblue      = 0X07FF,
+		_Red        = 0xF800,
+		_Magenta    = 0xF81F,
+		_Green      = 0x07E0,
+		_Cyan       = 0x7FFF,
+		_Yellow     = 0xFFE0,
+		_Brown      = 0XBC40,
+		_Brred      = 0XFC07,
+		_Gray       = 0X8430,
+		_Darkblue   = 0X01CF,
+		_Lightblue  = 0X7D7C,
+		_Grayblue   = 0X5458,
+		_Lightgreen = 0X841F,
+		_Lgray      = 0XC618,
+		_Lgrayblue  = 0XA651,
+		_Lbblue     = 0X2B12,
+		_White      = 0xFFFF,
 	};
 
 	//FontSize
 	enum FontSize
 	{
-		Font16 = 16,
-		Font24 = 24,
+		_Font16 = 16,
+		_Font24 = 24,
 	};
 
 	//DrawMode
 	enum DrawMode
 	{
-		Multiply    = 0,
-		NotMultiply = 1,
+		_Multiply    = 0,
+		_NotMultiply = 1,
 	};
 
 	//Static constants
-	static const int defBgColor = Color16::White;
-	static const int defStrokeColor = Color16::Black;
+	static const int defBgColor = _White;
+	static const int defStrokeColor = _Black;
 };
 
 #endif //!__VG_DRAW_DEFS_H__

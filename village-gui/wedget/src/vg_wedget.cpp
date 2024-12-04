@@ -11,7 +11,7 @@
 Wedget::Wedget()
 	:devices(NULL),
 	title((char*)"None"),
-	bgColor(DrawDefs::White),
+	bgColor(DrawDefs::_White),
 	hidden(false),
 	enable(true),
 	fixed(false),
