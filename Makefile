@@ -283,6 +283,7 @@ endif
 #######################################
 rootfs:
 	$(Q)cp -rf $(BUILD_DIR)/output/*    $(CONFIG_ROOTFS:"%"=%)/
+	$(Q)cp -rf rootfs.img               $(BUILD_DIR)/village-fs.img
 
 
 #######################################

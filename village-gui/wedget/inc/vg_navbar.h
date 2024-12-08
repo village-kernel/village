@@ -25,11 +25,14 @@ public:
 	Navbar();
 	~Navbar();
 
-	void InitContent();
-	void DrawContent();
-
+	//Binding Methods
 	void SetTitile(char* title);
 	char* GetTitle();
+
+	//Methods
+	void Initiate(GraphicsDevices* devices);
+	void Execute(IndevData input);
+	void Redraw(DrawArea area);
 };
 
 #endif //!__VG_NAV_BAR_H__

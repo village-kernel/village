@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsInput::GraphicsInput(GraphicsData& databus)
-	:databus(databus),
+GraphicsInput::GraphicsInput(GraphicsDevices& devices)
+	:devices(devices),
 	isReady(false)
 {
 }
@@ -28,8 +28,10 @@ void GraphicsInput::Setup()
 
 	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
 	{
-		indevs.Item()->Setup();
+		indevs.Item()->Setup(&devices);
 	}
+
+	devices.indev = indevs.Begin();
 
 	isReady = true;
 }
@@ -38,13 +40,17 @@ void GraphicsInput::Setup()
 /// @brief Input execute
 void GraphicsInput::Execute()
 {
-	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
+	while (1)
 	{
-		Indev* indev = indevs.Item();
-		
-		if (NULL != indev)
+		indevs.Next(); if (indevs.IsEnd()) indevs.Begin();
+
+		if (indevs.Item()->IsReady())
 		{
-			indev->Read(&databus.input);
+			devices.indev = indevs.Item();
+			
+			indevs.Item()->ClearReady();
+
+			break;
 		}
 	}
 }
@@ -65,7 +71,7 @@ void GraphicsInput::Exit()
 void GraphicsInput::RegisterIndev(Indev* indev)
 {
 	indevs.Add(indev);
-	if (isReady) indev->Setup();
+	if (isReady) indev->Setup(&devices);
 }
 
 

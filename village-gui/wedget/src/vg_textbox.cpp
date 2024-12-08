@@ -17,17 +17,3 @@ TextBox::TextBox()
 TextBox::~TextBox()
 {
 }
-
-
-/// @brief Init content
-void TextBox::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void TextBox::DrawContent()
-{
-	
-}

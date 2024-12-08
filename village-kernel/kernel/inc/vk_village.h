@@ -14,7 +14,7 @@
 #include "vk_interrupt.h"
 #include "vk_scheduler.h"
 #include "vk_thread.h"
-#include "vk_workQueue.h"
+#include "vk_workqueue.h"
 #include "vk_event.h"
 #include "vk_symbol.h"
 #include "vk_device.h"

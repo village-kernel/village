@@ -17,17 +17,3 @@ MsgBox::MsgBox()
 MsgBox::~MsgBox()
 {
 }
-
-
-/// @brief Init content
-void MsgBox::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void MsgBox::DrawContent()
-{
-
-}

@@ -73,7 +73,7 @@ public:
 	virtual bool Setup() = 0;
 	virtual void DrawPoint(uint32_t x, uint32_t y, uint32_t color) = 0;
 	virtual uint32_t ReadPoint(uint32_t x, uint32_t y) = 0;
-	virtual void Fill(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color) = 0;
+	virtual void Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color) = 0;
 	virtual void Clear(uint32_t color) = 0;
 	virtual void Exit() = 0;
 };

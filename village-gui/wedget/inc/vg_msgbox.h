@@ -17,9 +17,6 @@ public:
 	//Methods
 	MsgBox();
 	~MsgBox();
-
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_MSG_BOX_H__

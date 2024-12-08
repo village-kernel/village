@@ -7,10 +7,10 @@
 #ifndef __VG_GRAPHICS_H__
 #define __VG_GRAPHICS_H__
 
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_timer.h"
 #include "vg_input.h"
-#include "vg_group.h"
+#include "vg_object.h"
 #include "vg_display.h"
 
 
@@ -19,11 +19,11 @@ class VkGraphics
 {
 public:
 	//Members
-	GraphicsData     databus;
+	GraphicsDevices  devices;
 	GraphicsTimer    timer;
 	GraphicsInput    input;
-	GraphicsGroup    group;
 	GraphicsDisplay  display;
+	GraphicsObject   object;
 public:
 	//Methods
 	VkGraphics();

@@ -20,20 +20,6 @@ Label::~Label()
 }
 
 
-/// @brief Init content
-void Label::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Label::DrawContent()
-{
-
-}
-
-
 /// @brief 
 /// @param text 
 void Label::SetText(char* text)

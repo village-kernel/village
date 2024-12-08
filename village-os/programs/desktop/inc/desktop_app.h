@@ -16,13 +16,13 @@ class DesktopApp
 private:
 	//Members
 	VkGraphics*  vkgui;
-	Window*      mainwin;
+	Wedget*      mainwin;
 
 	//Members
 	DesktopView  view;
 private:
 	//Methods
-	Window* CreateWindow();
+	Wedget* CreateWindow();
 	void DestroyWindow();
 public:
 	//Methods

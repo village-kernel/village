@@ -7,12 +7,19 @@
 #include "vg_draw_arc.h"
 
 
+/// @brief Initiate
+/// @param devices 
+void DrawArc::Initiate(GraphicsDevices* devices)
+{
+	this->devices = devices;
+}
+
+
 /// @brief Draw arc
-/// @param x 
-/// @param y 
-/// @param r 
+/// @param layerArea 
+/// @param drawArea 
 /// @param color 
-void DrawArc::Execute(int x, int y, int r, int* colors)
+void DrawArc::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 {
 
 }

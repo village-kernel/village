@@ -17,9 +17,6 @@ public:
 	//Methods
 	ListBox();
 	~ListBox();
-
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_LIST_BOX_H__

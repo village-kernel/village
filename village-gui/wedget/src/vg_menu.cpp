@@ -17,17 +17,3 @@ Menu::Menu()
 Menu::~Menu()
 {
 }
-
-
-/// @brief Init content
-void Menu::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Menu::DrawContent()
-{
-
-}

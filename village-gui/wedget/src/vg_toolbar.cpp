@@ -17,17 +17,3 @@ Toolbar::Toolbar()
 Toolbar::~Toolbar()
 {
 }
-
-
-/// @brief Init content
-void Toolbar::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Toolbar::DrawContent()
-{
-
-}

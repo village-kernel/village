@@ -17,17 +17,3 @@ Tabbar::Tabbar()
 Tabbar::~Tabbar()
 {
 }
-
-
-/// @brief Init content
-void Tabbar::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Tabbar::DrawContent()
-{
-
-}

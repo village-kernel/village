@@ -6,7 +6,8 @@
 //###########################################################################
 #include "vk_gui_service.h"
 #include "vk_timer_ticks.h"
-#include "vk_event_indev.h"
+#include "vk_mouse_indev.h"
+#include "vk_keyboard_indev.h"
 #include "vk_disp_lcddev.h"
 #include "vk_kernel.h"
 
@@ -33,8 +34,11 @@ bool VkGuiService::Setup()
 	//Register tick
 	vkgui.timer.RegisterTick(new VkTicks());
 
-	//Register indev
-	vkgui.input.RegisterIndev(new VkEvent());
+	//Register mouse
+	vkgui.input.RegisterIndev(new VkMouse());
+
+	//Register keyboard
+	vkgui.input.RegisterIndev(new VkKeyBoard());
 
 	//Register display
 	vkgui.display.RegisterLcddev(new VkDisplay());

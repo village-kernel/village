@@ -424,11 +424,11 @@ uint32_t ILI9488::ReadPoint(uint32_t x, uint32_t y)
 
 
 /// @brief ILI9488 fill color
-void ILI9488::Fill(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color)
+void ILI9488::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color)
 {
-	uint16_t width = labs(x0 - x1) + 1;
-	uint16_t height = labs(y0 - y1) + 1;
-	OpenWindow(x0, y0, width, height);
+	uint16_t width = labs(sx - ex) + 1;
+	uint16_t height = labs(sy - ey) + 1;
+	OpenWindow(sx, sy, width, height);
 	Fill(width * height, color);
 }
 

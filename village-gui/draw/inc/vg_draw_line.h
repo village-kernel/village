@@ -7,22 +7,20 @@
 #ifndef __VG_DRAW_LINE_H__
 #define __VG_DRAW_LINE_H__
 
+#include "vg_devices.h"
 #include "vg_draw_defs.h"
 
 
 /// @brief DrawLine
 class DrawLine
 {
+private:
+	//Members
+	GraphicsDevices* devices;
 public:
 	//Methods
-	void Execute
-	(
-		int x0,
-		int y0,
-		int x1,
-		int y1,
-		int color = DrawDefs::defStrokeColor
-	);
+	void Initiate(GraphicsDevices* devices);
+	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_LINE_H__

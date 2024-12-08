@@ -19,11 +19,14 @@ private:
 	FBDriver* fbdev;
 public:
 	//Methods
-	void Setup();
+	void Setup(GraphicsDevices* devices);
 	void Exit();
 
 	//Draw methods
-	void Flush(DrawArea area, uint8_t* pixels);
+	int GetWidth();
+	int GetHeight();
+	void Point(int x, int y, int color);
+	void Flush(DrawArea area, void* pixels);
 };
 
 #endif //!__VK_DISPLAY_LCDDEV_H__

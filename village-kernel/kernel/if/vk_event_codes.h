@@ -268,7 +268,7 @@ enum EventCode
 	_KeyWlan                 = 238,
 	_KeyUWB                  = 239,
 	
-	_KeyUnknon               = 240,
+	_KeyUnknow               = 240,
 	
 	_KeyVideoNext            = 241, /* drive next video source */
 	_KeyVideoPrev            = 242, /* drive previous video source */

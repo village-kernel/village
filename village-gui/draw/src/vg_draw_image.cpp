@@ -7,14 +7,19 @@
 #include "vg_draw_image.h"
 
 
-/// @brief draw image set
-/// @param x 
-/// @param y 
-/// @param chr 
-/// @param font 
-/// @param mode 
+/// @brief Initiate
+/// @param devices 
+void DrawImage::Initiate(GraphicsDevices* devices)
+{
+	this->devices = devices;
+}
+
+
+/// @brief Draw arc
+/// @param layerArea 
+/// @param drawArea 
 /// @param color 
-void DrawImage::Execute(int x, int y, char chr, int font, int mode, int color)
+void DrawImage::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 {
 
 }

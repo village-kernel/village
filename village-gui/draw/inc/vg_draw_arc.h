@@ -7,21 +7,20 @@
 #ifndef __VG_DRAW_ARC_H__
 #define __VG_DRAW_ARC_H__
 
+#include "vg_devices.h"
 #include "vg_draw_defs.h"
 
 
 /// @brief DrawArc
 class DrawArc
 {
+private:
+	//Members
+	GraphicsDevices* devices;
 public:
 	//Methods
-	void Execute
-	(
-		int x,
-		int y,
-		int r,
-		int* colors = NULL
-	);
+	void Initiate(GraphicsDevices* devices);
+	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_ARC_H__

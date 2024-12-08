@@ -17,17 +17,3 @@ Table::Table()
 Table::~Table()
 {
 }
-
-
-/// @brief Init content
-void Table::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void Table::DrawContent()
-{
-
-}

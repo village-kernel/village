@@ -24,7 +24,7 @@ DesktopApp::~DesktopApp()
 
 /// @brief Create Window
 /// @return 
-Window* DesktopApp::CreateWindow()
+Wedget* DesktopApp::CreateWindow()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
@@ -35,14 +35,14 @@ Window* DesktopApp::CreateWindow()
 	if (NULL == vkgui) return NULL;
 	
 	//Create mainwin
-	return vkgui->group.Create();
+	return vkgui->object.Create();
 }
 
 
 /// @brief Destroy Window
 void DesktopApp::DestroyWindow()
 {
-	vkgui->group.Destroy(mainwin);
+	vkgui->object.Destroy(mainwin);
 }
 
 
@@ -52,6 +52,12 @@ void DesktopApp::Setup()
 	//Create main window
 	mainwin = CreateWindow();
 	if (NULL == mainwin) return;
+
+	//Setup mainwin size
+	mainwin->SetSize(0, 0, 1024, 768);
+	mainwin->SetFixed(true);
+	mainwin->SetOnBottom(true);
+	mainwin->SetTitle((char*)"desktop");
 
 	//Init view component
 	view.InitComponent(mainwin);

@@ -17,9 +17,6 @@ public:
 	//Methods
 	Menu();
 	~Menu();
-
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_MENU_H__

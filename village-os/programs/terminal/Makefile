@@ -24,6 +24,7 @@ src-terminal-y                        += village-os/programs/terminal/src
 ######################################
 objs-terminal-y                       += terminal_app.o
 objs-terminal-y                       += terminal_view.o
+objs-terminal-y                       += terminal_model.o
 
 
 ######################################

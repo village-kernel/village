@@ -20,11 +20,12 @@ public:
 	//Methods
 	Button();
 	~Button();
-	
-	void InitContent();
-	void DrawContent();
 
+	//Binding Methods
 	void SetText(char* text);
+
+	//Methods
+	void Execute(IndevData input);
 };
 
 #endif //!__VG_BUTTON_H__
