@@ -12,7 +12,7 @@
 
 /// @brief Fifo
 template<typename Object>
-class Fifo
+class VkFifo
 {
 private:
 	/// @brief Members
