@@ -9,7 +9,7 @@
 
 #include "vg_devices.h"
 #include "vg_lcddev.h"
-#include "vk_list.h"
+#include "vg_list.h"
 
 
 /// @brief GraphicsDisplay
@@ -18,7 +18,7 @@ class GraphicsDisplay
 private:
 	//Members
 	GraphicsDevices&   devices;
-	List<Lcddev*>      lcddevs;
+	VgList<Lcddev*>    lcddevs;
 	bool               isReady;
 public:
 	//Methods

@@ -9,7 +9,7 @@
 
 #include "vg_draw_defs.h"
 #include "vg_math.h"
-#include "vk_list.h"
+#include "vg_list.h"
 
 /// @brief Layer
 class Layer
@@ -19,9 +19,9 @@ private:
 	Math math;
 
 	//Methods
-	bool SiftOverlapArea(DrawArea dsc, List<DrawArea> areas);
-	DrawArea CutOverlapArea(DrawArea dsc, List<DrawArea> areas);
-	List<DrawArea> InciseOverlapArea(DrawArea area, List<DrawArea> areas);
+	bool SiftOverlapArea(DrawArea dsc, VgList<DrawArea> areas);
+	DrawArea CutOverlapArea(DrawArea dsc, VgList<DrawArea> areas);
+	VgList<DrawArea> InciseOverlapArea(DrawArea area, VgList<DrawArea> areas);
 public:
 	//Methods
 	Layer();
@@ -35,13 +35,13 @@ public:
 	DrawArea GetOverlapArea(DrawArea a0, DrawArea a1);
 	DrawArea CutCoveredArea(DrawArea a0, DrawArea a1);
 	DrawArea CutOverlapArea(DrawArea a0, DrawArea a1);
-	List<DrawArea> InciseOverlapArea(DrawArea a0, DrawArea a1);
-	List<DrawArea> MovedOverlapArea(DrawArea oldArea, DrawArea newArea);
+	VgList<DrawArea> InciseOverlapArea(DrawArea a0, DrawArea a1);
+	VgList<DrawArea> MovedOverlapArea(DrawArea oldArea, DrawArea newArea);
 
-	List<DrawArea> GetOverlapAreas(DrawArea dsc, List<DrawArea> areas);
-	List<DrawArea> SiftOverlapAreas(List<DrawArea> areas);
-	List<DrawArea> CutOverlapAreas(List<DrawArea> areas);
-	List<DrawArea> InciseOverlapAreas(List<DrawArea> areas);
+	VgList<DrawArea> GetOverlapAreas(DrawArea dsc, VgList<DrawArea> areas);
+	VgList<DrawArea> SiftOverlapAreas(VgList<DrawArea> areas);
+	VgList<DrawArea> CutOverlapAreas(VgList<DrawArea> areas);
+	VgList<DrawArea> InciseOverlapAreas(VgList<DrawArea> areas);
 };
 
 #endif //!__VG_LAYER_H__

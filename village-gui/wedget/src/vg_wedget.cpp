@@ -296,7 +296,7 @@ void Wedget::Redraw(DrawArea drawArea)
 
 /// @brief Wedget Draw
 /// @param drawAreas 
-void Wedget::Redraw(List<DrawArea> drawAreas)
+void Wedget::Redraw(VgList<DrawArea> drawAreas)
 {
 	for (drawAreas.Begin(); !drawAreas.IsEnd(); drawAreas.Next())
 	{

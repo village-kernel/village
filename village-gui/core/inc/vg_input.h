@@ -9,7 +9,7 @@
 
 #include "vg_devices.h"
 #include "vg_indev.h"
-#include "vk_list.h"
+#include "vg_list.h"
 
 
 /// @brief GraphicsInput
@@ -17,9 +17,9 @@ class GraphicsInput
 {
 private:
 	//Members
-	GraphicsDevices&   devices;
-	List<Indev*>  indevs;
-	bool          isReady;
+	GraphicsDevices& devices;
+	VgList<Indev*>   indevs;
+	bool             isReady;
 public:
 	//Methods
 	GraphicsInput(GraphicsDevices& devices);

@@ -103,9 +103,9 @@ bool GraphicsObject::IsActWedgetChange()
 
 /// @brief Get actived wedget upper areas
 /// @return 
-List<DrawArea> GraphicsObject::GetActWedgetUpperAreas()
+VgList<DrawArea> GraphicsObject::GetActWedgetUpperAreas()
 {
-	List<DrawArea> getAreas;
+	VgList<DrawArea> getAreas;
 
 	wedgets.Begin(); while(wedgets.Item() != actWedget) { wedgets.Next(); }
 
@@ -123,7 +123,7 @@ List<DrawArea> GraphicsObject::GetActWedgetUpperAreas()
 /// @brief Redraw actived wedget overlap areas
 void GraphicsObject::RedrawActWedgetOverlapAreas()
 {
-	List<DrawArea> areas;
+	VgList<DrawArea> areas;
 	
 	//Get active wedget upper areas
 	areas = GetActWedgetUpperAreas();
@@ -209,7 +209,7 @@ bool GraphicsObject::IsActWedgetMove()
 /// @brief Get move wedget overlap areas
 /// @param input 
 /// @return 
-List<DrawArea> GraphicsObject::GetMoveWedgetOverlapAreas(Wedget* movWedget)
+VgList<DrawArea> GraphicsObject::GetMoveWedgetOverlapAreas(Wedget* movWedget)
 {
 	DrawArea oldArea = movWedget->GetArea();
 	
@@ -223,7 +223,7 @@ List<DrawArea> GraphicsObject::GetMoveWedgetOverlapAreas(Wedget* movWedget)
 
 /// @brief Redraw move wedget areas
 /// @param areas 
-void GraphicsObject::RedrawMoveWedgetArea(Wedget* movWedget, List<DrawArea> areas)
+void GraphicsObject::RedrawMoveWedgetArea(Wedget* movWedget, VgList<DrawArea> areas)
 {
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
@@ -249,7 +249,7 @@ void GraphicsObject::RedrawMoveWedgetArea(Wedget* movWedget, List<DrawArea> area
 /// @brief Redraw move wedget overlap areas
 void GraphicsObject::RedrawMoveWedgetOverlapAreas(Wedget* movWedget)
 {
-	List<DrawArea> areas;
+	VgList<DrawArea> areas;
 
 	//Get move overlap areas
 	areas = GetMoveWedgetOverlapAreas(movWedget);

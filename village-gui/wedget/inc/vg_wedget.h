@@ -7,7 +7,7 @@
 #ifndef __VG_WEDGET_H__
 #define __VG_WEDGET_H__
 
-#include "vk_list.h"
+#include "vg_list.h"
 #include "vg_layer.h"
 #include "vg_devices.h"
 #include "vg_input_cmd.h"
@@ -37,7 +37,7 @@ protected:
 	ICommand* cmd;
 
 	//Wedget members
-	List<Wedget*> wedgets;
+	VgList<Wedget*> wedgets;
 
 	//Members
 	Layer    layer;
@@ -91,7 +91,7 @@ public:
 	virtual void Initiate(GraphicsDevices* devices);
 	virtual void Execute(IndevData input);
 	virtual void Redraw(DrawArea drawArea);
-	virtual void Redraw(List<DrawArea> drawAreas);
+	virtual void Redraw(VgList<DrawArea> drawAreas);
 	virtual void Show();
 };
 

@@ -153,9 +153,9 @@ DrawArea Layer::CutOverlapArea(DrawArea a0, DrawArea a1)
 /// @param a0 
 /// @param a1 
 /// @return 
-List<DrawArea> Layer::InciseOverlapArea(DrawArea a0, DrawArea a1)
+VgList<DrawArea> Layer::InciseOverlapArea(DrawArea a0, DrawArea a1)
 {
-	List<DrawArea> list;
+	VgList<DrawArea> list;
 	
 	//Upper
 	if (a0.sy < a1.sy)
@@ -209,9 +209,9 @@ List<DrawArea> Layer::InciseOverlapArea(DrawArea a0, DrawArea a1)
 /// @param oldArea 
 /// @param newArea 
 /// @return 
-List<DrawArea> Layer::MovedOverlapArea(DrawArea oldArea, DrawArea newArea)
+VgList<DrawArea> Layer::MovedOverlapArea(DrawArea oldArea, DrawArea newArea)
 {
-	List<DrawArea> list;
+	VgList<DrawArea> list;
 
 	if (IsAreaOverlap(oldArea, newArea))
 		list = InciseOverlapArea(oldArea, newArea);
@@ -224,9 +224,9 @@ List<DrawArea> Layer::MovedOverlapArea(DrawArea oldArea, DrawArea newArea)
 
 /// @brief Get overlap areas
 /// @return 
-List<DrawArea> Layer::GetOverlapAreas(DrawArea dsc, List<DrawArea> areas)
+VgList<DrawArea> Layer::GetOverlapAreas(DrawArea dsc, VgList<DrawArea> areas)
 {
-	List<DrawArea> getAreas;
+	VgList<DrawArea> getAreas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
@@ -246,7 +246,7 @@ List<DrawArea> Layer::GetOverlapAreas(DrawArea dsc, List<DrawArea> areas)
 /// @param dsc 
 /// @param areas 
 /// @return 
-bool Layer::SiftOverlapArea(DrawArea dsc, List<DrawArea> areas)
+bool Layer::SiftOverlapArea(DrawArea dsc, VgList<DrawArea> areas)
 {
 	DrawArea tmp = dsc;
 
@@ -267,9 +267,9 @@ bool Layer::SiftOverlapArea(DrawArea dsc, List<DrawArea> areas)
 /// @brief 
 /// @param areas 
 /// @return 
-List<DrawArea> Layer::SiftOverlapAreas(List<DrawArea> areas)
+VgList<DrawArea> Layer::SiftOverlapAreas(VgList<DrawArea> areas)
 {
-	List<DrawArea> siftAreas;
+	VgList<DrawArea> siftAreas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
@@ -289,7 +289,7 @@ List<DrawArea> Layer::SiftOverlapAreas(List<DrawArea> areas)
 /// @param area 
 /// @param areas 
 /// @return 
-DrawArea Layer::CutOverlapArea(DrawArea dsc, List<DrawArea> areas)
+DrawArea Layer::CutOverlapArea(DrawArea dsc, VgList<DrawArea> areas)
 {
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
@@ -309,9 +309,9 @@ DrawArea Layer::CutOverlapArea(DrawArea dsc, List<DrawArea> areas)
 /// @brief Cut overlap areas
 /// @param areas 
 /// @return 
-List<DrawArea> Layer::CutOverlapAreas(List<DrawArea> areas)
+VgList<DrawArea> Layer::CutOverlapAreas(VgList<DrawArea> areas)
 {
-	List<DrawArea> cutAreas;
+	VgList<DrawArea> cutAreas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
@@ -330,9 +330,9 @@ List<DrawArea> Layer::CutOverlapAreas(List<DrawArea> areas)
 /// @param area 
 /// @param areas 
 /// @return 
-List<DrawArea> Layer::InciseOverlapArea(DrawArea area, List<DrawArea> areas)
+VgList<DrawArea> Layer::InciseOverlapArea(DrawArea area, VgList<DrawArea> areas)
 {
-	List<DrawArea> inciseAreas;
+	VgList<DrawArea> inciseAreas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
@@ -342,7 +342,7 @@ List<DrawArea> Layer::InciseOverlapArea(DrawArea area, List<DrawArea> areas)
 
 		if (!IsAreaOverlap(area, temp)) continue;
 		
-		List<DrawArea> list = InciseOverlapArea(area, temp);
+		VgList<DrawArea> list = InciseOverlapArea(area, temp);
 
 		if (0 != list.GetSize())
 		{
@@ -358,9 +358,9 @@ List<DrawArea> Layer::InciseOverlapArea(DrawArea area, List<DrawArea> areas)
 /// @brief Incise actived wedget overlap areas
 /// @param areas 
 /// @return 
-List<DrawArea> Layer::InciseOverlapAreas(List<DrawArea> areas)
+VgList<DrawArea> Layer::InciseOverlapAreas(VgList<DrawArea> areas)
 {
-	List<DrawArea> inciseAreas;
+	VgList<DrawArea> inciseAreas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
