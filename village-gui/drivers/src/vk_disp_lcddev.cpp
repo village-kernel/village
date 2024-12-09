@@ -14,7 +14,7 @@
 void VkDisplay::Setup(GraphicsDevices* devices)
 {
 	//Get all display device fbDevs
-	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
+	VkList<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
 
 	//Get the universal driver by name
 	DevStream screen;

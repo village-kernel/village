@@ -24,7 +24,7 @@ ConcreteFileSystem::~ConcreteFileSystem()
 void ConcreteFileSystem::Setup()
 {
 	//Get all block device blockDevs
-	List<Base*> blockDevs = kernel->device.GetDevices(DriverID::_block);
+	VkList<Base*> blockDevs = kernel->device.GetDevices(DriverID::_block);
 
 	//Initialize all hard disk
 	for (blockDevs.Begin(); !blockDevs.IsEnd(); blockDevs.Next())
@@ -284,7 +284,7 @@ bool ConcreteFileSystem::MountRootNode()
 /// @brief Mount system node
 /// @param volumes 
 /// @return 
-bool ConcreteFileSystem::MountSystemNode(List<FileVol*> volumes, MountNode* mount)
+bool ConcreteFileSystem::MountSystemNode(VkList<FileVol*> volumes, MountNode* mount)
 {
 	for (volumes.Begin(); !volumes.IsEnd(); volumes.Next())
 	{

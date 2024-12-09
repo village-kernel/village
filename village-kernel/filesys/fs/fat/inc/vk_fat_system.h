@@ -40,9 +40,9 @@ private:
 	};
 
 	//Members
-	FatDiskio         fatDisk;
-	List<DirLayer*>   dirLayers;
-	List<FileLayer*>  fileLayers;
+	FatDiskio          fatDisk;
+	VkList<DirLayer*>  dirLayers;
+	VkList<FileLayer*> fileLayers;
 
 	//Members
 	uint32_t bytesPerSec;

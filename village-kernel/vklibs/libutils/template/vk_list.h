@@ -15,7 +15,7 @@
 /// @brief List class template 
 /// @tparam Object 
 template<typename Object>
-class List
+class VkList
 {
 private:
 	//Structures
@@ -57,7 +57,7 @@ private:
 	int   size;
 public:
 	/// @brief Constructor
-	List() :
+	VkList() :
 		head(NULL),
 		tail(NULL),
 		iterator(NULL),
@@ -177,7 +177,7 @@ public:
 
 	/// @brief Append other lists to this list
 	/// @param  
-	void Append(List<Object> list)
+	void Append(VkList<Object> list)
 	{
 		for (list.Begin(); !list.IsEnd(); list.Next())
 		{

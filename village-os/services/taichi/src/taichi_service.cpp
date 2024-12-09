@@ -27,7 +27,7 @@ void TaichiService::Load(const char* filename)
 {
 	RcParser* parser = new RcParser(filename);
 
-	List<char*>& runcmds = parser->GetRunCmds();
+	VkList<char*>& runcmds = parser->GetRunCmds();
 
 	for (runcmds.Begin(); !runcmds.IsEnd(); runcmds.Next())
 	{
@@ -45,7 +45,7 @@ void TaichiService::Unload(const char* filename)
 {
 	RcParser* parser = new RcParser(filename);
 
-	List<char*>& runcmds = parser->GetRunCmds();
+	VkList<char*>& runcmds = parser->GetRunCmds();
 
 	for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
 	{
