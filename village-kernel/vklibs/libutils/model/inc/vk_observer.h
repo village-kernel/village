@@ -29,7 +29,7 @@ protected:
 	};
 
 	//Members
-	List<Observer*> observers;
+	VkList<Observer*> observers;
 public:
 	//Methods
 	ObserverModel();

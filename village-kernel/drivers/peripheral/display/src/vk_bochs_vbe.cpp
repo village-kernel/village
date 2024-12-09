@@ -179,16 +179,16 @@ uint32_t BochsVBE::ReadPoint(uint32_t x, uint32_t y)
 
 
 /// @brief BochsVBE fill area
-/// @param x0 
-/// @param y0 
-/// @param x1 
-/// @param y1 
+/// @param sx 
+/// @param sy 
+/// @param ex 
+/// @param ey 
 /// @param color 
-void BochsVBE::Fill(uint32_t x0, uint32_t y0, uint32_t x1, uint32_t y1, uint32_t color)
+void BochsVBE::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color)
 {
-	for (uint32_t y = y0; y <= y1; y++)
+	for (uint32_t y = sy; y <= ey; y++)
 	{
-		for (uint32_t x = x0; x <= x1; x++)
+		for (uint32_t x = sx; x <= ex; x++)
 		{
 			DrawPoint(x, y, color);
 		}

@@ -19,8 +19,8 @@ class ConcreteProcess : public Process, public Class
 private:
 	/// @brief Members
 	Regex regex;
-	List<Data*> datum;
-	List<Executor*> executors;
+	VkList<Data*> datum;
+	VkList<Executor*> executors;
 
 	/// @brief Methods
 	void Taichi();
@@ -46,7 +46,7 @@ public:
 	bool Kill(int pid);
 
 	/// @brief Data Methods
-	List<Data*> GetData();
+	VkList<Data*> GetData();
 };
 
 #endif //!__VK_PROCESS_H__

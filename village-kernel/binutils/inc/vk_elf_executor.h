@@ -31,7 +31,7 @@ private:
 class ElfExecutorFty : public Executor
 {
 public:
-	List<char*> GetSuffixes();
+	VkList<char*> GetSuffixes();
 	BaseExecutor* Create();
 };
 

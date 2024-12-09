@@ -85,7 +85,7 @@ void ConcreteTerminal::UnregisterCmd(Cmd* cmd, char* name)
 
 /// @brief Terminal get cmds
 /// @return 
-List<Cmd*> ConcreteTerminal::GetCmds()
+VkList<Cmd*> ConcreteTerminal::GetCmds()
 {
 	return cmds;
 }
@@ -176,7 +176,7 @@ void ConcreteTerminal::ConsoleSandbox(Sandbox* sandbox)
 
 /// @brief Terminal get sandboxes
 /// @return 
-List<Terminal::Sandbox*> ConcreteTerminal::GetSandboxes()
+VkList<Terminal::Sandbox*> ConcreteTerminal::GetSandboxes()
 {
 	return sandboxes;
 }

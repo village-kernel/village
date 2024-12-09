@@ -18,7 +18,7 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		List<Process::Data*> data = kernel->process.GetData();
+		VkList<Process::Data*> data = kernel->process.GetData();
 
 		for (data.Begin(); !data.IsEnd(); data.Next())
 		{

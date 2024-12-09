@@ -18,7 +18,7 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		List<Cmd*> cmds = kernel->terminal.GetCmds();
+		VkList<Cmd*> cmds = kernel->terminal.GetCmds();
 
 		for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
 		{

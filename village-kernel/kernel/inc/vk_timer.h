@@ -18,8 +18,8 @@ class ConcreteTimer : public Timer, public Class
 {
 private:
 	/// @brief Members
-	System*     system;
-	List<Job*>  jobs;
+	System*      system;
+	VkList<Job*> jobs;
 	
 	/// @brief Methods
 	void Execute();

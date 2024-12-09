@@ -15,7 +15,7 @@
 /// @brief List class template 
 /// @tparam Object 
 template<typename Object>
-class List
+class VkList
 {
 private:
 	//Structures
@@ -57,7 +57,7 @@ private:
 	int   size;
 public:
 	/// @brief Constructor
-	List() :
+	VkList() :
 		head(NULL),
 		tail(NULL),
 		iterator(NULL),
@@ -128,7 +128,7 @@ public:
 	/// @return object pointer
 	Object Item()
 	{
-		return (NULL != iterator) ? iterator->obj : NULL;
+		return (NULL != iterator) ? iterator->obj : Object();
 	}
 
 	/// @brief List get node id 
@@ -157,8 +157,6 @@ public:
 	/// @return result
 	int Add(Object obj, char* name = NULL)
 	{
-		if (NULL == obj) return -1;
-
 		if (NULL == head)
 		{
 			nidCounter = 0;
@@ -177,14 +175,22 @@ public:
 		return (NULL != tail) ? tail->nid : -1;
 	}
 
+	/// @brief Append other lists to this list
+	/// @param  
+	void Append(VkList<Object> list)
+	{
+		for (list.Begin(); !list.IsEnd(); list.Next())
+		{
+			Add(list.Item(), list.GetName());
+		}
+	}
+
 	/// @brief Insert object node to list
 	/// @param obj object pointer
 	/// @param nid object node id
 	/// @return result
 	int Insert(Object obj, int nid, char* name = NULL)
 	{
-		if (NULL == obj) return -1;
-
 		Node* temp = NULL;
 
 		if (NULL == head)
@@ -247,8 +253,6 @@ public:
 	/// @return result
 	int Insert(Object obj, char* name)
 	{
-		if (NULL == obj) return -1;
-
 		Node* temp = NULL;
 
 		if (NULL == head)
@@ -311,8 +315,6 @@ public:
 	/// @return result
 	bool Remove(Object obj, int nid = -1)
 	{
-		if (NULL == obj) return false;
-
 		for (Node* node = head; NULL != node; node = node->next)
 		{
 			if ((obj == node->obj) || (nid == node->nid))

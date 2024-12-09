@@ -27,7 +27,7 @@ public:
 	virtual ~Executor() { }
 
 	//Methods
-	virtual List<char*> GetSuffixes() = 0;
+	virtual VkList<char*> GetSuffixes() = 0;
 	virtual BaseExecutor* Create() = 0;
 };
 

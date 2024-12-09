@@ -111,10 +111,10 @@ private:
 	/// @brief DiskMedia
 	struct DiskMedia
 	{
-		int            type;
-		char*          name;
-		DevStream*     dev;
-		List<FileVol*> vols;
+		int              type;
+		char*            name;
+		DevStream*       dev;
+		VkList<FileVol*> vols;
 
 		DiskMedia(char* name, DevStream* dev)
 			:type(_None),
@@ -124,14 +124,14 @@ private:
 	};
 private:
 	/// @brief Members
-	List<FileSys*>    filesyses;
-	List<DiskMedia*>  medias;
-	List<MountNode*>  mounts;
+	VkList<FileSys*>    filesyses;
+	VkList<DiskMedia*>  medias;
+	VkList<MountNode*>  mounts;
 
 	/// @brief Methods
 	bool CheckPartiionTable(MBRPartition partition);
 	int  SetupVolume(DiskMedia* media, uint32_t startingLBA);
-	bool MountSystemNode(List<FileVol*> volumes, MountNode* mount);
+	bool MountSystemNode(VkList<FileVol*> volumes, MountNode* mount);
 	bool MountRootNode();
 public:
 	/// @brief Methods
