@@ -19,7 +19,7 @@ public:
 	//Methods
 	LibraryTool();
 	~LibraryTool();
-	List<ElfLoader*>* GetLibraries();
+	VkList<ElfLoader*>* GetLibraries();
 	bool Install(const char* filename);
 	bool Uninstall(const char* filename);
 	uint32_t SearchSymbol(const char* symbol);

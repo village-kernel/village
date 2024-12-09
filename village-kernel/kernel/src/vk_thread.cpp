@@ -204,7 +204,7 @@ bool ConcreteThread::IsTaskAlive(int tid)
 
 /// @brief Get tasks
 /// @return 
-List<ConcreteThread::Task*> ConcreteThread::GetTasks()
+VkList<ConcreteThread::Task*> ConcreteThread::GetTasks()
 {
 	return tasks;
 }

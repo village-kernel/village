@@ -343,22 +343,22 @@ Fopts* ConcreteDevice::GetDeviceFopts(const char* name)
 /// @brief Get the device name list by driver id
 /// @param id 
 /// @return 
-List<Base*> ConcreteDevice::GetDevices(DriverID id)
+VkList<Base*> ConcreteDevice::GetDevices(DriverID id)
 {
 	if (id >= DriverID::_block && id < DriverID::_dirverIdSize)
 	{
-		List<Base*> lists[DriverID::_dirverIdSize] = {
-			(List<Base*>&)blockDevs,
-			(List<Base*>&)charDevs,
-			(List<Base*>&)fbDevs,
-			(List<Base*>&)inDevs,
-			(List<Base*>&)ntDevs,
-			(List<Base*>&)miscDevs,
-			(List<Base*>&)platDevs,
-			(List<Base*>&)platDrvs
+		VkList<Base*> lists[DriverID::_dirverIdSize] = {
+			(VkList<Base*>&)blockDevs,
+			(VkList<Base*>&)charDevs,
+			(VkList<Base*>&)fbDevs,
+			(VkList<Base*>&)inDevs,
+			(VkList<Base*>&)ntDevs,
+			(VkList<Base*>&)miscDevs,
+			(VkList<Base*>&)platDevs,
+			(VkList<Base*>&)platDrvs
 		};
 
 		return lists[id];
 	}
-	return List<Base*>();
+	return VkList<Base*>();
 }

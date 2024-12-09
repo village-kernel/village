@@ -24,7 +24,7 @@ private:
 	};
 
 	//Members
-	List<char*> runcmds;
+	VkList<char*> runcmds;
 
 	//Methods
 	void Decode(const char* rcString, int size);
@@ -32,7 +32,7 @@ public:
 	//Methods
 	RcParser(const char* filename = NULL);
 	bool Load(const char* filename);
-	List<char*>& GetRunCmds();
+	VkList<char*>& GetRunCmds();
 	void Release();
 };
 

@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsDisplay::GraphicsDisplay(GraphicsData& databus)
-	:databus(databus),
+GraphicsDisplay::GraphicsDisplay(GraphicsDevices& devices)
+	:devices(devices),
 	isReady(false)
 {
 }
@@ -28,8 +28,10 @@ void GraphicsDisplay::Setup()
 
 	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 	{
-		lcddevs.Item()->Setup();
+		lcddevs.Item()->Setup(&devices);
 	}
+
+	devices.lcddev = lcddevs.Begin();
 
 	isReady = true;
 }
@@ -38,19 +40,22 @@ void GraphicsDisplay::Setup()
 /// @brief Display execute
 void GraphicsDisplay::Execute()
 {
-	List<DrawData*> draws = databus.draws;
-
-	for (draws.Begin(); !draws.IsEnd(); draws.Next())
+	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 	{
-		Lcddev* lcddev = lcddevs.Begin();
+		Lcddev* lcddev = lcddevs.Item();
 
-		if (NULL != lcddev)
+		if (IndevType::_Mouse == devices.indev->GetType())
 		{
-			lcddev->Flush(draws.Item()->area, draws.Item()->pixels);
+			IndevData input = devices.indev->Read();
+
+			if ((input.point.x <= lcddev->GetWidth()) &&
+				(input.point.y <= lcddev->GetHeight()))
+			{
+				devices.lcddev = lcddev;
+				break;
+			}
 		}
 	}
-
-	databus.draws.Release();
 }
 
 
@@ -69,7 +74,7 @@ void GraphicsDisplay::Exit()
 void GraphicsDisplay::RegisterLcddev(Lcddev* lcd)
 {
 	lcddevs.Add(lcd);
-	if (isReady) lcd->Setup();
+	if (isReady) lcd->Setup(&devices);
 }
 
 

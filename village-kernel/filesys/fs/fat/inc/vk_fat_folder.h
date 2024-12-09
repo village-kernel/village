@@ -26,7 +26,7 @@ private:
 	FatObject*        parent;
 
 	//FatObject Members
-	List<FatObject*>  fatObjs;
+	VkList<FatObject*> fatObjs;
 
 	//Disk Methods
 	void CalcFirstSector();

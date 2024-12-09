@@ -8,8 +8,8 @@
 
 
 /// @brief Constructor
-GraphicsTimer::GraphicsTimer(GraphicsData& databus)
-	:databus(databus),
+GraphicsTimer::GraphicsTimer(GraphicsDevices& devices)
+	:devices(devices),
 	ticks(NULL),
 	isReady(false)
 {
@@ -27,7 +27,9 @@ void GraphicsTimer::Setup()
 {
 	isReady = false;
 
-	if (NULL != ticks) ticks->Setup();
+	if (NULL != ticks) ticks->Setup(&devices);
+
+	devices.ticks = ticks;
 
 	isReady = true;
 }
@@ -38,7 +40,7 @@ void GraphicsTimer::Execute()
 {
 	if (NULL != ticks)
 	{
-		databus.ticks = ticks->GetTicks();
+		devices.ticks = ticks;
 	}
 }
 
@@ -61,7 +63,7 @@ void GraphicsTimer::RegisterTick(Ticks* ticks)
 	if (NULL != ticks && ticks != this->ticks)
 	{
 		this->ticks = ticks;
-		if (isReady) ticks->Setup();
+		if (isReady) ticks->Setup(&devices);
 	}
 }
 

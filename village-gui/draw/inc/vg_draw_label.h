@@ -7,23 +7,20 @@
 #ifndef __VG_DRAW_LABEL_H__
 #define __VG_DRAW_LABEL_H__
 
+#include "vg_devices.h"
 #include "vg_draw_defs.h"
 
 
 /// @brief DrawLabel
 class DrawLabel
 {
+private:
+	//Members
+	GraphicsDevices* devices;
 public:
 	//Methods
-	void Execute
-	(
-		int x,
-		int y,
-		char* str,
-		int font = DrawDefs::Font16,
-		int mode = DrawDefs::Multiply,
-		int color = DrawDefs::defStrokeColor
-	);
+	void Initiate(GraphicsDevices* devices);
+	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_LABEL_H__

@@ -158,7 +158,7 @@ public:
 	virtual bool WaitForTask(int tid) = 0;
 	virtual bool DeleteTask(int tid) = 0;
 	virtual bool IsTaskAlive(int tid) = 0;
-	virtual List<Task*> GetTasks() = 0;
+	virtual VkList<Task*> GetTasks() = 0;
 	
 	/// @brief State Methods
 	virtual void ChangeState(TaskState state) = 0;
@@ -223,7 +223,7 @@ public:
 
 	/// @brief Data methods
 	virtual Fopts* GetDeviceFopts(const char* name) = 0;
-	virtual List<Base*> GetDevices(DriverID id) = 0;
+	virtual VkList<Base*> GetDevices(DriverID id) = 0;
 };
 
 
@@ -423,8 +423,8 @@ public:
 	virtual bool Uninstall(int type, const char* filename) = 0;
 	
 	/// @brief Data Methods
-	virtual List<ElfLoader*>* GetLibraries() = 0;
-	virtual List<ElfLoader*>* GetModules() = 0;
+	virtual VkList<ElfLoader*>* GetLibraries() = 0;
+	virtual VkList<ElfLoader*>* GetModules() = 0;
 };
 
 
@@ -474,7 +474,7 @@ public:
 	virtual bool Kill(int pid) = 0;
 	
 	/// @brief Data Methods
-	virtual List<Data*> GetData() = 0;
+	virtual VkList<Data*> GetData() = 0;
 };
 
 
@@ -546,12 +546,12 @@ public:
 	/// @brief Cmd Methods
 	virtual void RegisterCmd(Cmd* cmd, char* name) = 0;
 	virtual void UnregisterCmd(Cmd* cmd, char* name) = 0;
-	virtual List<Cmd*> GetCmds() = 0;
+	virtual VkList<Cmd*> GetCmds() = 0;
 
 	/// @brief Console Methods
 	virtual int CreateConsole(const char* driver) = 0;
 	virtual bool DestroyConsole(const char* driver) = 0;
-	virtual List<Sandbox*> GetSandboxes() = 0;
+	virtual VkList<Sandbox*> GetSandboxes() = 0;
 };
 
 

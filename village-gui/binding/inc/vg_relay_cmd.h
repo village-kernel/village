@@ -20,7 +20,7 @@ private:
 public:
 	//Methods
 	RelayCommand(Class* user, Method method);
-	void Execute(void* args);
+	void Execute(void* args = NULL);
 };
 
 #endif //!__VG_RELAY_COMMAND_H__

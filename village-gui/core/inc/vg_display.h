@@ -7,9 +7,9 @@
 #ifndef __VG_DISPLAY_H__
 #define __VG_DISPLAY_H__
 
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_lcddev.h"
-#include "vk_list.h"
+#include "vg_list.h"
 
 
 /// @brief GraphicsDisplay
@@ -17,12 +17,12 @@ class GraphicsDisplay
 {
 private:
 	//Members
-	List<Lcddev*>  lcddevs;
-	GraphicsData&  databus;
-	bool           isReady;
+	GraphicsDevices&   devices;
+	VgList<Lcddev*>    lcddevs;
+	bool               isReady;
 public:
 	//Methods
-	GraphicsDisplay(GraphicsData& databus);
+	GraphicsDisplay(GraphicsDevices& devices);
 	~GraphicsDisplay();
 	void Setup();
 	void Execute();

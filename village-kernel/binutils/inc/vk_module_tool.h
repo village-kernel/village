@@ -19,7 +19,7 @@ public:
 	//Methods
 	ModuleTool();
 	~ModuleTool();
-	List<ElfLoader*>* GetModules();
+	VkList<ElfLoader*>* GetModules();
 	bool Install(const char* filename);
 	bool Uninstall(const char* filename);
 };

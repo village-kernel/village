@@ -18,9 +18,6 @@ public:
 	//Methods
 	TextBox();
 	~TextBox();
-	
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_TEXT_BOX_H__

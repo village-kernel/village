@@ -7,9 +7,9 @@
 #ifndef __VG_INPUT_H__
 #define __VG_INPUT_H__
 
-#include "vg_data.h"
+#include "vg_devices.h"
 #include "vg_indev.h"
-#include "vk_list.h"
+#include "vg_list.h"
 
 
 /// @brief GraphicsInput
@@ -17,12 +17,12 @@ class GraphicsInput
 {
 private:
 	//Members
-	List<Indev*>  indevs;
-	GraphicsData& databus;
-	bool          isReady;
+	GraphicsDevices& devices;
+	VgList<Indev*>   indevs;
+	bool             isReady;
 public:
 	//Methods
-	GraphicsInput(GraphicsData& databus);
+	GraphicsInput(GraphicsDevices& devices);
 	~GraphicsInput();
 	void Setup();
 	void Execute();

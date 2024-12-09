@@ -19,15 +19,17 @@ Window::~Window()
 }
 
 
-/// @brief Init content
-void Window::InitContent()
+/// @brief Wedget Initiate
+/// @param devices 
+void Window::Initiate(GraphicsDevices* devices)
 {
-
+	Wedget::Initiate(devices);
 }
 
 
-/// @brief Draw content
-void Window::DrawContent()
+/// @brief Wedget Execute
+/// @param input 
+void Window::Execute(IndevData input)
 {
 
 }

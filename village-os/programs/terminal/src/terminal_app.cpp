@@ -10,6 +10,8 @@
 
 /// @brief Constructor
 TerminalAPP::TerminalAPP()
+	:vkgui(NULL),
+	mainwin(NULL)
 {
 }
 
@@ -20,24 +22,63 @@ TerminalAPP::~TerminalAPP()
 }
 
 
+
+/// @brief Create Window
+/// @return 
+Wedget* TerminalAPP::CreateWindow()
+{
+	//Gets the vkgui module
+	Module* module = kernel->feature.GetModule("vkgui");
+	if (NULL == module) return NULL;
+
+	//Gets the vkgui pointer
+	vkgui = (VkGraphics*)module->GetData();
+	if (NULL == vkgui) return NULL;
+	
+	//Create mainwin
+	return vkgui->object.Create();
+}
+
+
+/// @brief Destroy Window
+void TerminalAPP::DestroyWindow()
+{
+	vkgui->object.Destroy(mainwin);
+}
+
+
 /// @brief Setup
 void TerminalAPP::Setup()
 {
-	view.Setup();
+	//Create main window
+	mainwin = CreateWindow();
+	if (NULL == mainwin) return;
+
+	//Setup mainwin size
+	mainwin->SetSize(100, 100, 600, 400);
+	mainwin->SetTitle((char*)"terminal");
+	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
+
+	//Init view component
+	view.InitComponent(mainwin);
 }
 
 
 /// @brief Execute
 void TerminalAPP::Execute()
 {
-	while (1) view.Execute();
+	//Show main window
+	mainwin->Show();
+
+	//Blocked app
+	kernel->thread.Blocked();
 }
 
 
 /// @brief Exit
 void TerminalAPP::Exit()
 {
-	view.Exit();
+	DestroyWindow();
 }
 
 

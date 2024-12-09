@@ -17,17 +17,3 @@ ListBox::ListBox()
 ListBox::~ListBox()
 {
 }
-
-
-/// @brief Init content
-void ListBox::InitContent()
-{
-
-}
-
-
-/// @brief Draw content
-void ListBox::DrawContent()
-{
-
-}

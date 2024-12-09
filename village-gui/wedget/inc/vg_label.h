@@ -21,9 +21,6 @@ public:
 	Label();
 	~Label();
 
-	void InitContent();
-	void DrawContent();
-
 	void SetText(char* text);
 };
 

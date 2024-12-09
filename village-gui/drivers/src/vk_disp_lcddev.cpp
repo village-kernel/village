@@ -9,12 +9,12 @@
 #include "vk_kernel.h"
 
 
-/// @brief 
+/// @brief Setup
 /// @return 
-void VkDisplay::Setup()
+void VkDisplay::Setup(GraphicsDevices* devices)
 {
 	//Get all display device fbDevs
-	List<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
+	VkList<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
 
 	//Get the universal driver by name
 	DevStream screen;
@@ -22,33 +22,60 @@ void VkDisplay::Setup()
 	//Open the first screen 
 	if (screen.Open(fbDevs.Begin()->GetName(), FileMode::_Read))
 	{
-		FBDriver* fbdev = NULL;
-
 		//Get the specified lcd driver by ioctrl 
 		screen.IOCtrl(0, (void*)&fbdev);
 	}
 }
 
 
-/// @brief 
+/// @brief Exit
 void VkDisplay::Exit()
 {
 	
 }
 
 
+/// @brief GetWidth
+/// @return 
+int VkDisplay::GetWidth()
+{
+	return fbdev->info.width;
+}
+
+
 /// @brief 
+/// @return 
+int VkDisplay::GetHeight()
+{
+	return fbdev->info.height;
+}
+
+
+/// @brief Point
+/// @param x 
+/// @param y 
+/// @param color 
+void VkDisplay::Point(int x, int y, int color)
+{
+	if (NULL != fbdev)
+	{
+		fbdev->DrawPoint(x, y, color);
+	}
+}
+
+
+/// @brief Flush
 /// @param area 
 /// @param pixels 
-void VkDisplay::Flush(DrawArea area, uint8_t* pixels)
+void VkDisplay::Flush(DrawArea area, void* pixels)
 {
 	if (NULL != fbdev)
 	{
 		uint16_t* pixelsmap = (uint16_t*)pixels;
 
-		for (int y = area.y0; y < area.y1; y++)
+		for (int y = area.sy; y <= area.ey; y++)
 		{
-			for (int x = area.x0; x < area.x1; x++)
+			for (int x = area.sx; x <= area.ex; x++)
 			{
 				fbdev->DrawPoint(x, y, *pixelsmap++);
 			}

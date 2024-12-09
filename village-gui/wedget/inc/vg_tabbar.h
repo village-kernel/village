@@ -17,9 +17,6 @@ public:
 	//Methods
 	Tabbar();
 	~Tabbar();
-
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_TAB_BAR_H__

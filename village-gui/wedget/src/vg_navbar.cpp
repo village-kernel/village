@@ -23,9 +23,28 @@ Navbar::~Navbar()
 }
 
 
-/// @brief Init content
-void Navbar::InitContent()
+/// @brief 
+/// @param title 
+void Navbar::SetTitile(char* title)
 {
+	this->title = title;
+}
+
+
+/// @brief 
+/// @return 
+char* Navbar::GetTitle()
+{
+	return this->title;
+}
+
+
+/// @brief Wedget Initiate
+/// @param devices 
+void Navbar::Initiate(GraphicsDevices* devices)
+{
+	Wedget::Initiate(devices);
+
 	minbtn = new Button();
 	minbtn->SetSize(40, 0, 20, 20);
 	minbtn->SetText((char*)"-");
@@ -43,24 +62,17 @@ void Navbar::InitContent()
 }
 
 
-/// @brief Draw content
-void Navbar::DrawContent()
+/// @brief Wedget Execute
+/// @param input 
+void Navbar::Execute(IndevData input)
 {
 
 }
 
 
-/// @brief 
-/// @param title 
-void Navbar::SetTitile(char* title)
+/// @brief Wedget Draw
+/// @param area 
+void Navbar::Redraw(DrawArea area)
 {
-	this->title = title;
-}
 
-
-/// @brief 
-/// @return 
-char* Navbar::GetTitle()
-{
-	return this->title;
 }

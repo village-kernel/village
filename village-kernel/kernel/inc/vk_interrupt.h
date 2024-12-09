@@ -40,7 +40,7 @@ private:
 	volatile bool isReady;
 	Exception     exception;
 	uint8_t       warnings[Exception::isr_num] = { 0 };
-	List<Isr*>    isrTabs[Exception::isr_num];
+	VkList<Isr*>  isrTabs[Exception::isr_num];
 public:
 	/// @brief Methods
 	ConcreteInterrupt();

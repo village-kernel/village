@@ -18,7 +18,7 @@ class ConcreteFeature : public Feature
 private:
 	/// @brief Members
 	bool isRuntime;
-	List<Module*> modules;
+	VkList<Module*> modules;
 public:
 	/// @brief Methods
 	ConcreteFeature();

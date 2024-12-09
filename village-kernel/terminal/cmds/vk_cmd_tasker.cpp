@@ -18,7 +18,7 @@ public:
 	/// @param argv 
 	void Execute(int argc, char* argv[])
 	{
-		List<Thread::Task*> tasks = kernel->thread.GetTasks();
+		VkList<Thread::Task*> tasks = kernel->thread.GetTasks();
 		for (tasks.Begin(); !tasks.IsEnd(); tasks.Next())
 		{
 			console->Println("tid %d, stack 0x%08x, psp 0x%08x, state %d, ticks %10d, name %s",

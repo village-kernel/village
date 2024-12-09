@@ -29,9 +29,6 @@ public:
 	//Methods
 	Scrollbar();
 	~Scrollbar();
-	
-	void InitContent();
-	void DrawContent();
 
 	void SetDirection(Direction dir);
 };

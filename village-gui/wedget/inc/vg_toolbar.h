@@ -18,9 +18,6 @@ public:
 	//Methods
 	Toolbar();
 	~Toolbar();
-
-	void InitContent();
-	void DrawContent();
 };
 
 #endif //!__VG_TOOL_BAR_H__

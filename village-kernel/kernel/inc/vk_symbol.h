@@ -28,7 +28,7 @@ private:
 	};
 
 	/// @brief Members
-	List<Entry*> entrys;
+	VkList<Entry*> entrys;
 public:
 	/// @brief Methods
 	ConcreteSymbol();

@@ -23,7 +23,7 @@ ConcreteEvent::~ConcreteEvent()
 void ConcreteEvent::Setup()
 {
 	//Get all input devices
-	List<Base*> devices = kernel->device.GetDevices(DriverID::_input);
+	VkList<Base*> devices = kernel->device.GetDevices(DriverID::_input);
 
 	//Init all input devices
 	for (devices.Begin(); !devices.IsEnd(); devices.Next())
@@ -43,7 +43,7 @@ void ConcreteEvent::Setup()
 void ConcreteEvent::Exit()
 {
 	//Get all input devices
-	List<Base*> devices = kernel->device.GetDevices(DriverID::_input);
+	VkList<Base*> devices = kernel->device.GetDevices(DriverID::_input);
 
 	//Exit all input devices
 	for (devices.End(); !devices.IsBegin(); devices.Prev())
