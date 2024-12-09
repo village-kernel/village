@@ -50,7 +50,7 @@ void ConcreteLoader::Load(int type, const char* filename)
 {
 	RcParser* parser = new RcParser(filename);
 
-	List<char*>& runcmds = parser->GetRunCmds();
+	VkList<char*>& runcmds = parser->GetRunCmds();
 
 	for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
 	{
@@ -68,7 +68,7 @@ void ConcreteLoader::Unload(int type, const char* filename)
 {
 	RcParser* parser = new RcParser(filename);
 
-	List<char*>& runcmds = parser->GetRunCmds();
+	VkList<char*>& runcmds = parser->GetRunCmds();
 
 	for (runcmds.Begin(); !runcmds.IsEnd(); runcmds.Next())
 	{
@@ -116,7 +116,7 @@ bool ConcreteLoader::Uninstall(int type, const char* filename)
 
 /// @brief Get libraries
 /// @return libraries
-List<ElfLoader*>* ConcreteLoader::GetLibraries()
+VkList<ElfLoader*>* ConcreteLoader::GetLibraries()
 {
 	return &libraries;
 }
@@ -124,7 +124,7 @@ List<ElfLoader*>* ConcreteLoader::GetLibraries()
 
 /// @brief Get modules
 /// @return modules
-List<ElfLoader*>* ConcreteLoader::GetModules()
+VkList<ElfLoader*>* ConcreteLoader::GetModules()
 {
 	return &modules;
 }

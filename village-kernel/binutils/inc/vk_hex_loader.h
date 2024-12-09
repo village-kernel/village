@@ -55,9 +55,9 @@ private:
 	};
 private:
 	//Members
-	HEX           hex;
-	List<Record*> records;
-	char*         filename;
+	HEX             hex;
+	VkList<Record*> records;
+	char*           filename;
 	
 	//Methods
 	bool LoadHex();

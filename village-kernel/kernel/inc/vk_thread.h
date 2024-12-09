@@ -27,10 +27,10 @@ private:
 	static const uint32_t psp_frame_size = sizeof(TaskContext);
 	
 	/// @brief Members
-	List<Task*> tasks;
-	Memory*     memory;
-	System*     system;
-	Scheduler*  scheduler;
+	VkList<Task*> tasks;
+	Memory*       memory;
+	System*       system;
+	Scheduler*    scheduler;
 
 	/// @brief Members
 	void TaskHandler(Function function, void* user, void* args);
@@ -52,7 +52,7 @@ public:
 	bool WaitForTask(int tid);
 	bool DeleteTask(int tid);
 	bool IsTaskAlive(int tid);
-	List<Task*> GetTasks();
+	VkList<Task*> GetTasks();
 
 	/// @brief State Methods
 	void ChangeState(TaskState state);

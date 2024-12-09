@@ -18,7 +18,7 @@ class ConcreteProtocol : public Protocol
 private:
 	/// @brief Members
 	bool isRuntime;
-	List<Stack*> stacks;
+	VkList<Stack*> stacks;
 public:
 	/// @brief Methods
 	ConcreteProtocol();

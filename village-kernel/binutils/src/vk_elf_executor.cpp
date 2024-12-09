@@ -38,9 +38,9 @@ bool ElfExecutor::Release()
 
 /// @brief ElfExecutorFty GetSuffixes
 /// @return 
-List<char*> ElfExecutorFty::GetSuffixes()
+VkList<char*> ElfExecutorFty::GetSuffixes()
 {
-	List<char*> suffixes;
+	VkList<char*> suffixes;
 	suffixes.Add((char*)".elf");
 #ifdef ASSOCIATED_EXEC_ELF
 	suffixes.Add((char*)".exec");

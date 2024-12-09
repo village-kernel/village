@@ -28,7 +28,7 @@ private:
 	OutFormat    outFormat;
 
 	/// @brief Model members
-	List<DevStream*> inDevs;
+	VkList<DevStream*> inDevs;
 	ObserverModel observers[_AllType];
 public:
 	/// @brief Methods

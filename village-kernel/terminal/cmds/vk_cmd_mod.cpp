@@ -25,7 +25,7 @@ public:
 			return;
 		}
 
-		List<ElfLoader*>* mods = kernel->loader.GetModules();
+		VkList<ElfLoader*>* mods = kernel->loader.GetModules();
 		if (NULL != mods)
 		{
 			for (mods->Begin(); !mods->IsEnd(); mods->Next())

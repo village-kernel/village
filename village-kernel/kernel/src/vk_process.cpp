@@ -97,7 +97,7 @@ BaseExecutor* ConcreteProcess::CreateExecutor(const char* path)
 
 	for (executors.Begin(); !executors.IsEnd(); executors.Next())
 	{
-		List<char*> suffixes = executors.Item()->GetSuffixes();
+		VkList<char*> suffixes = executors.Item()->GetSuffixes();
 
 		for (suffixes.Begin(); !suffixes.IsEnd(); suffixes.Next())
 		{
@@ -193,7 +193,7 @@ bool ConcreteProcess::Kill(int pid)
 
 /// @brief GetExecutors
 /// @return 
-List<ConcreteProcess::Data*> ConcreteProcess::GetData()
+VkList<ConcreteProcess::Data*> ConcreteProcess::GetData()
 {
 	return datum;
 }

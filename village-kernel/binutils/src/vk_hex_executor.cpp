@@ -38,9 +38,9 @@ bool HexExecutor::Release()
 
 /// @brief HexExecutorFty GetSuffixes
 /// @return 
-List<char*> HexExecutorFty::GetSuffixes()
+VkList<char*> HexExecutorFty::GetSuffixes()
 {
-	List<char*> suffixes;
+	VkList<char*> suffixes;
 	suffixes.Add((char*)".hex");
 #ifdef ASSOCIATED_EXEC_HEX
 	suffixes.Add((char*)".exec");

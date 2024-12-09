@@ -79,7 +79,7 @@ void Console::ExecuteCmd(CmdMsg msg)
 	msgMgr.Write((uint8_t*)"\r\n");
 
 	//Gets all terminal commands
-	List<Cmd*> cmds = kernel->terminal.GetCmds();
+	VkList<Cmd*> cmds = kernel->terminal.GetCmds();
 
 	//Find the command and execute it 
 	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())

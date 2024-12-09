@@ -18,14 +18,14 @@ class ConcreteDevice : public Device
 private:
 	/// @brief Members
 	bool isRuntime;
-	List<BlockDriver*>    blockDevs;
-	List<CharDriver*>     charDevs;
-	List<FBDriver*>       fbDevs;
-	List<InputDriver*>    inDevs;
-	List<NetworkDriver*>  ntDevs;
-	List<MiscDriver*>     miscDevs;
-	List<PlatDevice*>     platDevs;
-	List<PlatDriver*>     platDrvs;
+	VkList<BlockDriver*>    blockDevs;
+	VkList<CharDriver*>     charDevs;
+	VkList<FBDriver*>       fbDevs;
+	VkList<InputDriver*>    inDevs;
+	VkList<NetworkDriver*>  ntDevs;
+	VkList<MiscDriver*>     miscDevs;
+	VkList<PlatDevice*>     platDevs;
+	VkList<PlatDriver*>     platDrvs;
 
 	/// @brief Methods
 	bool PlatformMatch(PlatDevice* device, PlatDriver* driver);
@@ -79,7 +79,7 @@ public:
 
 	/// @brief Data methods
 	Fopts* GetDeviceFopts(const char* name);
-	List<Base*> GetDevices(DriverID id);
+	VkList<Base*> GetDevices(DriverID id);
 };
 
 #endif // !__VK_DEVICE_H__

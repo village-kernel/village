@@ -19,8 +19,8 @@ class ConcreteTerminal : public Terminal, public Class
 {
 private:
 	//Members
-	List<Cmd*>     cmds;
-	List<Sandbox*> sandboxes;
+	VkList<Cmd*>     cmds;
+	VkList<Sandbox*> sandboxes;
 
 	//Methods
 	void Execute();
@@ -36,12 +36,12 @@ public:
 	//Cmd Methods
 	void RegisterCmd(Cmd* cmd, char* name);
 	void UnregisterCmd(Cmd* cmd, char* name);
-	List<Cmd*> GetCmds();
+	VkList<Cmd*> GetCmds();
 
 	//Console Methods
 	int CreateConsole(const char* driver);
 	bool DestroyConsole(const char* driver);
-	List<Sandbox*> GetSandboxes();
+	VkList<Sandbox*> GetSandboxes();
 };
 
 #endif // !__VK_TERMINAL_H__

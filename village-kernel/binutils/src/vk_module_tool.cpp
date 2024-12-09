@@ -22,10 +22,10 @@ ModuleTool::~ModuleTool()
 
 
 /// @brief Module tool get modules
-List<ElfLoader*>* ModuleTool::GetModules()
+VkList<ElfLoader*>* ModuleTool::GetModules()
 {
 	//Get the modules pointer
-	List<ElfLoader*>* modules = kernel->loader.GetModules();
+	VkList<ElfLoader*>* modules = kernel->loader.GetModules();
 	if (NULL == modules)
 	{
 		kernel->debug.Error("get modules address failed");
@@ -51,7 +51,7 @@ bool ModuleTool::Install(const char* filename)
 	}
 
 	//Get the modules pointer
-	List<ElfLoader*>* modules = GetModules();
+	VkList<ElfLoader*>* modules = GetModules();
 	if (NULL == modules) return false;
 
 	//Check the module if it has been installed
@@ -101,7 +101,7 @@ bool ModuleTool::Uninstall(const char* filename)
 	}
 
 	//Get the modules pointer
-	List<ElfLoader*>* modules = GetModules();
+	VkList<ElfLoader*>* modules = GetModules();
 	if (NULL == modules) return false;
 
 	//Search module and remove it

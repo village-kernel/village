@@ -38,9 +38,9 @@ bool BinExecutor::Release()
 
 /// @brief BinExecutorFty GetSuffixes
 /// @return 
-List<char*> BinExecutorFty::GetSuffixes()
+VkList<char*> BinExecutorFty::GetSuffixes()
 {
-	List<char*> suffixes;
+	VkList<char*> suffixes;
 	suffixes.Add((char*)".bin");
 #ifdef ASSOCIATED_EXEC_BIN
 	suffixes.Add((char*)".exec");

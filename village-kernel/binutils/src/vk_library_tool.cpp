@@ -22,10 +22,10 @@ LibraryTool::~LibraryTool()
 
 
 /// @brief Library tool Get libraries
-List<ElfLoader*>* LibraryTool::GetLibraries()
+VkList<ElfLoader*>* LibraryTool::GetLibraries()
 {
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = kernel->loader.GetLibraries();
+	VkList<ElfLoader*>* libraries = kernel->loader.GetLibraries();
 	if (NULL == libraries)
 	{
 		kernel->debug.Error("get libraries address failed");
@@ -51,7 +51,7 @@ bool LibraryTool::Install(const char* filename)
 	}
 
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = GetLibraries();
+	VkList<ElfLoader*>* libraries = GetLibraries();
 	if (NULL == libraries) return false;
 
 	//Check the library if it has been installed
@@ -103,7 +103,7 @@ bool LibraryTool::Uninstall(const char* filename)
 	}
 
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = GetLibraries();
+	VkList<ElfLoader*>* libraries = GetLibraries();
 	if (NULL == libraries) return false;
 
 	//Search library and remove it
@@ -137,7 +137,7 @@ uint32_t LibraryTool::SearchSymbol(const char* symbol)
 	}
 
 	//Get the libraries pointer
-	List<ElfLoader*>* libraries = GetLibraries();
+	VkList<ElfLoader*>* libraries = GetLibraries();
 	if (NULL == libraries) return false;
 
 	//Search symbol

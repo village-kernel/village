@@ -109,7 +109,7 @@ bool ConcreteInterrupt::RemoveISR(int irq, Function func, void* user, void* args
 {
 	irq += Exception::rsvd_isr_size;
 
-	List<Isr*>* isrs = &isrTabs[irq];
+	VkList<Isr*>* isrs = &isrTabs[irq];
 
 	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
 	{
@@ -145,7 +145,7 @@ void ConcreteInterrupt::ClearISR(int irq)
 {
 	irq += Exception::rsvd_isr_size;
 
-	List<Isr*>* isrs = &isrTabs[irq];
+	VkList<Isr*>* isrs = &isrTabs[irq];
 
 	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
 	{
@@ -170,7 +170,7 @@ void ConcreteInterrupt::Handler(int irq)
 {
 	if (false == isReady) return;
 
-	List<Isr*>* isrs = &isrTabs[irq];
+	VkList<Isr*>* isrs = &isrTabs[irq];
 	
 	if (isrs->IsEmpty())
 	{

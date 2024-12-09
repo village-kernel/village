@@ -19,10 +19,10 @@ class ConcreteLoader : public Loader, public Class
 {
 private:
 	/// @brief Members
-	List<ElfLoader*> libraries;
-	List<ElfLoader*> modules;
-	LibraryTool      libraryTool;
-	ModuleTool       moduleTool;
+	VkList<ElfLoader*> libraries;
+	VkList<ElfLoader*> modules;
+	LibraryTool        libraryTool;
+	ModuleTool         moduleTool;
 
 	/// @brief Methods
 	void Execute();
@@ -42,8 +42,8 @@ public:
 	bool Uninstall(int type, const char* filename);
 
 	/// @brief Data Methods
-	List<ElfLoader*>* GetLibraries();
-	List<ElfLoader*>* GetModules();
+	VkList<ElfLoader*>* GetLibraries();
+	VkList<ElfLoader*>* GetModules();
 };
 
 #endif //!__VK_LOADER_H__

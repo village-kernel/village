@@ -18,7 +18,7 @@ class ConcreteWorkQueue : public WorkQueue, public Class
 {
 private:
 	/// @brief Members
-	List<Work*> works;
+	VkList<Work*> works;
 
 	/// @brief Methods
 	void Execute();
