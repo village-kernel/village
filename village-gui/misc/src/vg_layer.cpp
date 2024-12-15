@@ -56,18 +56,7 @@ bool Layer::IsAreaSame(DrawArea a0, DrawArea a1)
 }
 
 
-/// @brief Layer is area covered
-/// @param a0 
-/// @param a1 
-/// @return 
-bool Layer::IsAreaCovered(DrawArea a0, DrawArea a1)
-{
-	return (a0.sx >= a1.sx && a0.ex <= a1.sx && 
-			a0.sy >= a1.sy && a0.ey <= a1.sy);
-}
-
-
-/// @brief 
+/// @brief Layer is area valid
 /// @param dsc 
 /// @return 
 bool Layer::IsAreaVaild(DrawArea dsc)
@@ -93,140 +82,11 @@ DrawArea Layer::GetOverlapArea(DrawArea a0, DrawArea a1)
 }
 
 
-/// @brief Layer cut the overlap area
-/// @param a0 
-/// @param a1 
-/// @return 
-DrawArea Layer::CutCoveredArea(DrawArea a0, DrawArea a1)
-{
-	DrawArea a = a0;
-
-	if (a0.sy >= a1.sy && a0.ey <= a1.ey)
-	{
-		if (a0.sx >= a1.sx && a0.sx <= a1.ex)
-			a.sx = a1.ex;
-		if (a0.ex >= a1.sx && a0.ex <= a1.ex)
-			a.ex = a1.sx;
-	}
-
-	if (a0.sx >= a1.sx && a0.ex <= a1.ex)
-	{
-		if (a0.sy >= a1.sy && a0.sy <= a1.ey)
-			a.sy = a1.ey;
-		if (a0.ey >= a1.sy && a0.ey <= a1.ey)
-			a.ey = a1.sy;
-	}
-
-	return a;
-}
-
-
-/// @brief Layer cut the overlap area
-/// @param a0 
-/// @param a1 
-/// @return 
-DrawArea Layer::CutOverlapArea(DrawArea a0, DrawArea a1)
-{
-	DrawArea a = a0;
-
-	if (a0.sy >= a1.sy && a0.ey <= a1.ey)
-	{
-		if (a0.sx > a1.sx && a0.sx < a1.ex && a0.ex > a1.ex)
-			a.sx = a1.ex;
-		if (a0.ex > a1.sx && a0.ex < a1.ex && a0.sx < a1.sx)
-			a.ex = a1.sx;
-	}
-
-	if (a0.sx >= a1.sx && a0.ex <= a1.ex)
-	{
-		if (a0.sy >= a1.sy && a0.sy < a1.ey && a0.ey > a1.ey)
-			a.sy = a1.ey;
-		if (a0.ey > a1.sy && a0.ey <= a1.ey && a0.sy < a1.sy)
-			a.ey = a1.sy;
-	}
-
-	return a;
-}
-
-
-/// @brief Layer incise the overlap area
-/// @param a0 
-/// @param a1 
-/// @return 
-VgList<DrawArea> Layer::InciseOverlapArea(DrawArea a0, DrawArea a1)
-{
-	VgList<DrawArea> list;
-	
-	//Upper
-	if (a0.sy < a1.sy)
-	{
-		DrawArea a;
-		a.sx = a0.sx;
-		a.ex = a0.ex;
-		a.sy = a0.sy;
-		a.ey = a1.sy;
-		list.Add(a);
-	}
-
-	//Under
-	if (a0.ey > a1.ey)
-	{
-		DrawArea a;
-		a.sx = a0.sx;
-		a.ex = a0.ex;
-		a.sy = a1.ey;
-		a.ey = a0.ey;
-		list.Add(a);
-	}
-
-	//Left
-	if (a0.sx < a1.sx)
-	{
-		DrawArea a;
-		a.sx = a0.sx;
-		a.ex = a1.sx;
-		a.sy = math.Max(a0.sy, a1.sy);
-		a.ey = math.Min(a0.ey, a1.ey);
-		list.Add(a);
-	}
-
-	//Right
-	if (a0.ex > a1.ex)
-	{
-		DrawArea a;
-		a.sx = a1.ex;
-		a.ex = a0.ex;
-		a.sy = math.Max(a0.sy, a1.sy);
-		a.ey = math.Min(a0.ey, a1.ey);
-		list.Add(a);
-	}
-
-	return list;
-}
-
-
-/// @brief Layer moved the overlap area
-/// @param oldArea 
-/// @param newArea 
-/// @return 
-VgList<DrawArea> Layer::MovedOverlapArea(DrawArea oldArea, DrawArea newArea)
-{
-	VgList<DrawArea> list;
-
-	if (IsAreaOverlap(oldArea, newArea))
-		list = InciseOverlapArea(oldArea, newArea);
-	else
-		list.Add(oldArea);
-
-	return list;
-}
-
-
 /// @brief Get overlap areas
 /// @return 
-VgList<DrawArea> Layer::GetOverlapAreas(DrawArea dsc, VgList<DrawArea> areas)
+DrawAreas Layer::GetOverlapAreas(DrawArea dsc, DrawAreas areas)
 {
-	VgList<DrawArea> getAreas;
+	DrawAreas getAreas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
@@ -242,132 +102,135 @@ VgList<DrawArea> Layer::GetOverlapAreas(DrawArea dsc, VgList<DrawArea> areas)
 }
 
 
-/// @brief 
-/// @param dsc 
-/// @param areas 
+/// @brief Layer cut the overlap areas
+/// @param a0 
+/// @param a1 
 /// @return 
-bool Layer::SiftOverlapArea(DrawArea dsc, VgList<DrawArea> areas)
+DrawAreas Layer::CutOverlapAreas(DrawArea a0, DrawArea a1)
 {
-	DrawArea tmp = dsc;
+	DrawAreas list;
 
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	//Not overlap
+	if (!IsAreaOverlap(a0, a1))
 	{
-		DrawArea area = areas.Item();
-
-		if (IsAreaSame(dsc, area)) continue;
-
-		tmp = CutCoveredArea(tmp, area);
-		
-		if (!IsAreaVaild(tmp)) return false;
+		list.Add(a0);
+		return list;
 	}
-	return true;
+
+	//A1 shrinks by one pixel
+	a1.sx = a1.sx - 1;
+	a1.ex = a1.ex + 1;
+	a1.sy = a1.sy - 1;
+	a1.ey = a1.ey + 1;
+	
+	//Upper
+	if (a0.sy <= a1.sy)
+	{
+		DrawArea a;
+		a.sx = a0.sx;
+		a.ex = a0.ex;
+		a.sy = a0.sy;
+		a.ey = a1.sy;
+		list.Add(a);
+	}
+
+	//Under
+	if (a0.ey >= a1.ey)
+	{
+		DrawArea a;
+		a.sx = a0.sx;
+		a.ex = a0.ex;
+		a.sy = a1.ey;
+		a.ey = a0.ey;
+		list.Add(a);
+	}
+
+	//Left
+	if (a0.sx <= a1.sx)
+	{
+		DrawArea a;
+		a.sx = a0.sx;
+		a.ex = a1.sx;
+		a.sy = math.Max(a0.sy, a1.sy);
+		a.ey = math.Min(a0.ey, a1.ey);
+		list.Add(a);
+	}
+
+	//Right
+	if (a0.ex >= a1.ex)
+	{
+		DrawArea a;
+		a.sx = a1.ex;
+		a.ex = a0.ex;
+		a.sy = math.Max(a0.sy, a1.sy);
+		a.ey = math.Min(a0.ey, a1.ey);
+		list.Add(a);
+	}
+
+	return list;
 }
 
 
-/// @brief 
+/// @brief Add area to areas
 /// @param areas 
-/// @return 
-VgList<DrawArea> Layer::SiftOverlapAreas(VgList<DrawArea> areas)
-{
-	VgList<DrawArea> siftAreas;
-
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
-	{
-		DrawArea area = areas.Item();
-
-		if (SiftOverlapArea(area, areas))
-		{
-			siftAreas.Add(area);
-		}
-	}
-
-	return siftAreas;
-}
-
-
-/// @brief Cut overlap area
 /// @param area 
-/// @param areas 
 /// @return 
-DrawArea Layer::CutOverlapArea(DrawArea dsc, VgList<DrawArea> areas)
+DrawAreas Layer::AddAreaToAreas(DrawAreas areas, DrawArea area)
 {
+	DrawAreas appendAreas;
+
+	appendAreas.Add(area);
+
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
-		DrawArea area = areas.Item();
-
-		if (IsAreaSame(dsc, area)) continue;
-
-		if (!IsAreaOverlap(dsc, area)) continue;
-		
-		dsc = CutOverlapArea(dsc, area);
+		appendAreas = CutAreaFromAreas(appendAreas, areas.Item());
 	}
 
-	return dsc;
+	areas.Append(appendAreas);
+
+	return areas;
 }
 
 
-/// @brief Cut overlap areas
+/// @brief Cut area from areas
 /// @param areas 
+/// @param area 
 /// @return 
-VgList<DrawArea> Layer::CutOverlapAreas(VgList<DrawArea> areas)
+DrawAreas Layer::CutAreaFromAreas(DrawAreas areas, DrawArea area)
 {
-	VgList<DrawArea> cutAreas;
+	DrawAreas cutAreas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
-		DrawArea area = areas.Item();
-
-		area = CutOverlapArea(area, areas);
-
-		cutAreas.Add(area);
+		cutAreas.Append(CutOverlapAreas(areas.Item(), area));
 	}
 
 	return cutAreas;
 }
 
 
-/// @brief 
-/// @param area 
-/// @param areas 
+/// @brief Calc overlap areas
+/// @param dsc 
+/// @param overlap 
+/// @param upper 
 /// @return 
-VgList<DrawArea> Layer::InciseOverlapArea(DrawArea area, VgList<DrawArea> areas)
+DrawAreas Layer::CalcOverlapAreas(DrawArea dsc, DrawAreas overlapAreas, DrawAreas upperAreas)
 {
-	VgList<DrawArea> inciseAreas;
+	DrawAreas areas;
 
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
-	{
-		DrawArea temp = areas.Item();
-
-		if (IsAreaSame(area, temp)) continue;
-
-		if (!IsAreaOverlap(area, temp)) continue;
-		
-		VgList<DrawArea> list = InciseOverlapArea(area, temp);
-
-		if (0 != list.GetSize())
-		{
-			inciseAreas.Append(list);
-		}
-		else inciseAreas.Add(area);
-	}
-
-	return inciseAreas;
-}
-
-
-/// @brief Incise actived wedget overlap areas
-/// @param areas 
-/// @return 
-VgList<DrawArea> Layer::InciseOverlapAreas(VgList<DrawArea> areas)
-{
-	VgList<DrawArea> inciseAreas;
-
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
-	{
-		DrawArea area = areas.Item();
-
-		inciseAreas.Append(InciseOverlapArea(area, areas));
-	}
+	DrawAreas overlaps = GetOverlapAreas(dsc, overlapAreas);
 	
-	return inciseAreas;
+	for (overlaps.Begin(); !overlaps.IsEnd(); overlaps.Next())
+	{
+		areas = AddAreaToAreas(areas, overlaps.Item());
+	}
+
+	DrawAreas uppers = GetOverlapAreas(dsc, upperAreas);
+
+	for (uppers.Begin(); !uppers.IsEnd(); uppers.Next())
+	{
+		areas = CutAreaFromAreas(areas, uppers.Item());
+	}
+
+	return areas;
 }

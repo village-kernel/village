@@ -49,7 +49,7 @@ void GraphicsObject::Execute()
 	//Change actived wedget
 	if (IsActWedgetChange())
 	{
-		RedrawActWedgetOverlapAreas();
+		RedrawSelWedgetOverlapAreas(actWedget);
 
 		SwapActWedgetListNode();
 	}
@@ -70,192 +70,6 @@ void GraphicsObject::Execute()
 void GraphicsObject::Exit()
 {
 	wedgets.Release();
-}
-
-
-/// @brief Is actived wedget change
-/// @param input 
-/// @return 
-bool GraphicsObject::IsActWedgetChange()
-{
-	if (EventCode::_BtnLeft != input.key) return false;
-	
-	if (KeyState::_Pressed != input.state) return false;
-	
-	for (wedgets.End(); !wedgets.IsBegin(); wedgets.Prev())
-	{
-		Wedget* wedget = wedgets.Item();
-
-		if (layer.IsCoordinateInArea(input.point.x, input.point.y, wedget->GetArea()))
-		{
-			if (actWedget != wedget)
-			{
-				actWedget = wedget;
-				return true;
-			}
-			break;
-		}
-	}
-	
-	return false;
-}
-
-
-/// @brief Get actived wedget upper areas
-/// @return 
-VgList<DrawArea> GraphicsObject::GetActWedgetUpperAreas()
-{
-	VgList<DrawArea> getAreas;
-
-	wedgets.Begin(); while(wedgets.Item() != actWedget) { wedgets.Next(); }
-
-	for (wedgets.Next(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* wedget = wedgets.Item();
-
-		getAreas.Add(wedget->GetArea());
-	}
-
-	return getAreas;
-}
-
-
-/// @brief Redraw actived wedget overlap areas
-void GraphicsObject::RedrawActWedgetOverlapAreas()
-{
-	VgList<DrawArea> areas;
-	
-	//Get active wedget upper areas
-	areas = GetActWedgetUpperAreas();
-
-	//Get overlap areas
-	areas = layer.GetOverlapAreas(actWedget->GetArea(), areas);
-
-	//Sift overlap areas
-	areas = layer.SiftOverlapAreas(areas);
-
-	//Cut overlap areas
-	areas = layer.CutOverlapAreas(areas);
-	
-	//Incise overlap areas
-	//areas = layer.InciseOverlapAreas(areas);
-
-	//Redraw overlap areas
-	actWedget->Redraw(areas);
-}
-
-
-/// @brief Swap active wedget
-void GraphicsObject::SwapActWedgetListNode()
-{
-	if (false == actWedget->IsOnBottom() && 
-		false == actWedget->IsOnTop())
-	{
-		wedgets.Remove(actWedget);
-		wedgets.Add(actWedget);
-	}
-}
-
-
-/// @brief Updata input
-void GraphicsObject::UpdataInput()
-{
-	static IndevData last;
-
-	input = devices.indev->Read();
-
-	if (IndevType::_Mouse == devices.indev->GetType())
-	{
-		axis.point.x = input.point.x - last.point.x;
-		axis.point.y = input.point.y - last.point.y;
-		last = input;
-	}
-}
-
-
-/// @brief Is cursor wedget move
-/// @param input 
-/// @return 
-bool GraphicsObject::IsCurWedgetMove()
-{
-	if (IndevType::_Mouse != devices.indev->GetType())
-		return false;
-	if (NULL == devices.indev->Cursor())
-		return false;
-	return true;
-}
-
-
-/// @brief Is actived wedget move
-/// @param input 
-/// @return 
-bool GraphicsObject::IsActWedgetMove()
-{
-	if (actWedget->IsFixed()) return false;
-
-	if (EventCode::_BtnLeft != input.key) return false;
-
-	if (KeyState::_Pressed != input.state) return false;
-
-	if (layer.IsCoordinateInArea(input.point.x, input.point.y, actWedget->GetArea()))
-	{
-		return (axis.point.x || axis.point.y);
-	}
-
-	return false;
-}
-
-
-/// @brief Get move wedget overlap areas
-/// @param input 
-/// @return 
-VgList<DrawArea> GraphicsObject::GetMoveWedgetOverlapAreas(Wedget* movWedget)
-{
-	DrawArea oldArea = movWedget->GetArea();
-	
-	movWedget->Move(axis.point.x, axis.point.y);
-	
-	DrawArea newArea = movWedget->GetArea();
-
-	return layer.MovedOverlapArea(oldArea, newArea);
-}
-
-
-/// @brief Redraw move wedget areas
-/// @param areas 
-void GraphicsObject::RedrawMoveWedgetArea(Wedget* movWedget, VgList<DrawArea> areas)
-{
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
-	{
-		DrawArea area = areas.Item();
-
-		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-		{
-			Wedget* wedget = wedgets.Item();
-
-			if (wedget == movWedget) continue;
-
-			if (layer.IsAreaOverlap(area, wedget->GetArea()))
-			{
-				wedget->Redraw(area);
-			}
-		}
-	}
-
-	movWedget->Show();
-}
-
-
-/// @brief Redraw move wedget overlap areas
-void GraphicsObject::RedrawMoveWedgetOverlapAreas(Wedget* movWedget)
-{
-	VgList<DrawArea> areas;
-
-	//Get move overlap areas
-	areas = GetMoveWedgetOverlapAreas(movWedget);
-
-	//Redraw move areas
-	RedrawMoveWedgetArea(movWedget, areas);
 }
 
 
@@ -282,4 +96,207 @@ bool GraphicsObject::Destroy(Wedget* wedget)
 		return true;
 	}
 	return false;
+}
+
+
+/// @brief Updata input
+void GraphicsObject::UpdataInput()
+{
+	static IndevData last;
+
+	input = devices.indev->Read();
+
+	if (IndevType::_Mouse == devices.indev->GetType())
+	{
+		axis.point.x = input.point.x - last.point.x;
+		axis.point.y = input.point.y - last.point.y;
+		last = input;
+	}
+}
+
+
+/// @brief Is cursor wedget move
+/// @return 
+bool GraphicsObject::IsCurWedgetMove()
+{
+	if (IndevType::_Mouse != devices.indev->GetType())
+		return false;
+	if (NULL == devices.indev->Cursor())
+		return false;
+	return true;
+}
+
+
+/// @brief Is actived wedget move
+/// @return 
+bool GraphicsObject::IsActWedgetMove()
+{
+	if (actWedget->IsFixed()) return false;
+
+	if (EventCode::_BtnLeft != input.key) return false;
+
+	if (KeyState::_Pressed != input.state) return false;
+
+	if (layer.IsCoordinateInArea(input.point.x, input.point.y, actWedget->GetArea()))
+	{
+		return (axis.point.x || axis.point.y);
+	}
+
+	return false;
+}
+
+
+/// @brief Is actived wedget change
+/// @return 
+bool GraphicsObject::IsActWedgetChange()
+{
+	if (EventCode::_BtnLeft != input.key) return false;
+	
+	if (KeyState::_Pressed != input.state) return false;
+	
+	for (wedgets.End(); !wedgets.IsBegin(); wedgets.Prev())
+	{
+		Wedget* wedget = wedgets.Item();
+
+		if (layer.IsCoordinateInArea(input.point.x, input.point.y, wedget->GetArea()))
+		{
+			if (actWedget != wedget)
+			{
+				actWedget = wedget;
+				return true;
+			}
+			break;
+		}
+	}
+	
+	return false;
+}
+
+
+/// @brief Swap active wedget
+void GraphicsObject::SwapActWedgetListNode()
+{
+	if (false == actWedget->IsOnBottom() && 
+		false == actWedget->IsOnTop())
+	{
+		wedgets.Remove(actWedget);
+		wedgets.Add(actWedget);
+	}
+}
+
+
+/// @brief Get wedget upper areas
+/// @return 
+DrawAreas GraphicsObject::GetWedgetUpperAreas()
+{
+	DrawAreas getAreas;
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* wedget = wedgets.Item();
+
+		if (wedget->IsOnTop())
+		{
+			getAreas.Add(wedget->GetArea());
+		}	
+	}
+
+	return getAreas;
+}
+
+
+/// @brief Get selected wedget overlap areas
+/// @return 
+DrawAreas GraphicsObject::GetSelWedgetOverlapAreas(Wedget* selWedget)
+{
+	DrawAreas getAreas;
+
+	wedgets.Begin(); while(wedgets.Item() != selWedget) { wedgets.Next(); }
+
+	for (wedgets.Next(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		getAreas.Add(wedgets.Item()->GetArea());
+	}
+
+	return getAreas;
+}
+
+
+/// @brief Get moved wedget overlap areas
+/// @param input 
+/// @return 
+DrawAreas GraphicsObject::GetMoveWedgetOverlapAreas(Wedget* movWedget)
+{
+	DrawArea oldArea = movWedget->GetArea();
+	
+	movWedget->Move(axis.point.x, axis.point.y);
+	
+	DrawArea newArea = movWedget->GetArea();
+
+	return layer.CutOverlapAreas(oldArea, newArea);
+}
+
+
+/// @brief Redraw actived wedget overlap areas
+/// @param wedget 
+void GraphicsObject::RedrawSelWedgetOverlapAreas(Wedget* selWedget)
+{
+	//Get upper areas
+	DrawAreas upperAreas = GetWedgetUpperAreas();
+
+	//Get overlap areas
+	DrawAreas overlapAreas = GetSelWedgetOverlapAreas(selWedget);
+
+	//Calc redraw areas
+	DrawAreas redrawAreas = layer.CalcOverlapAreas(selWedget->GetArea(), overlapAreas, upperAreas);
+
+	//Wedget redraw
+	selWedget->Redraw(redrawAreas);
+}
+
+
+/// @brief Redraw move wedget overlap areas
+void GraphicsObject::RedrawMoveWedgetOverlapAreas(Wedget* movWedget)
+{
+	//Get move overlap areas
+	DrawAreas movAreas = GetMoveWedgetOverlapAreas(movWedget);
+
+	//Redraw other wedget areas
+	for (wedgets.End(); !wedgets.IsBegin(); wedgets.Prev())
+	{
+		Wedget* wedget = wedgets.Item();
+
+		if (wedget == movWedget) continue;
+
+		DrawAreas cutAreas = movAreas;
+
+		for (movAreas.Begin(); !movAreas.IsEnd(); movAreas.Next())
+		{
+			DrawArea area = movAreas.Item();
+
+			if (layer.IsAreaOverlap(area, wedget->GetArea()))
+			{
+				DrawArea redraw = layer.GetOverlapArea(area, wedget->GetArea());
+
+				wedget->Redraw(redraw);
+
+				cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
+			}
+		}
+
+		movAreas = cutAreas;
+	}
+
+	//Redraw moved wedget areas
+	if (devices.indev->Cursor() != movWedget)
+	{
+		DrawArea cursorArea = devices.indev->Cursor()->GetArea();
+		DrawArea movWedArea = movWedget->GetArea();
+		DrawAreas areas = layer.CutOverlapAreas(movWedArea, cursorArea);
+		movWedget->Redraw(areas);
+	}
+	else
+	{
+		movWedget->Show();
+	}
 }

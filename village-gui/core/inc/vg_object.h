@@ -26,18 +26,16 @@ private:
 	IndevData          input;
 	IndevData          axis;
 private:
-	//Focus Methods
-	bool IsActWedgetChange();
-	VgList<DrawArea> GetActWedgetUpperAreas();
-	void RedrawActWedgetOverlapAreas();
-	void SwapActWedgetListNode();
-
-	//Move Methods
+	//Methods
 	void UpdataInput();
 	bool IsCurWedgetMove();
 	bool IsActWedgetMove();
-	VgList<DrawArea> GetMoveWedgetOverlapAreas(Wedget* movWedget);
-	void RedrawMoveWedgetArea(Wedget* movWedget, VgList<DrawArea> areas);
+	bool IsActWedgetChange();
+	void SwapActWedgetListNode();
+	DrawAreas GetWedgetUpperAreas();
+	DrawAreas GetSelWedgetOverlapAreas(Wedget* selWedget);
+	DrawAreas GetMoveWedgetOverlapAreas(Wedget* movWedget);
+	void RedrawSelWedgetOverlapAreas(Wedget* selWedget);
 	void RedrawMoveWedgetOverlapAreas(Wedget* movWedget);
 public:
 	//Methods

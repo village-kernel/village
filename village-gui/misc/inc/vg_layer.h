@@ -17,11 +17,6 @@ class Layer
 private:
 	//Members
 	Math math;
-
-	//Methods
-	bool SiftOverlapArea(DrawArea dsc, VgList<DrawArea> areas);
-	DrawArea CutOverlapArea(DrawArea dsc, VgList<DrawArea> areas);
-	VgList<DrawArea> InciseOverlapArea(DrawArea area, VgList<DrawArea> areas);
 public:
 	//Methods
 	Layer();
@@ -29,19 +24,15 @@ public:
 	bool IsCoordinateInArea(int x, int y, DrawArea area);
 	bool IsAreaOverlap(DrawArea a0, DrawArea a1);
 	bool IsAreaSame(DrawArea a0, DrawArea a1);
-	bool IsAreaCovered(DrawArea a0, DrawArea a1);
 	bool IsAreaVaild(DrawArea dsc);
-	
 	DrawArea GetOverlapArea(DrawArea a0, DrawArea a1);
-	DrawArea CutCoveredArea(DrawArea a0, DrawArea a1);
-	DrawArea CutOverlapArea(DrawArea a0, DrawArea a1);
-	VgList<DrawArea> InciseOverlapArea(DrawArea a0, DrawArea a1);
-	VgList<DrawArea> MovedOverlapArea(DrawArea oldArea, DrawArea newArea);
-
-	VgList<DrawArea> GetOverlapAreas(DrawArea dsc, VgList<DrawArea> areas);
-	VgList<DrawArea> SiftOverlapAreas(VgList<DrawArea> areas);
-	VgList<DrawArea> CutOverlapAreas(VgList<DrawArea> areas);
-	VgList<DrawArea> InciseOverlapAreas(VgList<DrawArea> areas);
+	DrawAreas GetOverlapAreas(DrawArea dsc, DrawAreas areas);
+	DrawAreas CutOverlapAreas(DrawArea a0, DrawArea a1);
+public:
+	//Methods
+	DrawAreas AddAreaToAreas(DrawAreas areas, DrawArea area);
+	DrawAreas CutAreaFromAreas(DrawAreas areas, DrawArea area);
+	DrawAreas CalcOverlapAreas(DrawArea dsc, DrawAreas overlapAreas, DrawAreas upperAreas);
 };
 
 #endif //!__VG_LAYER_H__
