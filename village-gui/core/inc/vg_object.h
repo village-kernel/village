@@ -22,6 +22,7 @@ private:
 	VgList<Wedget*>    wedgets;
 	Wedget*            defWedget;
 	Wedget*            actWedget;
+	Wedget*            curWedget;
 	Layer              layer;
 	IndevData          input;
 	IndevData          axis;
@@ -31,13 +32,18 @@ private:
 	bool IsCurWedgetMove();
 	bool IsActWedgetMove();
 	bool IsActWedgetChange();
-	void SwapActWedgetListNode();
-	void ExecuteAlwaysFocusWedget();
+	
+	//Focus Methods
 	DrawAreas GetWedgetUpperAreas();
 	DrawAreas GetSelWedgetOverlapAreas(Wedget* selWedget);
-	DrawAreas GetMoveWedgetOverlapAreas(Wedget* movWedget);
 	void RedrawSelWedgetOverlapAreas(Wedget* selWedget);
-	void RedrawMoveWedgetOverlapAreas(Wedget* movWedget);
+	void SwapActWedgetListNode(Wedget* selWedget);
+	void AlwaysFocusWedgetExecute(Wedget* selWedget);
+
+	//Move Methods
+	DrawAreas GetMoveWedgetOverlapAreas(Wedget* movWedget);
+	void RedrawOtherWedgetAreas(Wedget* movWedget);
+	void RedrawMoveWedgetAreas(Wedget* movWedget);
 public:
 	//Methods
 	GraphicsObject(GraphicsDevices& devices);
