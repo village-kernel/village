@@ -32,6 +32,7 @@ private:
 	bool IsActWedgetMove();
 	bool IsActWedgetChange();
 	void SwapActWedgetListNode();
+	void ExecuteAlwaysFocusWedget();
 	DrawAreas GetWedgetUpperAreas();
 	DrawAreas GetSelWedgetOverlapAreas(Wedget* selWedget);
 	DrawAreas GetMoveWedgetOverlapAreas(Wedget* movWedget);

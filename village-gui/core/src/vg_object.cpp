@@ -52,6 +52,8 @@ void GraphicsObject::Execute()
 		RedrawSelWedgetOverlapAreas(actWedget);
 
 		SwapActWedgetListNode();
+
+		ExecuteAlwaysFocusWedget();
 	}
 	//Move actived wedget
 	else if (IsActWedgetMove())
@@ -182,7 +184,12 @@ void GraphicsObject::SwapActWedgetListNode()
 		wedgets.Remove(actWedget);
 		wedgets.Add(actWedget);
 	}
+}
 
+
+/// @brief Execute always focus actived wedget
+void GraphicsObject::ExecuteAlwaysFocusWedget()
+{
 	if (actWedget->IsAlwaysFocus())
 	{
 		actWedget->Execute(input);
