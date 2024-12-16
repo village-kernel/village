@@ -234,6 +234,7 @@ void Wedget::AddWedget(Wedget* wedget)
 	if (NULL != wedget) 
 	{
 		wedget->Initiate(devices);
+		wedget->Move(GetX(), GetY());
 		wedgets.Add(wedget);
 	}
 }
