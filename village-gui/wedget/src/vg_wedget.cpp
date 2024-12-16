@@ -16,7 +16,8 @@ Wedget::Wedget()
 	enable(true),
 	fixed(false),
 	bottom(false),
-	top(false)
+	top(false),
+	focus(false)
 {
 }
 
@@ -198,6 +199,22 @@ void Wedget::SetOnTop(bool top)
 bool Wedget::IsOnTop()
 {
 	return top;
+}
+
+
+/// @brief Set always focus
+/// @param focus 
+void Wedget::SetAlwaysFocus(bool focus)
+{
+	this->focus = focus;
+}
+
+
+/// @brief Is always focus
+/// @return 
+bool Wedget::IsAlwaysFocus()
+{
+	return focus;
 }
 
 

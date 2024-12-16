@@ -32,6 +32,7 @@ protected:
 	bool fixed;
 	bool bottom;
 	bool top;
+	bool focus;
 
 	//Binding members
 	ICommand* cmd;
@@ -77,6 +78,9 @@ public:
 
 	void SetOnTop(bool top);
 	bool IsOnTop();
+
+	void SetAlwaysFocus(bool focus);
+	bool IsAlwaysFocus();
 
 	//Binding methods
 	void BindingCommand(ICommand* cmd);

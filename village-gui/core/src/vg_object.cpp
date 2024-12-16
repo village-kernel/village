@@ -182,6 +182,11 @@ void GraphicsObject::SwapActWedgetListNode()
 		wedgets.Remove(actWedget);
 		wedgets.Add(actWedget);
 	}
+
+	if (actWedget->IsAlwaysFocus())
+	{
+		actWedget->Execute(input);
+	}
 }
 
 

@@ -57,6 +57,7 @@ void DesktopApp::Setup()
 	mainwin->SetSize(0, 0, 1024, 768);
 	mainwin->SetFixed(true);
 	mainwin->SetOnBottom(true);
+	mainwin->SetAlwaysFocus(true);
 	mainwin->SetTitle((char*)"desktop");
 
 	//Init view component
