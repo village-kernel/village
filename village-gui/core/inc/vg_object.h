@@ -34,16 +34,16 @@ private:
 	bool IsActWedgetChange();
 	
 	//Focus Methods
-	DrawAreas GetWedgetUpperAreas(Wedget* selWedget);
-	DrawAreas GetSelWedgetOverlapAreas(Wedget* selWedget);
-	void RedrawSelWedgetOverlapAreas(Wedget* selWedget);
-	void SwapActWedgetListNode(Wedget* selWedget);
-	void AlwaysFocusWedgetExecute(Wedget* selWedget);
+	DrawAreas GetWedgetUpperAreas(Wedget* wedget);
+	DrawAreas GetSelWedgetOverlapAreas(Wedget* wedget);
+	void RedrawSelWedgetOverlapAreas(Wedget* wedget);
+	void SwapActWedgetListNode(Wedget* wedget);
+	void AlwaysFocusWedgetExecute(Wedget* wedget);
 
 	//Move Methods
-	DrawAreas GetMoveWedgetOverlapAreas(Wedget* movWedget);
-	void RedrawOtherWedgetAreas(Wedget* movWedget);
-	void RedrawMoveWedgetAreas(Wedget* movWedget);
+	DrawAreas GetMoveWedgetOverlapAreas(Wedget* wedget);
+	void RedrawOtherWedgetAreas(Wedget* wedget);
+	void RedrawMoveWedgetAreas(Wedget* wedget);
 public:
 	//Methods
 	GraphicsObject(GraphicsDevices& devices);
