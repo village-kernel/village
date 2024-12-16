@@ -34,7 +34,7 @@ private:
 	bool IsActWedgetChange();
 	
 	//Focus Methods
-	DrawAreas GetWedgetUpperAreas();
+	DrawAreas GetWedgetUpperAreas(Wedget* selWedget);
 	DrawAreas GetSelWedgetOverlapAreas(Wedget* selWedget);
 	void RedrawSelWedgetOverlapAreas(Wedget* selWedget);
 	void SwapActWedgetListNode(Wedget* selWedget);

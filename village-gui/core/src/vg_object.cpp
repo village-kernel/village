@@ -184,9 +184,11 @@ bool GraphicsObject::IsActWedgetChange()
 
 /// @brief Get wedget upper areas
 /// @return 
-DrawAreas GraphicsObject::GetWedgetUpperAreas()
+DrawAreas GraphicsObject::GetWedgetUpperAreas(Wedget* selWedget)
 {
 	DrawAreas getAreas;
+
+	if (selWedget == curWedget) return getAreas;
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
@@ -224,7 +226,7 @@ DrawAreas GraphicsObject::GetSelWedgetOverlapAreas(Wedget* selWedget)
 void GraphicsObject::RedrawSelWedgetOverlapAreas(Wedget* selWedget)
 {
 	//Get upper areas
-	DrawAreas upper = GetWedgetUpperAreas();
+	DrawAreas upper = GetWedgetUpperAreas(selWedget);
 
 	//Get overlap areas
 	DrawAreas overlap = GetSelWedgetOverlapAreas(selWedget);
@@ -314,7 +316,7 @@ void GraphicsObject::RedrawOtherWedgetAreas(Wedget* movWedget)
 void GraphicsObject::RedrawMoveWedgetAreas(Wedget* movWedget)
 {
 	//Get upper areas
-	DrawAreas upper = GetWedgetUpperAreas();
+	DrawAreas upper = GetWedgetUpperAreas(movWedget);
 
 	//Get overlap areas
 	DrawAreas overlap; overlap.Add(movWedget->GetArea());
