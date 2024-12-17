@@ -37,11 +37,8 @@ bool Layer::IsCoordinateInArea(int x, int y, DrawArea area)
 /// @return 
 bool Layer::IsAreaOverlap(DrawArea a0, DrawArea a1)
 {
-	if (IsCoordinateInArea(a0.sx, a0.sy, a1)) return true;
-	if (IsCoordinateInArea(a0.sx, a0.ey, a1)) return true;
-	if (IsCoordinateInArea(a0.ex, a0.sy, a1)) return true;
-	if (IsCoordinateInArea(a0.ex, a0.ey, a1)) return true;
-	return false;
+	return ((math.Min(a0.ex, a1.ex) - math.Max(a0.sx, a1.sx) >= 0) &&
+			(math.Min(a0.ey, a1.ey) - math.Max(a0.sy, a1.sy) >= 0));
 }
 
 
@@ -117,13 +114,13 @@ DrawAreas Layer::CutOverlapAreas(DrawArea a0, DrawArea a1)
 		return list;
 	}
 
-	//A1 shrinks by one pixel
+	//A1 enlarge by one pixel
 	a1.sx = a1.sx - 1;
 	a1.ex = a1.ex + 1;
 	a1.sy = a1.sy - 1;
 	a1.ey = a1.ey + 1;
 	
-	//Upper
+	//Up
 	if (a0.sy <= a1.sy)
 	{
 		DrawArea a;
@@ -131,17 +128,6 @@ DrawAreas Layer::CutOverlapAreas(DrawArea a0, DrawArea a1)
 		a.ex = a0.ex;
 		a.sy = a0.sy;
 		a.ey = a1.sy;
-		list.Add(a);
-	}
-
-	//Under
-	if (a0.ey >= a1.ey)
-	{
-		DrawArea a;
-		a.sx = a0.sx;
-		a.ex = a0.ex;
-		a.sy = a1.ey;
-		a.ey = a0.ey;
 		list.Add(a);
 	}
 
@@ -164,6 +150,17 @@ DrawAreas Layer::CutOverlapAreas(DrawArea a0, DrawArea a1)
 		a.ex = a0.ex;
 		a.sy = math.Max(a0.sy, a1.sy);
 		a.ey = math.Min(a0.ey, a1.ey);
+		list.Add(a);
+	}
+
+	//Down
+	if (a0.ey >= a1.ey)
+	{
+		DrawArea a;
+		a.sx = a0.sx;
+		a.ex = a0.ex;
+		a.sy = a1.ey;
+		a.ey = a0.ey;
 		list.Add(a);
 	}
 
