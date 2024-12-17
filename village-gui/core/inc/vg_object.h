@@ -42,6 +42,7 @@ private:
 
 	//Move Methods
 	DrawAreas GetMoveWedgetOverlapAreas(Wedget* wedget);
+	DrawAreas RedrawOtherWedgetAreas(DrawAreas areas, Wedget* wedget, Wedget::Place place);
 	void RedrawOtherWedgetAreas(Wedget* wedget);
 	void RedrawMoveWedgetAreas(Wedget* wedget);
 public:
