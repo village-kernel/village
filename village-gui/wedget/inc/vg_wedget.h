@@ -17,6 +17,14 @@
 /// @brief Wedget
 class Wedget
 {
+public:
+	//Enumerations
+	enum Place
+	{
+		_Top = 1,
+		_Middle,
+		_Bottom
+	};
 protected:
 	//Members
 	GraphicsDevices* devices;
@@ -30,9 +38,8 @@ protected:
 	bool hidden;
 	bool enable;
 	bool fixed;
-	bool bottom;
-	bool top;
 	bool focus;
+	Place place;
 
 	//Binding members
 	ICommand* cmd;
@@ -73,14 +80,11 @@ public:
 	void SetFixed(bool fixed);
 	bool IsFixed();
 
-	void SetOnBottom(bool bottom);
-	bool IsOnBottom();
-
-	void SetOnTop(bool top);
-	bool IsOnTop();
-
 	void SetAlwaysFocus(bool focus);
 	bool IsAlwaysFocus();
+
+	void SetPlace(Place place);
+	Place GetPlace();
 
 	//Binding methods
 	void BindingCommand(ICommand* cmd);

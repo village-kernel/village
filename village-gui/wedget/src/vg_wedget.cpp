@@ -15,9 +15,8 @@ Wedget::Wedget()
 	hidden(false),
 	enable(true),
 	fixed(false),
-	bottom(false),
-	top(false),
-	focus(false)
+	focus(false),
+	place(_Middle)
 {
 }
 
@@ -172,36 +171,6 @@ bool Wedget::IsFixed()
 }
 
 
-/// @brief Set on bottom
-void Wedget::SetOnBottom(bool bottom)
-{
-	this->bottom = bottom;
-}
-
-
-/// @brief Is on bottom
-/// @return 
-bool Wedget::IsOnBottom()
-{
-	return bottom;
-}
-
-
-/// @brief Set on top
-void Wedget::SetOnTop(bool top)
-{
-	this->top = top;
-}
-
-
-/// @brief Is on top
-/// @return 
-bool Wedget::IsOnTop()
-{
-	return top;
-}
-
-
 /// @brief Set always focus
 /// @param focus 
 void Wedget::SetAlwaysFocus(bool focus)
@@ -215,6 +184,22 @@ void Wedget::SetAlwaysFocus(bool focus)
 bool Wedget::IsAlwaysFocus()
 {
 	return focus;
+}
+
+
+/// @brief Wedget set place
+/// @param place 
+void Wedget::SetPlace(Place place)
+{
+	this->place = place;
+}
+
+
+/// @brief Wedget get place
+/// @return 
+Wedget::Place Wedget::GetPlace()
+{
+	return place;
 }
 
 
