@@ -23,6 +23,9 @@ public:
 		_Bottom
 	};
 private:
+	//Static constants members
+	static const int navbar_height = 20;
+
 	//Members
 	Navbar navbar;
 

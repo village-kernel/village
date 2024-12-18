@@ -15,6 +15,14 @@
 class Navbar : public Wedget
 {
 private:
+	//Static constants members
+	static const int btn_width = 20;
+	static const int btn_height = 20;
+	static const int btn_y = 0;
+	static const int exit_btn_x = 0;
+	static const int min_btn_x = exit_btn_x + btn_width;
+	static const int max_btn_x = min_btn_x + btn_width;
+
 	//Members
 	Button exitbtn;
 	Button minbtn;

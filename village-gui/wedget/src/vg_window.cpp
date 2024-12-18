@@ -28,7 +28,7 @@ void Window::SetSize(int width, int height)
 {
 	Wedget::SetSize(width, height);
 
-	navbar.SetSize(GetWidth(), 20);
+	navbar.SetSize(GetWidth(), navbar_height);
 }
 
 
