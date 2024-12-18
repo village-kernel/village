@@ -128,15 +128,13 @@ void VgGroup::UpdataInput()
 /// @return 
 bool VgGroup::IsCurWindowMove()
 {
-	if (IndevType::_Mouse != devices.indev->GetType())
-		return false;
-
-	if (NULL == devices.indev->Cursor())
-		return false;
-	
-	resizeMethod = ResizeMethod::_Move;
-
-	return true;
+	if ((devices.indev->GetType() == IndevType::_Mouse) && 
+		(devices.indev->Cursor() != NULL))
+	{
+		resizeMethod = ResizeMethod::_Move;
+		return true;
+	}
+	return false;
 }
 
 
@@ -144,23 +142,34 @@ bool VgGroup::IsCurWindowMove()
 /// @return 
 bool VgGroup::IsActWindowResize()
 {
+	static bool isResizeMode = false;
+	static ResizeMethod staticResizeMethod = ResizeMethod::_None;
+
 	if (actWindow->IsFixed()) return false;
 
-	if (EventCode::_BtnLeft != input.key) return false;
-
-	if (KeyState::_Pressed != input.state) return false;
-
-	resizeMethod = ResizeMethod::_None;
-
-	if (axis.point.x || axis.point.y)
+	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
 	{
-		if (actWindow->IsInMoveArea(input.point.x, input.point.y))
-			resizeMethod = ResizeMethod::_Move;
-		if (actWindow->IsInResizeArea(input.point.x, input.point.y))
-			resizeMethod = ResizeMethod::_Resize;
+		if ((false == isResizeMode) && (axis.point.x || axis.point.y))
+		{
+			staticResizeMethod = ResizeMethod::_None;
+
+			if (actWindow->IsInMoveArea(input.point.x, input.point.y))
+				staticResizeMethod = ResizeMethod::_Move;
+			if (actWindow->IsInResizeArea(input.point.x, input.point.y))
+				staticResizeMethod = ResizeMethod::_Resize;
+			
+			isResizeMode = true;
+		}
+
+		resizeMethod = staticResizeMethod;
+	}
+	else
+	{
+		isResizeMode = false;
+		resizeMethod = ResizeMethod::_None;
 	}
 
-	return (ResizeMethod::_None != resizeMethod);
+	return isResizeMode;
 }
 
 
@@ -168,22 +177,21 @@ bool VgGroup::IsActWindowResize()
 /// @return 
 bool VgGroup::IsActWindowSelect()
 {
-	if (EventCode::_BtnLeft != input.key) return false;
-	
-	if (KeyState::_Pressed != input.state) return false;
-	
-	for (windows.End(); !windows.IsBegin(); windows.Prev())
+	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
 	{
-		Window* item = windows.Item();
-
-		if (layer.IsCoordinateInArea(input.point.x, input.point.y, item->GetArea()))
+		for (windows.End(); !windows.IsBegin(); windows.Prev())
 		{
-			if (actWindow != item)
+			Window* item = windows.Item();
+
+			if (layer.IsCoordinateInArea(input.point.x, input.point.y, item->GetArea()))
 			{
-				actWindow = item;
-				return true;
+				if (actWindow != item)
+				{
+					actWindow = item;
+					return true;
+				}
+				break;
 			}
-			break;
 		}
 	}
 	
