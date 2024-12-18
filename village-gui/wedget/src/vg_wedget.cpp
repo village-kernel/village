@@ -35,7 +35,13 @@ void Wedget::Move(int axisx, int axisy)
 	layerArea.ex += axisx;
 	layerArea.sy += axisy;
 	layerArea.ey += axisy;
-	MoveWedgets(axisx, axisy);
+	
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+		
+		item->Move(axisx, axisy);
+	}
 }
 
 
@@ -200,56 +206,6 @@ void Wedget::AddWedget(Wedget* wedget)
 }
 
 
-/// @brief Execute wedgets
-/// @param input 
-void Wedget::ExecuteWedgets(IndevData input)
-{
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* wedget = wedgets.Item();
-		
-		wedget->Execute(input);
-	}
-}
-
-
-/// @brief Move wedgets
-/// @param input 
-void Wedget::MoveWedgets(int axisx, int axisy)
-{
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* wedget = wedgets.Item();
-		
-		wedget->Move(axisx, axisy);
-	}
-}
-
-
-/// @brief Draw wedgets
-void Wedget::DrawWedgets(DrawArea drawArea)
-{
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* wedget = wedgets.Item();
-		
-		wedget->Redraw(drawArea);
-	}
-}
-
-
-/// @brief Show wedgets
-void Wedget::ShowWedgets()
-{
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* wedget = wedgets.Item();
-		
-		wedget->Show();
-	}
-}
-
-
 /// @brief Wedget Initiate
 /// @param devices 
 void Wedget::Initiate(VgDevices* devices)
@@ -268,8 +224,39 @@ void Wedget::Execute(IndevData input)
 
 	if (layer.IsCoordinateInArea(input.point.x, input.point.y, layerArea))
 	{
-		ExecuteWedgets(input);
+		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+		{
+			Wedget* item = wedgets.Item();
+			
+			item->Execute(input);
+		}
 	}
+}
+
+
+/// @brief Wedget redraw wedget areas
+/// @param wedget 
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
+{
+	DrawAreas cutAreas = areas;
+
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		DrawArea area = areas.Item();
+
+		if (layer.IsAreaOverlap(area, wedget->GetArea()))
+		{
+			DrawArea redraw = layer.GetOverlapArea(area, wedget->GetArea());
+
+			wedget->Redraw(redraw);
+
+			cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
+		}
+	}
+
+	return cutAreas;
 }
 
 
@@ -279,15 +266,24 @@ void Wedget::Redraw(DrawArea drawArea)
 {
 	if (true == hidden) return;
 
-	rect.Execute(layerArea, drawArea, bgColor);
+	DrawAreas redraws; redraws.Add(drawArea);
+	
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
 
-	DrawWedgets(drawArea);
+		if (item->IsHidden()) continue;
+
+		redraws = RedrawWedgetAreas(item, redraws);
+	}
+
+	rect.Execute(layerArea, redraws, bgColor);
 }
 
 
 /// @brief Wedget Draw
 /// @param drawAreas 
-void Wedget::Redraw(VgList<DrawArea> drawAreas)
+void Wedget::Redraw(DrawAreas drawAreas)
 {
 	for (drawAreas.Begin(); !drawAreas.IsEnd(); drawAreas.Next())
 	{
@@ -301,7 +297,12 @@ void Wedget::Show()
 {
 	if (true == hidden) return;
 
-	rect.Execute(layerArea, layerArea, bgColor);
-	
-	ShowWedgets();
+	Redraw(layerArea);
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+		
+		item->Show();
+	}
 }

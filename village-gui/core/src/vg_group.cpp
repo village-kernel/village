@@ -290,16 +290,16 @@ void VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window)
 void VgGroup::RedrawSelfWindowAreas(Window* window)
 {
 	//Get upper areas
-	DrawAreas upper = GetWindowUpperAreas(window);
+	DrawAreas uppers = GetWindowUpperAreas(window);
 
 	//Get overlap areas
-	DrawAreas overlap; overlap.Add(window->GetArea());
+	DrawAreas overlaps; overlaps.Add(window->GetArea());
 
 	//Calc redraw areas
-	DrawAreas redraw = layer.CalcOverlapAreas(window->GetArea(), overlap, upper);
+	DrawAreas redraws = layer.CalcOverlapAreas(window->GetArea(), overlaps, uppers);
 
 	//Window redraw
-	window->Redraw(redraw);
+	window->Redraw(redraws);
 }
 
 
@@ -340,7 +340,7 @@ DrawAreas VgGroup::GetResizeWindowOverlapAreas(Window* window)
 {
 	DrawArea oldArea = window->GetArea();
 	
-	window->Resize(input.point.x, input.point.y, axis.point.x, axis.point.y);
+	window->Resize(input, axis);
 
 	DrawArea newArea = window->GetArea();
 
@@ -390,16 +390,16 @@ DrawAreas VgGroup::GetSelWindowOverlapAreas(Window* window)
 void VgGroup::RedrawSelWindowOverlapAreas(Window* window)
 {
 	//Get upper areas
-	DrawAreas upper = GetWindowUpperAreas(window);
+	DrawAreas uppers = GetWindowUpperAreas(window);
 
 	//Get overlap areas
-	DrawAreas overlap = GetSelWindowOverlapAreas(window);
+	DrawAreas overlaps = GetSelWindowOverlapAreas(window);
 
 	//Calc redraw areas
-	DrawAreas redraw = layer.CalcOverlapAreas(window->GetArea(), overlap, upper);
+	DrawAreas redraws = layer.CalcOverlapAreas(window->GetArea(), overlaps, uppers);
 
 	//Window redraw
-	window->Redraw(redraw);
+	window->Redraw(redraws);
 }
 
 

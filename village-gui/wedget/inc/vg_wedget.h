@@ -40,6 +40,9 @@ protected:
 	//Members
 	Layer    layer;
 	DrawRect rect;
+private:
+	//Methods
+	DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 public:
 	//Methods
 	Wedget();
@@ -76,16 +79,12 @@ public:
 
 	//Wedget methods
 	void AddWedget(Wedget* wedget);
-	void ExecuteWedgets(IndevData input);
-	void MoveWedgets(int axisx, int axisy);
-	void DrawWedgets(DrawArea drawArea);
-	void ShowWedgets();
 
 	//Methods
 	virtual void Initiate(VgDevices* devices);
 	virtual void Execute(IndevData input);
 	virtual void Redraw(DrawArea drawArea);
-	virtual void Redraw(VgList<DrawArea> drawAreas);
+	virtual void Redraw(DrawAreas drawAreas);
 	virtual void Show();
 };
 

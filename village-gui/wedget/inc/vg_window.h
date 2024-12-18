@@ -39,7 +39,6 @@ public:
 	
 	//Area methods
 	void SetSize(int width, int height);
-	void Resize(int x, int y, int axisx, int axisy);
 	bool IsInMoveArea(int x, int y);
 	bool IsInResizeArea(int x, int y);
 
@@ -59,6 +58,7 @@ public:
 	//Methods
 	void Initiate(VgDevices* devices);
 	void Execute(IndevData input);
+	void Resize(IndevData input, IndevData axis);
 };
 
 #endif //!__VG_WINDOW_H__

@@ -32,17 +32,6 @@ void Window::SetSize(int width, int height)
 }
 
 
-/// @brief Wedget resize size
-/// @param x 
-/// @param y 
-/// @param axisx 
-/// @param axisy 
-void Window::Resize(int x, int y, int axisx, int axisy)
-{
-
-}
-
-
 /// @brief Set enable navbar
 /// @param enable 
 void Window::SetEnableNavbar(bool enable)
@@ -149,4 +138,13 @@ void Window::Initiate(VgDevices* devices)
 void Window::Execute(IndevData input)
 {
 	Wedget::Execute(input);
+}
+
+
+/// @brief Wedget resize size
+/// @param input 
+/// @param axis 
+void Window::Resize(IndevData input, IndevData axis)
+{
+
 }

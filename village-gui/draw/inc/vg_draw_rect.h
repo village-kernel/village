@@ -25,6 +25,7 @@ public:
 	//Methods
 	void Initiate(VgDevices* devices);
 	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
+	void Execute(DrawArea layerArea, DrawAreas drawAreas, int color);
 };
 
 #endif //!__VG_DRAW_RECT_H__

@@ -37,3 +37,18 @@ void DrawRect::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 		}
 	}
 }
+
+
+/// @brief DrawRect Execute
+/// @param layerArea 
+/// @param drawAreas 
+/// @param color 
+void DrawRect::Execute(DrawArea layerArea, DrawAreas drawAreas, int color)
+{
+	for (drawAreas.Begin(); !drawAreas.IsEnd(); drawAreas.Next())
+	{
+		DrawArea drawArea = drawAreas.Item();
+
+		Execute(layerArea, drawArea, color);
+	}
+}
