@@ -26,17 +26,6 @@ Wedget::~Wedget()
 }
 
 
-/// @brief Wedget set size
-/// @param area 
-void Wedget::SetSize(int x, int y, int width, int height)
-{
-	layerArea.sx = x;
-	layerArea.ex = x + width - 1;
-	layerArea.sy = y;
-	layerArea.ey = y + height - 1;
-}
-
-
 /// @brief Wedget move
 /// @param x 
 /// @param y 
@@ -46,6 +35,26 @@ void Wedget::Move(int axisx, int axisy)
 	layerArea.ex += axisx;
 	layerArea.sy += axisy;
 	layerArea.ey += axisy;
+	MoveWedgets(axisx, axisy);
+}
+
+
+/// @brief Wedget set size
+/// @param area 
+void Wedget::SetSize(int width, int height)
+{
+	layerArea.ex = layerArea.sx + width - 1;
+	layerArea.ey = layerArea.sy + height - 1;
+}
+
+
+/// @brief Is in move area
+/// @param x 
+/// @param y 
+/// @return 
+bool Wedget::IsInMoveArea(int x, int y)
+{
+	return layer.IsCoordinateInArea(x, y, layerArea);
 }
 
 
@@ -191,7 +200,7 @@ void Wedget::AddWedget(Wedget* wedget)
 }
 
 
-/// @brief Execite wedgets
+/// @brief Execute wedgets
 /// @param input 
 void Wedget::ExecuteWedgets(IndevData input)
 {
@@ -200,6 +209,19 @@ void Wedget::ExecuteWedgets(IndevData input)
 		Wedget* wedget = wedgets.Item();
 		
 		wedget->Execute(input);
+	}
+}
+
+
+/// @brief Move wedgets
+/// @param input 
+void Wedget::MoveWedgets(int axisx, int axisy)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* wedget = wedgets.Item();
+		
+		wedget->Move(axisx, axisy);
 	}
 }
 

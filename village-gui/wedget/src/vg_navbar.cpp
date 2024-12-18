@@ -9,10 +9,6 @@
 
 /// @brief Constructor
 Navbar::Navbar()
-	:title(NULL),
-	minbtn(NULL),
-	maxbtn(NULL),
-	exitbtn(NULL)
 {
 }
 
@@ -23,56 +19,27 @@ Navbar::~Navbar()
 }
 
 
-/// @brief 
-/// @param title 
-void Navbar::SetTitile(char* title)
-{
-	this->title = title;
-}
-
-
-/// @brief 
-/// @return 
-char* Navbar::GetTitle()
-{
-	return this->title;
-}
-
-
 /// @brief Wedget Initiate
 /// @param devices 
 void Navbar::Initiate(VgDevices* devices)
 {
 	Wedget::Initiate(devices);
 
-	minbtn = new Button();
-	minbtn->SetSize(40, 0, 20, 20);
-	minbtn->SetText((char*)"-");
-	AddWedget(minbtn);
+	exitbtn.Move(0, 0);
+	exitbtn.SetSize(20, 20);
+	exitbtn.SetText((char*)"X");
+	exitbtn.SetBgColor(DrawDefs::_Red);
+	AddWedget(&exitbtn);
 
-	maxbtn = new Button();
-	maxbtn->SetSize(20, 0, 20, 20);
-	maxbtn->SetText((char*)"O");
-	AddWedget(maxbtn);
+	minbtn.Move(20, 0);
+	minbtn.SetSize(20, 20);
+	minbtn.SetText((char*)"-");
+	minbtn.SetBgColor(DrawDefs::_Yellow);
+	AddWedget(&minbtn);
 
-	exitbtn = new Button();
-	exitbtn->SetSize(0, 0, 20, 20);
-	exitbtn->SetText((char*)"X");
-	AddWedget(exitbtn);
-}
-
-
-/// @brief Wedget Execute
-/// @param input 
-void Navbar::Execute(IndevData input)
-{
-
-}
-
-
-/// @brief Wedget Draw
-/// @param area 
-void Navbar::Redraw(DrawArea area)
-{
-
+	maxbtn.Move(40, 0);
+	maxbtn.SetSize(20, 20);
+	maxbtn.SetText((char*)"O");
+	maxbtn.SetBgColor(DrawDefs::_Green);
+	AddWedget(&maxbtn);
 }

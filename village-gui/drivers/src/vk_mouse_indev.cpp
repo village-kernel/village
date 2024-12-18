@@ -33,9 +33,10 @@ void VkMouse::Setup(VgDevices* devices)
 
 	//Create an cursor
 	cursor = new Window();
-	cursor->Initiate(devices);
-	cursor->SetSize(0, 0, 8, 8);
+	cursor->SetSize(8, 8);
 	cursor->SetBgColor(DrawDefs::_Black);
+	cursor->SetHiddenNavbar(true);
+	cursor->Initiate(devices);
 
 	//Attach input event
 	kernel->event.Attach(Event::_InputKey,  (Method)&VkMouse::KeyReceiver, this);

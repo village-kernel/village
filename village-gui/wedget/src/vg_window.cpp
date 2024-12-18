@@ -21,6 +21,17 @@ Window::~Window()
 }
 
 
+/// @brief 
+/// @param width 
+/// @param height 
+void Window::SetSize(int width, int height)
+{
+	Wedget::SetSize(width, height);
+
+	navbar.SetSize(GetWidth(), 20);
+}
+
+
 /// @brief Wedget resize size
 /// @param x 
 /// @param y 
@@ -29,6 +40,38 @@ Window::~Window()
 void Window::Resize(int x, int y, int axisx, int axisy)
 {
 
+}
+
+
+/// @brief Set enable navbar
+/// @param enable 
+void Window::SetEnableNavbar(bool enable)
+{
+	navbar.SetEnable(enable);
+}
+
+
+/// @brief Is enable navbar
+/// @return 
+bool Window::IsEnableNavbar()
+{
+	return navbar.IsEnable();
+}
+
+
+/// @brief Set hidden navbar
+/// @param hidden 
+void Window::SetHiddenNavbar(bool hidden)
+{
+	navbar.SetHidden(hidden);
+}
+
+
+/// @brief Is hidden navbar
+/// @return 
+bool Window::IsHiddenNavbar()
+{
+	return navbar.IsHidden();
 }
 
 
@@ -70,7 +113,14 @@ Window::Place Window::GetPlace()
 /// @return 
 bool Window::IsInMoveArea(int x, int y)
 {
-	return layer.IsCoordinateInArea(x, y, layerArea);
+	bool res = false;
+
+	if (!navbar.IsHidden() && navbar.IsEnable())
+		res = navbar.IsInMoveArea(x, y);
+	else
+		res = layer.IsCoordinateInArea(x, y, layerArea);
+
+	return res;
 }
 
 
@@ -89,6 +139,8 @@ bool Window::IsInResizeArea(int x, int y)
 void Window::Initiate(VgDevices* devices)
 {
 	Wedget::Initiate(devices);
+
+	AddWedget(&navbar);
 }
 
 

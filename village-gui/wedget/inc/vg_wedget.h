@@ -46,14 +46,15 @@ public:
 	virtual ~Wedget();
 
 	//Area methods
-	void SetSize(int x, int y, int width, int height);
 	void Move(int axisx, int axisy);
+	void SetSize(int width, int height);
+	bool IsInMoveArea(int x, int y);
 	int GetX();
 	int GetY();
 	int GetWidth();
 	int GetHeight();
 	DrawArea GetArea();
-
+	
 	//Attribute methods
 	void SetTitle(char* title);
 	char* GetTitle();
@@ -76,6 +77,7 @@ public:
 	//Wedget methods
 	void AddWedget(Wedget* wedget);
 	void ExecuteWedgets(IndevData input);
+	void MoveWedgets(int axisx, int axisy);
 	void DrawWedgets(DrawArea drawArea);
 	void ShowWedgets();
 

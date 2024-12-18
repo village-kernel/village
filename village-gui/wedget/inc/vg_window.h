@@ -8,6 +8,7 @@
 #define __VG_WINDOW_H__
 
 #include "vg_wedget.h"
+#include "vg_navbar.h"
 
 
 /// @brief Window
@@ -22,6 +23,9 @@ public:
 		_Bottom
 	};
 private:
+	//Members
+	Navbar navbar;
+
 	//Attribute members
 	bool focus;
 	Place place;
@@ -31,17 +35,23 @@ public:
 	~Window();
 	
 	//Area methods
+	void SetSize(int width, int height);
 	void Resize(int x, int y, int axisx, int axisy);
+	bool IsInMoveArea(int x, int y);
+	bool IsInResizeArea(int x, int y);
 
 	//Attribute methods
+	void SetEnableNavbar(bool enable);
+	bool IsEnableNavbar();
+
+	void SetHiddenNavbar(bool hidden);
+	bool IsHiddenNavbar();
+
 	void SetAlwaysFocus(bool focus);
 	bool IsAlwaysFocus();
 
 	void SetPlace(Place place);
 	Place GetPlace();
-
-	bool IsInMoveArea(int x, int y);
-	bool IsInResizeArea(int x, int y);
 
 	//Methods
 	void Initiate(VgDevices* devices);
