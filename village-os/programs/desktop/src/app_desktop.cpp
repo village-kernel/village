@@ -25,25 +25,25 @@ DesktopApp::~DesktopApp()
 
 /// @brief Create Window
 /// @return 
-Wedget* DesktopApp::CreateWindow()
+Window* DesktopApp::CreateWindow()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
 	if (NULL == module) return NULL;
 
 	//Gets the vkgui pointer
-	vkgui = (VkGraphics*)module->GetData();
+	vkgui = (VillageGUI*)module->GetData();
 	if (NULL == vkgui) return NULL;
 	
 	//Create mainwin
-	return vkgui->object.Create();
+	return vkgui->group.Create();
 }
 
 
 /// @brief Destroy Window
 void DesktopApp::DestroyWindow()
 {
-	vkgui->object.Destroy(deskwin);
+	vkgui->group.Destroy(deskwin);
 }
 
 
@@ -58,7 +58,7 @@ void DesktopApp::Setup()
 	deskwin->SetSize(0, 0, 1024, 728);
 	deskwin->SetFixed(true);
 	deskwin->SetAlwaysFocus(true);
-	deskwin->SetPlace(Wedget::_Bottom);
+	deskwin->SetPlace(Window::_Bottom);
 	deskwin->SetTitle((char*)"desktop");
 
 	//Init desk view component
@@ -72,7 +72,7 @@ void DesktopApp::Setup()
 	dockwin->SetSize(0, 728, 1024, 40);
 	dockwin->SetFixed(true);
 	dockwin->SetAlwaysFocus(true);
-	dockwin->SetPlace(Wedget::_Top);
+	dockwin->SetPlace(Window::_Top);
 	dockwin->SetTitle((char*)"dock");
 
 	//Init dock view component

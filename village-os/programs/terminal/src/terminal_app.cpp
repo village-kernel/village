@@ -25,25 +25,25 @@ TerminalAPP::~TerminalAPP()
 
 /// @brief Create Window
 /// @return 
-Wedget* TerminalAPP::CreateWindow()
+Window* TerminalAPP::CreateWindow()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
 	if (NULL == module) return NULL;
 
 	//Gets the vkgui pointer
-	vkgui = (VkGraphics*)module->GetData();
+	vkgui = (VillageGUI*)module->GetData();
 	if (NULL == vkgui) return NULL;
 	
 	//Create mainwin
-	return vkgui->object.Create();
+	return vkgui->group.Create();
 }
 
 
 /// @brief Destroy Window
 void TerminalAPP::DestroyWindow()
 {
-	vkgui->object.Destroy(mainwin);
+	vkgui->group.Destroy(mainwin);
 }
 
 

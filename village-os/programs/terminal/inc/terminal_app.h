@@ -15,14 +15,14 @@ class TerminalAPP
 {
 private:
 	//Members
-	VkGraphics*  vkgui;
-	Wedget*      mainwin;
+	VillageGUI*  vkgui;
+	Window*      mainwin;
 
 	//Members
 	TerminalView view;
 private:
 	//Methods
-	Wedget* CreateWindow();
+	Window* CreateWindow();
 	void DestroyWindow();
 public:
 	//Methods

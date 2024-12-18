@@ -9,7 +9,7 @@
 
 #include "vk_module.h"
 #include "vk_kernel.h"
-#include "vg_graphics.h"
+#include "vg_gui.h"
 
 
 /// @brief VkGuiService
@@ -18,7 +18,7 @@ class VkGuiService : public Module
 private:
 	//Members
 	bool       isReady;
-	VkGraphics vkgui;
+	VillageGUI vkgui;
 public:
 	//Methods
 	VkGuiService();

@@ -16,16 +16,16 @@ class DesktopApp
 {
 private:
 	//Members
-	VkGraphics*  vkgui;
-	Wedget*      deskwin;
-	Wedget*      dockwin;
+	VillageGUI*  vkgui;
+	Window*      deskwin;
+	Window*      dockwin;
 
 	//Members
 	DeskView     deskView;
 	DockView     dockView;
 private:
 	//Methods
-	Wedget* CreateWindow();
+	Window* CreateWindow();
 	void DestroyWindow();
 public:
 	//Methods
