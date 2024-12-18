@@ -34,7 +34,7 @@ public:
 private:
 	//Static constants members
 	static const int navbar_height = 20;
-	static const int resize_range = 10;
+	static const int resize_range = 5;
 
 	//Members
 	Navbar navbar;
