@@ -17,6 +17,7 @@ void DeskView::InitComponent(Wedget* parent)
 	Menu* contextMenu = new Menu();
 	contextMenu->SetSize(40, 40);
 	contextMenu->SetBgColor(DrawDefs::_Blue);
+	contextMenu->SetHidden(true);
 	//contextMenu->SetItemSource(model.ContextMenuLists);
 	contextMenu->BindingCommand(model.ContextMenuCmd);
 	parent->AddWedget(contextMenu);
