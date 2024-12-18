@@ -55,11 +55,12 @@ void DesktopApp::Setup()
 	if (NULL == deskwin) return;
 
 	//Setup deskwin size
-	deskwin->SetSize(0, 0, 1024, 728);
+	deskwin->SetSize(1024, 728);
 	deskwin->SetFixed(true);
 	deskwin->SetAlwaysFocus(true);
 	deskwin->SetPlace(Window::_Bottom);
 	deskwin->SetTitle((char*)"desktop");
+	deskwin->SetHiddenNavbar(true);
 
 	//Init desk view component
 	deskView.InitComponent(deskwin);
@@ -69,11 +70,13 @@ void DesktopApp::Setup()
 	if (NULL == dockwin) return;
 
 	//Setup dock size
-	dockwin->SetSize(0, 728, 1024, 40);
+	dockwin->Move(0, 728);
+	dockwin->SetSize(1024, 40);
 	dockwin->SetFixed(true);
 	dockwin->SetAlwaysFocus(true);
 	dockwin->SetPlace(Window::_Top);
 	dockwin->SetTitle((char*)"dock");
+	dockwin->SetHiddenNavbar(true);
 
 	//Init dock view component
 	dockView.InitComponent(dockwin);

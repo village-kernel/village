@@ -55,7 +55,8 @@ void TerminalAPP::Setup()
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
-	mainwin->SetSize(100, 100, 600, 400);
+	mainwin->Move(100, 100);
+	mainwin->SetSize(600, 400);
 	mainwin->SetTitle((char*)"terminal");
 	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
 
