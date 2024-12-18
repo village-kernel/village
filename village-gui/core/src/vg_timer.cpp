@@ -8,7 +8,7 @@
 
 
 /// @brief Constructor
-GraphicsTimer::GraphicsTimer(GraphicsDevices& devices)
+VgTimer::VgTimer(VgDevices& devices)
 	:devices(devices),
 	ticks(NULL),
 	isReady(false)
@@ -17,13 +17,13 @@ GraphicsTimer::GraphicsTimer(GraphicsDevices& devices)
 
 
 /// @brief Destructor
-GraphicsTimer::~GraphicsTimer()
+VgTimer::~VgTimer()
 {
 }
 
 
 /// @brief 
-void GraphicsTimer::Setup()
+void VgTimer::Setup()
 {
 	isReady = false;
 
@@ -36,7 +36,7 @@ void GraphicsTimer::Setup()
 
 
 /// @brief 
-void GraphicsTimer::Execute()
+void VgTimer::Execute()
 {
 	if (NULL != ticks)
 	{
@@ -46,7 +46,7 @@ void GraphicsTimer::Execute()
 
 
 /// @brief 
-void GraphicsTimer::Exit()
+void VgTimer::Exit()
 {
 	if (NULL != ticks)
 	{
@@ -58,7 +58,7 @@ void GraphicsTimer::Exit()
 
 /// @brief 
 /// @param tick 
-void GraphicsTimer::RegisterTick(Ticks* ticks)
+void VgTimer::RegisterTick(Ticks* ticks)
 {
 	if (NULL != ticks && ticks != this->ticks)
 	{
@@ -70,7 +70,7 @@ void GraphicsTimer::RegisterTick(Ticks* ticks)
 
 /// @brief 
 /// @param tick 
-void GraphicsTimer::UnregisterTick(Ticks* ticks)
+void VgTimer::UnregisterTick(Ticks* ticks)
 {
 	if (this->ticks == ticks)
 	{

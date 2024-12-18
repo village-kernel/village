@@ -8,19 +8,43 @@
 #define __VG_WINDOW_H__
 
 #include "vg_wedget.h"
-#include "vg_draw_rect.h"
 
 
 /// @brief Window
 class Window : public Wedget
 {
 public:
+	//Enumerations
+	enum Place
+	{
+		_Top = 1,
+		_Middle,
+		_Bottom
+	};
+private:
+	//Attribute members
+	bool focus;
+	Place place;
+public:
 	//Methods
 	Window();
 	~Window();
 	
+	//Area methods
+	void Resize(int x, int y, int axisx, int axisy);
+
+	//Attribute methods
+	void SetAlwaysFocus(bool focus);
+	bool IsAlwaysFocus();
+
+	void SetPlace(Place place);
+	Place GetPlace();
+
+	bool IsInMoveArea(int x, int y);
+	bool IsInResizeArea(int x, int y);
+
 	//Methods
-	void Initiate(GraphicsDevices* devices);
+	void Initiate(VgDevices* devices);
 	void Execute(IndevData input);
 };
 

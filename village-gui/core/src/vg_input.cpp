@@ -8,7 +8,7 @@
 
 
 /// @brief Constructor
-GraphicsInput::GraphicsInput(GraphicsDevices& devices)
+VgInput::VgInput(VgDevices& devices)
 	:devices(devices),
 	isReady(false)
 {
@@ -16,13 +16,13 @@ GraphicsInput::GraphicsInput(GraphicsDevices& devices)
 
 
 /// @brief Destructor
-GraphicsInput::~GraphicsInput()
+VgInput::~VgInput()
 {
 }
 
 
 /// @brief Input setup
-void GraphicsInput::Setup()
+void VgInput::Setup()
 {
 	isReady = false;
 
@@ -38,7 +38,7 @@ void GraphicsInput::Setup()
 
 
 /// @brief Input execute
-void GraphicsInput::Execute()
+void VgInput::Execute()
 {
 	while (1)
 	{
@@ -57,7 +57,7 @@ void GraphicsInput::Execute()
 
 
 /// @brief Input exit
-void GraphicsInput::Exit()
+void VgInput::Exit()
 {
 	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
 	{
@@ -68,7 +68,7 @@ void GraphicsInput::Exit()
 
 /// @brief Input register indev
 /// @param indev 
-void GraphicsInput::RegisterIndev(Indev* indev)
+void VgInput::RegisterIndev(Indev* indev)
 {
 	indevs.Add(indev);
 	if (isReady) indev->Setup(&devices);
@@ -77,7 +77,7 @@ void GraphicsInput::RegisterIndev(Indev* indev)
 
 /// @brief Input unregister indev
 /// @param indev 
-void GraphicsInput::UnregisterIndev(Indev* indev)
+void VgInput::UnregisterIndev(Indev* indev)
 {
 	if (isReady) indev->Exit();
 	indevs.Remove(indev);

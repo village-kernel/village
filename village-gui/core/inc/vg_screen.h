@@ -1,29 +1,29 @@
 //###########################################################################
-// vg_display.h
-// Declarations of the functions that manage dispaly
+// vg_screen.h
+// Declarations of the functions that manage screen
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_DISPLAY_H__
-#define __VG_DISPLAY_H__
+#ifndef __VG_SCREEN_H__
+#define __VG_SCREEN_H__
 
 #include "vg_devices.h"
 #include "vg_lcddev.h"
 #include "vg_list.h"
 
 
-/// @brief GraphicsDisplay
-class GraphicsDisplay
+/// @brief VgScreen
+class VgScreen
 {
 private:
 	//Members
-	GraphicsDevices&   devices;
-	VgList<Lcddev*>    lcddevs;
-	bool               isReady;
+	VgDevices&       devices;
+	VgList<Lcddev*>  lcddevs;
+	bool             isReady;
 public:
 	//Methods
-	GraphicsDisplay(GraphicsDevices& devices);
-	~GraphicsDisplay();
+	VgScreen(VgDevices& devices);
+	~VgScreen();
 	void Setup();
 	void Execute();
 	void Exit();
@@ -33,4 +33,4 @@ public:
 	void UnregisterLcddev(Lcddev* lcd);
 };
 
-#endif //!__VG_DISPLAY_H__
+#endif //!__VG_SCREEN_H__

@@ -30,7 +30,7 @@ public:
 	char* GetTitle();
 
 	//Methods
-	void Initiate(GraphicsDevices* devices);
+	void Initiate(VgDevices* devices);
 	void Execute(IndevData input);
 	void Redraw(DrawArea area);
 };

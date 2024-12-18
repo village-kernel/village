@@ -14,9 +14,7 @@ Wedget::Wedget()
 	bgColor(DrawDefs::_White),
 	hidden(false),
 	enable(true),
-	fixed(false),
-	focus(false),
-	place(_Middle)
+	fixed(false)
 {
 }
 
@@ -171,38 +169,6 @@ bool Wedget::IsFixed()
 }
 
 
-/// @brief Set always focus
-/// @param focus 
-void Wedget::SetAlwaysFocus(bool focus)
-{
-	this->focus = focus;
-}
-
-
-/// @brief Is always focus
-/// @return 
-bool Wedget::IsAlwaysFocus()
-{
-	return focus;
-}
-
-
-/// @brief Wedget set place
-/// @param place 
-void Wedget::SetPlace(Place place)
-{
-	this->place = place;
-}
-
-
-/// @brief Wedget get place
-/// @return 
-Wedget::Place Wedget::GetPlace()
-{
-	return place;
-}
-
-
 /// @brief Wedget BindingCommand
 /// @param cmd 
 void Wedget::BindingCommand(ICommand* cmd)
@@ -264,7 +230,7 @@ void Wedget::ShowWedgets()
 
 /// @brief Wedget Initiate
 /// @param devices 
-void Wedget::Initiate(GraphicsDevices* devices)
+void Wedget::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 

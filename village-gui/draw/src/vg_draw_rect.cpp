@@ -9,7 +9,7 @@
 
 /// @brief DrawRect Initiate
 /// @param devices 
-void DrawRect::Initiate(GraphicsDevices* devices)
+void DrawRect::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }

@@ -41,7 +41,7 @@ char* Navbar::GetTitle()
 
 /// @brief Wedget Initiate
 /// @param devices 
-void Navbar::Initiate(GraphicsDevices* devices)
+void Navbar::Initiate(VgDevices* devices)
 {
 	Wedget::Initiate(devices);
 

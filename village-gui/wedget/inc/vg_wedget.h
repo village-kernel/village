@@ -17,17 +17,9 @@
 /// @brief Wedget
 class Wedget
 {
-public:
-	//Enumerations
-	enum Place
-	{
-		_Top = 1,
-		_Middle,
-		_Bottom
-	};
 protected:
 	//Members
-	GraphicsDevices* devices;
+	VgDevices* devices;
 
 	//Area members
 	DrawArea layerArea;
@@ -38,8 +30,6 @@ protected:
 	bool hidden;
 	bool enable;
 	bool fixed;
-	bool focus;
-	Place place;
 
 	//Binding members
 	ICommand* cmd;
@@ -80,12 +70,6 @@ public:
 	void SetFixed(bool fixed);
 	bool IsFixed();
 
-	void SetAlwaysFocus(bool focus);
-	bool IsAlwaysFocus();
-
-	void SetPlace(Place place);
-	Place GetPlace();
-
 	//Binding methods
 	void BindingCommand(ICommand* cmd);
 
@@ -96,7 +80,7 @@ public:
 	void ShowWedgets();
 
 	//Methods
-	virtual void Initiate(GraphicsDevices* devices);
+	virtual void Initiate(VgDevices* devices);
 	virtual void Execute(IndevData input);
 	virtual void Redraw(DrawArea drawArea);
 	virtual void Redraw(VgList<DrawArea> drawAreas);
