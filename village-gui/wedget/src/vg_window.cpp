@@ -10,7 +10,8 @@
 /// @brief Constructor
 Window::Window()
 	:focus(false),
-	place(_Middle)
+	place(_Middle),
+	resizeSide(0)
 {
 }
 
@@ -21,7 +22,49 @@ Window::~Window()
 }
 
 
-/// @brief 
+/// @brief Is in move area
+/// @param x 
+/// @param y 
+/// @return 
+bool Window::IsInMoveArea(int x, int y)
+{
+	bool res = false;
+
+	if (!navbar.IsHidden() && navbar.IsEnable())
+		res = navbar.IsInMoveArea(x, y);
+	else
+		res = layer.IsCoordinateInArea(x, y, layerArea);
+
+	return res;
+}
+
+
+/// @brief Is in resize area
+/// @param x 
+/// @param y 
+/// @return 
+bool Window::IsInResizeArea(int x, int y)
+{
+	resizeSide = 0;
+
+	if ((math.IsInRange(x, layerArea.sx - resize_range, layerArea.ex + resize_range)) &&
+		(math.IsInRange(y, layerArea.sy - resize_range, layerArea.ey + resize_range)))
+	{
+		if (math.IsInRange(x - layerArea.sx, -resize_range, resize_range))
+			resizeSide |= ResizeSide::_LeftSide;
+		if (math.IsInRange(layerArea.ex - x, -resize_range, resize_range))
+			resizeSide |= ResizeSide::_RightSide;
+		if (math.IsInRange(y - layerArea.sy, -resize_range, resize_range))
+			resizeSide |= ResizeSide::_UpSide;
+		if (math.IsInRange(layerArea.ey - y, -resize_range, resize_range))
+			resizeSide |= ResizeSide::_DownSide;
+	}
+
+	return (0 != resizeSide);
+}
+
+
+/// @brief Wedget set size
 /// @param width 
 /// @param height 
 void Window::SetSize(int width, int height)
@@ -29,6 +72,22 @@ void Window::SetSize(int width, int height)
 	Wedget::SetSize(width, height);
 
 	navbar.SetSize(GetWidth(), navbar_height);
+}
+
+
+/// @brief Wedget resize size
+/// @param axisx 
+/// @param axisy 
+void Window::Resize(int axisx, int axisy)
+{
+	if (resizeSide & ResizeSide::_LeftSide)
+		layerArea.sx += axisx;
+	if (resizeSide & ResizeSide::_RightSide)
+		layerArea.ex += axisx;
+	if (resizeSide & ResizeSide::_UpSide)
+		layerArea.sy += axisy;
+	if (resizeSide & ResizeSide::_DownSide)
+		layerArea.ey += axisy;
 }
 
 
@@ -96,33 +155,6 @@ Window::Place Window::GetPlace()
 }
 
 
-/// @brief Is in move area
-/// @param x 
-/// @param y 
-/// @return 
-bool Window::IsInMoveArea(int x, int y)
-{
-	bool res = false;
-
-	if (!navbar.IsHidden() && navbar.IsEnable())
-		res = navbar.IsInMoveArea(x, y);
-	else
-		res = layer.IsCoordinateInArea(x, y, layerArea);
-
-	return res;
-}
-
-
-/// @brief Is in resize area
-/// @param x 
-/// @param y 
-/// @return 
-bool Window::IsInResizeArea(int x, int y)
-{
-	return false;
-}
-
-
 /// @brief Wedget Initiate
 /// @param devices 
 void Window::Initiate(VgDevices* devices)
@@ -138,13 +170,4 @@ void Window::Initiate(VgDevices* devices)
 void Window::Execute(IndevData input)
 {
 	Wedget::Execute(input);
-}
-
-
-/// @brief Wedget resize size
-/// @param input 
-/// @param axis 
-void Window::Resize(IndevData input, IndevData axis)
-{
-
 }

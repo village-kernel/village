@@ -340,7 +340,7 @@ DrawAreas VgGroup::GetResizeWindowOverlapAreas(Window* window)
 {
 	DrawArea oldArea = window->GetArea();
 	
-	window->Resize(input, axis);
+	window->Resize(axis.point.x, axis.point.y);
 
 	DrawArea newArea = window->GetArea();
 
