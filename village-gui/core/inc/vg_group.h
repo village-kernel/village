@@ -17,6 +17,14 @@
 class VgGroup
 {
 private:
+	//Enumerations
+	enum ResizeMethod
+	{
+		_None = 0,
+		_Move,
+		_Resize,
+	};
+
 	//Members
 	VgDevices&       devices;
 	VgList<Window*>  windows;
@@ -26,11 +34,11 @@ private:
 	Layer            layer;
 	IndevData        input;
 	IndevData        axis;
+	ResizeMethod     resizeMethod;
 private:
 	//Methods
 	void UpdataInput();
 	bool IsCurWindowMove();
-	bool IsActWindowMove();
 	bool IsActWindowResize();
 	bool IsActWindowSelect();
 	
@@ -39,10 +47,6 @@ private:
 	DrawAreas RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place);
 	void RedrawOtherWindowAreas(DrawAreas areas, Window* window);
 	void RedrawSelfWindowAreas(Window* window);
-
-	//Move Methods
-	DrawAreas GetMoveWindowOverlapAreas(Window* window);
-	void RedrawMoveWindowOverlapAreas(Window* window);
 
 	//Resize Methods
 	DrawAreas GetResizeWindowOverlapAreas(Window* window);
