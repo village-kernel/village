@@ -250,8 +250,6 @@ void ConcreteMemory::Free(uint32_t memory, uint32_t size)
 {
 	if (0 == memory) return;
 
-	freeLock.Lock();
-
 	MapNode* currNode = curr;
 
 	while (NULL != currNode)
@@ -308,8 +306,6 @@ void ConcreteMemory::Free(uint32_t memory, uint32_t size)
 			currNode = (memory < currNode->map.addr) ? currNode->prev : currNode->next;
 		}
 	}
-
-	freeLock.Unlock();
 }
 
 
