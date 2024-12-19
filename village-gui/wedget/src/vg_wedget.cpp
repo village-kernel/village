@@ -14,7 +14,8 @@ Wedget::Wedget()
 	bgColor(DrawDefs::_White),
 	hidden(false),
 	enable(true),
-	fixed(false)
+	fixed(false),
+	cmd(NULL)
 {
 }
 

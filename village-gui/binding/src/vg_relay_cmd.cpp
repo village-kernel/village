@@ -20,5 +20,5 @@ RelayCommand::RelayCommand(Class* user, Method method)
 /// @brief Execute
 void RelayCommand::Execute(void* args)
 {
-	(user->*method)(args);
+	if (user) (user->*method)(args);
 }
