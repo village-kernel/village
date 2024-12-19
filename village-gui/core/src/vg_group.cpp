@@ -305,7 +305,7 @@ DrawAreas VgGroup::GetResizeWindowOverlapAreas(Window* window)
 	DrawArea oldArea = window->GetArea();
 	
 	if (ResizeMethod::_Move == resizeMethod)
-		window->Move(axis.point.x, axis.point.y);
+		window->AxisMove(axis.point.x, axis.point.y);
 	else
 		window->Resize(axis.point.x, axis.point.y);
 

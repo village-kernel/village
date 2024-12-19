@@ -88,6 +88,9 @@ void Window::Resize(int axisx, int axisy)
 		layerArea.sy += axisy;
 	if (resizeSide & ResizeSide::_DownSide)
 		layerArea.ey += axisy;
+	
+	navbar.SetSize(GetWidth(), navbar_height);
+	navbar.MoveTo(GetX(), GetY());
 }
 
 

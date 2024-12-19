@@ -26,10 +26,21 @@ Wedget::~Wedget()
 }
 
 
-/// @brief Wedget move
+/// @brief Wedget move in absolute position
 /// @param x 
 /// @param y 
-void Wedget::Move(int axisx, int axisy)
+void Wedget::MoveTo(int x, int y)
+{
+	int axisx = x - layerArea.sx;
+	int axisy = y - layerArea.sy;
+	AxisMove(axisx, axisy);
+}
+
+
+/// @brief Wedget move in relative position
+/// @param axisx 
+/// @param axisy 
+void Wedget::AxisMove(int axisx, int axisy)
 {
 	layerArea.sx += axisx;
 	layerArea.ex += axisx;
@@ -40,7 +51,7 @@ void Wedget::Move(int axisx, int axisy)
 	{
 		Wedget* item = wedgets.Item();
 		
-		item->Move(axisx, axisy);
+		item->AxisMove(axisx, axisy);
 	}
 }
 
@@ -200,7 +211,7 @@ void Wedget::AddWedget(Wedget* wedget)
 	if (NULL != wedget) 
 	{
 		wedget->Initiate(devices);
-		wedget->Move(GetX(), GetY());
+		wedget->AxisMove(GetX(), GetY());
 		wedgets.Add(wedget);
 	}
 }

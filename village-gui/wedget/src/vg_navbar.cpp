@@ -25,19 +25,19 @@ void Navbar::Initiate(VgDevices* devices)
 {
 	Wedget::Initiate(devices);
 
-	exitbtn.Move(exit_btn_x, btn_y);
+	exitbtn.AxisMove(exit_btn_x, btn_y);
 	exitbtn.SetSize(btn_width, btn_height);
 	exitbtn.SetText((char*)"X");
 	exitbtn.SetBgColor(DrawDefs::_Red);
 	AddWedget(&exitbtn);
 
-	minbtn.Move(min_btn_x, btn_y);
+	minbtn.AxisMove(min_btn_x, btn_y);
 	minbtn.SetSize(btn_width, btn_height);
 	minbtn.SetText((char*)"-");
 	minbtn.SetBgColor(DrawDefs::_Yellow);
 	AddWedget(&minbtn);
 
-	maxbtn.Move(max_btn_x, btn_y);
+	maxbtn.AxisMove(max_btn_x, btn_y);
 	maxbtn.SetSize(btn_width, btn_height);
 	maxbtn.SetText((char*)"O");
 	maxbtn.SetBgColor(DrawDefs::_Green);

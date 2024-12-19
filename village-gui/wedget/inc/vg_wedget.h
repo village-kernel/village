@@ -49,7 +49,8 @@ public:
 	virtual ~Wedget();
 
 	//Area methods
-	void Move(int axisx, int axisy);
+	void MoveTo(int x, int y);
+	void AxisMove(int axisx, int axisy);
 	void SetSize(int width, int height);
 	bool IsInMoveArea(int x, int y);
 	int GetX();
