@@ -1,30 +1,30 @@
 //###########################################################################
-// vg_graphics.cpp
+// vg_gui.cpp
 // Definitions of the functions that manage village gui
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_graphics.h"
+#include "vg_gui.h"
 
 
 /// @brief Constructor
-VkGraphics::VkGraphics()
+VillageGUI::VillageGUI()
 	:timer(devices),
 	input(devices),
-	display(devices),
-	object(devices)
+	screen(devices),
+	group(devices)
 {
 }
 
 
 /// @brief Destructor
-VkGraphics::~VkGraphics()
+VillageGUI::~VillageGUI()
 {
 }
 
 
 /// @brief Setup
-void VkGraphics::Setup()
+void VillageGUI::Setup()
 {
 	//Setup timer
 	timer.Setup();
@@ -32,16 +32,16 @@ void VkGraphics::Setup()
 	//Setup input
 	input.Setup();
 
-	//Setup display
-	display.Setup();
+	//Setup screen
+	screen.Setup();
 
-	//Setup object
-	object.Setup();
+	//Setup group
+	group.Setup();
 }
 
 
 /// @brief Execute
-void VkGraphics::Execute()
+void VillageGUI::Execute()
 {
 	//Execute timer
 	timer.Execute();
@@ -49,22 +49,22 @@ void VkGraphics::Execute()
 	//Execute input
 	input.Execute();
 
-	//Execute display
-	display.Execute();
+	//Execute screen
+	screen.Execute();
 
-	//Execute object
-	object.Execute();
+	//Execute group
+	group.Execute();
 }
 
 
 /// @brief Exit
-void VkGraphics::Exit()
+void VillageGUI::Exit()
 {
-	//Exit object
-	object.Exit();
+	//Exit group
+	group.Exit();
 
-	//Exit display
-	display.Exit();
+	//Exit screen
+	screen.Exit();
 
 	//Exit indev
 	input.Exit();

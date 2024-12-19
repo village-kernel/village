@@ -16,10 +16,10 @@ class DrawArc
 {
 private:
 	//Members
-	GraphicsDevices* devices;
+	VgDevices* devices;
 public:
 	//Methods
-	void Initiate(GraphicsDevices* devices);
+	void Initiate(VgDevices* devices);
 	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
 };
 

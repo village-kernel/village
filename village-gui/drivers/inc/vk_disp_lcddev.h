@@ -19,7 +19,7 @@ private:
 	FBDriver* fbdev;
 public:
 	//Methods
-	void Setup(GraphicsDevices* devices);
+	void Setup(VgDevices* devices);
 	void Exit();
 
 	//Draw methods

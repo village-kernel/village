@@ -71,11 +71,11 @@ struct IndevData
 
 
 /// @brief GraphicsDevices
-struct GraphicsDevices;
+struct VgDevices;
 
 
-/// @brief Wedget
-class Wedget;
+/// @brief Window
+class Window;
 
 
 /// @brief Indev
@@ -87,7 +87,7 @@ protected:
 	bool      ready;
 public:
 	//Methods
-	virtual void Setup(GraphicsDevices* devices) = 0;
+	virtual void Setup(VgDevices* devices) = 0;
 	virtual void Exit() = 0;
 
 	//Type Methods
@@ -100,7 +100,7 @@ public:
 	virtual void ClearReady() { this->ready = false; }
 
 	//Mouse Methods
-	virtual Wedget* Cursor() { return NULL; }
+	virtual Window* Cursor() { return NULL; }
 
 	//Data Methods
 	virtual IndevData Read() = 0;

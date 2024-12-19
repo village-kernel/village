@@ -12,18 +12,18 @@
 #include "vg_list.h"
 
 
-/// @brief GraphicsInput
-class GraphicsInput
+/// @brief VgInput
+class VgInput
 {
 private:
 	//Members
-	GraphicsDevices& devices;
-	VgList<Indev*>   indevs;
-	bool             isReady;
+	VgDevices&      devices;
+	VgList<Indev*>  indevs;
+	bool            isReady;
 public:
 	//Methods
-	GraphicsInput(GraphicsDevices& devices);
-	~GraphicsInput();
+	VgInput(VgDevices& devices);
+	~VgInput();
 	void Setup();
 	void Execute();
 	void Exit();

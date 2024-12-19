@@ -9,7 +9,7 @@
 
 
 /// @brief 
-void VkTicks::Setup(GraphicsDevices* devices)
+void VkTicks::Setup(VgDevices* devices)
 {
 
 }

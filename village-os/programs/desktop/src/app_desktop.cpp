@@ -1,17 +1,18 @@
 //###########################################################################
-// desktop_app.cpp
+// app_desktop.cpp
 // Definitions of the functions that manage desktop app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "desktop_app.h"
+#include "app_desktop.h"
 #include "vk_kernel.h"
 
 
 /// @brief Constructor
 DesktopApp::DesktopApp()
 	:vkgui(NULL),
-	mainwin(NULL)
+	deskwin(NULL),
+	dockwin(NULL)
 {
 }
 
@@ -24,51 +25,72 @@ DesktopApp::~DesktopApp()
 
 /// @brief Create Window
 /// @return 
-Wedget* DesktopApp::CreateWindow()
+Window* DesktopApp::CreateWindow()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
 	if (NULL == module) return NULL;
 
 	//Gets the vkgui pointer
-	vkgui = (VkGraphics*)module->GetData();
+	vkgui = (VillageGUI*)module->GetData();
 	if (NULL == vkgui) return NULL;
 	
 	//Create mainwin
-	return vkgui->object.Create();
+	return vkgui->group.Create();
 }
 
 
 /// @brief Destroy Window
 void DesktopApp::DestroyWindow()
 {
-	vkgui->object.Destroy(mainwin);
+	vkgui->group.Destroy(deskwin);
 }
 
 
 /// @brief Setup
 void DesktopApp::Setup()
 {
-	//Create main window
-	mainwin = CreateWindow();
-	if (NULL == mainwin) return;
+	//Create desk window
+	deskwin = CreateWindow();
+	if (NULL == deskwin) return;
 
-	//Setup mainwin size
-	mainwin->SetSize(0, 0, 1024, 768);
-	mainwin->SetFixed(true);
-	mainwin->SetOnBottom(true);
-	mainwin->SetTitle((char*)"desktop");
+	//Setup deskwin size
+	deskwin->SetSize(1024, 728);
+	deskwin->SetFixed(true);
+	deskwin->SetAlwaysFocus(true);
+	deskwin->SetPlace(Window::_Bottom);
+	deskwin->SetTitle((char*)"desktop");
+	deskwin->SetHiddenNavbar(true);
 
-	//Init view component
-	view.InitComponent(mainwin);
+	//Init desk view component
+	deskView.InitComponent(deskwin);
+
+	//Create dock window
+	dockwin = CreateWindow();
+	if (NULL == dockwin) return;
+
+	//Setup dock size
+	dockwin->AxisMove(0, 728);
+	dockwin->SetSize(1024, 40);
+	dockwin->SetFixed(true);
+	dockwin->SetAlwaysFocus(true);
+	dockwin->SetPlace(Window::_Top);
+	dockwin->SetTitle((char*)"dock");
+	dockwin->SetHiddenNavbar(true);
+
+	//Init dock view component
+	dockView.InitComponent(dockwin);
 }
 
 
 /// @brief Execute
 void DesktopApp::Execute()
 {
-	//Show main window
-	mainwin->Show();
+	//Show desk window
+	deskwin->Show();
+
+	//Show dock window
+	dockwin->Show();
 
 	//Blocked app
 	kernel->thread.Blocked();

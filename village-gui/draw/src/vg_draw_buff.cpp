@@ -9,7 +9,7 @@
 
 /// @brief DrawBuff Initiate
 /// @param devices 
-void DrawBuff::Initiate(GraphicsDevices* devices)
+void DrawBuff::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }

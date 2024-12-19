@@ -9,6 +9,24 @@
 
 #include "stdint.h"
 #include "stddef.h"
+#include "vg_list.h"
+
+
+/// @brief DrawPoint
+struct DrawPoint
+{
+	int x;
+	int y;
+
+	DrawPoint
+	(
+		int x = 0,
+		int y = 0
+	):
+		x(x),
+		y(y)
+	{}
+};
 
 
 /// @brief DrawArea
@@ -32,6 +50,18 @@ struct DrawArea
 		ey(ey)
 	{}
 };
+
+
+/// @brief DrawPath
+typedef VgList<DrawPoint> DrawPath;
+
+
+/// @brief DrawCanvas
+typedef VgList<DrawPath>  DrawCanvas;
+
+
+/// @brief DrawAreas
+typedef VgList<DrawArea>  DrawAreas;
 
 
 /// @brief DrawData

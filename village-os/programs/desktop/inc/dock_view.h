@@ -1,24 +1,24 @@
 //###########################################################################
-// desktop_view.h
+// dock_view.h
 // Declarations of the desktop view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __DESKTOP_VIEW_H__
-#define __DESKTOP_VIEW_H__
+#ifndef __DOCK_VIEW_H__
+#define __DOCK_VIEW_H__
 
-#include "desktop_model.h"
+#include "dock_model.h"
 
 
-/// @brief DesktopView
-class DesktopView
+/// @brief DockView
+class DockView
 {
 private:
 	//Members
-	DesktopModel model;
+	DockModel model;
 public:
 	//Methods
 	void InitComponent(Wedget* parent);
 };
 
-#endif //!__DESKTOP_VIEW_H__
+#endif //!__DOCK_VIEW_H__

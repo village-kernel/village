@@ -11,7 +11,7 @@
 
 /// @brief Setup
 /// @return 
-void VkDisplay::Setup(GraphicsDevices* devices)
+void VkDisplay::Setup(VgDevices* devices)
 {
 	//Get all display device fbDevs
 	VkList<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);

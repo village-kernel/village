@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawMask::Initiate(GraphicsDevices* devices)
+void DrawMask::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 

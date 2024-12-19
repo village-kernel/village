@@ -18,14 +18,14 @@ class VkMouse : public Indev, public Class
 {
 private:
 	//Members
-	GraphicsDevices* devices;
+	VgDevices* devices;
 
 	//Members
 	Math math;
 
 	//Members
 	IndevData data;
-	Wedget* cursor;
+	Window* cursor;
 
 	//Methods
 	void KeyReceiver(Event::InputKey* input);
@@ -34,11 +34,11 @@ public:
 	//Methods
 	VkMouse();
 	~VkMouse();
-	void Setup(GraphicsDevices* devices);
+	void Setup(VgDevices* devices);
 	void Exit();
 
 	//Mouse Methods
-	Wedget* Cursor();
+	Window* Cursor();
 
 	//Data Methods
 	IndevData Read();

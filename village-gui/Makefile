@@ -37,11 +37,11 @@ src-y                                   += village-gui/wedget/src
 ######################################
 # objects
 ######################################
-objs-vkgui-y                            += vg_graphics.o
+objs-vkgui-y                            += vg_gui.o
 objs-vkgui-y                            += vg_timer.o
 objs-vkgui-y                            += vg_input.o
-objs-vkgui-y                            += vg_display.o
-objs-vkgui-y                            += vg_object.o
+objs-vkgui-y                            += vg_screen.o
+objs-vkgui-y                            += vg_group.o
 
 objs-vkgui-y                            += vg_relay_cmd.o
 

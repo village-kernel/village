@@ -12,7 +12,7 @@
 
 
 /// @brief GraphicsDevices
-struct GraphicsDevices;
+struct VgDevices;
 
 
 /// @brief Ticks
@@ -20,7 +20,7 @@ class Ticks
 {
 public:
 	//Methods
-	virtual void Setup(GraphicsDevices* devices) = 0;
+	virtual void Setup(VgDevices* devices) = 0;
 	virtual void Exit() = 0;
 
 	//Ticks Methods

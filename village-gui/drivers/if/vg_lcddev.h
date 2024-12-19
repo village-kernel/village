@@ -13,7 +13,7 @@
 
 
 /// @brief GraphicsDevices
-struct GraphicsDevices;
+struct VgDevices;
 
 
 /// @brief Lcddev
@@ -21,7 +21,7 @@ class Lcddev
 {
 public:
 	//Methods
-	virtual void Setup(GraphicsDevices* devices) = 0;
+	virtual void Setup(VgDevices* devices) = 0;
 	virtual void Exit() = 0;
 
 	//Draw methods

@@ -11,18 +11,18 @@
 #include "vg_ticks.h"
 
 
-/// @brief GraphicsTimer
-class GraphicsTimer
+/// @brief VgTimer
+class VgTimer
 {
 private:
 	//Members
-	GraphicsDevices&  devices;
-	Ticks*            ticks;
-	bool              isReady;
+	VgDevices&  devices;
+	Ticks*      ticks;
+	bool        isReady;
 public:
 	//Methods
-	GraphicsTimer(GraphicsDevices& devices);
-	~GraphicsTimer();
+	VgTimer(VgDevices& devices);
+	~VgTimer();
 	void Setup();
 	void Execute();
 	void Exit();

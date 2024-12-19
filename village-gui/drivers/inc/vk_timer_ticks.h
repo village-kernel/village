@@ -15,7 +15,7 @@ class VkTicks : public Ticks
 {
 public:
 	//Methods
-	void Setup(GraphicsDevices* devices);
+	void Setup(VgDevices* devices);
 	void Exit();
 
 	//Ticks Methods

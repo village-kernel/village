@@ -10,7 +10,7 @@
 
 
 /// @brief Setup
-void VkKeyBoard::Setup(GraphicsDevices* devices)
+void VkKeyBoard::Setup(VgDevices* devices)
 {
 	//Set indev type
 	SetType(IndevType::_Keyboard);
