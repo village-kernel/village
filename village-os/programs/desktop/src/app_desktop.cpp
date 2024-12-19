@@ -70,7 +70,7 @@ void DesktopApp::Setup()
 	if (NULL == dockwin) return;
 
 	//Setup dock size
-	dockwin->Move(0, 728);
+	dockwin->AxisMove(0, 728);
 	dockwin->SetSize(1024, 40);
 	dockwin->SetFixed(true);
 	dockwin->SetAlwaysFocus(true);

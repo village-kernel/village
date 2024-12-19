@@ -14,7 +14,7 @@ void DockView::InitComponent(Wedget* parent)
 
 	//Create start button
 	Button* startBtn = new Button();
-	startBtn->Move(0, 0);
+	startBtn->AxisMove(0, 0);
 	startBtn->SetSize(40, 40);
 	startBtn->SetBgColor(DrawDefs::_Brown);
 	//startBtn->SetText(model.StartText);
@@ -23,7 +23,7 @@ void DockView::InitComponent(Wedget* parent)
 
 	//Create start menu
 	Menu* startMenu = new Menu();
-	startMenu->Move(0, -480);
+	startMenu->AxisMove(0, -480);
 	startMenu->SetSize(320, 480);
 	startMenu->SetBgColor(DrawDefs::_Lgray);
 	startMenu->SetHidden(true);
@@ -33,7 +33,7 @@ void DockView::InitComponent(Wedget* parent)
 
 	//Create task bar
 	Toolbar* taskbar = new Toolbar();
-	taskbar->Move(40, 0);
+	taskbar->AxisMove(40, 0);
 	taskbar->SetSize(width - 40, 40);
 	taskbar->SetBgColor(DrawDefs::_Cyan);
 	//taskbar->SetItemSource(model.TaskbarLists);
