@@ -32,6 +32,11 @@ public:
 	Navbar();
 	~Navbar();
 
+	//Wedget methods
+	Button* GetExitBtn();
+	Button* GetMinBtn();
+	Button* GetMaxBtn();
+
 	//Area methods
 	bool IsInMaximizeArea(int x, int y);
 	bool IsInMinimizeArea(int x, int y);

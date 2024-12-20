@@ -19,6 +19,30 @@ Navbar::~Navbar()
 }
 
 
+/// @brief Get exit button
+/// @return 
+Button* Navbar::GetExitBtn()
+{
+	return &exitbtn;
+}
+
+
+/// @brief Get min button
+/// @return 
+Button* Navbar::GetMinBtn()
+{
+	return &minbtn;
+}
+
+
+/// @brief Get max button
+/// @return 
+Button* Navbar::GetMaxBtn()
+{
+	return &maxbtn;
+}
+
+
 /// @brief Is in maximize area
 /// @param x 
 /// @param y 
