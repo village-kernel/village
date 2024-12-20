@@ -47,9 +47,11 @@ public:
 	int CreateTask(const char* name, Method method, Class *user, void* args = NULL);
 
 	/// @brief Task Methods
+	int GetTaskId();
 	bool StartTask(int tid);
 	bool StopTask(int tid);
 	bool WaitForTask(int tid);
+	bool ExitBlocked(int tid);
 	bool DeleteTask(int tid);
 	bool IsTaskAlive(int tid);
 	VkList<Task*> GetTasks();

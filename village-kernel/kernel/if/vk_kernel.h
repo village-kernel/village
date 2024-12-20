@@ -153,9 +153,11 @@ public:
 	virtual int CreateTask(const char* name, Method method, Class *user, void* args = NULL) = 0;
 	
 	/// @brief Task Methods
+	virtual int GetTaskId() = 0;
 	virtual bool StartTask(int tid) = 0;
 	virtual bool StopTask(int tid) = 0;
 	virtual bool WaitForTask(int tid) = 0;
+	virtual bool ExitBlocked(int tid) = 0;
 	virtual bool DeleteTask(int tid) = 0;
 	virtual bool IsTaskAlive(int tid) = 0;
 	virtual VkList<Task*> GetTasks() = 0;
