@@ -22,6 +22,14 @@ Window::~Window()
 }
 
 
+/// @brief Get navbar
+/// @return 
+Navbar* Window::GetNavbar()
+{
+	return &navbar;
+}
+
+
 /// @brief Is in move area
 /// @param x 
 /// @param y 

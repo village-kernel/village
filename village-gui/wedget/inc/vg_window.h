@@ -50,7 +50,10 @@ public:
 	//Methods
 	Window();
 	~Window();
-	
+
+	//Wedget methods
+	Navbar* GetNavbar();
+
 	//Area methods
 	bool IsInMoveArea(int x, int y);
 	bool IsInResizeArea(int x, int y);
