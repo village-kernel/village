@@ -54,7 +54,11 @@ void VgGroup::Execute()
 	//Resize actived window
 	if (IsActWindowResize())
 	{
+		ResizeWindowExecute(actWindow);
+
 		RedrawResizeWindowOverlapAreas(actWindow);
+
+		DestroyCloseWindow(actWindow);
 	}
 	//Select actived window
 	else if (IsActWindowSelect())
@@ -360,6 +364,32 @@ void VgGroup::RedrawResizeWindowOverlapAreas(Window* window)
 }
 
 
+/// @brief Resize window execute
+/// @param window 
+void VgGroup::ResizeWindowExecute(Window* window)
+{
+	if ((ResizeMethod::_Maximize == resizeMethod) ||
+		(ResizeMethod::_Minimize == resizeMethod) ||
+		(ResizeMethod::_Close    == resizeMethod))
+	{
+		window->Execute(input);
+	}
+}
+
+
+/// @brief Destory close window
+/// @param window 
+void VgGroup::DestroyCloseWindow(Window* window)
+{
+	if (ResizeMethod::_Close == resizeMethod)
+	{
+		Destroy(window);
+
+		actWindow = defWindow;
+	}
+}
+
+
 /// @brief Get selected window overlap areas
 /// @param window 
 /// @return 
@@ -367,7 +397,10 @@ DrawAreas VgGroup::GetSelWindowOverlapAreas(Window* window)
 {
 	DrawAreas areas;
 
-	windows.Begin(); while(windows.Item() != window) { windows.Next(); }
+	for (windows.Begin(); !windows.IsEnd(); windows.Next())
+	{ 
+		if (windows.Item() == window) break;
+	}
 
 	for (windows.Next(); !windows.IsEnd(); windows.Next())
 	{

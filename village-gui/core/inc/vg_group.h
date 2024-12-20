@@ -54,6 +54,8 @@ private:
 	//Resize Methods
 	DrawAreas GetResizeWindowOverlapAreas(Window* window);
 	void RedrawResizeWindowOverlapAreas(Window* window);
+	void ResizeWindowExecute(Window* window);
+	void DestroyCloseWindow(Window* window);
 
 	//Focus Methods
 	DrawAreas GetSelWindowOverlapAreas(Window* window);
