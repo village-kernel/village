@@ -59,15 +59,6 @@ endif
 
 
 #######################################
-# Phony rules
-#######################################
-PHONY += all boot libs kernel modules vkos oslibs osapps ossvcs osImage rootfs
-PHONY += clean clean-boot clean-libs clean-mods clean-vkos distclean
-PHONY += menuconfig silentoldconfig
-.PHONY: $(PHONY)
-
-
-#######################################
 # tasks
 #######################################
 # default action: build all
@@ -339,3 +330,15 @@ endif
 
 distclean: clean
 	$(Q)$(MAKE) -C $(Scripts)/kconfig clean
+
+
+#######################################
+# Phony rules
+#######################################
+PHONY += FORCE
+FORCE:
+
+PHONY += all boot libs kernel modules vkos oslibs osapps ossvcs osImage rootfs
+PHONY += clean clean-boot clean-libs clean-mods clean-vkos distclean
+PHONY += menuconfig silentoldconfig
+.PHONY: $(PHONY)
