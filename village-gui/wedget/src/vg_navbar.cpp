@@ -19,6 +19,36 @@ Navbar::~Navbar()
 }
 
 
+/// @brief Is in maximize area
+/// @param x 
+/// @param y 
+/// @return 
+bool Navbar::IsInMaximizeArea(int x, int y)
+{
+	return maxbtn.IsInArea(x, y);
+}
+
+
+/// @brief Is in minimize area
+/// @param x 
+/// @param y 
+/// @return 
+bool Navbar::IsInMinimizeArea(int x, int y)
+{
+	return minbtn.IsInArea(x, y);
+}
+
+
+/// @brief Is in close area
+/// @param x 
+/// @param y 
+/// @return 
+bool Navbar::IsInCloseArea(int x, int y)
+{
+	return exitbtn.IsInArea(x, y);
+}
+
+
 /// @brief Wedget Initiate
 /// @param devices 
 void Navbar::Initiate(VgDevices* devices)

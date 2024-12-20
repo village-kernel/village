@@ -22,7 +22,10 @@ private:
 	{
 		_None = 0,
 		_Move,
-		_Resize,
+		_Adjust,
+		_Maximize,
+		_Minimize,
+		_Close,
 	};
 
 	//Members

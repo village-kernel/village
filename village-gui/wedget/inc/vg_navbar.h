@@ -32,6 +32,11 @@ public:
 	Navbar();
 	~Navbar();
 
+	//Area methods
+	bool IsInMaximizeArea(int x, int y);
+	bool IsInMinimizeArea(int x, int y);
+	bool IsInCloseArea(int x, int y);
+
 	//Methods
 	void Initiate(VgDevices* devices);
 };

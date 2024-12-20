@@ -30,6 +30,7 @@ void VgGroup::Setup()
 {
 	//Create an default window
 	defWindow = new Window();
+	defWindow->Initiate(&devices);
 
 	//Set default window as active window
 	actWindow = defWindow;
@@ -89,6 +90,7 @@ Window* VgGroup::Create()
 	Window* window = new Window();
 	window->Initiate(&devices);
 	windows.Add(window);
+	actWindow = window;
 	return window;
 }
 
@@ -149,16 +151,28 @@ bool VgGroup::IsActWindowResize()
 
 	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
 	{
-		if ((false == isResizeMode) && (axis.point.x || axis.point.y))
+		if (false == isResizeMode)
 		{
 			staticResizeMethod = ResizeMethod::_None;
-
-			if (actWindow->IsInMoveArea(input.point.x, input.point.y))
-				staticResizeMethod = ResizeMethod::_Move;
-			if (actWindow->IsInResizeArea(input.point.x, input.point.y))
-				staticResizeMethod = ResizeMethod::_Resize;
 			
-			isResizeMode = true;
+			if (axis.point.x || axis.point.y)
+			{
+				if (actWindow->IsInMoveArea(input.point.x, input.point.y))
+					staticResizeMethod = ResizeMethod::_Move;
+				if (actWindow->IsInResizeArea(input.point.x, input.point.y))
+					staticResizeMethod = ResizeMethod::_Adjust;
+			}
+			else
+			{
+				if (actWindow->IsInMaximizeArea(input.point.x, input.point.y))
+					staticResizeMethod = ResizeMethod::_Maximize;
+				if (actWindow->IsInMinimizeArea(input.point.x, input.point.y))
+					staticResizeMethod = ResizeMethod::_Minimize;
+				if (actWindow->IsInCloseArea(input.point.x, input.point.y))
+					staticResizeMethod = ResizeMethod::_Close;
+			}
+
+			isResizeMode = (ResizeMethod::_None != staticResizeMethod);
 		}
 
 		resizeMethod = staticResizeMethod;
@@ -304,10 +318,26 @@ DrawAreas VgGroup::GetResizeWindowOverlapAreas(Window* window)
 {
 	DrawArea oldArea = window->GetArea();
 	
-	if (ResizeMethod::_Move == resizeMethod)
-		window->AxisMove(axis.point.x, axis.point.y);
-	else
-		window->Resize(axis.point.x, axis.point.y);
+	switch (resizeMethod)
+	{
+		case ResizeMethod::_Move:
+			window->AxisMove(axis.point.x, axis.point.y);
+			break;
+		case ResizeMethod::_Adjust:
+			window->Adjust(axis.point.x, axis.point.y);
+			break;
+		case ResizeMethod::_Maximize:
+			window->Maximize();
+			break;
+		case ResizeMethod::_Minimize:
+			window->Minimize();
+			break;
+		case ResizeMethod::_Close:
+			window->Close();
+			break;
+		default:
+			break;
+	}
 
 	DrawArea newArea = window->GetArea();
 

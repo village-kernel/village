@@ -52,7 +52,7 @@ public:
 	void MoveTo(int x, int y);
 	void AxisMove(int axisx, int axisy);
 	void SetSize(int width, int height);
-	bool IsInMoveArea(int x, int y);
+	bool IsInArea(int x, int y);
 	int GetX();
 	int GetY();
 	int GetWidth();

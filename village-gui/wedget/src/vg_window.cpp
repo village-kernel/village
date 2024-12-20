@@ -28,14 +28,11 @@ Window::~Window()
 /// @return 
 bool Window::IsInMoveArea(int x, int y)
 {
-	bool res = false;
-
 	if (!navbar.IsHidden() && navbar.IsEnable())
-		res = navbar.IsInMoveArea(x, y);
-	else
-		res = layer.IsCoordinateInArea(x, y, layerArea);
-
-	return res;
+	{
+		return navbar.IsInArea(x, y);
+	}
+	return layer.IsCoordinateInArea(x, y, layerArea);
 }
 
 
@@ -64,7 +61,49 @@ bool Window::IsInResizeArea(int x, int y)
 }
 
 
-/// @brief Wedget set size
+/// @brief Is in maximize area
+/// @param x 
+/// @param y 
+/// @return 
+bool Window::IsInMaximizeArea(int x, int y)
+{
+	if (!navbar.IsHidden() && navbar.IsEnable())
+	{
+		return navbar.IsInMaximizeArea(x, y);
+	}
+	return false;
+}
+
+
+/// @brief Is in minimize area
+/// @param x 
+/// @param y 
+/// @return 
+bool Window::IsInMinimizeArea(int x, int y)
+{
+	if (!navbar.IsHidden() && navbar.IsEnable())
+	{
+		return navbar.IsInMinimizeArea(x, y);
+	}
+	return false;
+}
+
+
+/// @brief Is in close area
+/// @param x 
+/// @param y 
+/// @return 
+bool Window::IsInCloseArea(int x, int y)
+{
+	if (!navbar.IsHidden() && navbar.IsEnable())
+	{
+		return navbar.IsInCloseArea(x, y);
+	}
+	return false;
+}
+
+
+/// @brief Window set size
 /// @param width 
 /// @param height 
 void Window::SetSize(int width, int height)
@@ -75,10 +114,10 @@ void Window::SetSize(int width, int height)
 }
 
 
-/// @brief Wedget resize size
+/// @brief Window adjust size
 /// @param axisx 
 /// @param axisy 
-void Window::Resize(int axisx, int axisy)
+void Window::Adjust(int axisx, int axisy)
 {
 	if (resizeSide & ResizeSide::_LeftSide)
 		layerArea.sx += axisx;
@@ -91,6 +130,44 @@ void Window::Resize(int axisx, int axisy)
 	
 	navbar.SetSize(GetWidth(), navbar_height);
 	navbar.MoveTo(GetX(), GetY());
+}
+
+
+/// @brief Window maximize
+void Window::Maximize()
+{
+	static DrawArea oldArea;
+	static bool isMaximize = false;
+	
+	if (false == isMaximize)
+	{
+		oldArea = layerArea;
+		MoveTo(0, 0);
+		SetSize(devices->lcddev->GetWidth(), devices->lcddev->GetHeight());
+		isMaximize = true;
+	}
+	else
+	{
+		MoveTo(oldArea.sx, oldArea.sy);
+		SetSize(oldArea.ex - oldArea.sx + 1, oldArea.ey - oldArea.sy + 1);
+		isMaximize = false;
+	}
+}
+
+
+/// @brief Window minimize
+void Window::Minimize()
+{
+	MoveTo(0, 0);
+	SetSize(0, 0);
+}
+
+
+/// @brief Window close
+void Window::Close()
+{
+	MoveTo(0, 0);
+	SetSize(0, 0);
 }
 
 
@@ -142,7 +219,7 @@ bool Window::IsAlwaysFocus()
 }
 
 
-/// @brief Wedget set place
+/// @brief Window set place
 /// @param place 
 void Window::SetPlace(Place place)
 {
@@ -150,7 +227,7 @@ void Window::SetPlace(Place place)
 }
 
 
-/// @brief Wedget get place
+/// @brief Window get place
 /// @return 
 Window::Place Window::GetPlace()
 {
@@ -158,7 +235,7 @@ Window::Place Window::GetPlace()
 }
 
 
-/// @brief Wedget Initiate
+/// @brief Window Initiate
 /// @param devices 
 void Window::Initiate(VgDevices* devices)
 {
@@ -168,7 +245,7 @@ void Window::Initiate(VgDevices* devices)
 }
 
 
-/// @brief Wedget Execute
+/// @brief Window Execute
 /// @param input 
 void Window::Execute(IndevData input)
 {

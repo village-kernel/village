@@ -66,11 +66,11 @@ void Wedget::SetSize(int width, int height)
 }
 
 
-/// @brief Is in move area
+/// @brief Is in area
 /// @param x 
 /// @param y 
 /// @return 
-bool Wedget::IsInMoveArea(int x, int y)
+bool Wedget::IsInArea(int x, int y)
 {
 	return layer.IsCoordinateInArea(x, y, layerArea);
 }

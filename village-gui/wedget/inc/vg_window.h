@@ -54,8 +54,14 @@ public:
 	//Area methods
 	bool IsInMoveArea(int x, int y);
 	bool IsInResizeArea(int x, int y);
+	bool IsInMaximizeArea(int x, int y);
+	bool IsInMinimizeArea(int x, int y);
+	bool IsInCloseArea(int x, int y);
 	void SetSize(int width, int height);
-	void Resize(int axisx, int axisy);
+	void Adjust(int axisx, int axisy);
+	void Maximize();
+	void Minimize();
+	void Close();
 
 	//Attribute methods
 	void SetEnableNavbar(bool enable);
