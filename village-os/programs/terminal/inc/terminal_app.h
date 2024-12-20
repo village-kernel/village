@@ -11,25 +11,26 @@
 
 
 /// @brief TerminalAPP
-class TerminalAPP
+class TerminalAPP : public Class
 {
 private:
+	//Members
+	int          tid;
+	ICommand*    closeCmd;
+
 	//Members
 	VillageGUI*  vkgui;
 	Window*      mainwin;
 
 	//Members
 	TerminalView view;
-private:
-	//Methods
-	Window* CreateWindow();
-	void DestroyWindow();
 public:
 	//Methods
 	TerminalAPP();
 	~TerminalAPP();
 	void Setup();
 	void Execute();
+	void Close();
 	void Exit();
 };
 

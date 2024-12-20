@@ -10,9 +10,11 @@
 
 /// @brief Constructor
 TerminalAPP::TerminalAPP()
-	:vkgui(NULL),
+	:tid(0),
+	vkgui(NULL),
 	mainwin(NULL)
 {
+	closeCmd = new RelayCommand(this, (Method)&TerminalAPP::Close);
 }
 
 
@@ -22,36 +24,19 @@ TerminalAPP::~TerminalAPP()
 }
 
 
-
-/// @brief Create Window
-/// @return 
-Window* TerminalAPP::CreateWindow()
-{
-	//Gets the vkgui module
-	Module* module = kernel->feature.GetModule("vkgui");
-	if (NULL == module) return NULL;
-
-	//Gets the vkgui pointer
-	vkgui = (VillageGUI*)module->GetData();
-	if (NULL == vkgui) return NULL;
-	
-	//Create mainwin
-	return vkgui->group.Create();
-}
-
-
-/// @brief Destroy Window
-void TerminalAPP::DestroyWindow()
-{
-	vkgui->group.Destroy(mainwin);
-}
-
-
 /// @brief Setup
 void TerminalAPP::Setup()
 {
-	//Create main window
-	mainwin = CreateWindow();
+	//Gets the vkgui module
+	Module* module = kernel->feature.GetModule("vkgui");
+	if (NULL == module) return;
+
+	//Gets the vkgui pointer
+	vkgui = (VillageGUI*)module->GetData();
+	if (NULL == vkgui) return;
+	
+	//Create mainwin
+	mainwin = vkgui->group.Create();
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
@@ -59,6 +44,7 @@ void TerminalAPP::Setup()
 	mainwin->SetSize(600, 400);
 	mainwin->SetTitle((char*)"terminal");
 	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
+	mainwin->GetNavbar()->GetExitBtn()->BindingCommand(closeCmd);
 
 	//Init view component
 	view.InitComponent(mainwin);
@@ -71,15 +57,25 @@ void TerminalAPP::Execute()
 	//Show main window
 	mainwin->Show();
 
+	//Get self task id
+	tid = kernel->thread.GetTaskId();
+
 	//Blocked app
 	kernel->thread.Blocked();
+}
+
+
+/// @brief Close
+void TerminalAPP::Close()
+{
+	kernel->thread.ExitBlocked(tid);
 }
 
 
 /// @brief Exit
 void TerminalAPP::Exit()
 {
-	DestroyWindow();
+
 }
 
 

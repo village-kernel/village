@@ -23,10 +23,6 @@ private:
 	//Members
 	DeskView     deskView;
 	DockView     dockView;
-private:
-	//Methods
-	Window* CreateWindow();
-	void DestroyWindow();
 public:
 	//Methods
 	DesktopApp();

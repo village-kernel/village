@@ -23,35 +23,19 @@ DesktopApp::~DesktopApp()
 }
 
 
-/// @brief Create Window
-/// @return 
-Window* DesktopApp::CreateWindow()
-{
-	//Gets the vkgui module
-	Module* module = kernel->feature.GetModule("vkgui");
-	if (NULL == module) return NULL;
-
-	//Gets the vkgui pointer
-	vkgui = (VillageGUI*)module->GetData();
-	if (NULL == vkgui) return NULL;
-	
-	//Create mainwin
-	return vkgui->group.Create();
-}
-
-
-/// @brief Destroy Window
-void DesktopApp::DestroyWindow()
-{
-	vkgui->group.Destroy(deskwin);
-}
-
-
 /// @brief Setup
 void DesktopApp::Setup()
 {
+	//Gets the vkgui module
+	Module* module = kernel->feature.GetModule("vkgui");
+	if (NULL == module) return;
+
+	//Gets the vkgui pointer
+	vkgui = (VillageGUI*)module->GetData();
+	if (NULL == vkgui) return;
+	
 	//Create desk window
-	deskwin = CreateWindow();
+	deskwin = vkgui->group.Create();
 	if (NULL == deskwin) return;
 
 	//Setup deskwin size
@@ -66,7 +50,7 @@ void DesktopApp::Setup()
 	deskView.InitComponent(deskwin);
 
 	//Create dock window
-	dockwin = CreateWindow();
+	dockwin = vkgui->group.Create();
 	if (NULL == dockwin) return;
 
 	//Setup dock size
@@ -100,7 +84,7 @@ void DesktopApp::Execute()
 /// @brief Exit
 void DesktopApp::Exit()
 {
-	DestroyWindow();
+	
 }
 
 
