@@ -10,7 +10,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawLabel::Initiate(GraphicsDevices* devices)
+void DrawLabel::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }

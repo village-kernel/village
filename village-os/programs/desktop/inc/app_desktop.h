@@ -1,5 +1,5 @@
 //###########################################################################
-// desktop_app.h
+// app_desktop.h
 // Declarations of the desktop app
 //
 // $Copyright: Copyright (C) village
@@ -7,7 +7,8 @@
 #ifndef __DESKTOP_APP_H__
 #define __DESKTOP_APP_H__
 
-#include "desktop_view.h"
+#include "desk_view.h"
+#include "dock_view.h"
 
 
 /// @brief DesktopApp
@@ -15,15 +16,13 @@ class DesktopApp
 {
 private:
 	//Members
-	VkGraphics*  vkgui;
-	Wedget*      mainwin;
+	VillageGUI*  vkgui;
+	Window*      deskwin;
+	Window*      dockwin;
 
 	//Members
-	DesktopView  view;
-private:
-	//Methods
-	Wedget* CreateWindow();
-	void DestroyWindow();
+	DeskView     deskView;
+	DockView     dockView;
 public:
 	//Methods
 	DesktopApp();

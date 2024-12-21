@@ -1,6 +1,6 @@
 //###########################################################################
 // vg_gui.h
-// Declarations of the functions that manage gui header
+// Declarations of the functions that manage village gui
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
@@ -39,6 +39,30 @@
 #include "vg_relay_cmd.h"
 
 /// @brief include grahics headers
-#include "vg_graphics.h"
+#include "vg_devices.h"
+#include "vg_timer.h"
+#include "vg_input.h"
+#include "vg_screen.h"
+#include "vg_group.h"
+
+
+/// @brief VillageGUI
+class VillageGUI
+{
+public:
+	//Members
+	VgDevices  devices;
+	VgTimer    timer;
+	VgInput    input;
+	VgScreen   screen;
+	VgGroup    group;
+public:
+	//Methods
+	VillageGUI();
+	~VillageGUI();
+	void Setup();
+	void Execute();
+	void Exit();
+};
 
 #endif //!__VG_GUI_H__

@@ -5,6 +5,7 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vg_button.h"
+#include "vk_event_codes.h"
 
 
 /// @brief Constructor
@@ -34,7 +35,7 @@ void Button::Execute(IndevData input)
 {
 	if (layer.IsCoordinateInArea(input.point.x, input.point.y, layerArea))
 	{
-		if (KeyState::_Pressed == input.state)
+		if (EventCode::_BtnLeft == input.key && KeyState::_Pressed == input.state)
 		{
 			if (NULL != cmd) cmd->Execute();
 		}

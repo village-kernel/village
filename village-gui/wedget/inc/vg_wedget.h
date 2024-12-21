@@ -19,7 +19,7 @@ class Wedget
 {
 protected:
 	//Members
-	GraphicsDevices* devices;
+	VgDevices* devices;
 
 	//Area members
 	DrawArea layerArea;
@@ -30,8 +30,6 @@ protected:
 	bool hidden;
 	bool enable;
 	bool fixed;
-	bool bottom;
-	bool top;
 
 	//Binding members
 	ICommand* cmd;
@@ -42,20 +40,25 @@ protected:
 	//Members
 	Layer    layer;
 	DrawRect rect;
+private:
+	//Methods
+	DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 public:
 	//Methods
 	Wedget();
 	virtual ~Wedget();
 
 	//Area methods
-	void SetSize(int x, int y, int width, int height);
-	void Move(int axisx, int axisy);
+	void MoveTo(int x, int y);
+	void AxisMove(int axisx, int axisy);
+	void SetSize(int width, int height);
+	bool IsInArea(int x, int y);
 	int GetX();
 	int GetY();
 	int GetWidth();
 	int GetHeight();
 	DrawArea GetArea();
-
+	
 	//Attribute methods
 	void SetTitle(char* title);
 	char* GetTitle();
@@ -72,26 +75,17 @@ public:
 	void SetFixed(bool fixed);
 	bool IsFixed();
 
-	void SetOnBottom(bool bottom);
-	bool IsOnBottom();
-
-	void SetOnTop(bool top);
-	bool IsOnTop();
-
 	//Binding methods
 	void BindingCommand(ICommand* cmd);
 
 	//Wedget methods
 	void AddWedget(Wedget* wedget);
-	void ExecuteWedgets(IndevData input);
-	void DrawWedgets(DrawArea drawArea);
-	void ShowWedgets();
 
 	//Methods
-	virtual void Initiate(GraphicsDevices* devices);
+	virtual void Initiate(VgDevices* devices);
 	virtual void Execute(IndevData input);
 	virtual void Redraw(DrawArea drawArea);
-	virtual void Redraw(VgList<DrawArea> drawAreas);
+	virtual void Redraw(DrawAreas drawAreas);
 	virtual void Show();
 };
 

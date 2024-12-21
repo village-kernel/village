@@ -9,7 +9,7 @@
 
 /// @brief DrawRect Initiate
 /// @param devices 
-void DrawRect::Initiate(GraphicsDevices* devices)
+void DrawRect::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
@@ -35,5 +35,20 @@ void DrawRect::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 		{
 			devices->lcddev->Point(x, y, color);
 		}
+	}
+}
+
+
+/// @brief DrawRect Execute
+/// @param layerArea 
+/// @param drawAreas 
+/// @param color 
+void DrawRect::Execute(DrawArea layerArea, DrawAreas drawAreas, int color)
+{
+	for (drawAreas.Begin(); !drawAreas.IsEnd(); drawAreas.Next())
+	{
+		DrawArea drawArea = drawAreas.Item();
+
+		Execute(layerArea, drawArea, color);
 	}
 }

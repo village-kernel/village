@@ -44,7 +44,7 @@ bool ElfLoader::Load(const char* filename)
 	if (!SharedObjs())  return false;
 	if (!RelEntries())  return false;
 	
-	kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", elf.map, filename);
+	kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", elf.base, filename);
 	return true;
 }
 
@@ -139,7 +139,7 @@ inline uint32_t ElfLoader::GetSymbolAddr(uint32_t index)
 {
 	if (elf.symtabNum > index)
 	{
-		return elf.map + elf.symtab[index].value;
+		return elf.base + elf.symtab[index].value;
 	}
 	return 0;
 }
@@ -152,7 +152,7 @@ inline uint32_t ElfLoader::GetDynSymAddr(uint32_t index)
 {
 	if (elf.dynsymNum > index)
 	{
-		return elf.map + elf.dynsym[index].value;
+		return elf.base + elf.dynsym[index].value;
 	}
 	return 0;
 }
@@ -204,7 +204,7 @@ inline ElfLoader::SectionData ElfLoader::GetSectionData(uint32_t index)
 /// @return address
 inline ElfLoader::SectionData ElfLoader::GetDynSectionData(uint32_t index)
 {
-	return SectionData(elf.map + elf.sections[index].addr);
+	return SectionData(elf.base + elf.sections[index].addr);
 }
 
 
@@ -296,11 +296,11 @@ bool ElfLoader::SetMapAddr()
 				memsize = memsize / program.align * program.align;
 			}
 		}
-		elf.map = (uint32_t)new char[memsize]();
+		elf.base = (uint32_t)new char[memsize]();
 	}
 	else if (_ELF_Type_Exec == elf.header->type)
 	{
-		elf.map = 0;
+		elf.base = 0;
 	}
 
 	kernel->debug.Output(Debug::_Lv1, "%s set mapping address successful", filename);
@@ -318,7 +318,7 @@ bool ElfLoader::LoadProgram()
 
 		if (_PT_LOAD == program.type)
 		{
-			uint8_t* vaddr = (uint8_t*)(elf.map  + program.vaddr);
+			uint8_t* vaddr = (uint8_t*)(elf.base + program.vaddr);
 			uint8_t* code  = (uint8_t*)(elf.load + program.offset);
 
 			for (uint32_t size = 0; size < program.memSize; size++)
@@ -341,10 +341,10 @@ bool ElfLoader::PostParser()
 	if (_ELF_Type_Dyn != elf.header->type) return true;
 
 	//Set elf header pointer
-	elf.header = (ELFHeader*)(elf.map);
+	elf.header = (ELFHeader*)(elf.base);
 
 	//Set executable entry
-	elf.exec = elf.map + elf.header->entry;
+	elf.exec = elf.base + elf.header->entry;
 
 	//Get some information of elf
 	for (uint32_t i = 0; i < elf.header->sectionHeaderNum; i++)
@@ -441,17 +441,17 @@ bool ElfLoader::RelEntries()
 				const char* symName = GetDynSymName(relEntry.symbol);
 
 				//Get relocation section addr
-				uint32_t relAddr = elf.map + relEntry.offset;
+				uint32_t relAddr = elf.base + relEntry.offset;
 				uint32_t symAddr = 0;
 
 				//Get the address of symbol entry when the relocation entry type is relative
-				if (_R_TYPE_RELATIVE == relEntry.type) symAddr = elf.map;
+				if (_R_TYPE_RELATIVE == relEntry.type) symAddr = elf.base;
 
 				//Get the address of symbol entry when the relocation entry type is copy
 				if (_R_TYPE_COPY == relEntry.type) symAddr = LibraryTool().SearchSymbol(symName);
 				
 				//Get the address of object symbol entry
-				if (0 == symAddr && symEntry.shndx) symAddr = elf.map + symEntry.value;
+				if (0 == symAddr && symEntry.shndx) symAddr = elf.base + symEntry.value;
 
 				//Get the address of undefined symbol entry
 				if (0 == symAddr) symAddr = kernel->symbol.Search(symName);
@@ -498,7 +498,7 @@ bool ElfLoader::RelEntries()
 void ElfLoader::RelSymCall(uint32_t relAddr, uint32_t symAddr, uint8_t type, uint32_t size)
 {
 	uint32_t A = *((uint32_t*)relAddr);
-	uint32_t B = elf.map;
+	uint32_t B = elf.base;
 	uint32_t G = 0;     //
 	uint32_t GOT = 0;   //
 	uint32_t L = 0;     //
@@ -775,6 +775,6 @@ bool ElfLoader::Exit()
 {
 	delete[] filename;
 	delete[] (char*)elf.load;
-	delete[] (char*)elf.map;
+	delete[] (char*)elf.base;
 	return true;
 }

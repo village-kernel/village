@@ -12,14 +12,14 @@
 #include "vg_lcddev.h"
 
 
-/// @brief GraphicsDevices
-struct GraphicsDevices
+/// @brief VgDevices
+struct VgDevices
 {
 	Ticks*  ticks;
 	Indev*  indev;
 	Lcddev* lcddev;
 
-	GraphicsDevices()
+	VgDevices()
 		:ticks(NULL),
 		indev(NULL),
 		lcddev(NULL)

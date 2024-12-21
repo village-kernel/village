@@ -9,10 +9,6 @@
 
 /// @brief Constructor
 Navbar::Navbar()
-	:title(NULL),
-	minbtn(NULL),
-	maxbtn(NULL),
-	exitbtn(NULL)
 {
 }
 
@@ -23,56 +19,81 @@ Navbar::~Navbar()
 }
 
 
-/// @brief 
-/// @param title 
-void Navbar::SetTitile(char* title)
+/// @brief Get exit button
+/// @return 
+Button* Navbar::GetExitBtn()
 {
-	this->title = title;
+	return &exitbtn;
 }
 
 
-/// @brief 
+/// @brief Get min button
 /// @return 
-char* Navbar::GetTitle()
+Button* Navbar::GetMinBtn()
 {
-	return this->title;
+	return &minbtn;
+}
+
+
+/// @brief Get max button
+/// @return 
+Button* Navbar::GetMaxBtn()
+{
+	return &maxbtn;
+}
+
+
+/// @brief Is in maximize area
+/// @param x 
+/// @param y 
+/// @return 
+bool Navbar::IsInMaximizeArea(int x, int y)
+{
+	return maxbtn.IsInArea(x, y);
+}
+
+
+/// @brief Is in minimize area
+/// @param x 
+/// @param y 
+/// @return 
+bool Navbar::IsInMinimizeArea(int x, int y)
+{
+	return minbtn.IsInArea(x, y);
+}
+
+
+/// @brief Is in close area
+/// @param x 
+/// @param y 
+/// @return 
+bool Navbar::IsInCloseArea(int x, int y)
+{
+	return exitbtn.IsInArea(x, y);
 }
 
 
 /// @brief Wedget Initiate
 /// @param devices 
-void Navbar::Initiate(GraphicsDevices* devices)
+void Navbar::Initiate(VgDevices* devices)
 {
 	Wedget::Initiate(devices);
 
-	minbtn = new Button();
-	minbtn->SetSize(40, 0, 20, 20);
-	minbtn->SetText((char*)"-");
-	AddWedget(minbtn);
+	exitbtn.AxisMove(exit_btn_x, btn_y);
+	exitbtn.SetSize(btn_width, btn_height);
+	exitbtn.SetText((char*)"X");
+	exitbtn.SetBgColor(DrawDefs::_Red);
+	AddWedget(&exitbtn);
 
-	maxbtn = new Button();
-	maxbtn->SetSize(20, 0, 20, 20);
-	maxbtn->SetText((char*)"O");
-	AddWedget(maxbtn);
+	minbtn.AxisMove(min_btn_x, btn_y);
+	minbtn.SetSize(btn_width, btn_height);
+	minbtn.SetText((char*)"-");
+	minbtn.SetBgColor(DrawDefs::_Yellow);
+	AddWedget(&minbtn);
 
-	exitbtn = new Button();
-	exitbtn->SetSize(0, 0, 20, 20);
-	exitbtn->SetText((char*)"X");
-	AddWedget(exitbtn);
-}
-
-
-/// @brief Wedget Execute
-/// @param input 
-void Navbar::Execute(IndevData input)
-{
-
-}
-
-
-/// @brief Wedget Draw
-/// @param area 
-void Navbar::Redraw(DrawArea area)
-{
-
+	maxbtn.AxisMove(max_btn_x, btn_y);
+	maxbtn.SetSize(btn_width, btn_height);
+	maxbtn.SetText((char*)"O");
+	maxbtn.SetBgColor(DrawDefs::_Green);
+	AddWedget(&maxbtn);
 }

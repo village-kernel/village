@@ -116,6 +116,14 @@ int ConcreteThread::CreateTask(const char* name, Method method, Class *user, voi
 }
 
 
+/// @brief Get current task id
+/// @return 
+int ConcreteThread::GetTaskId()
+{
+	return tasks.GetNid();
+}
+
+
 /// @brief Start task
 /// @param tid 
 /// @return 
@@ -166,6 +174,27 @@ bool ConcreteThread::WaitForTask(int tid)
 		//Blocking wait
 		while(task->state != TaskState::_Exited) {}
 		return true;
+	}
+	return false;
+}
+
+
+/// @brief Exit task blocked state
+/// @param tid 
+/// @return 
+bool ConcreteThread::ExitBlocked(int tid)
+{
+	//Gets the task
+	Task* task = tasks.GetItem(tid);
+
+	//Check task is valid
+	if (NULL != task)
+	{
+		if (TaskState::_Blocked == task->state)
+		{
+			task->state = TaskState::_Running;
+			return true;
+		}
 	}
 	return false;
 }

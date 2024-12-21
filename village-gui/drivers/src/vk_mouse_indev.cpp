@@ -7,7 +7,7 @@
 #include "vk_mouse_indev.h"
 #include "vk_event_codes.h"
 #include "vk_kernel.h"
-#include "vg_wedget.h"
+#include "vg_window.h"
 
 
 /// @brief Constructor
@@ -24,7 +24,7 @@ VkMouse::~VkMouse()
 
 
 /// @brief Setup
-void VkMouse::Setup(GraphicsDevices* devices)
+void VkMouse::Setup(VgDevices* devices)
 {
 	this->devices = devices;
 
@@ -32,10 +32,11 @@ void VkMouse::Setup(GraphicsDevices* devices)
 	SetType(IndevType::_Mouse);
 
 	//Create an cursor
-	cursor = new Wedget();
-	cursor->Initiate(devices);
-	cursor->SetSize(0, 0, 8, 8);
+	cursor = new Window();
+	cursor->SetSize(8, 8);
 	cursor->SetBgColor(DrawDefs::_Black);
+	cursor->SetHiddenNavbar(true);
+	cursor->Initiate(devices);
 
 	//Attach input event
 	kernel->event.Attach(Event::_InputKey,  (Method)&VkMouse::KeyReceiver, this);
@@ -101,7 +102,7 @@ void VkMouse::AxisReceiver(Event::InputAxis* input)
 
 /// @brief Cursor
 /// @return 
-Wedget* VkMouse::Cursor()
+Window* VkMouse::Cursor()
 {
 	return cursor;
 }

@@ -176,6 +176,23 @@
 		切换到vscode debug界面
 		选择Cortex Debug-stlink STM32F407
 
+# 调试动态加载的程序：
+
+- 正常启动debug内核
+- 在与内核交互的串口终端使用run命令加载程序
+- 运行之后会出现debug信息，其中0xxxxxxxx就是程序加载的地址
+- 例如运行调试terminal.exec应用程序
+
+		root@village / # run /programs/terminal.exec
+		[Debug] load at 0x0016ec20, /programs/terminal.exec load done
+
+- 加载符号到gdb，暂停debug内核，切换到 调试控制台，执行以下命令:
+	
+		-exec add-symbol-file build/output/programs/terminal.elf -o 0x0016ec20
+
+- 继续debug内核，这样就可以调试terminal应用程序了。
+
+
 # 说明
 - 目前还处于开发阶段，各功能还不完善，框架结构未确定，待优化。
 - 适配平台不多，目前只适配了cortex-m和i686平台，其他平台待适配。

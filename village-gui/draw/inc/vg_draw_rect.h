@@ -17,14 +17,15 @@ class DrawRect
 {
 private:
 	//Members
-	GraphicsDevices* devices;
+	VgDevices* devices;
 
 	//Members
 	Math math;
 public:
 	//Methods
-	void Initiate(GraphicsDevices* devices);
+	void Initiate(VgDevices* devices);
 	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
+	void Execute(DrawArea layerArea, DrawAreas drawAreas, int color);
 };
 
 #endif //!__VG_DRAW_RECT_H__

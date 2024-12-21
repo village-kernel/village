@@ -48,7 +48,7 @@ int Math::Sat(int a, int min, int max)
 /// @param min 
 /// @param max 
 /// @return 
-bool IsInRange(int a, int min, int max)
+bool Math::IsInRange(int a, int min, int max)
 {
 	return ((a >= min) && (a <= max));
 }

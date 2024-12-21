@@ -22,9 +22,11 @@ src-desktop-y                         += village-os/programs/desktop/src
 ######################################
 # objects
 ######################################
-objs-desktop-y                        += desktop_app.o
-objs-desktop-y                        += desktop_view.o
-objs-desktop-y                        += desktop_model.o
+objs-desktop-y                        += app_desktop.o
+objs-desktop-y                        += desk_view.o
+objs-desktop-y                        += desk_model.o
+objs-desktop-y                        += dock_view.o
+objs-desktop-y                        += dock_model.o
 
 
 ######################################

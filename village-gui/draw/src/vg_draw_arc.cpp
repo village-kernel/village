@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawArc::Initiate(GraphicsDevices* devices)
+void DrawArc::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }

@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawTriangle::Initiate(GraphicsDevices* devices)
+void DrawTriangle::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }

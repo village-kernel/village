@@ -15,24 +15,35 @@
 class Navbar : public Wedget
 {
 private:
+	//Static constants members
+	static const int btn_width = 20;
+	static const int btn_height = 20;
+	static const int btn_y = 0;
+	static const int exit_btn_x = 0;
+	static const int min_btn_x = exit_btn_x + btn_width;
+	static const int max_btn_x = min_btn_x + btn_width;
+
 	//Members
-	char* title;
-	Button* minbtn;
-	Button* maxbtn;
-	Button* exitbtn;
+	Button exitbtn;
+	Button minbtn;
+	Button maxbtn;
 public:
 	//Methods
 	Navbar();
 	~Navbar();
 
-	//Binding Methods
-	void SetTitile(char* title);
-	char* GetTitle();
+	//Wedget methods
+	Button* GetExitBtn();
+	Button* GetMinBtn();
+	Button* GetMaxBtn();
+
+	//Area methods
+	bool IsInMaximizeArea(int x, int y);
+	bool IsInMinimizeArea(int x, int y);
+	bool IsInCloseArea(int x, int y);
 
 	//Methods
-	void Initiate(GraphicsDevices* devices);
-	void Execute(IndevData input);
-	void Redraw(DrawArea area);
+	void Initiate(VgDevices* devices);
 };
 
 #endif //!__VG_NAV_BAR_H__
