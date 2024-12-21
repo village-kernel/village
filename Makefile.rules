@@ -159,39 +159,39 @@ BIN = $(CP) -O binary -S
 	$(Q)mkdir -p $(BUILD_DIR)/$(dir $<)
 	$(Q)$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $(BUILD_DIR)/$(<:.cpp=.o)
 
-%.a: $(OBJS)
+%.a: $(OBJS) FORCE
 	$(Q)echo output $@
-	$(Q)$(AR) rcs $@ $^
+	$(Q)$(AR) rcs $@ $(^:%FORCE=%)
 
-%.so: $(OBJS)
+%.so: $(OBJS) FORCE
 	$(Q)echo output $@
-	$(Q)$(LD) $(EMULATION) -shared -fPIC $^ -o $@
+	$(Q)$(LD) $(EMULATION) -shared -fPIC $(^:%FORCE=%) -o $@
 	$(Q)$(SZ) $@
 
-%.mo: $(OBJS)
+%.mo: $(OBJS) FORCE
 	$(Q)echo output $@
-	$(Q)$(LD) $(EMULATION) -shared -fPIC $^ -o $@
+	$(Q)$(LD) $(EMULATION) -shared -fPIC $(^:%FORCE=%) -o $@
 	$(Q)$(SZ) $@
 
-%.elf: $(OBJS)
+%.elf: $(OBJS) FORCE
 	$(Q)echo output $@
-	$(Q)$(CXX) $(LDFLAGS) $^ -o $@ $(LIBRARIES)
+	$(Q)$(CXX) $(LDFLAGS) $(^:%FORCE=%) -o $@ $(LIBRARIES)
 	$(Q)$(SZ) $@
 
-%.hex: %.elf
-	$(Q)echo output $@
-	$(Q)$(HEX) $< $@
-
-%.bin: %.elf
-	$(Q)echo output $@
-	$(Q)$(BIN) $< $@
-
-%.efi: $(OBJS)
+%.efi: $(OBJS) FORCE
 	$(Q)echo output $(@:.efi=.elf)
-	$(Q)$(LD) $(LDFLAGS) $^ -o $(@:.efi=.elf) $(LIBRARIES)
+	$(Q)$(LD) $(LDFLAGS) $(^:%FORCE=%) -o $(@:.efi=.elf) $(LIBRARIES)
 	$(Q)echo output $@
 	$(Q)$(CP) $(COPYFLAGS) $(@:.efi=.elf) $@
 
-%.exec:
+%.hex: FORCE
+	$(Q)echo output $@
+	$(Q)$(HEX) $(@:.hex=.elf) $@
+
+%.bin: FORCE
+	$(Q)echo output $@
+	$(Q)$(BIN) $(@:.bin=.elf) $@
+
+%.exec: FORCE
 	$(Q)echo output $@
 	$(Q)cp -rf $(@:.exec=$(EXEC_SUFFIX)) $@

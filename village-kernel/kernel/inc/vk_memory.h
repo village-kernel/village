@@ -70,7 +70,6 @@ private:
 	/// @brief Locks
 	SpinLock heapLock;
 	SpinLock stackLock;
-	SpinLock freeLock;
 public:
 	/// @brief Methods
 	ConcreteMemory();

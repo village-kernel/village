@@ -40,7 +40,7 @@ bool BinLoader::Load(const char* filename)
 	if (!RelEntries())  return false;
 
 	//Output debug info
-	kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", bin.load, filename);
+	kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", bin.base, filename);
 	return true;
 }
 
@@ -78,7 +78,8 @@ bool BinLoader::PostParser()
 	bin.offset  = *(((uint32_t*)bin.load) + 0);
 	bin.dynamic = *(((uint32_t*)bin.load) + 1);
 	bin.entry   = *(((uint32_t*)bin.load) + 2);
-	bin.exec    = bin.load + bin.entry - bin.offset;
+	bin.base    = bin.load - bin.offset;
+	bin.exec    = bin.base + bin.entry;
 	return true;
 }
 
@@ -87,24 +88,20 @@ bool BinLoader::PostParser()
 /// @return
 bool BinLoader::RelEntries()
 {
-	uint32_t   imagebase = 0;
 	uint32_t   relcount = 0;
 	uint32_t*  relAddr = NULL;
 	DynamicHeader* dynamic = NULL;
 	RelocationEntry* relocate = NULL;
-	
-	//Calc the imagebase value
-	imagebase = bin.load - bin.offset;
 
 	//Calc the dynamic address
-	dynamic = (DynamicHeader*)(imagebase + bin.dynamic);
+	dynamic = (DynamicHeader*)(bin.base + bin.dynamic);
 
 	//Gets the relocate section address and the relcount
 	for (int i = 0; dynamic[i].tag != _DT_NULL; i++)
 	{
 		if (_DT_REL == dynamic[i].tag)
 		{
-			relocate = (RelocationEntry*)(imagebase + dynamic[i].ptr);
+			relocate = (RelocationEntry*)(bin.base + dynamic[i].ptr);
 		}
 		else if (_DT_RELCOUNT == dynamic[i].tag)
 		{
@@ -121,8 +118,8 @@ bool BinLoader::RelEntries()
 	{
 		if (_R_TYPE_RELATIVE == relocate[i].type)
 		{
-			relAddr  = (uint32_t*)(imagebase + relocate[i].offset);
-			*relAddr = imagebase + *relAddr;
+			relAddr  = (uint32_t*)(bin.base + relocate[i].offset);
+			*relAddr = bin.base + *relAddr;
 		}
 	}
 
