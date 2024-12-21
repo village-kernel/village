@@ -250,6 +250,9 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 /// @return 
 DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place)
 {
+	//Cut cursor area from redraw areas
+	areas = layer.CutAreaFromAreas(areas, curWindow->GetArea());
+
 	//Redraw other window areas
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
