@@ -40,9 +40,10 @@ bool HexLoader::Load(const char* filename)
 	if (!LoadProgram()) return false;
 	if (!PostParser())  return false;
 	if (!RelEntries())  return false;
+	if (!Cleanup())     return false;
 
 	//Output debug info
-	kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", hex.map, filename);
+	kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", hex.base, filename);
 	return true;
 }
 
@@ -56,9 +57,9 @@ bool HexLoader::LoadHex()
 	if (file.Open(filename, FileMode::_Read))
 	{
 		int size = file.Size();
-		hex.load = (uint32_t)new char[size]();
+		hex.text = (uint32_t)new char[size]();
 
-		if (hex.load && (file.Read((char*)hex.load, size) == size))
+		if (hex.text && (file.Read((char*)hex.text, size) == size))
 		{
 			kernel->debug.Output(Debug::_Lv1, "%s hex file load successful", filename);
 			file.Close();
@@ -169,8 +170,8 @@ bool HexLoader::PreParser()
 	const uint32_t constlen = 10;
 
 	uint32_t segment = 0;
-	uint32_t mapSize = 0;
-	char*    text = (char*)hex.load;
+	uint32_t loadSize = 0;
+	char*    text = (char*)hex.text;
 	
 	while (1)
 	{
@@ -186,10 +187,10 @@ bool HexLoader::PreParser()
 		//Add record into list
 		records.Add(record);
 		
-		//Calculate map size
+		//Calculate load size
 		if (HexLoader::_Data == record->type)
 		{
-			mapSize = segment + record->address + record->length;
+			loadSize = segment + record->address + record->length;
 		}
 		else if (HexLoader::_ExtSegAddr == record->type)
 		{
@@ -198,8 +199,8 @@ bool HexLoader::PreParser()
 		else if (HexLoader::_EndOfFile == record->type)
 		{
 			hex.offset  = records.Begin()->address;
-			mapSize     = mapSize - hex.offset;
-			hex.map     = (uint32_t)new char[mapSize]();
+			loadSize    = loadSize - hex.offset;
+			hex.load    = (uint32_t)new char[loadSize]();
 			return true;
 		}
 
@@ -216,7 +217,7 @@ bool HexLoader::PreParser()
 /// @return 
 bool HexLoader::LoadProgram()
 {
-	uint8_t* mapping = (uint8_t*)hex.map;
+	uint8_t* mapping = (uint8_t*)hex.load;
 	uint32_t segment = 0;
 
 	for (records.Begin(); !records.IsEnd(); records.Next())
@@ -246,10 +247,11 @@ bool HexLoader::LoadProgram()
 /// @return 
 bool HexLoader::PostParser()
 {
-	hex.offset  = *(((uint32_t*)hex.map) + 0);
-	hex.dynamic = *(((uint32_t*)hex.map) + 1);
-	hex.entry   = *(((uint32_t*)hex.map) + 2);
-	hex.exec    = hex.map + hex.entry - hex.offset;
+	hex.offset  = *(((uint32_t*)hex.load) + 0);
+	hex.dynamic = *(((uint32_t*)hex.load) + 1);
+	hex.entry   = *(((uint32_t*)hex.load) + 2);
+	hex.base    = hex.load - hex.offset;
+	hex.exec    = hex.base + hex.entry;
 	return true;
 }
 
@@ -258,24 +260,20 @@ bool HexLoader::PostParser()
 /// @return
 bool HexLoader::RelEntries()
 {
-	uint32_t   imagebase = 0;
 	uint32_t   relcount = 0;
 	uint32_t*  relAddr = NULL;
 	DynamicHeader* dynamic = NULL;
 	RelocationEntry* relocate = NULL;
-	
-	//Calc the imagebase value
-	imagebase = hex.map - hex.offset;
 
 	//Calc the dynamic address
-	dynamic = (DynamicHeader*)(imagebase + hex.dynamic);
+	dynamic = (DynamicHeader*)(hex.base + hex.dynamic);
 
 	//Gets the relocate section address and the relcount
 	for (int i = 0; dynamic[i].tag != _DT_NULL; i++)
 	{
 		if (_DT_REL == dynamic[i].tag)
 		{
-			relocate = (RelocationEntry*)(imagebase + dynamic[i].ptr);
+			relocate = (RelocationEntry*)(hex.base + dynamic[i].ptr);
 		}
 		else if (_DT_RELCOUNT == dynamic[i].tag)
 		{
@@ -292,11 +290,21 @@ bool HexLoader::RelEntries()
 	{
 		if (_R_TYPE_RELATIVE == relocate[i].type)
 		{
-			relAddr  = (uint32_t*)(imagebase + relocate[i].offset);
-			*relAddr = imagebase + *relAddr;
+			relAddr  = (uint32_t*)(hex.base + relocate[i].offset);
+			*relAddr = hex.base + *relAddr;
 		}
 	}
 
+	return true;
+}
+
+
+/// @brief HexLoader clean up
+/// @return 
+bool HexLoader::Cleanup()
+{
+	delete[] (char*)hex.text;
+	records.Release();
 	return true;
 }
 
@@ -323,7 +331,5 @@ bool HexLoader::Exit()
 {
 	delete[] filename;
 	delete[] (char*)hex.load;
-	delete[] (char*)hex.map;
-	records.Release();
 	return true;
 }
