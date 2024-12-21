@@ -45,8 +45,9 @@ private:
 	//ELF structure
 	struct HEX
 	{
-		uint32_t map;
+		uint32_t text;
 		uint32_t load;
+		uint32_t base;
 		uint32_t exec;
 
 		uint32_t offset;
@@ -65,6 +66,7 @@ private:
 	bool LoadProgram();
 	bool PostParser();
 	bool RelEntries();
+	bool Cleanup();
 
 	//Tool Methods
 	uint16_t HexStrToInt(char* str, int size);
