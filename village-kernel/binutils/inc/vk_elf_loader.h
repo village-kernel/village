@@ -17,8 +17,8 @@ private:
 	//ELF structure
 	struct ELF
 	{
-		uint32_t         map;
 		uint32_t         load;
+		uint32_t         base;
 		uint32_t         exec;
 		
 		ELFHeader*       header;
