@@ -236,12 +236,14 @@ void Wedget::Execute(IndevData input)
 
 	if (layer.IsCoordinateInArea(input.point.x, input.point.y, layerArea))
 	{
-		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-		{
-			Wedget* item = wedgets.Item();
-			
-			item->Execute(input);
-		}
+		if (NULL != cmd) cmd->Execute();
+	}
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+		
+		item->Execute(input);
 	}
 }
 
