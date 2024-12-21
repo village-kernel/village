@@ -18,6 +18,7 @@ private:
 	struct BIN
 	{
 		uint32_t load;
+		uint32_t base;
 		uint32_t exec;
 
 		uint32_t offset;
