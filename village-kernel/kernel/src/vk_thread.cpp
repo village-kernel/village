@@ -313,18 +313,21 @@ void ConcreteThread::SelectNextTask()
 		//Set next task as current task
 		tasks.Next(); if (tasks.IsEnd()) tasks.Begin();
 
+		//Get current task
+		Task* task = tasks.Item();
+
 		//Check current task state
-		if (TaskState::_Suspend == tasks.Item()->state)
+		if (TaskState::_Suspend == task->state)
 		{
-			if(system->GetSysClkCounts() >= tasks.Item()->ticks)
+			if(system->GetSysClkCounts() >= task->ticks)
 			{
-				tasks.Item()->state = TaskState::_Running;
-				tasks.Item()->ticks = 0;
+				task->state = TaskState::_Running;
+				task->ticks = 0;
 			}
 		}
 
 		//Break when task state is running
-		if (TaskState::_Running == tasks.Item()->state) break;
+		if (TaskState::_Running == task->state) break;
 	}
 }
 
