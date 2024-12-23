@@ -144,6 +144,35 @@ bool VgGroup::IsCurWindowMove()
 }
 
 
+/// @brief Check resize method
+/// @param input 
+/// @param axis 
+/// @return 
+VgGroup::ResizeMethod VgGroup::CheckResizeMethod(Point input, Point axis)
+{
+	ResizeMethod resizeMethod = ResizeMethod::_None;
+
+	if (axis.x || axis.y)
+	{
+		if (actWindow->IsInMoveArea(input.x, input.y))
+			resizeMethod = ResizeMethod::_Move;
+		if (actWindow->IsInResizeArea(input.x, input.y))
+			resizeMethod = ResizeMethod::_Adjust;
+	}
+	else
+	{
+		if (actWindow->IsInMaximizeArea(input.x, input.y))
+			resizeMethod = ResizeMethod::_Maximize;
+		if (actWindow->IsInMinimizeArea(input.x, input.y))
+			resizeMethod = ResizeMethod::_Minimize;
+		if (actWindow->IsInCloseArea(input.x, input.y))
+			resizeMethod = ResizeMethod::_Close;
+	}
+
+	return resizeMethod;
+}
+
+
 /// @brief Is actived window resize
 /// @return 
 bool VgGroup::IsActWindowResize()
@@ -155,30 +184,11 @@ bool VgGroup::IsActWindowResize()
 
 	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
 	{
-		if (false == isResizeMode)
+		if (!isResizeMode)
 		{
-			staticResizeMethod = ResizeMethod::_None;
-			
-			if (axis.point.x || axis.point.y)
-			{
-				if (actWindow->IsInMoveArea(input.point.x, input.point.y))
-					staticResizeMethod = ResizeMethod::_Move;
-				if (actWindow->IsInResizeArea(input.point.x, input.point.y))
-					staticResizeMethod = ResizeMethod::_Adjust;
-			}
-			else
-			{
-				if (actWindow->IsInMaximizeArea(input.point.x, input.point.y))
-					staticResizeMethod = ResizeMethod::_Maximize;
-				if (actWindow->IsInMinimizeArea(input.point.x, input.point.y))
-					staticResizeMethod = ResizeMethod::_Minimize;
-				if (actWindow->IsInCloseArea(input.point.x, input.point.y))
-					staticResizeMethod = ResizeMethod::_Close;
-			}
-
+			staticResizeMethod = CheckResizeMethod(input.point, axis.point);
 			isResizeMode = (ResizeMethod::_None != staticResizeMethod);
 		}
-
 		resizeMethod = staticResizeMethod;
 	}
 	else
@@ -212,7 +222,7 @@ bool VgGroup::IsActWindowSelect()
 			}
 		}
 	}
-	
+
 	return false;
 }
 

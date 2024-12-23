@@ -44,6 +44,7 @@ private:
 	bool IsCurWindowMove();
 	bool IsActWindowResize();
 	bool IsActWindowSelect();
+	ResizeMethod CheckResizeMethod(Point input, Point axis);
 	
 	//Common Methods
 	DrawAreas GetWindowUpperAreas(Window* window);
