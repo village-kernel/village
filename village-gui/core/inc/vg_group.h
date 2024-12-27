@@ -44,6 +44,7 @@ private:
 	bool IsCurWindowMove();
 	bool IsActWindowResize();
 	bool IsActWindowSelect();
+	Window* SelectActWindow();
 	ResizeMethod CheckResizeMethod(Point input, Point axis);
 	
 	//Common Methods

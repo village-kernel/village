@@ -46,8 +46,6 @@ void VgGroup::Execute()
 	//Update mouse cursor
 	if (IsCurWindowMove())
 	{
-		curWindow = devices.indev->Cursor();
-
 		RedrawResizeWindowOverlapAreas(curWindow);
 	}
 
@@ -137,6 +135,7 @@ bool VgGroup::IsCurWindowMove()
 	if ((devices.indev->GetType() == IndevType::_Mouse) && 
 		(devices.indev->Cursor() != NULL))
 	{
+		curWindow = devices.indev->Cursor();
 		resizeMethod = ResizeMethod::_Move;
 		return true;
 	}
@@ -201,25 +200,34 @@ bool VgGroup::IsActWindowResize()
 }
 
 
+/// @brief Selected active window
+/// @return 
+Window* VgGroup::SelectActWindow()
+{
+	for (windows.End(); !windows.IsBegin(); windows.Prev())
+	{
+		Window* item = windows.Item();
+
+		if (layer.IsCoordinateInArea(input.point.x, input.point.y, item->GetArea()))
+		{
+			return item;
+		}
+	}
+	return NULL;
+}
+
+
 /// @brief Is actived window change
 /// @return 
 bool VgGroup::IsActWindowSelect()
 {
 	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
 	{
-		for (windows.End(); !windows.IsBegin(); windows.Prev())
-		{
-			Window* item = windows.Item();
+		Window* window = SelectActWindow();
 
-			if (layer.IsCoordinateInArea(input.point.x, input.point.y, item->GetArea()))
-			{
-				if (actWindow != item)
-				{
-					actWindow = item;
-					return true;
-				}
-				break;
-			}
+		if ((NULL != window) && (actWindow != window))
+		{
+			actWindow = window; return true;
 		}
 	}
 
@@ -240,10 +248,10 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 		{
 			Window* item = windows.Item();
 
-			if (Window::_Top == item->GetPlace())
+			if (window->GetPlace() < item->GetPlace())
 			{
 				areas.Add(item->GetArea());
-			}	
+			}
 		}
 
 		areas.Add(curWindow->GetArea());
