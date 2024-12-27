@@ -19,9 +19,9 @@ public:
 	//Enumerations
 	enum Place
 	{
-		_Top = 1,
+		_Bottom = 1,
 		_Middle,
-		_Bottom
+		_Top,
 	};
 
 	enum ResizeSide
