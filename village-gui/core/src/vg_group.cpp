@@ -280,23 +280,7 @@ DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Windo
 
 		if (place != item->GetPlace()) continue;
 
-		DrawAreas cutAreas = areas;
-
-		for (areas.Begin(); !areas.IsEnd(); areas.Next())
-		{
-			DrawArea area = areas.Item();
-
-			if (layer.IsAreaOverlap(area, item->GetArea()))
-			{
-				DrawArea redraw = layer.GetOverlapArea(area, item->GetArea());
-
-				item->Redraw(redraw);
-
-				cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
-			}
-		}
-
-		areas = cutAreas;
+		areas = item->RedrawWedgetAreas(item, areas);
 	}
 
 	return areas;

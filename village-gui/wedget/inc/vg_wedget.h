@@ -40,7 +40,7 @@ protected:
 	//Members
 	Layer    layer;
 	DrawRect rect;
-private:
+public:
 	//Methods
 	DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 public:
