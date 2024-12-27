@@ -37,12 +37,11 @@ private:
 	Layer            layer;
 	IndevData        input;
 	IndevData        axis;
-	ResizeMethod     resizeMethod;
 private:
 	//Methods
 	void UpdataInput();
-	bool IsCurWindowMove();
-	bool IsActWindowResize();
+	void UpdateCursor();
+	bool IsActWindowResize(ResizeMethod& resizeMethod);
 	bool IsActWindowSelect();
 	Window* SelectActWindow();
 	ResizeMethod CheckResizeMethod(Point input, Point axis);
@@ -54,10 +53,10 @@ private:
 	void RedrawSelfWindowAreas(Window* window);
 
 	//Resize Methods
-	DrawAreas GetResizeWindowOverlapAreas(Window* window);
-	void RedrawResizeWindowOverlapAreas(Window* window);
-	void ResizeWindowExecute(Window* window);
-	void DestroyCloseWindow(Window* window);
+	DrawAreas GetResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod);
+	void RedrawResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod);
+	void ResizeWindowExecute(Window* window, ResizeMethod resizeMethod);
+	void DestroyCloseWindow(Window* window, ResizeMethod resizeMethod);
 
 	//Focus Methods
 	DrawAreas GetSelWindowOverlapAreas(Window* window);
