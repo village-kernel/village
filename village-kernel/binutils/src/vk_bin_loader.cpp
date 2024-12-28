@@ -136,6 +136,7 @@ bool BinLoader::Execute(int argc, char* argv[])
 	if (0 != bin.exec)
 	{
 		((StartEntry)bin.exec)(kernel, argc, argv);
+		kernel->debug.Output(Debug::_Lv2, "%s exit", filename);
 		return true;
 	}
 	kernel->debug.Error("%s execute failed!", filename);
