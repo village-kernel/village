@@ -141,7 +141,7 @@ int ConcreteProcess::Run(Behavior behavior, const char* path, int argc, char* ar
 {
 	//New data object
 	Data* data = new Data((char*)path); 
-	
+
 	//Create executor
 	if ((data->exec = CreateExecutor(path)) == NULL) 
 	{
@@ -155,20 +155,20 @@ int ConcreteProcess::Run(Behavior behavior, const char* path, int argc, char* ar
 		delete data;
 		return -1;
 	}
-	
+
 	//Add to datum list
 	if ((data->pid = datum.Add(data, (char*)path)) < 0)
 	{
 		delete data;
 		return -1;
 	}
-	
+
 	//Wait for task done
 	if (behavior == _Foreground)
 	{
 		data->exec->Wait();
 	}
-	
+
 	return data->pid;
 }
 
