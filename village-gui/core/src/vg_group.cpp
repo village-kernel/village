@@ -203,7 +203,7 @@ Window* VgGroup::SelectActWindow()
 	{
 		Window* item = windows.Item();
 
-		if (layer.IsCoordinateInArea(input.point.x, input.point.y, item->GetArea()))
+		if (item->IsInArea(input.point.x, input.point.y))
 		{
 			return item;
 		}
