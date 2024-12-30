@@ -30,6 +30,7 @@ protected:
 	bool hidden;
 	bool enable;
 	bool fixed;
+	bool update;
 
 	//Binding members
 	ICommand* cmd;
@@ -57,7 +58,8 @@ public:
 	int GetY();
 	int GetWidth();
 	int GetHeight();
-	DrawArea GetArea();
+	DrawArea GetLayerArea();
+	DrawArea GetUpdateArea();
 	
 	//Attribute methods
 	void SetTitle(char* title);
@@ -74,6 +76,9 @@ public:
 
 	void SetFixed(bool fixed);
 	bool IsFixed();
+
+	void UpdateRequest(bool request);
+	bool IsUpdateRequest();
 
 	//Binding methods
 	void BindingCommand(ICommand* cmd);

@@ -41,6 +41,7 @@ private:
 	//Methods
 	void UpdataInput();
 	void UpdateCursor();
+	void UpdateWindow();
 	bool IsActWindowResize(ResizeMethod& resizeMethod);
 	bool IsActWindowSelect();
 	Window* SelectActWindow();

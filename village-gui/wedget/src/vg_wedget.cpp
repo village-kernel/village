@@ -15,6 +15,7 @@ Wedget::Wedget()
 	hidden(false),
 	enable(true),
 	fixed(false),
+	update(false),
 	cmd(NULL)
 {
 }
@@ -108,9 +109,9 @@ int Wedget::GetHeight()
 }
 
 
-/// @brief GetArea
+/// @brief GetLayerArea
 /// @return 
-DrawArea Wedget::GetArea()
+DrawArea Wedget::GetLayerArea()
 {
 	return layerArea;
 }
@@ -196,6 +197,21 @@ bool Wedget::IsFixed()
 }
 
 
+/// @brief Wedget update
+void Wedget::UpdateRequest(bool request)
+{
+	this->update = request;
+}
+
+
+/// @brief Wedget is update request
+/// @return 
+bool Wedget::IsUpdateRequest()
+{
+	return update;
+}
+
+
 /// @brief Wedget BindingCommand
 /// @param cmd 
 void Wedget::BindingCommand(ICommand* cmd)
@@ -260,9 +276,9 @@ DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 	{
 		DrawArea area = areas.Item();
 
-		if (layer.IsAreaOverlap(area, wedget->GetArea()))
+		if (layer.IsAreaOverlap(area, wedget->GetLayerArea()))
 		{
-			DrawArea redraw = layer.GetOverlapArea(area, wedget->GetArea());
+			DrawArea redraw = layer.GetOverlapArea(area, wedget->GetLayerArea());
 
 			wedget->Redraw(redraw);
 
