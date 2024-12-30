@@ -59,7 +59,7 @@ public:
 	int GetWidth();
 	int GetHeight();
 	DrawArea GetLayerArea();
-	DrawArea GetUpdateArea();
+	DrawAreas GetUpdateAreas();
 	
 	//Attribute methods
 	void SetTitle(char* title);

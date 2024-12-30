@@ -109,11 +109,30 @@ int Wedget::GetHeight()
 }
 
 
-/// @brief GetLayerArea
+/// @brief Get layer area
 /// @return 
 DrawArea Wedget::GetLayerArea()
 {
 	return layerArea;
+}
+
+
+/// @brief Get update areas
+/// @return 
+DrawAreas Wedget::GetUpdateAreas()
+{
+	DrawAreas areas;
+
+	if (update) areas.Add(layerArea);
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		areas.Append(item->GetUpdateAreas());
+	}
+
+	return areas;
 }
 
 
@@ -208,7 +227,21 @@ void Wedget::UpdateRequest(bool request)
 /// @return 
 bool Wedget::IsUpdateRequest()
 {
-	return update;
+	bool request = update;
+
+	if (!request)
+	{
+		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+		{
+			Wedget* item = wedgets.Item();
+
+			request = item->IsUpdateRequest();
+
+			if (request) break;
+		}
+	}
+
+	return request;
 }
 
 
