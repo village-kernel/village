@@ -141,7 +141,7 @@ void VgGroup::UpdateCursor()
 }
 
 
-/// @brief Update window wedget
+/// @brief Update window
 void VgGroup::UpdateWindow()
 {
 	for (windows.Begin(); !windows.IsEnd(); windows.Next())
@@ -150,7 +150,7 @@ void VgGroup::UpdateWindow()
 		
 		if (item->IsUpdateRequest())
 		{
-			RedrawSelfWindowAreas(item);
+			RedrawWindowUpdateAreas(item);
 			item->UpdateRequest(false);
 		}
 	}
@@ -325,6 +325,24 @@ void VgGroup::RedrawSelfWindowAreas(Window* window)
 
 	//Get overlap areas
 	DrawAreas overlaps; overlaps.Add(window->GetLayerArea());
+
+	//Calc redraw areas
+	DrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);
+
+	//Window redraw
+	window->Redraw(redraws);
+}
+
+
+/// @brief Redraw window update areas
+/// @param window 
+void VgGroup::RedrawWindowUpdateAreas(Window* window)
+{
+	//Get upper areas
+	DrawAreas uppers = GetWindowUpperAreas(window);
+
+	//Get overlap areas
+	DrawAreas overlaps = window->GetUpdateAreas();
 
 	//Calc redraw areas
 	DrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);

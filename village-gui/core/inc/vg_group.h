@@ -52,6 +52,7 @@ private:
 	DrawAreas RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place);
 	void RedrawOtherWindowAreas(DrawAreas areas, Window* window);
 	void RedrawSelfWindowAreas(Window* window);
+	void RedrawWindowUpdateAreas(Window* window);
 
 	//Resize Methods
 	DrawAreas GetResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod);
