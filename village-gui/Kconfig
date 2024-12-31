@@ -15,6 +15,10 @@ config VKGUI_BUTTON
 	bool "Enable button support"
 	default y
 
+config VKGUI_CONTEXT
+	bool "Enable context menu"
+	default y
+
 config VKGUI_LABEL
 	bool "Enable label support"
 	default y

@@ -67,6 +67,7 @@ objs-vkgui-y                            += vg_grid.o
 
 objs-vkgui-y                            += vg_wedget.o
 objs-vkgui-$(CONFIG_VKGUI_BUTTON)       += vg_button.o
+objs-vkgui-$(CONFIG_VKGUI_CONTEXT)      += vg_context.o
 objs-vkgui-$(CONFIG_VKGUI_LABEL)        += vg_label.o
 objs-vkgui-$(CONFIG_VKGUI_LISTBOX)      += vg_listbox.o
 objs-vkgui-$(CONFIG_VKGUI_MENU)         += vg_menu.o
