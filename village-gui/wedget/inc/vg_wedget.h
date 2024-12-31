@@ -43,48 +43,46 @@ protected:
 	DrawRect rect;
 public:
 	//Methods
-	DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
-public:
-	//Methods
 	Wedget();
 	virtual ~Wedget();
 
 	//Area methods
-	void MoveTo(int x, int y);
-	void AxisMove(int axisx, int axisy);
-	void SetSize(int width, int height);
-	bool IsInArea(int x, int y);
-	int GetX();
-	int GetY();
-	int GetWidth();
-	int GetHeight();
-	DrawArea GetLayerArea();
-	DrawAreas GetUpdateAreas();
+	virtual void MoveTo(int x, int y);
+	virtual void AxisMove(int axisx, int axisy);
+	virtual void SetSize(int width, int height);
+	virtual bool IsInArea(int x, int y);
+	virtual int GetX();
+	virtual int GetY();
+	virtual int GetWidth();
+	virtual int GetHeight();
+	virtual DrawArea GetLayerArea();
+	virtual DrawAreas GetUpdateAreas();
+	virtual DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 	
 	//Attribute methods
-	void SetTitle(char* title);
-	char* GetTitle();
+	virtual void SetTitle(char* title);
+	virtual char* GetTitle();
 
-	void SetBgColor(int color);
-	int GetBgColor();
+	virtual void SetBgColor(int color);
+	virtual int GetBgColor();
 
-	void SetHidden(bool hidden);
-	bool IsHidden();
+	virtual void SetHidden(bool hidden);
+	virtual bool IsHidden();
 	
-	void SetEnable(bool enable);
-	bool IsEnable();
+	virtual void SetEnable(bool enable);
+	virtual bool IsEnable();
 
-	void SetFixed(bool fixed);
-	bool IsFixed();
+	virtual void SetFixed(bool fixed);
+	virtual bool IsFixed();
 
-	void UpdateRequest(bool request);
-	bool IsUpdateRequest();
+	virtual void UpdateRequest(bool request);
+	virtual bool IsUpdateRequest();
 
 	//Binding methods
-	void BindingCommand(ICommand* cmd);
+	virtual void BindingCommand(ICommand* cmd);
 
 	//Wedget methods
-	void AddWedget(Wedget* wedget);
+	virtual void AddWedget(Wedget* wedget);
 
 	//Methods
 	virtual void Initiate(VgDevices* devices);

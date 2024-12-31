@@ -136,6 +136,32 @@ DrawAreas Wedget::GetUpdateAreas()
 }
 
 
+/// @brief Wedget redraw wedget areas
+/// @param wedget 
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
+{
+	DrawAreas cutAreas = areas;
+
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		DrawArea area = areas.Item();
+
+		if (layer.IsAreaOverlap(area, wedget->GetLayerArea()))
+		{
+			DrawArea redraw = layer.GetOverlapArea(area, wedget->GetLayerArea());
+
+			wedget->Redraw(redraw);
+
+			cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
+		}
+	}
+
+	return cutAreas;
+}
+
+
 /// @brief Set title
 /// @param title 
 void Wedget::SetTitle(char* title)
@@ -294,32 +320,6 @@ void Wedget::Execute(IndevData input)
 		
 		item->Execute(input);
 	}
-}
-
-
-/// @brief Wedget redraw wedget areas
-/// @param wedget 
-/// @param areas 
-/// @return 
-DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
-{
-	DrawAreas cutAreas = areas;
-
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
-	{
-		DrawArea area = areas.Item();
-
-		if (layer.IsAreaOverlap(area, wedget->GetLayerArea()))
-		{
-			DrawArea redraw = layer.GetOverlapArea(area, wedget->GetLayerArea());
-
-			wedget->Redraw(redraw);
-
-			cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
-		}
-	}
-
-	return cutAreas;
 }
 
 
