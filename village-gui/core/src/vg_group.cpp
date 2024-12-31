@@ -45,9 +45,6 @@ void VgGroup::Execute()
 	//Update mouse cursor
 	UpdateCursor();
 
-	//Update window wedget
-	UpdateWindow();
-
 	//Resize actived window
 	ResizeMethod resizeMethod = ResizeMethod::_None;
 	
@@ -74,7 +71,9 @@ void VgGroup::Execute()
 	//Active window execute
 	else
 	{
-		actWindow->Execute(input);
+		ExecuteWindow();
+		
+		UpdateWindow();
 	}
 }
 
@@ -137,6 +136,18 @@ void VgGroup::UpdateCursor()
 	{
 		curWindow = devices.indev->Cursor();
 		RedrawResizeWindowOverlapAreas(curWindow, ResizeMethod::_Move);
+	}
+}
+
+
+/// @brief Execute window
+void VgGroup::ExecuteWindow()
+{
+	Window* window = SelectActWindow();
+
+	if (NULL != window)
+	{
+		window->Execute(input);
 	}
 }
 
