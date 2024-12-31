@@ -14,13 +14,13 @@ void DeskView::InitComponent(Wedget* parent)
 	int height = parent->GetHeight();
 
 	//Create context menu
-	Menu* contextMenu = new Menu();
-	contextMenu->SetSize(40, 40);
-	contextMenu->SetBgColor(DrawDefs::_Blue);
-	contextMenu->SetHidden(true);
-	//contextMenu->SetItemSource(model.ContextMenuLists);
-	contextMenu->BindingCommand(model.ContextMenuCmd);
-	parent->AddWedget(contextMenu);
+	Context* context = new Context();
+	context->SetSize(80, 160);
+	context->SetBgColor(DrawDefs::_White);
+	context->SetHidden(true);
+	//context->SetItemSource(model.ContextMenuLists);
+	context->BindingCommand(model.ContextMenuCmd);
+	parent->AddWedget(context);
 
 	//Create shortcut table
 	Table* shortcut = new Table();
