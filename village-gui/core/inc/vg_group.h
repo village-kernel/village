@@ -50,6 +50,7 @@ private:
 	
 	//Common Methods
 	DrawAreas GetWindowUpperAreas(Window* window);
+	DrawAreas RedrawFloatWindowAreas(DrawAreas areas, Window* window);
 	DrawAreas RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place);
 	void RedrawOtherWindowAreas(DrawAreas areas, Window* window);
 	void RedrawSelfWindowAreas(Window* window);

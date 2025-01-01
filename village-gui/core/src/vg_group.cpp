@@ -72,7 +72,7 @@ void VgGroup::Execute()
 	else
 	{
 		ExecuteWindow();
-		
+
 		UpdateWindow();
 	}
 }
@@ -277,9 +277,43 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 			{
 				areas.Add(item->GetLayerArea());
 			}
+
+			if (item->IsFloatable())
+			{
+				areas.Append(item->GetFloatAreas());
+			}
 		}
 
+		areas = layer.CutAreasFromAreas(areas, window->GetFloatAreas());
+
 		areas.Add(curWindow->GetLayerArea());
+	}
+
+	return areas;
+}
+
+
+
+/// @brief Redraw Float window overlap areas
+/// @param areas 
+/// @param window 
+/// @param place 
+/// @return 
+DrawAreas VgGroup::RedrawFloatWindowAreas(DrawAreas areas, Window* window)
+{
+	//Cut window area from redraw areas
+	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
+
+	//Redraw other window areas
+	for (windows.End(); !windows.IsBegin(); windows.Prev())
+	{
+		Window* item = windows.Item();
+
+		if (item == window) continue;
+
+		if (!item->IsFloatable()) continue;
+
+		areas = item->RedrawFloatAreas(areas);
 	}
 
 	return areas;
@@ -293,7 +327,7 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 /// @return 
 DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place)
 {
-	//Cut cursor area from redraw areas
+	//Cut window area from redraw areas
 	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
 
 	//Redraw other window areas
@@ -305,7 +339,7 @@ DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Windo
 
 		if (place != item->GetPlace()) continue;
 
-		areas = item->RedrawWedgetAreas(item, areas);
+		areas = item->RedrawWedgetAreas(areas);
 	}
 
 	return areas;
@@ -316,6 +350,9 @@ DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Windo
 /// @param window 
 void VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window)
 {
+	//Redraw float windows
+	areas = RedrawFloatWindowAreas(areas, window);
+
 	//Redraw top windows
 	areas = RedrawOtherWindowAreas(areas, window, Window::_Top);
 
@@ -357,6 +394,9 @@ void VgGroup::RedrawWindowUpdateAreas(Window* window)
 
 	//Calc redraw areas
 	DrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);
+
+	//Redraw Other window areas
+	RedrawOtherWindowAreas(overlaps, window);
 
 	//Window redraw
 	window->Redraw(redraws);
