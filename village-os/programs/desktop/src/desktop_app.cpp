@@ -1,18 +1,17 @@
 //###########################################################################
-// app_desktop.cpp
+// desktop_app.cpp
 // Definitions of the functions that manage desktop app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "app_desktop.h"
+#include "desktop_app.h"
 #include "vk_kernel.h"
 
 
 /// @brief Constructor
 DesktopApp::DesktopApp()
 	:vkgui(NULL),
-	deskwin(NULL),
-	dockwin(NULL)
+	mainwin(NULL)
 {
 }
 
@@ -34,47 +33,28 @@ void DesktopApp::Setup()
 	vkgui = (VillageGUI*)module->GetData();
 	if (NULL == vkgui) return;
 	
-	//Create desk window
-	deskwin = vkgui->group.Create();
-	if (NULL == deskwin) return;
+	//Create mainwin window
+	mainwin = vkgui->group.Create();
+	if (NULL == mainwin) return;
 
-	//Setup deskwin size
-	deskwin->SetSize(1024, 728);
-	deskwin->SetFixed(true);
-	deskwin->SetAlwaysFocus(true);
-	deskwin->SetPlace(Window::_Bottom);
-	deskwin->SetTitle((char*)"desktop");
-	deskwin->SetHiddenNavbar(true);
+	//Setup mainwin size
+	mainwin->SetSize(1024, 768);
+	mainwin->SetFixed(true);
+	mainwin->SetAlwaysFocus(true);
+	mainwin->SetPlace(Window::_Bottom);
+	mainwin->SetTitle((char*)"desktop");
+	mainwin->SetHiddenNavbar(true);
 
 	//Init desk view component
-	deskView.InitComponent(deskwin);
-
-	//Create dock window
-	dockwin = vkgui->group.Create();
-	if (NULL == dockwin) return;
-
-	//Setup dock size
-	dockwin->AxisMove(0, 728);
-	dockwin->SetSize(1024, 40);
-	dockwin->SetFixed(true);
-	dockwin->SetAlwaysFocus(true);
-	dockwin->SetPlace(Window::_Top);
-	dockwin->SetTitle((char*)"dock");
-	dockwin->SetHiddenNavbar(true);
-
-	//Init dock view component
-	dockView.InitComponent(dockwin);
+	view.InitComponent(mainwin);
 }
 
 
 /// @brief Execute
 void DesktopApp::Execute()
 {
-	//Show desk window
-	deskwin->Show();
-
-	//Show dock window
-	dockwin->Show();
+	//Show mainwin window
+	mainwin->Show();
 
 	//Blocked app
 	kernel->thread.Blocked();

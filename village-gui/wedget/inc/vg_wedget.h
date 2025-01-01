@@ -26,10 +26,13 @@ protected:
 	
 	//Attribute members
 	char* title;
-	int bgColor;
+	int  bgColor;
 	bool hidden;
 	bool enable;
 	bool fixed;
+	bool focus;
+	bool floatable;
+	bool update;
 
 	//Binding members
 	ICommand* cmd;
@@ -40,46 +43,60 @@ protected:
 	//Members
 	Layer    layer;
 	DrawRect rect;
-private:
-	//Methods
-	DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 public:
 	//Methods
 	Wedget();
 	virtual ~Wedget();
 
 	//Area methods
-	void MoveTo(int x, int y);
-	void AxisMove(int axisx, int axisy);
-	void SetSize(int width, int height);
-	bool IsInArea(int x, int y);
-	int GetX();
-	int GetY();
-	int GetWidth();
-	int GetHeight();
-	DrawArea GetArea();
+	virtual void MoveTo(int x, int y);
+	virtual void AxisMove(int axisx, int axisy);
+	virtual void SetSize(int width, int height);
+	virtual bool IsInArea(int x, int y);
+	virtual int GetX();
+	virtual int GetY();
+	virtual int GetWidth();
+	virtual int GetHeight();
+	virtual DrawArea GetLayerArea();
+	virtual DrawAreas GetFloatAreas();
+	virtual DrawAreas GetUpdateAreas();
+	virtual DrawAreas RedrawFloats(DrawAreas areas);
+	virtual DrawAreas RedrawFloatAreas(DrawAreas areas);
+	virtual DrawAreas RedrawFloatAreas(Wedget* wedget, DrawAreas areas);
+	virtual DrawAreas RedrawWedgets(DrawAreas areas);
+	virtual DrawAreas RedrawWedgetAreas(DrawAreas areas);
+	virtual DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 	
 	//Attribute methods
-	void SetTitle(char* title);
-	char* GetTitle();
+	virtual void SetTitle(char* title);
+	virtual char* GetTitle();
 
-	void SetBgColor(int color);
-	int GetBgColor();
+	virtual void SetBgColor(int color);
+	virtual int GetBgColor();
 
-	void SetHidden(bool hidden);
-	bool IsHidden();
+	virtual void SetHidden(bool hidden);
+	virtual bool IsHidden();
 	
-	void SetEnable(bool enable);
-	bool IsEnable();
+	virtual void SetEnable(bool enable);
+	virtual bool IsEnable();
 
-	void SetFixed(bool fixed);
-	bool IsFixed();
+	virtual void SetFixed(bool fixed);
+	virtual bool IsFixed();
+
+	virtual void SetFocus(bool focus);
+	virtual bool IsFocus();
+
+	virtual void SetFloatable(bool floatable);
+	virtual bool IsFloatable();
+
+	virtual void UpdateRequest(bool request);
+	virtual bool IsUpdateRequest();
 
 	//Binding methods
-	void BindingCommand(ICommand* cmd);
+	virtual void BindingCommand(ICommand* cmd);
 
 	//Wedget methods
-	void AddWedget(Wedget* wedget);
+	virtual void AddWedget(Wedget* wedget);
 
 	//Methods
 	virtual void Initiate(VgDevices* devices);

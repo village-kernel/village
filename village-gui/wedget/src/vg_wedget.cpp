@@ -15,6 +15,9 @@ Wedget::Wedget()
 	hidden(false),
 	enable(true),
 	fixed(false),
+	focus(false),
+	floatable(false),
+	update(false),
 	cmd(NULL)
 {
 }
@@ -108,11 +111,164 @@ int Wedget::GetHeight()
 }
 
 
-/// @brief GetArea
+/// @brief Get layer area
 /// @return 
-DrawArea Wedget::GetArea()
+DrawArea Wedget::GetLayerArea()
 {
 	return layerArea;
+}
+
+
+/// @brief Get floatable areas
+/// @return 
+DrawAreas Wedget::GetFloatAreas()
+{
+	DrawAreas areas;
+
+	if (!hidden && floatable) areas.Add(layerArea);
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		areas.Append(item->GetFloatAreas());
+	}
+
+	return areas;
+}
+
+
+/// @brief Get update areas
+/// @return 
+DrawAreas Wedget::GetUpdateAreas()
+{
+	DrawAreas areas;
+
+	if (update) areas.Add(layerArea);
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		areas.Append(item->GetUpdateAreas());
+	}
+
+	return areas;
+}
+
+
+/// @brief Wedget redraw floats
+/// @param drawAreas 
+/// @return 
+DrawAreas Wedget::RedrawFloats(DrawAreas areas)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		if (item->IsHidden()) continue;
+
+		areas = RedrawFloatAreas(item, areas);
+	}
+
+	return areas;
+}
+
+
+/// @brief Wedget redraw float areas
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawFloatAreas(DrawAreas areas)
+{
+	return RedrawFloatAreas(this, areas);
+}
+
+
+/// @brief Wedget redraw float areas
+/// @param wedget 
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawFloatAreas(Wedget* wedget, DrawAreas areas)
+{
+	DrawAreas cutAreas = areas;
+
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		DrawArea item = areas.Item();
+
+		DrawAreas floatAreas = wedget->GetFloatAreas();
+
+		for (floatAreas.Begin(); !floatAreas.IsEnd(); floatAreas.Next())
+		{
+			DrawArea area = floatAreas.Item();
+
+			if (layer.IsAreaOverlap(item, area))
+			{
+				DrawArea redraw = layer.GetOverlapArea(item, area);
+
+				wedget->Redraw(redraw);
+
+				cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
+			}
+		}
+	}
+
+	return cutAreas;
+}
+
+
+/// @brief Wedget redraw wedgets
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawWedgets(DrawAreas areas)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		if (item->IsHidden()) continue;
+
+		areas = RedrawWedgetAreas(item, areas);
+	}
+
+	return areas;
+}
+
+
+/// @brief Wedget redraw wedget areas
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawWedgetAreas(DrawAreas areas)
+{
+	return RedrawWedgetAreas(this, areas);
+}
+
+
+/// @brief Wedget redraw wedget areas
+/// @param wedget 
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
+{
+	DrawAreas cutAreas = areas;
+
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		DrawArea item = areas.Item();
+
+		DrawArea area = wedget->GetLayerArea();
+
+		if (layer.IsAreaOverlap(item, area))
+		{
+			DrawArea redraw = layer.GetOverlapArea(item, area);
+
+			wedget->Redraw(redraw);
+
+			cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
+		}
+	}
+
+	return cutAreas;
 }
 
 
@@ -196,6 +352,102 @@ bool Wedget::IsFixed()
 }
 
 
+/// @brief Wedget set focus
+/// @param focus 
+void Wedget::SetFocus(bool focus)
+{
+	this->focus = focus;
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		item->SetFocus(focus);
+	}
+}
+
+
+/// @brief Wedget is focus
+/// @return 
+bool Wedget::IsFocus()
+{
+	return focus;
+}
+
+
+/// @brief Wedget set floatable
+/// @param floatable 
+void Wedget::SetFloatable(bool floatable)
+{
+	this->floatable = floatable;
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		item->SetFloatable(floatable);
+	}
+}
+
+
+/// @brief Is floatable
+/// @return 
+bool Wedget::IsFloatable()
+{
+	bool abled = floatable;
+
+	if (!abled)
+	{
+		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+		{
+			Wedget* item = wedgets.Item();
+
+			abled = item->IsFloatable();
+
+			if (abled) break;
+		}
+	}
+
+	return abled;
+}
+
+
+/// @brief Wedget update
+void Wedget::UpdateRequest(bool request)
+{
+	this->update = request;
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		item->UpdateRequest(request);
+	}
+}
+
+
+/// @brief Wedget is update request
+/// @return 
+bool Wedget::IsUpdateRequest()
+{
+	bool request = update;
+
+	if (!request)
+	{
+		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+		{
+			Wedget* item = wedgets.Item();
+
+			request = item->IsUpdateRequest();
+
+			if (request) break;
+		}
+	}
+
+	return request;
+}
+
+
 /// @brief Wedget BindingCommand
 /// @param cmd 
 void Wedget::BindingCommand(ICommand* cmd)
@@ -248,48 +500,19 @@ void Wedget::Execute(IndevData input)
 }
 
 
-/// @brief Wedget redraw wedget areas
-/// @param wedget 
-/// @param areas 
-/// @return 
-DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
-{
-	DrawAreas cutAreas = areas;
-
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
-	{
-		DrawArea area = areas.Item();
-
-		if (layer.IsAreaOverlap(area, wedget->GetArea()))
-		{
-			DrawArea redraw = layer.GetOverlapArea(area, wedget->GetArea());
-
-			wedget->Redraw(redraw);
-
-			cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
-		}
-	}
-
-	return cutAreas;
-}
-
-
 /// @brief Wedget Draw
 /// @param drawArea 
 void Wedget::Redraw(DrawArea drawArea)
 {
 	if (true == hidden) return;
 
-	DrawAreas redraws; redraws.Add(drawArea);
+	DrawAreas redraws; 
 	
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* item = wedgets.Item();
+	redraws.Add(drawArea);
 
-		if (item->IsHidden()) continue;
+	redraws = RedrawFloats(redraws);
 
-		redraws = RedrawWedgetAreas(item, redraws);
-	}
+	redraws = RedrawWedgets(redraws);
 
 	rect.Execute(layerArea, redraws, bgColor);
 }
@@ -309,14 +532,5 @@ void Wedget::Redraw(DrawAreas drawAreas)
 /// @brief Wedget Show
 void Wedget::Show()
 {
-	if (true == hidden) return;
-
 	Redraw(layerArea);
-
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* item = wedgets.Item();
-		
-		item->Show();
-	}
 }

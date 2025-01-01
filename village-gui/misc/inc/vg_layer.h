@@ -30,8 +30,10 @@ public:
 	DrawAreas CutOverlapAreas(DrawArea a0, DrawArea a1);
 public:
 	//Methods
-	DrawAreas AddAreaToAreas(DrawAreas areas, DrawArea area);
-	DrawAreas CutAreaFromAreas(DrawAreas areas, DrawArea area);
+	DrawAreas AddAreaToAreas(DrawAreas dscs, DrawArea area);
+	DrawAreas AddAreasToAreas(DrawAreas dscs, DrawAreas areas);
+	DrawAreas CutAreaFromAreas(DrawAreas dscs, DrawArea area);
+	DrawAreas CutAreasFromAreas(DrawAreas dscs, DrawAreas areas);
 	DrawAreas CalcOverlapAreas(DrawArea dsc, DrawAreas overlapAreas, DrawAreas upperAreas);
 };
 

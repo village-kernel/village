@@ -7,9 +7,7 @@
 #ifndef __DESKTOP_APP_H__
 #define __DESKTOP_APP_H__
 
-#include "desk_view.h"
-#include "dock_view.h"
-
+#include "desktop_view.h"
 
 /// @brief DesktopApp
 class DesktopApp
@@ -17,12 +15,10 @@ class DesktopApp
 private:
 	//Members
 	VillageGUI*  vkgui;
-	Window*      deskwin;
-	Window*      dockwin;
+	Window*      mainwin;
 
 	//Members
-	DeskView     deskView;
-	DockView     dockView;
+	DesktopView  view;
 public:
 	//Methods
 	DesktopApp();
