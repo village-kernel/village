@@ -1,36 +1,40 @@
 //###########################################################################
-// dock_model.h
-// Declarations of the dock view model
+// desktop_model.h
+// Declarations of the desktop view model
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __DOCK_MODEL_H__
-#define __DOCK_MODEL_H__
+#ifndef __DESKTOP_MODEL_H__
+#define __DESKTOP_MODEL_H__
 
 #include "vg_gui.h"
 
 
-/// @brief DockModel
-class DockModel : public Class
+/// @brief DesktopModel
+class DesktopModel : public Class
 {
 public:
 	////Data
 	//char*      StartText;
 	//Collection StartMenuLists;
 	//Collection TaskbarLists;
+	//Collection ContextMenuLists;
+	//Collection ShortcutLists;
 
 	//Command
 	ICommand*  StartBtnCmd;
 	ICommand*  StartMenuCmd;
 	ICommand*  TaskbarCmd;
+	ICommand*  ContextMenuCmd;
+	ICommand*  ShortcutCmd;
 public:
 	//Methods
-	DockModel();
-	~DockModel();
+	DesktopModel();
+	~DesktopModel();
 private:
 	//Command Methods
 	void OpenApplication(const char* name);
 	void ExitApplication(const char* name);
 };
 
-#endif //!__DOCK_MODEL_H__
+#endif //!__DESKTOP_MODEL_H__
