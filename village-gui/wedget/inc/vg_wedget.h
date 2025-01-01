@@ -60,8 +60,10 @@ public:
 	virtual DrawArea GetLayerArea();
 	virtual DrawAreas GetFloatAreas();
 	virtual DrawAreas GetUpdateAreas();
+	virtual DrawAreas RedrawFloats(DrawAreas areas);
 	virtual DrawAreas RedrawFloatAreas(DrawAreas areas);
 	virtual DrawAreas RedrawFloatAreas(Wedget* wedget, DrawAreas areas);
+	virtual DrawAreas RedrawWedgets(DrawAreas areas);
 	virtual DrawAreas RedrawWedgetAreas(DrawAreas areas);
 	virtual DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 	

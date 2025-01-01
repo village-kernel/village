@@ -157,6 +157,24 @@ DrawAreas Wedget::GetUpdateAreas()
 }
 
 
+/// @brief Wedget redraw floats
+/// @param drawAreas 
+/// @return 
+DrawAreas Wedget::RedrawFloats(DrawAreas areas)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		if (item->IsHidden()) continue;
+
+		areas = RedrawFloatAreas(item, areas);
+	}
+
+	return areas;
+}
+
+
 /// @brief Wedget redraw float areas
 /// @param areas 
 /// @return 
@@ -196,6 +214,24 @@ DrawAreas Wedget::RedrawFloatAreas(Wedget* wedget, DrawAreas areas)
 	}
 
 	return cutAreas;
+}
+
+
+/// @brief Wedget redraw wedgets
+/// @param areas 
+/// @return 
+DrawAreas Wedget::RedrawWedgets(DrawAreas areas)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		if (item->IsHidden()) continue;
+
+		areas = RedrawWedgetAreas(item, areas);
+	}
+
+	return areas;
 }
 
 
@@ -470,16 +506,13 @@ void Wedget::Redraw(DrawArea drawArea)
 {
 	if (true == hidden) return;
 
-	DrawAreas redraws; redraws.Add(drawArea);
+	DrawAreas redraws; 
 	
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* item = wedgets.Item();
+	redraws.Add(drawArea);
 
-		if (item->IsHidden()) continue;
+	redraws = RedrawFloats(redraws);
 
-		redraws = RedrawWedgetAreas(item, redraws);
-	}
+	redraws = RedrawWedgets(redraws);
 
 	rect.Execute(layerArea, redraws, bgColor);
 }
@@ -499,14 +532,5 @@ void Wedget::Redraw(DrawAreas drawAreas)
 /// @brief Wedget Show
 void Wedget::Show()
 {
-	if (true == hidden) return;
-
 	Redraw(layerArea);
-
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		Wedget* item = wedgets.Item();
-		
-		item->Show();
-	}
 }
