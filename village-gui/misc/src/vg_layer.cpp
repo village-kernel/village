@@ -168,41 +168,69 @@ DrawAreas Layer::CutOverlapAreas(DrawArea a0, DrawArea a1)
 }
 
 
-/// @brief Add area to areas
-/// @param areas 
+/// @brief Add area to dscs
+/// @param dscs 
 /// @param area 
 /// @return 
-DrawAreas Layer::AddAreaToAreas(DrawAreas areas, DrawArea area)
+DrawAreas Layer::AddAreaToAreas(DrawAreas dscs, DrawArea area)
 {
 	DrawAreas appendAreas;
 
 	appendAreas.Add(area);
 
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	for (dscs.Begin(); !dscs.IsEnd(); dscs.Next())
 	{
-		appendAreas = CutAreaFromAreas(appendAreas, areas.Item());
+		appendAreas = CutAreaFromAreas(appendAreas, dscs.Item());
 	}
 
-	areas.Append(appendAreas);
+	dscs.Append(appendAreas);
 
-	return areas;
+	return dscs;
 }
 
 
-/// @brief Cut area from areas
+/// @brief Add areas to dscs
+/// @param dscs 
 /// @param areas 
+/// @return 
+DrawAreas Layer::AddAreasToAreas(DrawAreas dscs, DrawAreas areas)
+{
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		dscs = AddAreaToAreas(dscs, areas.Item());
+	}
+	return dscs;
+}
+
+
+/// @brief Cut area from dscs
+/// @param dscs 
 /// @param area 
 /// @return 
-DrawAreas Layer::CutAreaFromAreas(DrawAreas areas, DrawArea area)
+DrawAreas Layer::CutAreaFromAreas(DrawAreas dscs, DrawArea area)
 {
 	DrawAreas cutAreas;
 
-	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	for (dscs.Begin(); !dscs.IsEnd(); dscs.Next())
 	{
-		cutAreas.Append(CutOverlapAreas(areas.Item(), area));
+		cutAreas.Append(CutOverlapAreas(dscs.Item(), area));
 	}
 
 	return cutAreas;
+}
+
+
+/// @brief Cut areas from dscs
+/// @param dscs 
+/// @param areas 
+/// @return 
+DrawAreas Layer::CutAreasFromAreas(DrawAreas dscs, DrawAreas areas)
+{
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		dscs = CutAreaFromAreas(dscs, areas.Item());
+	}
+	return dscs;
 }
 
 
