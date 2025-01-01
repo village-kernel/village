@@ -18,7 +18,7 @@ private:
 	DrawArea oldArea;
 
 	//Methods
-	bool UpdateActive(bool active);
+	void UpdateActive(bool active);
 public:
 	//Methods
 	Context();
@@ -27,7 +27,11 @@ public:
 	//Area methods
 	DrawAreas GetUpdateAreas();
 
+	//Attribute methods
+	void SetFocus(bool focus);
+
 	//Methods
+	void Initiate(VgDevices* devices);
 	void Execute(IndevData input);
 };
 

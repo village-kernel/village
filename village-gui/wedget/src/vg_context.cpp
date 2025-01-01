@@ -39,11 +39,29 @@ DrawAreas Context::GetUpdateAreas()
 /// @brief Update active
 /// @param active 
 /// @return 
-bool Context::UpdateActive(bool active)
+void Context::UpdateActive(bool active)
 {
 	SetHidden(!active);
 	UpdateRequest(true);
-	return active;
+}
+
+
+/// @brief Set focus
+/// @param focus 
+void Context::SetFocus(bool focus)
+{
+	UpdateActive(focus);
+	Wedget::SetFocus(focus);
+}
+
+
+/// @brief Context Initiate
+/// @param devices 
+void Context::Initiate(VgDevices* devices)
+{
+	Wedget::Initiate(devices);
+
+	SetFloatable(true);
 }
 
 
@@ -52,29 +70,28 @@ bool Context::UpdateActive(bool active)
 void Context::Execute(IndevData input)
 {
 	static bool isPressed = false;
-	static bool isActive = false;
 	static int lastx = 0, lasty = 0;
 
 	if (!isPressed && KeyState::_Pressed == input.state)
 	{
 		if (EventCode::_BtnRight == input.key)
 		{
-			if (!isActive || input.point.x != lastx || input.point.y != lasty)
+			if (IsHidden() || input.point.x != lastx || input.point.y != lasty)
 			{
 				oldArea = layerArea;
 				MoveTo(input.point.x, input.point.y);
 				lastx = input.point.x;
 				lasty = input.point.y;
-				isActive = UpdateActive(true);
+				UpdateActive(true);
 			}
 			else
 			{
-				isActive = UpdateActive(false);
+				UpdateActive(false);
 			}
 		}
 		else if (EventCode::_BtnLeft == input.key)
 		{
-			if (isActive) isActive = UpdateActive(false);
+			if (!IsHidden()) UpdateActive(false);
 		}
 
 		isPressed = true;
