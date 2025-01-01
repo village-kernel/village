@@ -50,7 +50,10 @@ void Context::UpdateActive(bool active)
 /// @param focus 
 void Context::SetFocus(bool focus)
 {
-	UpdateActive(focus);
+	if (!focus && !IsHidden())
+	{
+		UpdateActive(false);
+	}
 	Wedget::SetFocus(focus);
 }
 
