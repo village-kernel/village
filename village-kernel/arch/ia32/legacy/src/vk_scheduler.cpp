@@ -76,7 +76,7 @@ void ConcreteScheduler::Start()
 /// @param access scheduler access
 void ConcreteScheduler::Sched()
 {
-	if (false == isStartSchedule) return;
+	if (!isStartSchedule) return;
 
 	//Trigger PendSV directly
 	__asm volatile("int $31");
@@ -93,7 +93,7 @@ void ConcreteScheduler::SysTickHandler()
 /// @brief PendSV handler
 void __attribute__((naked)) ConcreteScheduler::PendSVHandler()
 {
-	uint32_t psp = 0;
+	static volatile uint32_t psp = 0;
 
 	//Push old task registers
 	__asm volatile("pushl %ebp");

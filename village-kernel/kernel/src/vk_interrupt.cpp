@@ -187,8 +187,13 @@ void ConcreteInterrupt::Handler(int irq)
 		warnings[irq] = 0;
 	}
 
-	for (Isr* isr = isrs->Begin(); !isrs->IsEnd(); isr = isrs->Next())
+	for (isrs->Begin(); !isrs->IsEnd(); isrs->Next())
 	{
-		(isr->func)(isr->user, isr->args);
+		Isr* isr = isrs->Item();
+
+		if (isr && isr->func)
+		{
+			(isr->func)(isr->user, isr->args);
+		}
 	}
 }

@@ -78,7 +78,7 @@ void ConcreteScheduler::Start()
 /// @param access scheduler access
 void ConcreteScheduler::Sched()
 {
-	if (false == isStartSchedule) return;
+	if (!isStartSchedule) return;
 
 	//Trigger PendSV directly
 	SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;

@@ -318,6 +318,7 @@ bool HexLoader::Execute(int argc, char* argv[])
 	if (0 != hex.exec)
 	{
 		((StartEntry)hex.exec)(kernel, argc, argv);
+		kernel->debug.Output(Debug::_Lv2, "%s exit", filename);
 		return true;
 	}
 	kernel->debug.Error("%s execute failed!", filename);
