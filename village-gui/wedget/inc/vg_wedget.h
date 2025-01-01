@@ -26,10 +26,12 @@ protected:
 	
 	//Attribute members
 	char* title;
-	int bgColor;
+	int  bgColor;
 	bool hidden;
 	bool enable;
 	bool fixed;
+	bool focus;
+	bool floatable;
 	bool update;
 
 	//Binding members
@@ -56,7 +58,11 @@ public:
 	virtual int GetWidth();
 	virtual int GetHeight();
 	virtual DrawArea GetLayerArea();
+	virtual DrawAreas GetFloatAreas();
 	virtual DrawAreas GetUpdateAreas();
+	virtual DrawAreas RedrawFloatAreas(DrawAreas areas);
+	virtual DrawAreas RedrawFloatAreas(Wedget* wedget, DrawAreas areas);
+	virtual DrawAreas RedrawWedgetAreas(DrawAreas areas);
 	virtual DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
 	
 	//Attribute methods
@@ -74,6 +80,12 @@ public:
 
 	virtual void SetFixed(bool fixed);
 	virtual bool IsFixed();
+
+	virtual void SetFocus(bool focus);
+	virtual bool IsFocus();
+
+	virtual void SetFloatable(bool floatable);
+	virtual bool IsFloatable();
 
 	virtual void UpdateRequest(bool request);
 	virtual bool IsUpdateRequest();
