@@ -1,10 +1,10 @@
 //###########################################################################
-// vg_gui.cpp
+// vg_villageui.cpp
 // Definitions of the functions that manage village gui
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_gui.h"
+#include "vg_villageui.h"
 
 
 /// @brief Constructor

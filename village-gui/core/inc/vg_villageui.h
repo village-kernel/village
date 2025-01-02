@@ -1,11 +1,11 @@
 //###########################################################################
-// vg_gui.h
+// vg_villageui.h
 // Declarations of the functions that manage village gui
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_GUI_H__
-#define __VG_GUI_H__
+#ifndef __VG_VILLAGE_GUI_H__
+#define __VG_VILLAGE_GUI_H__
 
 /// @brief include draw headers
 #include "vg_draw_arc.h"
@@ -66,4 +66,4 @@ public:
 	void Exit();
 };
 
-#endif //!__VG_GUI_H__
+#endif //!__VG_VILLAGE_GUI_H__

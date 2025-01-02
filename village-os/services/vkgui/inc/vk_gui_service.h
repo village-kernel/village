@@ -9,7 +9,7 @@
 
 #include "vk_module.h"
 #include "vk_kernel.h"
-#include "vg_gui.h"
+#include "vg_villageui.h"
 
 
 /// @brief VkGuiService
