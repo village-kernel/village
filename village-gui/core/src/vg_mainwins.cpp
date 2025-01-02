@@ -29,6 +29,7 @@ void VgMainWins::Setup()
 {
 	//Create an default window
 	defWindow = new Window();
+	defWindow->SetFixed(true);
 	defWindow->Initiate(&devices);
 
 	//Set default window as active window
@@ -504,7 +505,7 @@ void VgMainWins::DestroyCloseWindow(Window* window, ResizeMethod resizeMethod)
 	{
 		Destroy(window);
 
-		actWindow = windows.End();
+		actWindow = defWindow;
 	}
 }
 
