@@ -53,6 +53,7 @@ public:
 	virtual void AxisMove(int axisx, int axisy);
 	virtual void SetSize(int width, int height);
 	virtual bool IsInArea(int x, int y);
+	virtual bool IsAreaValid();
 	virtual int GetX();
 	virtual int GetY();
 	virtual int GetWidth();

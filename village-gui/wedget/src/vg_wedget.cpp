@@ -79,6 +79,14 @@ bool Wedget::IsInArea(int x, int y)
 }
 
 
+/// @brief Is area valid
+/// @return 
+bool Wedget::IsAreaValid()
+{
+	return layer.IsAreaVaild(layerArea);
+}
+
+
 /// @brief 
 /// @return 
 int Wedget::GetX()
