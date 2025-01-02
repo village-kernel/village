@@ -55,16 +55,17 @@ void DesktopApp::Execute()
 {
 	//Show mainwin window
 	mainwin->Show();
-
-	//Blocked app
-	kernel->thread.Blocked();
 }
 
 
 /// @brief Exit
 void DesktopApp::Exit()
 {
-	
+	//Wait for mainwin close
+	while (vkgui->group.IsExist(mainwin)) 
+	{
+		kernel->thread.Sleep(1);
+	}
 }
 
 
