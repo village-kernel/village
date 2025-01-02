@@ -210,7 +210,7 @@ bool VgGroup::IsActWindowResize(ResizeMethod& resizeMethod)
 	{
 		if (KeyState::_Pressed == input.state)
 		{
-			if (!isResizeMode)
+			if (!isResizeMode || staticResizeMethod > ResizeMethod::_Adjust)
 			{
 				staticResizeMethod = CheckResizeMethod(input.point, axis.point);
 				isResizeMode = (ResizeMethod::_None != staticResizeMethod);
