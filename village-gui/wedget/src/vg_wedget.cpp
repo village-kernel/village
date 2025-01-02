@@ -237,6 +237,8 @@ DrawAreas Wedget::RedrawWedgets(DrawAreas areas)
 		if (item->IsHidden()) continue;
 
 		areas = RedrawWedgetAreas(item, areas);
+
+		if (areas.IsEmpty()) break;
 	}
 
 	return areas;
@@ -273,6 +275,8 @@ DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 			wedget->Redraw(redraw);
 
 			cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
+
+			if (cutAreas.IsEmpty()) break;
 		}
 	}
 
