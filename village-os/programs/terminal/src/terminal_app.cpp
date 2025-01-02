@@ -10,11 +10,9 @@
 
 /// @brief Constructor
 TerminalAPP::TerminalAPP()
-	:tid(0),
-	vkgui(NULL),
+	:vkgui(NULL),
 	mainwin(NULL)
 {
-	closeCmd = new RelayCommand(this, (Method)&TerminalAPP::Close);
 }
 
 
@@ -44,7 +42,6 @@ void TerminalAPP::Setup()
 	mainwin->SetSize(600, 400);
 	mainwin->SetTitle((char*)"terminal");
 	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
-	mainwin->GetNavbar()->GetExitBtn()->BindingCommand(closeCmd);
 
 	//Init view component
 	view.InitComponent(mainwin);
@@ -56,19 +53,6 @@ void TerminalAPP::Execute()
 {
 	//Show main window
 	mainwin->Show();
-
-	//Get self task id
-	tid = kernel->thread.GetTaskId();
-
-	//Blocked app
-	kernel->thread.Blocked();
-}
-
-
-/// @brief Close
-void TerminalAPP::Close()
-{
-	kernel->thread.ExitBlocked(tid);
 }
 
 
@@ -76,7 +60,10 @@ void TerminalAPP::Close()
 void TerminalAPP::Exit()
 {
 	//Wait for mainwin close
-	while (vkgui->group.IsExist(mainwin)) {}
+	while (vkgui->group.IsExist(mainwin)) 
+	{
+		kernel->thread.Sleep(1);
+	}
 }
 
 
