@@ -10,6 +10,7 @@
 /// @brief Constructor
 Table::Table()
 {
+	SetTitle((char*)"table");
 }
 
 

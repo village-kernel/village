@@ -12,6 +12,7 @@ Scrollbar::Scrollbar()
 	:dir(_Vertical),
 	scrollbtn(NULL)
 {
+	SetTitle((char*)"scrollbar");
 }
 
 

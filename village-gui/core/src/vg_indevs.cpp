@@ -1,14 +1,14 @@
 //###########################################################################
-// vg_input.cpp
-// Definitions of the functions that manage input
+// vg_indevs.cpp
+// Definitions of the functions that manage indevs
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_input.h"
+#include "vg_indevs.h"
 
 
 /// @brief Constructor
-VgInput::VgInput(VgDevices& devices)
+VgIndevs::VgIndevs(VgDevices& devices)
 	:devices(devices),
 	isReady(false)
 {
@@ -16,13 +16,13 @@ VgInput::VgInput(VgDevices& devices)
 
 
 /// @brief Destructor
-VgInput::~VgInput()
+VgIndevs::~VgIndevs()
 {
 }
 
 
 /// @brief Input setup
-void VgInput::Setup()
+void VgIndevs::Setup()
 {
 	isReady = false;
 
@@ -38,7 +38,7 @@ void VgInput::Setup()
 
 
 /// @brief Input execute
-void VgInput::Execute()
+void VgIndevs::Execute()
 {
 	while (1)
 	{
@@ -57,7 +57,7 @@ void VgInput::Execute()
 
 
 /// @brief Input exit
-void VgInput::Exit()
+void VgIndevs::Exit()
 {
 	for (indevs.Begin(); !indevs.IsEnd(); indevs.Next())
 	{
@@ -68,7 +68,7 @@ void VgInput::Exit()
 
 /// @brief Input register indev
 /// @param indev 
-void VgInput::RegisterIndev(Indev* indev)
+void VgIndevs::RegisterIndev(Indev* indev)
 {
 	indevs.Add(indev);
 	if (isReady) indev->Setup(&devices);
@@ -77,7 +77,7 @@ void VgInput::RegisterIndev(Indev* indev)
 
 /// @brief Input unregister indev
 /// @param indev 
-void VgInput::UnregisterIndev(Indev* indev)
+void VgIndevs::UnregisterIndev(Indev* indev)
 {
 	if (isReady) indev->Exit();
 	indevs.Remove(indev);

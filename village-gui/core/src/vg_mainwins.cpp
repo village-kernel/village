@@ -1,15 +1,15 @@
 //###########################################################################
-// vg_group.cpp
-// Definitions of the functions that manage group
+// vg_mainwins.cpp
+// Definitions of the functions that manage mainwins
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_group.h"
+#include "vg_mainwins.h"
 #include "vk_event_codes.h"
 
 
 /// @brief Constructor
-VgGroup::VgGroup(VgDevices& devices)
+VgMainWins::VgMainWins(VgDevices& devices)
 	:devices(devices),
 	defWindow(NULL),
 	actWindow(NULL),
@@ -19,16 +19,17 @@ VgGroup::VgGroup(VgDevices& devices)
 
 
 /// @brief Destructor
-VgGroup::~VgGroup()
+VgMainWins::~VgMainWins()
 {
 }
 
 
 /// @brief Setup
-void VgGroup::Setup()
+void VgMainWins::Setup()
 {
 	//Create an default window
 	defWindow = new Window();
+	defWindow->SetFixed(true);
 	defWindow->Initiate(&devices);
 
 	//Set default window as active window
@@ -37,12 +38,12 @@ void VgGroup::Setup()
 
 
 /// @brief Execute
-void VgGroup::Execute()
+void VgMainWins::Execute()
 {
 	//Update input
 	UpdataInput();
 
-	//Update mouse cursor
+	//Update cursor
 	UpdateCursor();
 
 	//Resize actived window
@@ -79,7 +80,7 @@ void VgGroup::Execute()
 
 
 /// @brief Exit
-void VgGroup::Exit()
+void VgMainWins::Exit()
 {
 	windows.Release();
 }
@@ -87,7 +88,7 @@ void VgGroup::Exit()
 
 /// @brief Create window
 /// @return 
-Window* VgGroup::Create()
+Window* VgMainWins::Create()
 {
 	Window* window = new Window();
 	window->Initiate(&devices);
@@ -100,7 +101,7 @@ Window* VgGroup::Create()
 /// @brief Destory window
 /// @param window 
 /// @return 
-bool VgGroup::Destroy(Window* window)
+bool VgMainWins::Destroy(Window* window)
 {
 	if (NULL != window)
 	{
@@ -112,8 +113,24 @@ bool VgGroup::Destroy(Window* window)
 }
 
 
+/// @brief Is window exist
+/// @param win 
+/// @return 
+bool VgMainWins::IsExist(Window* window)
+{
+	if (NULL != window)
+	{
+		for (windows.Begin(); !windows.IsEnd(); windows.Next())
+		{
+			if (window == windows.Item()) return true;
+		}
+	}
+	return false;
+}
+
+
 /// @brief Updata input
-void VgGroup::UpdataInput()
+void VgMainWins::UpdataInput()
 {
 	static IndevData last;
 
@@ -129,7 +146,7 @@ void VgGroup::UpdataInput()
 
 
 /// @brief Update cursor
-void VgGroup::UpdateCursor()
+void VgMainWins::UpdateCursor()
 {
 	if ((devices.indev->GetType() == IndevType::_Mouse) && 
 		(devices.indev->Cursor() != NULL))
@@ -141,7 +158,7 @@ void VgGroup::UpdateCursor()
 
 
 /// @brief Execute window
-void VgGroup::ExecuteWindow()
+void VgMainWins::ExecuteWindow()
 {
 	Window* window = SelectActWindow();
 
@@ -153,7 +170,7 @@ void VgGroup::ExecuteWindow()
 
 
 /// @brief Update window
-void VgGroup::UpdateWindow()
+void VgMainWins::UpdateWindow()
 {
 	for (windows.Begin(); !windows.IsEnd(); windows.Next())
 	{
@@ -172,7 +189,7 @@ void VgGroup::UpdateWindow()
 /// @param input 
 /// @param axis 
 /// @return 
-VgGroup::ResizeMethod VgGroup::CheckResizeMethod(Point input, Point axis)
+VgMainWins::ResizeMethod VgMainWins::CheckResizeMethod(Point input, Point axis)
 {
 	ResizeMethod resizeMethod = ResizeMethod::_None;
 
@@ -199,26 +216,29 @@ VgGroup::ResizeMethod VgGroup::CheckResizeMethod(Point input, Point axis)
 
 /// @brief Is actived window resize
 /// @return 
-bool VgGroup::IsActWindowResize(ResizeMethod& resizeMethod)
+bool VgMainWins::IsActWindowResize(ResizeMethod& resizeMethod)
 {
 	static bool isResizeMode = false;
 	static ResizeMethod staticResizeMethod = ResizeMethod::_None;
 
 	if (actWindow->IsFixed()) return false;
 
-	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
+	if (EventCode::_BtnLeft == input.key)
 	{
-		if (!isResizeMode)
+		if (KeyState::_Pressed == input.state)
 		{
-			staticResizeMethod = CheckResizeMethod(input.point, axis.point);
-			isResizeMode = (ResizeMethod::_None != staticResizeMethod);
+			if (!isResizeMode || staticResizeMethod > ResizeMethod::_Adjust)
+			{
+				staticResizeMethod = CheckResizeMethod(input.point, axis.point);
+				isResizeMode = (ResizeMethod::_None != staticResizeMethod);
+			}
+			resizeMethod = staticResizeMethod;
 		}
-		resizeMethod = staticResizeMethod;
-	}
-	else
-	{
-		isResizeMode = false;
-		resizeMethod = ResizeMethod::_None;
+		else if (KeyState::_Released == input.state)
+		{
+			isResizeMode = false;
+			resizeMethod = ResizeMethod::_None;
+		}
 	}
 
 	return isResizeMode;
@@ -227,7 +247,7 @@ bool VgGroup::IsActWindowResize(ResizeMethod& resizeMethod)
 
 /// @brief Selected active window
 /// @return 
-Window* VgGroup::SelectActWindow()
+Window* VgMainWins::SelectActWindow()
 {
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
@@ -238,21 +258,32 @@ Window* VgGroup::SelectActWindow()
 			return item;
 		}
 	}
-	return NULL;
+	return actWindow;
 }
 
 
 /// @brief Is actived window change
 /// @return 
-bool VgGroup::IsActWindowSelect()
+bool VgMainWins::IsActWindowSelect()
 {
-	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
-	{
-		Window* window = SelectActWindow();
+	static bool isPressed = false;
 
-		if ((NULL != window) && (actWindow != window))
+	if (EventCode::_BtnLeft == input.key)
+	{
+		if (!isPressed && KeyState::_Pressed == input.state)
 		{
-			actWindow = window; return true;
+			isPressed = true;
+
+			Window* selWindow = SelectActWindow();
+			
+			if (actWindow != selWindow)
+			{
+				actWindow = selWindow; return true;
+			}
+		}
+		else if (KeyState::_Released == input.state)
+		{
+			isPressed = false;
 		}
 	}
 
@@ -263,7 +294,7 @@ bool VgGroup::IsActWindowSelect()
 /// @brief Get window upper areas
 /// @param window 
 /// @return 
-DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
+DrawAreas VgMainWins::GetWindowUpperAreas(Window* window)
 {
 	DrawAreas areas;
 
@@ -272,6 +303,8 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 		for (windows.Begin(); !windows.IsEnd(); windows.Next())
 		{
 			Window* item = windows.Item();
+
+			if (item == window) continue;
 
 			if (window->GetPlace() < item->GetPlace())
 			{
@@ -293,17 +326,13 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 }
 
 
-
 /// @brief Redraw Float window overlap areas
 /// @param areas 
 /// @param window 
 /// @param place 
 /// @return 
-DrawAreas VgGroup::RedrawFloatWindowAreas(DrawAreas areas, Window* window)
+DrawAreas VgMainWins::RedrawFloatWindowAreas(DrawAreas areas, Window* window)
 {
-	//Cut window area from redraw areas
-	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
-
 	//Redraw other window areas
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
@@ -325,11 +354,8 @@ DrawAreas VgGroup::RedrawFloatWindowAreas(DrawAreas areas, Window* window)
 /// @param window 
 /// @param place 
 /// @return 
-DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place)
+DrawAreas VgMainWins::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place)
 {
-	//Cut window area from redraw areas
-	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
-
 	//Redraw other window areas
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
@@ -348,8 +374,11 @@ DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Windo
 
 /// @brief Redraw other window overlap areas
 /// @param window 
-void VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window)
+void VgMainWins::RedrawOtherWindowAreas(DrawAreas areas, Window* window)
 {
+	//Cut window area from redraw areas
+	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
+
 	//Redraw float windows
 	areas = RedrawFloatWindowAreas(areas, window);
 
@@ -366,8 +395,11 @@ void VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window)
 
 /// @brief Redraw window self areas
 /// @param window 
-void VgGroup::RedrawSelfWindowAreas(Window* window)
+void VgMainWins::RedrawSelfWindowAreas(Window* window)
 {
+	//Return when the window area invalid
+	if (!window->IsAreaValid()) return;
+
 	//Get upper areas
 	DrawAreas uppers = GetWindowUpperAreas(window);
 
@@ -384,7 +416,7 @@ void VgGroup::RedrawSelfWindowAreas(Window* window)
 
 /// @brief Redraw window update areas
 /// @param window 
-void VgGroup::RedrawWindowUpdateAreas(Window* window)
+void VgMainWins::RedrawWindowUpdateAreas(Window* window)
 {
 	//Get upper areas
 	DrawAreas uppers = GetWindowUpperAreas(window);
@@ -395,7 +427,7 @@ void VgGroup::RedrawWindowUpdateAreas(Window* window)
 	//Calc redraw areas
 	DrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);
 
-	//Redraw Other window areas
+	//Redraw other window areas
 	RedrawOtherWindowAreas(overlaps, window);
 
 	//Window redraw
@@ -406,7 +438,7 @@ void VgGroup::RedrawWindowUpdateAreas(Window* window)
 /// @brief Get resize window overlap areas
 /// @param window 
 /// @return 
-DrawAreas VgGroup::GetResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod)
+DrawAreas VgMainWins::GetResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod)
 {
 	DrawArea oldArea = window->GetLayerArea();
 	
@@ -439,7 +471,7 @@ DrawAreas VgGroup::GetResizeWindowOverlapAreas(Window* window, ResizeMethod resi
 
 /// @brief Redraw resize window overlap areas
 /// @param window 
-void VgGroup::RedrawResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod)
+void VgMainWins::RedrawResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod)
 {
 	//Get resize overlap areas
 	DrawAreas areas = GetResizeWindowOverlapAreas(window, resizeMethod);
@@ -454,7 +486,7 @@ void VgGroup::RedrawResizeWindowOverlapAreas(Window* window, ResizeMethod resize
 
 /// @brief Resize window execute
 /// @param window 
-void VgGroup::ResizeWindowExecute(Window* window, ResizeMethod resizeMethod)
+void VgMainWins::ResizeWindowExecute(Window* window, ResizeMethod resizeMethod)
 {
 	if ((ResizeMethod::_Maximize == resizeMethod) ||
 		(ResizeMethod::_Minimize == resizeMethod) ||
@@ -467,7 +499,7 @@ void VgGroup::ResizeWindowExecute(Window* window, ResizeMethod resizeMethod)
 
 /// @brief Destory close window
 /// @param window 
-void VgGroup::DestroyCloseWindow(Window* window, ResizeMethod resizeMethod)
+void VgMainWins::DestroyCloseWindow(Window* window, ResizeMethod resizeMethod)
 {
 	if (ResizeMethod::_Close == resizeMethod)
 	{
@@ -481,7 +513,7 @@ void VgGroup::DestroyCloseWindow(Window* window, ResizeMethod resizeMethod)
 /// @brief Get selected window overlap areas
 /// @param window 
 /// @return 
-DrawAreas VgGroup::GetSelWindowOverlapAreas(Window* window)
+DrawAreas VgMainWins::GetSelWindowOverlapAreas(Window* window)
 {
 	DrawAreas areas;
 
@@ -505,7 +537,7 @@ DrawAreas VgGroup::GetSelWindowOverlapAreas(Window* window)
 
 /// @brief Redraw actived window overlap areas
 /// @param window 
-void VgGroup::RedrawSelWindowOverlapAreas(Window* window)
+void VgMainWins::RedrawSelWindowOverlapAreas(Window* window)
 {
 	//Get upper areas
 	DrawAreas uppers = GetWindowUpperAreas(window);
@@ -523,7 +555,7 @@ void VgGroup::RedrawSelWindowOverlapAreas(Window* window)
 
 /// @brief Swap active window
 /// @param window 
-void VgGroup::SwapActWindowListNode(Window* window)
+void VgMainWins::SwapActWindowListNode(Window* window)
 {
 	windows.Remove(window);
 	windows.Add(window);
@@ -532,7 +564,7 @@ void VgGroup::SwapActWindowListNode(Window* window)
 
 /// @brief Execute always focus actived window
 /// @param window 
-void VgGroup::AlwaysFocusWindowExecute(Window* window)
+void VgMainWins::AlwaysFocusWindowExecute(Window* window)
 {
 	if (window->IsAlwaysFocus())
 	{

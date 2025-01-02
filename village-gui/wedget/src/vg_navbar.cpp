@@ -10,6 +10,7 @@
 /// @brief Constructor
 Navbar::Navbar()
 {
+	SetTitle((char*)"navbar");
 }
 
 

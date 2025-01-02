@@ -12,6 +12,7 @@
 Button::Button()
 	:text(NULL)
 {
+	SetTitle((char*)"button");
 }
 
 

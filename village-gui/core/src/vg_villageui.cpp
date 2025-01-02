@@ -1,18 +1,18 @@
 //###########################################################################
-// vg_gui.cpp
+// vg_villageui.cpp
 // Definitions of the functions that manage village gui
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_gui.h"
+#include "vg_villageui.h"
 
 
 /// @brief Constructor
 VillageGUI::VillageGUI()
 	:timer(devices),
-	input(devices),
-	screen(devices),
-	group(devices)
+	indevs(devices),
+	displays(devices),
+	mainwins(devices)
 {
 }
 
@@ -29,14 +29,14 @@ void VillageGUI::Setup()
 	//Setup timer
 	timer.Setup();
 
-	//Setup input
-	input.Setup();
+	//Setup indevs
+	indevs.Setup();
 
-	//Setup screen
-	screen.Setup();
+	//Setup displays
+	displays.Setup();
 
-	//Setup group
-	group.Setup();
+	//Setup mainwins
+	mainwins.Setup();
 }
 
 
@@ -46,28 +46,28 @@ void VillageGUI::Execute()
 	//Execute timer
 	timer.Execute();
 
-	//Execute input
-	input.Execute();
+	//Execute indevs
+	indevs.Execute();
 
-	//Execute screen
-	screen.Execute();
+	//Execute displays
+	displays.Execute();
 
-	//Execute group
-	group.Execute();
+	//Execute mainwins
+	mainwins.Execute();
 }
 
 
 /// @brief Exit
 void VillageGUI::Exit()
 {
-	//Exit group
-	group.Exit();
+	//Exit mainwins
+	mainwins.Exit();
 
-	//Exit screen
-	screen.Exit();
+	//Exit displays
+	displays.Exit();
 
 	//Exit indev
-	input.Exit();
+	indevs.Exit();
 
 	//Exit timer
 	timer.Exit();

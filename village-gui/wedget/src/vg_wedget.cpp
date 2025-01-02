@@ -10,7 +10,7 @@
 /// @brief Constructor
 Wedget::Wedget()
 	:devices(NULL),
-	title((char*)"None"),
+	title((char*)"wedget"),
 	bgColor(DrawDefs::_White),
 	hidden(false),
 	enable(true),
@@ -76,6 +76,14 @@ void Wedget::SetSize(int width, int height)
 bool Wedget::IsInArea(int x, int y)
 {
 	return layer.IsCoordinateInArea(x, y, layerArea);
+}
+
+
+/// @brief Is area valid
+/// @return 
+bool Wedget::IsAreaValid()
+{
+	return layer.IsAreaVaild(layerArea);
 }
 
 
@@ -229,6 +237,8 @@ DrawAreas Wedget::RedrawWedgets(DrawAreas areas)
 		if (item->IsHidden()) continue;
 
 		areas = RedrawWedgetAreas(item, areas);
+
+		if (areas.IsEmpty()) break;
 	}
 
 	return areas;
@@ -265,6 +275,8 @@ DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 			wedget->Redraw(redraw);
 
 			cutAreas = layer.CutAreaFromAreas(cutAreas, redraw);
+
+			if (cutAreas.IsEmpty()) break;
 		}
 	}
 

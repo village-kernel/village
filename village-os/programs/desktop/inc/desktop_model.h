@@ -7,7 +7,7 @@
 #ifndef __DESKTOP_MODEL_H__
 #define __DESKTOP_MODEL_H__
 
-#include "vg_gui.h"
+#include "vg_villageui.h"
 
 
 /// @brief DesktopModel

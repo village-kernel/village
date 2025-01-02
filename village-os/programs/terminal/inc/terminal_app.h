@@ -11,13 +11,9 @@
 
 
 /// @brief TerminalAPP
-class TerminalAPP : public Class
+class TerminalAPP
 {
 private:
-	//Members
-	int          tid;
-	ICommand*    closeCmd;
-
 	//Members
 	VillageGUI*  vkgui;
 	Window*      mainwin;
@@ -30,7 +26,6 @@ public:
 	~TerminalAPP();
 	void Setup();
 	void Execute();
-	void Close();
 	void Exit();
 };
 

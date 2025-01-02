@@ -11,6 +11,7 @@
 Label::Label()
 	:label(NULL)
 {
+	SetTitle((char*)"label");
 }
 
 

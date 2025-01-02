@@ -10,6 +10,7 @@
 /// @brief Constructor
 MsgBox::MsgBox()
 {
+	SetTitle((char*)"msgbox");
 }
 
 

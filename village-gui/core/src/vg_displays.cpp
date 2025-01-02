@@ -1,14 +1,14 @@
 //###########################################################################
-// vg_screen.cpp
-// Definitions of the functions that manage screen
+// vg_displays.cpp
+// Definitions of the functions that manage displays
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_screen.h"
+#include "vg_displays.h"
 
 
 /// @brief Constructor
-VgScreen::VgScreen(VgDevices& devices)
+VgDisplays::VgDisplays(VgDevices& devices)
 	:devices(devices),
 	isReady(false)
 {
@@ -16,13 +16,13 @@ VgScreen::VgScreen(VgDevices& devices)
 
 
 /// @brief Destructor
-VgScreen::~VgScreen()
+VgDisplays::~VgDisplays()
 {
 }
 
 
 /// @brief Display setup
-void VgScreen::Setup()
+void VgDisplays::Setup()
 {
 	isReady = false;
 
@@ -38,7 +38,7 @@ void VgScreen::Setup()
 
 
 /// @brief Display execute
-void VgScreen::Execute()
+void VgDisplays::Execute()
 {
 	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 	{
@@ -60,7 +60,7 @@ void VgScreen::Execute()
 
 
 /// @brief Display exit
-void VgScreen::Exit()
+void VgDisplays::Exit()
 {
 	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 	{
@@ -71,7 +71,7 @@ void VgScreen::Exit()
 
 /// @brief Display register lcddev
 /// @param lcd 
-void VgScreen::RegisterLcddev(Lcddev* lcd)
+void VgDisplays::RegisterLcddev(Lcddev* lcd)
 {
 	lcddevs.Add(lcd);
 	if (isReady) lcd->Setup(&devices);
@@ -80,7 +80,7 @@ void VgScreen::RegisterLcddev(Lcddev* lcd)
 
 /// @brief Display unregister lcddev
 /// @param lcd 
-void VgScreen::UnregisterLcddev(Lcddev* lcd)
+void VgDisplays::UnregisterLcddev(Lcddev* lcd)
 {
 	if (isReady) lcd->Exit();
 	lcddevs.Remove(lcd);

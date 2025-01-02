@@ -26,8 +26,8 @@ public:
 	void Setup();
 	void Execute();
 	void Exit();
-	void RegisterTick(Ticks* ticks);
-	void UnregisterTick(Ticks* ticks);
+	void SetTicks(Ticks* ticks);
+	void ClearTick(Ticks* ticks);
 };
 
 #endif //!__VG_TIMER_H__

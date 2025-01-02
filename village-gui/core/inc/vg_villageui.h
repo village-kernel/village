@@ -1,11 +1,11 @@
 //###########################################################################
-// vg_gui.h
+// vg_villageui.h
 // Declarations of the functions that manage village gui
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_GUI_H__
-#define __VG_GUI_H__
+#ifndef __VG_VILLAGE_GUI_H__
+#define __VG_VILLAGE_GUI_H__
 
 /// @brief include draw headers
 #include "vg_draw_arc.h"
@@ -42,9 +42,9 @@
 /// @brief include grahics headers
 #include "vg_devices.h"
 #include "vg_timer.h"
-#include "vg_input.h"
-#include "vg_screen.h"
-#include "vg_group.h"
+#include "vg_indevs.h"
+#include "vg_displays.h"
+#include "vg_mainwins.h"
 
 
 /// @brief VillageGUI
@@ -54,9 +54,9 @@ public:
 	//Members
 	VgDevices  devices;
 	VgTimer    timer;
-	VgInput    input;
-	VgScreen   screen;
-	VgGroup    group;
+	VgIndevs   indevs;
+	VgDisplays displays;
+	VgMainWins mainwins;
 public:
 	//Methods
 	VillageGUI();
@@ -66,4 +66,4 @@ public:
 	void Exit();
 };
 
-#endif //!__VG_GUI_H__
+#endif //!__VG_VILLAGE_GUI_H__

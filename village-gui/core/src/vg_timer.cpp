@@ -58,7 +58,7 @@ void VgTimer::Exit()
 
 /// @brief 
 /// @param tick 
-void VgTimer::RegisterTick(Ticks* ticks)
+void VgTimer::SetTicks(Ticks* ticks)
 {
 	if (NULL != ticks && ticks != this->ticks)
 	{
@@ -70,7 +70,7 @@ void VgTimer::RegisterTick(Ticks* ticks)
 
 /// @brief 
 /// @param tick 
-void VgTimer::UnregisterTick(Ticks* ticks)
+void VgTimer::ClearTick(Ticks* ticks)
 {
 	if (this->ticks == ticks)
 	{
