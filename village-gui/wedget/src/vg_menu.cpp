@@ -10,6 +10,7 @@
 /// @brief Constructor
 Menu::Menu()
 {
+	SetTitle((char*)"menu");
 }
 
 

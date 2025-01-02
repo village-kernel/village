@@ -10,6 +10,7 @@
 /// @brief Constructor
 Tabbar::Tabbar()
 {
+	SetTitle((char*)"tabbar");
 }
 
 

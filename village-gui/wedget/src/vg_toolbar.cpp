@@ -10,6 +10,7 @@
 /// @brief Constructor
 Toolbar::Toolbar()
 {
+	SetTitle((char*)"toolbar");
 }
 
 

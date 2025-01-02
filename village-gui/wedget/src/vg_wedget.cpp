@@ -10,7 +10,7 @@
 /// @brief Constructor
 Wedget::Wedget()
 	:devices(NULL),
-	title((char*)"None"),
+	title((char*)"wedget"),
 	bgColor(DrawDefs::_White),
 	hidden(false),
 	enable(true),

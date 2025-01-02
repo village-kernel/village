@@ -13,6 +13,7 @@ Window::Window()
 	place(_Middle),
 	resizeSide(0)
 {
+	SetTitle((char*)"window");
 }
 
 

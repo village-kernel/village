@@ -10,6 +10,7 @@
 /// @brief Constructor
 ListBox::ListBox()
 {
+	SetTitle((char*)"listbox");
 }
 
 

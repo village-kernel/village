@@ -10,6 +10,7 @@
 /// @brief Constructor
 TextBox::TextBox()
 {
+	SetTitle((char*)"textbox");
 }
 
 

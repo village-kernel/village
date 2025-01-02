@@ -11,6 +11,7 @@
 /// @brief Constructor
 Context::Context()
 {
+	SetTitle((char*)"context");
 }
 
 
