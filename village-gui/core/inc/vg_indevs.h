@@ -1,19 +1,19 @@
 //###########################################################################
-// vg_input.h
-// Declarations of the functions that manage input
+// vg_indevs.h
+// Declarations of the functions that manage indevs
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_INPUT_H__
-#define __VG_INPUT_H__
+#ifndef __VG_INDEVS_H__
+#define __VG_INDEVS_H__
 
 #include "vg_devices.h"
 #include "vg_indev.h"
 #include "vg_list.h"
 
 
-/// @brief VgInput
-class VgInput
+/// @brief VgIndevs
+class VgIndevs
 {
 private:
 	//Members
@@ -22,8 +22,8 @@ private:
 	bool            isReady;
 public:
 	//Methods
-	VgInput(VgDevices& devices);
-	~VgInput();
+	VgIndevs(VgDevices& devices);
+	~VgIndevs();
 	void Setup();
 	void Execute();
 	void Exit();
@@ -33,4 +33,4 @@ public:
 	void UnregisterIndev(Indev* indev);
 };
 
-#endif //!__VG_INPUT_H__
+#endif //!__VG_INDEVS_H__

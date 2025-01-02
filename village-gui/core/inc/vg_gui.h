@@ -42,7 +42,7 @@
 /// @brief include grahics headers
 #include "vg_devices.h"
 #include "vg_timer.h"
-#include "vg_input.h"
+#include "vg_indevs.h"
 #include "vg_displays.h"
 #include "vg_mainwins.h"
 
@@ -54,7 +54,7 @@ public:
 	//Members
 	VgDevices  devices;
 	VgTimer    timer;
-	VgInput    input;
+	VgIndevs   indevs;
 	VgDisplays displays;
 	VgMainWins mainwins;
 public:

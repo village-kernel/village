@@ -10,7 +10,7 @@
 /// @brief Constructor
 VillageGUI::VillageGUI()
 	:timer(devices),
-	input(devices),
+	indevs(devices),
 	displays(devices),
 	mainwins(devices)
 {
@@ -29,8 +29,8 @@ void VillageGUI::Setup()
 	//Setup timer
 	timer.Setup();
 
-	//Setup input
-	input.Setup();
+	//Setup indevs
+	indevs.Setup();
 
 	//Setup displays
 	displays.Setup();
@@ -46,8 +46,8 @@ void VillageGUI::Execute()
 	//Execute timer
 	timer.Execute();
 
-	//Execute input
-	input.Execute();
+	//Execute indevs
+	indevs.Execute();
 
 	//Execute displays
 	displays.Execute();
@@ -67,7 +67,7 @@ void VillageGUI::Exit()
 	displays.Exit();
 
 	//Exit indev
-	input.Exit();
+	indevs.Exit();
 
 	//Exit timer
 	timer.Exit();

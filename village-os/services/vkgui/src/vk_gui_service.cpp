@@ -35,10 +35,10 @@ bool VkGuiService::Setup()
 	vkgui.timer.RegisterTick(new VkTicks());
 
 	//Register mouse
-	vkgui.input.RegisterIndev(new VkMouse());
+	vkgui.indevs.RegisterIndev(new VkMouse());
 
 	//Register keyboard
-	vkgui.input.RegisterIndev(new VkKeyBoard());
+	vkgui.indevs.RegisterIndev(new VkKeyBoard());
 
 	//Register display
 	vkgui.displays.RegisterLcddev(new VkDisplay());
