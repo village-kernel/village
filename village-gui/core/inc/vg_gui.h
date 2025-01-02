@@ -44,7 +44,7 @@
 #include "vg_timer.h"
 #include "vg_input.h"
 #include "vg_screen.h"
-#include "vg_group.h"
+#include "vg_mainwins.h"
 
 
 /// @brief VillageGUI
@@ -56,7 +56,7 @@ public:
 	VgTimer    timer;
 	VgInput    input;
 	VgScreen   screen;
-	VgGroup    group;
+	VgMainWins mainwins;
 public:
 	//Methods
 	VillageGUI();

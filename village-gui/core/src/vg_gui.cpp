@@ -12,7 +12,7 @@ VillageGUI::VillageGUI()
 	:timer(devices),
 	input(devices),
 	screen(devices),
-	group(devices)
+	mainwins(devices)
 {
 }
 
@@ -35,8 +35,8 @@ void VillageGUI::Setup()
 	//Setup screen
 	screen.Setup();
 
-	//Setup group
-	group.Setup();
+	//Setup mainwins
+	mainwins.Setup();
 }
 
 
@@ -52,16 +52,16 @@ void VillageGUI::Execute()
 	//Execute screen
 	screen.Execute();
 
-	//Execute group
-	group.Execute();
+	//Execute mainwins
+	mainwins.Execute();
 }
 
 
 /// @brief Exit
 void VillageGUI::Exit()
 {
-	//Exit group
-	group.Exit();
+	//Exit mainwins
+	mainwins.Exit();
 
 	//Exit screen
 	screen.Exit();

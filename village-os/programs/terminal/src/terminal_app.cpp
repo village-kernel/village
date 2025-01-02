@@ -34,7 +34,7 @@ void TerminalAPP::Setup()
 	if (NULL == vkgui) return;
 	
 	//Create mainwin
-	mainwin = vkgui->group.Create();
+	mainwin = vkgui->mainwins.Create();
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
@@ -60,7 +60,7 @@ void TerminalAPP::Execute()
 void TerminalAPP::Exit()
 {
 	//Wait for mainwin close
-	while (vkgui->group.IsExist(mainwin)) 
+	while (vkgui->mainwins.IsExist(mainwin)) 
 	{
 		kernel->thread.Sleep(1);
 	}

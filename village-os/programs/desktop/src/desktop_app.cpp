@@ -34,7 +34,7 @@ void DesktopApp::Setup()
 	if (NULL == vkgui) return;
 	
 	//Create mainwin window
-	mainwin = vkgui->group.Create();
+	mainwin = vkgui->mainwins.Create();
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
@@ -62,7 +62,7 @@ void DesktopApp::Execute()
 void DesktopApp::Exit()
 {
 	//Wait for mainwin close
-	while (vkgui->group.IsExist(mainwin)) 
+	while (vkgui->mainwins.IsExist(mainwin)) 
 	{
 		kernel->thread.Sleep(1);
 	}

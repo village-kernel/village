@@ -1,11 +1,11 @@
 //###########################################################################
-// vg_group.h
-// Declarations of the functions that manage window group
+// vg_mainwins.h
+// Declarations of the functions that manage mainwins
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_GROUP_H__
-#define __VG_GROUP_H__
+#ifndef __VG_MAINWINS_H__
+#define __VG_MAINWINS_H__
 
 #include "vg_devices.h"
 #include "vg_layer.h"
@@ -13,8 +13,8 @@
 #include "vg_list.h"
 
 
-/// @brief VgGroup
-class VgGroup
+/// @brief VgMainWins
+class VgMainWins
 {
 private:
 	//Enumerations
@@ -69,8 +69,8 @@ private:
 	void AlwaysFocusWindowExecute(Window* window);
 public:
 	//Methods
-	VgGroup(VgDevices& devices);
-	~VgGroup();
+	VgMainWins(VgDevices& devices);
+	~VgMainWins();
 	void Setup();
 	void Execute();
 	void Exit();
@@ -81,4 +81,4 @@ public:
 	bool IsExist(Window* window);
 };
 
-#endif //!__VG_GROUP_H__
+#endif //!__VG_MAINWINS_H__
