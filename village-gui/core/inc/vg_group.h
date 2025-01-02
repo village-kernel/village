@@ -77,7 +77,8 @@ public:
 
 	//Methods
 	Window* Create();
-	bool Destroy(Window* win);
+	bool Destroy(Window* window);
+	bool IsExist(Window* window);
 };
 
 #endif //!__VG_GROUP_H__

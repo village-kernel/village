@@ -50,9 +50,9 @@ void VgGroup::Execute()
 	
 	if (IsActWindowResize(resizeMethod))
 	{
-		RedrawResizeWindowOverlapAreas(actWindow, resizeMethod);
-
 		ResizeWindowExecute(actWindow, resizeMethod);
+
+		RedrawResizeWindowOverlapAreas(actWindow, resizeMethod);
 
 		DestroyCloseWindow(actWindow, resizeMethod);
 	}
@@ -107,6 +107,22 @@ bool VgGroup::Destroy(Window* window)
 		windows.Remove(window);
 		delete window;
 		return true;
+	}
+	return false;
+}
+
+
+/// @brief Is window exist
+/// @param win 
+/// @return 
+bool VgGroup::IsExist(Window* window)
+{
+	if (NULL != window)
+	{
+		for (windows.Begin(); !windows.IsEnd(); windows.Next())
+		{
+			if (window == windows.Item()) return true;
+		}
 	}
 	return false;
 }
@@ -316,9 +332,6 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 /// @return 
 DrawAreas VgGroup::RedrawFloatWindowAreas(DrawAreas areas, Window* window)
 {
-	//Cut window area from redraw areas
-	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
-
 	//Redraw other window areas
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
@@ -342,9 +355,6 @@ DrawAreas VgGroup::RedrawFloatWindowAreas(DrawAreas areas, Window* window)
 /// @return 
 DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place)
 {
-	//Cut window area from redraw areas
-	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
-
 	//Redraw other window areas
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
@@ -365,6 +375,9 @@ DrawAreas VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Windo
 /// @param window 
 void VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window)
 {
+	//Cut window area from redraw areas
+	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
+
 	//Redraw float windows
 	areas = RedrawFloatWindowAreas(areas, window);
 
