@@ -42,7 +42,7 @@ void VgGroup::Execute()
 	//Update input
 	UpdataInput();
 
-	//Update mouse cursor
+	//Update cursor
 	UpdateCursor();
 
 	//Resize actived window
@@ -50,9 +50,9 @@ void VgGroup::Execute()
 	
 	if (IsActWindowResize(resizeMethod))
 	{
-		ResizeWindowExecute(actWindow, resizeMethod);
-
 		RedrawResizeWindowOverlapAreas(actWindow, resizeMethod);
+
+		ResizeWindowExecute(actWindow, resizeMethod);
 
 		DestroyCloseWindow(actWindow, resizeMethod);
 	}
@@ -206,19 +206,22 @@ bool VgGroup::IsActWindowResize(ResizeMethod& resizeMethod)
 
 	if (actWindow->IsFixed()) return false;
 
-	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
+	if (EventCode::_BtnLeft == input.key)
 	{
-		if (!isResizeMode)
+		if (KeyState::_Pressed == input.state)
 		{
-			staticResizeMethod = CheckResizeMethod(input.point, axis.point);
-			isResizeMode = (ResizeMethod::_None != staticResizeMethod);
+			if (!isResizeMode)
+			{
+				staticResizeMethod = CheckResizeMethod(input.point, axis.point);
+				isResizeMode = (ResizeMethod::_None != staticResizeMethod);
+			}
+			resizeMethod = staticResizeMethod;
 		}
-		resizeMethod = staticResizeMethod;
-	}
-	else
-	{
-		isResizeMode = false;
-		resizeMethod = ResizeMethod::_None;
+		else if (KeyState::_Released == input.state)
+		{
+			isResizeMode = false;
+			resizeMethod = ResizeMethod::_None;
+		}
 	}
 
 	return isResizeMode;
@@ -238,7 +241,7 @@ Window* VgGroup::SelectActWindow()
 			return item;
 		}
 	}
-	return NULL;
+	return actWindow;
 }
 
 
@@ -246,13 +249,24 @@ Window* VgGroup::SelectActWindow()
 /// @return 
 bool VgGroup::IsActWindowSelect()
 {
-	if ((EventCode::_BtnLeft == input.key) && (KeyState::_Pressed == input.state))
-	{
-		Window* window = SelectActWindow();
+	static bool isPressed = false;
 
-		if ((NULL != window) && (actWindow != window))
+	if (EventCode::_BtnLeft == input.key)
+	{
+		if (!isPressed && KeyState::_Pressed == input.state)
 		{
-			actWindow = window; return true;
+			isPressed = true;
+
+			Window* selWindow = SelectActWindow();
+			
+			if (actWindow != selWindow)
+			{
+				actWindow = selWindow; return true;
+			}
+		}
+		else if (KeyState::_Released == input.state)
+		{
+			isPressed = false;
 		}
 	}
 
@@ -273,6 +287,8 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 		{
 			Window* item = windows.Item();
 
+			if (item == window) continue;
+
 			if (window->GetPlace() < item->GetPlace())
 			{
 				areas.Add(item->GetLayerArea());
@@ -291,7 +307,6 @@ DrawAreas VgGroup::GetWindowUpperAreas(Window* window)
 
 	return areas;
 }
-
 
 
 /// @brief Redraw Float window overlap areas
@@ -368,6 +383,9 @@ void VgGroup::RedrawOtherWindowAreas(DrawAreas areas, Window* window)
 /// @param window 
 void VgGroup::RedrawSelfWindowAreas(Window* window)
 {
+	//Return when the window area invalid
+	if (!window->IsAreaValid()) return;
+
 	//Get upper areas
 	DrawAreas uppers = GetWindowUpperAreas(window);
 
@@ -395,7 +413,7 @@ void VgGroup::RedrawWindowUpdateAreas(Window* window)
 	//Calc redraw areas
 	DrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);
 
-	//Redraw Other window areas
+	//Redraw other window areas
 	RedrawOtherWindowAreas(overlaps, window);
 
 	//Window redraw
@@ -473,7 +491,7 @@ void VgGroup::DestroyCloseWindow(Window* window, ResizeMethod resizeMethod)
 	{
 		Destroy(window);
 
-		actWindow = defWindow;
+		actWindow = windows.End();
 	}
 }
 
