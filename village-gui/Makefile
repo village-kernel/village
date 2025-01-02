@@ -40,7 +40,7 @@ src-y                                   += village-gui/wedget/src
 objs-vkgui-y                            += vg_gui.o
 objs-vkgui-y                            += vg_timer.o
 objs-vkgui-y                            += vg_input.o
-objs-vkgui-y                            += vg_screen.o
+objs-vkgui-y                            += vg_displays.o
 objs-vkgui-y                            += vg_mainwins.o
 
 objs-vkgui-y                            += vg_relay_cmd.o

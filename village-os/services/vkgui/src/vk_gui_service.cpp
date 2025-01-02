@@ -41,7 +41,7 @@ bool VkGuiService::Setup()
 	vkgui.input.RegisterIndev(new VkKeyBoard());
 
 	//Register display
-	vkgui.screen.RegisterLcddev(new VkDisplay());
+	vkgui.displays.RegisterLcddev(new VkDisplay());
 
 	//Setup vkgui
 	vkgui.Setup();

@@ -43,7 +43,7 @@
 #include "vg_devices.h"
 #include "vg_timer.h"
 #include "vg_input.h"
-#include "vg_screen.h"
+#include "vg_displays.h"
 #include "vg_mainwins.h"
 
 
@@ -55,7 +55,7 @@ public:
 	VgDevices  devices;
 	VgTimer    timer;
 	VgInput    input;
-	VgScreen   screen;
+	VgDisplays displays;
 	VgMainWins mainwins;
 public:
 	//Methods

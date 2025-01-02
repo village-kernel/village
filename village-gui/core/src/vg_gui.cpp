@@ -11,7 +11,7 @@
 VillageGUI::VillageGUI()
 	:timer(devices),
 	input(devices),
-	screen(devices),
+	displays(devices),
 	mainwins(devices)
 {
 }
@@ -32,8 +32,8 @@ void VillageGUI::Setup()
 	//Setup input
 	input.Setup();
 
-	//Setup screen
-	screen.Setup();
+	//Setup displays
+	displays.Setup();
 
 	//Setup mainwins
 	mainwins.Setup();
@@ -49,8 +49,8 @@ void VillageGUI::Execute()
 	//Execute input
 	input.Execute();
 
-	//Execute screen
-	screen.Execute();
+	//Execute displays
+	displays.Execute();
 
 	//Execute mainwins
 	mainwins.Execute();
@@ -63,8 +63,8 @@ void VillageGUI::Exit()
 	//Exit mainwins
 	mainwins.Exit();
 
-	//Exit screen
-	screen.Exit();
+	//Exit displays
+	displays.Exit();
 
 	//Exit indev
 	input.Exit();
