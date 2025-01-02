@@ -1,10 +1,10 @@
 //###########################################################################
-// vk_mouse_indev.cpp
+// vk_gui_mouse.cpp
 // Definitions of the functions that manage mouse
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vk_mouse_indev.h"
+#include "vk_gui_mouse.h"
 #include "vk_event_codes.h"
 #include "vk_kernel.h"
 #include "vg_window.h"

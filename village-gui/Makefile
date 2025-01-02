@@ -19,7 +19,6 @@ inc-y                                   += village-gui/binding/inc
 inc-y                                   += village-gui/core/inc
 inc-y                                   += village-gui/draw/inc
 inc-y                                   += village-gui/drivers/if
-inc-y                                   += village-gui/drivers/inc
 inc-y                                   += village-gui/font/inc
 inc-y                                   += village-gui/layout/inc
 inc-y                                   += village-gui/misc/inc
@@ -28,7 +27,6 @@ inc-y                                   += village-gui/wedget/inc
 src-y                                   += village-gui/binding/src
 src-y                                   += village-gui/core/src
 src-y                                   += village-gui/draw/src
-src-y                                   += village-gui/drivers/src
 src-y                                   += village-gui/layout/src
 src-y                                   += village-gui/misc/src
 src-y                                   += village-gui/wedget/src
@@ -47,11 +45,6 @@ objs-vkgui-y                            += vg_relay_cmd.o
 
 objs-vkgui-y                            += vg_layer.o
 objs-vkgui-y                            += vg_math.o
-
-objs-vkgui-y                            += vk_disp_lcddev.o
-objs-vkgui-y                            += vk_keyboard_indev.o
-objs-vkgui-y                            += vk_mouse_indev.o
-objs-vkgui-y                            += vk_timer_ticks.o
 
 objs-vkgui-y                            += vg_draw_arc.o
 objs-vkgui-y                            += vg_draw_buff.o

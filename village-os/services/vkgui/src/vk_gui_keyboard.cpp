@@ -1,10 +1,10 @@
 //###########################################################################
-// vk_keyboard_indev.cpp
+// vk_gui_keyboard.cpp
 // Definitions of the functions that manage keyboard
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vk_keyboard_indev.h"
+#include "vk_gui_keyboard.h"
 #include "vk_event_codes.h"
 #include "vk_kernel.h"
 

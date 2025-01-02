@@ -1,10 +1,10 @@
 //###########################################################################
-// VkTicks.cpp
+// vk_gui_ticks.cpp
 // Definitions of the functions that manage ticks
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vk_timer_ticks.h"
+#include "vk_gui_ticks.h"
 #include "vk_kernel.h"
 
 

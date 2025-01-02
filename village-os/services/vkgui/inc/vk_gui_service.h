@@ -1,5 +1,5 @@
 //###########################################################################
-// VkGuiService.h
+// vk_gui_service.h
 // Declarations of the village gui service
 //
 // $Copyright: Copyright (C) village

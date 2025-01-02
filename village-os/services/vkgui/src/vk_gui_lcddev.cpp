@@ -1,10 +1,10 @@
 //###########################################################################
-// vk_disp_lcddev.cpp
+// vk_gui_lcddev.cpp
 // Definitions of the functions that manage display
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vk_disp_lcddev.h"
+#include "vk_gui_lcddev.h"
 #include "vk_dev_stream.h"
 #include "vk_kernel.h"
 
