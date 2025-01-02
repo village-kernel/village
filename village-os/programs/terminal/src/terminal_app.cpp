@@ -75,7 +75,8 @@ void TerminalAPP::Close()
 /// @brief Exit
 void TerminalAPP::Exit()
 {
-
+	//Wait for mainwin close
+	while (vkgui->group.IsExist(mainwin)) {}
 }
 
 
