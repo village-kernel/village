@@ -356,6 +356,9 @@ DrawAreas VgMainWins::RedrawFloatWindowAreas(DrawAreas areas, Window* window)
 /// @return 
 DrawAreas VgMainWins::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place)
 {
+	DrawAreas cutAreas = areas;
+	DrawAreas mulAreas = areas;
+
 	//Redraw other window areas
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
@@ -365,10 +368,12 @@ DrawAreas VgMainWins::RedrawOtherWindowAreas(DrawAreas areas, Window* window, Wi
 
 		if (place != item->GetPlace()) continue;
 
-		areas = item->RedrawWedgetAreas(areas);
+		cutAreas = item->RedrawWedgetAreas(cutAreas);
+
+		item->RedrawMultiplyAreas(mulAreas);
 	}
 
-	return areas;
+	return cutAreas;
 }
 
 
