@@ -9,6 +9,7 @@
 
 #include "vg_devices.h"
 #include "vg_draw_defs.h"
+#include "vg_math.h"
 
 
 /// @brief DrawLabel
@@ -17,10 +18,32 @@ class DrawLabel
 private:
 	//Members
 	VgDevices* devices;
+
+	//Members
+	Math math;
+
+	//Members
+	int fontSize;
+	int fontWidth;
+	int fontHeight;
+	int fontColor;
+
+	//Methods
+	int GetFontIndex(int chr);
+	int GetFontMatrix(int index, int row);
 public:
 	//Methods
+	DrawLabel();
+	~DrawLabel();
+
+	//Methods
+	void SetFontSize(int font);
+	void SetFontColor(int color);
+
+	//Methods
 	void Initiate(VgDevices* devices);
-	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
+	void Execute(DrawArea layerArea, DrawArea drawArea, char  chr);
+	void Execute(DrawArea layerArea, DrawArea drawArea, char* str);
 };
 
 #endif //!__VG_DRAW_LABEL_H__

@@ -8,7 +8,72 @@
 #include "vg_ascii_font.h"
 
 
-/// @brief Initiate
+/// @brief Constructor
+DrawLabel::DrawLabel()
+	:fontSize(DrawDefs::_Font16),
+	 fontWidth(fontSize >> 1),
+	 fontHeight(fontSize),
+	 fontColor(DrawDefs::_Black)
+{
+}
+
+
+/// @brief Destructor
+DrawLabel::~DrawLabel()
+{
+}
+
+
+/// @brief Set font size
+/// @param font 
+void DrawLabel::SetFontSize(int font)
+{
+	this->fontSize   = font;
+	this->fontWidth  = font >> 1;
+	this->fontHeight = font;
+}
+
+
+/// @brief Set font color
+/// @param color 
+void DrawLabel::SetFontColor(int color)
+{
+	this->fontColor = color;
+}
+
+
+/// @brief Get font index
+/// @param chr 
+/// @return 
+inline int DrawLabel::GetFontIndex(int chr)
+{
+	return chr - ' ';
+}
+
+
+/// @brief Get font matrix
+/// @param index 
+/// @param row 
+/// @return 
+inline int DrawLabel::GetFontMatrix(int index, int row)
+{
+	int matrix = 0;
+
+	if (DrawDefs::_Font16 == fontSize)
+	{
+		matrix = ASCII_16[index][row];
+	}
+	else if (DrawDefs::_Font24 == fontSize)
+	{
+		matrix  = (ASCII_24[index][row * 2 + 0] & 0x00ff) << 0;
+		matrix += (ASCII_24[index][row * 2 + 1] & 0x00ff) << 8;
+	}
+
+	return matrix;
+}
+
+
+/// @brief DrawLabel Initiate
 /// @param devices 
 void DrawLabel::Initiate(VgDevices* devices)
 {
@@ -16,93 +81,62 @@ void DrawLabel::Initiate(VgDevices* devices)
 }
 
 
-/// @brief Draw arc
+/// @brief DrawLabel Execute
 /// @param layerArea 
 /// @param drawArea 
+/// @param chr 
 /// @param color 
-void DrawLabel::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+void DrawLabel::Execute(DrawArea layerArea, DrawArea drawArea, char chr)
 {
+	int maxX = devices->lcddev->GetWidth() - 1;
+	int maxY = devices->lcddev->GetHeight() - 1;
+	int ecol = layerArea.sx + fontWidth - 1;
+	int erow = layerArea.sy + fontHeight - 1;
+	int sx = math.Sat(               math.Max(drawArea.sx, layerArea.sx) , 0, maxX);
+	int ex = math.Sat(math.Min(ecol, math.Min(drawArea.ex, layerArea.ex)), 0, maxX);
+	int sy = math.Sat(               math.Max(drawArea.sy, layerArea.sy) , 0, maxY);
+	int ey = math.Sat(math.Min(erow, math.Min(drawArea.ey, layerArea.ey)), 0, maxY);
 
+	int fontIdx = GetFontIndex(chr);
+
+	for (int y = sy; y <= ey; y++)
+	{
+		int matrixIdx = y - layerArea.sy;
+
+		int matrix = GetFontMatrix(fontIdx, matrixIdx);
+		
+		for (int x = sx; x <= ex; x++)
+		{
+			int matrixPos = x - layerArea.sx;
+
+			if (matrix & (1 << matrixPos))
+			{
+				devices->lcddev->Point(x, y, fontColor);
+			}
+		}
+	}
 }
 
 
-
-///// @brief draw char set
-///// @param x 
-///// @param y 
-///// @param chr 
-///// @param font 
-///// @param mode 
-///// @param color 
-//void DrawChar::Execute(int x, int y, char chr, int font, int mode, int color)
-//{
-//	//const uint16_t PointMask = 0x0001;
-
-//	//uint16_t charLine = 0;
-//	//uint16_t charIndex = chr - ' ';
-//	//uint8_t rowSize = font;
-//	//uint8_t colSize = font >> 1;
-
-//	//for (uint8_t row = 0; row < rowSize; row++)
-//	//{
-//	//	if (DrawDefs::Font16 == font)
-//	//	{
-//	//		charLine = ASCII_16[charIndex][row];
-//	//	}
-//	//	else
-//	//	{
-//	//		charLine  = (ASCII_24[charIndex][row * 2 + 0] & 0x00ff) << 0;
-//	//		charLine += (ASCII_24[charIndex][row * 2 + 1] & 0x00ff) << 8;
-//	//	}
-			
-//	//	for (uint8_t col = 0; col < colSize; col++)
-//	//	{
-//	//		if (charLine & PointMask)
-//	//		{
-//	//			draw->point.Set(x + col, y + row, color);
-//	//		}
-//	//		else if (DrawDefs::NotMultiply == mode)
-//	//		{ 
-//	//			draw->point.Set(x + col, y + row, DrawDefs::defBgColor);
-//	//		}
-
-//	//		charLine >>= 1;
-				
-//	//		if ((x + col) > limitX) return;
-//	//	}
-
-//	//	if ((y + row) > limitY) return;
-//	//}
-//}
-
-
-/// @brief Draw string set
-/// @param x 
-/// @param y 
-/// @param str 
-/// @param font 
-/// @param mode 
+/// @brief DrawLabel Execute
+/// @param layerArea 
+/// @param drawArea 
+/// @param text 
 /// @param color 
-//void DrawLabel::Execute(int x, int y, char* str, int font, int mode, int color)
-//{
-	//int xOffset = x;
-	//int yOffset = y;
+void DrawLabel::Execute(DrawArea layerArea, DrawArea drawArea, char* str)
+{
+	if (NULL == str) return;
 
-	//if (NULL != str)
-	//{
-	//	while ((*str <= '~') && (*str >= ' '))
-	//	{
-	//		draw->chr.Set(xOffset, yOffset, *str, font, mode, color);
+	int sidx = (drawArea.sx - layerArea.sx) / fontWidth;
+	int eidx = (drawArea.ex - layerArea.sx) / fontWidth;
+	int slen = strlen(str); if (eidx >= slen) eidx = slen - 1;
+	
+	layerArea.sx += sidx * fontWidth;
 
-	//		xOffset += font >> 1;
+	for (int idx = sidx; idx <= eidx; idx++)
+	{
+		Execute(layerArea, drawArea, str[idx]);
 
-	//		if (xOffset > limitX)
-	//		{
-	//			xOffset = 0;
-	//			yOffset += font;
-	//		}
-
-	//		str++;
-	//	}
-	//}
-//}
+		layerArea.sx += fontWidth;
+	}
+}
