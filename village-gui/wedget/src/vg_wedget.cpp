@@ -199,17 +199,18 @@ DrawAreas Wedget::RedrawFloatAreas(DrawAreas areas)
 /// @return 
 DrawAreas Wedget::RedrawFloatAreas(Wedget* wedget, DrawAreas areas)
 {
+	if (!wedget->IsFloatable()) return areas;
+
 	DrawAreas cutAreas = areas;
+	DrawAreas flyAreas = wedget->GetFloatAreas();
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
 		DrawArea item = areas.Item();
 
-		DrawAreas floatAreas = wedget->GetFloatAreas();
-
-		for (floatAreas.Begin(); !floatAreas.IsEnd(); floatAreas.Next())
+		for (flyAreas.Begin(); !flyAreas.IsEnd(); flyAreas.Next())
 		{
-			DrawArea area = floatAreas.Item();
+			DrawArea area = flyAreas.Item();
 
 			if (layer.IsAreaOverlap(item, area))
 			{
@@ -261,19 +262,18 @@ DrawAreas Wedget::RedrawWedgetAreas(DrawAreas areas)
 /// @return 
 DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 {
-	DrawAreas cutAreas = areas;
+	if (wedget->IsMultiply()) return areas;
 
-	if (wedget->IsMultiply()) return cutAreas;
+	DrawArea  layArea  = wedget->GetLayerArea();
+	DrawAreas cutAreas = areas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
 		DrawArea item = areas.Item();
 
-		DrawArea area = wedget->GetLayerArea();
-
-		if (layer.IsAreaOverlap(item, area))
+		if (layer.IsAreaOverlap(item, layArea))
 		{
-			DrawArea redraw = layer.GetOverlapArea(item, area);
+			DrawArea redraw = layer.GetOverlapArea(item, layArea);
 
 			wedget->Redraw(redraw);
 
@@ -320,15 +320,15 @@ void Wedget::RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas)
 {
 	if (!wedget->IsMultiply()) return;
 
+	DrawArea layArea = wedget->GetLayerArea();
+
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
 		DrawArea item = areas.Item();
 
-		DrawArea area = wedget->GetLayerArea();
-
-		if (layer.IsAreaOverlap(item, area))
+		if (layer.IsAreaOverlap(item, layArea))
 		{
-			DrawArea redraw = layer.GetOverlapArea(item, area);
+			DrawArea redraw = layer.GetOverlapArea(item, layArea);
 
 			wedget->Redraw(redraw);
 		}
