@@ -22,7 +22,7 @@ Button::~Button()
 }
 
 
-/// @brief 
+/// @brief Button set text
 /// @param text 
 void Button::SetText(char* text)
 {
@@ -30,7 +30,19 @@ void Button::SetText(char* text)
 }
 
 
-/// @brief Wedget Execute
+/// @brief Button initiate
+/// @param devices 
+void Button::Initiate(VgDevices* devices)
+{
+	Wedget::Initiate(devices);
+
+	label.SetSize(GetWidth(), GetHeight());
+	label.SetText(text);
+	AddWedget(&label);
+}
+
+
+/// @brief Button execute
 /// @param input 
 void Button::Execute(IndevData input)
 {
