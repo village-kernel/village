@@ -12,6 +12,7 @@ Label::Label()
 	:label(NULL)
 {
 	SetTitle((char*)"label");
+	SetMultiply(true);
 }
 
 
@@ -21,9 +22,27 @@ Label::~Label()
 }
 
 
-/// @brief 
+/// @brief Label set text
 /// @param text 
 void Label::SetText(char* text)
 {
 	this->label = text;
+}
+
+
+/// @brief Label initiate
+/// @param devices 
+void Label::Initiate(VgDevices* devices)
+{
+	Wedget::Initiate(devices);
+
+	drawlab.Initiate(devices);
+}
+
+
+/// @brief Label redraw
+/// @param drawArea 
+void Label::Redraw(DrawArea drawArea)
+{
+	drawlab.Execute(layerArea, drawArea, label);
 }
