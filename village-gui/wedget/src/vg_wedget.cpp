@@ -15,6 +15,7 @@ Wedget::Wedget()
 	hidden(false),
 	enable(true),
 	fixed(false),
+	multiply(false),
 	focus(false),
 	floatable(false),
 	update(false),
@@ -262,6 +263,8 @@ DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 {
 	DrawAreas cutAreas = areas;
 
+	if (wedget->IsMultiply()) return cutAreas;
+
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
 		DrawArea item = areas.Item();
@@ -281,6 +284,55 @@ DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 	}
 
 	return cutAreas;
+}
+
+
+/// @brief Redraw multiplys
+/// @param areas 
+/// @return 
+void Wedget::RedrawMultiplys(DrawAreas areas)
+{
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		Wedget* item = wedgets.Item();
+
+		if (item->IsHidden()) continue;
+
+		RedrawMultiplyAreas(item, areas);
+	}
+}
+
+
+/// @brief Redraw multiply areas
+/// @param areas 
+/// @return 
+void Wedget::RedrawMultiplyAreas(DrawAreas areas)
+{
+	RedrawMultiplyAreas(this, areas);
+}
+
+
+/// @brief Redraw multiply areas
+/// @param wedget 
+/// @param areas 
+/// @return 
+void Wedget::RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas)
+{
+	if (!wedget->IsMultiply()) return;
+
+	for (areas.Begin(); !areas.IsEnd(); areas.Next())
+	{
+		DrawArea item = areas.Item();
+
+		DrawArea area = wedget->GetLayerArea();
+
+		if (layer.IsAreaOverlap(item, area))
+		{
+			DrawArea redraw = layer.GetOverlapArea(item, area);
+
+			wedget->Redraw(redraw);
+		}
+	}
 }
 
 
@@ -361,6 +413,22 @@ void Wedget::SetFixed(bool fixed)
 bool Wedget::IsFixed()
 {
 	return fixed;
+}
+
+
+/// @brief Wedget set multiply
+/// @param multiply 
+void Wedget::SetMultiply(bool multiply)
+{
+	this->multiply = multiply;
+}
+
+
+/// @brief Wedget is multiply
+/// @return 
+bool Wedget::IsMultiply()
+{
+	return multiply;
 }
 
 
@@ -524,9 +592,13 @@ void Wedget::Redraw(DrawArea drawArea)
 
 	redraws = RedrawFloats(redraws);
 
+	DrawAreas multiplys = redraws;
+
 	redraws = RedrawWedgets(redraws);
 
 	rect.Execute(layerArea, redraws, bgColor);
+
+	RedrawMultiplys(multiplys);
 }
 
 

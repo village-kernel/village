@@ -30,6 +30,7 @@ protected:
 	bool hidden;
 	bool enable;
 	bool fixed;
+	bool multiply;
 	bool focus;
 	bool floatable;
 	bool update;
@@ -67,6 +68,9 @@ public:
 	virtual DrawAreas RedrawWedgets(DrawAreas areas);
 	virtual DrawAreas RedrawWedgetAreas(DrawAreas areas);
 	virtual DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
+	virtual void RedrawMultiplys(DrawAreas areas);
+	virtual void RedrawMultiplyAreas(DrawAreas areas);
+	virtual void RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas);
 	
 	//Attribute methods
 	virtual void SetTitle(char* title);
@@ -83,6 +87,9 @@ public:
 
 	virtual void SetFixed(bool fixed);
 	virtual bool IsFixed();
+
+	virtual void SetMultiply(bool multiply);
+	virtual bool IsMultiply();
 
 	virtual void SetFocus(bool focus);
 	virtual bool IsFocus();
