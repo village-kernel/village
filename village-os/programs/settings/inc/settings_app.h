@@ -1,5 +1,5 @@
 //###########################################################################
-// SettingsApp.h
+// settings_app.h
 // Declarations of the settings app
 //
 // $Copyright: Copyright (C) village
@@ -14,6 +14,10 @@
 class SettingsApp
 {
 private:
+	//Members
+	VillageGUI*  vkgui;
+	Window*      mainwin;
+
 	//Members
 	SettingsView view;
 public:

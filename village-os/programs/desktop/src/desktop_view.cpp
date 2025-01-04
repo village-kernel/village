@@ -36,7 +36,7 @@ void DesktopView::InitComponent(Wedget* parent)
 	startBtn->SetSize(40, 40);
 	startBtn->SetBgColor(DrawDefs::_Brown);
 	startBtn->SetFloatable(true);
-	//startBtn->SetText(model.StartText);
+	startBtn->SetText(model.StartText);
 	startBtn->BindingCommand(model.StartBtnCmd);
 	parent->AddWedget(startBtn);
 

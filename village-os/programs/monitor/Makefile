@@ -1,36 +1,36 @@
 ###########################################################################
 # Makefile
-# The Makefile of settings
+# The Makefile of monitor
 #
 # $Copyright: Copyright (C) village
 ############################################################################
-ifeq ($(CONFIG_SETTINGS_APP), y)
+ifeq ($(CONFIG_MONITOR_APP), y)
 
 ######################################
 # programs
 ######################################
-apps-y                                += settings
+apps-y                                += monitor
 
 
 ######################################
 # paths
 ######################################
-inc-settings-y                        += village-os/programs/settings/inc
-src-settings-y                        += village-os/programs/settings/src
+inc-monitor-y                         += village-os/programs/monitor/inc
+src-monitor-y                         += village-os/programs/monitor/src
 
 
 ######################################
 # objects
 ######################################
-objs-settings-y                       += settings_app.o
-objs-settings-y                       += settings_model.o
-objs-settings-y                       += settings_view.o
+objs-monitor-y                        += monitor_app.o
+objs-monitor-y                        += monitor_model.o
+objs-monitor-y                        += monitor_view.o
 
 
 ######################################
 # libraries
 ######################################
-libs-settings-y                       += vkgui utils vkc++ vkc
+libs-monitor-y                        += vkgui utils vkc++ vkc
 
 endif
 
@@ -38,6 +38,6 @@ endif
 ######################################
 # settings
 ######################################
-ifeq ($(CONFIG_SETTINGS_POWER_UP), y)
-settings-settings                     += power_up
+ifeq ($(CONFIG_MONITOR_POWER_UP), y)
+monitor-settings                      += power_up
 endif

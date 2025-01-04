@@ -11,7 +11,7 @@
 /// @brief Constructor
 DesktopModel::DesktopModel()
 {
-	//StartText = (char*)"Start";
+	StartText = (char*)"Start";
 
 	//ShowMemuCmd = new RelayCommand(this, (Method)&DesktopModel::ShowStartMemu);
 

@@ -1,15 +1,15 @@
 //###########################################################################
-// SettingsApp.cpp
-// Definitions of the functions that manage settings app
+// monitor_app.cpp
+// Definitions of the functions that manage monitor app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "settings_app.h"
+#include "monitor_app.h"
 #include "vk_kernel.h"
 
 
 /// @brief Constructor
-SettingsApp::SettingsApp()
+MonitorApp::MonitorApp()
 	:vkgui(NULL),
 	mainwin(NULL)
 {
@@ -17,13 +17,13 @@ SettingsApp::SettingsApp()
 
 
 /// @brief Destructor
-SettingsApp::~SettingsApp()
+MonitorApp::~MonitorApp()
 {
 }
 
 
 /// @brief Setup
-void SettingsApp::Setup()
+void MonitorApp::Setup()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
@@ -40,7 +40,7 @@ void SettingsApp::Setup()
 	//Setup mainwin size
 	mainwin->AxisMove(100, 100);
 	mainwin->SetSize(600, 400);
-	mainwin->SetTitle((char*)"settings");
+	mainwin->SetTitle((char*)"monitor");
 	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
 
 	//Init view component
@@ -49,7 +49,7 @@ void SettingsApp::Setup()
 
 
 /// @brief Execute
-void SettingsApp::Execute()
+void MonitorApp::Execute()
 {
 	//Show main window
 	mainwin->Show();
@@ -57,7 +57,7 @@ void SettingsApp::Execute()
 
 
 /// @brief Exit
-void SettingsApp::Exit()
+void MonitorApp::Exit()
 {
 	//Wait for mainwin close
 	while (vkgui->mainwins.IsExist(mainwin)) 
@@ -70,9 +70,9 @@ void SettingsApp::Exit()
 /// @brief main
 int main(void)
 {
-	SettingsApp settings;
-	settings.Setup();
-	settings.Execute();
-	settings.Exit();
+	MonitorApp monitor;
+	monitor.Setup();
+	monitor.Execute();
+	monitor.Exit();
 	return 0;
 }

@@ -14,8 +14,8 @@
 class DesktopModel : public Class
 {
 public:
-	////Data
-	//char*      StartText;
+	//Data
+	char*      StartText;
 	//Collection StartMenuLists;
 	//Collection TaskbarLists;
 	//Collection ContextMenuLists;

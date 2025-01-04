@@ -1,23 +1,23 @@
 //###########################################################################
-// settings_view.h
-// Declarations of the settings view
+// monitor_view.h
+// Declarations of the monitor view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __SETTINGS_VIEW_H__
-#define __SETTINGS_VIEW_H__
+#ifndef __MONITOR_VIEW_H__
+#define __MONITOR_VIEW_H__
 
-#include "settings_model.h"
+#include "monitor_model.h"
 
-/// @brief SettingsView
-class SettingsView
+/// @brief MonitorView
+class MonitorView
 {
 private:
 	//Members
-	SettingsModel model;
+	MonitorModel model;
 public:
 	//Methods
 	void InitComponent(Wedget* parent);
 };
 
-#endif //!__SETTINGS_VIEW_H__
+#endif //!__MONITOR_VIEW_H__

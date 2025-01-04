@@ -1,5 +1,5 @@
 //###########################################################################
-// TerminalApp.h
+// terminal_app.h
 // Declarations of the terminal app
 //
 // $Copyright: Copyright (C) village

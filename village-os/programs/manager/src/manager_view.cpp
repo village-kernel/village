@@ -1,15 +1,15 @@
 //###########################################################################
-// terminal_view.cpp
-// Definitions of the functions that manage terminal view
+// manager_view.cpp
+// Definitions of the functions that manage manager view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "terminal_view.h"
+#include "manager_view.h"
 
 
 /// @brief Init Component
 /// @param parent 
-void TerminalView::InitComponent(Wedget* parent)
+void ManagerView::InitComponent(Wedget* parent)
 {
 
 }

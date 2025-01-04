@@ -1,15 +1,15 @@
 //###########################################################################
-// SettingsApp.cpp
-// Definitions of the functions that manage settings app
+// manager_app.cpp
+// Definitions of the functions that manage manager app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "settings_app.h"
+#include "manager_app.h"
 #include "vk_kernel.h"
 
 
 /// @brief Constructor
-SettingsApp::SettingsApp()
+ManagerApp::ManagerApp()
 	:vkgui(NULL),
 	mainwin(NULL)
 {
@@ -17,13 +17,13 @@ SettingsApp::SettingsApp()
 
 
 /// @brief Destructor
-SettingsApp::~SettingsApp()
+ManagerApp::~ManagerApp()
 {
 }
 
 
 /// @brief Setup
-void SettingsApp::Setup()
+void ManagerApp::Setup()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
@@ -40,7 +40,7 @@ void SettingsApp::Setup()
 	//Setup mainwin size
 	mainwin->AxisMove(100, 100);
 	mainwin->SetSize(600, 400);
-	mainwin->SetTitle((char*)"settings");
+	mainwin->SetTitle((char*)"manager");
 	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
 
 	//Init view component
@@ -49,7 +49,7 @@ void SettingsApp::Setup()
 
 
 /// @brief Execute
-void SettingsApp::Execute()
+void ManagerApp::Execute()
 {
 	//Show main window
 	mainwin->Show();
@@ -57,7 +57,7 @@ void SettingsApp::Execute()
 
 
 /// @brief Exit
-void SettingsApp::Exit()
+void ManagerApp::Exit()
 {
 	//Wait for mainwin close
 	while (vkgui->mainwins.IsExist(mainwin)) 
@@ -70,9 +70,9 @@ void SettingsApp::Exit()
 /// @brief main
 int main(void)
 {
-	SettingsApp settings;
-	settings.Setup();
-	settings.Execute();
-	settings.Exit();
+	ManagerApp manager;
+	manager.Setup();
+	manager.Execute();
+	manager.Exit();
 	return 0;
 }

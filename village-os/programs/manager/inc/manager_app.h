@@ -1,16 +1,17 @@
 //###########################################################################
-// desktop_app.h
-// Declarations of the desktop app
+// manager_app.h
+// Declarations of the manager app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __DESKTOP_APP_H__
-#define __DESKTOP_APP_H__
+#ifndef __MANAGER_APP_H__
+#define __MANAGER_APP_H__
 
-#include "desktop_view.h"
+#include "manager_view.h"
 
-/// @brief DesktopApp
-class DesktopApp
+
+/// @brief ManagerApp
+class ManagerApp
 {
 private:
 	//Members
@@ -18,14 +19,14 @@ private:
 	Window*      mainwin;
 
 	//Members
-	DesktopView  view;
+	ManagerView view;
 public:
 	//Methods
-	DesktopApp();
-	~DesktopApp();
+	ManagerApp();
+	~ManagerApp();
 	void Setup();
 	void Execute();
 	void Exit();
 };
 
-#endif //!__DESKTOP_APP_H__
+#endif //!__MANAGER_APP_H__
