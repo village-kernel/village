@@ -13,7 +13,8 @@ DrawText::DrawText()
 	:fontSize(DrawDefs::_Font16),
 	 fontWidth(fontSize >> 1),
 	 fontHeight(fontSize),
-	 fontColor(DrawDefs::_Black)
+	 fontColor(DrawDefs::_Black),
+	 alignment(DrawText::_AlignCenter)
 {
 }
 
@@ -39,6 +40,14 @@ void DrawText::SetFontSize(int font)
 void DrawText::SetFontColor(int color)
 {
 	this->fontColor = color;
+}
+
+
+/// @brief Set alignment
+/// @param align 
+void DrawText::SetAlignment(Alignment align)
+{
+	this->alignment = align;
 }
 
 
@@ -126,6 +135,14 @@ void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char chr)
 void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char* str)
 {
 	if (NULL == str) return;
+
+	if (DrawText::_AlignCenter == alignment)
+	{
+		int halfWidth  = (layerArea.ex - layerArea.sx + 1) >> 1;
+		int halfHeight = (layerArea.ey - layerArea.sy + 1) >> 1;
+		layerArea.sx = layerArea.sx + halfWidth  - (strlen(str) * fontWidth >> 1);
+		layerArea.sy = layerArea.sy + halfHeight - (fontHeight >> 1);
+	}
 
 	int sidx = (drawArea.sx - layerArea.sx) / fontWidth;
 	int eidx = (drawArea.ex - layerArea.sx) / fontWidth;

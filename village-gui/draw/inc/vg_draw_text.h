@@ -15,6 +15,14 @@
 /// @brief DrawText
 class DrawText
 {
+public:
+	//Alignment
+	enum Alignment
+	{
+		_AlignRight,
+		_AlignLeft,
+		_AlignCenter,
+	};
 private:
 	//Members
 	VgDevices* devices;
@@ -27,6 +35,7 @@ private:
 	int fontWidth;
 	int fontHeight;
 	int fontColor;
+	Alignment alignment;
 
 	//Methods
 	int GetFontIndex(int chr);
@@ -39,6 +48,7 @@ public:
 	//Methods
 	void SetFontSize(int font);
 	void SetFontColor(int color);
+	void SetAlignment(Alignment align);
 
 	//Methods
 	void Initiate(VgDevices* devices);
