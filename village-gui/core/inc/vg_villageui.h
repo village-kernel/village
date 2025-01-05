@@ -10,10 +10,10 @@
 /// @brief include draw headers
 #include "vg_draw_arc.h"
 #include "vg_draw_image.h"
-#include "vg_draw_label.h"
 #include "vg_draw_line.h"
 #include "vg_draw_mask.h"
 #include "vg_draw_rect.h"
+#include "vg_draw_text.h"
 #include "vg_draw_triangle.h"
 
 /// @brief include layout headers

@@ -8,7 +8,7 @@
 #define __VG_LABEL_H__
 
 #include "vg_wedget.h"
-#include "vg_draw_label.h"
+#include "vg_draw_text.h"
 
 
 /// @brief Label
@@ -17,7 +17,7 @@ class Label : public Wedget
 private:
 	//Memebers
 	char* 	  label;
-	DrawLabel drawlab;
+	DrawText  drawlab;
 public:
 	//Methods
 	Label();

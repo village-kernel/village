@@ -1,15 +1,15 @@
 //###########################################################################
-// vg_draw_label.cpp
-// Definitions of the functions that manage draw label
+// vg_draw_text.cpp
+// Definitions of the functions that manage draw text
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_draw_label.h"
+#include "vg_draw_text.h"
 #include "vg_ascii_font.h"
 
 
 /// @brief Constructor
-DrawLabel::DrawLabel()
+DrawText::DrawText()
 	:fontSize(DrawDefs::_Font16),
 	 fontWidth(fontSize >> 1),
 	 fontHeight(fontSize),
@@ -19,14 +19,14 @@ DrawLabel::DrawLabel()
 
 
 /// @brief Destructor
-DrawLabel::~DrawLabel()
+DrawText::~DrawText()
 {
 }
 
 
 /// @brief Set font size
 /// @param font 
-void DrawLabel::SetFontSize(int font)
+void DrawText::SetFontSize(int font)
 {
 	this->fontSize   = font;
 	this->fontWidth  = font >> 1;
@@ -36,7 +36,7 @@ void DrawLabel::SetFontSize(int font)
 
 /// @brief Set font color
 /// @param color 
-void DrawLabel::SetFontColor(int color)
+void DrawText::SetFontColor(int color)
 {
 	this->fontColor = color;
 }
@@ -45,7 +45,7 @@ void DrawLabel::SetFontColor(int color)
 /// @brief Get font index
 /// @param chr 
 /// @return 
-inline int DrawLabel::GetFontIndex(int chr)
+inline int DrawText::GetFontIndex(int chr)
 {
 	return chr - ' ';
 }
@@ -55,7 +55,7 @@ inline int DrawLabel::GetFontIndex(int chr)
 /// @param index 
 /// @param row 
 /// @return 
-inline int DrawLabel::GetFontMatrix(int index, int row)
+inline int DrawText::GetFontMatrix(int index, int row)
 {
 	int matrix = 0;
 
@@ -73,20 +73,20 @@ inline int DrawLabel::GetFontMatrix(int index, int row)
 }
 
 
-/// @brief DrawLabel Initiate
+/// @brief DrawText Initiate
 /// @param devices 
-void DrawLabel::Initiate(VgDevices* devices)
+void DrawText::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
 
 
-/// @brief DrawLabel Execute
+/// @brief DrawText Execute
 /// @param layerArea 
 /// @param drawArea 
 /// @param chr 
 /// @param color 
-void DrawLabel::Execute(DrawArea layerArea, DrawArea drawArea, char chr)
+void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char chr)
 {
 	int maxX = devices->lcddev->GetWidth() - 1;
 	int maxY = devices->lcddev->GetHeight() - 1;
@@ -118,12 +118,12 @@ void DrawLabel::Execute(DrawArea layerArea, DrawArea drawArea, char chr)
 }
 
 
-/// @brief DrawLabel Execute
+/// @brief DrawText Execute
 /// @param layerArea 
 /// @param drawArea 
 /// @param text 
 /// @param color 
-void DrawLabel::Execute(DrawArea layerArea, DrawArea drawArea, char* str)
+void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char* str)
 {
 	if (NULL == str) return;
 

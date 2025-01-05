@@ -49,10 +49,10 @@ objs-vkgui-y                            += vg_math.o
 objs-vkgui-y                            += vg_draw_arc.o
 objs-vkgui-y                            += vg_draw_buff.o
 objs-vkgui-y                            += vg_draw_image.o
-objs-vkgui-y                            += vg_draw_label.o
 objs-vkgui-y                            += vg_draw_line.o
 objs-vkgui-y                            += vg_draw_mask.o
 objs-vkgui-y                            += vg_draw_rect.o
+objs-vkgui-y                            += vg_draw_text.o
 objs-vkgui-y                            += vg_draw_triangle.o
 
 objs-vkgui-y                            += vg_flex.o

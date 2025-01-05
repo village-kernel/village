@@ -1,19 +1,19 @@
 //###########################################################################
-// vg_draw_label.h
-// Declarations of the functions that about draw label
+// vg_draw_text.h
+// Declarations of the functions that about draw text
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_DRAW_LABEL_H__
-#define __VG_DRAW_LABEL_H__
+#ifndef __VG_DRAW_TEXT_H__
+#define __VG_DRAW_TEXT_H__
 
 #include "vg_devices.h"
 #include "vg_draw_defs.h"
 #include "vg_math.h"
 
 
-/// @brief DrawLabel
-class DrawLabel
+/// @brief DrawText
+class DrawText
 {
 private:
 	//Members
@@ -33,8 +33,8 @@ private:
 	int GetFontMatrix(int index, int row);
 public:
 	//Methods
-	DrawLabel();
-	~DrawLabel();
+	DrawText();
+	~DrawText();
 
 	//Methods
 	void SetFontSize(int font);
@@ -46,4 +46,4 @@ public:
 	void Execute(DrawArea layerArea, DrawArea drawArea, char* str);
 };
 
-#endif //!__VG_DRAW_LABEL_H__
+#endif //!__VG_DRAW_TEXT_H__
