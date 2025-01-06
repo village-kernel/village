@@ -118,14 +118,7 @@ bool VgMainWins::Destroy(Window* window)
 /// @return 
 bool VgMainWins::IsExist(Window* window)
 {
-	if (NULL != window)
-	{
-		for (windows.Begin(); !windows.IsEnd(); windows.Next())
-		{
-			if (window == windows.Item()) return true;
-		}
-	}
-	return false;
+	return windows.IsExist(window);
 }
 
 
