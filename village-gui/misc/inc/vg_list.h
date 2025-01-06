@@ -430,6 +430,18 @@ public:
 		return NULL;
 	}
 
+	/// @brief List IsExist
+	/// @param obj 
+	/// @return 
+	bool IsExist(Object obj)
+	{
+		for (Node* node = head; NULL != node; node = node->next)
+		{
+			if (obj == node->obj) return true;
+		}
+		return false;
+	}
+
 	/// @brief Release source
 	void Release()
 	{
