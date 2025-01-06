@@ -562,8 +562,7 @@ void VgMainWins::RedrawSelWindowOverlapAreas(Window* window)
 /// @param window 
 void VgMainWins::SwapActWindowListNode(Window* window)
 {
-	windows.Remove(window);
-	windows.Add(window);
+	windows.MoveToEnd(window);
 }
 
 
