@@ -309,6 +309,36 @@ public:
 		return (NULL != temp) ? temp->nid : -1;
 	}
 
+	/// @brief Move object to list tail
+	/// @param obj 
+	/// @return 
+	bool MoveToEnd(Object obj)
+	{
+		for (Node* node = head; NULL != node; node = node->next)
+		{
+			if (obj == node->obj)
+			{
+				if (NULL != node->prev)
+					node->prev->next = node->next;
+				else
+					head = node->next;
+
+				if (NULL != node->next)
+					node->next->prev = node->prev;
+				else
+					tail = node->prev;
+
+				tail->next = node;
+				tail->next->prev = tail;
+				tail->next->next = NULL;
+				tail = tail->next;
+
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/// @brief Remove object node from list
 	/// @param obj object pointer
 	/// @param nid node id
@@ -338,7 +368,6 @@ public:
 		return false;
 	}
 
-
 	/// @brief Remove object node from list
 	/// @param nid node id
 	/// @return result
@@ -346,7 +375,6 @@ public:
 	{
 		return Remove(GetItem(nid), nid); 
 	}
-
 
 	/// @brief Remove object node from list
 	/// @param obj object pointer
