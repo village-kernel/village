@@ -17,6 +17,9 @@ template<typename Object>
 class IData
 {
 public:
+	//Destructor
+	virtual ~IData() {}
+
 	//Methods
 	virtual void Binding(Wedget* wedget) = 0;
 	virtual void Set(Object value) = 0;
