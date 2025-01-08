@@ -136,6 +136,7 @@ void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char* str)
 {
 	if (NULL == str) return;
 
+	//Update layer area
 	if (DrawText::_AlignCenter == alignment)
 	{
 		int halfWidth  = (layerArea.ex - layerArea.sx + 1) >> 1;
@@ -144,12 +145,21 @@ void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char* str)
 		layerArea.sy = layerArea.sy + halfHeight - (fontHeight >> 1);
 	}
 
+	//Update draw area
+	drawArea.sx = math.Max(drawArea.sx, layerArea.sx);
+	drawArea.ex = math.Min(drawArea.ex, layerArea.ex);
+	drawArea.sy = math.Max(drawArea.sy, layerArea.sy);
+	drawArea.ey = math.Min(drawArea.ey, layerArea.ey);
+
+	//Clac string index
 	int sidx = (drawArea.sx - layerArea.sx) / fontWidth;
 	int eidx = (drawArea.ex - layerArea.sx) / fontWidth;
 	int slen = strlen(str); if (eidx >= slen) eidx = slen - 1;
 	
+	//Offset layer area sx
 	layerArea.sx += sidx * fontWidth;
 
+	//Draw string
 	for (int idx = sidx; idx <= eidx; idx++)
 	{
 		Execute(layerArea, drawArea, str[idx]);
