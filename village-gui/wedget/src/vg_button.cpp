@@ -27,8 +27,7 @@ Button::~Button()
 /// @param text 
 void Button::BindingText(IData<char*>* text)
 {
-	bText = text;
-	if (bText) bText->Binding(this);
+	bText = text; if (bText) bText->Binding(this);
 }
 
 
@@ -36,8 +35,7 @@ void Button::BindingText(IData<char*>* text)
 /// @param text 
 void Button::SetText(char* text)
 {
-	this->text = text;
-	if (bText) bText->Set(text);
+	this->text = text; if (bText) bText->Set(text);
 }
 
 
@@ -55,9 +53,8 @@ void Button::Initiate(VgDevices* devices)
 {
 	Wedget::Initiate(devices);
 
-	label.SetSize(GetWidth(), GetHeight());
-	label.SetText(GetText());
-	AddWedget(&label);
+	drawText.Initiate(devices);
+	drawText.SetAlignment(DrawText::_AlignCenter);
 }
 
 
@@ -81,4 +78,14 @@ void Button::Execute(IndevData input)
 			}
 		}
 	}
+}
+
+
+/// @brief Label redraw
+/// @param drawArea 
+void Button::Redraw(DrawArea drawArea)
+{
+	Wedget::Redraw(drawArea);
+
+	drawText.Execute(layerArea, drawArea, GetText());
 }

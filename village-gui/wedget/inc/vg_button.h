@@ -8,7 +8,7 @@
 #define __VG_BUTTON_H__
 
 #include "vg_wedget.h"
-#include "vg_label.h"
+#include "vg_draw_text.h"
 
 
 /// @brief Button
@@ -16,11 +16,11 @@ class Button : public Wedget
 {
 private:
 	//Members
-	char* text;
+	char*         text;
 	IData<char*>* bText;
 
 	//Members
-	Label label;
+	DrawText      drawText;
 public:
 	//Methods
 	Button();
@@ -34,6 +34,7 @@ public:
 	//Methods
 	void Initiate(VgDevices* devices);
 	void Execute(IndevData input);
+	void Redraw(DrawArea drawArea);
 };
 
 #endif //!__VG_BUTTON_H__
