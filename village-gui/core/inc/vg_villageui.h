@@ -38,6 +38,8 @@
 /// @brief include cmd headers
 #include "vg_input_cmd.h"
 #include "vg_relay_cmd.h"
+#include "vg_input_data.h"
+#include "vg_relay_data.h"
 
 /// @brief include grahics headers
 #include "vg_devices.h"
