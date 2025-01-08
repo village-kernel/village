@@ -16,15 +16,20 @@ class Label : public Wedget
 {
 private:
 	//Memebers
-	char* 	  label;
-	DrawText  drawlab;
+	char* 	      text;
+	IData<char*>* bText;
+
+	//Members
+	DrawText      drawText;
 public:
 	//Methods
 	Label();
 	~Label();
 
 	//Attribute Methods
+	void BindingText(IData<char*>* text);
 	void SetText(char* text);
+	char* GetText();
 
 	//Methods
 	void Initiate(VgDevices* devices);

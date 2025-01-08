@@ -9,7 +9,8 @@
 
 /// @brief Constructor
 Label::Label()
-	:label(NULL)
+	:text(NULL),
+	bText(NULL)
 {
 	SetTitle((char*)"label");
 	SetMultiply(true);
@@ -22,11 +23,27 @@ Label::~Label()
 }
 
 
+/// @brief 
+/// @param bText 
+void Label::BindingText(IData<char*>* text)
+{
+	bText = text; if (bText) bText->Binding(this);
+}
+
+
 /// @brief Label set text
 /// @param text 
 void Label::SetText(char* text)
 {
-	this->label = text;
+	this->text = text; if (bText) bText->Set(text);
+}
+
+
+/// @brief Label get text
+/// @return 
+char* Label::GetText()
+{
+	return bText ? bText->Get() : text;
 }
 
 
@@ -36,8 +53,8 @@ void Label::Initiate(VgDevices* devices)
 {
 	Wedget::Initiate(devices);
 
-	drawlab.Initiate(devices);
-	drawlab.SetAlignment(DrawText::_AlignCenter);
+	drawText.Initiate(devices);
+	drawText.SetAlignment(DrawText::_AlignCenter);
 }
 
 
@@ -45,5 +62,5 @@ void Label::Initiate(VgDevices* devices)
 /// @param drawArea 
 void Label::Redraw(DrawArea drawArea)
 {
-	drawlab.Execute(layerArea, drawArea, label);
+	drawText.Execute(layerArea, drawArea, GetText());
 }
