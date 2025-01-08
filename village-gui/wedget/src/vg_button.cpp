@@ -10,7 +10,8 @@
 
 /// @brief Constructor
 Button::Button()
-	:text(NULL)
+	:text(NULL),
+	bText(NULL)
 {
 	SetTitle((char*)"button");
 }
@@ -22,11 +23,29 @@ Button::~Button()
 }
 
 
+/// @brief Button binding text
+/// @param text 
+void Button::BindingText(IData<char*>* text)
+{
+	bText = text;
+	if (bText) bText->Binding(this);
+}
+
+
 /// @brief Button set text
 /// @param text 
 void Button::SetText(char* text)
 {
 	this->text = text;
+	if (bText) bText->Set(text);
+}
+
+
+/// @brief Button get text
+/// @return 
+char* Button::GetText()
+{
+	return bText ? bText->Get() : text;
 }
 
 
@@ -37,7 +56,7 @@ void Button::Initiate(VgDevices* devices)
 	Wedget::Initiate(devices);
 
 	label.SetSize(GetWidth(), GetHeight());
-	label.SetText(text);
+	label.SetText(GetText());
 	AddWedget(&label);
 }
 

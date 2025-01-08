@@ -17,6 +17,9 @@ class Button : public Wedget
 private:
 	//Members
 	char* text;
+	IData<char*>* bText;
+
+	//Members
 	Label label;
 public:
 	//Methods
@@ -24,7 +27,9 @@ public:
 	~Button();
 
 	//Binding Methods
+	void BindingText(IData<char*>* text);
 	void SetText(char* text);
+	char* GetText();
 
 	//Methods
 	void Initiate(VgDevices* devices);
