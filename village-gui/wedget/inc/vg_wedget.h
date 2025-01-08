@@ -11,6 +11,7 @@
 #include "vg_layer.h"
 #include "vg_devices.h"
 #include "vg_input_cmd.h"
+#include "vg_input_data.h"
 #include "vg_draw_rect.h"
 
 
@@ -34,6 +35,15 @@ protected:
 	bool focus;
 	bool floatable;
 	bool update;
+	IData<char*>* bTitle;
+	IData<int>*  bBgColor;
+	IData<bool>* bHidden;
+	IData<bool>* bEnable;
+	IData<bool>* bFixed;
+	IData<bool>* bMultiply;
+	IData<bool>* bFocus;
+	IData<bool>* bFloatable;
+	IData<bool>* bUpdata;
 
 	//Binding members
 	ICommand* cmd;
@@ -73,30 +83,39 @@ public:
 	virtual void RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas);
 	
 	//Attribute methods
+	virtual void BindingTitle(IData<char*>* title);
 	virtual void SetTitle(char* title);
 	virtual char* GetTitle();
 
+	virtual void BindingBgColor(IData<int>* color);
 	virtual void SetBgColor(int color);
 	virtual int GetBgColor();
 
+	virtual void BindingHidden(IData<bool>* hidden);
 	virtual void SetHidden(bool hidden);
 	virtual bool IsHidden();
 	
+	virtual void BindingEnable(IData<bool>* enable);
 	virtual void SetEnable(bool enable);
 	virtual bool IsEnable();
 
+	virtual void BindingFixed(IData<bool>* fixed);
 	virtual void SetFixed(bool fixed);
 	virtual bool IsFixed();
 
+	virtual void BindingMultiply(IData<bool>* multiply);
 	virtual void SetMultiply(bool multiply);
 	virtual bool IsMultiply();
 
+	virtual void BindingFocus(IData<bool>* focus);
 	virtual void SetFocus(bool focus);
 	virtual bool IsFocus();
 
+	virtual void BindingFloatable(IData<bool>* floatable);
 	virtual void SetFloatable(bool floatable);
 	virtual bool IsFloatable();
 
+	virtual void BindingUpdateRequest(IData<bool>* request);
 	virtual void UpdateRequest(bool request);
 	virtual bool IsUpdateRequest();
 
