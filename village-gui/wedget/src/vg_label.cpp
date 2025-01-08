@@ -37,6 +37,7 @@ void Label::Initiate(VgDevices* devices)
 	Wedget::Initiate(devices);
 
 	drawlab.Initiate(devices);
+	drawlab.SetAlignment(DrawText::_AlignCenter);
 }
 
 
