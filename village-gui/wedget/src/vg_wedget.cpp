@@ -79,7 +79,7 @@ void Wedget::SetSize(int width, int height)
 }
 
 
-/// @brief Is in area
+/// @brief Wedget is in area
 /// @param x 
 /// @param y 
 /// @return 
@@ -89,7 +89,7 @@ bool Wedget::IsInArea(int x, int y)
 }
 
 
-/// @brief Is area valid
+/// @brief Wedget is area valid
 /// @return 
 bool Wedget::IsAreaValid()
 {
@@ -97,7 +97,7 @@ bool Wedget::IsAreaValid()
 }
 
 
-/// @brief 
+/// @brief Wedget get x
 /// @return 
 int Wedget::GetX()
 {
@@ -105,7 +105,7 @@ int Wedget::GetX()
 }
 
 
-/// @brief 
+/// @brief Wedget get y
 /// @return 
 int Wedget::GetY()
 {
@@ -113,7 +113,7 @@ int Wedget::GetY()
 }
 
 
-/// @brief GetWidth
+/// @brief Wedget get width
 /// @return 
 int Wedget::GetWidth()
 {
@@ -121,7 +121,7 @@ int Wedget::GetWidth()
 }
 
 
-/// @brief GetHeight
+/// @brief Wedget get height
 /// @return 
 int Wedget::GetHeight()
 {
@@ -129,7 +129,7 @@ int Wedget::GetHeight()
 }
 
 
-/// @brief Get layer area
+/// @brief Wedget get layer area
 /// @return 
 DrawArea Wedget::GetLayerArea()
 {
@@ -137,7 +137,7 @@ DrawArea Wedget::GetLayerArea()
 }
 
 
-/// @brief Get floatable areas
+/// @brief Wedget get floatable areas
 /// @return 
 DrawAreas Wedget::GetFloatAreas()
 {
@@ -156,7 +156,7 @@ DrawAreas Wedget::GetFloatAreas()
 }
 
 
-/// @brief Get update areas
+/// @brief Wedget get update areas
 /// @return 
 DrawAreas Wedget::GetUpdateAreas()
 {
@@ -296,7 +296,7 @@ DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 }
 
 
-/// @brief Redraw multiplys
+/// @brief Wedget redraw multiplys
 /// @param areas 
 /// @return 
 void Wedget::RedrawMultiplys(DrawAreas areas)
@@ -312,7 +312,7 @@ void Wedget::RedrawMultiplys(DrawAreas areas)
 }
 
 
-/// @brief Redraw multiply areas
+/// @brief Wedget redraw multiply areas
 /// @param areas 
 /// @return 
 void Wedget::RedrawMultiplyAreas(DrawAreas areas)
@@ -321,7 +321,7 @@ void Wedget::RedrawMultiplyAreas(DrawAreas areas)
 }
 
 
-/// @brief Redraw multiply areas
+/// @brief Wedget redraw multiply areas
 /// @param wedget 
 /// @param areas 
 /// @return 
@@ -349,21 +349,19 @@ void Wedget::RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas)
 /// @param title 
 void Wedget::BindingTitle(IData<char*>* title)
 {
-	bTitle = title;
-	if (bTitle) bTitle->Binding(this);
+	bTitle = title; if (bTitle) bTitle->Binding(this);
 }
 
 
-/// @brief Set title
+/// @brief Wedget set title
 /// @param title 
 void Wedget::SetTitle(char* title)
 {
-	this->title = title;
-	if (bTitle) bTitle->Set(title);
+	this->title = title; if (bTitle) bTitle->Set(title);
 }
 
 
-/// @brief Get title
+/// @brief Wedget get title
 /// @return 
 char* Wedget::GetTitle()
 {
@@ -375,8 +373,7 @@ char* Wedget::GetTitle()
 /// @param color 
 void Wedget::BindingBgColor(IData<int>* color)
 {
-	bBgColor = color;
-	if (bBgColor) bBgColor->Binding(this);
+	bBgColor = color; if (bBgColor) bBgColor->Binding(this);
 }
 
 
@@ -384,8 +381,7 @@ void Wedget::BindingBgColor(IData<int>* color)
 /// @param color 
 void Wedget::SetBgColor(int color)
 {
-	this->bgColor = color;
-	if (bBgColor) bBgColor->Set(color);
+	this->bgColor = color; if (bBgColor) bBgColor->Set(color);
 }
 
 
@@ -401,8 +397,7 @@ int Wedget::GetBgColor()
 /// @param hidden 
 void Wedget::BindingHidden(IData<bool>* hidden)
 {
-	bHidden = hidden;
-	if (bHidden) bHidden->Binding(this);
+	bHidden = hidden; if (bHidden) bHidden->Binding(this);
 }
 
 
@@ -410,8 +405,7 @@ void Wedget::BindingHidden(IData<bool>* hidden)
 /// @param hidden 
 void Wedget::SetHidden(bool hidden)
 {
-	this->hidden = hidden;
-	if (bHidden) bHidden->Set(hidden);
+	this->hidden = hidden; if (bHidden) bHidden->Set(hidden);
 }
 
 
@@ -427,8 +421,7 @@ bool Wedget::IsHidden()
 /// @param enable 
 void Wedget::BindingEnable(IData<bool>* enable)
 {
-	bEnable = enable;
-	if (bEnable) bHidden->Binding(this);
+	bEnable = enable; if (bEnable) bHidden->Binding(this);
 }
 
 
@@ -436,8 +429,7 @@ void Wedget::BindingEnable(IData<bool>* enable)
 /// @param enable 
 void Wedget::SetEnable(bool enable)
 {
-	this->enable = enable;
-	if (bEnable) bEnable->Set(enable);
+	this->enable = enable; if (bEnable) bEnable->Set(enable);
 }
 
 
@@ -453,8 +445,7 @@ bool Wedget::IsEnable()
 /// @param fixed 
 void Wedget::BindingFixed(IData<bool>* fixed)
 {
-	bFixed = fixed;
-	if (bFixed) bFixed->Binding(this);
+	bFixed = fixed; if (bFixed) bFixed->Binding(this);
 }
 
 
@@ -462,8 +453,7 @@ void Wedget::BindingFixed(IData<bool>* fixed)
 /// @param fixed 
 void Wedget::SetFixed(bool fixed)
 {
-	this->fixed = fixed;
-	if (bFixed) bFixed->Set(fixed);
+	this->fixed = fixed; if (bFixed) bFixed->Set(fixed);
 }
 
 
@@ -479,8 +469,7 @@ bool Wedget::IsFixed()
 /// @param multiply 
 void Wedget::BindingMultiply(IData<bool>* multiply)
 {
-	bMultiply = multiply;
-	if (bMultiply) bMultiply->Binding(this);
+	bMultiply = multiply; if (bMultiply) bMultiply->Binding(this);
 }
 
 
@@ -488,8 +477,7 @@ void Wedget::BindingMultiply(IData<bool>* multiply)
 /// @param multiply 
 void Wedget::SetMultiply(bool multiply)
 {
-	this->multiply = multiply;
-	if (bMultiply) bMultiply->Set(multiply);
+	this->multiply = multiply; if (bMultiply) bMultiply->Set(multiply);
 }
 
 
@@ -505,8 +493,7 @@ bool Wedget::IsMultiply()
 /// @param focus 
 void Wedget::BindingFocus(IData<bool>* focus)
 {
-	bFocus = focus;
-	if (bFocus) bFocus->Binding(this);
+	bFocus = focus; if (bFocus) bFocus->Binding(this);
 }
 
 
@@ -514,8 +501,7 @@ void Wedget::BindingFocus(IData<bool>* focus)
 /// @param focus 
 void Wedget::SetFocus(bool focus)
 {
-	this->focus = focus;
-	if (bFocus) bFocus->Set(focus);
+	this->focus = focus; if (bFocus) bFocus->Set(focus);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
@@ -538,8 +524,7 @@ bool Wedget::IsFocus()
 /// @param floatable 
 void Wedget::BindingFloatable(IData<bool>* floatable)
 {
-	bFloatable = floatable;
-	if (bFloatable) bFloatable->Binding(this);
+	bFloatable = floatable; if (bFloatable) bFloatable->Binding(this);
 }
 
 
@@ -547,8 +532,7 @@ void Wedget::BindingFloatable(IData<bool>* floatable)
 /// @param floatable 
 void Wedget::SetFloatable(bool floatable)
 {
-	this->floatable = floatable;
-	if (bFloatable) bFloatable->Set(floatable);
+	this->floatable = floatable; if (bFloatable) bFloatable->Set(floatable);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
@@ -559,7 +543,7 @@ void Wedget::SetFloatable(bool floatable)
 }
 
 
-/// @brief Is floatable
+/// @brief Wedget is floatable
 /// @return 
 bool Wedget::IsFloatable()
 {
@@ -585,16 +569,14 @@ bool Wedget::IsFloatable()
 /// @param request 
 void Wedget::BindingUpdateRequest(IData<bool>* request)
 {
-	bUpdata = request;
-	if (bUpdata) bUpdata->Binding(this);
+	bUpdata = request; if (bUpdata) bUpdata->Binding(this);
 }
 
 
-/// @brief Wedget update
+/// @brief Wedget update request
 void Wedget::UpdateRequest(bool request)
 {
-	this->update = request;
-	if (bUpdata) bUpdata->Set(request);
+	this->update = request; if (bUpdata) bUpdata->Set(request);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
@@ -635,7 +617,7 @@ void Wedget::BindingCommand(ICommand* cmd)
 }
 
 
-/// @brief Add wedget
+/// @brief Wedget add wedget
 /// @param wedget 
 /// @return 
 void Wedget::AddWedget(Wedget* wedget)
