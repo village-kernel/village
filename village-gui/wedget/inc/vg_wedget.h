@@ -61,30 +61,6 @@ public:
 	VgWedget();
 	virtual ~VgWedget();
 
-	//Area methods
-	virtual void MoveTo(int x, int y);
-	virtual void AxisMove(int axisx, int axisy);
-	virtual void SetSize(int width, int height);
-	virtual bool IsInLayerArea(int x, int y);
-	virtual bool IsLayerAreaValid();
-	virtual int GetX();
-	virtual int GetY();
-	virtual int GetWidth();
-	virtual int GetHeight();
-	virtual VgDrawArea GetLayerArea();
-	virtual VgDrawAreas GetFloatAreas();
-	virtual VgDrawAreas GetUpdateAreas();
-	virtual VgDrawAreas RedrawFloats(VgDrawAreas areas);
-	virtual VgDrawAreas RedrawFloatAreas(VgDrawAreas areas);
-	virtual VgDrawAreas RedrawFloatAreas(VgWedget* wedget, VgDrawAreas areas);
-	virtual VgDrawAreas RedrawWedgets(VgDrawAreas areas);
-	virtual VgDrawAreas RedrawWedgetAreas(VgDrawAreas areas);
-	virtual VgDrawAreas RedrawWedgetAreas(VgWedget* wedget, VgDrawAreas areas);
-	virtual void RedrawMultiplys(VgDrawAreas areas);
-	virtual void RedrawMultiplyAreas(VgDrawAreas areas);
-	virtual void RedrawMultiplyAreas(VgWedget* wedget, VgDrawAreas areas);
-	virtual void RedrawBackgroundAreas(VgDrawAreas areas);
-	
 	//Attribute methods
 	virtual void BindingTitle(IData<char*>* title);
 	virtual void SetTitle(char* title);
@@ -117,14 +93,41 @@ public:
 	virtual void BindingFloatable(IData<bool>* floatable);
 	virtual void SetFloatable(bool floatable);
 	virtual bool IsFloatable();
+	virtual bool HasFloatable();
 
 	virtual void BindingUpdateRequest(IData<bool>* request);
 	virtual void UpdateRequest(bool request);
 	virtual bool IsUpdateRequest();
+	virtual bool HasUpdateRequest();
+	virtual void ClearUpdateRequest();
 
-	//Binding methods
+	//Command methods
 	virtual void BindingCommand(ICommand* cmd);
 	virtual void ExecuteCommand(VgInputData input, void* args = NULL);
+
+	//Area methods
+	virtual void MoveTo(int x, int y);
+	virtual void AxisMove(int axisx, int axisy);
+	virtual void SetSize(int width, int height);
+	virtual bool IsInLayerArea(int x, int y);
+	virtual bool IsLayerAreaValid();
+	virtual int GetX();
+	virtual int GetY();
+	virtual int GetWidth();
+	virtual int GetHeight();
+	virtual VgDrawArea GetLayerArea();
+	virtual VgDrawAreas GetFloatAreas();
+	virtual VgDrawAreas GetUpdateAreas();
+	virtual VgDrawAreas RedrawFloats(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawFloatAreas(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawFloatAreas(VgWedget* wedget, VgDrawAreas areas);
+	virtual VgDrawAreas RedrawWedgets(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawWedgetAreas(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawWedgetAreas(VgWedget* wedget, VgDrawAreas areas);
+	virtual void RedrawMultiplys(VgDrawAreas areas);
+	virtual void RedrawMultiplyAreas(VgDrawAreas areas);
+	virtual void RedrawMultiplyAreas(VgWedget* wedget, VgDrawAreas areas);
+	virtual void RedrawBackgroundAreas(VgDrawAreas areas);
 
 	//Wedget methods
 	virtual void AddWedget(VgWedget* wedget);

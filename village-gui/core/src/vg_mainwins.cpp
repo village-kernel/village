@@ -169,10 +169,10 @@ void VgMainWins::UpdateWindow()
 	{
 		VgWindow* item = windows.Item();
 		
-		if (item->IsUpdateRequest())
+		if (item->HasUpdateRequest())
 		{
 			RedrawWindowUpdateAreas(item);
-			item->UpdateRequest(false);
+			item->ClearUpdateRequest();
 		}
 	}
 }
@@ -304,7 +304,7 @@ VgDrawAreas VgMainWins::GetWindowUpperAreas(VgWindow* window)
 				areas.Add(item->GetLayerArea());
 			}
 
-			if (item->IsFloatable())
+			if (item->HasFloatable())
 			{
 				areas.Append(item->GetFloatAreas());
 			}
@@ -333,7 +333,7 @@ VgDrawAreas VgMainWins::RedrawFloatWindowAreas(VgDrawAreas areas, VgWindow* wind
 
 		if (item == window) continue;
 
-		if (!item->IsFloatable()) continue;
+		if (!item->HasFloatable()) continue;
 
 		areas = item->RedrawFloatAreas(areas);
 	}
