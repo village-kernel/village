@@ -17,7 +17,7 @@ private:
 	MonitorModel model;
 public:
 	//Methods
-	void InitComponent(Wedget* parent);
+	void InitComponent(VgWedget* parent);
 };
 
 #endif //!__MONITOR_VIEW_H__

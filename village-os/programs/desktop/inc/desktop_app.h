@@ -15,7 +15,7 @@ class DesktopApp
 private:
 	//Members
 	VillageGUI*  vkgui;
-	Window*      mainwin;
+	VgWindow*      mainwin;
 
 	//Members
 	DesktopView  view;

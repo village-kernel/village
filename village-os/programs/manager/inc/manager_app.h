@@ -16,7 +16,7 @@ class ManagerApp
 private:
 	//Members
 	VillageGUI*  vkgui;
-	Window*      mainwin;
+	VgWindow*      mainwin;
 
 	//Members
 	ManagerView view;

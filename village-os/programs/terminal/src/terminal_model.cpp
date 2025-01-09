@@ -10,10 +10,12 @@
 /// @brief Constructor
 TerminalModel::TerminalModel()
 {
+	ConsoleText = new RelayData<char*>((char*)"shabi");
 }
 
 
 /// @brief Destructor
 TerminalModel::~TerminalModel()
 {
+	delete ConsoleText;
 }

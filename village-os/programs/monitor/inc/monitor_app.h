@@ -16,7 +16,7 @@ class MonitorApp
 private:
 	//Members
 	VillageGUI*  vkgui;
-	Window*      mainwin;
+	VgWindow*      mainwin;
 
 	//Members
 	MonitorView view;

@@ -41,7 +41,7 @@ void DesktopApp::Setup()
 	mainwin->SetSize(1024, 768);
 	mainwin->SetFixed(true);
 	mainwin->SetAlwaysFocus(true);
-	mainwin->SetPlace(Window::_Bottom);
+	mainwin->SetPlace(VgWindow::_Bottom);
 	mainwin->SetTitle((char*)"desktop");
 	mainwin->SetHiddenNavbar(true);
 

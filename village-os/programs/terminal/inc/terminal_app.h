@@ -16,7 +16,7 @@ class TerminalAPP
 private:
 	//Members
 	VillageGUI*  vkgui;
-	Window*      mainwin;
+	VgWindow*      mainwin;
 
 	//Members
 	TerminalView view;

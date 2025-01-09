@@ -8,56 +8,56 @@
 
 
 /// @brief InitComponent
-void DesktopView::InitComponent(Wedget* parent)
+void DesktopView::InitComponent(VgWedget* parent)
 {
 	int width = parent->GetWidth();
 	int height = parent->GetHeight();
 
 	//Create context menu
-	Context* context = new Context();
+	VgContext* context = new VgContext();
 	context->SetSize(80, 160);
-	context->SetBgColor(DrawDefs::_White);
+	context->SetBgColor(VgDrawDefs::_White);
 	context->SetHidden(true);
-	//context->SetItemSource(model.ContextMenuLists);
-	context->BindingCommand(model.ContextMenuCmd);
+	context->BindingItems(model.ContextItems);
+	context->BindingCommand(model.ContextCmd);
 	parent->AddWedget(context);
 
 	//Create shortcut table
-	Table* shortcut = new Table();
-	shortcut->SetSize(width, height);
-	shortcut->SetBgColor(DrawDefs::_Gray);
-	//shortcut->SetItemSource(model.ShortcutLists);
+	VgTable* shortcut = new VgTable();
+	shortcut->SetSize(width, height - 40);
+	shortcut->SetBgColor(VgDrawDefs::_Grayblue);
+	shortcut->BindingItems(model.ShortcutItems);
 	shortcut->BindingCommand(model.ShortcutCmd);
 	parent->AddWedget(shortcut);
 
 	//Create start button
-	Button* startBtn = new Button();
+	VgButton* startBtn = new VgButton();
 	startBtn->AxisMove(0, height - 40);
 	startBtn->SetSize(40, 40);
-	startBtn->SetBgColor(DrawDefs::_Brown);
+	startBtn->SetBgColor(VgDrawDefs::_Gray);
 	startBtn->SetFloatable(true);
-	startBtn->SetText(model.StartText);
+	startBtn->BindingText(model.StartBtnText);
 	startBtn->BindingCommand(model.StartBtnCmd);
 	parent->AddWedget(startBtn);
 
 	//Create start menu
-	Menu* startMenu = new Menu();
+	VgMenu* startMenu = new VgMenu();
 	startMenu->AxisMove(0, height - 520);
 	startMenu->SetSize(320, 480);
-	startMenu->SetBgColor(DrawDefs::_Lgray);
+	startMenu->SetBgColor(VgDrawDefs::_White);
 	startMenu->SetFloatable(true);
-	startMenu->SetHidden(true);
-	//startMenu->SetItemSource(model.StartMenuLists);
+	startMenu->BindingHidden(model.StartMenuHidden);
+	startMenu->BindingItems(model.StartMenuItems);
 	startMenu->BindingCommand(model.StartMenuCmd);
 	parent->AddWedget(startMenu);
 
-	//Create task bar
-	Toolbar* taskbar = new Toolbar();
-	taskbar->AxisMove(40, height - 40);
-	taskbar->SetSize(width - 40, 40);
-	taskbar->SetBgColor(DrawDefs::_Cyan);
-	taskbar->SetFloatable(true);
-	//taskbar->SetItemSource(model.TaskbarLists);
-	taskbar->BindingCommand(model.TaskbarCmd);
-	parent->AddWedget(taskbar);
+	//Create toolbar
+	VgToolbar* toolbar = new VgToolbar();
+	toolbar->AxisMove(40, height - 40);
+	toolbar->SetSize(width - 40, 40);
+	toolbar->SetBgColor(VgDrawDefs::_Lgray);
+	toolbar->SetFloatable(true);
+	toolbar->BindingItems(model.ToolbarItems);
+	toolbar->BindingCommand(model.ToolbarCmd);
+	parent->AddWedget(toolbar);
 }

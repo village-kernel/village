@@ -16,7 +16,7 @@ class SettingsApp
 private:
 	//Members
 	VillageGUI*  vkgui;
-	Window*      mainwin;
+	VgWindow*      mainwin;
 
 	//Members
 	SettingsView view;

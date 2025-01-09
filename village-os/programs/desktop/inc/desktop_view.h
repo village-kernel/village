@@ -18,7 +18,7 @@ private:
 	DesktopModel model;
 public:
 	//Methods
-	void InitComponent(Wedget* parent);
+	void InitComponent(VgWedget* parent);
 };
 
 #endif //!__DESKTOP_VIEW_H__

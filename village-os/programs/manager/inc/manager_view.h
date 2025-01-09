@@ -17,7 +17,7 @@ private:
 	ManagerModel model;
 public:
 	//Methods
-	void InitComponent(Wedget* parent);
+	void InitComponent(VgWedget* parent);
 };
 
 #endif //!__MANAGER_VIEW_H__

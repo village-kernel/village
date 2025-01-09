@@ -14,6 +14,9 @@
 class TerminalModel : public Class
 {
 public:
+	//Data
+	IData<char*>* ConsoleText;
+public:
 	//Methods
 	TerminalModel();
 	~TerminalModel();

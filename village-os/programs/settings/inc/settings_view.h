@@ -17,7 +17,7 @@ private:
 	SettingsModel model;
 public:
 	//Methods
-	void InitComponent(Wedget* parent);
+	void InitComponent(VgWedget* parent);
 };
 
 #endif //!__SETTINGS_VIEW_H__

@@ -9,7 +9,7 @@
 
 /// @brief Init Component
 /// @param parent 
-void ManagerView::InitComponent(Wedget* parent)
+void ManagerView::InitComponent(VgWedget* parent)
 {
 
 }

@@ -9,7 +9,7 @@
 
 /// @brief Init Component
 /// @param parent 
-void SettingsView::InitComponent(Wedget* parent)
+void SettingsView::InitComponent(VgWedget* parent)
 {
 
 }

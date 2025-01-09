@@ -9,7 +9,7 @@
 
 /// @brief Init Component
 /// @param parent 
-void MonitorView::InitComponent(Wedget* parent)
+void MonitorView::InitComponent(VgWedget* parent)
 {
 
 }
