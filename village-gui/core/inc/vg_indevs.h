@@ -1,36 +1,36 @@
 //###########################################################################
-// vg_screen.h
-// Declarations of the functions that manage screen
+// vg_indevs.h
+// Declarations of the functions that manage indevs
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_SCREEN_H__
-#define __VG_SCREEN_H__
+#ifndef __VG_INDEVS_H__
+#define __VG_INDEVS_H__
 
 #include "vg_devices.h"
-#include "vg_lcddev.h"
+#include "vg_indev.h"
 #include "vg_list.h"
 
 
-/// @brief VgScreen
-class VgScreen
+/// @brief VgIndevs
+class VgIndevs
 {
 private:
 	//Members
 	VgDevices&       devices;
-	VgList<Lcddev*>  lcddevs;
+	VgList<VgIndev*> indevs;
 	bool             isReady;
 public:
 	//Methods
-	VgScreen(VgDevices& devices);
-	~VgScreen();
+	VgIndevs(VgDevices& devices);
+	~VgIndevs();
 	void Setup();
 	void Execute();
 	void Exit();
 
 	//Methods
-	void RegisterLcddev(Lcddev* lcd);
-	void UnregisterLcddev(Lcddev* lcd);
+	void RegisterIndev(VgIndev* indev);
+	void UnregisterIndev(VgIndev* indev);
 };
 
-#endif //!__VG_SCREEN_H__
+#endif //!__VG_INDEVS_H__

@@ -8,20 +8,21 @@
 
 
 /// @brief Constructor
-Navbar::Navbar()
+VgNavbar::VgNavbar()
 {
+	SetTitle((char*)"navbar");
 }
 
 
 /// @brief Destructor
-Navbar::~Navbar()
+VgNavbar::~VgNavbar()
 {
 }
 
 
 /// @brief Get exit button
 /// @return 
-Button* Navbar::GetExitBtn()
+VgButton* VgNavbar::GetExitBtn()
 {
 	return &exitbtn;
 }
@@ -29,7 +30,7 @@ Button* Navbar::GetExitBtn()
 
 /// @brief Get min button
 /// @return 
-Button* Navbar::GetMinBtn()
+VgButton* VgNavbar::GetMinBtn()
 {
 	return &minbtn;
 }
@@ -37,7 +38,7 @@ Button* Navbar::GetMinBtn()
 
 /// @brief Get max button
 /// @return 
-Button* Navbar::GetMaxBtn()
+VgButton* VgNavbar::GetMaxBtn()
 {
 	return &maxbtn;
 }
@@ -47,9 +48,9 @@ Button* Navbar::GetMaxBtn()
 /// @param x 
 /// @param y 
 /// @return 
-bool Navbar::IsInMaximizeArea(int x, int y)
+bool VgNavbar::IsInMaximizeArea(int x, int y)
 {
-	return maxbtn.IsInArea(x, y);
+	return maxbtn.IsInLayerArea(x, y);
 }
 
 
@@ -57,9 +58,9 @@ bool Navbar::IsInMaximizeArea(int x, int y)
 /// @param x 
 /// @param y 
 /// @return 
-bool Navbar::IsInMinimizeArea(int x, int y)
+bool VgNavbar::IsInMinimizeArea(int x, int y)
 {
-	return minbtn.IsInArea(x, y);
+	return minbtn.IsInLayerArea(x, y);
 }
 
 
@@ -67,33 +68,47 @@ bool Navbar::IsInMinimizeArea(int x, int y)
 /// @param x 
 /// @param y 
 /// @return 
-bool Navbar::IsInCloseArea(int x, int y)
+bool VgNavbar::IsInCloseArea(int x, int y)
 {
-	return exitbtn.IsInArea(x, y);
+	return exitbtn.IsInLayerArea(x, y);
 }
 
 
-/// @brief Wedget Initiate
+/// @brief VgNavbar initiate
 /// @param devices 
-void Navbar::Initiate(VgDevices* devices)
+void VgNavbar::InitContent(VgDevices* devices)
 {
-	Wedget::Initiate(devices);
-
 	exitbtn.AxisMove(exit_btn_x, btn_y);
 	exitbtn.SetSize(btn_width, btn_height);
 	exitbtn.SetText((char*)"X");
-	exitbtn.SetBgColor(DrawDefs::_Red);
+	exitbtn.SetBgColor(VgDrawDefs::_Red);
 	AddWedget(&exitbtn);
 
 	minbtn.AxisMove(min_btn_x, btn_y);
 	minbtn.SetSize(btn_width, btn_height);
 	minbtn.SetText((char*)"-");
-	minbtn.SetBgColor(DrawDefs::_Yellow);
+	minbtn.SetBgColor(VgDrawDefs::_Yellow);
 	AddWedget(&minbtn);
 
 	maxbtn.AxisMove(max_btn_x, btn_y);
 	maxbtn.SetSize(btn_width, btn_height);
 	maxbtn.SetText((char*)"O");
-	maxbtn.SetBgColor(DrawDefs::_Green);
+	maxbtn.SetBgColor(VgDrawDefs::_Green);
 	AddWedget(&maxbtn);
+}
+
+
+/// @brief VgNavbar execute
+/// @param input 
+void VgNavbar::ExecContent(VgInputData input)
+{
+
+}
+
+
+/// @brief VgNavbar draw
+/// @param drawArea 
+void VgNavbar::DrawContent(VgDrawArea drawArea)
+{
+
 }

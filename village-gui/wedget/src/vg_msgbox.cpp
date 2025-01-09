@@ -8,12 +8,37 @@
 
 
 /// @brief Constructor
-MsgBox::MsgBox()
+VgMsgBox::VgMsgBox()
 {
+	SetTitle((char*)"msgbox");
 }
 
 
 /// @brief Destructor
-MsgBox::~MsgBox()
+VgMsgBox::~VgMsgBox()
 {
+}
+
+
+/// @brief VgMsgBox initiate
+/// @param devices 
+void VgMsgBox::InitContent(VgDevices* devices)
+{
+
+}
+
+
+/// @brief VgMsgBox execute
+/// @param input 
+void VgMsgBox::ExecContent(VgInputData input)
+{
+
+}
+
+
+/// @brief VgMsgBox draw
+/// @param drawArea 
+void VgMsgBox::DrawContent(VgDrawArea drawArea)
+{
+
 }

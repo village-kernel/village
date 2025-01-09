@@ -1,18 +1,18 @@
 //###########################################################################
-// vk_disp_lcddev.h
+// vk_gui_lcddev.h
 // Declarations of the functions that manage dispaly
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_DISPLAY_LCDDEV_H__
-#define __VK_DISPLAY_LCDDEV_H__
+#ifndef __VK_GUI_LCDDEV_H__
+#define __VK_GUI_LCDDEV_H__
 
 #include "vg_lcddev.h"
 #include "vk_driver.h"
 
 
 /// @brief VkDisplay
-class VkDisplay : public Lcddev
+class VkDisplay : public VgLcddev
 {
 private:
 	//Members
@@ -26,7 +26,7 @@ public:
 	int GetWidth();
 	int GetHeight();
 	void Point(int x, int y, int color);
-	void Flush(DrawArea area, void* pixels);
+	void Flush(VgDrawArea area, void* pixels);
 };
 
-#endif //!__VK_DISPLAY_LCDDEV_H__
+#endif //!__VK_GUI_LCDDEV_H__

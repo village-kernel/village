@@ -27,9 +27,12 @@ void VgTimer::Setup()
 {
 	isReady = false;
 
-	if (NULL != ticks) ticks->Setup(&devices);
+	if (NULL != ticks)
+	{
+		ticks->Setup(&devices);
 
-	devices.ticks = ticks;
+		devices.ticks = ticks;
+	}
 
 	isReady = true;
 }
@@ -58,7 +61,7 @@ void VgTimer::Exit()
 
 /// @brief 
 /// @param tick 
-void VgTimer::RegisterTick(Ticks* ticks)
+void VgTimer::SetTicks(VgTicks* ticks)
 {
 	if (NULL != ticks && ticks != this->ticks)
 	{
@@ -70,7 +73,7 @@ void VgTimer::RegisterTick(Ticks* ticks)
 
 /// @brief 
 /// @param tick 
-void VgTimer::UnregisterTick(Ticks* ticks)
+void VgTimer::ClearTick(VgTicks* ticks)
 {
 	if (this->ticks == ticks)
 	{

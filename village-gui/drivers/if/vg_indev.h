@@ -11,8 +11,8 @@
 #include "stdint.h"
 
 
-/// @brief IndevType
-enum IndevType
+/// @brief VgIndevType
+enum VgIndevType
 {
 	_Button = 1,
 	_Keyboard,
@@ -22,37 +22,41 @@ enum IndevType
 };
 
 
-/// @brief KeyState
-enum KeyState
+/// @brief VgKeyState
+enum VgKeyState
 {
 	_Released = 0,
 	_Pressed,
 };
 
 
-/// @brief Point
-struct Point
+/// @brief VgPoint
+struct VgPoint
 {
-	int32_t x;
-	int32_t y;
+	int x;
+	int y;
 
-	Point()
-		:x(0),
+	VgPoint
+	(
+		int x = 0,
+		int y = 0
+	):
+		x(0),
 		y(0)
 	{}
 };
 
 
-/// @brief IndevData
-struct IndevData
+/// @brief VgInputData
+struct VgInputData
 {
-	Point    point;
-	uint32_t key;
-	uint32_t btnid;
-	int16_t  encdiff;
-	KeyState state;
+	VgPoint    point;
+	uint32_t   key;
+	uint32_t   btnid;
+	int16_t    encdiff;
+	VgKeyState state;
 
-	IndevData()
+	VgInputData()
 		:key(0),
 		btnid(0),
 		encdiff(0),
@@ -61,7 +65,7 @@ struct IndevData
 
 	void Reset()
 	{
-		point = Point();
+		point = VgPoint();
 		key = 0;
 		btnid = 0;
 		encdiff = 0;
@@ -70,29 +74,29 @@ struct IndevData
 };
 
 
-/// @brief GraphicsDevices
+/// @brief VgDevices
 struct VgDevices;
 
 
-/// @brief Window
-class Window;
+/// @brief VgWindow
+class VgWindow;
 
 
-/// @brief Indev
-class Indev
+/// @brief VgIndev
+class VgIndev
 {
 protected:
 	//Members
-	IndevType type;
-	bool      ready;
+	VgIndevType type;
+	bool        ready;
 public:
 	//Methods
 	virtual void Setup(VgDevices* devices) = 0;
 	virtual void Exit() = 0;
 
 	//Type Methods
-	virtual void SetType(IndevType type) { this->type = type; }
-	virtual IndevType GetType()          { return this->type; }
+	virtual void SetType(VgIndevType type) { this->type = type; }
+	virtual VgIndevType GetType()          { return this->type; }
 
 	//Ready Methods
 	virtual bool IsReady()    { return this->ready; }
@@ -100,10 +104,10 @@ public:
 	virtual void ClearReady() { this->ready = false; }
 
 	//Mouse Methods
-	virtual Window* Cursor() { return NULL; }
+	virtual VgWindow* Cursor() { return NULL; }
 
 	//Data Methods
-	virtual IndevData Read() = 0;
+	virtual VgInputData Read() = 0;
 };
 
 #endif //!__VG_INDEV_H__

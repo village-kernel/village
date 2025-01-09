@@ -10,13 +10,13 @@
 #include "vg_layout.h"
 
 
-/// @brief Flex
-class Flex : public Layout
+/// @brief VgFlex
+class VgFlex : public VgLayout
 {
 public:
 	//Methods
-	Flex();
-	~Flex();
+	VgFlex();
+	~VgFlex();
 };
 
 #endif //!__VG_FLEX_H__

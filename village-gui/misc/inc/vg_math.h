@@ -11,8 +11,8 @@
 #include "stddef.h"
 
 
-/// @brief Math
-class Math
+/// @brief VgMath
+class VgMath
 {
 public:
 	//Methods

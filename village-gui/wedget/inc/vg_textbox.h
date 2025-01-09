@@ -8,16 +8,34 @@
 #define __VG_TEXT_BOX_H__
 
 #include "vg_wedget.h"
-#include "vg_scrollbar.h"
+#include "vg_draw_text.h"
+#include "vg_input_data.h"
 
 
-/// @brief TextBox
-class TextBox : public Wedget
+/// @brief VgTextBox
+class VgTextBox : public VgWedget
 {
+private:
+	//Memebers
+	char* 	      text;
+	IData<char*>* bText;
+
+	//Members
+	VgDrawText      drawText;
 public:
 	//Methods
-	TextBox();
-	~TextBox();
+	VgTextBox();
+	~VgTextBox();
+
+	//Attribute Methods
+	void BindingText(IData<char*>* text);
+	void SetText(char* text);
+	char* GetText();
+private:
+	//Methods
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_TEXT_BOX_H__

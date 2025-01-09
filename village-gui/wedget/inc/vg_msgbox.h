@@ -10,13 +10,18 @@
 #include "vg_wedget.h"
 
 
-/// @brief MsgBox
-class MsgBox : public Wedget
+/// @brief VgMsgBox
+class VgMsgBox : public VgWedget
 {
 public:
 	//Methods
-	MsgBox();
-	~MsgBox();
+	VgMsgBox();
+	~VgMsgBox();
+private:
+	//Methods
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_MSG_BOX_H__

@@ -11,8 +11,8 @@
 #include "vg_draw_defs.h"
 
 
-/// @brief DrawLine
-class DrawLine
+/// @brief VgDrawLine
+class VgDrawLine
 {
 private:
 	//Members
@@ -20,7 +20,7 @@ private:
 public:
 	//Methods
 	void Initiate(VgDevices* devices);
-	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
+	void Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_LINE_H__

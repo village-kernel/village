@@ -8,31 +8,36 @@
 #define __VG_CONTEXT_H__
 
 #include "vg_wedget.h"
+#include "vg_collection.h"
 
 
-/// @brief Context
-class Context : public Wedget
+/// @brief VgContext
+class VgContext : public VgWedget
 {
 private:
 	//Members
-	DrawArea oldArea;
+	VgDrawArea oldArea;
 
 	//Methods
 	void UpdateActive(bool active);
 public:
 	//Methods
-	Context();
-	~Context();
+	VgContext();
+	~VgContext();
+
+	//Binding Methods
+	void BindingItems(IData<Collection*>* items);
 
 	//Area methods
-	DrawAreas GetUpdateAreas();
+	VgDrawAreas GetUpdateAreas();
 
 	//Attribute methods
 	void SetFocus(bool focus);
-
+private:
 	//Methods
-	void Initiate(VgDevices* devices);
-	void Execute(IndevData input);
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_CONTEXT_H__

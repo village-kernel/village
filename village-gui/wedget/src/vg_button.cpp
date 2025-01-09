@@ -9,44 +9,67 @@
 
 
 /// @brief Constructor
-Button::Button()
-	:text(NULL)
+VgButton::VgButton()
+	:text(NULL),
+	bText(NULL)
 {
+	SetTitle((char*)"button");
 }
 
 
 /// @brief Destructor
-Button::~Button()
+VgButton::~VgButton()
 {
 }
 
 
-/// @brief 
+/// @brief VgButton binding text
 /// @param text 
-void Button::SetText(char* text)
+void VgButton::BindingText(IData<char*>* text)
 {
-	this->text = text;
+	bText = text; if (bText) bText->Binding(this);
 }
 
 
-/// @brief Wedget Execute
-/// @param input 
-void Button::Execute(IndevData input)
+/// @brief VgButton set text
+/// @param text 
+void VgButton::SetText(char* text)
 {
-	static bool isPressed = false;
+	this->text = text; if (bText) bText->Set(text);
+}
 
-	if (layer.IsCoordinateInArea(input.point.x, input.point.y, layerArea))
+
+/// @brief VgButton get text
+/// @return 
+char* VgButton::GetText()
+{
+	return bText ? bText->Get() : text;
+}
+
+
+/// @brief VgButton initiate
+/// @param devices 
+void VgButton::InitContent(VgDevices* devices)
+{
+	drawText.Initiate(devices);
+	drawText.SetAlignment(VgDrawText::_AlignCenter);
+}
+
+
+/// @brief VgButton execute
+/// @param input 
+void VgButton::ExecContent(VgInputData input)
+{
+	if (IsInLayerArea(input.point.x, input.point.y))
 	{
-		if (EventCode::_BtnLeft == input.key)
-		{
-			if (!isPressed && KeyState::_Pressed == input.state)
-			{
-				isPressed = true; if (NULL != cmd) cmd->Execute();
-			}
-			else if (KeyState::_Released == input.state)
-			{
-				isPressed = false;
-			}
-		}
+		ExecuteCommand(input);
 	}
+}
+
+
+/// @brief VgButton draw
+/// @param drawArea 
+void VgButton::DrawContent(VgDrawArea drawArea)
+{
+	drawText.Execute(layerArea, drawArea, GetText());
 }

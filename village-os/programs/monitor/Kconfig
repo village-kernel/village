@@ -1,0 +1,17 @@
+# monitor menu
+
+menu "monitor"
+
+config MONITOR_APP
+	bool "Build monitor application"
+	default y
+
+if MONITOR_APP
+
+config MONITOR_POWER_UP
+	bool "Running when power up"
+	default n
+
+endif
+
+endmenu

@@ -1,14 +1,14 @@
 //###########################################################################
-// VkGuiService.cpp
+// vk_gui_service.cpp
 // Definitions of the functions that manage village gui service
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vk_gui_service.h"
-#include "vk_timer_ticks.h"
-#include "vk_mouse_indev.h"
-#include "vk_keyboard_indev.h"
-#include "vk_disp_lcddev.h"
+#include "vk_gui_ticks.h"
+#include "vk_gui_mouse.h"
+#include "vk_gui_keyboard.h"
+#include "vk_gui_lcddev.h"
 #include "vk_kernel.h"
 
 
@@ -32,16 +32,16 @@ bool VkGuiService::Setup()
 	isReady = false;
 
 	//Register tick
-	vkgui.timer.RegisterTick(new VkTicks());
+	vkgui.timer.SetTicks(new VkTicks());
 
 	//Register mouse
-	vkgui.input.RegisterIndev(new VkMouse());
+	vkgui.indevs.RegisterIndev(new VkMouse());
 
 	//Register keyboard
-	vkgui.input.RegisterIndev(new VkKeyBoard());
+	vkgui.indevs.RegisterIndev(new VkKeyBoard());
 
 	//Register display
-	vkgui.screen.RegisterLcddev(new VkDisplay());
+	vkgui.displays.RegisterLcddev(new VkDisplay());
 
 	//Setup vkgui
 	vkgui.Setup();

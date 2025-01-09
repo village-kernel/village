@@ -1,11 +1,11 @@
 //###########################################################################
-// vk_mouse_indev.h
+// vk_gui_mouse.h
 // Declarations of the functions that manage mouse
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_MOUSE_INDEV_H__
-#define __VK_MOUSE_INDEV_H__
+#ifndef __VK_GUI_MOUSE_H__
+#define __VK_GUI_MOUSE_H__
 
 #include "vg_indev.h"
 #include "vg_math.h"
@@ -14,18 +14,18 @@
 
 
 /// @brief VkMouse
-class VkMouse : public Indev, public Class
+class VkMouse : public VgIndev, public Class
 {
 private:
 	//Members
 	VgDevices* devices;
 
 	//Members
-	Math math;
+	VgMath math;
 
 	//Members
-	IndevData data;
-	Window* cursor;
+	VgInputData data;
+	VgWindow* cursor;
 
 	//Methods
 	void KeyReceiver(Event::InputKey* input);
@@ -38,10 +38,10 @@ public:
 	void Exit();
 
 	//Mouse Methods
-	Window* Cursor();
+	VgWindow* Cursor();
 
 	//Data Methods
-	IndevData Read();
+	VgInputData Read();
 };
 
-#endif //!__VK_MOUSE_INDEV_H__
+#endif //!__VK_GUI_MOUSE_H__

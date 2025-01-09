@@ -11,8 +11,8 @@
 #include "vg_button.h"
 
 
-/// @brief Navbar
-class Navbar : public Wedget
+/// @brief VgNavbar
+class VgNavbar : public VgWedget
 {
 private:
 	//Static constants members
@@ -24,26 +24,28 @@ private:
 	static const int max_btn_x = min_btn_x + btn_width;
 
 	//Members
-	Button exitbtn;
-	Button minbtn;
-	Button maxbtn;
+	VgButton exitbtn;
+	VgButton minbtn;
+	VgButton maxbtn;
 public:
 	//Methods
-	Navbar();
-	~Navbar();
+	VgNavbar();
+	~VgNavbar();
 
 	//Wedget methods
-	Button* GetExitBtn();
-	Button* GetMinBtn();
-	Button* GetMaxBtn();
+	VgButton* GetExitBtn();
+	VgButton* GetMinBtn();
+	VgButton* GetMaxBtn();
 
 	//Area methods
 	bool IsInMaximizeArea(int x, int y);
 	bool IsInMinimizeArea(int x, int y);
 	bool IsInCloseArea(int x, int y);
-
+private:
 	//Methods
-	void Initiate(VgDevices* devices);
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_NAV_BAR_H__

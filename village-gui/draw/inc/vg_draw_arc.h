@@ -11,8 +11,8 @@
 #include "vg_draw_defs.h"
 
 
-/// @brief DrawArc
-class DrawArc
+/// @brief VgDrawArc
+class VgDrawArc
 {
 private:
 	//Members
@@ -20,7 +20,7 @@ private:
 public:
 	//Methods
 	void Initiate(VgDevices* devices);
-	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
+	void Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_ARC_H__

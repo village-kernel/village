@@ -1,5 +1,5 @@
 //###########################################################################
-// app_desktop.h
+// desktop_app.h
 // Declarations of the desktop app
 //
 // $Copyright: Copyright (C) village
@@ -15,7 +15,7 @@ class DesktopApp
 private:
 	//Members
 	VillageGUI*  vkgui;
-	Window*      mainwin;
+	VgWindow*      mainwin;
 
 	//Members
 	DesktopView  view;

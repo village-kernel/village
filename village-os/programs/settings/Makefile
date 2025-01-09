@@ -23,13 +23,14 @@ src-settings-y                        += village-os/programs/settings/src
 # objects
 ######################################
 objs-settings-y                       += settings_app.o
+objs-settings-y                       += settings_model.o
 objs-settings-y                       += settings_view.o
 
 
 ######################################
 # libraries
 ######################################
-libs-settings-y                       += vkc
+libs-settings-y                       += vkgui utils vkc++ vkc
 
 endif
 
@@ -38,5 +39,5 @@ endif
 # settings
 ######################################
 ifeq ($(CONFIG_SETTINGS_POWER_UP), y)
-settings-settings                     += 
+settings-settings                     += power_up
 endif

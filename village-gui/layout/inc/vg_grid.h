@@ -10,13 +10,13 @@
 #include "vg_layout.h"
 
 
-/// @brief Grid
-class Grid : public Layout
+/// @brief VgGrid
+class VgGrid : public VgLayout
 {
 public:
 	//Methods
-	Grid();
-	~Grid();
+	VgGrid();
+	~VgGrid();
 };
 
 #endif //!__VG_GRID_H__

@@ -12,13 +12,13 @@
 #include "vg_list.h"
 
 
-/// @brief DrawPoint
-struct DrawPoint
+/// @brief VgDrawPoint
+struct VgDrawPoint
 {
 	int x;
 	int y;
 
-	DrawPoint
+	VgDrawPoint
 	(
 		int x = 0,
 		int y = 0
@@ -29,15 +29,15 @@ struct DrawPoint
 };
 
 
-/// @brief DrawArea
-struct DrawArea
+/// @brief VgDrawArea
+struct VgDrawArea
 {
 	int sx;
 	int ex;
 	int sy;
 	int ey;
 
-	DrawArea
+	VgDrawArea
 	(
 		int sx = 0,
 		int ex = 0,
@@ -52,36 +52,24 @@ struct DrawArea
 };
 
 
-/// @brief DrawPath
-typedef VgList<DrawPoint> DrawPath;
+/// @brief VgDrawPath
+typedef VgList<VgDrawPoint> VgDrawPath;
 
 
-/// @brief DrawCanvas
-typedef VgList<DrawPath>  DrawCanvas;
+/// @brief VgDrawCanvas
+typedef VgList<VgDrawPath>  VgDrawCanvas;
 
 
 /// @brief DrawAreas
-typedef VgList<DrawArea>  DrawAreas;
+typedef VgList<VgDrawArea>  VgDrawAreas;
 
 
-/// @brief DrawData
-struct DrawData
-{
-	DrawArea   area;
-	void*      pixels;
-
-	DrawData()
-		:pixels(NULL)
-	{}
-};
-
-
-/// @brief DrawDefs
-class DrawDefs
+/// @brief VgDrawDefs
+class VgDrawDefs
 {
 public:
-	//Color16
-	enum Color16
+	//Color
+	enum Color
 	{
 		_Black      = 0x0000,
 		_Blue       = 0x001F,

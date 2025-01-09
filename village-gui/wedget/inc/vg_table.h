@@ -9,15 +9,36 @@
 
 #include "vg_wedget.h"
 #include "vg_button.h"
+#include "vg_collection.h"
 
 
-/// @brief Table
-class Table : public Wedget
+/// @brief VgTable
+class VgTable : public VgWedget
 {
+private:
+	//Members
+	Collection*         items;
+	IData<Collection*>* bItems;
+	int                 index;
+	IData<int>*         bIndex;
 public:
 	//Methods
-	Table();
-	~Table();
+	VgTable();
+	~VgTable();
+
+	//Binding Methods
+	void BindingItems(IData<Collection*>* items);
+	void SetItems(Collection* items);
+	Collection* GetItems();
+
+	void BindingItemIndex(IData<int>* index);
+	void SetItemIndex(int index);
+	int  GetItemIndex();
+private:
+	//Methods
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_TABLE_H__

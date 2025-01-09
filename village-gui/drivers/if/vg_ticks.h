@@ -11,12 +11,12 @@
 #include "stdint.h"
 
 
-/// @brief GraphicsDevices
+/// @brief VgDevices
 struct VgDevices;
 
 
-/// @brief Ticks
-class Ticks
+/// @brief VgTicks
+class VgTicks
 {
 public:
 	//Methods

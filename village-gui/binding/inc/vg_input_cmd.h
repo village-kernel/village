@@ -14,6 +14,9 @@
 class ICommand
 {
 public:
+	//Destructor
+	virtual ~ICommand() {}
+
 	//Methods
 	virtual void Execute(void* args = NULL) = 0;
 };

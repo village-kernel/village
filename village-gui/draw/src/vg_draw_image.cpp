@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawImage::Initiate(VgDevices* devices)
+void VgDrawImage::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
@@ -19,7 +19,7 @@ void DrawImage::Initiate(VgDevices* devices)
 /// @param layerArea 
 /// @param drawArea 
 /// @param color 
-void DrawImage::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+void VgDrawImage::Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color)
 {
 
 }

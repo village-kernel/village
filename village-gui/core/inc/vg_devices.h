@@ -15,9 +15,9 @@
 /// @brief VgDevices
 struct VgDevices
 {
-	Ticks*  ticks;
-	Indev*  indev;
-	Lcddev* lcddev;
+	VgTicks*  ticks;
+	VgIndev*  indev;
+	VgLcddev* lcddev;
 
 	VgDevices()
 		:ticks(NULL),

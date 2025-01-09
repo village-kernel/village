@@ -8,12 +8,12 @@
 
 
 /// @brief Constructor
-Grid::Grid()
+VgGrid::VgGrid()
 {
 }
 
 
 /// @brief Destructor
-Grid::~Grid()
+VgGrid::~VgGrid()
 {
 }

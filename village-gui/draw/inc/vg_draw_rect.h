@@ -12,20 +12,20 @@
 #include "vg_math.h"
 
 
-/// @brief DrawRect
-class DrawRect
+/// @brief VgDrawRect
+class VgDrawRect
 {
 private:
 	//Members
 	VgDevices* devices;
 
 	//Members
-	Math math;
+	VgMath math;
 public:
 	//Methods
 	void Initiate(VgDevices* devices);
-	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
-	void Execute(DrawArea layerArea, DrawAreas drawAreas, int color);
+	void Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color);
+	void Execute(VgDrawArea layerArea, VgDrawAreas drawAreas, int color);
 };
 
 #endif //!__VG_DRAW_RECT_H__

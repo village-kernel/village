@@ -1,5 +1,5 @@
 //###########################################################################
-// TerminalApp.h
+// terminal_app.h
 // Declarations of the terminal app
 //
 // $Copyright: Copyright (C) village
@@ -11,16 +11,12 @@
 
 
 /// @brief TerminalAPP
-class TerminalAPP : public Class
+class TerminalAPP
 {
 private:
 	//Members
-	int          tid;
-	ICommand*    closeCmd;
-
-	//Members
 	VillageGUI*  vkgui;
-	Window*      mainwin;
+	VgWindow*      mainwin;
 
 	//Members
 	TerminalView view;
@@ -30,7 +26,6 @@ public:
 	~TerminalAPP();
 	void Setup();
 	void Execute();
-	void Close();
 	void Exit();
 };
 

@@ -11,30 +11,30 @@
 #include "vg_math.h"
 #include "vg_list.h"
 
-/// @brief Layer
-class Layer
+/// @brief VgLayer
+class VgLayer
 {
 private:
 	//Members
-	Math math;
+	VgMath math;
 public:
 	//Methods
-	Layer();
-	~Layer();
-	bool IsCoordinateInArea(int x, int y, DrawArea area);
-	bool IsAreaOverlap(DrawArea a0, DrawArea a1);
-	bool IsAreaSame(DrawArea a0, DrawArea a1);
-	bool IsAreaVaild(DrawArea dsc);
-	DrawArea GetOverlapArea(DrawArea a0, DrawArea a1);
-	DrawAreas GetOverlapAreas(DrawArea dsc, DrawAreas areas);
-	DrawAreas CutOverlapAreas(DrawArea a0, DrawArea a1);
+	VgLayer();
+	~VgLayer();
+	bool IsCoordinateInArea(int x, int y, VgDrawArea area);
+	bool IsAreaOverlap(VgDrawArea a0, VgDrawArea a1);
+	bool IsAreaSame(VgDrawArea a0, VgDrawArea a1);
+	bool IsAreaVaild(VgDrawArea dsc);
+	VgDrawArea GetOverlapArea(VgDrawArea a0, VgDrawArea a1);
+	VgDrawAreas GetOverlapAreas(VgDrawArea dsc, VgDrawAreas areas);
+	VgDrawAreas CutOverlapAreas(VgDrawArea a0, VgDrawArea a1);
 public:
 	//Methods
-	DrawAreas AddAreaToAreas(DrawAreas dscs, DrawArea area);
-	DrawAreas AddAreasToAreas(DrawAreas dscs, DrawAreas areas);
-	DrawAreas CutAreaFromAreas(DrawAreas dscs, DrawArea area);
-	DrawAreas CutAreasFromAreas(DrawAreas dscs, DrawAreas areas);
-	DrawAreas CalcOverlapAreas(DrawArea dsc, DrawAreas overlapAreas, DrawAreas upperAreas);
+	VgDrawAreas AddAreaToAreas(VgDrawAreas dscs, VgDrawArea area);
+	VgDrawAreas AddAreasToAreas(VgDrawAreas dscs, VgDrawAreas areas);
+	VgDrawAreas CutAreaFromAreas(VgDrawAreas dscs, VgDrawArea area);
+	VgDrawAreas CutAreasFromAreas(VgDrawAreas dscs, VgDrawAreas areas);
+	VgDrawAreas CalcOverlapAreas(VgDrawArea dsc, VgDrawAreas overlapAreas, VgDrawAreas upperAreas);
 };
 
 #endif //!__VG_LAYER_H__

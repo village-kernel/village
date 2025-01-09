@@ -1,11 +1,11 @@
 //###########################################################################
-// vk_keyboard_indev.h
+// vk_gui_keyboard.h
 // Declarations of the functions that manage keyboard
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_KEYBOARD_INDEV_H__
-#define __VK_KEYBOARD_INDEV_H__
+#ifndef __VK_GUI_KEYBOARD_H__
+#define __VK_GUI_KEYBOARD_H__
 
 #include "vg_indev.h"
 #include "vk_class.h"
@@ -13,11 +13,11 @@
 
 
 /// @brief VkKeyBoard
-class VkKeyBoard : public Indev, public Class
+class VkKeyBoard : public VgIndev, public Class
 {
 private:
 	//Members
-	IndevData data;
+	VgInputData data;
 
 	//Methods
 	void KeyReceiver(Event::InputKey* input);
@@ -27,7 +27,7 @@ public:
 	void Exit();
 
 	//Data Methods
-	IndevData Read();
+	VgInputData Read();
 };
 
-#endif //!__VK_KEYBOARD_INDEV_H__
+#endif //!__VK_GUI_KEYBOARD_H__

@@ -121,7 +121,7 @@ public:
 	/// @return result
 	bool IsEmpty()
 	{
-		return (NULL == head);
+		return (0 == size);
 	}
 
 	/// @brief List item

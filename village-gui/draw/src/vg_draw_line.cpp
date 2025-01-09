@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawLine::Initiate(VgDevices* devices)
+void VgDrawLine::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
@@ -19,7 +19,7 @@ void DrawLine::Initiate(VgDevices* devices)
 /// @param layerArea 
 /// @param drawArea 
 /// @param color 
-void DrawLine::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+void VgDrawLine::Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color)
 {
 	int xError = 0, yError = 0, distance = 0;
 	int xIncrease = 0, yIncrease = 0;

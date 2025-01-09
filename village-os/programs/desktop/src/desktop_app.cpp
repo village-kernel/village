@@ -34,14 +34,14 @@ void DesktopApp::Setup()
 	if (NULL == vkgui) return;
 	
 	//Create mainwin window
-	mainwin = vkgui->group.Create();
+	mainwin = vkgui->mainwins.Create();
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
 	mainwin->SetSize(1024, 768);
 	mainwin->SetFixed(true);
 	mainwin->SetAlwaysFocus(true);
-	mainwin->SetPlace(Window::_Bottom);
+	mainwin->SetPlace(VgWindow::_Bottom);
 	mainwin->SetTitle((char*)"desktop");
 	mainwin->SetHiddenNavbar(true);
 
@@ -55,16 +55,17 @@ void DesktopApp::Execute()
 {
 	//Show mainwin window
 	mainwin->Show();
-
-	//Blocked app
-	kernel->thread.Blocked();
 }
 
 
 /// @brief Exit
 void DesktopApp::Exit()
 {
-	
+	//Wait for mainwin close
+	while (vkgui->mainwins.IsExist(mainwin)) 
+	{
+		kernel->thread.Sleep(1);
+	}
 }
 
 

@@ -9,28 +9,37 @@
 
 
 /// @brief Constructor
-Context::Context()
+VgContext::VgContext()
 {
+	SetTitle((char*)"context");
 }
 
 
 /// @brief Destructor
-Context::~Context()
+VgContext::~VgContext()
 {
 }
 
 
-/// @brief Get update areas
-DrawAreas Context::GetUpdateAreas()
+/// @brief Binding Items
+/// @param items 
+void VgContext::BindingItems(IData<Collection*>* items)
 {
-	DrawAreas areas;
+
+}
+
+
+/// @brief Get update areas
+VgDrawAreas VgContext::GetUpdateAreas()
+{
+	VgDrawAreas areas;
 
 	if (!layer.IsAreaSame(oldArea, layerArea))
 	{
 		areas.Add(oldArea);
 	}
 
-	areas.Append(Wedget::GetUpdateAreas());
+	areas.Append(VgWedget::GetUpdateAreas());
 
 	return areas;
 }
@@ -39,7 +48,7 @@ DrawAreas Context::GetUpdateAreas()
 /// @brief Update active
 /// @param active 
 /// @return 
-void Context::UpdateActive(bool active)
+void VgContext::UpdateActive(bool active)
 {
 	SetHidden(!active);
 	UpdateRequest(true);
@@ -48,31 +57,32 @@ void Context::UpdateActive(bool active)
 
 /// @brief Set focus
 /// @param focus 
-void Context::SetFocus(bool focus)
+void VgContext::SetFocus(bool focus)
 {
-	UpdateActive(focus);
-	Wedget::SetFocus(focus);
+	if (!focus && !IsHidden())
+	{
+		UpdateActive(false);
+	}
+	VgWedget::SetFocus(focus);
 }
 
 
-/// @brief Context Initiate
+/// @brief VgContext Initiate
 /// @param devices 
-void Context::Initiate(VgDevices* devices)
+void VgContext::InitContent(VgDevices* devices)
 {
-	Wedget::Initiate(devices);
-
 	SetFloatable(true);
 }
 
 
-/// @brief Context menu is active
+/// @brief VgContext Execute
 /// @param input 
-void Context::Execute(IndevData input)
+void VgContext::ExecContent(VgInputData input)
 {
 	static bool isPressed = false;
 	static int lastx = 0, lasty = 0;
 
-	if (!isPressed && KeyState::_Pressed == input.state)
+	if (!isPressed && VgKeyState::_Pressed == input.state)
 	{
 		if (EventCode::_BtnRight == input.key)
 		{
@@ -96,10 +106,16 @@ void Context::Execute(IndevData input)
 
 		isPressed = true;
 	}
-	else if (KeyState::_Released == input.state)
+	else if (VgKeyState::_Released == input.state)
 	{
 		isPressed = false;
 	}
+}
 
-	Wedget::Execute(input);
+
+/// @brief VgContext draw
+/// @param drawArea 
+void VgContext::DrawContent(VgDrawArea drawArea)
+{
+
 }

@@ -8,23 +8,24 @@
 
 
 /// @brief Constructor
-Window::Window()
+VgWindow::VgWindow()
 	:focus(false),
 	place(_Middle),
 	resizeSide(0)
 {
+	SetTitle((char*)"window");
 }
 
 
 /// @brief Destructor
-Window::~Window()
+VgWindow::~VgWindow()
 {
 }
 
 
 /// @brief Get navbar
 /// @return 
-Navbar* Window::GetNavbar()
+VgNavbar* VgWindow::GetNavbar()
 {
 	return &navbar;
 }
@@ -34,11 +35,11 @@ Navbar* Window::GetNavbar()
 /// @param x 
 /// @param y 
 /// @return 
-bool Window::IsInMoveArea(int x, int y)
+bool VgWindow::IsInMoveArea(int x, int y)
 {
 	if (!navbar.IsHidden() && navbar.IsEnable())
 	{
-		return navbar.IsInArea(x, y);
+		return navbar.IsInLayerArea(x, y);
 	}
 	return layer.IsCoordinateInArea(x, y, layerArea);
 }
@@ -48,7 +49,7 @@ bool Window::IsInMoveArea(int x, int y)
 /// @param x 
 /// @param y 
 /// @return 
-bool Window::IsInResizeArea(int x, int y)
+bool VgWindow::IsInResizeArea(int x, int y)
 {
 	resizeSide = 0;
 
@@ -73,7 +74,7 @@ bool Window::IsInResizeArea(int x, int y)
 /// @param x 
 /// @param y 
 /// @return 
-bool Window::IsInMaximizeArea(int x, int y)
+bool VgWindow::IsInMaximizeArea(int x, int y)
 {
 	if (!navbar.IsHidden() && navbar.IsEnable())
 	{
@@ -87,7 +88,7 @@ bool Window::IsInMaximizeArea(int x, int y)
 /// @param x 
 /// @param y 
 /// @return 
-bool Window::IsInMinimizeArea(int x, int y)
+bool VgWindow::IsInMinimizeArea(int x, int y)
 {
 	if (!navbar.IsHidden() && navbar.IsEnable())
 	{
@@ -101,7 +102,7 @@ bool Window::IsInMinimizeArea(int x, int y)
 /// @param x 
 /// @param y 
 /// @return 
-bool Window::IsInCloseArea(int x, int y)
+bool VgWindow::IsInCloseArea(int x, int y)
 {
 	if (!navbar.IsHidden() && navbar.IsEnable())
 	{
@@ -111,21 +112,21 @@ bool Window::IsInCloseArea(int x, int y)
 }
 
 
-/// @brief Window set size
+/// @brief VgWindow set size
 /// @param width 
 /// @param height 
-void Window::SetSize(int width, int height)
+void VgWindow::SetSize(int width, int height)
 {
-	Wedget::SetSize(width, height);
+	VgWedget::SetSize(width, height);
 
 	navbar.SetSize(GetWidth(), navbar_height);
 }
 
 
-/// @brief Window adjust size
+/// @brief VgWindow adjust size
 /// @param axisx 
 /// @param axisy 
-void Window::Adjust(int axisx, int axisy)
+void VgWindow::Adjust(int axisx, int axisy)
 {
 	if (resizeSide & ResizeSide::_LeftSide)
 		layerArea.sx += axisx;
@@ -141,10 +142,10 @@ void Window::Adjust(int axisx, int axisy)
 }
 
 
-/// @brief Window maximize
-void Window::Maximize()
+/// @brief VgWindow maximize
+void VgWindow::Maximize()
 {
-	static DrawArea oldArea;
+	static VgDrawArea oldArea;
 	static bool isMaximize = false;
 	
 	if (false == isMaximize)
@@ -163,16 +164,16 @@ void Window::Maximize()
 }
 
 
-/// @brief Window minimize
-void Window::Minimize()
+/// @brief VgWindow minimize
+void VgWindow::Minimize()
 {
 	MoveTo(0, 0);
 	SetSize(0, 0);
 }
 
 
-/// @brief Window close
-void Window::Close()
+/// @brief VgWindow close
+void VgWindow::Close()
 {
 	MoveTo(0, 0);
 	SetSize(0, 0);
@@ -181,7 +182,7 @@ void Window::Close()
 
 /// @brief Set enable navbar
 /// @param enable 
-void Window::SetEnableNavbar(bool enable)
+void VgWindow::SetEnableNavbar(bool enable)
 {
 	navbar.SetEnable(enable);
 }
@@ -189,7 +190,7 @@ void Window::SetEnableNavbar(bool enable)
 
 /// @brief Is enable navbar
 /// @return 
-bool Window::IsEnableNavbar()
+bool VgWindow::IsEnableNavbar()
 {
 	return navbar.IsEnable();
 }
@@ -197,7 +198,7 @@ bool Window::IsEnableNavbar()
 
 /// @brief Set hidden navbar
 /// @param hidden 
-void Window::SetHiddenNavbar(bool hidden)
+void VgWindow::SetHiddenNavbar(bool hidden)
 {
 	navbar.SetHidden(hidden);
 }
@@ -205,7 +206,7 @@ void Window::SetHiddenNavbar(bool hidden)
 
 /// @brief Is hidden navbar
 /// @return 
-bool Window::IsHiddenNavbar()
+bool VgWindow::IsHiddenNavbar()
 {
 	return navbar.IsHidden();
 }
@@ -213,7 +214,7 @@ bool Window::IsHiddenNavbar()
 
 /// @brief Set always focus
 /// @param focus 
-void Window::SetAlwaysFocus(bool focus)
+void VgWindow::SetAlwaysFocus(bool focus)
 {
 	this->focus = focus;
 }
@@ -221,41 +222,47 @@ void Window::SetAlwaysFocus(bool focus)
 
 /// @brief Is always focus
 /// @return 
-bool Window::IsAlwaysFocus()
+bool VgWindow::IsAlwaysFocus()
 {
 	return focus;
 }
 
 
-/// @brief Window set place
+/// @brief VgWindow set place
 /// @param place 
-void Window::SetPlace(Place place)
+void VgWindow::SetPlace(Place place)
 {
 	this->place = place;
 }
 
 
-/// @brief Window get place
+/// @brief VgWindow get place
 /// @return 
-Window::Place Window::GetPlace()
+VgWindow::Place VgWindow::GetPlace()
 {
 	return place;
 }
 
 
-/// @brief Window Initiate
+/// @brief VgWindow Initiate
 /// @param devices 
-void Window::Initiate(VgDevices* devices)
+void VgWindow::InitContent(VgDevices* devices)
 {
-	Wedget::Initiate(devices);
-
 	AddWedget(&navbar);
 }
 
 
-/// @brief Window Execute
+/// @brief VgWindow Execute
 /// @param input 
-void Window::Execute(IndevData input)
+void VgWindow::ExecContent(VgInputData input)
 {
-	Wedget::Execute(input);
+
+}
+
+
+/// @brief VgWindow draw
+/// @param drawArea 
+void VgWindow::DrawContent(VgDrawArea drawArea)
+{
+
 }
