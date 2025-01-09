@@ -8,7 +8,7 @@
 
 
 /// @brief Constructor
-Label::Label()
+VgLabel::VgLabel()
 	:text(NULL),
 	bText(NULL)
 {
@@ -18,49 +18,63 @@ Label::Label()
 
 
 /// @brief Destructor
-Label::~Label()
+VgLabel::~VgLabel()
 {
 }
 
 
-/// @brief 
+/// @brief VgLabel binding text
 /// @param bText 
-void Label::BindingText(IData<char*>* text)
+void VgLabel::BindingText(IData<char*>* text)
 {
 	bText = text; if (bText) bText->Binding(this);
 }
 
 
-/// @brief Label set text
+/// @brief VgLabel set text
 /// @param text 
-void Label::SetText(char* text)
+void VgLabel::SetText(char* text)
 {
 	this->text = text; if (bText) bText->Set(text);
 }
 
 
-/// @brief Label get text
+/// @brief VgLabel get text
 /// @return 
-char* Label::GetText()
+char* VgLabel::GetText()
 {
 	return bText ? bText->Get() : text;
 }
 
 
-/// @brief Label initiate
-/// @param devices 
-void Label::Initiate(VgDevices* devices)
+/// @brief VgLabel redraw background
+/// @param areas 
+void VgLabel::RedrawBackgroundAreas(VgDrawAreas areas)
 {
-	Wedget::Initiate(devices);
 
-	drawText.Initiate(devices);
-	drawText.SetAlignment(DrawText::_AlignCenter);
 }
 
 
-/// @brief Label redraw
+/// @brief VgLabel initiate
+/// @param devices 
+void VgLabel::InitContent(VgDevices* devices)
+{
+	drawText.Initiate(devices);
+	drawText.SetAlignment(VgDrawText::_AlignCenter);
+}
+
+
+/// @brief VgLabel execute
+/// @param input 
+void VgLabel::ExecContent(VgInputData input)
+{
+
+}
+
+
+/// @brief VgLabel draw
 /// @param drawArea 
-void Label::Redraw(DrawArea drawArea)
+void VgLabel::DrawContent(VgDrawArea drawArea)
 {
 	drawText.Execute(layerArea, drawArea, GetText());
 }

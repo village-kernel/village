@@ -13,7 +13,7 @@
 void VkKeyBoard::Setup(VgDevices* devices)
 {
 	//Set indev type
-	SetType(IndevType::_Keyboard);
+	SetType(VgIndevType::_Keyboard);
 
 	//Attach input event
 	kernel->event.Attach(Event::_InputKey,  (Method)&VkKeyBoard::KeyReceiver, this);
@@ -38,9 +38,9 @@ void VkKeyBoard::KeyReceiver(Event::InputKey* input)
 
 		//Get whether the keyboard button is pressed or released
 		if(KeyStatus::_KeyPressed == input->status)
-			data.state = KeyState::_Pressed;
+			data.state = VgKeyState::_Pressed;
 		else
-			data.state = KeyState::_Released;
+			data.state = VgKeyState::_Released;
 
 		//Set the ready flag
 		SetReady();
@@ -49,7 +49,7 @@ void VkKeyBoard::KeyReceiver(Event::InputKey* input)
 
 
 /// @brief Read
-IndevData VkKeyBoard::Read()
+VgInputData VkKeyBoard::Read()
 {
 	return data;
 }

@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawMask::Initiate(VgDevices* devices)
+void VgDrawMask::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 
@@ -21,9 +21,9 @@ void DrawMask::Initiate(VgDevices* devices)
 /// @param layerArea 
 /// @param drawArea 
 /// @param color 
-void DrawMask::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+void VgDrawMask::Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color)
 {
-	DrawArea lineArea;
+	VgDrawArea lineArea;
 	
 	lineArea.sx = layerArea.sx;
 	lineArea.ex = layerArea.ex;

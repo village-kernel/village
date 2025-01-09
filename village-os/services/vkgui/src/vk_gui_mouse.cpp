@@ -29,12 +29,12 @@ void VkMouse::Setup(VgDevices* devices)
 	this->devices = devices;
 
 	//Set indev type
-	SetType(IndevType::_Mouse);
+	SetType(VgIndevType::_Mouse);
 
 	//Create an cursor
-	cursor = new Window();
+	cursor = new VgWindow();
 	cursor->SetSize(8, 8);
-	cursor->SetBgColor(DrawDefs::_Black);
+	cursor->SetBgColor(VgDrawDefs::_Black);
 	cursor->SetHiddenNavbar(true);
 	cursor->Initiate(devices);
 
@@ -65,9 +65,9 @@ void VkMouse::KeyReceiver(Event::InputKey* input)
 
 		//Get whether the keyboard button is pressed or released
 		if(KeyStatus::_KeyPressed == input->status)
-			data.state = KeyState::_Pressed;
+			data.state = VgKeyState::_Pressed;
 		else
-			data.state = KeyState::_Released;
+			data.state = VgKeyState::_Released;
 
 		//Set the ready flag
 		SetReady();
@@ -78,7 +78,7 @@ void VkMouse::KeyReceiver(Event::InputKey* input)
 /// @brief Axis input receiver
 void VkMouse::AxisReceiver(Event::InputAxis* input)
 {
-	static Point point;
+	static VgPoint point;
 
 	//Get the limit x y
 	int maxX = devices->lcddev->GetWidth() - 1;
@@ -102,14 +102,14 @@ void VkMouse::AxisReceiver(Event::InputAxis* input)
 
 /// @brief Cursor
 /// @return 
-Window* VkMouse::Cursor()
+VgWindow* VkMouse::Cursor()
 {
 	return cursor;
 }
 
 
 /// @brief Read
-IndevData VkMouse::Read()
+VgInputData VkMouse::Read()
 {
 	return data;
 }

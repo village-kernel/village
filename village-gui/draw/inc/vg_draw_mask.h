@@ -12,17 +12,17 @@
 #include "vg_draw_line.h"
 
 
-/// @brief DrawMask
-class DrawMask
+/// @brief VgDrawMask
+class VgDrawMask
 {
 private:
 	//Members
 	VgDevices* devices;
-	DrawLine line;
+	VgDrawLine line;
 public:
 	//Methods
 	void Initiate(VgDevices* devices);
-	void Execute(DrawArea layerArea, DrawArea drawArea, int color);
+	void Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color);
 };
 
 #endif //!__VG_DRAW_MASK_H__

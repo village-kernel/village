@@ -16,71 +16,74 @@
 
 
 /// @brief Wedget
-class Wedget
+class VgWedget
 {
 protected:
 	//Members
 	VgDevices* devices;
 
 	//Area members
-	DrawArea layerArea;
+	VgLayer    layer;
+	VgDrawArea layerArea;
 	
 	//Attribute members
 	char* title;
-	int  bgColor;
-	bool hidden;
-	bool enable;
-	bool fixed;
-	bool multiply;
-	bool focus;
-	bool floatable;
-	bool update;
-	IData<char*>* bTitle;
-	IData<int>*  bBgColor;
-	IData<bool>* bHidden;
-	IData<bool>* bEnable;
-	IData<bool>* bFixed;
-	IData<bool>* bMultiply;
-	IData<bool>* bFocus;
-	IData<bool>* bFloatable;
-	IData<bool>* bUpdata;
+	int   bgColor;
+	bool  hidden;
+	bool  enable;
+	bool  fixed;
+	bool  multiply;
+	bool  focus;
+	bool  floatable;
+	bool  update;
 
-	//Binding members
+	//Binding attribute members
+	IData<char*>* bTitle;
+	IData<int>*   bBgColor;
+	IData<bool>*  bHidden;
+	IData<bool>*  bEnable;
+	IData<bool>*  bFixed;
+	IData<bool>*  bMultiply;
+	IData<bool>*  bFocus;
+	IData<bool>*  bFloatable;
+	IData<bool>*  bUpdata;
+
+	//Binding command members
 	ICommand* cmd;
 
 	//Wedget members
-	VgList<Wedget*> wedgets;
+	VgList<VgWedget*> wedgets;
 
 	//Members
-	Layer    layer;
-	DrawRect rect;
+	VgDrawRect drawRect;
 public:
 	//Methods
-	Wedget();
-	virtual ~Wedget();
+	VgWedget();
+	virtual ~VgWedget();
 
 	//Area methods
 	virtual void MoveTo(int x, int y);
 	virtual void AxisMove(int axisx, int axisy);
 	virtual void SetSize(int width, int height);
-	virtual bool IsInArea(int x, int y);
-	virtual bool IsAreaValid();
+	virtual bool IsInLayerArea(int x, int y);
+	virtual bool IsLayerAreaValid();
 	virtual int GetX();
 	virtual int GetY();
 	virtual int GetWidth();
 	virtual int GetHeight();
-	virtual DrawArea GetLayerArea();
-	virtual DrawAreas GetFloatAreas();
-	virtual DrawAreas GetUpdateAreas();
-	virtual DrawAreas RedrawFloats(DrawAreas areas);
-	virtual DrawAreas RedrawFloatAreas(DrawAreas areas);
-	virtual DrawAreas RedrawFloatAreas(Wedget* wedget, DrawAreas areas);
-	virtual DrawAreas RedrawWedgets(DrawAreas areas);
-	virtual DrawAreas RedrawWedgetAreas(DrawAreas areas);
-	virtual DrawAreas RedrawWedgetAreas(Wedget* wedget, DrawAreas areas);
-	virtual void RedrawMultiplys(DrawAreas areas);
-	virtual void RedrawMultiplyAreas(DrawAreas areas);
-	virtual void RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas);
+	virtual VgDrawArea GetLayerArea();
+	virtual VgDrawAreas GetFloatAreas();
+	virtual VgDrawAreas GetUpdateAreas();
+	virtual VgDrawAreas RedrawFloats(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawFloatAreas(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawFloatAreas(VgWedget* wedget, VgDrawAreas areas);
+	virtual VgDrawAreas RedrawWedgets(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawWedgetAreas(VgDrawAreas areas);
+	virtual VgDrawAreas RedrawWedgetAreas(VgWedget* wedget, VgDrawAreas areas);
+	virtual void RedrawMultiplys(VgDrawAreas areas);
+	virtual void RedrawMultiplyAreas(VgDrawAreas areas);
+	virtual void RedrawMultiplyAreas(VgWedget* wedget, VgDrawAreas areas);
+	virtual void RedrawBackgroundAreas(VgDrawAreas areas);
 	
 	//Attribute methods
 	virtual void BindingTitle(IData<char*>* title);
@@ -121,15 +124,21 @@ public:
 
 	//Binding methods
 	virtual void BindingCommand(ICommand* cmd);
+	virtual void ExecuteCommand(VgInputData input, void* args = NULL);
 
 	//Wedget methods
-	virtual void AddWedget(Wedget* wedget);
-
+	virtual void AddWedget(VgWedget* wedget);
+private:
+	//Methods
+	virtual void InitContent(VgDevices* devices) = 0;
+	virtual void ExecContent(VgInputData input) = 0;
+	virtual void DrawContent(VgDrawArea drawArea) = 0;
+public:
 	//Methods
 	virtual void Initiate(VgDevices* devices);
-	virtual void Execute(IndevData input);
-	virtual void Redraw(DrawArea drawArea);
-	virtual void Redraw(DrawAreas drawAreas);
+	virtual void Execute(VgInputData input);
+	virtual void Redraw(VgDrawArea drawArea);
+	virtual void Redraw(VgDrawAreas drawAreas);
 	virtual void Show();
 };
 

@@ -7,20 +7,20 @@
 #include "vg_draw_rect.h"
 
 
-/// @brief DrawRect Initiate
+/// @brief VgDrawRect Initiate
 /// @param devices 
-void DrawRect::Initiate(VgDevices* devices)
+void VgDrawRect::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
 
 
-/// @brief DrawRect Execute
+/// @brief VgDrawRect Execute
 /// @param devices 
 /// @param layerArea 
 /// @param drawArea 
 /// @param color 
-void DrawRect::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+void VgDrawRect::Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color)
 {
 	int maxX = devices->lcddev->GetWidth() - 1;
 	int maxY = devices->lcddev->GetHeight() - 1;
@@ -39,15 +39,15 @@ void DrawRect::Execute(DrawArea layerArea, DrawArea drawArea, int color)
 }
 
 
-/// @brief DrawRect Execute
+/// @brief VgDrawRect Execute
 /// @param layerArea 
 /// @param drawAreas 
 /// @param color 
-void DrawRect::Execute(DrawArea layerArea, DrawAreas drawAreas, int color)
+void VgDrawRect::Execute(VgDrawArea layerArea, VgDrawAreas drawAreas, int color)
 {
 	for (drawAreas.Begin(); !drawAreas.IsEnd(); drawAreas.Next())
 	{
-		DrawArea drawArea = drawAreas.Item();
+		VgDrawArea drawArea = drawAreas.Item();
 
 		Execute(layerArea, drawArea, color);
 	}

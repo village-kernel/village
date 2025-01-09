@@ -13,11 +13,11 @@
 
 
 /// @brief VkKeyBoard
-class VkKeyBoard : public Indev, public Class
+class VkKeyBoard : public VgIndev, public Class
 {
 private:
 	//Members
-	IndevData data;
+	VgInputData data;
 
 	//Methods
 	void KeyReceiver(Event::InputKey* input);
@@ -27,7 +27,7 @@ public:
 	void Exit();
 
 	//Data Methods
-	IndevData Read();
+	VgInputData Read();
 };
 
 #endif //!__VK_GUI_KEYBOARD_H__

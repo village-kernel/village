@@ -8,13 +8,45 @@
 
 
 /// @brief Constructor
-Menu::Menu()
+VgMenu::VgMenu()
 {
 	SetTitle((char*)"menu");
 }
 
 
 /// @brief Destructor
-Menu::~Menu()
+VgMenu::~VgMenu()
 {
+}
+
+
+/// @brief Binding Items
+/// @param items 
+void VgMenu::BindingItems(IData<Collection*>* items)
+{
+
+}
+
+
+/// @brief VgMenu initiate
+/// @param devices 
+void VgMenu::InitContent(VgDevices* devices)
+{
+
+}
+
+
+/// @brief VgMenu execute
+/// @param input 
+void VgMenu::ExecContent(VgInputData input)
+{
+
+}
+
+
+/// @brief VgMenu draw
+/// @param drawArea 
+void VgMenu::DrawContent(VgDrawArea drawArea)
+{
+
 }

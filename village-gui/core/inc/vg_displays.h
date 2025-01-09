@@ -17,9 +17,9 @@ class VgDisplays
 {
 private:
 	//Members
-	VgDevices&       devices;
-	VgList<Lcddev*>  lcddevs;
-	bool             isReady;
+	VgDevices&        devices;
+	VgList<VgLcddev*> lcddevs;
+	bool              isReady;
 public:
 	//Methods
 	VgDisplays(VgDevices& devices);
@@ -29,8 +29,8 @@ public:
 	void Exit();
 
 	//Methods
-	void RegisterLcddev(Lcddev* lcd);
-	void UnregisterLcddev(Lcddev* lcd);
+	void RegisterLcddev(VgLcddev* lcd);
+	void UnregisterLcddev(VgLcddev* lcd);
 };
 
 #endif //!__VG_DISPLAYS_H__

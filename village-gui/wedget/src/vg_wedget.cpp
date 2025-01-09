@@ -5,13 +5,14 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vg_wedget.h"
+#include "vk_event_codes.h"
 
 
 /// @brief Constructor
-Wedget::Wedget()
+VgWedget::VgWedget()
 	:devices(NULL),
 	title((char*)"wedget"),
-	bgColor(DrawDefs::_White),
+	bgColor(VgDrawDefs::_White),
 	hidden(false),
 	enable(true),
 	fixed(false),
@@ -34,7 +35,7 @@ Wedget::Wedget()
 
 
 /// @brief Destructor
-Wedget::~Wedget()
+VgWedget::~VgWedget()
 {
 	wedgets.Release();
 }
@@ -43,7 +44,7 @@ Wedget::~Wedget()
 /// @brief Wedget move in absolute position
 /// @param x 
 /// @param y 
-void Wedget::MoveTo(int x, int y)
+void VgWedget::MoveTo(int x, int y)
 {
 	int axisx = x - layerArea.sx;
 	int axisy = y - layerArea.sy;
@@ -54,7 +55,7 @@ void Wedget::MoveTo(int x, int y)
 /// @brief Wedget move in relative position
 /// @param axisx 
 /// @param axisy 
-void Wedget::AxisMove(int axisx, int axisy)
+void VgWedget::AxisMove(int axisx, int axisy)
 {
 	layerArea.sx += axisx;
 	layerArea.ex += axisx;
@@ -63,7 +64,7 @@ void Wedget::AxisMove(int axisx, int axisy)
 	
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 		
 		item->AxisMove(axisx, axisy);
 	}
@@ -72,26 +73,26 @@ void Wedget::AxisMove(int axisx, int axisy)
 
 /// @brief Wedget set size
 /// @param area 
-void Wedget::SetSize(int width, int height)
+void VgWedget::SetSize(int width, int height)
 {
 	layerArea.ex = layerArea.sx + width - 1;
 	layerArea.ey = layerArea.sy + height - 1;
 }
 
 
-/// @brief Wedget is in area
+/// @brief Wedget is in layer area
 /// @param x 
 /// @param y 
 /// @return 
-bool Wedget::IsInArea(int x, int y)
+bool VgWedget::IsInLayerArea(int x, int y)
 {
 	return layer.IsCoordinateInArea(x, y, layerArea);
 }
 
 
-/// @brief Wedget is area valid
+/// @brief Wedget is layer area valid
 /// @return 
-bool Wedget::IsAreaValid()
+bool VgWedget::IsLayerAreaValid()
 {
 	return layer.IsAreaVaild(layerArea);
 }
@@ -99,7 +100,7 @@ bool Wedget::IsAreaValid()
 
 /// @brief Wedget get x
 /// @return 
-int Wedget::GetX()
+int VgWedget::GetX()
 {
 	return layerArea.sx;
 }
@@ -107,7 +108,7 @@ int Wedget::GetX()
 
 /// @brief Wedget get y
 /// @return 
-int Wedget::GetY()
+int VgWedget::GetY()
 {
 	return layerArea.sy;
 }
@@ -115,7 +116,7 @@ int Wedget::GetY()
 
 /// @brief Wedget get width
 /// @return 
-int Wedget::GetWidth()
+int VgWedget::GetWidth()
 {
 	return layerArea.ex - layerArea.sx + 1;
 }
@@ -123,7 +124,7 @@ int Wedget::GetWidth()
 
 /// @brief Wedget get height
 /// @return 
-int Wedget::GetHeight()
+int VgWedget::GetHeight()
 {
 	return layerArea.ey - layerArea.sy + 1;
 }
@@ -131,7 +132,7 @@ int Wedget::GetHeight()
 
 /// @brief Wedget get layer area
 /// @return 
-DrawArea Wedget::GetLayerArea()
+VgDrawArea VgWedget::GetLayerArea()
 {
 	return layerArea;
 }
@@ -139,15 +140,15 @@ DrawArea Wedget::GetLayerArea()
 
 /// @brief Wedget get floatable areas
 /// @return 
-DrawAreas Wedget::GetFloatAreas()
+VgDrawAreas VgWedget::GetFloatAreas()
 {
-	DrawAreas areas;
+	VgDrawAreas areas;
 
 	if (!hidden && floatable) areas.Add(layerArea);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		areas.Append(item->GetFloatAreas());
 	}
@@ -158,15 +159,15 @@ DrawAreas Wedget::GetFloatAreas()
 
 /// @brief Wedget get update areas
 /// @return 
-DrawAreas Wedget::GetUpdateAreas()
+VgDrawAreas VgWedget::GetUpdateAreas()
 {
-	DrawAreas areas;
+	VgDrawAreas areas;
 
 	if (update) areas.Add(layerArea);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		areas.Append(item->GetUpdateAreas());
 	}
@@ -178,11 +179,11 @@ DrawAreas Wedget::GetUpdateAreas()
 /// @brief Wedget redraw floats
 /// @param drawAreas 
 /// @return 
-DrawAreas Wedget::RedrawFloats(DrawAreas areas)
+VgDrawAreas VgWedget::RedrawFloats(VgDrawAreas areas)
 {
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		if (item->IsHidden()) continue;
 
@@ -196,7 +197,7 @@ DrawAreas Wedget::RedrawFloats(DrawAreas areas)
 /// @brief Wedget redraw float areas
 /// @param areas 
 /// @return 
-DrawAreas Wedget::RedrawFloatAreas(DrawAreas areas)
+VgDrawAreas VgWedget::RedrawFloatAreas(VgDrawAreas areas)
 {
 	return RedrawFloatAreas(this, areas);
 }
@@ -206,24 +207,24 @@ DrawAreas Wedget::RedrawFloatAreas(DrawAreas areas)
 /// @param wedget 
 /// @param areas 
 /// @return 
-DrawAreas Wedget::RedrawFloatAreas(Wedget* wedget, DrawAreas areas)
+VgDrawAreas VgWedget::RedrawFloatAreas(VgWedget* wedget, VgDrawAreas areas)
 {
 	if (!wedget->IsFloatable()) return areas;
 
-	DrawAreas cutAreas = areas;
-	DrawAreas flyAreas = wedget->GetFloatAreas();
+	VgDrawAreas cutAreas = areas;
+	VgDrawAreas flyAreas = wedget->GetFloatAreas();
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
-		DrawArea item = areas.Item();
+		VgDrawArea item = areas.Item();
 
 		for (flyAreas.Begin(); !flyAreas.IsEnd(); flyAreas.Next())
 		{
-			DrawArea area = flyAreas.Item();
+			VgDrawArea area = flyAreas.Item();
 
 			if (layer.IsAreaOverlap(item, area))
 			{
-				DrawArea redraw = layer.GetOverlapArea(item, area);
+				VgDrawArea redraw = layer.GetOverlapArea(item, area);
 
 				wedget->Redraw(redraw);
 
@@ -239,11 +240,11 @@ DrawAreas Wedget::RedrawFloatAreas(Wedget* wedget, DrawAreas areas)
 /// @brief Wedget redraw wedgets
 /// @param areas 
 /// @return 
-DrawAreas Wedget::RedrawWedgets(DrawAreas areas)
+VgDrawAreas VgWedget::RedrawWedgets(VgDrawAreas areas)
 {
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		if (item->IsHidden()) continue;
 
@@ -259,7 +260,7 @@ DrawAreas Wedget::RedrawWedgets(DrawAreas areas)
 /// @brief Wedget redraw wedget areas
 /// @param areas 
 /// @return 
-DrawAreas Wedget::RedrawWedgetAreas(DrawAreas areas)
+VgDrawAreas VgWedget::RedrawWedgetAreas(VgDrawAreas areas)
 {
 	return RedrawWedgetAreas(this, areas);
 }
@@ -269,20 +270,20 @@ DrawAreas Wedget::RedrawWedgetAreas(DrawAreas areas)
 /// @param wedget 
 /// @param areas 
 /// @return 
-DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
+VgDrawAreas VgWedget::RedrawWedgetAreas(VgWedget* wedget, VgDrawAreas areas)
 {
 	if (wedget->IsMultiply()) return areas;
 
-	DrawArea  layArea  = wedget->GetLayerArea();
-	DrawAreas cutAreas = areas;
+	VgDrawArea  layArea  = wedget->GetLayerArea();
+	VgDrawAreas cutAreas = areas;
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
-		DrawArea item = areas.Item();
+		VgDrawArea item = areas.Item();
 
 		if (layer.IsAreaOverlap(item, layArea))
 		{
-			DrawArea redraw = layer.GetOverlapArea(item, layArea);
+			VgDrawArea redraw = layer.GetOverlapArea(item, layArea);
 
 			wedget->Redraw(redraw);
 
@@ -299,11 +300,11 @@ DrawAreas Wedget::RedrawWedgetAreas(Wedget* wedget, DrawAreas areas)
 /// @brief Wedget redraw multiplys
 /// @param areas 
 /// @return 
-void Wedget::RedrawMultiplys(DrawAreas areas)
+void VgWedget::RedrawMultiplys(VgDrawAreas areas)
 {
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		if (item->IsHidden()) continue;
 
@@ -315,7 +316,7 @@ void Wedget::RedrawMultiplys(DrawAreas areas)
 /// @brief Wedget redraw multiply areas
 /// @param areas 
 /// @return 
-void Wedget::RedrawMultiplyAreas(DrawAreas areas)
+void VgWedget::RedrawMultiplyAreas(VgDrawAreas areas)
 {
 	RedrawMultiplyAreas(this, areas);
 }
@@ -325,19 +326,19 @@ void Wedget::RedrawMultiplyAreas(DrawAreas areas)
 /// @param wedget 
 /// @param areas 
 /// @return 
-void Wedget::RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas)
+void VgWedget::RedrawMultiplyAreas(VgWedget* wedget, VgDrawAreas areas)
 {
 	if (!wedget->IsMultiply()) return;
 
-	DrawArea layArea = wedget->GetLayerArea();
+	VgDrawArea layArea = wedget->GetLayerArea();
 
 	for (areas.Begin(); !areas.IsEnd(); areas.Next())
 	{
-		DrawArea item = areas.Item();
+		VgDrawArea item = areas.Item();
 
 		if (layer.IsAreaOverlap(item, layArea))
 		{
-			DrawArea redraw = layer.GetOverlapArea(item, layArea);
+			VgDrawArea redraw = layer.GetOverlapArea(item, layArea);
 
 			wedget->Redraw(redraw);
 		}
@@ -345,9 +346,17 @@ void Wedget::RedrawMultiplyAreas(Wedget* wedget, DrawAreas areas)
 }
 
 
+/// @brief Wedget redraw backgroud areas
+/// @param areas 
+void VgWedget::RedrawBackgroundAreas(VgDrawAreas areas)
+{
+	drawRect.Execute(layerArea, areas, bgColor);
+}
+
+
 /// @brief Wedget binding title
 /// @param title 
-void Wedget::BindingTitle(IData<char*>* title)
+void VgWedget::BindingTitle(IData<char*>* title)
 {
 	bTitle = title; if (bTitle) bTitle->Binding(this);
 }
@@ -355,7 +364,7 @@ void Wedget::BindingTitle(IData<char*>* title)
 
 /// @brief Wedget set title
 /// @param title 
-void Wedget::SetTitle(char* title)
+void VgWedget::SetTitle(char* title)
 {
 	this->title = title; if (bTitle) bTitle->Set(title);
 }
@@ -363,7 +372,7 @@ void Wedget::SetTitle(char* title)
 
 /// @brief Wedget get title
 /// @return 
-char* Wedget::GetTitle()
+char* VgWedget::GetTitle()
 {
 	return bTitle ? bTitle->Get() : title;
 }
@@ -371,7 +380,7 @@ char* Wedget::GetTitle()
 
 /// @brief Wedget binding bg color
 /// @param color 
-void Wedget::BindingBgColor(IData<int>* color)
+void VgWedget::BindingBgColor(IData<int>* color)
 {
 	bBgColor = color; if (bBgColor) bBgColor->Binding(this);
 }
@@ -379,7 +388,7 @@ void Wedget::BindingBgColor(IData<int>* color)
 
 /// @brief Wedget set bg color
 /// @param color 
-void Wedget::SetBgColor(int color)
+void VgWedget::SetBgColor(int color)
 {
 	this->bgColor = color; if (bBgColor) bBgColor->Set(color);
 }
@@ -387,7 +396,7 @@ void Wedget::SetBgColor(int color)
 
 /// @brief Wedget get bg color
 /// @return 
-int Wedget::GetBgColor()
+int VgWedget::GetBgColor()
 {
 	return bBgColor ? bBgColor->Get() : bgColor;
 }
@@ -395,7 +404,7 @@ int Wedget::GetBgColor()
 
 /// @brief Wedget binding hidden
 /// @param hidden 
-void Wedget::BindingHidden(IData<bool>* hidden)
+void VgWedget::BindingHidden(IData<bool>* hidden)
 {
 	bHidden = hidden; if (bHidden) bHidden->Binding(this);
 }
@@ -403,7 +412,7 @@ void Wedget::BindingHidden(IData<bool>* hidden)
 
 /// @brief Wedget set hidden
 /// @param hidden 
-void Wedget::SetHidden(bool hidden)
+void VgWedget::SetHidden(bool hidden)
 {
 	this->hidden = hidden; if (bHidden) bHidden->Set(hidden);
 }
@@ -411,7 +420,7 @@ void Wedget::SetHidden(bool hidden)
 
 /// @brief Wedget is hidden
 /// @return 
-bool Wedget::IsHidden()
+bool VgWedget::IsHidden()
 {
 	return bHidden ? bHidden->Get() : hidden;
 }
@@ -419,7 +428,7 @@ bool Wedget::IsHidden()
 
 /// @brief Wedget binding enable 
 /// @param enable 
-void Wedget::BindingEnable(IData<bool>* enable)
+void VgWedget::BindingEnable(IData<bool>* enable)
 {
 	bEnable = enable; if (bEnable) bHidden->Binding(this);
 }
@@ -427,7 +436,7 @@ void Wedget::BindingEnable(IData<bool>* enable)
 
 /// @brief Wedget set enable
 /// @param enable 
-void Wedget::SetEnable(bool enable)
+void VgWedget::SetEnable(bool enable)
 {
 	this->enable = enable; if (bEnable) bEnable->Set(enable);
 }
@@ -435,7 +444,7 @@ void Wedget::SetEnable(bool enable)
 
 /// @brief Wedget is enable
 /// @return 
-bool Wedget::IsEnable()
+bool VgWedget::IsEnable()
 {
 	return bEnable ? bEnable->Get() : enable;
 }
@@ -443,7 +452,7 @@ bool Wedget::IsEnable()
 
 /// @brief Wedget binding fixed
 /// @param fixed 
-void Wedget::BindingFixed(IData<bool>* fixed)
+void VgWedget::BindingFixed(IData<bool>* fixed)
 {
 	bFixed = fixed; if (bFixed) bFixed->Binding(this);
 }
@@ -451,7 +460,7 @@ void Wedget::BindingFixed(IData<bool>* fixed)
 
 /// @brief Wedget set fixed
 /// @param fixed 
-void Wedget::SetFixed(bool fixed)
+void VgWedget::SetFixed(bool fixed)
 {
 	this->fixed = fixed; if (bFixed) bFixed->Set(fixed);
 }
@@ -459,7 +468,7 @@ void Wedget::SetFixed(bool fixed)
 
 /// @brief Wedget is fixed
 /// @return 
-bool Wedget::IsFixed()
+bool VgWedget::IsFixed()
 {
 	return bFixed ? bFixed->Get() : fixed;
 }
@@ -467,7 +476,7 @@ bool Wedget::IsFixed()
 
 /// @brief Wedget binding multiply
 /// @param multiply 
-void Wedget::BindingMultiply(IData<bool>* multiply)
+void VgWedget::BindingMultiply(IData<bool>* multiply)
 {
 	bMultiply = multiply; if (bMultiply) bMultiply->Binding(this);
 }
@@ -475,7 +484,7 @@ void Wedget::BindingMultiply(IData<bool>* multiply)
 
 /// @brief Wedget set multiply
 /// @param multiply 
-void Wedget::SetMultiply(bool multiply)
+void VgWedget::SetMultiply(bool multiply)
 {
 	this->multiply = multiply; if (bMultiply) bMultiply->Set(multiply);
 }
@@ -483,7 +492,7 @@ void Wedget::SetMultiply(bool multiply)
 
 /// @brief Wedget is multiply
 /// @return 
-bool Wedget::IsMultiply()
+bool VgWedget::IsMultiply()
 {
 	return bMultiply ? bMultiply->Get() : multiply;
 }
@@ -491,7 +500,7 @@ bool Wedget::IsMultiply()
 
 /// @brief Wedget binding focus
 /// @param focus 
-void Wedget::BindingFocus(IData<bool>* focus)
+void VgWedget::BindingFocus(IData<bool>* focus)
 {
 	bFocus = focus; if (bFocus) bFocus->Binding(this);
 }
@@ -499,13 +508,13 @@ void Wedget::BindingFocus(IData<bool>* focus)
 
 /// @brief Wedget set focus
 /// @param focus 
-void Wedget::SetFocus(bool focus)
+void VgWedget::SetFocus(bool focus)
 {
 	this->focus = focus; if (bFocus) bFocus->Set(focus);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		item->SetFocus(focus);
 	}
@@ -514,7 +523,7 @@ void Wedget::SetFocus(bool focus)
 
 /// @brief Wedget is focus
 /// @return 
-bool Wedget::IsFocus()
+bool VgWedget::IsFocus()
 {
 	return bFocus ? bFocus->Get() : focus;
 }
@@ -522,7 +531,7 @@ bool Wedget::IsFocus()
 
 /// @brief Wedget binding floatable
 /// @param floatable 
-void Wedget::BindingFloatable(IData<bool>* floatable)
+void VgWedget::BindingFloatable(IData<bool>* floatable)
 {
 	bFloatable = floatable; if (bFloatable) bFloatable->Binding(this);
 }
@@ -530,13 +539,13 @@ void Wedget::BindingFloatable(IData<bool>* floatable)
 
 /// @brief Wedget set floatable
 /// @param floatable 
-void Wedget::SetFloatable(bool floatable)
+void VgWedget::SetFloatable(bool floatable)
 {
 	this->floatable = floatable; if (bFloatable) bFloatable->Set(floatable);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		item->SetFloatable(floatable);
 	}
@@ -545,7 +554,7 @@ void Wedget::SetFloatable(bool floatable)
 
 /// @brief Wedget is floatable
 /// @return 
-bool Wedget::IsFloatable()
+bool VgWedget::IsFloatable()
 {
 	bool abled = bFloatable ? bFloatable->Get() : floatable;
 
@@ -553,7 +562,7 @@ bool Wedget::IsFloatable()
 	{
 		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 		{
-			Wedget* item = wedgets.Item();
+			VgWedget* item = wedgets.Item();
 
 			abled = item->IsFloatable();
 
@@ -567,20 +576,20 @@ bool Wedget::IsFloatable()
 
 /// @brief Wedget binding update request
 /// @param request 
-void Wedget::BindingUpdateRequest(IData<bool>* request)
+void VgWedget::BindingUpdateRequest(IData<bool>* request)
 {
 	bUpdata = request; if (bUpdata) bUpdata->Binding(this);
 }
 
 
 /// @brief Wedget update request
-void Wedget::UpdateRequest(bool request)
+void VgWedget::UpdateRequest(bool request)
 {
 	this->update = request; if (bUpdata) bUpdata->Set(request);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 
 		item->UpdateRequest(request);
 	}
@@ -589,7 +598,7 @@ void Wedget::UpdateRequest(bool request)
 
 /// @brief Wedget is update request
 /// @return 
-bool Wedget::IsUpdateRequest()
+bool VgWedget::IsUpdateRequest()
 {
 	bool request = bUpdata ? bUpdata->Get() : update;
 
@@ -597,7 +606,7 @@ bool Wedget::IsUpdateRequest()
 	{
 		for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 		{
-			Wedget* item = wedgets.Item();
+			VgWedget* item = wedgets.Item();
 
 			request = item->IsUpdateRequest();
 
@@ -611,16 +620,36 @@ bool Wedget::IsUpdateRequest()
 
 /// @brief Wedget BindingCommand
 /// @param cmd 
-void Wedget::BindingCommand(ICommand* cmd)
+void VgWedget::BindingCommand(ICommand* cmd)
 {
 	this->cmd = cmd;
+}
+
+
+/// @brief Wedget execute command
+/// @param args 
+void VgWedget::ExecuteCommand(VgInputData input, void* args)
+{
+	static bool isPressed = false;
+
+	if (EventCode::_BtnLeft == input.key)
+	{
+		if (!isPressed && VgKeyState::_Pressed == input.state)
+		{
+			isPressed = true; if (NULL != cmd) cmd->Execute(args);
+		}
+		else if (VgKeyState::_Released == input.state)
+		{
+			isPressed = false;
+		}
+	}
 }
 
 
 /// @brief Wedget add wedget
 /// @param wedget 
 /// @return 
-void Wedget::AddWedget(Wedget* wedget)
+void VgWedget::AddWedget(VgWedget* wedget)
 {
 	if (NULL != wedget) 
 	{
@@ -633,59 +662,58 @@ void Wedget::AddWedget(Wedget* wedget)
 
 /// @brief Wedget Initiate
 /// @param devices 
-void Wedget::Initiate(VgDevices* devices)
+void VgWedget::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 
-	rect.Initiate(devices);
+	InitContent(devices);
+
+	drawRect.Initiate(devices);
 }
 
 
 /// @brief Wedget Execute
 /// @param input 
-void Wedget::Execute(IndevData input)
+void VgWedget::Execute(VgInputData input)
 {
 	if (true == hidden) return;
 
-	if (layer.IsCoordinateInArea(input.point.x, input.point.y, layerArea))
-	{
-		if (NULL != cmd) cmd->Execute();
-	}
+	ExecContent(input);
 
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
-		Wedget* item = wedgets.Item();
+		VgWedget* item = wedgets.Item();
 		
 		item->Execute(input);
 	}
 }
 
 
-/// @brief Wedget Draw
+/// @brief Wedget Draw area
 /// @param drawArea 
-void Wedget::Redraw(DrawArea drawArea)
+void VgWedget::Redraw(VgDrawArea drawArea)
 {
 	if (true == hidden) return;
 
-	DrawAreas redraws; 
+	VgDrawAreas redraws, multiplys;
 	
 	redraws.Add(drawArea);
 
-	redraws = RedrawFloats(redraws);
-
-	DrawAreas multiplys = redraws;
+	redraws = multiplys = RedrawFloats(redraws);
 
 	redraws = RedrawWedgets(redraws);
 
-	rect.Execute(layerArea, redraws, bgColor);
+	RedrawBackgroundAreas(redraws);
 
 	RedrawMultiplys(multiplys);
+
+	DrawContent(drawArea);
 }
 
 
-/// @brief Wedget Draw
+/// @brief Wedget Draw areas
 /// @param drawAreas 
-void Wedget::Redraw(DrawAreas drawAreas)
+void VgWedget::Redraw(VgDrawAreas drawAreas)
 {
 	for (drawAreas.Begin(); !drawAreas.IsEnd(); drawAreas.Next())
 	{
@@ -695,7 +723,7 @@ void Wedget::Redraw(DrawAreas drawAreas)
 
 
 /// @brief Wedget Show
-void Wedget::Show()
+void VgWedget::Show()
 {
 	Redraw(layerArea);
 }

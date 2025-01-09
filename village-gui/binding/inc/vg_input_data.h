@@ -9,8 +9,8 @@
 
 #include "stdint.h"
 
-/// @brief Wedget
-class Wedget;
+/// @brief VgWedget
+class VgWedget;
 
 /// @brief IData
 template<typename Object>
@@ -21,7 +21,7 @@ public:
 	virtual ~IData() {}
 
 	//Methods
-	virtual void Binding(Wedget* wedget) = 0;
+	virtual void Binding(VgWedget* wedget) = 0;
 	virtual void Set(Object value) = 0;
 	virtual Object Get() = 0;
 };

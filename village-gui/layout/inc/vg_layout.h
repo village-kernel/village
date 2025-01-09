@@ -8,8 +8,8 @@
 #define __VG_LAYOUT_H__
 
 
-/// @brief Layout
-class Layout
+/// @brief VgLayout
+class VgLayout
 {
 
 };

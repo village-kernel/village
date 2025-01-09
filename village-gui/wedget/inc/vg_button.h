@@ -11,8 +11,8 @@
 #include "vg_draw_text.h"
 
 
-/// @brief Button
-class Button : public Wedget
+/// @brief VgButton
+class VgButton : public VgWedget
 {
 private:
 	//Members
@@ -20,21 +20,21 @@ private:
 	IData<char*>* bText;
 
 	//Members
-	DrawText      drawText;
+	VgDrawText      drawText;
 public:
 	//Methods
-	Button();
-	~Button();
+	VgButton();
+	~VgButton();
 
 	//Binding Methods
 	void BindingText(IData<char*>* text);
 	void SetText(char* text);
 	char* GetText();
-
+private:
 	//Methods
-	void Initiate(VgDevices* devices);
-	void Execute(IndevData input);
-	void Redraw(DrawArea drawArea);
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_BUTTON_H__

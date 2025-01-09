@@ -18,7 +18,7 @@ class RelayData : public IData<Object>
 private:
 	//Members
 	Object object;
-	Wedget* wedget;
+	VgWedget* wedget;
 public:
 	/// @brief Constructor
 	/// @param object 
@@ -29,7 +29,7 @@ public:
 
 	/// @brief Binding wedget
 	/// @param wedget 
-	void Binding(Wedget* wedget)
+	void Binding(VgWedget* wedget)
 	{
 		this->wedget = wedget;
 	}

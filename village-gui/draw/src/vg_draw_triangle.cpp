@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawTriangle::Initiate(VgDevices* devices)
+void VgDrawTriangle::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
@@ -19,7 +19,7 @@ void DrawTriangle::Initiate(VgDevices* devices)
 /// @param layerArea 
 /// @param drawArea 
 /// @param color 
-void DrawTriangle::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+void VgDrawTriangle::Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color)
 {
 
 }

@@ -8,13 +8,45 @@
 
 
 /// @brief Constructor
-ListBox::ListBox()
+VgListBox::VgListBox()
 {
 	SetTitle((char*)"listbox");
 }
 
 
 /// @brief Destructor
-ListBox::~ListBox()
+VgListBox::~VgListBox()
 {
+}
+
+
+/// @brief Binding Items
+/// @param items 
+void VgListBox::BindingItems(IData<Collection*>* items)
+{
+
+}
+
+
+/// @brief VgListBox initiate
+/// @param devices 
+void VgListBox::InitContent(VgDevices* devices)
+{
+
+}
+
+
+/// @brief VgListBox execute
+/// @param input 
+void VgListBox::ExecContent(VgInputData input)
+{
+
+}
+
+
+/// @brief VgListBox draw
+/// @param drawArea 
+void VgListBox::DrawContent(VgDrawArea drawArea)
+{
+
 }

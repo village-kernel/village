@@ -9,25 +9,25 @@
 
 
 /// @brief Constructor
-DrawText::DrawText()
-	:fontSize(DrawDefs::_Font16),
+VgDrawText::VgDrawText()
+	:fontSize(VgDrawDefs::_Font16),
 	 fontWidth(fontSize >> 1),
 	 fontHeight(fontSize),
-	 fontColor(DrawDefs::_Black),
-	 alignment(DrawText::_AlignCenter)
+	 fontColor(VgDrawDefs::_Black),
+	 alignment(VgDrawText::_AlignCenter)
 {
 }
 
 
 /// @brief Destructor
-DrawText::~DrawText()
+VgDrawText::~VgDrawText()
 {
 }
 
 
 /// @brief Set font size
 /// @param font 
-void DrawText::SetFontSize(int font)
+void VgDrawText::SetFontSize(int font)
 {
 	this->fontSize   = font;
 	this->fontWidth  = font >> 1;
@@ -37,7 +37,7 @@ void DrawText::SetFontSize(int font)
 
 /// @brief Set font color
 /// @param color 
-void DrawText::SetFontColor(int color)
+void VgDrawText::SetFontColor(int color)
 {
 	this->fontColor = color;
 }
@@ -45,7 +45,7 @@ void DrawText::SetFontColor(int color)
 
 /// @brief Set alignment
 /// @param align 
-void DrawText::SetAlignment(Alignment align)
+void VgDrawText::SetAlignment(Alignment align)
 {
 	this->alignment = align;
 }
@@ -54,7 +54,7 @@ void DrawText::SetAlignment(Alignment align)
 /// @brief Get font index
 /// @param chr 
 /// @return 
-inline int DrawText::GetFontIndex(int chr)
+inline int VgDrawText::GetFontIndex(int chr)
 {
 	return chr - ' ';
 }
@@ -64,38 +64,38 @@ inline int DrawText::GetFontIndex(int chr)
 /// @param index 
 /// @param row 
 /// @return 
-inline int DrawText::GetFontMatrix(int index, int row)
+inline int VgDrawText::GetFontMatrix(int index, int row)
 {
 	int matrix = 0;
 
-	if (DrawDefs::_Font16 == fontSize)
+	if (VgDrawDefs::_Font16 == fontSize)
 	{
-		matrix = ASCII_16[index][row];
+		matrix = VgAscii16[index][row];
 	}
-	else if (DrawDefs::_Font24 == fontSize)
+	else if (VgDrawDefs::_Font24 == fontSize)
 	{
-		matrix  = (ASCII_24[index][row * 2 + 0] & 0x00ff) << 0;
-		matrix += (ASCII_24[index][row * 2 + 1] & 0x00ff) << 8;
+		matrix  = (VgAscii24[index][row * 2 + 0] & 0x00ff) << 0;
+		matrix += (VgAscii24[index][row * 2 + 1] & 0x00ff) << 8;
 	}
 
 	return matrix;
 }
 
 
-/// @brief DrawText Initiate
+/// @brief VgDrawText Initiate
 /// @param devices 
-void DrawText::Initiate(VgDevices* devices)
+void VgDrawText::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
 
 
-/// @brief DrawText Execute
+/// @brief VgDrawText Execute
 /// @param layerArea 
 /// @param drawArea 
 /// @param chr 
 /// @param color 
-void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char chr)
+void VgDrawText::Execute(VgDrawArea layerArea, VgDrawArea drawArea, char chr)
 {
 	int maxX = devices->lcddev->GetWidth() - 1;
 	int maxY = devices->lcddev->GetHeight() - 1;
@@ -127,17 +127,17 @@ void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char chr)
 }
 
 
-/// @brief DrawText Execute
+/// @brief VgDrawText Execute
 /// @param layerArea 
 /// @param drawArea 
 /// @param text 
 /// @param color 
-void DrawText::Execute(DrawArea layerArea, DrawArea drawArea, char* str)
+void VgDrawText::Execute(VgDrawArea layerArea, VgDrawArea drawArea, char* str)
 {
 	if (NULL == str) return;
 
 	//Update layer area
-	if (DrawText::_AlignCenter == alignment)
+	if (VgDrawText::_AlignCenter == alignment)
 	{
 		int halfWidth  = (layerArea.ex - layerArea.sx + 1) >> 1;
 		int halfHeight = (layerArea.ey - layerArea.sy + 1) >> 1;

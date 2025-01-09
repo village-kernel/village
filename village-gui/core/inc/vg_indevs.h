@@ -17,9 +17,9 @@ class VgIndevs
 {
 private:
 	//Members
-	VgDevices&      devices;
-	VgList<Indev*>  indevs;
-	bool            isReady;
+	VgDevices&       devices;
+	VgList<VgIndev*> indevs;
+	bool             isReady;
 public:
 	//Methods
 	VgIndevs(VgDevices& devices);
@@ -29,8 +29,8 @@ public:
 	void Exit();
 
 	//Methods
-	void RegisterIndev(Indev* indev);
-	void UnregisterIndev(Indev* indev);
+	void RegisterIndev(VgIndev* indev);
+	void UnregisterIndev(VgIndev* indev);
 };
 
 #endif //!__VG_INDEVS_H__

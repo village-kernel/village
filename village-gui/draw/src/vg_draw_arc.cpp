@@ -9,7 +9,7 @@
 
 /// @brief Initiate
 /// @param devices 
-void DrawArc::Initiate(VgDevices* devices)
+void VgDrawArc::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
@@ -19,7 +19,7 @@ void DrawArc::Initiate(VgDevices* devices)
 /// @param layerArea 
 /// @param drawArea 
 /// @param color 
-void DrawArc::Execute(DrawArea layerArea, DrawArea drawArea, int color)
+void VgDrawArc::Execute(VgDrawArea layerArea, VgDrawArea drawArea, int color)
 {
 
 }

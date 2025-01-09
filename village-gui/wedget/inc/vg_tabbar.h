@@ -10,13 +10,18 @@
 #include "vg_wedget.h"
 
 
-/// @brief Tabbar
-class Tabbar : public Wedget
+/// @brief VgTabbar
+class VgTabbar : public VgWedget
 {
 public:
 	//Methods
-	Tabbar();
-	~Tabbar();
+	VgTabbar();
+	~VgTabbar();
+private:
+	//Methods
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_TAB_BAR_H__

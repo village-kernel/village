@@ -17,7 +17,7 @@ class VgTimer
 private:
 	//Members
 	VgDevices&  devices;
-	Ticks*      ticks;
+	VgTicks*    ticks;
 	bool        isReady;
 public:
 	//Methods
@@ -26,8 +26,8 @@ public:
 	void Setup();
 	void Execute();
 	void Exit();
-	void SetTicks(Ticks* ticks);
-	void ClearTick(Ticks* ticks);
+	void SetTicks(VgTicks* ticks);
+	void ClearTick(VgTicks* ticks);
 };
 
 #endif //!__VG_TIMER_H__

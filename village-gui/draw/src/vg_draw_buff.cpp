@@ -7,20 +7,20 @@
 #include "vg_draw_buff.h"
 
 
-/// @brief DrawBuff Initiate
+/// @brief VgDrawBuff Initiate
 /// @param devices 
-void DrawBuff::Initiate(VgDevices* devices)
+void VgDrawBuff::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 }
 
 
-/// @brief DrawBuff Execute
+/// @brief VgDrawBuff Execute
 /// @param devices 
 /// @param layerArea 
 /// @param drawArea 
 /// @param color 
-void DrawBuff::Execute(DrawArea layerArea, DrawArea drawArea, int* buff)
+void VgDrawBuff::Execute(VgDrawArea layerArea, VgDrawArea drawArea, int* buff)
 {
 	int maxX = devices->lcddev->GetWidth() - 1;
 	int maxY = devices->lcddev->GetHeight() - 1;

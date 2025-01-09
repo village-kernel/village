@@ -42,11 +42,11 @@ void VgDisplays::Execute()
 {
 	for (lcddevs.Begin(); !lcddevs.IsEnd(); lcddevs.Next())
 	{
-		Lcddev* lcddev = lcddevs.Item();
+		VgLcddev* lcddev = lcddevs.Item();
 
-		if (IndevType::_Mouse == devices.indev->GetType())
+		if (VgIndevType::_Mouse == devices.indev->GetType())
 		{
-			IndevData input = devices.indev->Read();
+			VgInputData input = devices.indev->Read();
 
 			if ((input.point.x <= lcddev->GetWidth()) &&
 				(input.point.y <= lcddev->GetHeight()))
@@ -71,7 +71,7 @@ void VgDisplays::Exit()
 
 /// @brief Display register lcddev
 /// @param lcd 
-void VgDisplays::RegisterLcddev(Lcddev* lcd)
+void VgDisplays::RegisterLcddev(VgLcddev* lcd)
 {
 	lcddevs.Add(lcd);
 	if (isReady) lcd->Setup(&devices);
@@ -80,7 +80,7 @@ void VgDisplays::RegisterLcddev(Lcddev* lcd)
 
 /// @brief Display unregister lcddev
 /// @param lcd 
-void VgDisplays::UnregisterLcddev(Lcddev* lcd)
+void VgDisplays::UnregisterLcddev(VgLcddev* lcd)
 {
 	if (isReady) lcd->Exit();
 	lcddevs.Remove(lcd);

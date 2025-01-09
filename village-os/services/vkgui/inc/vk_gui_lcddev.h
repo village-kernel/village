@@ -12,7 +12,7 @@
 
 
 /// @brief VkDisplay
-class VkDisplay : public Lcddev
+class VkDisplay : public VgLcddev
 {
 private:
 	//Members
@@ -26,7 +26,7 @@ public:
 	int GetWidth();
 	int GetHeight();
 	void Point(int x, int y, int color);
-	void Flush(DrawArea area, void* pixels);
+	void Flush(VgDrawArea area, void* pixels);
 };
 
 #endif //!__VK_GUI_LCDDEV_H__

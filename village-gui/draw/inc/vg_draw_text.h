@@ -12,8 +12,8 @@
 #include "vg_math.h"
 
 
-/// @brief DrawText
-class DrawText
+/// @brief VgDrawText
+class VgDrawText
 {
 public:
 	//Alignment
@@ -28,7 +28,7 @@ private:
 	VgDevices* devices;
 
 	//Members
-	Math math;
+	VgMath math;
 
 	//Members
 	int fontSize;
@@ -42,8 +42,8 @@ private:
 	int GetFontMatrix(int index, int row);
 public:
 	//Methods
-	DrawText();
-	~DrawText();
+	VgDrawText();
+	~VgDrawText();
 
 	//Methods
 	void SetFontSize(int font);
@@ -52,8 +52,8 @@ public:
 
 	//Methods
 	void Initiate(VgDevices* devices);
-	void Execute(DrawArea layerArea, DrawArea drawArea, char  chr);
-	void Execute(DrawArea layerArea, DrawArea drawArea, char* str);
+	void Execute(VgDrawArea layerArea, VgDrawArea drawArea, char  chr);
+	void Execute(VgDrawArea layerArea, VgDrawArea drawArea, char* str);
 };
 
 #endif //!__VG_DRAW_TEXT_H__

@@ -12,19 +12,19 @@
 #include "vg_math.h"
 
 
-/// @brief DrawBuff
-class DrawBuff
+/// @brief VgDrawBuff
+class VgDrawBuff
 {
 private:
 	//Members
 	VgDevices* devices;
 
 	//Members
-	Math math;
+	VgMath math;
 public:
 	//Methods
 	void Initiate(VgDevices* devices);
-	void Execute(DrawArea layerArea, DrawArea drawArea, int* buff);
+	void Execute(VgDrawArea layerArea, VgDrawArea drawArea, int* buff);
 };
 
 #endif //!__VG_DRAW_BUFF_H__

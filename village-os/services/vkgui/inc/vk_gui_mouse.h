@@ -14,18 +14,18 @@
 
 
 /// @brief VkMouse
-class VkMouse : public Indev, public Class
+class VkMouse : public VgIndev, public Class
 {
 private:
 	//Members
 	VgDevices* devices;
 
 	//Members
-	Math math;
+	VgMath math;
 
 	//Members
-	IndevData data;
-	Window* cursor;
+	VgInputData data;
+	VgWindow* cursor;
 
 	//Methods
 	void KeyReceiver(Event::InputKey* input);
@@ -38,10 +38,10 @@ public:
 	void Exit();
 
 	//Mouse Methods
-	Window* Cursor();
+	VgWindow* Cursor();
 
 	//Data Methods
-	IndevData Read();
+	VgInputData Read();
 };
 
 #endif //!__VK_GUI_MOUSE_H__

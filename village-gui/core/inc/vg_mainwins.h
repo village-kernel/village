@@ -30,13 +30,13 @@ private:
 
 	//Members
 	VgDevices&       devices;
-	VgList<Window*>  windows;
-	Window*          defWindow;
-	Window*          actWindow;
-	Window*          curWindow;
-	Layer            layer;
-	IndevData        input;
-	IndevData        axis;
+	VgList<VgWindow*>  windows;
+	VgWindow*          defWindow;
+	VgWindow*          actWindow;
+	VgWindow*          curWindow;
+	VgLayer          layer;
+	VgInputData      input;
+	VgInputData      axis;
 private:
 	//Methods
 	void UpdataInput();
@@ -45,28 +45,28 @@ private:
 	void UpdateWindow();
 	bool IsActWindowResize(ResizeMethod& resizeMethod);
 	bool IsActWindowSelect();
-	Window* SelectActWindow();
-	ResizeMethod CheckResizeMethod(Point input, Point axis);
+	VgWindow* SelectActWindow();
+	ResizeMethod CheckResizeMethod(VgPoint input, VgPoint axis);
 	
 	//Common Methods
-	DrawAreas GetWindowUpperAreas(Window* window);
-	DrawAreas RedrawFloatWindowAreas(DrawAreas areas, Window* window);
-	DrawAreas RedrawOtherWindowAreas(DrawAreas areas, Window* window, Window::Place place);
-	void RedrawOtherWindowAreas(DrawAreas areas, Window* window);
-	void RedrawSelfWindowAreas(Window* window);
-	void RedrawWindowUpdateAreas(Window* window);
+	VgDrawAreas GetWindowUpperAreas(VgWindow* window);
+	VgDrawAreas RedrawFloatWindowAreas(VgDrawAreas areas, VgWindow* window);
+	VgDrawAreas RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window, VgWindow::Place place);
+	void RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window);
+	void RedrawSelfWindowAreas(VgWindow* window);
+	void RedrawWindowUpdateAreas(VgWindow* window);
 
 	//Resize Methods
-	DrawAreas GetResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod);
-	void RedrawResizeWindowOverlapAreas(Window* window, ResizeMethod resizeMethod);
-	void ResizeWindowExecute(Window* window, ResizeMethod resizeMethod);
-	void DestroyCloseWindow(Window* window, ResizeMethod resizeMethod);
+	VgDrawAreas GetResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod);
+	void RedrawResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod);
+	void ResizeWindowExecute(VgWindow* window, ResizeMethod resizeMethod);
+	void DestroyCloseWindow(VgWindow* window, ResizeMethod resizeMethod);
 
 	//Focus Methods
-	DrawAreas GetSelWindowOverlapAreas(Window* window);
-	void RedrawSelWindowOverlapAreas(Window* window);
-	void SwapActWindowListNode(Window* window);
-	void AlwaysFocusWindowExecute(Window* window);
+	VgDrawAreas GetSelWindowOverlapAreas(VgWindow* window);
+	void RedrawSelWindowOverlapAreas(VgWindow* window);
+	void SwapActWindowListNode(VgWindow* window);
+	void AlwaysFocusWindowExecute(VgWindow* window);
 public:
 	//Methods
 	VgMainWins(VgDevices& devices);
@@ -76,9 +76,9 @@ public:
 	void Exit();
 
 	//Methods
-	Window* Create();
-	bool Destroy(Window* window);
-	bool IsExist(Window* window);
+	VgWindow* Create();
+	bool Destroy(VgWindow* window);
+	bool IsExist(VgWindow* window);
 };
 
 #endif //!__VG_MAINWINS_H__

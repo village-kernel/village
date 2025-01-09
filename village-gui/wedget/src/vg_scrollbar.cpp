@@ -8,7 +8,7 @@
 
 
 /// @brief Constructor
-Scrollbar::Scrollbar()
+VgScrollbar::VgScrollbar()
 	:dir(_Vertical),
 	scrollbtn(NULL)
 {
@@ -17,14 +17,38 @@ Scrollbar::Scrollbar()
 
 
 /// @brief Destructor
-Scrollbar::~Scrollbar()
+VgScrollbar::~VgScrollbar()
 {
 }
 
 
 /// @brief 
 /// @param dir 
-void Scrollbar::SetDirection(Direction dir)
+void VgScrollbar::SetDirection(Direction dir)
 {
 	this->dir = dir;
+}
+
+
+/// @brief VgScrollbar initiate
+/// @param devices 
+void VgScrollbar::InitContent(VgDevices* devices)
+{
+
+}
+
+
+/// @brief VgScrollbar execute
+/// @param input 
+void VgScrollbar::ExecContent(VgInputData input)
+{
+
+}
+
+
+/// @brief VgScrollbar draw
+/// @param drawArea 
+void VgScrollbar::DrawContent(VgDrawArea drawArea)
+{
+
 }

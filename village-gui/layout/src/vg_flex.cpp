@@ -1,5 +1,5 @@
 //###########################################################################
-// Flex.cpp
+// VgFlex.cpp
 // Definitions of the functions that manage flex
 //
 // $Copyright: Copyright (C) village
@@ -8,12 +8,12 @@
 
 
 /// @brief Constructor
-Flex::Flex()
+VgFlex::VgFlex()
 {
 }
 
 
 /// @brief Destructor
-Flex::~Flex()
+VgFlex::~VgFlex()
 {
 }

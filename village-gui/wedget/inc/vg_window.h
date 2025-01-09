@@ -12,8 +12,8 @@
 #include "vg_navbar.h"
 
 
-/// @brief Window
-class Window : public Wedget
+/// @brief VgWindow
+class VgWindow : public VgWedget
 {
 public:
 	//Enumerations
@@ -37,7 +37,7 @@ private:
 	static const int resize_range = 5;
 
 	//Members
-	Navbar navbar;
+	VgNavbar navbar;
 
 	//Attribute members
 	bool focus;
@@ -45,14 +45,14 @@ private:
 	int resizeSide;
 
 	//Members
-	Math math;
+	VgMath math;
 public:
 	//Methods
-	Window();
-	~Window();
+	VgWindow();
+	~VgWindow();
 
 	//Wedget methods
-	Navbar* GetNavbar();
+	VgNavbar* GetNavbar();
 
 	//Area methods
 	bool IsInMoveArea(int x, int y);
@@ -78,10 +78,11 @@ public:
 
 	void SetPlace(Place place);
 	Place GetPlace();
-
+private:
 	//Methods
-	void Initiate(VgDevices* devices);
-	void Execute(IndevData input);
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_WINDOW_H__

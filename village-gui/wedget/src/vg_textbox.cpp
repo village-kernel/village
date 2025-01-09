@@ -8,7 +8,7 @@
 
 
 /// @brief Constructor
-TextBox::TextBox()
+VgTextBox::VgTextBox()
 	:text(NULL),
 	bText(NULL)
 {
@@ -17,51 +17,55 @@ TextBox::TextBox()
 
 
 /// @brief Destructor
-TextBox::~TextBox()
+VgTextBox::~VgTextBox()
 {
 }
 
 
-/// @brief TextBox binding text
+/// @brief VgTextBox binding text
 /// @param text 
-void TextBox::BindingText(IData<char*>* text)
+void VgTextBox::BindingText(IData<char*>* text)
 {
 	bText = text; if (bText) bText->Binding(this);
 }
 
 
-/// @brief TextBox set text
+/// @brief VgTextBox set text
 /// @param text 
-void TextBox::SetText(char* text)
+void VgTextBox::SetText(char* text)
 {
 	this->text = text; if (bText) bText->Set(text);
 }
 
 
-/// @brief TextBox get text
+/// @brief VgTextBox get text
 /// @return 
-char* TextBox::GetText()
+char* VgTextBox::GetText()
 {
 	return bText ? bText->Get() : text;
 }
 
 
-/// @brief TextBox initiate
+/// @brief VgTextBox initiate
 /// @param devices 
-void TextBox::Initiate(VgDevices* devices)
+void VgTextBox::InitContent(VgDevices* devices)
 {
-	Wedget::Initiate(devices);
-
 	drawText.Initiate(devices);
-	drawText.SetAlignment(DrawText::_AlignLeft);
+	drawText.SetAlignment(VgDrawText::_AlignLeft);
 }
 
 
-/// @brief TextBox redraw
-/// @param drawArea 
-void TextBox::Redraw(DrawArea drawArea)
+/// @brief VgTextBox execute
+/// @param input 
+void VgTextBox::ExecContent(VgInputData input)
 {
-	Wedget::Redraw(drawArea);
 
+}
+
+
+/// @brief VgTextBox draw
+/// @param drawArea 
+void VgTextBox::DrawContent(VgDrawArea drawArea)
+{
 	drawText.Execute(layerArea, drawArea, GetText());
 }

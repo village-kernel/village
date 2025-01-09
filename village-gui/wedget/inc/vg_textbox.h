@@ -12,8 +12,8 @@
 #include "vg_input_data.h"
 
 
-/// @brief TextBox
-class TextBox : public Wedget
+/// @brief VgTextBox
+class VgTextBox : public VgWedget
 {
 private:
 	//Memebers
@@ -21,20 +21,21 @@ private:
 	IData<char*>* bText;
 
 	//Members
-	DrawText      drawText;
+	VgDrawText      drawText;
 public:
 	//Methods
-	TextBox();
-	~TextBox();
+	VgTextBox();
+	~VgTextBox();
 
 	//Attribute Methods
 	void BindingText(IData<char*>* text);
 	void SetText(char* text);
 	char* GetText();
-
+private:
 	//Methods
-	void Initiate(VgDevices* devices);
-	void Redraw(DrawArea drawArea);
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_TEXT_BOX_H__

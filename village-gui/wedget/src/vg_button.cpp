@@ -9,7 +9,7 @@
 
 
 /// @brief Constructor
-Button::Button()
+VgButton::VgButton()
 	:text(NULL),
 	bText(NULL)
 {
@@ -18,74 +18,58 @@ Button::Button()
 
 
 /// @brief Destructor
-Button::~Button()
+VgButton::~VgButton()
 {
 }
 
 
-/// @brief Button binding text
+/// @brief VgButton binding text
 /// @param text 
-void Button::BindingText(IData<char*>* text)
+void VgButton::BindingText(IData<char*>* text)
 {
 	bText = text; if (bText) bText->Binding(this);
 }
 
 
-/// @brief Button set text
+/// @brief VgButton set text
 /// @param text 
-void Button::SetText(char* text)
+void VgButton::SetText(char* text)
 {
 	this->text = text; if (bText) bText->Set(text);
 }
 
 
-/// @brief Button get text
+/// @brief VgButton get text
 /// @return 
-char* Button::GetText()
+char* VgButton::GetText()
 {
 	return bText ? bText->Get() : text;
 }
 
 
-/// @brief Button initiate
+/// @brief VgButton initiate
 /// @param devices 
-void Button::Initiate(VgDevices* devices)
+void VgButton::InitContent(VgDevices* devices)
 {
-	Wedget::Initiate(devices);
-
 	drawText.Initiate(devices);
-	drawText.SetAlignment(DrawText::_AlignCenter);
+	drawText.SetAlignment(VgDrawText::_AlignCenter);
 }
 
 
-/// @brief Button execute
+/// @brief VgButton execute
 /// @param input 
-void Button::Execute(IndevData input)
+void VgButton::ExecContent(VgInputData input)
 {
-	static bool isPressed = false;
-
-	if (layer.IsCoordinateInArea(input.point.x, input.point.y, layerArea))
+	if (IsInLayerArea(input.point.x, input.point.y))
 	{
-		if (EventCode::_BtnLeft == input.key)
-		{
-			if (!isPressed && KeyState::_Pressed == input.state)
-			{
-				isPressed = true; if (NULL != cmd) cmd->Execute();
-			}
-			else if (KeyState::_Released == input.state)
-			{
-				isPressed = false;
-			}
-		}
+		ExecuteCommand(input);
 	}
 }
 
 
-/// @brief Label redraw
+/// @brief VgButton draw
 /// @param drawArea 
-void Button::Redraw(DrawArea drawArea)
+void VgButton::DrawContent(VgDrawArea drawArea)
 {
-	Wedget::Redraw(drawArea);
-
 	drawText.Execute(layerArea, drawArea, GetText());
 }

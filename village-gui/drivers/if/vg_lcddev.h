@@ -12,12 +12,12 @@
 #include "vg_draw_defs.h"
 
 
-/// @brief GraphicsDevices
+/// @brief VgDevices
 struct VgDevices;
 
 
-/// @brief Lcddev
-class Lcddev
+/// @brief VgLcddev
+class VgLcddev
 {
 public:
 	//Methods
@@ -28,7 +28,7 @@ public:
 	virtual int GetWidth() = 0;
 	virtual int GetHeight() = 0;
 	virtual void Point(int x, int y, int color) = 0;
-	virtual void Flush(DrawArea area, void* pixels) = 0;
+	virtual void Flush(VgDrawArea area, void* pixels) = 0;
 };
 
 #endif //!__VG_LCD_DEV_H__

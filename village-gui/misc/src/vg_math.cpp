@@ -11,7 +11,7 @@
 /// @param a 
 /// @param b 
 /// @return 
-int Math::Max(int a, int b)
+int VgMath::Max(int a, int b)
 {
 	return (a > b) ? a : b;
 }
@@ -21,7 +21,7 @@ int Math::Max(int a, int b)
 /// @param a 
 /// @param b 
 /// @return 
-int Math::Min(int a, int b)
+int VgMath::Min(int a, int b)
 {
 	return (a < b) ? a : b;
 }
@@ -32,7 +32,7 @@ int Math::Min(int a, int b)
 /// @param max 
 /// @param min 
 /// @return 
-int Math::Sat(int a, int min, int max)
+int VgMath::Sat(int a, int min, int max)
 {
 	if (a < min)
 		a = min;
@@ -48,7 +48,7 @@ int Math::Sat(int a, int min, int max)
 /// @param min 
 /// @param max 
 /// @return 
-bool Math::IsInRange(int a, int min, int max)
+bool VgMath::IsInRange(int a, int min, int max)
 {
 	return ((a >= min) && (a <= max));
 }

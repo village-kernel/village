@@ -11,7 +11,7 @@
 
 
 /// @brief VkTicks
-class VkTicks : public Ticks
+class VkTicks : public VgTicks
 {
 public:
 	//Methods

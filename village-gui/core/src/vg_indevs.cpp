@@ -68,7 +68,7 @@ void VgIndevs::Exit()
 
 /// @brief Input register indev
 /// @param indev 
-void VgIndevs::RegisterIndev(Indev* indev)
+void VgIndevs::RegisterIndev(VgIndev* indev)
 {
 	indevs.Add(indev);
 	if (isReady) indev->Setup(&devices);
@@ -77,7 +77,7 @@ void VgIndevs::RegisterIndev(Indev* indev)
 
 /// @brief Input unregister indev
 /// @param indev 
-void VgIndevs::UnregisterIndev(Indev* indev)
+void VgIndevs::UnregisterIndev(VgIndev* indev)
 {
 	if (isReady) indev->Exit();
 	indevs.Remove(indev);

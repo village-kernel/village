@@ -67,7 +67,7 @@ void VkDisplay::Point(int x, int y, int color)
 /// @brief Flush
 /// @param area 
 /// @param pixels 
-void VkDisplay::Flush(DrawArea area, void* pixels)
+void VkDisplay::Flush(VgDrawArea area, void* pixels)
 {
 	if (NULL != fbdev)
 	{

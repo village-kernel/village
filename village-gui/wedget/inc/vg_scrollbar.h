@@ -11,8 +11,8 @@
 #include "vg_button.h"
 
 
-/// @brief Scrollbar
-class Scrollbar : public Wedget
+/// @brief VgScrollbar
+class VgScrollbar : public VgWedget
 {
 public:
 	//Direction
@@ -24,13 +24,18 @@ public:
 private:
 	//Members
 	Direction dir;
-	Button* scrollbtn;
+	VgButton* scrollbtn;
 public:
 	//Methods
-	Scrollbar();
-	~Scrollbar();
+	VgScrollbar();
+	~VgScrollbar();
 
 	void SetDirection(Direction dir);
+private:
+	//Methods
+	void InitContent(VgDevices* devices);
+	void ExecContent(VgInputData input);
+	void DrawContent(VgDrawArea drawArea);
 };
 
 #endif //!__VG_SCROLL_BAR_H__
