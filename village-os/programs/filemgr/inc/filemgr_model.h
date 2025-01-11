@@ -1,22 +1,22 @@
 //###########################################################################
-// manager_model.h
-// Declarations of the manager view model
+// filemgr_model.h
+// Declarations of the filemgr view model
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __MANAGER_MODEL_H__
-#define __MANAGER_MODEL_H__
+#ifndef __FILEMGR_MODEL_H__
+#define __FILEMGR_MODEL_H__
 
 #include "vg_villageui.h"
 
 
-/// @brief MANAGERModel
-class ManagerModel : public Class
+/// @brief FILEMGRModel
+class FilemgrModel : public Class
 {
 public:
 	//Methods
-	ManagerModel();
-	~ManagerModel();
+	FilemgrModel();
+	~FilemgrModel();
 };
 
-#endif //!__MANAGER_MODEL_H__
+#endif //!__FILEMGR_MODEL_H__

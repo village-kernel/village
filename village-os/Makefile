@@ -10,7 +10,7 @@ include village-os/libraries/crt0/Makefile
 
 # programs
 include village-os/programs/desktop/Makefile
-include village-os/programs/manager/Makefile
+include village-os/programs/filemgr/Makefile
 include village-os/programs/monitor/Makefile
 include village-os/programs/settings/Makefile
 include village-os/programs/terminal/Makefile

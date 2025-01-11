@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of manager
+# The Makefile of filemgr
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -9,28 +9,28 @@ ifeq ($(CONFIG_MONITOR_APP), y)
 ######################################
 # programs
 ######################################
-apps-y                                += manager
+apps-y                                += filemgr
 
 
 ######################################
 # paths
 ######################################
-inc-manager-y                         += village-os/programs/manager/inc
-src-manager-y                         += village-os/programs/manager/src
+inc-filemgr-y                         += village-os/programs/filemgr/inc
+src-filemgr-y                         += village-os/programs/filemgr/src
 
 
 ######################################
 # objects
 ######################################
-objs-manager-y                        += manager_app.o
-objs-manager-y                        += manager_model.o
-objs-manager-y                        += manager_view.o
+objs-filemgr-y                        += filemgr_app.o
+objs-filemgr-y                        += filemgr_model.o
+objs-filemgr-y                        += filemgr_view.o
 
 
 ######################################
 # libraries
 ######################################
-libs-manager-y                        += vkgui utils vkc++ vkc
+libs-filemgr-y                        += vkgui utils vkc++ vkc
 
 endif
 
@@ -38,6 +38,6 @@ endif
 ######################################
 # settings
 ######################################
-ifeq ($(CONFIG_MONITOR_POWER_UP), y)
-manager-settings                      += power_up
+ifeq ($(CONFIG_FILEMGR_POWER_UP), y)
+filemgr-settings                      += power_up
 endif
