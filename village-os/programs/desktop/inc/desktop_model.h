@@ -25,11 +25,11 @@ public:
 	ICollection*  ShortcutItems;
 
 	//Command
-	ICommand*  ContextCmd;
-	ICommand*  ShortcutCmd;
 	ICommand*  StartBtnCmd;
-	ICommand*  StartMenuCmd;
-	ICommand*  ToolbarCmd;
+	ICommand*  ToolbarItemCmd;
+	ICommand*  ContextItemCmd;
+	ICommand*  ShortcutItemCmd;
+	ICommand*  StartMenuItemCmd;
 public:
 	//Methods
 	DesktopModel();
@@ -42,15 +42,13 @@ private:
 	void ExitToolbarItems();
 	void InitBindingCmd();
 	void ExitBindingCmd();
-	void OpenApplication(const char* name);
-	void ExitApplication(const char* name);
 private:
 	//Command Methods
-	void ContextClick(CollectionItem* item);
-	void ShortcutClick(CollectionItem* item);
 	void StartBtnClick();
-	void StartMenuClick(CollectionItem* item);
-	void ToolbarClick(CollectionItem* item);
+	void ToolbarItemClick(CollectionItem* item);
+	void ContextItemClick(CollectionItem* item);
+	void ShortcutItemClick(CollectionItem* item);
+	void StartMenuItemClick(CollectionItem* item);
 };
 
 #endif //!__DESKTOP_MODEL_H__

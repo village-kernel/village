@@ -85,52 +85,22 @@ void DesktopModel::ExitToolbarItems()
 /// @brief Init binding cmd
 void DesktopModel::InitBindingCmd()
 {
-	ContextCmd   = new RelayCommand(this, (Method)&DesktopModel::ContextClick);
-	ShortcutCmd  = new RelayCommand(this, (Method)&DesktopModel::ShortcutClick);
-	StartBtnCmd  = new RelayCommand(this, (Method)&DesktopModel::StartBtnClick);
-	StartMenuCmd = new RelayCommand(this, (Method)&DesktopModel::StartMenuClick);
-	ToolbarCmd   = new RelayCommand(this, (Method)&DesktopModel::ToolbarClick);
+	StartBtnCmd      = new RelayCommand(this, (Method)&DesktopModel::StartBtnClick);
+	ToolbarItemCmd   = new RelayCommand(this, (Method)&DesktopModel::ToolbarItemClick);
+	ContextItemCmd   = new RelayCommand(this, (Method)&DesktopModel::ContextItemClick);
+	ShortcutItemCmd  = new RelayCommand(this, (Method)&DesktopModel::ShortcutItemClick);
+	StartMenuItemCmd = new RelayCommand(this, (Method)&DesktopModel::StartMenuItemClick);
 }
 
 
 /// @brief Exit binding cmd
 void DesktopModel::ExitBindingCmd()
 {
-	delete ContextCmd;
-	delete ShortcutCmd;
 	delete StartBtnCmd;
-	delete StartMenuCmd;
-	delete ToolbarCmd;
-}
-
-
-/// @brief Open application
-/// @param name 
-void DesktopModel::OpenApplication(const char* name)
-{
-	kernel->process.Run(Process::_Background, name);
-}
-
-
-/// @brief Exit application
-/// @param name 
-void DesktopModel::ExitApplication(const char* name)
-{
-	kernel->process.Kill(name);
-}
-
-
-/// @brief Context click
-void DesktopModel::ContextClick(CollectionItem* item)
-{
-
-}
-
-
-/// @brief Shortcut click
-void DesktopModel::ShortcutClick(CollectionItem* item)
-{
-	
+	delete ToolbarItemCmd;
+	delete ContextItemCmd;
+	delete ShortcutItemCmd;
+	delete StartMenuItemCmd;
 }
 
 
@@ -141,15 +111,29 @@ void DesktopModel::StartBtnClick()
 }
 
 
-/// @brief Start menu click
-void DesktopModel::StartMenuClick(CollectionItem* item)
+/// @brief Toolbar item click
+void DesktopModel::ToolbarItemClick(CollectionItem* item)
+{
+	kernel->process.Run(Process::_Background, (char*)item->data);
+}
+
+
+/// @brief Context menu item click
+void DesktopModel::ContextItemClick(CollectionItem* item)
 {
 
 }
 
 
-/// @brief Toolbar click
-void DesktopModel::ToolbarClick(CollectionItem* item)
+/// @brief Shortcut item click
+void DesktopModel::ShortcutItemClick(CollectionItem* item)
 {
-	OpenApplication((char*)item->data);
+	
+}
+
+
+/// @brief Start menu item click
+void DesktopModel::StartMenuItemClick(CollectionItem* item)
+{
+
 }
