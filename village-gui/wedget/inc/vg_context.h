@@ -8,7 +8,6 @@
 #define __VG_CONTEXT_H__
 
 #include "vg_wedget.h"
-#include "vg_collection.h"
 
 
 /// @brief VgContext
@@ -26,7 +25,7 @@ public:
 	~VgContext();
 
 	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
+	void BindingItems(ICollection* items);
 
 	//Area methods
 	VgDrawAreas GetUpdateAreas();

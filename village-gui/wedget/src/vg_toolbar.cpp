@@ -10,9 +10,7 @@
 /// @brief Constructor
 VgToolbar::VgToolbar()
 	:items(NULL),
-	bItems(NULL),
-	index(0),
-	bIndex(NULL)
+	bItems(NULL)
 {
 	SetTitle((char*)"toolbar");
 }
@@ -26,7 +24,7 @@ VgToolbar::~VgToolbar()
 
 /// @brief VgToolbar binding items
 /// @param items 
-void VgToolbar::BindingItems(IData<Collection*>* items)
+void VgToolbar::BindingItems(ICollection* items)
 {
 	bItems = items; if (bItems) bItems->Binding(this);
 }
@@ -34,41 +32,43 @@ void VgToolbar::BindingItems(IData<Collection*>* items)
 
 /// @brief VgToolbar set items
 /// @param items 
-void VgToolbar::SetItems(Collection* items)
+void VgToolbar::SetItems(ICollection* items)
 {
-	this->items = items; if (bItems) bItems->Set(items);
+	this->items = items;
 }
 
 
 /// @brief VgToolbar get items
 /// @return 
-Collection* VgToolbar::GetItems()
+ICollection* VgToolbar::GetItems()
 {
-	return bItems ? bItems->Get() : items;
+	return bItems ? bItems : items;
 }
 
 
-/// @brief VgToolbar binding item index
-/// @param index 
-void VgToolbar::BindingItemIndex(IData<int>* index)
+/// @brief VgToolbar append item
+/// @param item 
+void VgToolbar::AppendItem(CollectionItem* item)
 {
-	bIndex = index; if (bIndex) bIndex->Binding(this);
+	ICollection* items = GetItems();
+	if (items) items->Append(item);
 }
 
 
-/// @brief VgToolbar set item index
-/// @param index 
-void VgToolbar::SetItemIndex(int index)
+/// @brief VgToolbar remove item
+/// @param item 
+void VgToolbar::RemoveItem(CollectionItem* item)
 {
-	this->index = index; if (bIndex) bIndex->Set(index);
+	ICollection* items = GetItems();
+	if (items) items->Remove(item);
 }
 
 
-/// @brief VgToolbar get item index
-/// @return 
-int VgToolbar::GetItemIndex()
+/// @brief VgToolbar update request
+/// @param request 
+void VgToolbar::UpdateRequest(bool request)
 {
-	return bIndex ? bIndex->Get() : index;
+	VgWedget::UpdateRequest(request);
 }
 
 
@@ -76,7 +76,28 @@ int VgToolbar::GetItemIndex()
 /// @param devices 
 void VgToolbar::InitContent(VgDevices* devices)
 {
+	ICollection* items = GetItems();
 
+	if (items)
+	{
+		int xspan = 0;
+
+		for (items->Begin(); !items->IsEnd(); items->Next())
+		{
+			CollectionItem* item = items->Item();
+
+			VgButton* button = new VgButton();
+			button->AxisMove(xspan + item_axisx, item_axisy);
+			button->SetSize(item_width, item_height);
+			button->SetBgColor(VgDrawDefs::_White);
+			button->SetText((char*)item->name);
+			button->SetArgs((void*)item);
+			button->BindingCommand(cmd);
+			AddWedget(button);
+
+			xspan += item_span;
+		}
+	}
 }
 
 
@@ -84,10 +105,7 @@ void VgToolbar::InitContent(VgDevices* devices)
 /// @param input 
 void VgToolbar::ExecContent(VgInputData input)
 {
-	if (IsInLayerArea(input.point.x, input.point.y))
-	{
-		ExecuteCommand(input);
-	}
+
 }
 
 

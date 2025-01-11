@@ -41,7 +41,7 @@ objs-vkgui-y                            += vg_displays.o
 objs-vkgui-y                            += vg_mainwins.o
 objs-vkgui-y                            += vg_villageui.o
 
-objs-vkgui-y                            += vg_relay_cmd.o
+objs-vkgui-y                            += vg_cmd_binding.o
 
 objs-vkgui-y                            += vg_layer.o
 objs-vkgui-y                            += vg_math.o

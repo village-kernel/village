@@ -22,7 +22,7 @@ VgMenu::~VgMenu()
 
 /// @brief Binding Items
 /// @param items 
-void VgMenu::BindingItems(IData<Collection*>* items)
+void VgMenu::BindingItems(ICollection* items)
 {
 
 }

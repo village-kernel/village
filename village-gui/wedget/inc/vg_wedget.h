@@ -10,8 +10,9 @@
 #include "vg_list.h"
 #include "vg_layer.h"
 #include "vg_devices.h"
-#include "vg_input_cmd.h"
-#include "vg_input_data.h"
+#include "vg_cmd_interface.h"
+#include "vg_data_interface.h"
+#include "vg_item_interface.h"
 #include "vg_draw_rect.h"
 
 

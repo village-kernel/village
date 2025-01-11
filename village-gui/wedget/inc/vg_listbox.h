@@ -8,7 +8,6 @@
 #define __VG_LIST_BOX_H__
 
 #include "vg_wedget.h"
-#include "vg_collection.h"
 
 
 /// @brief VgListBox
@@ -20,7 +19,7 @@ public:
 	~VgListBox();
 
 	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
+	void BindingItems(ICollection* items);
 private:
 	//Methods
 	void InitContent(VgDevices* devices);

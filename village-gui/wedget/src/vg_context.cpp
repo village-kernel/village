@@ -23,7 +23,7 @@ VgContext::~VgContext()
 
 /// @brief Binding Items
 /// @param items 
-void VgContext::BindingItems(IData<Collection*>* items)
+void VgContext::BindingItems(ICollection* items)
 {
 
 }

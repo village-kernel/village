@@ -1,19 +1,19 @@
 //###########################################################################
-// vg_relay_data.h
-// Declarations of the functions that manage relay data
+// vg_data_binding.h
+// Declarations of the functions that manage data binding
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_RELAY_DATA_H__
-#define __VG_RELAY_DATA_H__
+#ifndef __VG_DATA_BINDING_H__
+#define __VG_DATA_BINDING_H__
 
-#include "vg_input_data.h"
+#include "vg_data_interface.h"
 #include "vg_wedget.h"
 
 
-/// @brief IData
+/// @brief BindingData
 template<typename Object>
-class RelayData : public IData<Object>
+class BindingData : public IData<Object>
 {
 private:
 	//Members
@@ -22,8 +22,9 @@ private:
 public:
 	/// @brief Constructor
 	/// @param object 
-	RelayData(Object object)
-		:object(object)
+	BindingData(Object object)
+		:object(object),
+		wedget(NULL)
 	{
 	}
 
@@ -50,4 +51,4 @@ public:
 	}
 };
 
-#endif //!__VG_RELAY_DATA_H__
+#endif //!__VG_DATA_BINDING_H__

@@ -9,31 +9,36 @@
 
 #include "vg_wedget.h"
 #include "vg_button.h"
-#include "vg_collection.h"
 
 
 /// @brief VgToolbar
 class VgToolbar : public VgWedget
 {
 private:
+	//Static constants members
+	static const int item_axisx = 5;
+	static const int item_axisy = 5;
+	static const int item_span = 35;
+	static const int item_width = 30;
+	static const int item_height = 30;
+
 	//Members
-	Collection*         items;
-	IData<Collection*>* bItems;
-	int                 index;
-	IData<int>*         bIndex;
+	ICollection*  items;
+	ICollection*  bItems;
 public:
 	//Methods
 	VgToolbar();
 	~VgToolbar();
 
-	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
-	void SetItems(Collection* items);
-	Collection* GetItems();
+	//Attritube Methods
+	void BindingItems(ICollection* items);
+	void SetItems(ICollection* items);
+	ICollection* GetItems();
 
-	void BindingItemIndex(IData<int>* index);
-	void SetItemIndex(int index);
-	int  GetItemIndex();
+	void AppendItem(CollectionItem* item);
+	void RemoveItem(CollectionItem* item);
+
+	void UpdateRequest(bool request);
 private:
 	//Methods
 	void InitContent(VgDevices* devices);

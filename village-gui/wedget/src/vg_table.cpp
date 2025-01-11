@@ -26,7 +26,7 @@ VgTable::~VgTable()
 
 /// @brief VgTable binding items
 /// @param items 
-void VgTable::BindingItems(IData<Collection*>* items)
+void VgTable::BindingItems(ICollection* items)
 {
 	bItems = items; if (bItems) bItems->Binding(this);
 }
@@ -34,17 +34,17 @@ void VgTable::BindingItems(IData<Collection*>* items)
 
 /// @brief VgTable set items
 /// @param items 
-void VgTable::SetItems(Collection* items)
+void VgTable::SetItems(ICollection* items)
 {
-	this->items = items; if (bItems) bItems->Set(items);
+	this->items = items;
 }
 
 
 /// @brief VgTable get items
 /// @return 
-Collection* VgTable::GetItems()
+ICollection* VgTable::GetItems()
 {
-	return bItems ? bItems->Get() : items;
+	return bItems ? bItems: items;
 }
 
 

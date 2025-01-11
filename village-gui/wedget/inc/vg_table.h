@@ -9,7 +9,6 @@
 
 #include "vg_wedget.h"
 #include "vg_button.h"
-#include "vg_collection.h"
 
 
 /// @brief VgTable
@@ -17,8 +16,8 @@ class VgTable : public VgWedget
 {
 private:
 	//Members
-	Collection*         items;
-	IData<Collection*>* bItems;
+	ICollection*        items;
+	ICollection*        bItems;
 	int                 index;
 	IData<int>*         bIndex;
 public:
@@ -27,9 +26,9 @@ public:
 	~VgTable();
 
 	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
-	void SetItems(Collection* items);
-	Collection* GetItems();
+	void BindingItems(ICollection* items);
+	void SetItems(ICollection* items);
+	ICollection* GetItems();
 
 	void BindingItemIndex(IData<int>* index);
 	void SetItemIndex(int index);

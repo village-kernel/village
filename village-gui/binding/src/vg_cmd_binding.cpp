@@ -1,10 +1,10 @@
 //###########################################################################
-// vg_relay_cmd.cpp
-// Definitions of the functions that manage relay command
+// vg_cmd_binding.cpp
+// Definitions of the functions that manage command binding
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vg_relay_cmd.h"
+#include "vg_cmd_binding.h"
 
 
 /// @brief Constructor

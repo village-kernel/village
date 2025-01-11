@@ -17,10 +17,12 @@ class VgButton : public VgWedget
 private:
 	//Members
 	char*         text;
+	void*         args;
 	IData<char*>* bText;
+	IData<void*>* bArgs;
 
 	//Members
-	VgDrawText      drawText;
+	VgDrawText    drawText;
 public:
 	//Methods
 	VgButton();
@@ -30,6 +32,10 @@ public:
 	void BindingText(IData<char*>* text);
 	void SetText(char* text);
 	char* GetText();
+
+	void BindingArgs(IData<void*>* args);
+	void SetArgs(void* args);
+	void* GetArgs();
 private:
 	//Methods
 	void InitContent(VgDevices* devices);

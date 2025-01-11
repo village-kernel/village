@@ -1,11 +1,11 @@
 //###########################################################################
-// vg_input_cmd.h
-// Declarations of the functions that manage input command
+// vg_cmd_interface.h
+// Declarations of the functions that manage command interface
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_INPUT_COMMAND_H__
-#define __VG_INPUT_COMMAND_H__
+#ifndef __VG_COMMAND_INTERFACE_H__
+#define __VG_COMMAND_INTERFACE_H__
 
 #include "stdint.h"
 #include "vk_class.h"
@@ -21,4 +21,4 @@ public:
 	virtual void Execute(void* args = NULL) = 0;
 };
 
-#endif //!__VG_INPUT_COMMAND_H__
+#endif //!__VG_COMMAND_INTERFACE_H__

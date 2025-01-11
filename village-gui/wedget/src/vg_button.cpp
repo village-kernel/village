@@ -11,7 +11,9 @@
 /// @brief Constructor
 VgButton::VgButton()
 	:text(NULL),
-	bText(NULL)
+	args(NULL),
+	bText(NULL),
+	bArgs(NULL)
 {
 	SetTitle((char*)"button");
 }
@@ -47,6 +49,30 @@ char* VgButton::GetText()
 }
 
 
+/// @brief VgButton binding args
+/// @param args 
+void VgButton::BindingArgs(IData<void*>* args)
+{
+	bArgs = args; if (bArgs) bArgs->Binding(this);
+}
+
+
+/// @brief VgButton set args
+/// @param args 
+void VgButton::SetArgs(void* args)
+{
+	this->args = args; if (bArgs) bArgs->Set(args);
+}
+
+
+/// @brief VgButton get args
+/// @return 
+void* VgButton::GetArgs()
+{
+	return bArgs ? bArgs->Get() : args;
+}
+
+
 /// @brief VgButton initiate
 /// @param devices 
 void VgButton::InitContent(VgDevices* devices)
@@ -62,7 +88,7 @@ void VgButton::ExecContent(VgInputData input)
 {
 	if (IsInLayerArea(input.point.x, input.point.y))
 	{
-		ExecuteCommand(input);
+		ExecuteCommand(input, GetArgs());
 	}
 }
 

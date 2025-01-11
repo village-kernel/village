@@ -36,10 +36,12 @@
 #include "vg_window.h"
 
 /// @brief include cmd headers
-#include "vg_input_cmd.h"
-#include "vg_relay_cmd.h"
-#include "vg_input_data.h"
-#include "vg_relay_data.h"
+#include "vg_cmd_interface.h"
+#include "vg_cmd_binding.h"
+#include "vg_data_interface.h"
+#include "vg_data_binding.h"
+#include "vg_item_interface.h"
+#include "vg_item_binding.h"
 
 /// @brief include grahics headers
 #include "vg_devices.h"

@@ -1,13 +1,13 @@
 //###########################################################################
-// vg_relay_cmd.h
-// Declarations of the functions that manage relay command
+// vg_cmd_binding.h
+// Declarations of the functions that manage command binding
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_RELAY_COMMAND_H__
-#define __VG_RELAY_COMMAND_H__
+#ifndef __VG_COMMAND_BINDING_H__
+#define __VG_COMMAND_BINDING_H__
 
-#include "vg_input_cmd.h"
+#include "vg_cmd_interface.h"
 
 
 /// @brief RelayCommand
@@ -23,4 +23,4 @@ public:
 	void Execute(void* args = NULL);
 };
 
-#endif //!__VG_RELAY_COMMAND_H__
+#endif //!__VG_COMMAND_BINDING_H__

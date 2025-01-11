@@ -9,7 +9,6 @@
 
 #include "vg_wedget.h"
 #include "vg_draw_text.h"
-#include "vg_input_data.h"
 
 
 /// @brief VgTextBox
@@ -21,7 +20,7 @@ private:
 	IData<char*>* bText;
 
 	//Members
-	VgDrawText      drawText;
+	VgDrawText    drawText;
 public:
 	//Methods
 	VgTextBox();

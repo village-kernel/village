@@ -8,7 +8,6 @@
 #define __VG_MENU_H__
 
 #include "vg_wedget.h"
-#include "vg_collection.h"
 
 
 /// @brief VgMenu
@@ -20,7 +19,7 @@ public:
 	~VgMenu();
 
 	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
+	void BindingItems(ICollection* items);
 private:
 	//Methods
 	void InitContent(VgDevices* devices);
