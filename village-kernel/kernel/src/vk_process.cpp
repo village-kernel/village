@@ -191,6 +191,15 @@ bool ConcreteProcess::Kill(int pid)
 }
 
 
+/// @brief Process is exist
+/// @param path 
+/// @return 
+bool ConcreteProcess::IsExist(const char* path)
+{
+	return (NULL != datum.GetItem(path));
+}
+
+
 /// @brief GetExecutors
 /// @return 
 VkList<ConcreteProcess::Data*> ConcreteProcess::GetData()
