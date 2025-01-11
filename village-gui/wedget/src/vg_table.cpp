@@ -9,10 +9,6 @@
 
 /// @brief Constructor
 VgTable::VgTable()
-	:items(NULL),
-	bItems(NULL),
-	index(0),
-	bIndex(NULL)
 {
 	SetTitle((char*)"table");
 }
@@ -21,54 +17,6 @@ VgTable::VgTable()
 /// @brief Destructor
 VgTable::~VgTable()
 {
-}
-
-
-/// @brief VgTable binding items
-/// @param items 
-void VgTable::BindingItems(ICollection* items)
-{
-	bItems = items; if (bItems) bItems->Binding(this);
-}
-
-
-/// @brief VgTable set items
-/// @param items 
-void VgTable::SetItems(ICollection* items)
-{
-	this->items = items;
-}
-
-
-/// @brief VgTable get items
-/// @return 
-ICollection* VgTable::GetItems()
-{
-	return bItems ? bItems: items;
-}
-
-
-/// @brief VgTable binding item index
-/// @param index 
-void VgTable::BindingItemIndex(IData<int>* index)
-{
-	bIndex = index; if (bIndex) bIndex->Binding(this);
-}
-
-
-/// @brief VgTable set item index
-/// @param index 
-void VgTable::SetItemIndex(int index)
-{
-	this->index = index; if (bIndex) bIndex->Set(index);
-}
-
-
-/// @brief VgTable get item index
-/// @return 
-int VgTable::GetItemIndex()
-{
-	return bIndex ? bIndex->Get() : index;
 }
 
 

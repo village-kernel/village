@@ -7,11 +7,11 @@
 #ifndef __VG_LIST_BOX_H__
 #define __VG_LIST_BOX_H__
 
-#include "vg_wedget.h"
+#include "vg_menu.h"
 
 
 /// @brief VgListBox
-class VgListBox : public VgWedget
+class VgListBox : public VgMenu
 {
 public:
 	//Methods

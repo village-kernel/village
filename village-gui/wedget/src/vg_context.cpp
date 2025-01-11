@@ -21,14 +21,6 @@ VgContext::~VgContext()
 }
 
 
-/// @brief Binding Items
-/// @param items 
-void VgContext::BindingItems(ICollection* items)
-{
-
-}
-
-
 /// @brief Get update areas
 VgDrawAreas VgContext::GetUpdateAreas()
 {

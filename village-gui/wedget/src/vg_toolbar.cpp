@@ -5,12 +5,11 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vg_toolbar.h"
+#include "vg_button.h"
 
 
 /// @brief Constructor
 VgToolbar::VgToolbar()
-	:items(NULL),
-	bItems(NULL)
 {
 	SetTitle((char*)"toolbar");
 }
@@ -19,48 +18,6 @@ VgToolbar::VgToolbar()
 /// @brief Destructor
 VgToolbar::~VgToolbar()
 {
-}
-
-
-/// @brief VgToolbar binding items
-/// @param items 
-void VgToolbar::BindingItems(ICollection* items)
-{
-	bItems = items; if (bItems) bItems->Binding(this);
-}
-
-
-/// @brief VgToolbar set items
-/// @param items 
-void VgToolbar::SetItems(ICollection* items)
-{
-	this->items = items;
-}
-
-
-/// @brief VgToolbar get items
-/// @return 
-ICollection* VgToolbar::GetItems()
-{
-	return bItems ? bItems : items;
-}
-
-
-/// @brief VgToolbar append item
-/// @param item 
-void VgToolbar::AppendItem(CollectionItem* item)
-{
-	ICollection* items = GetItems();
-	if (items) items->Append(item);
-}
-
-
-/// @brief VgToolbar remove item
-/// @param item 
-void VgToolbar::RemoveItem(CollectionItem* item)
-{
-	ICollection* items = GetItems();
-	if (items) items->Remove(item);
 }
 
 
@@ -92,7 +49,7 @@ void VgToolbar::InitContent(VgDevices* devices)
 			button->SetBgColor(VgDrawDefs::_White);
 			button->SetText((char*)item->name);
 			button->SetArgs((void*)item);
-			button->BindingCommand(cmd);
+			button->BindingCommand(itemCmd);
 			AddWedget(button);
 
 			xspan += item_span;
