@@ -10,7 +10,7 @@
 /// @brief Constructor
 TerminalModel::TerminalModel()
 {
-	ConsoleText = new RelayData<char*>((char*)"shabi");
+	ConsoleText = new BindingData<char*>((char*)"shabi");
 }
 
 

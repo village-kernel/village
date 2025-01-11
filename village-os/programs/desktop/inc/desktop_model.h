@@ -19,10 +19,10 @@ public:
 	IData<bool>*  StartMenuHidden;
 
 	//Collection
-	IData<Collection*>*  StartMenuItems;
-	IData<Collection*>*  ToolbarItems;
-	IData<Collection*>*  ContextItems;
-	IData<Collection*>*  ShortcutItems;
+	ICollection*  StartMenuItems;
+	ICollection*  ToolbarItems;
+	ICollection*  ContextItems;
+	ICollection*  ShortcutItems;
 
 	//Command
 	ICommand*  ContextCmd;
@@ -35,14 +35,22 @@ public:
 	DesktopModel();
 	~DesktopModel();
 private:
-	//Command Methods
+	//Methods
+	void InitBindingData();
+	void ExitBindingData();
+	void InitToolbarItems();
+	void ExitToolbarItems();
+	void InitBindingCmd();
+	void ExitBindingCmd();
 	void OpenApplication(const char* name);
 	void ExitApplication(const char* name);
-	void ContextClick(const char* item);
-	void ShortcutClick(const char* item);
+private:
+	//Command Methods
+	void ContextClick(CollectionItem* item);
+	void ShortcutClick(CollectionItem* item);
 	void StartBtnClick();
-	void StartMenuClick(const char* item);
-	void ToolbarClick(const char* item);
+	void StartMenuClick(CollectionItem* item);
+	void ToolbarClick(CollectionItem* item);
 };
 
 #endif //!__DESKTOP_MODEL_H__

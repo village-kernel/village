@@ -12,10 +12,79 @@
 DesktopModel::DesktopModel()
 {
 	//Data
-	StartBtnText      = new RelayData<char*>((char*)"Start");
-	StartMenuHidden   = new RelayData<bool>(true);
+	InitBindingData();
+
+	//Collection
+	InitToolbarItems();
 
 	//Command
+	InitBindingCmd();
+}
+
+
+/// @brief Destructor
+DesktopModel::~DesktopModel()
+{
+	//Data
+	ExitBindingData();
+
+	//Collection
+	ExitToolbarItems();
+
+	//Command
+	ExitBindingCmd();
+}
+
+
+/// @brief Init binding data
+void DesktopModel::InitBindingData()
+{
+	StartBtnText    = new BindingData<char*>((char*)"Start");
+	StartMenuHidden = new BindingData<bool>(true);
+}
+
+
+/// @brief Exit binding data
+void DesktopModel::ExitBindingData()
+{
+	delete StartBtnText;
+	delete StartMenuHidden;
+}
+
+
+/// @brief toolbarItems
+CollectionItem toolbarItems[] = {
+	{ (char*)">_", (void*)"/programs/terminal.exec" },
+	{ (char*)"M",  (void*)"/programs/monitor.exec"  },
+	{ (char*)"F",  (void*)"/programs/filemgr.exec"  },
+	{ (char*)"S",  (void*)"/programs/settings.exec" },
+};
+
+
+/// @brief Init toolbar items
+void DesktopModel::InitToolbarItems()
+{
+	ToolbarItems = new BindingCollection();
+
+	int toolbarItemSize = sizeof(toolbarItems) / sizeof(toolbarItems[0]);
+
+	for (int i = 0; i < toolbarItemSize; i++)
+	{
+		ToolbarItems->Append(&toolbarItems[i]);
+	}
+}
+
+
+/// @brief Exit toolbar items
+void DesktopModel::ExitToolbarItems()
+{
+	delete ToolbarItems;
+}
+
+
+/// @brief Init binding cmd
+void DesktopModel::InitBindingCmd()
+{
 	ContextCmd   = new RelayCommand(this, (Method)&DesktopModel::ContextClick);
 	ShortcutCmd  = new RelayCommand(this, (Method)&DesktopModel::ShortcutClick);
 	StartBtnCmd  = new RelayCommand(this, (Method)&DesktopModel::StartBtnClick);
@@ -24,11 +93,9 @@ DesktopModel::DesktopModel()
 }
 
 
-/// @brief Destructor
-DesktopModel::~DesktopModel()
+/// @brief Exit binding cmd
+void DesktopModel::ExitBindingCmd()
 {
-	delete StartBtnText;
-	delete StartMenuHidden;
 	delete ContextCmd;
 	delete ShortcutCmd;
 	delete StartBtnCmd;
@@ -54,16 +121,16 @@ void DesktopModel::ExitApplication(const char* name)
 
 
 /// @brief Context click
-void DesktopModel::ContextClick(const char* item)
+void DesktopModel::ContextClick(CollectionItem* item)
 {
 
 }
 
 
 /// @brief Shortcut click
-void DesktopModel::ShortcutClick(const char* item)
+void DesktopModel::ShortcutClick(CollectionItem* item)
 {
-	//kernel->debug.Info(item);
+	
 }
 
 
@@ -75,14 +142,14 @@ void DesktopModel::StartBtnClick()
 
 
 /// @brief Start menu click
-void DesktopModel::StartMenuClick(const char* item)
+void DesktopModel::StartMenuClick(CollectionItem* item)
 {
 
 }
 
 
 /// @brief Toolbar click
-void DesktopModel::ToolbarClick(const char* item)
+void DesktopModel::ToolbarClick(CollectionItem* item)
 {
-	//kernel->debug.Info(item);
+	OpenApplication((char*)item->data);
 }
