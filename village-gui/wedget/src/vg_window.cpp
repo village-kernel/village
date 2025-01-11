@@ -142,6 +142,16 @@ void VgWindow::Adjust(int axisx, int axisy)
 }
 
 
+/// @brief VgWindow show on center
+void VgWindow::ShowOnCenter()
+{
+	int x = (devices->lcddev->GetWidth() - GetWidth()) >> 1;
+	int y = (devices->lcddev->GetHeight() - GetHeight()) >> 1;
+	if (navbar.IsEnable()) y -= navbar_height;
+	MoveTo(x, y);
+}
+
+
 /// @brief VgWindow maximize
 void VgWindow::Maximize()
 {
