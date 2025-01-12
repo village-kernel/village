@@ -33,6 +33,7 @@ void VkMouse::Setup(VgDevices* devices)
 
 	//Create an cursor
 	cursor = new VgWindow();
+	cursor->AxisMove(-4, -4);
 	cursor->SetSize(8, 8);
 	cursor->SetBgColor(VgDrawDefs::_Black);
 	cursor->SetHiddenNavbar(true);
