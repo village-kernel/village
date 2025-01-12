@@ -47,20 +47,23 @@ private:
 	bool IsActWindowSelect();
 	VgWindow* SelectActWindow();
 	ResizeMethod CheckResizeMethod(VgPoint input, VgPoint axis);
-	
+
 	//Common Methods
 	VgDrawAreas GetWindowUpperAreas(VgWindow* window);
 	VgDrawAreas RedrawFloatWindowAreas(VgDrawAreas areas, VgWindow* window);
 	VgDrawAreas RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window, VgWindow::Place place);
-	void RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window);
-	void RedrawSelfWindowAreas(VgWindow* window);
-	void RedrawWindowUpdateAreas(VgWindow* window);
+	void RedrawOtherWindowAreas(VgDrawAreas overlaps, VgWindow* window);
+	void RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window);
 
 	//Resize Methods
 	VgDrawAreas GetResizeOtherWindowAreas(VgWindow* window, ResizeMethod resizeMethod);
 	void RedrawResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod);
 	void ResizeWindowExecute(VgWindow* window, ResizeMethod resizeMethod);
 	void DestroyCloseWindow(VgWindow* window, ResizeMethod resizeMethod);
+
+	//Update Methods
+	VgDrawAreas GetOtherWindowUpdateAreas(VgWindow* window);
+	void RedrawWindowUpdateOverlapAreas(VgWindow* window);
 
 	//Focus Methods
 	VgDrawAreas GetSelWindowOverlapAreas(VgWindow* window);

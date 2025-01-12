@@ -171,7 +171,7 @@ void VgMainWins::UpdateWindow()
 		
 		if (item->HasUpdateRequest())
 		{
-			RedrawWindowUpdateAreas(item);
+			RedrawWindowUpdateOverlapAreas(item);
 			item->ClearUpdateRequest();
 		}
 	}
@@ -369,28 +369,28 @@ VgDrawAreas VgMainWins::RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* wind
 
 /// @brief Redraw other window overlap areas
 /// @param window 
-void VgMainWins::RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window)
+void VgMainWins::RedrawOtherWindowAreas(VgDrawAreas overlaps, VgWindow* window)
 {
 	//Cut cursor area from redraw areas
-	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
+	overlaps = layer.CutAreaFromAreas(overlaps, curWindow->GetLayerArea());
 
 	//Redraw float windows
-	areas = RedrawFloatWindowAreas(areas, window);
+	overlaps = RedrawFloatWindowAreas(overlaps, window);
 
 	//Redraw top windows
-	areas = RedrawOtherWindowAreas(areas, window, VgWindow::_Top);
+	overlaps = RedrawOtherWindowAreas(overlaps, window, VgWindow::_Top);
 
 	//Redraw middle windows
-	areas = RedrawOtherWindowAreas(areas, window, VgWindow::_Middle);
+	overlaps = RedrawOtherWindowAreas(overlaps, window, VgWindow::_Middle);
 
 	//Redraw bottom windows
-	RedrawOtherWindowAreas(areas, window, VgWindow::_Bottom);
+	RedrawOtherWindowAreas(overlaps, window, VgWindow::_Bottom);
 }
 
 
 /// @brief Redraw window self areas
 /// @param window 
-void VgMainWins::RedrawSelfWindowAreas(VgWindow* window)
+void VgMainWins::RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window)
 {
 	//Return when the window area invalid
 	if (!window->IsLayerAreaValid()) return;
@@ -398,32 +398,8 @@ void VgMainWins::RedrawSelfWindowAreas(VgWindow* window)
 	//Get upper areas
 	VgDrawAreas uppers = GetWindowUpperAreas(window);
 
-	//Get overlap areas
-	VgDrawAreas overlaps; overlaps.Add(window->GetLayerArea());
-
 	//Calc redraw areas
 	VgDrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);
-
-	//VgWindow redraw
-	window->Redraw(redraws);
-}
-
-
-/// @brief Redraw window update areas
-/// @param window 
-void VgMainWins::RedrawWindowUpdateAreas(VgWindow* window)
-{
-	//Get upper areas
-	VgDrawAreas uppers = GetWindowUpperAreas(window);
-
-	//Get overlap areas
-	VgDrawAreas overlaps = window->GetUpdateAreas();
-
-	//Calc redraw areas
-	VgDrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);
-
-	//Redraw other window areas
-	RedrawOtherWindowAreas(overlaps, window);
 
 	//VgWindow redraw
 	window->Redraw(redraws);
@@ -468,14 +444,17 @@ VgDrawAreas VgMainWins::GetResizeOtherWindowAreas(VgWindow* window, ResizeMethod
 /// @param window 
 void VgMainWins::RedrawResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod)
 {
-	//Get resize other window areas
-	VgDrawAreas areas = GetResizeOtherWindowAreas(window, resizeMethod);
+	//Get other window areas
+	VgDrawAreas otherAreas = GetResizeOtherWindowAreas(window, resizeMethod);
 
 	//Redraw other window areas
-	RedrawOtherWindowAreas(areas, window);
+	RedrawOtherWindowAreas(otherAreas, window);
+
+	//Get self window areas
+	VgDrawAreas selfAreas; selfAreas.Add(window->GetLayerArea());
 
 	//Redraw resize window areas
-	RedrawSelfWindowAreas(window);
+	RedrawSelfWindowAreas(selfAreas, window);
 }
 
 
@@ -502,6 +481,30 @@ void VgMainWins::DestroyCloseWindow(VgWindow* window, ResizeMethod resizeMethod)
 
 		actWindow = defWindow;
 	}
+}
+
+
+/// @brief Get other window update areas
+/// @param window 
+/// @return 
+VgDrawAreas VgMainWins::GetOtherWindowUpdateAreas(VgWindow* window)
+{
+	return window->GetUpdateAreas();
+}
+
+
+/// @brief Redraw window update areas
+/// @param window 
+void VgMainWins::RedrawWindowUpdateOverlapAreas(VgWindow* window)
+{
+	//Get other window update areas
+	VgDrawAreas areas = GetOtherWindowUpdateAreas(window);
+
+	//Redraw other window areas
+	RedrawOtherWindowAreas(areas, window);
+
+	//Redraw self window areas
+	RedrawSelfWindowAreas(areas, window);
 }
 
 
@@ -534,17 +537,11 @@ VgDrawAreas VgMainWins::GetSelWindowOverlapAreas(VgWindow* window)
 /// @param window 
 void VgMainWins::RedrawSelWindowOverlapAreas(VgWindow* window)
 {
-	//Get upper areas
-	VgDrawAreas uppers = GetWindowUpperAreas(window);
-
 	//Get overlap areas
-	VgDrawAreas overlaps = GetSelWindowOverlapAreas(window);
+	VgDrawAreas areas = GetSelWindowOverlapAreas(window);
 
-	//Calc redraw areas
-	VgDrawAreas redraws = layer.CalcOverlapAreas(window->GetLayerArea(), overlaps, uppers);
-
-	//VgWindow redraw
-	window->Redraw(redraws);
+	//Redraw self window areas
+	RedrawSelfWindowAreas(areas, window);
 }
 
 
