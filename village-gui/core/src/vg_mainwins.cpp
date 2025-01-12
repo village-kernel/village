@@ -197,9 +197,9 @@ VgMainWins::ResizeMethod VgMainWins::CheckResizeMethod(VgPoint input, VgPoint ax
 	{
 		if (actWindow->IsInMaximizeArea(input.x, input.y))
 			resizeMethod = ResizeMethod::_Maximize;
-		if (actWindow->IsInMinimizeArea(input.x, input.y))
+		else if (actWindow->IsInMinimizeArea(input.x, input.y))
 			resizeMethod = ResizeMethod::_Minimize;
-		if (actWindow->IsInCloseArea(input.x, input.y))
+		else if (actWindow->IsInCloseArea(input.x, input.y))
 			resizeMethod = ResizeMethod::_Close;
 	}
 
@@ -350,7 +350,6 @@ VgDrawAreas VgMainWins::RedrawFloatWindowAreas(VgDrawAreas areas, VgWindow* wind
 VgDrawAreas VgMainWins::RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window, VgWindow::Place place)
 {
 	VgDrawAreas cutAreas = areas;
-	VgDrawAreas mulAreas = areas;
 
 	//Redraw other window areas
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
@@ -362,8 +361,6 @@ VgDrawAreas VgMainWins::RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* wind
 		if (place != item->GetPlace()) continue;
 
 		cutAreas = item->RedrawWedgetAreas(cutAreas);
-
-		item->RedrawMultiplyAreas(mulAreas);
 	}
 
 	return cutAreas;
@@ -374,7 +371,7 @@ VgDrawAreas VgMainWins::RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* wind
 /// @param window 
 void VgMainWins::RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window)
 {
-	//Cut window area from redraw areas
+	//Cut cursor area from redraw areas
 	areas = layer.CutAreaFromAreas(areas, curWindow->GetLayerArea());
 
 	//Redraw float windows
@@ -433,10 +430,10 @@ void VgMainWins::RedrawWindowUpdateAreas(VgWindow* window)
 }
 
 
-/// @brief Get resize window overlap areas
+/// @brief Get resize other window areas
 /// @param window 
 /// @return 
-VgDrawAreas VgMainWins::GetResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod)
+VgDrawAreas VgMainWins::GetResizeOtherWindowAreas(VgWindow* window, ResizeMethod resizeMethod)
 {
 	VgDrawArea oldArea = window->GetLayerArea();
 	
@@ -471,8 +468,8 @@ VgDrawAreas VgMainWins::GetResizeWindowOverlapAreas(VgWindow* window, ResizeMeth
 /// @param window 
 void VgMainWins::RedrawResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod)
 {
-	//Get resize overlap areas
-	VgDrawAreas areas = GetResizeWindowOverlapAreas(window, resizeMethod);
+	//Get resize other window areas
+	VgDrawAreas areas = GetResizeOtherWindowAreas(window, resizeMethod);
 
 	//Redraw other window areas
 	RedrawOtherWindowAreas(areas, window);

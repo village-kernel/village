@@ -29,14 +29,14 @@ private:
 	};
 
 	//Members
-	VgDevices&       devices;
+	VgDevices&         devices;
 	VgList<VgWindow*>  windows;
 	VgWindow*          defWindow;
 	VgWindow*          actWindow;
 	VgWindow*          curWindow;
-	VgLayer          layer;
-	VgInputData      input;
-	VgInputData      axis;
+	VgLayer            layer;
+	VgInputData        input;
+	VgInputData        axis;
 private:
 	//Methods
 	void UpdataInput();
@@ -57,7 +57,7 @@ private:
 	void RedrawWindowUpdateAreas(VgWindow* window);
 
 	//Resize Methods
-	VgDrawAreas GetResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod);
+	VgDrawAreas GetResizeOtherWindowAreas(VgWindow* window, ResizeMethod resizeMethod);
 	void RedrawResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod);
 	void ResizeWindowExecute(VgWindow* window, ResizeMethod resizeMethod);
 	void DestroyCloseWindow(VgWindow* window, ResizeMethod resizeMethod);
