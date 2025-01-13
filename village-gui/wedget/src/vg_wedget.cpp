@@ -439,25 +439,6 @@ VgDrawArea VgWedget::GetLayerArea()
 }
 
 
-/// @brief Wedget get floatable areas
-/// @return 
-VgDrawAreas VgWedget::GetFloatAreas()
-{
-	VgDrawAreas areas;
-
-	if (!IsHidden() && IsFloatable()) areas.Add(layerArea);
-
-	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
-	{
-		VgWedget* item = wedgets.Item();
-
-		areas.Append(item->GetFloatAreas());
-	}
-
-	return areas;
-}
-
-
 /// @brief Wedget get update areas
 /// @return 
 VgDrawAreas VgWedget::GetUpdateAreas()
@@ -471,6 +452,25 @@ VgDrawAreas VgWedget::GetUpdateAreas()
 		VgWedget* item = wedgets.Item();
 
 		areas.Append(item->GetUpdateAreas());
+	}
+
+	return areas;
+}
+
+
+/// @brief Wedget get floatable areas
+/// @return 
+VgDrawAreas VgWedget::GetFloatAreas()
+{
+	VgDrawAreas areas;
+
+	if (!IsHidden() && IsFloatable()) areas.Add(layerArea);
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		VgWedget* item = wedgets.Item();
+
+		areas.Append(item->GetFloatAreas());
 	}
 
 	return areas;

@@ -117,8 +117,8 @@ public:
 	virtual int GetWidth();
 	virtual int GetHeight();
 	virtual VgDrawArea GetLayerArea();
-	virtual VgDrawAreas GetFloatAreas();
 	virtual VgDrawAreas GetUpdateAreas();
+	virtual VgDrawAreas GetFloatAreas();
 	virtual VgDrawAreas RedrawFloats(VgDrawAreas areas);
 	virtual VgDrawAreas RedrawFloatAreas(VgDrawAreas areas);
 	virtual VgDrawAreas RedrawFloatAreas(VgWedget* wedget, VgDrawAreas areas);
