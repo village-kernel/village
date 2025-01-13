@@ -5,22 +5,30 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vk_gui_lcddev.h"
-#include "vk_dev_stream.h"
 #include "vk_kernel.h"
+
+
+/// @brief Constructor
+/// @param fbname 
+VkDisplay::VkDisplay(char* fbname)
+	:fbname(fbname),
+	fbdev(NULL)
+{
+}
+
+
+/// @brief Destructor
+VkDisplay::~VkDisplay()
+{
+}
 
 
 /// @brief Setup
 /// @return 
 void VkDisplay::Setup(VgDevices* devices)
 {
-	//Get all display device fbDevs
-	VkList<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
-
-	//Get the universal driver by name
-	DevStream screen;
-
-	//Open the first screen 
-	if (screen.Open(fbDevs.Begin()->GetName(), FileMode::_Read))
+	//Open the screen by fbname 
+	if (screen.Open(fbname, FileMode::_Read))
 	{
 		//Get the specified lcd driver by ioctrl 
 		screen.IOCtrl(0, (void*)&fbdev);
@@ -31,7 +39,7 @@ void VkDisplay::Setup(VgDevices* devices)
 /// @brief Exit
 void VkDisplay::Exit()
 {
-	
+	screen.Close();
 }
 
 
@@ -39,7 +47,7 @@ void VkDisplay::Exit()
 /// @return 
 int VkDisplay::GetWidth()
 {
-	return fbdev->info.width;
+	return (fbdev) ? fbdev->info.width : 0;
 }
 
 
@@ -47,7 +55,7 @@ int VkDisplay::GetWidth()
 /// @return 
 int VkDisplay::GetHeight()
 {
-	return fbdev->info.height;
+	return (fbdev) ? fbdev->info.height : 0;
 }
 
 
@@ -77,7 +85,7 @@ void VkDisplay::Flush(VgDrawArea area, void* pixels)
 		{
 			for (int x = area.sx; x <= area.ex; x++)
 			{
-				fbdev->DrawPoint(x, y, *pixelsmap++);
+				Point(x, y, *pixelsmap++);
 			}
 		}
 	}
