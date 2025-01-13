@@ -5,13 +5,15 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vg_window.h"
+#include "vk_event_codes.h"
 
 
 /// @brief Constructor
 VgWindow::VgWindow()
 	:focus(false),
 	place(_Middle),
-	resizeSide(0)
+	resizeSide(0),
+	resizeMethod(_None)
 {
 	SetTitle((char*)"window");
 }
@@ -254,6 +256,121 @@ VgWindow::Place VgWindow::GetPlace()
 }
 
 
+/// @brief VgWindow is window close
+/// @return 
+bool VgWindow::IsCloseRequest()
+{
+	return (VgWindow::_Close == resizeMethod);
+}
+
+
+/// @brief VgWindow is window resize
+/// @return 
+bool VgWindow::IsResizeRequest()
+{
+	return (VgWindow::_None != resizeMethod);
+}
+
+
+/// @brief VgWindow get resize areas
+/// @return 
+VgUpdateAreas VgWindow::GetResizeAreas()
+{
+	return resizeAreas;
+}
+
+
+/// @brief Check resize method
+/// @param input 
+/// @return 
+VgWindow::ResizeMethod VgWindow::CheckResizeMethod(VgInputData input)
+{
+	ResizeMethod resizeMethod = ResizeMethod::_None;
+
+	if (input.axis.x || input.axis.y)
+	{
+		if (IsInMoveArea(input.point.x, input.point.y))
+			resizeMethod = ResizeMethod::_Move;
+		if (IsInResizeArea(input.point.x, input.point.y))
+			resizeMethod = ResizeMethod::_Adjust;
+	}
+	else
+	{
+		if (IsInMaximizeArea(input.point.x, input.point.y))
+			resizeMethod = ResizeMethod::_Maximize;
+		else if (IsInMinimizeArea(input.point.x, input.point.y))
+			resizeMethod = ResizeMethod::_Minimize;
+		else if (IsInCloseArea(input.point.x, input.point.y))
+			resizeMethod = ResizeMethod::_Close;
+	}
+
+	return resizeMethod;
+}
+
+
+/// @brief Is resize mode
+/// @return 
+bool VgWindow::IsResizeMode(VgInputData input)
+{
+	static bool isResizeMode = false;
+
+	if (IsFixed()) return false;
+
+	if (EventCode::_BtnLeft == input.key)
+	{
+		if (VgKeyState::_Pressed == input.state)
+		{
+			if (!isResizeMode || resizeMethod > ResizeMethod::_Adjust)
+			{
+				resizeMethod = CheckResizeMethod(input);
+				isResizeMode = (ResizeMethod::_None != resizeMethod);
+			}
+		}
+		else if (VgKeyState::_Released == input.state)
+		{
+			isResizeMode = false;
+			resizeMethod = ResizeMethod::_None;
+		}
+	}
+
+	return isResizeMode;
+}
+
+
+/// @brief Get the resize areas
+/// @param window 
+/// @return 
+VgDrawAreas VgWindow::GetResizeAreas(VgInputData input)
+{
+	VgDrawArea oldArea = GetLayerArea();
+	
+	switch (resizeMethod)
+	{
+		case ResizeMethod::_Move:
+			AxisMove(input.axis.x, input.axis.y);
+			break;
+		case ResizeMethod::_Adjust:
+			Adjust(input.axis.x, input.axis.y);
+			break;
+		case ResizeMethod::_Maximize:
+			Maximize();
+			break;
+		case ResizeMethod::_Minimize:
+			Minimize();
+			break;
+		case ResizeMethod::_Close:
+			Close();
+			break;
+		default:
+			break;
+	}
+
+	VgDrawArea newArea = GetLayerArea();
+
+	return layer.CutOverlapAreas(oldArea, newArea);
+}
+
+
 /// @brief VgWindow Initiate
 /// @param devices 
 void VgWindow::InitContent(VgDevices* devices)
@@ -266,7 +383,15 @@ void VgWindow::InitContent(VgDevices* devices)
 /// @param input 
 void VgWindow::ExecContent(VgInputData input)
 {
+	VgUpdateAreas areas;
 
+	if (IsResizeMode(input))
+	{
+		areas.oldAreas = GetResizeAreas(input);
+		areas.newAreas.Add(GetLayerArea());
+	}
+
+	this->resizeAreas = areas;
 }
 
 

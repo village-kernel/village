@@ -17,17 +17,6 @@
 class VgMainWins
 {
 private:
-	//Enumerations
-	enum ResizeMethod
-	{
-		_None = 0,
-		_Move,
-		_Adjust,
-		_Maximize,
-		_Minimize,
-		_Close,
-	};
-
 	//Members
 	VgDevices&         devices;
 	VgList<VgWindow*>  windows;
@@ -36,11 +25,9 @@ private:
 	VgWindow*          cursorWin;
 	VgLayer            layer;
 	VgInputData        input;
-	VgInputData        axis;
 private:
 	//Methods
 	void UpdataInput();
-	void UpdateCursor();
 
 	//Common Methods
 	VgDrawAreas GetWindowUpperAreas(VgWindow* window);
@@ -49,13 +36,14 @@ private:
 	void RedrawOtherWindowAreas(VgDrawAreas overlaps, VgWindow* window);
 	void RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window);
 
+	//Cursor Methods
+	void UpdateCursor();
+	void RedrawCursorWindowArea(VgWindow* window);
+
 	//Resize Methods
-	ResizeMethod CheckResizeMethod(VgPoint input, VgPoint axis);
-	bool IsActWindowResize(ResizeMethod& resizeMethod);
-	VgDrawAreas GetResizeOtherWindowAreas(VgWindow* window, ResizeMethod resizeMethod);
-	void RedrawResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod);
-	void ResizeWindowExecute(VgWindow* window, ResizeMethod resizeMethod);
-	void DestroyCloseWindow(VgWindow* window, ResizeMethod resizeMethod);
+	bool IsActWindowResize();
+	void RedrawResizeWindowOverlapAreas(VgWindow* window);
+	void DestroyCloseWindow(VgWindow* window);
 
 	//Select Methods
 	bool IsActWindowSelect();

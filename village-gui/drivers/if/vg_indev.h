@@ -51,6 +51,7 @@ struct VgPoint
 struct VgInputData
 {
 	VgPoint    point;
+	VgPoint    axis;
 	uint32_t   key;
 	uint32_t   btnid;
 	int16_t    encdiff;
@@ -66,6 +67,7 @@ struct VgInputData
 	void Reset()
 	{
 		point = VgPoint();
+		axis = VgPoint();
 		key = 0;
 		btnid = 0;
 		encdiff = 0;

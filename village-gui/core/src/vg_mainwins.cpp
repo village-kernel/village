@@ -47,15 +47,11 @@ void VgMainWins::Execute()
 	UpdateCursor();
 
 	//Resize actived window
-	ResizeMethod resizeMethod = ResizeMethod::_None;
-	
-	if (IsActWindowResize(resizeMethod))
+	if (IsActWindowResize())
 	{
-		ResizeWindowExecute(activedWin, resizeMethod);
+		RedrawResizeWindowOverlapAreas(activedWin);
 
-		RedrawResizeWindowOverlapAreas(activedWin, resizeMethod);
-
-		DestroyCloseWindow(activedWin, resizeMethod);
+		DestroyCloseWindow(activedWin);
 	}
 	//Select actived window
 	else if (IsActWindowSelect())
@@ -131,21 +127,9 @@ void VgMainWins::UpdataInput()
 
 	if (VgIndevType::_Mouse == devices.indev->GetType())
 	{
-		axis.point.x = input.point.x - last.point.x;
-		axis.point.y = input.point.y - last.point.y;
+		input.axis.x = input.point.x - last.point.x;
+		input.axis.y = input.point.y - last.point.y;
 		last = input;
-	}
-}
-
-
-/// @brief Update cursor
-void VgMainWins::UpdateCursor()
-{
-	if ((devices.indev->GetType() == VgIndevType::_Mouse) && 
-		(devices.indev->Cursor() != NULL))
-	{
-		cursorWin = devices.indev->Cursor();
-		RedrawResizeWindowOverlapAreas(cursorWin, ResizeMethod::_Move);
 	}
 }
 
@@ -272,136 +256,72 @@ void VgMainWins::RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window)
 }
 
 
-/// @brief Check resize method
-/// @param input 
-/// @param axis 
-/// @return 
-VgMainWins::ResizeMethod VgMainWins::CheckResizeMethod(VgPoint input, VgPoint axis)
+/// @brief Update cursor
+void VgMainWins::UpdateCursor()
 {
-	ResizeMethod resizeMethod = ResizeMethod::_None;
-
-	if (axis.x || axis.y)
+	if ((devices.indev->GetType() == VgIndevType::_Mouse) && 
+		(devices.indev->Cursor() != NULL))
 	{
-		if (activedWin->IsInMoveArea(input.x, input.y))
-			resizeMethod = ResizeMethod::_Move;
-		if (activedWin->IsInResizeArea(input.x, input.y))
-			resizeMethod = ResizeMethod::_Adjust;
-	}
-	else
-	{
-		if (activedWin->IsInMaximizeArea(input.x, input.y))
-			resizeMethod = ResizeMethod::_Maximize;
-		else if (activedWin->IsInMinimizeArea(input.x, input.y))
-			resizeMethod = ResizeMethod::_Minimize;
-		else if (activedWin->IsInCloseArea(input.x, input.y))
-			resizeMethod = ResizeMethod::_Close;
-	}
+		//Get cursor window pointer
+		cursorWin = devices.indev->Cursor();
 
-	return resizeMethod;
+		//Redraw cursor window area
+		RedrawCursorWindowArea(cursorWin);
+	}
 }
 
 
-/// @brief Is actived window resize
-/// @return 
-bool VgMainWins::IsActWindowResize(ResizeMethod& resizeMethod)
-{
-	static bool isResizeMode = false;
-	static ResizeMethod staticResizeMethod = ResizeMethod::_None;
-
-	if (activedWin->IsFixed()) return false;
-
-	if (EventCode::_BtnLeft == input.key)
-	{
-		if (VgKeyState::_Pressed == input.state)
-		{
-			if (!isResizeMode || staticResizeMethod > ResizeMethod::_Adjust)
-			{
-				staticResizeMethod = CheckResizeMethod(input.point, axis.point);
-				isResizeMode = (ResizeMethod::_None != staticResizeMethod);
-			}
-			resizeMethod = staticResizeMethod;
-		}
-		else if (VgKeyState::_Released == input.state)
-		{
-			isResizeMode = false;
-			resizeMethod = ResizeMethod::_None;
-		}
-	}
-
-	return isResizeMode;
-}
-
-
-/// @brief Get resize other window areas
+/// @brief Redraw cursor window area
 /// @param window 
-/// @return 
-VgDrawAreas VgMainWins::GetResizeOtherWindowAreas(VgWindow* window, ResizeMethod resizeMethod)
+void VgMainWins::RedrawCursorWindowArea(VgWindow* window)
 {
-	VgDrawArea oldArea = window->GetLayerArea();
+	//Get the cursor old area
+	VgDrawAreas oldAreas; oldAreas.Add(window->GetLayerArea());
+
+	//Move cursor window axis
+	window->AxisMove(input.axis.x, input.axis.y);
+
+	//Get the cursor new area
+	VgDrawAreas newAreas; newAreas.Add(window->GetLayerArea());
+
+	//Redraw other window areas
+	RedrawOtherWindowAreas(oldAreas, window);
+
+	//Redraw resize window areas
+	RedrawSelfWindowAreas(newAreas, window);
+}
+
+
+/// @brief Is window resize
+/// @return 
+bool VgMainWins::IsActWindowResize()
+{
+	activedWin->Execute(input);
 	
-	switch (resizeMethod)
-	{
-		case ResizeMethod::_Move:
-			window->AxisMove(axis.point.x, axis.point.y);
-			break;
-		case ResizeMethod::_Adjust:
-			window->Adjust(axis.point.x, axis.point.y);
-			break;
-		case ResizeMethod::_Maximize:
-			window->Maximize();
-			break;
-		case ResizeMethod::_Minimize:
-			window->Minimize();
-			break;
-		case ResizeMethod::_Close:
-			window->Close();
-			break;
-		default:
-			break;
-	}
-
-	VgDrawArea newArea = window->GetLayerArea();
-
-	return layer.CutOverlapAreas(oldArea, newArea);
+	return activedWin->IsResizeRequest();
 }
 
 
 /// @brief Redraw resize window overlap areas
 /// @param window 
-void VgMainWins::RedrawResizeWindowOverlapAreas(VgWindow* window, ResizeMethod resizeMethod)
+void VgMainWins::RedrawResizeWindowOverlapAreas(VgWindow* window)
 {
-	//Get other window areas
-	VgDrawAreas otherAreas = GetResizeOtherWindowAreas(window, resizeMethod);
+	//Get resize window areas
+	VgUpdateAreas resizeAreas = window->GetResizeAreas();
 
 	//Redraw other window areas
-	RedrawOtherWindowAreas(otherAreas, window);
-
-	//Get self window areas
-	VgDrawAreas selfAreas; selfAreas.Add(window->GetLayerArea());
+	RedrawOtherWindowAreas(resizeAreas.oldAreas, window);
 
 	//Redraw resize window areas
-	RedrawSelfWindowAreas(selfAreas, window);
-}
-
-
-/// @brief Resize window execute
-/// @param window 
-void VgMainWins::ResizeWindowExecute(VgWindow* window, ResizeMethod resizeMethod)
-{
-	if ((ResizeMethod::_Maximize == resizeMethod) ||
-		(ResizeMethod::_Minimize == resizeMethod) ||
-		(ResizeMethod::_Close    == resizeMethod))
-	{
-		window->Execute(input);
-	}
+	RedrawSelfWindowAreas(resizeAreas.newAreas, window);
 }
 
 
 /// @brief Destory close window
 /// @param window 
-void VgMainWins::DestroyCloseWindow(VgWindow* window, ResizeMethod resizeMethod)
+void VgMainWins::DestroyCloseWindow(VgWindow* window)
 {
-	if (ResizeMethod::_Close == resizeMethod)
+	if (activedWin->IsCloseRequest())
 	{
 		Destroy(window);
 

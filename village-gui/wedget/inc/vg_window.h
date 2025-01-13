@@ -24,6 +24,16 @@ public:
 		_Top,
 	};
 
+	enum ResizeMethod
+	{
+		_None = 0,
+		_Move,
+		_Adjust,
+		_Maximize,
+		_Minimize,
+		_Close,
+	};
+
 	enum ResizeSide
 	{
 		_LeftSide  = 1,
@@ -42,7 +52,11 @@ private:
 	//Attribute members
 	bool focus;
 	Place place;
-	int resizeSide;
+	
+	//Members
+	int           resizeSide;
+	ResizeMethod  resizeMethod;
+	VgUpdateAreas resizeAreas;
 
 	//Members
 	VgMath math;
@@ -79,6 +93,16 @@ public:
 
 	void SetPlace(Place place);
 	Place GetPlace();
+
+	//Window methods
+	bool IsCloseRequest();
+	bool IsResizeRequest();
+	VgUpdateAreas GetResizeAreas();
+private:
+	//Methods
+	bool IsResizeMode(VgInputData input);
+	ResizeMethod CheckResizeMethod(VgInputData input);
+	VgDrawAreas GetResizeAreas(VgInputData input);
 private:
 	//Methods
 	void InitContent(VgDevices* devices);
