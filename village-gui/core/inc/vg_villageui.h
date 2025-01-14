@@ -23,6 +23,7 @@
 /// @brief include wedgets headers
 #include "vg_button.h"
 #include "vg_context.h"
+#include "vg_cursor.h"
 #include "vg_label.h"
 #include "vg_listbox.h"
 #include "vg_menu.h"

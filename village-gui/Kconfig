@@ -16,7 +16,11 @@ config VKGUI_BUTTON
 	default y
 
 config VKGUI_CONTEXT
-	bool "Enable context menu"
+	bool "Enable context menu support"
+	default y
+
+config VKGUI_CURSOR
+	bool "Enable cursor support"
 	default y
 
 config VKGUI_LABEL

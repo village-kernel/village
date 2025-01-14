@@ -41,7 +41,7 @@ public:
 		_UpSide    = 4,
 		_DownSide  = 8,
 	};
-private:
+protected:
 	//Static constants members
 	static const int navbar_height = 20;
 	static const int resize_range = 5;
@@ -98,7 +98,7 @@ public:
 	bool IsCloseRequest();
 	bool IsResizeRequest();
 	VgUpdateAreas GetResizeAreas();
-private:
+protected:
 	//Methods
 	bool IsResizeMode(VgInputData input);
 	ResizeMethod CheckResizeMethod(VgInputData input);
