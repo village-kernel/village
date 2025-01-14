@@ -7,6 +7,7 @@
 #ifndef __VK_GUI_MOUSE_H__
 #define __VK_GUI_MOUSE_H__
 
+#include "vg_devices.h"
 #include "vg_indev.h"
 #include "vg_math.h"
 #include "vk_class.h"
@@ -25,7 +26,6 @@ private:
 
 	//Members
 	VgInputData data;
-	VgWindow* cursor;
 
 	//Methods
 	void KeyReceiver(Event::InputKey* input);
@@ -36,9 +36,6 @@ public:
 	~VkMouse();
 	void Setup(VgDevices* devices);
 	void Exit();
-
-	//Mouse Methods
-	VgWindow* Cursor();
 
 	//Data Methods
 	VgInputData Read();

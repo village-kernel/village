@@ -6,7 +6,18 @@
 //###########################################################################
 #include "vk_gui_keyboard.h"
 #include "vk_event_codes.h"
-#include "vk_kernel.h"
+
+
+/// @brief Constructor
+VkKeyBoard::VkKeyBoard()
+{
+}
+
+
+/// @brief Destructor
+VkKeyBoard::~VkKeyBoard()
+{
+}
 
 
 /// @brief Setup

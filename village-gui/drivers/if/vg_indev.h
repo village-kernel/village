@@ -80,10 +80,6 @@ struct VgInputData
 struct VgDevices;
 
 
-/// @brief VgWindow
-class VgWindow;
-
-
 /// @brief VgIndev
 class VgIndev
 {
@@ -104,9 +100,6 @@ public:
 	virtual bool IsReady()    { return this->ready; }
 	virtual void SetReady()   { this->ready = true; }
 	virtual void ClearReady() { this->ready = false; }
-
-	//Mouse Methods
-	virtual VgWindow* Cursor() { return NULL; }
 
 	//Data Methods
 	virtual VgInputData Read() = 0;
