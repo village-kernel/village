@@ -34,6 +34,10 @@ void VgMainWins::Setup()
 
 	//Set default window as active window
 	activedWin = defaultWin;
+
+	//Create cursor window
+	cursorWin = new VgCursor();
+	cursorWin->Initiate(&devices);
 }
 
 
@@ -130,6 +134,20 @@ void VgMainWins::UpdataInput()
 		input.axis.x = input.point.x - last.point.x;
 		input.axis.y = input.point.y - last.point.y;
 		last = input;
+	}
+}
+
+
+/// @brief Update cursor
+void VgMainWins::UpdateCursor()
+{
+	if (VgIndevType::_Mouse == devices.indev->GetType())
+	{
+		//Execute cursor window
+		cursorWin->Execute(input);
+
+		//Redraw cursor window area
+		RedrawResizeWindowOverlapAreas(cursorWin);
 	}
 }
 
@@ -253,42 +271,6 @@ void VgMainWins::RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window)
 
 	//VgWindow redraw
 	window->Redraw(redraws);
-}
-
-
-/// @brief Update cursor
-void VgMainWins::UpdateCursor()
-{
-	if ((devices.indev->GetType() == VgIndevType::_Mouse) && 
-		(devices.indev->Cursor() != NULL))
-	{
-		//Get cursor window pointer
-		cursorWin = devices.indev->Cursor();
-
-		//Redraw cursor window area
-		RedrawCursorWindowArea(cursorWin);
-	}
-}
-
-
-/// @brief Redraw cursor window area
-/// @param window 
-void VgMainWins::RedrawCursorWindowArea(VgWindow* window)
-{
-	//Get the cursor old area
-	VgDrawAreas oldAreas; oldAreas.Add(window->GetLayerArea());
-
-	//Move cursor window axis
-	window->AxisMove(input.axis.x, input.axis.y);
-
-	//Get the cursor new area
-	VgDrawAreas newAreas; newAreas.Add(window->GetLayerArea());
-
-	//Redraw other window areas
-	RedrawOtherWindowAreas(oldAreas, window);
-
-	//Redraw resize window areas
-	RedrawSelfWindowAreas(newAreas, window);
 }
 
 

@@ -10,6 +10,7 @@
 #include "vg_devices.h"
 #include "vg_layer.h"
 #include "vg_window.h"
+#include "vg_cursor.h"
 #include "vg_list.h"
 
 
@@ -28,6 +29,7 @@ private:
 private:
 	//Methods
 	void UpdataInput();
+	void UpdateCursor();
 
 	//Common Methods
 	VgDrawAreas GetWindowUpperAreas(VgWindow* window);
@@ -35,10 +37,6 @@ private:
 	VgDrawAreas RedrawOtherWindowAreas(VgDrawAreas areas, VgWindow* window, VgWindow::Place place);
 	void RedrawOtherWindowAreas(VgDrawAreas overlaps, VgWindow* window);
 	void RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window);
-
-	//Cursor Methods
-	void UpdateCursor();
-	void RedrawCursorWindowArea(VgWindow* window);
 
 	//Resize Methods
 	bool IsActWindowResize();
