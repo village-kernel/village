@@ -97,6 +97,7 @@ public:
 	//Window methods
 	bool IsCloseRequest();
 	bool IsResizeRequest();
+	void ClearResizeRequest();
 	VgUpdateAreas GetResizeAreas();
 protected:
 	//Methods

@@ -272,6 +272,13 @@ bool VgWindow::IsResizeRequest()
 }
 
 
+/// @brief VgWindow clear resize request
+void VgWindow::ClearResizeRequest()
+{
+	resizeMethod = VgWindow::_None;
+}
+
+
 /// @brief VgWindow get resize areas
 /// @return 
 VgUpdateAreas VgWindow::GetResizeAreas()
@@ -313,6 +320,7 @@ VgWindow::ResizeMethod VgWindow::CheckResizeMethod(VgInputData input)
 bool VgWindow::IsResizeMode(VgInputData input)
 {
 	static bool isResizeMode = false;
+	static ResizeMethod staticResizeMethod = ResizeMethod::_None;
 
 	if (IsFixed()) return false;
 
@@ -320,11 +328,12 @@ bool VgWindow::IsResizeMode(VgInputData input)
 	{
 		if (VgKeyState::_Pressed == input.state)
 		{
-			if (!isResizeMode || resizeMethod > ResizeMethod::_Adjust)
+			if (!isResizeMode || staticResizeMethod > ResizeMethod::_Adjust)
 			{
-				resizeMethod = CheckResizeMethod(input);
-				isResizeMode = (ResizeMethod::_None != resizeMethod);
+				staticResizeMethod = CheckResizeMethod(input);
+				isResizeMode = (ResizeMethod::_None != staticResizeMethod);
 			}
+			resizeMethod = staticResizeMethod;
 		}
 		else if (VgKeyState::_Released == input.state)
 		{
