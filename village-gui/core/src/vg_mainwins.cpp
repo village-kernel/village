@@ -303,11 +303,14 @@ void VgMainWins::RedrawResizeWindowOverlapAreas(VgWindow* window)
 /// @param window 
 void VgMainWins::DestroyCloseWindow(VgWindow* window)
 {
-	if (activedWin->IsCloseRequest())
+	if (window->IsCloseRequest())
 	{
-		Destroy(window);
+		if (activedWin == window)
+		{
+			activedWin = defaultWin;
+		}
 
-		activedWin = defaultWin;
+		Destroy(window);
 	}
 }
 
