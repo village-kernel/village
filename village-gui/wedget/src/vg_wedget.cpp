@@ -675,9 +675,9 @@ void VgWedget::Initiate(VgDevices* devices)
 {
 	this->devices = devices;
 
-	InitContent(devices);
-
 	drawRect.Initiate(devices);
+
+	InitContent(devices);
 }
 
 
@@ -687,14 +687,14 @@ void VgWedget::Execute(VgInputData input)
 {
 	if (!IsEnable()) return;
 
-	ExecContent(input);
-
 	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
 	{
 		VgWedget* item = wedgets.Item();
 		
 		item->Execute(input);
 	}
+
+	ExecContent(input);
 }
 
 
