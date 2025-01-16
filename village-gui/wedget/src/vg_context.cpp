@@ -47,15 +47,15 @@ void VgContext::UpdateActive(bool active)
 }
 
 
-/// @brief Set focus
-/// @param focus 
-void VgContext::SetFocus(bool focus)
+/// @brief Set actived
+/// @param active 
+void VgContext::SetActived(bool active)
 {
-	if (!focus && !IsHidden())
+	if (!active && !IsHidden())
 	{
 		UpdateActive(false);
 	}
-	VgWedget::SetFocus(focus);
+	VgWedget::SetActived(active);
 }
 
 

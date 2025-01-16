@@ -25,7 +25,7 @@ public:
 	VgDrawAreas GetUpdateAreas();
 
 	//Attribute methods
-	void SetFocus(bool focus);
+	void SetActived(bool active);
 private:
 	//Methods
 	void UpdateActive(bool active);
