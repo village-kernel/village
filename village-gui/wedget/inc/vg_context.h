@@ -15,7 +15,7 @@ class VgContext : public VgMenu
 {
 private:
 	//Members
-	VgDrawArea oldArea;
+	VgDrawAreas updateAreas;
 public:
 	//Methods
 	VgContext();
@@ -28,6 +28,7 @@ public:
 	void SetActived(bool active);
 private:
 	//Methods
+	void MoveContext(VgInputData input);
 	void UpdateActive(bool active);
 private:
 	//Methods

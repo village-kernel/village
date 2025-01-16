@@ -24,16 +24,23 @@ VgContext::~VgContext()
 /// @brief Get update areas
 VgDrawAreas VgContext::GetUpdateAreas()
 {
+	return updateAreas;
+}
+
+
+/// @brief Move context
+/// @param input 
+void VgContext::MoveContext(VgInputData input)
+{
 	VgDrawAreas areas;
 
-	if (!layer.IsAreaSame(oldArea, layerArea))
-	{
-		areas.Add(oldArea);
-	}
+	areas = layer.AddAreaToAreas(areas, layerArea);
+	
+	MoveTo(input.point.x, input.point.y);
 
-	areas.Append(VgWedget::GetUpdateAreas());
+	areas = layer.AddAreaToAreas(areas, layerArea);
 
-	return areas;
+	this->updateAreas = areas;
 }
 
 
@@ -80,8 +87,7 @@ void VgContext::ExecContent(VgInputData input)
 		{
 			if (IsHidden() || input.point.x != lastx || input.point.y != lasty)
 			{
-				oldArea = layerArea;
-				MoveTo(input.point.x, input.point.y);
+				MoveContext(input);
 				lastx = input.point.x;
 				lasty = input.point.y;
 				UpdateActive(true);
