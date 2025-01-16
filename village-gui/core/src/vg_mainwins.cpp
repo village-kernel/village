@@ -52,6 +52,12 @@ void VgMainWins::Execute()
 	//Update cursor
 	UpdateCursor();
 
+	//Update selected
+	UpdateSelected();
+
+	//Update actived
+	UpdateActived();
+
 	//Update window
 	UpdateWindow();
 }
@@ -130,14 +136,55 @@ void VgMainWins::UpdateCursor()
 }
 
 
-/// @brief Update window
-void VgMainWins::UpdateWindow()
+/// @brief Update selected window
+/// @return 
+void VgMainWins::UpdateSelected()
 {
-	SelectedWindow();
+	//Select window
+	if (VgKeyState::_Released == input.state)
+	{
+		for (windows.End(); !windows.IsBegin(); windows.Prev())
+		{
+			VgWindow* item = windows.Item();
 
+			if (item->IsInLayerArea(input.point.x, input.point.y))
+			{
+				selectedWin = item; break;
+			}
+		}
+	}
+
+	//Execute selected window
 	selectedWin->Execute(input);
+}
 
-	if (IsActWindowChange())
+
+/// @brief Is actived window change
+/// @return 
+bool VgMainWins::IsActivedWinChange()
+{
+	static bool isPressed = false;
+
+	if (EventCode::_BtnLeft == input.key || EventCode::_BtnRight == input.key)
+	{
+		if (!isPressed && VgKeyState::_Pressed == input.state)
+		{
+			isPressed = true; return (activedWin != selectedWin);
+		}
+		else if (VgKeyState::_Released == input.state)
+		{
+			isPressed = false;
+		}
+	}
+
+	return false;
+}
+
+
+/// @brief Update Actived window
+void VgMainWins::UpdateActived()
+{
+	if (IsActivedWinChange())
 	{
 		activedWin->SetActived(false);
 		activedWin = selectedWin;
@@ -150,7 +197,12 @@ void VgMainWins::UpdateWindow()
 			SwapActWindowListNode(activedWin);
 		}
 	}
+}
 
+
+/// @brief Update window
+void VgMainWins::UpdateWindow()
+{
 	for (windows.End(); !windows.IsBegin(); windows.Prev())
 	{
 		VgWindow* item = windows.Item();
@@ -171,47 +223,6 @@ void VgMainWins::UpdateWindow()
 			item->ClearResizeRequest();
 		}
 	}
-}
-
-
-/// @brief Selected window
-/// @return 
-void VgMainWins::SelectedWindow()
-{
-	if (VgKeyState::_Released == input.state)
-	{
-		for (windows.End(); !windows.IsBegin(); windows.Prev())
-		{
-			VgWindow* item = windows.Item();
-
-			if (item->IsInLayerArea(input.point.x, input.point.y))
-			{
-				selectedWin = item; return;
-			}
-		}
-	}
-}
-
-
-/// @brief Is actived window change
-/// @return 
-bool VgMainWins::IsActWindowChange()
-{
-	static bool isPressed = false;
-
-	if (EventCode::_BtnLeft == input.key || EventCode::_BtnRight == input.key)
-	{
-		if (!isPressed && VgKeyState::_Pressed == input.state)
-		{
-			isPressed = true; return (activedWin != selectedWin);
-		}
-		else if (VgKeyState::_Released == input.state)
-		{
-			isPressed = false;
-		}
-	}
-
-	return false;
 }
 
 
@@ -373,11 +384,8 @@ void VgMainWins::DestroyCloseWindow(VgWindow* window)
 {
 	if (window->IsCloseRequest())
 	{
-		if (activedWin == window)
-		{
-			activedWin = defaultWin;
-		}
-
+		activedWin = defaultWin;
+		selectedWin = defaultWin;
 		Destroy(window);
 	}
 }

@@ -31,9 +31,10 @@ private:
 	//Methods
 	void UpdataInput();
 	void UpdateCursor();
+	void UpdateSelected();
+	void UpdateActived();
 	void UpdateWindow();
-	void SelectedWindow();
-	bool IsActWindowChange();
+	bool IsActivedWinChange();
 
 	//Common Methods
 	VgDrawAreas GetWindowUpperAreas(VgWindow* window);
