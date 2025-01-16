@@ -23,6 +23,7 @@ private:
 	VgList<VgWindow*>  windows;
 	VgWindow*          defaultWin;
 	VgWindow*          activedWin;
+	VgWindow*          selectedWin;
 	VgWindow*          cursorWin;
 	VgLayer            layer;
 	VgInputData        input;
@@ -30,6 +31,9 @@ private:
 	//Methods
 	void UpdataInput();
 	void UpdateCursor();
+	void UpdateWindow();
+	void SelectedWindow();
+	bool IsActWindowChange();
 
 	//Common Methods
 	VgDrawAreas GetWindowUpperAreas(VgWindow* window);
@@ -38,23 +42,17 @@ private:
 	void RedrawOtherWindowAreas(VgDrawAreas overlaps, VgWindow* window);
 	void RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window);
 
+	//Update Methods
+	void RedrawWindowUpdateOverlapAreas(VgWindow* window);
+
 	//Resize Methods
-	bool IsActWindowResize();
 	void RedrawResizeWindowOverlapAreas(VgWindow* window);
 	void DestroyCloseWindow(VgWindow* window);
 
 	//Select Methods
-	bool IsActWindowSelect();
-	VgWindow* SelectActWindow();
 	VgDrawAreas GetSelWindowOverlapAreas(VgWindow* window);
 	void RedrawSelWindowOverlapAreas(VgWindow* window);
 	void SwapActWindowListNode(VgWindow* window);
-	void AlwaysFocusWindowExecute(VgWindow* window);
-
-	//Update Methods
-	void ExecuteWindow();
-	void UpdateWindow();
-	void RedrawWindowUpdateOverlapAreas(VgWindow* window);
 public:
 	//Methods
 	VgMainWins(VgDevices& devices);

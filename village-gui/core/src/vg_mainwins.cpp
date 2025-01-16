@@ -13,6 +13,7 @@ VgMainWins::VgMainWins(VgDevices& devices)
 	:devices(devices),
 	defaultWin(NULL),
 	activedWin(NULL),
+	selectedWin(NULL),
 	cursorWin(NULL)
 {
 }
@@ -34,6 +35,7 @@ void VgMainWins::Setup()
 
 	//Set default window as active window
 	activedWin = defaultWin;
+	selectedWin = defaultWin;
 
 	//Create cursor window
 	cursorWin = new VgCursor();
@@ -50,32 +52,8 @@ void VgMainWins::Execute()
 	//Update cursor
 	UpdateCursor();
 
-	//Resize actived window
-	if (IsActWindowResize())
-	{
-		RedrawResizeWindowOverlapAreas(activedWin);
-
-		DestroyCloseWindow(activedWin);
-	}
-	//Select actived window
-	else if (IsActWindowSelect())
-	{
-		if (VgWindow::_Middle == activedWin->GetPlace())
-		{
-			RedrawSelWindowOverlapAreas(activedWin);
-
-			SwapActWindowListNode(activedWin);
-		}
-
-		AlwaysFocusWindowExecute(activedWin);
-	}
-	//Execute and update actived window
-	else
-	{
-		ExecuteWindow();
-
-		UpdateWindow();
-	}
+	//Update window
+	UpdateWindow();
 }
 
 
@@ -149,6 +127,91 @@ void VgMainWins::UpdateCursor()
 		//Redraw cursor window area
 		RedrawResizeWindowOverlapAreas(cursorWin);
 	}
+}
+
+
+/// @brief Update window
+void VgMainWins::UpdateWindow()
+{
+	SelectedWindow();
+
+	selectedWin->Execute(input);
+
+	if (IsActWindowChange())
+	{
+		activedWin->SetActived(false);
+		activedWin = selectedWin;
+		activedWin->SetActived(true);
+
+		if (VgWindow::_Middle == activedWin->GetPlace())
+		{
+			RedrawSelWindowOverlapAreas(activedWin);
+
+			SwapActWindowListNode(activedWin);
+		}
+	}
+
+	for (windows.End(); !windows.IsBegin(); windows.Prev())
+	{
+		VgWindow* item = windows.Item();
+		
+		if (item->HasUpdateRequest())
+		{
+			RedrawWindowUpdateOverlapAreas(item);
+
+			item->ClearUpdateRequest();
+		}
+
+		if (item->IsResizeRequest())
+		{
+			RedrawResizeWindowOverlapAreas(item);
+
+			DestroyCloseWindow(item);
+
+			item->ClearResizeRequest();
+		}
+	}
+}
+
+
+/// @brief Selected window
+/// @return 
+void VgMainWins::SelectedWindow()
+{
+	if (VgKeyState::_Released == input.state)
+	{
+		for (windows.End(); !windows.IsBegin(); windows.Prev())
+		{
+			VgWindow* item = windows.Item();
+
+			if (item->IsInLayerArea(input.point.x, input.point.y))
+			{
+				selectedWin = item; return;
+			}
+		}
+	}
+}
+
+
+/// @brief Is actived window change
+/// @return 
+bool VgMainWins::IsActWindowChange()
+{
+	static bool isPressed = false;
+
+	if (EventCode::_BtnLeft == input.key || EventCode::_BtnRight == input.key)
+	{
+		if (!isPressed && VgKeyState::_Pressed == input.state)
+		{
+			isPressed = true; return (activedWin != selectedWin);
+		}
+		else if (VgKeyState::_Released == input.state)
+		{
+			isPressed = false;
+		}
+	}
+
+	return false;
 }
 
 
@@ -274,13 +337,18 @@ void VgMainWins::RedrawSelfWindowAreas(VgDrawAreas overlaps, VgWindow* window)
 }
 
 
-/// @brief Is window resize
-/// @return 
-bool VgMainWins::IsActWindowResize()
+/// @brief Redraw window update areas
+/// @param window 
+void VgMainWins::RedrawWindowUpdateOverlapAreas(VgWindow* window)
 {
-	activedWin->Execute(input);
-	
-	return activedWin->IsResizeRequest();
+	//Get other window update areas
+	VgDrawAreas areas = window->GetUpdateAreas();
+
+	//Redraw other window areas
+	RedrawOtherWindowAreas(areas, window);
+
+	//Redraw self window areas
+	RedrawSelfWindowAreas(areas, window);
 }
 
 
@@ -312,52 +380,6 @@ void VgMainWins::DestroyCloseWindow(VgWindow* window)
 
 		Destroy(window);
 	}
-}
-
-
-/// @brief Selected active window
-/// @return 
-VgWindow* VgMainWins::SelectActWindow()
-{
-	for (windows.End(); !windows.IsBegin(); windows.Prev())
-	{
-		VgWindow* item = windows.Item();
-
-		if (item->IsInLayerArea(input.point.x, input.point.y))
-		{
-			return item;
-		}
-	}
-	return activedWin;
-}
-
-
-/// @brief Is actived window change
-/// @return 
-bool VgMainWins::IsActWindowSelect()
-{
-	static bool isPressed = false;
-
-	if (EventCode::_BtnLeft == input.key)
-	{
-		if (!isPressed && VgKeyState::_Pressed == input.state)
-		{
-			isPressed = true;
-
-			VgWindow* selWindow = SelectActWindow();
-			
-			if (activedWin != selWindow)
-			{
-				activedWin = selWindow; return true;
-			}
-		}
-		else if (VgKeyState::_Released == input.state)
-		{
-			isPressed = false;
-		}
-	}
-
-	return false;
 }
 
 
@@ -403,58 +425,4 @@ void VgMainWins::RedrawSelWindowOverlapAreas(VgWindow* window)
 void VgMainWins::SwapActWindowListNode(VgWindow* window)
 {
 	windows.MoveToEnd(window);
-}
-
-
-/// @brief Execute always focus actived window
-/// @param window 
-void VgMainWins::AlwaysFocusWindowExecute(VgWindow* window)
-{
-	if (window->IsAlwaysFocus())
-	{
-		window->Execute(input);
-	}
-}
-
-
-/// @brief Execute window
-void VgMainWins::ExecuteWindow()
-{
-	VgWindow* window = SelectActWindow();
-
-	if (NULL != window)
-	{
-		window->Execute(input);
-	}
-}
-
-
-/// @brief Update window
-void VgMainWins::UpdateWindow()
-{
-	for (windows.Begin(); !windows.IsEnd(); windows.Next())
-	{
-		VgWindow* item = windows.Item();
-		
-		if (item->HasUpdateRequest())
-		{
-			RedrawWindowUpdateOverlapAreas(item);
-			item->ClearUpdateRequest();
-		}
-	}
-}
-
-
-/// @brief Redraw window update areas
-/// @param window 
-void VgMainWins::RedrawWindowUpdateOverlapAreas(VgWindow* window)
-{
-	//Get other window update areas
-	VgDrawAreas areas = window->GetUpdateAreas();
-
-	//Redraw other window areas
-	RedrawOtherWindowAreas(areas, window);
-
-	//Redraw self window areas
-	RedrawSelfWindowAreas(areas, window);
 }
