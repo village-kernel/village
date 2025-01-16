@@ -18,6 +18,7 @@ VgWedget::VgWedget()
 	fixed(false),
 	multiply(false),
 	focus(false),
+	active(false),
 	floatable(false),
 	update(false),
 	bTitle(NULL),
@@ -27,6 +28,7 @@ VgWedget::VgWedget()
 	bFixed(NULL),
 	bMultiply(NULL),
 	bFocus(NULL),
+	bActive(NULL),
 	bFloatable(NULL),
 	bUpdata(NULL),
 	cmd(NULL)
@@ -206,6 +208,37 @@ void VgWedget::SetFocus(bool focus)
 bool VgWedget::IsFocus()
 {
 	return bFocus ? bFocus->Get() : focus;
+}
+
+
+/// @brief Wedget binding actived
+/// @param active 
+void VgWedget::BindingActived(IData<bool>* active)
+{
+	bActive = active; if (bActive) bActive->Binding(this);
+}
+
+
+/// @brief Wedget set actived
+/// @param active 
+void VgWedget::SetActived(bool active)
+{
+	this->active = active; if (bActive) bActive->Set(active);
+
+	for (wedgets.Begin(); !wedgets.IsEnd(); wedgets.Next())
+	{
+		VgWedget* item = wedgets.Item();
+
+		item->SetActived(active);
+	}
+}
+
+
+/// @brief Wedget is actived
+/// @return 
+bool VgWedget::IsActived()
+{
+	return active ? bActive->Get() : active;
 }
 
 

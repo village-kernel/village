@@ -35,6 +35,7 @@ protected:
 	bool  fixed;
 	bool  multiply;
 	bool  focus;
+	bool  active;
 	bool  floatable;
 	bool  update;
 
@@ -46,6 +47,7 @@ protected:
 	IData<bool>*  bFixed;
 	IData<bool>*  bMultiply;
 	IData<bool>*  bFocus;
+	IData<bool>*  bActive;
 	IData<bool>*  bFloatable;
 	IData<bool>*  bUpdata;
 
@@ -90,6 +92,10 @@ public:
 	virtual void BindingFocus(IData<bool>* focus);
 	virtual void SetFocus(bool focus);
 	virtual bool IsFocus();
+
+	virtual void BindingActived(IData<bool>* active);
+	virtual void SetActived(bool active);
+	virtual bool IsActived();
 
 	virtual void BindingFloatable(IData<bool>* floatable);
 	virtual void SetFloatable(bool floatable);
