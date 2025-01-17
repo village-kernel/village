@@ -475,6 +475,9 @@ public:
 	virtual bool Kill(const char* path) = 0;
 	virtual bool Kill(int pid) = 0;
 	
+	/// @brief Check Methods
+	virtual bool IsExist(const char* path) = 0;
+
 	/// @brief Data Methods
 	virtual VkList<Data*> GetData() = 0;
 };
