@@ -51,6 +51,7 @@ struct VgPoint
 struct VgInputData
 {
 	VgPoint    point;
+	VgPoint    axis;
 	uint32_t   key;
 	uint32_t   btnid;
 	int16_t    encdiff;
@@ -66,6 +67,7 @@ struct VgInputData
 	void Reset()
 	{
 		point = VgPoint();
+		axis = VgPoint();
 		key = 0;
 		btnid = 0;
 		encdiff = 0;
@@ -76,10 +78,6 @@ struct VgInputData
 
 /// @brief VgDevices
 struct VgDevices;
-
-
-/// @brief VgWindow
-class VgWindow;
 
 
 /// @brief VgIndev
@@ -102,9 +100,6 @@ public:
 	virtual bool IsReady()    { return this->ready; }
 	virtual void SetReady()   { this->ready = true; }
 	virtual void ClearReady() { this->ready = false; }
-
-	//Mouse Methods
-	virtual VgWindow* Cursor() { return NULL; }
 
 	//Data Methods
 	virtual VgInputData Read() = 0;

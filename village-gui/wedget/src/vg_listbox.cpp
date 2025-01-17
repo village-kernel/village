@@ -22,7 +22,7 @@ VgListBox::~VgListBox()
 
 /// @brief Binding Items
 /// @param items 
-void VgListBox::BindingItems(IData<Collection*>* items)
+void VgListBox::BindingItems(ICollection* items)
 {
 
 }

@@ -1,17 +1,17 @@
 //###########################################################################
-// manager_app.h
-// Declarations of the manager app
+// filemgr_app.h
+// Declarations of the filemgr app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __MANAGER_APP_H__
-#define __MANAGER_APP_H__
+#ifndef __FILEMGR_APP_H__
+#define __FILEMGR_APP_H__
 
-#include "manager_view.h"
+#include "filemgr_view.h"
 
 
-/// @brief ManagerApp
-class ManagerApp
+/// @brief FilemgrApp
+class FilemgrApp
 {
 private:
 	//Members
@@ -19,14 +19,14 @@ private:
 	VgWindow*      mainwin;
 
 	//Members
-	ManagerView view;
+	FilemgrView view;
 public:
 	//Methods
-	ManagerApp();
-	~ManagerApp();
+	FilemgrApp();
+	~FilemgrApp();
 	void Setup();
 	void Execute();
 	void Exit();
 };
 
-#endif //!__MANAGER_APP_H__
+#endif //!__FILEMGR_APP_H__

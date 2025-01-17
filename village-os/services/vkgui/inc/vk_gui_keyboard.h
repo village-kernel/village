@@ -7,6 +7,7 @@
 #ifndef __VK_GUI_KEYBOARD_H__
 #define __VK_GUI_KEYBOARD_H__
 
+#include "vg_devices.h"
 #include "vg_indev.h"
 #include "vk_class.h"
 #include "vk_kernel.h"
@@ -23,6 +24,8 @@ private:
 	void KeyReceiver(Event::InputKey* input);
 public:
 	//Methods
+	VkKeyBoard();
+	~VkKeyBoard();
 	void Setup(VgDevices* devices);
 	void Exit();
 

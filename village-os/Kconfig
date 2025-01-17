@@ -13,7 +13,7 @@ if VKOS
 	menu "programs"
 		comment "This is using to configure programs"
 		source ./village-os/programs/desktop/Kconfig
-		source ./village-os/programs/manager/Kconfig
+		source ./village-os/programs/filemgr/Kconfig
 		source ./village-os/programs/monitor/Kconfig
 		source ./village-os/programs/settings/Kconfig
 		source ./village-os/programs/terminal/Kconfig

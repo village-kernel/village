@@ -24,6 +24,16 @@ public:
 		_Top,
 	};
 
+	enum ResizeMethod
+	{
+		_None = 0,
+		_Move,
+		_Adjust,
+		_Maximize,
+		_Minimize,
+		_Close,
+	};
+
 	enum ResizeSide
 	{
 		_LeftSide  = 1,
@@ -31,7 +41,7 @@ public:
 		_UpSide    = 4,
 		_DownSide  = 8,
 	};
-private:
+protected:
 	//Static constants members
 	static const int navbar_height = 20;
 	static const int resize_range = 5;
@@ -42,7 +52,11 @@ private:
 	//Attribute members
 	bool focus;
 	Place place;
-	int resizeSide;
+	
+	//Members
+	int           resizeSide;
+	ResizeMethod  resizeMethod;
+	VgUpdateAreas resizeAreas;
 
 	//Members
 	VgMath math;
@@ -62,6 +76,8 @@ public:
 	bool IsInCloseArea(int x, int y);
 	void SetSize(int width, int height);
 	void Adjust(int axisx, int axisy);
+	void SetFullScreen();
+	void ShowOnCenter();
 	void Maximize();
 	void Minimize();
 	void Close();
@@ -78,6 +94,17 @@ public:
 
 	void SetPlace(Place place);
 	Place GetPlace();
+
+	//Window methods
+	bool IsCloseRequest();
+	bool IsResizeRequest();
+	void ClearResizeRequest();
+	VgUpdateAreas GetResizeAreas();
+protected:
+	//Methods
+	bool IsResizeMode(VgInputData input);
+	ResizeMethod CheckResizeMethod(VgInputData input);
+	VgDrawAreas GetResizeAreas(VgInputData input);
 private:
 	//Methods
 	void InitContent(VgDevices* devices);

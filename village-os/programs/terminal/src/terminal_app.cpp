@@ -38,10 +38,10 @@ void TerminalAPP::Setup()
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
-	mainwin->AxisMove(100, 100);
 	mainwin->SetSize(600, 400);
 	mainwin->SetTitle((char*)"terminal");
 	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
+	mainwin->ShowOnCenter();
 
 	//Init view component
 	view.InitComponent(mainwin);

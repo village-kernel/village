@@ -21,27 +21,26 @@ VgContext::~VgContext()
 }
 
 
-/// @brief Binding Items
-/// @param items 
-void VgContext::BindingItems(IData<Collection*>* items)
-{
-
-}
-
-
 /// @brief Get update areas
 VgDrawAreas VgContext::GetUpdateAreas()
 {
+	return updateAreas;
+}
+
+
+/// @brief Move context
+/// @param input 
+void VgContext::MoveContext(VgInputData input)
+{
 	VgDrawAreas areas;
 
-	if (!layer.IsAreaSame(oldArea, layerArea))
-	{
-		areas.Add(oldArea);
-	}
+	areas = layer.AddAreaToAreas(areas, layerArea);
+	
+	MoveTo(input.point.x, input.point.y);
 
-	areas.Append(VgWedget::GetUpdateAreas());
+	areas = layer.AddAreaToAreas(areas, layerArea);
 
-	return areas;
+	this->updateAreas = areas;
 }
 
 
@@ -55,15 +54,15 @@ void VgContext::UpdateActive(bool active)
 }
 
 
-/// @brief Set focus
-/// @param focus 
-void VgContext::SetFocus(bool focus)
+/// @brief Set actived
+/// @param active 
+void VgContext::SetActived(bool active)
 {
-	if (!focus && !IsHidden())
+	if (!active && !IsHidden())
 	{
 		UpdateActive(false);
 	}
-	VgWedget::SetFocus(focus);
+	VgWedget::SetActived(active);
 }
 
 
@@ -88,8 +87,7 @@ void VgContext::ExecContent(VgInputData input)
 		{
 			if (IsHidden() || input.point.x != lastx || input.point.y != lasty)
 			{
-				oldArea = layerArea;
-				MoveTo(input.point.x, input.point.y);
+				MoveContext(input);
 				lastx = input.point.x;
 				lasty = input.point.y;
 				UpdateActive(true);

@@ -41,7 +41,7 @@ objs-vkgui-y                            += vg_displays.o
 objs-vkgui-y                            += vg_mainwins.o
 objs-vkgui-y                            += vg_villageui.o
 
-objs-vkgui-y                            += vg_relay_cmd.o
+objs-vkgui-y                            += vg_cmd_binding.o
 
 objs-vkgui-y                            += vg_layer.o
 objs-vkgui-y                            += vg_math.o
@@ -61,6 +61,7 @@ objs-vkgui-y                            += vg_grid.o
 objs-vkgui-y                            += vg_wedget.o
 objs-vkgui-$(CONFIG_VKGUI_BUTTON)       += vg_button.o
 objs-vkgui-$(CONFIG_VKGUI_CONTEXT)      += vg_context.o
+objs-vkgui-$(CONFIG_VKGUI_CURSOR)       += vg_cursor.o
 objs-vkgui-$(CONFIG_VKGUI_LABEL)        += vg_label.o
 objs-vkgui-$(CONFIG_VKGUI_LISTBOX)      += vg_listbox.o
 objs-vkgui-$(CONFIG_VKGUI_MENU)         += vg_menu.o

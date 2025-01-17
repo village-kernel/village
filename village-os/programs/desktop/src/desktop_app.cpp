@@ -38,12 +38,12 @@ void DesktopApp::Setup()
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
-	mainwin->SetSize(1024, 768);
 	mainwin->SetFixed(true);
 	mainwin->SetAlwaysFocus(true);
 	mainwin->SetPlace(VgWindow::_Bottom);
 	mainwin->SetTitle((char*)"desktop");
 	mainwin->SetHiddenNavbar(true);
+	mainwin->SetFullScreen();
 
 	//Init desk view component
 	view.InitComponent(mainwin);

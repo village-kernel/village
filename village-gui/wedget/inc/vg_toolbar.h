@@ -7,33 +7,26 @@
 #ifndef __VG_TOOL_BAR_H__
 #define __VG_TOOL_BAR_H__
 
-#include "vg_wedget.h"
-#include "vg_button.h"
-#include "vg_collection.h"
+#include "vg_menu.h"
 
 
 /// @brief VgToolbar
-class VgToolbar : public VgWedget
+class VgToolbar : public VgMenu
 {
 private:
-	//Members
-	Collection*         items;
-	IData<Collection*>* bItems;
-	int                 index;
-	IData<int>*         bIndex;
+	//Static constants members
+	static const int item_axisx = 5;
+	static const int item_axisy = 5;
+	static const int item_span = 35;
+	static const int item_width = 30;
+	static const int item_height = 30;
 public:
 	//Methods
 	VgToolbar();
 	~VgToolbar();
 
-	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
-	void SetItems(Collection* items);
-	Collection* GetItems();
-
-	void BindingItemIndex(IData<int>* index);
-	void SetItemIndex(int index);
-	int  GetItemIndex();
+	//Area methods
+	void UpdateRequest(bool request);
 private:
 	//Methods
 	void InitContent(VgDevices* devices);

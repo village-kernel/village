@@ -1,15 +1,15 @@
 //###########################################################################
-// manager_app.cpp
-// Definitions of the functions that manage manager app
+// filemgr_app.cpp
+// Definitions of the functions that manage filemgr app
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "manager_app.h"
+#include "filemgr_app.h"
 #include "vk_kernel.h"
 
 
 /// @brief Constructor
-ManagerApp::ManagerApp()
+FilemgrApp::FilemgrApp()
 	:vkgui(NULL),
 	mainwin(NULL)
 {
@@ -17,13 +17,13 @@ ManagerApp::ManagerApp()
 
 
 /// @brief Destructor
-ManagerApp::~ManagerApp()
+FilemgrApp::~FilemgrApp()
 {
 }
 
 
 /// @brief Setup
-void ManagerApp::Setup()
+void FilemgrApp::Setup()
 {
 	//Gets the vkgui module
 	Module* module = kernel->feature.GetModule("vkgui");
@@ -38,10 +38,10 @@ void ManagerApp::Setup()
 	if (NULL == mainwin) return;
 
 	//Setup mainwin size
-	mainwin->AxisMove(100, 100);
 	mainwin->SetSize(600, 400);
-	mainwin->SetTitle((char*)"manager");
+	mainwin->SetTitle((char*)"filemgr");
 	mainwin->SetBgColor(kernel->system.GetSysClkCounts());
+	mainwin->ShowOnCenter();
 
 	//Init view component
 	view.InitComponent(mainwin);
@@ -49,7 +49,7 @@ void ManagerApp::Setup()
 
 
 /// @brief Execute
-void ManagerApp::Execute()
+void FilemgrApp::Execute()
 {
 	//Show main window
 	mainwin->Show();
@@ -57,7 +57,7 @@ void ManagerApp::Execute()
 
 
 /// @brief Exit
-void ManagerApp::Exit()
+void FilemgrApp::Exit()
 {
 	//Wait for mainwin close
 	while (vkgui->mainwins.IsExist(mainwin)) 
@@ -70,9 +70,9 @@ void ManagerApp::Exit()
 /// @brief main
 int main(void)
 {
-	ManagerApp manager;
-	manager.Setup();
-	manager.Execute();
-	manager.Exit();
+	FilemgrApp filemgr;
+	filemgr.Setup();
+	filemgr.Execute();
+	filemgr.Exit();
 	return 0;
 }

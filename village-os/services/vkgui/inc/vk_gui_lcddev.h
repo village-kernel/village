@@ -9,6 +9,7 @@
 
 #include "vg_lcddev.h"
 #include "vk_driver.h"
+#include "vk_dev_stream.h"
 
 
 /// @brief VkDisplay
@@ -16,8 +17,14 @@ class VkDisplay : public VgLcddev
 {
 private:
 	//Members
+	char*     fbname;
 	FBDriver* fbdev;
+	DevStream screen;
 public:
+	//Methods
+	VkDisplay(char* fbname = NULL);
+	~VkDisplay();
+
 	//Methods
 	void Setup(VgDevices* devices);
 	void Exit();

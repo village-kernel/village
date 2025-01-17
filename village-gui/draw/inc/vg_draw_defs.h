@@ -64,6 +64,14 @@ typedef VgList<VgDrawPath>  VgDrawCanvas;
 typedef VgList<VgDrawArea>  VgDrawAreas;
 
 
+/// @brief VgUpdateAreas
+struct VgUpdateAreas
+{
+	VgDrawAreas oldAreas;
+	VgDrawAreas newAreas;
+};
+
+
 /// @brief VgDrawDefs
 class VgDrawDefs
 {

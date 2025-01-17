@@ -7,32 +7,29 @@
 #ifndef __VG_CONTEXT_H__
 #define __VG_CONTEXT_H__
 
-#include "vg_wedget.h"
-#include "vg_collection.h"
+#include "vg_menu.h"
 
 
 /// @brief VgContext
-class VgContext : public VgWedget
+class VgContext : public VgMenu
 {
 private:
 	//Members
-	VgDrawArea oldArea;
-
-	//Methods
-	void UpdateActive(bool active);
+	VgDrawAreas updateAreas;
 public:
 	//Methods
 	VgContext();
 	~VgContext();
 
-	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
-
 	//Area methods
 	VgDrawAreas GetUpdateAreas();
 
 	//Attribute methods
-	void SetFocus(bool focus);
+	void SetActived(bool active);
+private:
+	//Methods
+	void MoveContext(VgInputData input);
+	void UpdateActive(bool active);
 private:
 	//Methods
 	void InitContent(VgDevices* devices);

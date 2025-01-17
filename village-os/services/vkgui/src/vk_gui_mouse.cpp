@@ -6,13 +6,10 @@
 //###########################################################################
 #include "vk_gui_mouse.h"
 #include "vk_event_codes.h"
-#include "vk_kernel.h"
-#include "vg_window.h"
 
 
 /// @brief Constructor
 VkMouse::VkMouse()
-	:cursor(NULL)
 {
 }
 
@@ -30,13 +27,6 @@ void VkMouse::Setup(VgDevices* devices)
 
 	//Set indev type
 	SetType(VgIndevType::_Mouse);
-
-	//Create an cursor
-	cursor = new VgWindow();
-	cursor->SetSize(8, 8);
-	cursor->SetBgColor(VgDrawDefs::_Black);
-	cursor->SetHiddenNavbar(true);
-	cursor->Initiate(devices);
 
 	//Attach input event
 	kernel->event.Attach(Event::_InputKey,  (Method)&VkMouse::KeyReceiver, this);
@@ -97,14 +87,6 @@ void VkMouse::AxisReceiver(Event::InputAxis* input)
 
 	//Set the ready flag
 	SetReady();
-}
-
-
-/// @brief Cursor
-/// @return 
-VgWindow* VkMouse::Cursor()
-{
-	return cursor;
 }
 
 

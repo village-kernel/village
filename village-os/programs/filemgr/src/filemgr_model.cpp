@@ -1,19 +1,19 @@
 //###########################################################################
-// manager_model.cpp
-// Definitions of the functions that manage manager view model
+// filemgr_model.cpp
+// Definitions of the functions that manage filemgr view model
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "manager_model.h"
+#include "filemgr_model.h"
 
 
 /// @brief Constructor
-ManagerModel::ManagerModel()
+FilemgrModel::FilemgrModel()
 {
 }
 
 
 /// @brief Destructor
-ManagerModel::~ManagerModel()
+FilemgrModel::~FilemgrModel()
 {
 }

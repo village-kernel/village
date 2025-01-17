@@ -40,8 +40,15 @@ bool VkGuiService::Setup()
 	//Register keyboard
 	vkgui.indevs.RegisterIndev(new VkKeyBoard());
 
+	//Get all display device fbDevs
+	VkList<Base*> fbDevs = kernel->device.GetDevices(DriverID::_framebuffer);
+
 	//Register display
-	vkgui.displays.RegisterLcddev(new VkDisplay());
+	for (fbDevs.Begin(); !fbDevs.IsEnd(); fbDevs.Next())
+	{
+		char* fbname = fbDevs.Item()->GetName();
+		vkgui.displays.RegisterLcddev(new VkDisplay(fbname));
+	}
 
 	//Setup vkgui
 	vkgui.Setup();

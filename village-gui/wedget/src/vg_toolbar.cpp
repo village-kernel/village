@@ -5,14 +5,11 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 #include "vg_toolbar.h"
+#include "vg_button.h"
 
 
 /// @brief Constructor
 VgToolbar::VgToolbar()
-	:items(NULL),
-	bItems(NULL),
-	index(0),
-	bIndex(NULL)
 {
 	SetTitle((char*)"toolbar");
 }
@@ -24,51 +21,11 @@ VgToolbar::~VgToolbar()
 }
 
 
-/// @brief VgToolbar binding items
-/// @param items 
-void VgToolbar::BindingItems(IData<Collection*>* items)
+/// @brief VgToolbar update request
+/// @param request 
+void VgToolbar::UpdateRequest(bool request)
 {
-	bItems = items; if (bItems) bItems->Binding(this);
-}
-
-
-/// @brief VgToolbar set items
-/// @param items 
-void VgToolbar::SetItems(Collection* items)
-{
-	this->items = items; if (bItems) bItems->Set(items);
-}
-
-
-/// @brief VgToolbar get items
-/// @return 
-Collection* VgToolbar::GetItems()
-{
-	return bItems ? bItems->Get() : items;
-}
-
-
-/// @brief VgToolbar binding item index
-/// @param index 
-void VgToolbar::BindingItemIndex(IData<int>* index)
-{
-	bIndex = index; if (bIndex) bIndex->Binding(this);
-}
-
-
-/// @brief VgToolbar set item index
-/// @param index 
-void VgToolbar::SetItemIndex(int index)
-{
-	this->index = index; if (bIndex) bIndex->Set(index);
-}
-
-
-/// @brief VgToolbar get item index
-/// @return 
-int VgToolbar::GetItemIndex()
-{
-	return bIndex ? bIndex->Get() : index;
+	VgWedget::UpdateRequest(request);
 }
 
 
@@ -76,7 +33,28 @@ int VgToolbar::GetItemIndex()
 /// @param devices 
 void VgToolbar::InitContent(VgDevices* devices)
 {
+	ICollection* items = GetItems();
 
+	if (items)
+	{
+		int xspan = 0;
+
+		for (items->Begin(); !items->IsEnd(); items->Next())
+		{
+			CollectionItem* item = items->Item();
+
+			VgButton* button = new VgButton();
+			button->AxisMove(xspan + item_axisx, item_axisy);
+			button->SetSize(item_width, item_height);
+			button->SetBgColor(VgDrawDefs::_White);
+			button->SetText((char*)item->name);
+			button->SetArgs((void*)item);
+			button->BindingCommand(itemCmd);
+			AddWedget(button);
+
+			xspan += item_span;
+		}
+	}
 }
 
 
@@ -84,10 +62,7 @@ void VgToolbar::InitContent(VgDevices* devices)
 /// @param input 
 void VgToolbar::ExecContent(VgInputData input)
 {
-	if (IsInLayerArea(input.point.x, input.point.y))
-	{
-		ExecuteCommand(input);
-	}
+
 }
 
 

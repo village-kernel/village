@@ -1,22 +1,22 @@
 //###########################################################################
-// vg_table.h
-// Declarations of the functions that manage table
+// vg_cursor.h
+// Declarations of the functions that manage cursor
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VG_TABLE_H__
-#define __VG_TABLE_H__
+#ifndef __VG_CURSOR_H__
+#define __VG_CURSOR_H__
 
-#include "vg_menu.h"
+#include "vg_window.h"
 
 
-/// @brief VgTable
-class VgTable : public VgMenu
+/// @brief VgCursor
+class VgCursor : public VgWindow
 {
 public:
 	//Methods
-	VgTable();
-	~VgTable();
+	VgCursor();
+	~VgCursor();
 private:
 	//Methods
 	void InitContent(VgDevices* devices);
@@ -24,4 +24,4 @@ private:
 	void DrawContent(VgDrawArea drawArea);
 };
 
-#endif //!__VG_TABLE_H__
+#endif //!__VG_CURSOR_H__

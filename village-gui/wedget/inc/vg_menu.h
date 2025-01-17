@@ -8,24 +8,39 @@
 #define __VG_MENU_H__
 
 #include "vg_wedget.h"
-#include "vg_collection.h"
 
 
 /// @brief VgMenu
 class VgMenu : public VgWedget
 {
+protected:
+	//Members
+	ICollection*  items;
+	ICollection*  bItems;
+	int           index;
+	IData<int>*   bIndex;
+
+	//Members
+	ICommand*     itemCmd;
 public:
 	//Methods
 	VgMenu();
 	~VgMenu();
 
-	//Binding Methods
-	void BindingItems(IData<Collection*>* items);
-private:
-	//Methods
-	void InitContent(VgDevices* devices);
-	void ExecContent(VgInputData input);
-	void DrawContent(VgDrawArea drawArea);
+	//Command Methods
+	void BindingItemCommand(ICommand* cmd);
+
+	//Attritube Methods
+	void BindingItems(ICollection* items);
+	void SetItems(ICollection* items);
+	ICollection* GetItems();
+
+	void AppendItem(CollectionItem* item);
+	void RemoveItem(CollectionItem* item);
+
+	void BindingItemIndex(IData<int>* index);
+	void SetItemIndex(int index);
+	int  GetItemIndex();
 };
 
 #endif //!__VG_MENU_H__

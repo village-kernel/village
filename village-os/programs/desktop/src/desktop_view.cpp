@@ -19,7 +19,7 @@ void DesktopView::InitComponent(VgWedget* parent)
 	context->SetBgColor(VgDrawDefs::_White);
 	context->SetHidden(true);
 	context->BindingItems(model.ContextItems);
-	context->BindingCommand(model.ContextCmd);
+	context->BindingItemCommand(model.ContextItemCmd);
 	parent->AddWedget(context);
 
 	//Create shortcut table
@@ -27,7 +27,7 @@ void DesktopView::InitComponent(VgWedget* parent)
 	shortcut->SetSize(width, height - 40);
 	shortcut->SetBgColor(VgDrawDefs::_Grayblue);
 	shortcut->BindingItems(model.ShortcutItems);
-	shortcut->BindingCommand(model.ShortcutCmd);
+	shortcut->BindingItemCommand(model.ShortcutItemCmd);
 	parent->AddWedget(shortcut);
 
 	//Create start button
@@ -41,14 +41,14 @@ void DesktopView::InitComponent(VgWedget* parent)
 	parent->AddWedget(startBtn);
 
 	//Create start menu
-	VgMenu* startMenu = new VgMenu();
+	VgTable* startMenu = new VgTable();
 	startMenu->AxisMove(0, height - 520);
 	startMenu->SetSize(320, 480);
 	startMenu->SetBgColor(VgDrawDefs::_White);
 	startMenu->SetFloatable(true);
 	startMenu->BindingHidden(model.StartMenuHidden);
 	startMenu->BindingItems(model.StartMenuItems);
-	startMenu->BindingCommand(model.StartMenuCmd);
+	startMenu->BindingItemCommand(model.StartMenuItemCmd);
 	parent->AddWedget(startMenu);
 
 	//Create toolbar
@@ -58,6 +58,6 @@ void DesktopView::InitComponent(VgWedget* parent)
 	toolbar->SetBgColor(VgDrawDefs::_Lgray);
 	toolbar->SetFloatable(true);
 	toolbar->BindingItems(model.ToolbarItems);
-	toolbar->BindingCommand(model.ToolbarCmd);
+	toolbar->BindingItemCommand(model.ToolbarItemCmd);
 	parent->AddWedget(toolbar);
 }

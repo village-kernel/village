@@ -45,6 +45,9 @@ public:
 	bool Kill(const char* path);
 	bool Kill(int pid);
 
+	/// @brief Check Methods
+	bool IsExist(const char* path);
+
 	/// @brief Data Methods
 	VkList<Data*> GetData();
 };

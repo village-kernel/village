@@ -1,23 +1,23 @@
 //###########################################################################
-// manager_view.h
-// Declarations of the manager view
+// filemgr_view.h
+// Declarations of the filemgr view
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __MANAGER_VIEW_H__
-#define __MANAGER_VIEW_H__
+#ifndef __FILEMGR_VIEW_H__
+#define __FILEMGR_VIEW_H__
 
-#include "manager_model.h"
+#include "filemgr_model.h"
 
-/// @brief ManagerView
-class ManagerView
+/// @brief FilemgrView
+class FilemgrView
 {
 private:
 	//Members
-	ManagerModel model;
+	FilemgrModel model;
 public:
 	//Methods
 	void InitComponent(VgWedget* parent);
 };
 
-#endif //!__MANAGER_VIEW_H__
+#endif //!__FILEMGR_VIEW_H__
