@@ -144,6 +144,13 @@ void VgWindow::Adjust(int axisx, int axisy)
 }
 
 
+/// @brief VgWindow set full screen
+void VgWindow::SetFullScreen()
+{
+	SetSize(devices->lcddev->GetWidth(), devices->lcddev->GetHeight());
+}
+
+
 /// @brief VgWindow show on center
 void VgWindow::ShowOnCenter()
 {

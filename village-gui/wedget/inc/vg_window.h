@@ -76,6 +76,7 @@ public:
 	bool IsInCloseArea(int x, int y);
 	void SetSize(int width, int height);
 	void Adjust(int axisx, int axisy);
+	void SetFullScreen();
 	void ShowOnCenter();
 	void Maximize();
 	void Minimize();
