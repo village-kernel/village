@@ -1,0 +1,23 @@
+comment "This is using to configure vkdemo"
+
+config VKDEMO
+	bool "Enable building vkdemo"
+	default y
+
+if VKDEMO
+
+	menu "libraries"
+		comment "This is using to configure libraries"
+	endmenu
+
+	menu "programs"
+		comment "This is using to configure programs"
+		source ./village-demo/programs/demo/Kconfig
+	endmenu
+
+	menu "services"
+		comment "This is using to configure service"
+		source ./village-demo/services/taichi/Kconfig
+	endmenu
+
+endif

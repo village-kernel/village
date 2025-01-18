@@ -15,11 +15,11 @@
 
 ---
 # 目录：
-- ## village-boot:    引导层
-- ## village-kernel:  内核层
-- ## village-os:      系统层
-- ## village-scripts: 工具脚本
+- ## village-boot:    引导工程
+- ## village-demo:    示范工程
 - ## village-docs:    相关文档
+- ## village-kernel:  内核工程
+- ## village-scripts: 工具脚本
 
 ---
 # 搭建开发i686平台环境：
@@ -181,18 +181,19 @@
 - 正常启动debug内核
 - 在与内核交互的串口终端使用run命令加载程序
 - 运行之后会出现debug信息，其中0xxxxxxxx就是程序加载的地址
-- 例如运行调试terminal.exec应用程序
+- 例如运行调试demo.exec应用程序
 
-		root@village / # run /programs/terminal.exec
-		[Debug] load at 0x0016ec20, /programs/terminal.exec load done
+		root@village / # run /programs/demo.exec
+		[Debug] load at 0x0016ec20, /programs/demo.exec load done
 
 - 加载符号到gdb，暂停debug内核，切换到 调试控制台，执行以下命令:
 	
-		-exec add-symbol-file build/output/programs/terminal.elf -o 0x0016ec20
+		-exec add-symbol-file build/output/programs/demo.elf -o 0x0016ec20
 
-- 继续debug内核，这样就可以调试terminal应用程序了。
+- 继续debug内核，这样就可以调试demo应用程序了。
 
 
 # 说明
 - 目前还处于开发阶段，各功能还不完善，框架结构未确定，待优化。
 - 适配平台不多，目前只适配了cortex-m和i686平台，其他平台待适配。
+- 不再开发GUI图形库，太浪费时间，删除图形库相关的代码，简化工程。
