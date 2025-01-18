@@ -92,6 +92,7 @@ objs-y                              += vk_terminal.o
 objs-$(CONFIG_CMD_ABOUT)            += vk_cmd_about.o
 objs-$(CONFIG_CMD_CAT)              += vk_cmd_cat.o
 objs-$(CONFIG_CMD_DEBUG)            += vk_cmd_debug.o
+objs-$(CONFIG_CMD_DEVICE)           += vk_cmd_device.o
 objs-$(CONFIG_CMD_ECHO)             += vk_cmd_echo.o
 objs-$(CONFIG_CMD_FILESYS)          += vk_cmd_filesys.o
 objs-$(CONFIG_CMD_HELP)             += vk_cmd_help.o
