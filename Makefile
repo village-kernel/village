@@ -29,9 +29,8 @@ SVCS_DIR      := $(BUILD_DIR)/output/services
 #######################################
 include $(WORKSPACE)/Makefile.rules
 include $(WORKSPACE)/village-boot/Makefile
-include $(WORKSPACE)/village-gui/Makefile
 include $(WORKSPACE)/village-kernel/Makefile
-include $(WORKSPACE)/village-os/Makefile
+include $(WORKSPACE)/village-demo/Makefile
 
 
 #######################################
@@ -323,7 +322,7 @@ endif
 clean-vkos:
 	$(Q)rm -rf $(APPS_DIR)
 	$(Q)rm -rf $(SVCS_DIR)
-	$(Q)rm -rf $(BUILD_DIR)/village-os
+	$(Q)rm -rf $(BUILD_DIR)/village_demo
 ifneq ($(A), )
 	$(Q)rm -rf $(BUILD_DIR)/$(A)
 endif

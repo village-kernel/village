@@ -1,0 +1,17 @@
+# demo menu
+
+menu "demo"
+
+config DEMO_APP
+	bool "Build demo application"
+	default y
+
+if DEMO_APP
+
+config DEMO_POWER_UP
+	bool "Running when power up"
+	default n
+
+endif
+
+endmenu
