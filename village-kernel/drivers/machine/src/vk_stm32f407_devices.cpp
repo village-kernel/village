@@ -95,3 +95,16 @@ void Stm32UartDev::Config()
 	driverName = (char*)"serial0";
 }
 REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart, stm32uartDev);
+
+
+/// @brief Stm32UsbDev
+void Stm32UsbDev::Config()
+{
+	config = {
+		.dmGpio = { Gpio::_ChA, 11,  Gpio::_Altera, 10, 0 },
+		.dpGpio = { Gpio::_ChA, 12,  Gpio::_Altera, 10, 0 },
+	};
+	driverData = (void*)&config;
+	driverName = (char*)"usb0";
+}
+REGISTER_PLAT_DEVICE(new Stm32UsbDev(), stm32Usb, stm32UsbDev);

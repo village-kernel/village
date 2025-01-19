@@ -60,6 +60,12 @@ config STM32F4XX_DRV_EXTI
 	bool "Enable EXTI drv class"
 	default n
 
+config STM32F4XX_DRV_USB
+	select STM32F4XX_DRV_GPIO
+	select STM32F4XX_DRV_NVIC
+	bool "Enable USB drv class"
+	default n
+
 endif
 
 # STM32H7xx hal drv
@@ -115,6 +121,8 @@ config STM32H7XX_DRV_FSMC
 endif
 
 endmenu
+
+menu "peripheral"
 
 menu "block"
 
@@ -194,8 +202,10 @@ endmenu
 
 menu "usb"
 
-config STM32USBDFS
-	tristate "Enable stm32 usbd fs support"
+config STM32USB
+	tristate "Enable stm32 usb support"
 	default n
+
+endmenu
 
 endmenu

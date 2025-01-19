@@ -1,32 +1,40 @@
 //###########################################################################
-// vk_stm32_usbd_fs.h
-// Declarations of the functions that manage stm32 usbd fs
+// vk_stm32_usb.h
+// Declarations of the functions that manage stm32 usb
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_STM32_USBD_FS_H__
-#define __VK_STM32_USBD_FS_H__
+#ifndef __VK_STM32_USB_H__
+#define __VK_STM32_USB_H__
 
 #include "vk_hardware.h"
 #include "vk_driver.h"
+#include "vk_drv_gpio.h"
+#include "vk_drv_usb.h"
 
 
-/// @brief Stm32UsbdFS
-class Stm32UsbdFS : public NetworkDriver
+/// @brief Stm32Usb
+class Stm32Usb : public CharDriver
 {
 public:
 	/// @brief Config
 	struct Config
 	{
-		uint16_t usb;
+		Gpio::Config dmGpio;
+		Gpio::Config dpGpio;
 	};
 private:
-	//Members
+	/// @brief Members
 	Config config;
+	Usb usb;
+	bool isUsed;
+
+	/// @brief Methods
+	void PinConfig();
 public:
 	/// @brief Methods
-	Stm32UsbdFS();
-	~Stm32UsbdFS();
+	Stm32Usb();
+	~Stm32Usb();
 
 	/// @brief Plat Methods
 	void SetData(void* data);
@@ -37,8 +45,8 @@ public:
 };
 
 
-/// @brief Stm32UsbdFSDrv
-class Stm32UsbdFSDrv : public PlatDriver
+/// @brief Stm32UsbDrv
+class Stm32UsbDrv : public PlatDriver
 {
 public:
 	/// @brief Methods
@@ -46,4 +54,4 @@ public:
 	bool Remove(PlatDevice* device);
 };
 
-#endif //!__VK_STM32_USBD_FS_H__
+#endif //!__VK_STM32_USB_H__
