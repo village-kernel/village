@@ -76,8 +76,8 @@ objs-$(CONFIG_SPIW25QXX)              += vk_spi_w25qxx.o
 inc-y                                 += village-kernel/drivers/peripheral/display/inc
 src-y                                 += village-kernel/drivers/peripheral/display/src
 
-objs-$(CONFIG_BOCHSVBE)               += vk_bochs_vbe.o
-objs-$(CONFIG_ILI9488)                += vk_ili9488.o
+objs-$(CONFIG_BOCHS_VBE)              += vk_bochs_vbe.o
+objs-$(CONFIG_LCD_ILI9488)            += vk_lcd_ili9488.o
 
 
 ######################################

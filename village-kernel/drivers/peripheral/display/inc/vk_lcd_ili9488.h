@@ -1,11 +1,11 @@
 //###########################################################################
-// vk_ili9488.h
+// vk_lcd_ili9488.h
 // Declarations of the functions that manage ili9488
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_ILI9488_H__
-#define __VK_ILI9488_H__
+#ifndef __VK_LCD_ILI9488_H__
+#define __VK_LCD_ILI9488_H__
 
 #include "vk_hardware.h"
 #include "vk_driver.h"
@@ -132,4 +132,4 @@ public:
 	bool Remove(PlatDevice* device);
 };
 
-#endif //!__VK_ILI9488_H__
+#endif //!__VK_LCD_ILI9488_H__

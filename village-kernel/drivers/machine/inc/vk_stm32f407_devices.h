@@ -11,7 +11,7 @@
 #include "vk_spi_w25qxx.h"
 #include "vk_stm32_uart.h"
 #include "vk_stm32_usb.h"
-#include "vk_ili9488.h"
+#include "vk_lcd_ili9488.h"
 
 
 /// @brief SpiSdCardDev

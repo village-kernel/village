@@ -1,10 +1,10 @@
 //###########################################################################
-// vk_ili9488.cpp
+// vk_lcd_ili9488.cpp
 // Definitions of the functions that manage ili9488
 //
 // $Copyright: Copyright (C)
 //###########################################################################
-#include "vk_ili9488.h"
+#include "vk_lcd_ili9488.h"
 #include "vk_kernel.h"
 #include "stdlib.h"
 
