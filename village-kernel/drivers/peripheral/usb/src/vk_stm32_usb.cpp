@@ -32,7 +32,17 @@ void Stm32Usb::SetData(void* data)
 /// @brief Pin config
 void Stm32Usb::PinConfig()
 {
+	Gpio gpio;
 
+	gpio.Initialize(config.dmGpio);
+	gpio.Initialize(config.dpGpio);
+}
+
+
+/// @brief UsbHandler
+void Stm32Usb::UsbHandler()
+{
+	usb.IRQHandler();
 }
 
 
@@ -47,6 +57,18 @@ bool Stm32Usb::Open()
 
 	//Configure usb
 	usb.Initialize();
+	usb.ConfigRxFifo(0x80);
+	usb.ConfigTxFifo(0, 0x40);
+	usb.ConfigTxFifo(1, 0x80);
+	usb.Start();
+
+	//Configure nvic
+	nvic.Initialize((IRQn_Type)config.irq);
+	nvic.SetPriority(0, 0);
+	nvic.EnableInterrupt();
+
+	//Set interrupt serivces
+	kernel->interrupt.SetISR(config.irq, (Method)(&Stm32Usb::UsbHandler), this);
 	
 	//Set isUsed flag
 	isUsed = true;
@@ -58,6 +80,8 @@ bool Stm32Usb::Open()
 /// @brief Close
 void Stm32Usb::Close()
 {
+	kernel->interrupt.RemoveISR(config.irq, (Method)(&Stm32Usb::UsbHandler), this);
+
 	isUsed = false;
 }
 
