@@ -101,6 +101,8 @@ REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart, stm32uartDev);
 void Stm32UsbDev::Config()
 {
 	config = {
+		.irq = OTG_FS_IRQn,
+		
 		.dmGpio = { Gpio::_ChA, 11,  Gpio::_Altera, 10, 0 },
 		.dpGpio = { Gpio::_ChA, 12,  Gpio::_Altera, 10, 0 },
 	};

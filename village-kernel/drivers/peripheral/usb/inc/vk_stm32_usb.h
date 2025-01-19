@@ -10,27 +10,32 @@
 #include "vk_hardware.h"
 #include "vk_driver.h"
 #include "vk_drv_gpio.h"
+#include "vk_drv_nvic.h"
 #include "vk_drv_usb.h"
 
 
 /// @brief Stm32Usb
-class Stm32Usb : public CharDriver
+class Stm32Usb : public CharDriver, public Class
 {
 public:
 	/// @brief Config
 	struct Config
 	{
+		uint32_t irq;
+
 		Gpio::Config dmGpio;
 		Gpio::Config dpGpio;
 	};
 private:
 	/// @brief Members
 	Config config;
+	Nvic nvic;
 	Usb usb;
 	bool isUsed;
 
 	/// @brief Methods
 	void PinConfig();
+	void UsbHandler();
 public:
 	/// @brief Methods
 	Stm32Usb();
