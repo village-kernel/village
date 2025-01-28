@@ -442,22 +442,6 @@ if KERNEL
 
 		endmenu
 
-		menu "libhw"
-			
-			if IA32LEGACY
-				source ./village-kernel/vklibs/libhw/ia32legacy/Kconfig
-			endif
-
-			if STM32F4xx
-				source ./village-kernel/vklibs/libhw/stm32f4xx/Kconfig
-			endif
-
-			if STM32H7xx
-				source ./village-kernel/vklibs/libhw/stm32h7xx/Kconfig
-			endif
-
-		endmenu
-
 		menu "libutils"
 
 			menu "fileutils"
