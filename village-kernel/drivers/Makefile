@@ -19,42 +19,17 @@ objs-$(CONFIG_STM32H7xx)              += vk_stm32h743_devices.o
 ######################################
 # platform
 ######################################
+## ia32legacy
 ifeq ($(CONFIG_IA32LEGACY), y)
-inc-y                                 += village-kernel/drivers/platform/ia32legacy/inc
-src-y                                 += village-kernel/drivers/platform/ia32legacy/src
+include village-kernel/drivers/platform/ia32legacy/Makefile
 
-objs-$(CONFIG_IA32LEGACY_DRV_PCI)     += vk_pci_controller.o
-objs-$(CONFIG_IA32LEGACY_DRV_PS2)     += vk_ps2_controller.o
-
+## stm32f4xx
 else ifeq ($(CONFIG_STM32F4xx), y)
-inc-y                                 += village-kernel/drivers/platform/stm32f4xx/inc
-src-y                                 += village-kernel/drivers/platform/stm32f4xx/src
+include village-kernel/drivers/platform/stm32f4xx/Makefile
 
-objs-$(CONFIG_STM32F4XX_DRV_HAL)      += vk_drv_hal.o
-objs-$(CONFIG_STM32F4XX_DRV_GPIO)     += vk_drv_gpio.o
-objs-$(CONFIG_STM32F4XX_DRV_NVIC)     += vk_drv_nvic.o
-objs-$(CONFIG_STM32F4XX_DRV_USART)    += vk_drv_usart.o
-objs-$(CONFIG_STM32F4XX_DRV_SPI)      += vk_drv_spi.o
-objs-$(CONFIG_STM32F4XX_DRV_I2C)      += vk_drv_i2c.o
-objs-$(CONFIG_STM32F4XX_DRV_DMA)      += vk_drv_dma.o
-objs-$(CONFIG_STM32F4XX_DRV_FSMC)     += vk_drv_fsmc.o
-objs-$(CONFIG_STM32F4XX_DRV_EXTI)     += vk_drv_exti.o
-objs-$(CONFIG_STM32F4XX_DRV_USB)      += vk_drv_usb.o
-
+## stm32h7xx
 else ifeq ($(CONFIG_STM32H7xx), y)
-inc-y                                 += village-kernel/drivers/platform/stm32h7xx/inc
-src-y                                 += village-kernel/drivers/platform/stm32h7xx/src
-
-objs-$(CONFIG_STM32H7XX_DRV_HAL)      += vk_drv_hal.o
-objs-$(CONFIG_STM32H7XX_DRV_GPIO)     += vk_drv_gpio.o
-objs-$(CONFIG_STM32H7XX_DRV_LTDC)     += vk_drv_ltdc.o
-objs-$(CONFIG_STM32H7XX_DRV_NVIC)     += vk_drv_nvic.o
-objs-$(CONFIG_STM32H7XX_DRV_USART)    += vk_drv_usart.o
-objs-$(CONFIG_STM32H7XX_DRV_SDIO)     += vk_drv_sdio.o
-objs-$(CONFIG_STM32H7XX_DRV_SPI)      += vk_drv_spi.o
-objs-$(CONFIG_STM32H7XX_DRV_I2C)      += vk_drv_i2c.o
-objs-$(CONFIG_STM32H7XX_DRV_DMA)      += vk_drv_dma.o
-objs-$(CONFIG_STM32H7XX_DRV_FSMC)     += vk_drv_fsmc.o
+include village-kernel/drivers/platform/stm32h7xx/Makefile
 endif
 
 

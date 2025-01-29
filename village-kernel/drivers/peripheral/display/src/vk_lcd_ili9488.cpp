@@ -66,7 +66,7 @@ inline void ILI9488::Fill(uint32_t pointSizes, uint32_t color)
 
 	for (uint32_t i = 0; i < pointSizes; i++)
 	{
-		WriteData(color);
+		WriteRAM(color);
 	}
 }
 
@@ -87,32 +87,32 @@ inline uint32_t ILI9488::ReadID()
 }
 
 
-/// @brief ILI9488 write reg
-inline void ILI9488::WriteCmd(uint16_t reg)
+/// @brief ILI9488 write cmd
+inline void ILI9488::WriteCmd(uint16_t cmd)
 {
-	lcdmap->reg = reg;
+	fsmc.WriteCmd(cmd);
 }
 
 
 /// @brief ILI9488 write data
 inline void ILI9488::WriteData(uint16_t data)
 {
-	lcdmap->ram = data;
+	fsmc.WriteData(data);
 }
 
 
 /// @brief ILI9488 read data
 inline uint16_t ILI9488::ReadData()
 {
-	return lcdmap->ram;
+	return fsmc.ReadData();
 }
 
 
 /// @brief ILI9488 write reg
 inline void ILI9488::WriteReg(uint16_t reg, uint16_t value)
 {
-	lcdmap->reg = reg;
-	lcdmap->ram = value;
+	WriteCmd(reg);
+	WriteData(value);
 }
 
 
@@ -127,14 +127,14 @@ inline uint16_t ILI9488::ReadRegData(uint16_t reg)
 /// @brief ILI9488 prepare write gram
 inline void ILI9488::PrepareWriteRAM()
 {
-	lcdmap->reg = lcd.wRamCmd;
+	WriteCmd(lcd.wRamCmd);
 }
 
 
 /// @brief ILI9488 write gram
 inline void ILI9488::WriteRAM(uint16_t rgbVal)
 {
-	lcdmap->ram = rgbVal;
+	WriteData(rgbVal);
 }
 
 
@@ -152,7 +152,7 @@ bool ILI9488::Setup()
 	if (lcd.id == ReadID())
 	{
 		DisplayConfig();
-		Clear();
+		Clear(0x1234);
 		BackLightOn();
 		return true;
 	}
@@ -230,7 +230,7 @@ void ILI9488::DisplayConfig()
 	WriteData(0xA9);
 	WriteData(0x51);
 	WriteData(0x2C);
-	WriteData(0x82);/* DSI write DCS command, use loose packet RGB 666 */
+	WriteData(0x82);/* DSI write DCS command, use loose packet RGB 565 */
 
 	// Power Control 1 (C0h)
 	WriteCmd(0xC0);

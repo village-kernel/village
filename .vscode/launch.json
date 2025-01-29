@@ -16,7 +16,7 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/village-kernel/drivers/platform/stm32f4xx/svd/STM32F407.svd",
             "preLaunchTask": "Build"
         },
         {
@@ -34,7 +34,7 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
+            "svdFile": "${workspaceRoot}/village-kernel/drivers/platform/stm32f4xx/svd/STM32F407.svd",
             "preLaunchTask": "Build"
         },
 		{
@@ -48,7 +48,7 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
+            "svdFile": "${workspaceRoot}/village-kernel/drivers/platform/stm32h7xx/svd/STM32H743.svd",
             "preLaunchTask": "Build"
         },
 		{
@@ -66,7 +66,7 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
+            "svdFile": "${workspaceRoot}/village-kernel/drivers/platform/stm32h7xx/svd/STM32H743.svd",
             "preLaunchTask": "Build"
         },
         {

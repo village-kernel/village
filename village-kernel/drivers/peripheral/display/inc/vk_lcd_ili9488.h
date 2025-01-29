@@ -64,26 +64,18 @@ public:
 		uint16_t  rRamCmd;
 		Direction dir;
 	};
-
-	//LCD map
-	struct LCDMap
-	{
-		uint16_t reg;
-		uint16_t ram;
-	} __attribute__((packed));
 private:
 	//Members
 	Fsmc   fsmc;
 	Gpio   blGpio;
 	Config config;
 	DriverInfo lcd;
-	volatile LCDMap *lcdmap = (LCDMap*)(uint32_t)(0x6C00007E);
 
 	/// @brief Methods
 	void PinConfig();
 	void Fill(uint32_t pointSizes, uint32_t color);
 	uint32_t ReadID();
-	void WriteCmd(uint16_t reg);
+	void WriteCmd(uint16_t cmd);
 	void WriteData(uint16_t data);
 	uint16_t ReadData();
 	void WriteReg(uint16_t reg, uint16_t value);

@@ -10,7 +10,7 @@ if DEMO_APP
 
 config DEMO_POWER_UP
 	bool "Running when power up"
-	default n
+	default y
 
 endif
 
