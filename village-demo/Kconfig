@@ -1,4 +1,4 @@
-comment "This is using to configure vkdemo"
+# This is using to configure vkdemo
 
 config VKDEMO
 	bool "Enable building vkdemo"

@@ -23,8 +23,8 @@ DEFS      += -DSTM32H750xx
 endif
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32H743II)            := -T village-kernel/drivers/platform/stm32h7xx/lds/STM32H743II_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-kernel/drivers/platform/stm32h7xx/lds/STM32H750VB_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H743II)            := -T village-machine/platform/stm32h7xx/lds/STM32H743II_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-machine/platform/stm32h7xx/lds/STM32H750VB_flash.ld
 
 
 #######################################
@@ -50,8 +50,8 @@ LDFLAGS-KERNEL                                   += -Wl,-static -pie
 ######################################
 # crt0
 ######################################
-inc-y                                            += village-kernel/drivers/platform/stm32h7xx/cmsis
-src-y                                            += village-kernel/drivers/platform/stm32h7xx/crt0
+inc-y                                            += village-machine/platform/stm32h7xx/cmsis
+src-y                                            += village-machine/platform/stm32h7xx/crt0
 
 objs-$(CONFIG_STM32H7a3xx)                       += crt0_kernel_stm32h7a3xx.o
 objs-$(CONFIG_STM32H7a3xxq)                      += crt0_kernel_stm32h7a3xxq.o
@@ -80,8 +80,8 @@ objs-$(CONFIG_STM32H757xx)                       += crt0_kernel_stm32h757xx.o
 ######################################
 # core
 ######################################
-inc-y                                            += village-kernel/drivers/platform/stm32h7xx/core/inc
-src-y                                            += village-kernel/drivers/platform/stm32h7xx/core/src
+inc-y                                            += village-machine/platform/stm32h7xx/core/inc
+src-y                                            += village-machine/platform/stm32h7xx/core/src
 
 objs-y                                           += system_stm32h7xx.o
 
@@ -89,8 +89,8 @@ objs-y                                           += system_stm32h7xx.o
 ######################################
 # hal
 ######################################
-inc-y                                            += village-kernel/drivers/platform/stm32h7xx/hal/inc
-src-y                                            += village-kernel/drivers/platform/stm32h7xx/hal/src
+inc-y                                            += village-machine/platform/stm32h7xx/hal/inc
+src-y                                            += village-machine/platform/stm32h7xx/hal/src
 
 objs-$(CONFIG_STM32H7XX_DRV_HAL)                 += vk_drv_hal.o
 objs-$(CONFIG_STM32H7XX_DRV_GPIO)                += vk_drv_gpio.o

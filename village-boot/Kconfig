@@ -1,4 +1,5 @@
-# bootloader
+# This is using to configure bootloader
+
 config BOOTLOADER
 	bool "Enable bootloader function"
 	default n

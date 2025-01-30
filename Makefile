@@ -30,6 +30,7 @@ SVCS_DIR      := $(BUILD_DIR)/output/services
 include $(WORKSPACE)/Makefile.rules
 include $(WORKSPACE)/village-boot/Makefile
 include $(WORKSPACE)/village-kernel/Makefile
+include $(WORKSPACE)/village-machine/Makefile
 include $(WORKSPACE)/village-demo/Makefile
 
 
@@ -79,6 +80,9 @@ ifeq ($(CONFIG_GENERATED_VKOS), y)
 endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
+endif
+ifeq ($(CONFIG_GENERATED_ROOTFS), y)
+	$(Q)$(MAKE) rootfs
 endif
 
 

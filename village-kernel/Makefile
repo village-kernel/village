@@ -196,9 +196,3 @@ endif
 ifdef CONFIG_TASK_STACK
 CFLAGS    += -DTASK_STACK=$(CONFIG_TASK_STACK)
 endif
-
-
-######################################
-# includes
-######################################
-include village-kernel/drivers/Makefile

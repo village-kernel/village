@@ -5,10 +5,7 @@
 			"label": "Build",
 			"type": "shell",
 			"command": "make",
-			"args": [
-				"all",
-				"rootfs",
-			],
+			"args": ["all"],
 			"detail": "Build project"
 		},
 		{

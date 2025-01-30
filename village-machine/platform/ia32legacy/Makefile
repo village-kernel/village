@@ -1,6 +1,6 @@
 ###########################################################################
 # Makefile
-# The Makefile of village-kernel/drivers/platform/ia32/legacy
+# The Makefile of village-machine/platform/ia32/legacy
 #
 # $Copyright: Copyright (C) village
 ############################################################################
@@ -15,7 +15,7 @@ MCU                                   := -m32 -mno-sse -mno-mmx
 EMULATION                             := -melf_i386 
 
 # link script
-LDSCRIPT-KERNEL                       := -T village-kernel/drivers/platform/ia32legacy/lds/kernel.lds
+LDSCRIPT-KERNEL                       := -T village-machine/platform/ia32legacy/lds/kernel.lds
 
 # gcc flags
 CFLAGS                                += $(MCU) -DARCH_X86
@@ -36,8 +36,8 @@ LDFLAGS-KERNEL                        += -Wl,-static -pie
 ######################################
 # crt0
 ######################################
-inc-y                                 += village-kernel/drivers/platform/ia32legacy/crt0
-src-y                                 += village-kernel/drivers/platform/ia32legacy/crt0
+inc-y                                 += village-machine/platform/ia32legacy/crt0
+src-y                                 += village-machine/platform/ia32legacy/crt0
 
 objs-y                                += crt0_kernel.o
 
@@ -45,8 +45,8 @@ objs-y                                += crt0_kernel.o
 ######################################
 # core
 ######################################
-inc-y                                 += village-kernel/drivers/platform/ia32legacy/core
-src-y                                 += village-kernel/drivers/platform/ia32legacy/core 
+inc-y                                 += village-machine/platform/ia32legacy/core
+src-y                                 += village-machine/platform/ia32legacy/core 
 
 objs-y                                += i386.o
 objs-y                                += div64.o
@@ -55,8 +55,8 @@ objs-y                                += div64.o
 ######################################
 # hal
 ######################################
-inc-y                                 += village-kernel/drivers/platform/ia32legacy/hal/inc
-src-y                                 += village-kernel/drivers/platform/ia32legacy/hal/src
+inc-y                                 += village-machine/platform/ia32legacy/hal/inc
+src-y                                 += village-machine/platform/ia32legacy/hal/src
 
 objs-$(CONFIG_IA32LEGACY_DRV_PCI)     += vk_pci_controller.o
 objs-$(CONFIG_IA32LEGACY_DRV_PS2)     += vk_ps2_controller.o

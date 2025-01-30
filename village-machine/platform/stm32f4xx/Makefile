@@ -18,9 +18,9 @@ MCU       := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 DEFS      := -DARCH_ARM -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG)            := -T village-kernel/drivers/platform/stm32f4xx/lds/STM32F405RG_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE)            := -T village-kernel/drivers/platform/stm32f4xx/lds/STM32F407ZE_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG)            := -T village-kernel/drivers/platform/stm32f4xx/lds/STM32F407ZG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG)            := -T village-machine/platform/stm32f4xx/lds/STM32F405RG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE)            := -T village-machine/platform/stm32f4xx/lds/STM32F407ZE_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG)            := -T village-machine/platform/stm32f4xx/lds/STM32F407ZG_flash.ld
 
 
 #######################################
@@ -46,8 +46,8 @@ LDFLAGS-KERNEL                                   += -Wl,-static -pie
 ######################################
 # crt0
 ######################################
-inc-y                                            += village-kernel/drivers/platform/stm32f4xx/cmsis
-src-y                                            += village-kernel/drivers/platform/stm32f4xx/core/src
+inc-y                                            += village-machine/platform/stm32f4xx/cmsis
+src-y                                            += village-machine/platform/stm32f4xx/core/src
 
 objs-$(CONFIG_STM32F401xc)                       += crt0_kernel_stm32f401xc.o
 objs-$(CONFIG_STM32F401xe)                       += crt0_kernel_stm32f401xe.o
@@ -77,8 +77,8 @@ objs-$(CONFIG_STM32F479xx)                       += crt0_kernel_stm32f479xx.o
 ######################################
 # core
 ######################################
-inc-y                                            += village-kernel/drivers/platform/stm32f4xx/core/inc
-src-y                                            += village-kernel/drivers/platform/stm32f4xx/crt0
+inc-y                                            += village-machine/platform/stm32f4xx/core/inc
+src-y                                            += village-machine/platform/stm32f4xx/crt0
 
 objs-y                                           += system_stm32f4xx.o
 
@@ -86,8 +86,8 @@ objs-y                                           += system_stm32f4xx.o
 ######################################
 # hal
 ######################################
-inc-y                                            += village-kernel/drivers/platform/stm32f4xx/hal/inc
-src-y                                            += village-kernel/drivers/platform/stm32f4xx/hal/src
+inc-y                                            += village-machine/platform/stm32f4xx/hal/inc
+src-y                                            += village-machine/platform/stm32f4xx/hal/src
 
 objs-$(CONFIG_STM32F4XX_DRV_HAL)                 += vk_drv_hal.o
 objs-$(CONFIG_STM32F4XX_DRV_GPIO)                += vk_drv_gpio.o

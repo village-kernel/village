@@ -487,6 +487,7 @@ bool ILI9488Drv::Probe(PlatDevice* device)
 	ili9488->SetName(device->GetDriverName());
 	ili9488->SetData(device->GetDriverData());
 	device->SetDriver(ili9488);
+	ili9488->Open();
 	kernel->device.RegisterFBDevice((FBDriver*)device->GetDriver());
 	return true;
 }

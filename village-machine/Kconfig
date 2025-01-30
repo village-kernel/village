@@ -1,0 +1,424 @@
+# This is using to configure machine
+
+config MACHINE
+	bool "Enable building machine"
+	default y
+
+if MACHINE
+	# config machine
+
+	menu "machine"
+
+	comment "Select CPU Architecture"
+
+	choice
+		prompt "Architecture"
+		default ARM
+
+		config ARM
+			bool "arm"
+
+		config IA32
+			bool "ia32"
+	endchoice
+
+	choice
+		prompt "ARM Series"
+		depends on ARM
+		default CORTEX_M
+
+		config CORTEX_A
+			bool "cortex-A"
+
+		config CORTEX_R
+			bool "cortex-R"
+
+		config CORTEX_M
+			bool "cortex-M"
+	endchoice
+
+	choice
+		prompt "MCU Manufacturer"
+		depends on CORTEX_M
+		default ST
+
+		config ST
+			bool "ST"
+	endchoice
+
+	choice
+		prompt "MCU Series"
+		depends on ST
+		default STM32F4xx
+
+		config STM32F4xx
+			bool "STM32F4xx"
+
+		config STM32H7xx
+			bool "STM32H7xx"
+	endchoice
+
+	choice
+		prompt "MCU Type"
+		depends on STM32F4xx
+		default STM32F407xx
+
+		config STM32F401xc
+			bool "STM32F401xc"
+
+		config STM32F401xe
+			bool "STM32F401xe"
+
+		config STM32F405xx
+			bool "STM32F405xx"
+
+		config STM32F407xx
+			bool "STM32F407xx"
+	endchoice
+
+	choice
+		prompt "MCU Model"
+		depends on STM32F407xx
+		default STM32F407ZE
+
+		config STM32F407IE
+			bool "STM32F407IE"
+
+		config STM32F407IG
+			bool "STM32F407IG"
+
+		config STM32F407VE
+			bool "STM32F407VE"
+
+		config STM32F407VG
+			bool "STM32F407VG"
+
+		config STM32F407ZE
+			bool "STM32F407ZE"
+
+		config STM32F407ZG
+			bool "STM32F407ZG"
+	endchoice
+
+	choice
+		prompt "MCU Model"
+		depends on STM32F405xx
+		default STM32F405RG
+
+		config STM32F405OE
+			bool "STM32F405OE"
+
+		config STM32F405OG
+			bool "STM32F405OG"
+
+		config STM32F405RG
+			bool "STM32F405RG"
+
+		config STM32F405VG
+			bool "STM32F405VG"
+
+		config STM32F405ZG
+			bool "STM32F405ZG"
+	endchoice
+
+	choice
+		prompt "MCU Type"
+		depends on STM32H7xx
+		default STM32H743xx
+
+		config STM32H743xx
+			bool "STM32H743xx"
+
+		config STM32H750xx
+			bool "STM32H750xx"
+	endchoice
+
+	choice
+		prompt "MCU Model"
+		depends on STM32H743xx
+		default STM32H743II
+
+		config STM32H743VI
+			bool "STM32H743VI"
+
+		config STM32H743ZI
+			bool "STM32H743ZI"
+
+		config STM32H743AI
+			bool "STM32H743AI"
+
+		config STM32H743II
+			bool "STM32H743II"
+
+		config STM32H743BI
+			bool "STM32H743BI"
+
+		config STM32H743XI
+			bool "STM32H743XI"
+
+		config STM32H743VG
+			bool "STM32H743VG"
+
+		config STM32H743ZG
+			bool "STM32H743ZG"
+
+		config STM32H743AG
+			bool "STM32H743AG"
+
+		config STM32H743IG
+			bool "STM32H743IG"
+
+		config STM32H743BG
+			bool "STM32H743BG"
+
+		config STM32H743XG
+			bool "STM32H743XG"
+	endchoice
+
+	choice
+		prompt "MCU Model"
+		depends on STM32H750xx
+		default STM32H750IB
+
+		config STM32H750IB
+			bool "STM32H750IB"
+
+		config STM32H750VB
+			bool "STM32H750VB"
+
+		config STM32H750XB
+			bool "STM32H750XB"
+
+		config STM32H750ZB
+			bool "STM32H750ZB"
+	endchoice
+
+	choice
+		prompt "Boot Mode"
+		depends on IA32
+		default IA32LEGACY
+
+		config IA32LEGACY
+			bool "legacy"
+
+		config IA32UEFI
+			bool "uefi"
+	endchoice
+
+	endmenu
+
+	# Config platform
+
+	menu "platform"
+
+	# IA32Legacy hal drv
+
+	if IA32LEGACY
+
+	config IA32LEGACY_DRV_PCI
+		bool "Enable pci controller class"
+		default y
+
+	config IA32LEGACY_DRV_PS2
+		bool "Enable ps2 controller class"
+		default y
+
+	endif
+
+	# STM32F4xx hal drv
+
+	if STM32F4xx
+
+	config STM32F4XX_DRV_HAL
+		bool "Enable Hal drv class"
+		default n
+
+	config STM32F4XX_DRV_GPIO
+		bool "Enable GPIO drv class"
+		default y
+
+	config STM32F4XX_DRV_NVIC
+		bool "Enalbe NVIC drv class"
+		default y
+
+	config STM32F4XX_DRV_USART
+		select STM32F4XX_DRV_GPIO
+		bool "Enable USART drv clas"
+		default n
+
+	config STM32F4XX_DRV_SPI
+		select STM32F4XX_DRV_GPIO
+		bool "Enable SPI drv class"
+		default n
+
+	config STM32F4XX_DRV_I2C
+		select STM32F4XX_DRV_GPIO
+		bool "Enable I2C drv class"
+		default n
+
+	config STM32F4XX_DRV_DMA
+		bool "Enable dma drv class"
+		default n
+
+	config STM32F4XX_DRV_FSMC
+		select STM32F4XX_DRV_GPIO
+		bool "Enable FSMC drv class"
+		default n
+
+	config STM32F4XX_DRV_EXTI
+		select STM32F4XX_DRV_GPIO
+		select STM32F4XX_DRV_NVIC
+		bool "Enable EXTI drv class"
+		default n
+
+	config STM32F4XX_DRV_USB
+		select STM32F4XX_DRV_GPIO
+		select STM32F4XX_DRV_NVIC
+		bool "Enable USB drv class"
+		default n
+
+	endif
+
+	# STM32H7xx hal drv
+
+	if STM32H7xx
+
+	config STM32H7XX_DRV_HAL
+		bool "Enable Hal drv class"
+		default n
+
+	config STM32H7XX_DRV_GPIO
+		bool "Enable GPIO drv class"
+		default y
+
+	config STM32H7XX_DRV_LTDC
+		select STM32H7XX_DRV_GPIO
+		bool "Enalbe LTDC drv class"
+		default y
+
+	config STM32H7XX_DRV_NVIC
+		bool "Enalbe NVIC drv class"
+		default y
+
+	config STM32H7XX_DRV_USART
+		select STM32H7XX_DRV_GPIO
+		bool "Enable USART drv clas"
+		default n
+
+	config STM32H7XX_DRV_SDIO
+		select STM32H7XX_DRV_GPIO
+		bool "Enable SDIO drv class"
+		default n
+
+	config STM32H7XX_DRV_SPI
+		select STM32H7XX_DRV_GPIO
+		bool "Enable SPI drv class"
+		default n
+
+	config STM32H7XX_DRV_I2C
+		select STM32H7XX_DRV_GPIO
+		bool "Enable I2C drv class"
+		default n
+
+	config STM32H7XX_DRV_DMA
+		bool "Enable DMA drv class"
+		default n
+
+	config STM32H7XX_DRV_FSMC
+		select STM32H7XX_DRV_GPIO
+		bool "Enable FSMC drv class"
+		default n
+
+	endif
+
+	endmenu
+
+	menu "peripheral"
+
+	menu "block"
+
+	config ATALBADISK
+		tristate "Enable ata lba disk support"
+		default n
+
+	config SDIOSDCARD
+		tristate "Enable sdio sd card support"
+		default n
+
+	config SPISDCARD
+		tristate "Enable spi sd card support"
+		default n
+
+	config SPIW25QXX
+		tristate "Enable spi w25qxx flash support"
+		default n
+
+	endmenu
+
+	menu "display"
+
+	config BOCHS_VBE
+		tristate "Enable Bochs VBE support"
+		default n
+
+	config LCD_ILI9488
+		tristate "Enable ILI9488 support"
+		default n
+
+	endmenu
+
+	menu "dma"
+
+	config STM32DMA
+		tristate "Enable stm32 dma fifo support"
+		default n
+
+	endmenu
+
+	menu "keyboard"
+
+	config PS2KEYBOARD
+		tristate "Enable ps2 key board input support"
+		default n
+
+	endmenu
+
+	menu "mouse"
+
+	config PS2MOUSE
+		tristate "Enable ps2 mouse input support"
+		default n
+
+	endmenu
+
+	menu "serial"
+
+	config PIC32UART
+		tristate "Enable pic32 uart support"
+		default n
+
+	config STM32UART
+		tristate "Enable stm32 uart support"
+		default n
+
+	endmenu
+
+	menu "timer"
+
+	config PIT32TIMER
+		tristate "Enable pit32 timer support"
+		default n
+
+	endmenu
+
+	menu "usb"
+
+	config STM32USB
+		tristate "Enable stm32 usb support"
+		default n
+
+	endmenu
+
+	endmenu
+
+endif
