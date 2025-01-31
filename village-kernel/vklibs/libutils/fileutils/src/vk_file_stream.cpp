@@ -10,10 +10,10 @@
 
 /// @brief Constructor
 FileStream::FileStream(const char* name, int mode)
-	:fd(-1),
-	volume(NULL)
+    :fd(-1),
+    volume(NULL)
 {
-	if (NULL != name) Open(name, mode);
+    if (NULL != name) Open(name, mode);
 }
 
 
@@ -28,14 +28,14 @@ FileStream::~FileStream()
 /// @return 
 bool FileStream::IsExist(const char* name)
 {
-	volume = kernel->filesys.GetVolume(name);
+    volume = kernel->filesys.GetVolume(name);
 
-	if (NULL != volume)
-	{
-		return volume->IsExist(name, FileType::_File);
-	}
-	
-	return false;
+    if (NULL != volume)
+    {
+        return volume->IsExist(name, FileType::_File);
+    }
+    
+    return false;
 }
 
 
@@ -45,14 +45,14 @@ bool FileStream::IsExist(const char* name)
 /// @return 
 bool FileStream::Open(const char* name, int mode)
 {
-	volume = kernel->filesys.GetVolume(name);
+    volume = kernel->filesys.GetVolume(name);
 
-	if (NULL != volume)
-	{
-		fd = volume->Open(name, mode);
-	}
+    if (NULL != volume)
+    {
+        fd = volume->Open(name, mode);
+    }
 
-	return (fd != -1);
+    return (fd != -1);
 }
 
 
@@ -63,11 +63,11 @@ bool FileStream::Open(const char* name, int mode)
 /// @return 
 int FileStream::Write(char* data, int size, int offset)
 {
-	if (NULL != volume)
-	{
-		return volume->Write(fd, data, size, offset);
-	}
-	return 0;
+    if (NULL != volume)
+    {
+        return volume->Write(fd, data, size, offset);
+    }
+    return 0;
 }
 
 
@@ -78,11 +78,11 @@ int FileStream::Write(char* data, int size, int offset)
 /// @return 
 int FileStream::Read(char* data, int size, int offset)
 {
-	if (NULL != volume)
-	{
-		return volume->Read(fd, data, size, offset);
-	}
-	return 0;
+    if (NULL != volume)
+    {
+        return volume->Read(fd, data, size, offset);
+    }
+    return 0;
 }
 
 
@@ -90,29 +90,29 @@ int FileStream::Read(char* data, int size, int offset)
 /// @return 
 int FileStream::Size()
 {
-	if (NULL != volume)
-	{
-		return volume->Size(fd);
-	}
-	return 0;
+    if (NULL != volume)
+    {
+        return volume->Size(fd);
+    }
+    return 0;
 }
 
 
 /// @brief FileStream flush
 void FileStream::Flush()
 {
-	if (NULL != volume)
-	{
-		volume->Flush(fd);
-	}
+    if (NULL != volume)
+    {
+        volume->Flush(fd);
+    }
 }
 
 
 /// @brief FileStream close
 void FileStream::Close()
 {
-	if (NULL != volume)
-	{
-		volume->Close(fd);
-	}
+    if (NULL != volume)
+    {
+        volume->Close(fd);
+    }
 }

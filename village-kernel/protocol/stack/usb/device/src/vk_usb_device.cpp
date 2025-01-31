@@ -22,7 +22,7 @@ UsbDevice::~UsbDevice()
 /// @brief Setup
 void UsbDevice::Setup()
 {
-	usb.Open("usb0");
+    usb.Open("usb0");
 }
 
 

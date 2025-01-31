@@ -17,39 +17,39 @@
 class ConcreteProcess : public Process, public Class
 {
 private:
-	/// @brief Members
-	Regex regex;
-	VkList<Data*> datum;
-	VkList<Executor*> executors;
+    /// @brief Members
+    Regex regex;
+    VkList<Data*> datum;
+    VkList<Executor*> executors;
 
-	/// @brief Methods
-	void Taichi();
-	void Listen();
-	BaseExecutor* CreateExecutor(const char* path);
+    /// @brief Methods
+    void Taichi();
+    void Listen();
+    BaseExecutor* CreateExecutor(const char* path);
 public:
-	/// @brief Methods
-	ConcreteProcess();
-	~ConcreteProcess();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteProcess();
+    ~ConcreteProcess();
+    void Setup();
+    void Exit();
 
-	/// @brief Register Methods
-	void RegisterExecutor(Executor* executor);
-	void UnregisterExecutor(Executor* executor);
+    /// @brief Register Methods
+    void RegisterExecutor(Executor* executor);
+    void UnregisterExecutor(Executor* executor);
 
-	/// @brief Run Methods
-	int Run(Behavior behavior, const char* args);
-	int Run(Behavior behavior, const char* path, int argc, char* argv[]);
+    /// @brief Run Methods
+    int Run(Behavior behavior, const char* args);
+    int Run(Behavior behavior, const char* path, int argc, char* argv[]);
 
-	/// @brief Kill Methods
-	bool Kill(const char* path);
-	bool Kill(int pid);
+    /// @brief Kill Methods
+    bool Kill(const char* path);
+    bool Kill(int pid);
 
-	/// @brief Check Methods
-	bool IsExist(const char* path);
+    /// @brief Check Methods
+    bool IsExist(const char* path);
 
-	/// @brief Data Methods
-	VkList<Data*> GetData();
+    /// @brief Data Methods
+    VkList<Data*> GetData();
 };
 
 #endif //!__VK_PROCESS_H__

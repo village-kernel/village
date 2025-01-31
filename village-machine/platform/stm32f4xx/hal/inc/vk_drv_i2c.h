@@ -15,37 +15,37 @@
 class I2c
 {
 public:
-	//Enumerations
-	enum AckType
-	{
-		Ack = 0,
-		Nack = 1,
-	};
+    //Enumerations
+    enum AckType
+    {
+        Ack = 0,
+        Nack = 1,
+    };
 
-	//Structures
-	struct PinConfig
-	{
-		Gpio::GpioChannel sclCh;
-		Gpio::GpioChannel sdaCh;
-		uint16_t sclPin;
-		uint16_t sdaPin;
-	};
+    //Structures
+    struct PinConfig
+    {
+        Gpio::GpioChannel sclCh;
+        Gpio::GpioChannel sdaCh;
+        uint16_t sclPin;
+        uint16_t sdaPin;
+    };
 private:
-	//Members
-	Gpio sclPin;
-	Gpio sdaPin;
+    //Members
+    Gpio sclPin;
+    Gpio sdaPin;
 
-	//Methods
-	void I2cDelay(void);
+    //Methods
+    void I2cDelay(void);
 public:
-	//Methods
-	void Initialize(PinConfig pins);
-	void Start();
-	void Stop();
-	void WriteByte(uint8_t data);	
-	uint8_t ReadByte();
-	AckType GetAck();
-	void PutAck(AckType ack);
+    //Methods
+    void Initialize(PinConfig pins);
+    void Start();
+    void Stop();
+    void WriteByte(uint8_t data);    
+    uint8_t ReadByte();
+    AckType GetAck();
+    void PutAck(AckType ack);
 };
 
 #endif //!__VK_DRV_I2C_H__

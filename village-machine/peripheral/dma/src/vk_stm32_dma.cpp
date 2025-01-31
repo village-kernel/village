@@ -10,9 +10,9 @@
 
 /// @brief Constructor
 Stm32Dma::Stm32Dma()
-	:length(0),
-	dequeuePtr(0),
-	prevDmaDataCtr(buffer_size)
+    :length(0),
+    dequeuePtr(0),
+    prevDmaDataCtr(buffer_size)
 {
 }
 
@@ -21,25 +21,25 @@ Stm32Dma::Stm32Dma()
 /// @param config 
 void Stm32Dma::Open(Config config)
 {
-	dma.Initialize(config.group, config.stream);
-	dma.ConfigPriority(Dma::_VeryHigh);
-	dma.ConfigIncMode(true, false);
-	dma.ConfigRequest(config.request);
-	dma.SetPeriphAddr(config.periphAddr);
+    dma.Initialize(config.group, config.stream);
+    dma.ConfigPriority(Dma::_VeryHigh);
+    dma.ConfigIncMode(true, false);
+    dma.ConfigRequest(config.request);
+    dma.SetPeriphAddr(config.periphAddr);
 
-	if (Dma::_PeriphToMemory == config.direction)
-	{	
-		dma.ConfigDirAndDataWidth(Dma::_PeriphToMemory, Dma::_8Bits);
-		dma.ConfigCircularMode(true);
-		dma.SetDataLen(buffer_size);
-		dma.SetMemAddr0(&buffer);
-		dma.Enable();
-		Clear();
-	}
-	else
-	{
-		dma.ConfigDirAndDataWidth(Dma::_MemoryToPeriph, Dma::_8Bits);
-	}
+    if (Dma::_PeriphToMemory == config.direction)
+    {    
+        dma.ConfigDirAndDataWidth(Dma::_PeriphToMemory, Dma::_8Bits);
+        dma.ConfigCircularMode(true);
+        dma.SetDataLen(buffer_size);
+        dma.SetMemAddr0(&buffer);
+        dma.Enable();
+        Clear();
+    }
+    else
+    {
+        dma.ConfigDirAndDataWidth(Dma::_MemoryToPeriph, Dma::_8Bits);
+    }
 }
 
 
@@ -48,7 +48,7 @@ void Stm32Dma::Open(Config config)
 /// @param length 
 inline void Stm32Dma::CopyTxData(uint8_t* data, uint16_t length)
 {
-	memcpy((uint8_t*)buffer, (uint8_t*)data, length);
+    memcpy((uint8_t*)buffer, (uint8_t*)data, length);
 }
 
 
@@ -59,22 +59,22 @@ inline void Stm32Dma::CopyTxData(uint8_t* data, uint16_t length)
 /// @return 
 int Stm32Dma::Write(uint8_t* data, uint32_t size, uint32_t offset)
 {
-	if (dma.IsReady())
-	{
-		CopyTxData(data + offset, size);
+    if (dma.IsReady())
+    {
+        CopyTxData(data + offset, size);
 
-		//Reset pipeline, sync bus and memory access
-		__asm ("dmb\n" "dsb\n" "isb\n");
+        //Reset pipeline, sync bus and memory access
+        __asm ("dmb\n" "dsb\n" "isb\n");
 
-		dma.Disable();
-		dma.ClearTransferCompleteFlag();
-		dma.SetMemAddr0(buffer);
-		dma.SetDataLen(size);
-		dma.Enable();
+        dma.Disable();
+        dma.ClearTransferCompleteFlag();
+        dma.SetMemAddr0(buffer);
+        dma.SetDataLen(size);
+        dma.Enable();
 
-		return size;
-	}
-	return 0;
+        return size;
+    }
+    return 0;
 }
 
 
@@ -83,14 +83,14 @@ int Stm32Dma::Write(uint8_t* data, uint32_t size, uint32_t offset)
 ///        from multiple over pointer rollovers
 void Stm32Dma::Update()
 {
-	uint32_t dmaDataCtr = dma.GetDataCounter();
+    uint32_t dmaDataCtr = dma.GetDataCounter();
 
-	if (dmaDataCtr > prevDmaDataCtr)
-		length += buffer_size + prevDmaDataCtr - dmaDataCtr;
-	else
-		length += prevDmaDataCtr - dmaDataCtr;
+    if (dmaDataCtr > prevDmaDataCtr)
+        length += buffer_size + prevDmaDataCtr - dmaDataCtr;
+    else
+        length += prevDmaDataCtr - dmaDataCtr;
 
-	prevDmaDataCtr = dmaDataCtr;
+    prevDmaDataCtr = dmaDataCtr;
 }
 
 
@@ -99,22 +99,22 @@ void Stm32Dma::Update()
 /// @return 
 uint8_t Stm32Dma::Dequeue()
 {
-	uint8_t b = buffer[dequeuePtr];
-	if (length)
-	{
-		if (++dequeuePtr >= buffer_size) dequeuePtr = 0;
-		--length;
-	}
-	return b;
+    uint8_t b = buffer[dequeuePtr];
+    if (length)
+    {
+        if (++dequeuePtr >= buffer_size) dequeuePtr = 0;
+        --length;
+    }
+    return b;
 }
 
 
 /// @brief Clears the FIFO of all existing data, can be called without disabling the DMA
 void Stm32Dma::Clear()
 { 
-	prevDmaDataCtr = dma.GetDataCounter();
-	dequeuePtr = buffer_size - prevDmaDataCtr;
-	length = 0;
+    prevDmaDataCtr = dma.GetDataCounter();
+    dequeuePtr = buffer_size - prevDmaDataCtr;
+    length = 0;
 }
 
 
@@ -125,23 +125,23 @@ void Stm32Dma::Clear()
 /// @return 
 int Stm32Dma::Read(uint8_t* data, uint32_t size, uint32_t offset)
 {
-	uint32_t readSize = 0;
+    uint32_t readSize = 0;
 
-	Update();
+    Update();
 
-	while (length)
-	{
-		data[offset + readSize++] = Dequeue();
+    while (length)
+    {
+        data[offset + readSize++] = Dequeue();
 
-		if (readSize >= size) break;
-	}
+        if (readSize >= size) break;
+    }
 
-	return readSize;
+    return readSize;
 }
 
 
 /// @brief Close
 void Stm32Dma::Close()
 {
-	dma.Disable();
+    dma.Disable();
 }

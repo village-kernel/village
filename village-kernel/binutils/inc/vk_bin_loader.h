@@ -14,33 +14,33 @@
 class BinLoader : public ElfDefines
 {
 private:
-	//ELF structure
-	struct BIN
-	{
-		uint32_t load;
-		uint32_t base;
-		uint32_t exec;
+    //ELF structure
+    struct BIN
+    {
+        uint32_t load;
+        uint32_t base;
+        uint32_t exec;
 
-		uint32_t offset;
-		uint32_t dynamic;
-		uint32_t entry;
-	};
+        uint32_t offset;
+        uint32_t dynamic;
+        uint32_t entry;
+    };
 private:
-	//Members
-	BIN   bin;
-	char* filename;
+    //Members
+    BIN   bin;
+    char* filename;
 
-	//Methods
-	bool LoadBin();
-	bool PostParser();
-	bool RelEntries();
+    //Methods
+    bool LoadBin();
+    bool PostParser();
+    bool RelEntries();
 public:
-	//Methods
-	BinLoader(const char* filename = NULL);
-	~BinLoader();
-	bool Load(const char* filename);
-	bool Execute(int argc = 0, char* argv[] = NULL);
-	bool Exit();
+    //Methods
+    BinLoader(const char* filename = NULL);
+    ~BinLoader();
+    bool Load(const char* filename);
+    bool Execute(int argc = 0, char* argv[] = NULL);
+    bool Exit();
 };
 
 #endif //!__VK_BIN_LOADER_H__

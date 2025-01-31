@@ -17,7 +17,7 @@ Nvic::Nvic()
 /// @param type 
 void Nvic::Initialize(IRQn_Type type)
 {
-	irqType = type;
+    irqType = type;
 }
 
 
@@ -26,7 +26,7 @@ void Nvic::Initialize(IRQn_Type type)
 /// @return 
 Nvic::PriorityGrouping Nvic::GetPriorityGroupSetting()
 {
-	return PriorityGrouping(NVIC_GetPriorityGrouping());
+    return PriorityGrouping(NVIC_GetPriorityGrouping());
 }
 
 
@@ -36,7 +36,7 @@ Nvic::PriorityGrouping Nvic::GetPriorityGroupSetting()
 /// @param subPriority 
 void Nvic::DecodePriority(uint32_t* groupPriority, uint32_t* subPriority)
 {
-	NVIC_DecodePriority(irqType, GetPriorityGroupSetting(), groupPriority, subPriority);
+    NVIC_DecodePriority(irqType, GetPriorityGroupSetting(), groupPriority, subPriority);
 }
 
 
@@ -45,7 +45,7 @@ void Nvic::DecodePriority(uint32_t* groupPriority, uint32_t* subPriority)
 /// @param prioGroup 
 void Nvic::ConfigPriorityGroupSetting(PriorityGrouping prioGroup)
 {
-	NVIC_SetPriorityGrouping(prioGroup);
+    NVIC_SetPriorityGrouping(prioGroup);
 }
 
 
@@ -54,6 +54,6 @@ void Nvic::ConfigPriorityGroupSetting(PriorityGrouping prioGroup)
 /// @param subPriority 
 void Nvic::SetPriority(uint8_t groupPriority, uint8_t subPriority)
 {
-	uint32_t prioritygroup = NVIC_GetPriorityGrouping();
-	NVIC_SetPriority(irqType, NVIC_EncodePriority(prioritygroup, groupPriority, subPriority));
+    uint32_t prioritygroup = NVIC_GetPriorityGrouping();
+    NVIC_SetPriority(irqType, NVIC_EncodePriority(prioritygroup, groupPriority, subPriority));
 }

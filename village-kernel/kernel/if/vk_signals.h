@@ -9,14 +9,14 @@
 
 enum Signals
 {
-	_None = 0,
-	
-	_Sleep,
-	_Standby,
-	_Shutdown,
-	_Reboot,
+    _None = 0,
+    
+    _Sleep,
+    _Standby,
+    _Shutdown,
+    _Reboot,
 
-	_Kill,
+    _Kill,
 };
 
 #endif //!__VK_SIGNALS_H__

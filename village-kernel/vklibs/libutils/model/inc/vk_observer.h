@@ -16,30 +16,30 @@
 class ObserverModel
 {
 protected:
-	//Structures
-	struct Observer
-	{
-		Function    func;
-		void*       user;
+    //Structures
+    struct Observer
+    {
+        Function    func;
+        void*       user;
 
-		Observer(Function func = NULL, void* user = NULL)
-			:func(func),
-			user(user)
-		{}
-	};
+        Observer(Function func = NULL, void* user = NULL)
+            :func(func),
+            user(user)
+        {}
+    };
 
-	//Members
-	VkList<Observer*> observers;
+    //Members
+    VkList<Observer*> observers;
 public:
-	//Methods
-	ObserverModel();
-	virtual ~ObserverModel();
-	virtual void Attach(Method method, Class* user);
-	virtual void Attach(Function func, void* user = NULL);
-	virtual void Detach(Method method, Class* user);
-	virtual void Detach(Function func, void* user = NULL);
-	virtual void Notify(void* argv);
-	virtual void Release();
+    //Methods
+    ObserverModel();
+    virtual ~ObserverModel();
+    virtual void Attach(Method method, Class* user);
+    virtual void Attach(Function func, void* user = NULL);
+    virtual void Detach(Method method, Class* user);
+    virtual void Detach(Function func, void* user = NULL);
+    virtual void Notify(void* argv);
+    virtual void Release();
 };
 
 #endif //!__VK_OBSERVER_H__

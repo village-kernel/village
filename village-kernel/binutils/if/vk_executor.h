@@ -20,15 +20,15 @@ class BaseExecutor;
 class Executor
 {
 public:
-	//Constructor
-	Executor() { }
+    //Constructor
+    Executor() { }
 
-	//Destructor
-	virtual ~Executor() { }
+    //Destructor
+    virtual ~Executor() { }
 
-	//Methods
-	virtual VkList<char*> GetSuffixes() = 0;
-	virtual BaseExecutor* Create() = 0;
+    //Methods
+    virtual VkList<char*> GetSuffixes() = 0;
+    virtual BaseExecutor* Create() = 0;
 };
 
 #endif // !__VK_EXECUTOR_INTERFACE_H__

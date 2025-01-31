@@ -15,31 +15,31 @@
 class ConcreteSymbol : public Symbol
 {
 private:
-	/// @brief Structures
-	struct Entry
-	{
-		const char* name;
-		uint32_t    addr;
+    /// @brief Structures
+    struct Entry
+    {
+        const char* name;
+        uint32_t    addr;
 
-		Entry(const char* name, uint32_t addr):
-			name(name),
-			addr(addr)
-		{}
-	};
+        Entry(const char* name, uint32_t addr):
+            name(name),
+            addr(addr)
+        {}
+    };
 
-	/// @brief Members
-	VkList<Entry*> entrys;
+    /// @brief Members
+    VkList<Entry*> entrys;
 public:
-	/// @brief Methods
-	ConcreteSymbol();
-	~ConcreteSymbol();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteSymbol();
+    ~ConcreteSymbol();
+    void Setup();
+    void Exit();
 
-	/// @brief Methods
-	void Export(uint32_t symAddr, const char* name);
-	void Unexport(const char* name);
-	uint32_t Search(const char* name);
+    /// @brief Methods
+    void Export(uint32_t symAddr, const char* name);
+    void Unexport(const char* name);
+    uint32_t Search(const char* name);
 };
 
 #endif //!__VK_SYMBOL_H__

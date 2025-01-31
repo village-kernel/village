@@ -14,7 +14,7 @@
 /// @return 
 extern "C" int atexit(void (*function)(void))
 {
-	return 0;
+    return 0;
 }
 
 
@@ -23,7 +23,7 @@ extern "C" int atexit(void (*function)(void))
 /// @return 
 extern "C" void* malloc(size_t size)
 {
-	return (void*)kernel->memory.HeapAlloc((uint32_t)size);
+    return (void*)kernel->memory.HeapAlloc((uint32_t)size);
 }
 
 
@@ -32,7 +32,7 @@ extern "C" void* malloc(size_t size)
 /// @param ptr 
 extern "C" void free(void* ptr)
 {
-	kernel->memory.Free((uint32_t)ptr);
+    kernel->memory.Free((uint32_t)ptr);
 }
 
 
@@ -41,7 +41,7 @@ extern "C" void free(void* ptr)
 /// @return 
 extern "C" int rand(void)
 {
-	return kernel->system.GetSysClkCounts();
+    return kernel->system.GetSysClkCounts();
 }
 
 
@@ -50,8 +50,8 @@ extern "C" int rand(void)
 /// @return 
 extern "C" int abs(int i)
 {
-	if (i < 0) i = -i;
-	return i;
+    if (i < 0) i = -i;
+    return i;
 }
 
 
@@ -60,8 +60,8 @@ extern "C" int abs(int i)
 /// @return 
 extern "C" long labs(long i)
 {
-	if (i < 0) i = -i;
-	return i;
+    if (i < 0) i = -i;
+    return i;
 }
 
 
@@ -70,12 +70,12 @@ extern "C" long labs(long i)
 /// @return 
 extern "C" int atoi(const char *str)
 {
-	int i = 0;
+    int i = 0;
 
-	while (isdigit(*str))
-	{
-		i = i * 10 + *(str++) - '0';
-	}
+    while (isdigit(*str))
+    {
+        i = i * 10 + *(str++) - '0';
+    }
 
-	return i;
+    return i;
 }

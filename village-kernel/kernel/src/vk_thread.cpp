@@ -9,9 +9,9 @@
 
 /// @brief Constructor
 ConcreteThread::ConcreteThread()
-	:memory(NULL),
-	system(NULL),
-	scheduler(NULL)
+    :memory(NULL),
+    system(NULL),
+    scheduler(NULL)
 {
 }
 
@@ -25,38 +25,38 @@ ConcreteThread::~ConcreteThread()
 /// @brief Thread setup
 void ConcreteThread::Setup()
 {
-	//Gets the memory pointer
-	memory = (Memory*)&kernel->memory;
+    //Gets the memory pointer
+    memory = (Memory*)&kernel->memory;
 
-	//Gets the system pointer
-	system = (System*)&kernel->system;
+    //Gets the system pointer
+    system = (System*)&kernel->system;
 
-	//Gets the scheduler pointer
-	scheduler = (Scheduler*)&kernel->scheduler;
+    //Gets the scheduler pointer
+    scheduler = (Scheduler*)&kernel->scheduler;
 
-	//Frist task should be idle task and the tid is 0
-	CreateTask("Thread::IdleTask", (Method)&ConcreteThread::IdleTask, this);
+    //Frist task should be idle task and the tid is 0
+    CreateTask("Thread::IdleTask", (Method)&ConcreteThread::IdleTask, this);
 
-	//Output debug info
-	kernel->debug.Info("Thread setup done!");
+    //Output debug info
+    kernel->debug.Info("Thread setup done!");
 }
 
 
 /// @brief Thread start
 void ConcreteThread::Start()
 {
-	for (tasks.Begin(); !tasks.IsEnd(); tasks.Next())
-	{
-		tasks.Item()->state = TaskState::_Running;
-	}
-	tasks.Begin();
+    for (tasks.Begin(); !tasks.IsEnd(); tasks.Next())
+    {
+        tasks.Item()->state = TaskState::_Running;
+    }
+    tasks.Begin();
 }
 
 
 /// @brief Exit
 void ConcreteThread::Exit()
 {
-	tasks.Release();
+    tasks.Release();
 }
 
 
@@ -65,11 +65,11 @@ void ConcreteThread::Exit()
 /// @param user execute user
 void ConcreteThread::TaskHandler(Function function, void* user, void* args)
 {
-	if (NULL != function)
-	{
-		(function)(user, args);
-	}
-	TaskExit(); while(1) {}
+    if (NULL != function)
+    {
+        (function)(user, args);
+    }
+    TaskExit(); while(1) {}
 }
 
 
@@ -80,28 +80,28 @@ void ConcreteThread::TaskHandler(Function function, void* user, void* args)
 /// @return tid
 int ConcreteThread::CreateTask(const char* name, Function function, void* user, void* args)
 {
-	//Create a new task and allocate stack space
-	Task* task = new Task(memory->StackAlloc(task_stack_size), (char*)name);
-	
-	//Check whether stack allocation is successful
-	if (NULL == task && 0 == task->stack) return -1;
+    //Create a new task and allocate stack space
+    Task* task = new Task(memory->StackAlloc(task_stack_size), (char*)name);
+    
+    //Check whether stack allocation is successful
+    if (NULL == task && 0 == task->stack) return -1;
 
-	//Fill the stack content
-	task->psp = task->stack - psp_frame_size;
-	*(TaskContext*)task->psp = TaskContext
-	(
-		(uint32_t)union_cast<uint32_t>(&ConcreteThread::TaskHandler),
-		(uint32_t)this,
-		(uint32_t)function,
-		(uint32_t)user,
-		(uint32_t)args
-	);
+    //Fill the stack content
+    task->psp = task->stack - psp_frame_size;
+    *(TaskContext*)task->psp = TaskContext
+    (
+        (uint32_t)union_cast<uint32_t>(&ConcreteThread::TaskHandler),
+        (uint32_t)this,
+        (uint32_t)function,
+        (uint32_t)user,
+        (uint32_t)args
+    );
 
-	//Add task into tasks list
-	task->tid = tasks.Add(task);
+    //Add task into tasks list
+    task->tid = tasks.Add(task);
 
-	//return task tid
-	return task->tid;
+    //return task tid
+    return task->tid;
 }
 
 
@@ -112,7 +112,7 @@ int ConcreteThread::CreateTask(const char* name, Function function, void* user, 
 /// @return tid
 int ConcreteThread::CreateTask(const char* name, Method method, Class *user, void* args)
 {
-	return CreateTask(name, union_cast<Function>(method), (void*)user, args);
+    return CreateTask(name, union_cast<Function>(method), (void*)user, args);
 }
 
 
@@ -120,7 +120,7 @@ int ConcreteThread::CreateTask(const char* name, Method method, Class *user, voi
 /// @return 
 int ConcreteThread::GetTaskId()
 {
-	return tasks.GetNid();
+    return tasks.GetNid();
 }
 
 
@@ -129,16 +129,16 @@ int ConcreteThread::GetTaskId()
 /// @return 
 bool ConcreteThread::StartTask(int tid)
 {
-	//Gets the task
-	Task* task = tasks.GetItem(tid);
+    //Gets the task
+    Task* task = tasks.GetItem(tid);
 
-	//Check task is valid
-	if (NULL != task)
-	{
-		task->state = TaskState::_Running;
-		return true;
-	}
-	return false;
+    //Check task is valid
+    if (NULL != task)
+    {
+        task->state = TaskState::_Running;
+        return true;
+    }
+    return false;
 }
 
 
@@ -147,16 +147,16 @@ bool ConcreteThread::StartTask(int tid)
 /// @return 
 bool ConcreteThread::StopTask(int tid)
 {
-	//Gets the task
-	Task* task = tasks.GetItem(tid);
+    //Gets the task
+    Task* task = tasks.GetItem(tid);
 
-	//Check task is valid
-	if (NULL != task)
-	{
-		task->state = TaskState::_Exited;
-		return true;
-	}
-	return false;
+    //Check task is valid
+    if (NULL != task)
+    {
+        task->state = TaskState::_Exited;
+        return true;
+    }
+    return false;
 }
 
 
@@ -165,17 +165,17 @@ bool ConcreteThread::StopTask(int tid)
 /// @return result
 bool ConcreteThread::WaitForTask(int tid)
 {
-	//Gets the task
-	Task* task = tasks.GetItem(tid);
+    //Gets the task
+    Task* task = tasks.GetItem(tid);
 
-	//Check task is valid
-	if (NULL != task)
-	{
-		//Blocking wait
-		while(task->state != TaskState::_Exited) {}
-		return true;
-	}
-	return false;
+    //Check task is valid
+    if (NULL != task)
+    {
+        //Blocking wait
+        while(task->state != TaskState::_Exited) {}
+        return true;
+    }
+    return false;
 }
 
 
@@ -184,19 +184,19 @@ bool ConcreteThread::WaitForTask(int tid)
 /// @return 
 bool ConcreteThread::ExitBlocked(int tid)
 {
-	//Gets the task
-	Task* task = tasks.GetItem(tid);
+    //Gets the task
+    Task* task = tasks.GetItem(tid);
 
-	//Check task is valid
-	if (NULL != task)
-	{
-		if (TaskState::_Blocked == task->state)
-		{
-			task->state = TaskState::_Running;
-			return true;
-		}
-	}
-	return false;
+    //Check task is valid
+    if (NULL != task)
+    {
+        if (TaskState::_Blocked == task->state)
+        {
+            task->state = TaskState::_Running;
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -205,16 +205,16 @@ bool ConcreteThread::ExitBlocked(int tid)
 /// @return result
 bool ConcreteThread::DeleteTask(int tid)
 {
-	//Gets the task
-	Task* task = tasks.GetItem(tid);
+    //Gets the task
+    Task* task = tasks.GetItem(tid);
 
-	//Check task is valid
-	if (NULL != task)
-	{
-		memory->Free(task->stack);
-		return tasks.Remove(task, tid);
-	}
-	return true;
+    //Check task is valid
+    if (NULL != task)
+    {
+        memory->Free(task->stack);
+        return tasks.Remove(task, tid);
+    }
+    return true;
 }
 
 
@@ -223,11 +223,11 @@ bool ConcreteThread::DeleteTask(int tid)
 /// @return result
 bool ConcreteThread::IsTaskAlive(int tid)
 {
-	//Gets the task
-	Task* task = tasks.GetItem(tid);
+    //Gets the task
+    Task* task = tasks.GetItem(tid);
 
-	//Returns true when the task is not null and the status is not exited
-	return ((NULL != task) && (task->state != TaskState::_Exited));
+    //Returns true when the task is not null and the status is not exited
+    return ((NULL != task) && (task->state != TaskState::_Exited));
 }
 
 
@@ -235,7 +235,7 @@ bool ConcreteThread::IsTaskAlive(int tid)
 /// @return 
 VkList<ConcreteThread::Task*> ConcreteThread::GetTasks()
 {
-	return tasks;
+    return tasks;
 }
 
 
@@ -243,11 +243,11 @@ VkList<ConcreteThread::Task*> ConcreteThread::GetTasks()
 /// @param state 
 void ConcreteThread::ChangeState(TaskState state)
 {
-	if(tasks.GetNid() > 0)
-	{
-		tasks.Item()->state = state;
-		scheduler->Sched();
-	}
+    if(tasks.GetNid() > 0)
+    {
+        tasks.Item()->state = state;
+        scheduler->Sched();
+    }
 }
 
 
@@ -255,37 +255,37 @@ void ConcreteThread::ChangeState(TaskState state)
 /// @param ticks sleep ticks
 void ConcreteThread::Sleep(uint32_t ticks)
 {
-	if(tasks.GetNid() > 0)
-	{
-		tasks.Item()->state = TaskState::_Suspend;
-		tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
-		scheduler->Sched();
-		while (TaskState::_Suspend == tasks.Item()->state) {}
-	}
+    if(tasks.GetNid() > 0)
+    {
+        tasks.Item()->state = TaskState::_Suspend;
+        tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
+        scheduler->Sched();
+        while (TaskState::_Suspend == tasks.Item()->state) {}
+    }
 }
 
 
 /// @brief Thread Blocked
 void ConcreteThread::Blocked()
 {
-	if(tasks.GetNid() > 0)
-	{
-		tasks.Item()->state = TaskState::_Blocked;
-		scheduler->Sched();
-		while (TaskState::_Blocked == tasks.Item()->state) {}
-	}
+    if(tasks.GetNid() > 0)
+    {
+        tasks.Item()->state = TaskState::_Blocked;
+        scheduler->Sched();
+        while (TaskState::_Blocked == tasks.Item()->state) {}
+    }
 }
 
 
 /// @brief Thread Exit
 void ConcreteThread::TaskExit()
 {
-	if(tasks.GetNid() > 0)
-	{
-		tasks.Item()->state = TaskState::_Exited;
-		DeleteTask(tasks.GetNid());
-		scheduler->Sched();
-	}
+    if(tasks.GetNid() > 0)
+    {
+        tasks.Item()->state = TaskState::_Exited;
+        DeleteTask(tasks.GetNid());
+        scheduler->Sched();
+    }
 }
 
 
@@ -293,7 +293,7 @@ void ConcreteThread::TaskExit()
 /// @param psp process stack pointer
 void ConcreteThread::SaveTaskPSP(uint32_t psp)
 {
-	tasks.Item()->psp = psp;
+    tasks.Item()->psp = psp;
 }
 
 
@@ -301,42 +301,42 @@ void ConcreteThread::SaveTaskPSP(uint32_t psp)
 /// @return process stack pointer
 uint32_t ConcreteThread::GetTaskPSP()
 {
-	return tasks.Item()->psp;
+    return tasks.Item()->psp;
 }
 
 
 /// @brief Select next task, round-Robin scheduler
 void ConcreteThread::SelectNextTask()
 {
-	while (1)
-	{
-		//Set next task as current task
-		tasks.Next(); if (tasks.IsEnd()) tasks.Begin();
+    while (1)
+    {
+        //Set next task as current task
+        tasks.Next(); if (tasks.IsEnd()) tasks.Begin();
 
-		//Get current task
-		Task* task = tasks.Item();
+        //Get current task
+        Task* task = tasks.Item();
 
-		//Check current task state
-		if (TaskState::_Suspend == task->state)
-		{
-			if(system->GetSysClkCounts() >= task->ticks)
-			{
-				task->state = TaskState::_Running;
-				task->ticks = 0;
-			}
-		}
+        //Check current task state
+        if (TaskState::_Suspend == task->state)
+        {
+            if(system->GetSysClkCounts() >= task->ticks)
+            {
+                task->state = TaskState::_Running;
+                task->ticks = 0;
+            }
+        }
 
-		//Break when task state is running
-		if (TaskState::_Running == task->state) break;
-	}
+        //Break when task state is running
+        if (TaskState::_Running == task->state) break;
+    }
 }
 
 
 /// @brief Idle task
 void ConcreteThread::IdleTask()
 {
-	while (1)
-	{
-		__asm volatile("NOP");
-	} 
+    while (1)
+    {
+        __asm volatile("NOP");
+    } 
 }

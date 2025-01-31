@@ -32,49 +32,49 @@
 class Village : public Kernel
 {
 private:
-	/// @brief Members
-	ConcreteSystem      concreteSystem;
-	ConcreteMemory      concreteMemory;
-	ConcreteDebug       concreteDebug;
-	ConcreteInterrupt   concreteInterrupt;
-	ConcreteScheduler   concreteScheduler;
-	ConcreteThread      concreteThread;
-	ConcreteWorkQueue   concreteWorkQueue;
-	ConcreteEvent       concreteEvent;
-	ConcreteSymbol      concreteSymbol;
-	ConcreteDevice      concreteDevice;
-	ConcreteFeature     concreteFeature;
-	ConcreteFileSystem  concreteFilesys;
-	ConcreteLoader      concreteLoader;
-	ConcreteProcess     concreteProcess;
-	ConcreteTimer       concreteTimer;
-	ConcreteTerminal    concreteTerminal;
-	ConcreteSignal      concreteSignal;
-	ConcreteProtocol    concreteProtocol;
+    /// @brief Members
+    ConcreteSystem      concreteSystem;
+    ConcreteMemory      concreteMemory;
+    ConcreteDebug       concreteDebug;
+    ConcreteInterrupt   concreteInterrupt;
+    ConcreteScheduler   concreteScheduler;
+    ConcreteThread      concreteThread;
+    ConcreteWorkQueue   concreteWorkQueue;
+    ConcreteEvent       concreteEvent;
+    ConcreteSymbol      concreteSymbol;
+    ConcreteDevice      concreteDevice;
+    ConcreteFeature     concreteFeature;
+    ConcreteFileSystem  concreteFilesys;
+    ConcreteLoader      concreteLoader;
+    ConcreteProcess     concreteProcess;
+    ConcreteTimer       concreteTimer;
+    ConcreteTerminal    concreteTerminal;
+    ConcreteSignal      concreteSignal;
+    ConcreteProtocol    concreteProtocol;
 private:
-	/// @brief Methods
-	Village();
-	~Village();
+    /// @brief Methods
+    Village();
+    ~Village();
 public:
-	/// @brief Kernel Methods
-	void Setup();
-	void Start();
-	void Exit();
+    /// @brief Kernel Methods
+    void Setup();
+    void Start();
+    void Exit();
 
-	/// @brief Power Methods
-	void Sleep();
-	void Standby();
-	void Shutdown();
-	void Reboot();
+    /// @brief Power Methods
+    void Sleep();
+    void Standby();
+    void Shutdown();
+    void Reboot();
 
-	/// @brief Kernel build info 
-	const char* GetBuildDate();
-	const char* GetBuildTime();
-	const char* GetBuildVersion();
-	const char* GetBuildGitCommit();
+    /// @brief Kernel build info 
+    const char* GetBuildDate();
+    const char* GetBuildTime();
+    const char* GetBuildVersion();
+    const char* GetBuildGitCommit();
 
-	/// @brief Static methods
-	static Village& Instance();
+    /// @brief Static methods
+    static Village& Instance();
 };
 
 #endif // !__VK_VILLAGE_H__

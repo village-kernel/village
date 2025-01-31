@@ -37,7 +37,7 @@
             "svdFile": "${workspaceRoot}/village-kernel/drivers/platform/stm32f4xx/svd/STM32F407.svd",
             "preLaunchTask": "Build"
         },
-		{
+        {
             "name": "Cortex Debug-jlink STM32H743",
             "cwd": "${workspaceRoot}/",
             "executable": "${workspaceFolder}/build/village-kernel.elf",
@@ -51,7 +51,7 @@
             "svdFile": "${workspaceRoot}/village-kernel/drivers/platform/stm32h7xx/svd/STM32H743.svd",
             "preLaunchTask": "Build"
         },
-		{
+        {
             "name": "Cortex Debug-stlink STM32H743",
             "cwd": "${workspaceRoot}/",
             "executable": "${workspaceFolder}/build/village-kernel.elf",

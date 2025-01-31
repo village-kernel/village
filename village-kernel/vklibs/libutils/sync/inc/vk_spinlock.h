@@ -14,14 +14,14 @@
 class SpinLock
 {
 private:
-	//Members
-	volatile bool lock;
+    //Members
+    volatile bool lock;
 public:
-	//Methods
-	SpinLock();
-	~SpinLock();
-	void Lock();
-	void Unlock();
+    //Methods
+    SpinLock();
+    ~SpinLock();
+    void Lock();
+    void Unlock();
 };
 
 #endif //!__VK_SPIN_LOCK_H__

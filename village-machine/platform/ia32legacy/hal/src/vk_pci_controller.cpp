@@ -15,16 +15,16 @@
 /// @return 
 uint32_t PCIController::ReadData(uint8_t bus, uint8_t dev, uint8_t func, uint8_t offset)
 {
-	// Create configuration address
-	uint32_t address =  ((uint32_t)bus << 16)     |
-						((uint32_t)dev << 11)     |
-						((uint32_t)func << 8)     |
-						((uint32_t)offset & 0xFC) |
-						((uint32_t)0x80000000);
-	// Write out the address
-	PortLongOut(0xCF8, address);
-	// Read in the data
-	return PortLongIn(0xCFC);
+    // Create configuration address
+    uint32_t address =  ((uint32_t)bus << 16)     |
+                        ((uint32_t)dev << 11)     |
+                        ((uint32_t)func << 8)     |
+                        ((uint32_t)offset & 0xFC) |
+                        ((uint32_t)0x80000000);
+    // Write out the address
+    PortLongOut(0xCF8, address);
+    // Read in the data
+    return PortLongIn(0xCFC);
 }
 
 
@@ -34,8 +34,8 @@ uint32_t PCIController::ReadData(uint8_t bus, uint8_t dev, uint8_t func, uint8_t
 /// @return 
 uint16_t PCIController::GetVendorID(uint8_t bus, uint8_t dev)
 {
-	uint32_t value = ReadData(bus, dev, 0, 0);
-	return (uint16_t)(value & 0xFFFF);
+    uint32_t value = ReadData(bus, dev, 0, 0);
+    return (uint16_t)(value & 0xFFFF);
 }
 
 
@@ -45,8 +45,8 @@ uint16_t PCIController::GetVendorID(uint8_t bus, uint8_t dev)
 /// @return 
 uint16_t PCIController::GetDeviceID(uint8_t bus, uint8_t dev)
 {
-	uint32_t value = ReadData(bus, dev, 0, 2);
-	return (uint16_t)((value >> 16) & 0xFFFF);
+    uint32_t value = ReadData(bus, dev, 0, 2);
+    return (uint16_t)((value >> 16) & 0xFFFF);
 }
 
 
@@ -57,8 +57,8 @@ uint16_t PCIController::GetDeviceID(uint8_t bus, uint8_t dev)
 /// @return 
 uint32_t PCIController::GetBaseAddress(uint8_t bus, uint8_t dev, uint8_t BAR)
 {
-	uint8_t offset = 0x4 << 2 << BAR;
-	return (ReadData(bus, dev, 0, offset) & 0xFFFFFFF0);
+    uint8_t offset = 0x4 << 2 << BAR;
+    return (ReadData(bus, dev, 0, offset) & 0xFFFFFFF0);
 }
 
 
@@ -69,18 +69,18 @@ uint32_t PCIController::GetBaseAddress(uint8_t bus, uint8_t dev, uint8_t BAR)
 /// @return 
 uint32_t PCIController::ReadBAR(uint16_t vendorID, uint16_t deviceID, uint8_t BAR)
 {
-	for (uint16_t bus = 0; bus < 256; bus++)
-	{
-		for (uint8_t dev = 0; dev < 32; dev++)
-		{
-			if (vendorID == GetVendorID(bus, dev))
-			{
-				if (deviceID == GetDeviceID(bus, dev))
-				{
-					return GetBaseAddress(bus, dev, BAR);
-				}
-			}
-		}
-	}
-	return 0;
+    for (uint16_t bus = 0; bus < 256; bus++)
+    {
+        for (uint8_t dev = 0; dev < 32; dev++)
+        {
+            if (vendorID == GetVendorID(bus, dev))
+            {
+                if (deviceID == GetDeviceID(bus, dev))
+                {
+                    return GetBaseAddress(bus, dev, BAR);
+                }
+            }
+        }
+    }
+    return 0;
 }

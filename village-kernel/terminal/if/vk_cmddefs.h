@@ -11,13 +11,13 @@
 ///Command register macro
 #define REGISTER_CMD(cmd, name)                                   \
 static struct _CMD_##name {                                       \
-	Cmd* command = cmd;                                           \
-	_CMD_##name() {                                               \
-		kernel->terminal.RegisterCmd(command, (char*)#name);      \
-	}                                                             \
-	~_CMD_##name() {                                              \
-		kernel->terminal.UnregisterCmd(command, (char*)#name);    \
-	}                                                             \
+    Cmd* command = cmd;                                           \
+    _CMD_##name() {                                               \
+        kernel->terminal.RegisterCmd(command, (char*)#name);      \
+    }                                                             \
+    ~_CMD_##name() {                                              \
+        kernel->terminal.UnregisterCmd(command, (char*)#name);    \
+    }                                                             \
 } const _cmd_##name __attribute__((used,__section__(".cmds")))
 
 

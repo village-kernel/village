@@ -12,19 +12,19 @@
 /// @return tid
 int BinExecutor::Initiate()
 {
-	//Load, parser and execute bin file
-	if (!bin.Load(path)) return -1;
+    //Load, parser and execute bin file
+    if (!bin.Load(path)) return -1;
 
-	//Create a sandboxed thread to run the app
-	return kernel->thread.CreateTask(path, (Method)&BinExecutor::Sandbox, this);
+    //Create a sandboxed thread to run the app
+    return kernel->thread.CreateTask(path, (Method)&BinExecutor::Sandbox, this);
 }
 
 
 /// @brief BinExecutor execute app
 void BinExecutor::Sandbox()
 {
-	bin.Execute(argc, argv);
-	bin.Exit();
+    bin.Execute(argc, argv);
+    bin.Exit();
 }
 
 
@@ -32,7 +32,7 @@ void BinExecutor::Sandbox()
 /// @return 
 bool BinExecutor::Release()
 {
-	return bin.Exit();
+    return bin.Exit();
 }
 
 
@@ -40,12 +40,12 @@ bool BinExecutor::Release()
 /// @return 
 VkList<char*> BinExecutorFty::GetSuffixes()
 {
-	VkList<char*> suffixes;
-	suffixes.Add((char*)".bin");
+    VkList<char*> suffixes;
+    suffixes.Add((char*)".bin");
 #ifdef ASSOCIATED_EXEC_BIN
-	suffixes.Add((char*)".exec");
+    suffixes.Add((char*)".exec");
 #endif
-	return suffixes;
+    return suffixes;
 }
 
 
@@ -53,7 +53,7 @@ VkList<char*> BinExecutorFty::GetSuffixes()
 /// @return 
 BaseExecutor* BinExecutorFty::Create()
 {
-	return new BinExecutor();
+    return new BinExecutor();
 }
 
 

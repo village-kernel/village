@@ -26,7 +26,7 @@ FileSysOpt::~FileSysOpt()
 /// @return 
 bool FileSysOpt::Move(const char* source, const char* target)
 {
-	return false;
+    return false;
 }
 
 
@@ -36,7 +36,7 @@ bool FileSysOpt::Move(const char* source, const char* target)
 /// @return 
 bool FileSysOpt::Copy(const char* source, const char* target)
 {
-	return false;
+    return false;
 }
 
 
@@ -45,12 +45,12 @@ bool FileSysOpt::Copy(const char* source, const char* target)
 /// @return 
 bool FileSysOpt::Remove(const char* source)
 {
-	FileVol* volume = kernel->filesys.GetVolume(source);
-	
-	if (NULL != volume)
-	{
-		return volume->Remove(source);
-	}
+    FileVol* volume = kernel->filesys.GetVolume(source);
+    
+    if (NULL != volume)
+    {
+        return volume->Remove(source);
+    }
 
-	return false;
+    return false;
 }

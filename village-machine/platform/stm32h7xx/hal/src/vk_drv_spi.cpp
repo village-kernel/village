@@ -9,7 +9,7 @@
 
 /// @brief Constructor
 Spi::Spi()
-	: base(NULL)
+    : base(NULL)
 {
 }
 
@@ -19,36 +19,36 @@ Spi::Spi()
 /// @param channel 
 void Spi::Initialize(Channel channel)
 {
-	//Enable clock
-	if (_Spi1 == channel)
-	{
-		RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-		base = SPI1;
-	}
-	else if(_Spi2 == channel)
-	{
-		RCC->APB1LENR |= RCC_APB1LENR_SPI2EN;
-		base = SPI2;
-	}
-	else if (_Spi3 == channel)
-	{
-		RCC->APB1LENR |= RCC_APB1LENR_SPI3EN;
-		base = SPI3;
-	}
-	else if (_Spi4 == channel)
-	{
-		RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
-		base = SPI4;
-	}
-		else if (_Spi5 == channel)
-	{
-		RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
-		base = SPI5;
-	}
+    //Enable clock
+    if (_Spi1 == channel)
+    {
+        RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+        base = SPI1;
+    }
+    else if(_Spi2 == channel)
+    {
+        RCC->APB1LENR |= RCC_APB1LENR_SPI2EN;
+        base = SPI2;
+    }
+    else if (_Spi3 == channel)
+    {
+        RCC->APB1LENR |= RCC_APB1LENR_SPI3EN;
+        base = SPI3;
+    }
+    else if (_Spi4 == channel)
+    {
+        RCC->APB2ENR |= RCC_APB2ENR_SPI4EN;
+        base = SPI4;
+    }
+        else if (_Spi5 == channel)
+    {
+        RCC->APB2ENR |= RCC_APB2ENR_SPI5EN;
+        base = SPI5;
+    }
 
-	//Get the tx and rx register pointer
-	txReg = (uint32_t)&(base->TXDR);
-	rxReg = (uint32_t)&(base->RXDR);
+    //Get the tx and rx register pointer
+    txReg = (uint32_t)&(base->TXDR);
+    rxReg = (uint32_t)&(base->RXDR);
 }
 
 
@@ -58,32 +58,32 @@ void Spi::Initialize(Channel channel)
 /// @param cpolCphaMode 
 void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode)
 {
-	if (_Master == MasterSelection)
-	{
-		//Enable software slave management
-		base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SSOM_Msk)) | SPI_CFG2_SSOM;
+    if (_Master == MasterSelection)
+    {
+        //Enable software slave management
+        base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SSOM_Msk)) | SPI_CFG2_SSOM;
 
-		//Enable software slave management
-		base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SSM_Msk)) | SPI_CFG2_SSM;
+        //Enable software slave management
+        base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SSM_Msk)) | SPI_CFG2_SSM;
 
-		//SET SSI bit
-		base->CR1 = (base->CR1 & ~(SPI_CR1_SSI_Msk)) | SPI_CR1_SSI;
-	}
-	else
-	{
-		//Disable software slave management
-		base->CFG2 = base->CFG2 & ~(SPI_CFG2_SSM_Msk);
-	}
+        //SET SSI bit
+        base->CR1 = (base->CR1 & ~(SPI_CR1_SSI_Msk)) | SPI_CR1_SSI;
+    }
+    else
+    {
+        //Disable software slave management
+        base->CFG2 = base->CFG2 & ~(SPI_CFG2_SSM_Msk);
+    }
 
-	//Set spi mode
-	if (MasterSelection == MasterSel::_Master)
-		base->CFG2 |= SPI_CFG2_MASTER;
-	else
-		base->CFG2 &= ~SPI_CFG2_MASTER;
+    //Set spi mode
+    if (MasterSelection == MasterSel::_Master)
+        base->CFG2 |= SPI_CFG2_MASTER;
+    else
+        base->CFG2 &= ~SPI_CFG2_MASTER;
 
-	//Set cpol Cpha mode
-	const uint32_t cpol_cpha_msk = SPI_CFG2_CPOL | SPI_CFG2_CPHA;
-	base->CFG2 = (base->CFG2 & ~cpol_cpha_msk) | (cpolCphaMode << SPI_CFG2_CPHA_Pos);
+    //Set cpol Cpha mode
+    const uint32_t cpol_cpha_msk = SPI_CFG2_CPOL | SPI_CFG2_CPHA;
+    base->CFG2 = (base->CFG2 & ~cpol_cpha_msk) | (cpolCphaMode << SPI_CFG2_CPHA_Pos);
 }
 
 
@@ -92,14 +92,14 @@ void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode)
 /// @param datasize 
 void Spi::ConfigFrame(LsbFirst lsbfirst, DataSize datasize)
 {
-	if (LsbFirst::_LsbFirst == lsbfirst)
-		base->CFG2 |= SPI_CFG2_LSBFRST;
-	else
-		base->CFG2 &= ~SPI_CFG2_LSBFRST;
+    if (LsbFirst::_LsbFirst == lsbfirst)
+        base->CFG2 |= SPI_CFG2_LSBFRST;
+    else
+        base->CFG2 &= ~SPI_CFG2_LSBFRST;
 
-	base->CFG1 = (base->CFG1 & ~SPI_CFG1_DSIZE) | (datasize << SPI_CFG1_DSIZE_Pos);
-	
-	base->CR2 = (base->CR2 & ~SPI_CR2_TSIZE) | (1 << SPI_CR2_TSIZE_Pos);
+    base->CFG1 = (base->CFG1 & ~SPI_CFG1_DSIZE) | (datasize << SPI_CFG1_DSIZE_Pos);
+    
+    base->CR2 = (base->CR2 & ~SPI_CR2_TSIZE) | (1 << SPI_CR2_TSIZE_Pos);
 }
 
 
@@ -109,7 +109,7 @@ void Spi::ConfigFrame(LsbFirst lsbfirst, DataSize datasize)
 /// @param baud_rate 
 void Spi::ConfigBaudRatePrescaler(BaudRate baud_rate)
 {
-	base->CFG1 = (base->CFG1 & ~SPI_CFG1_MBR_Msk) | (baud_rate << SPI_CFG1_MBR_Pos);
+    base->CFG1 = (base->CFG1 & ~SPI_CFG1_MBR_Msk) | (baud_rate << SPI_CFG1_MBR_Pos);
 }
 
 
@@ -117,7 +117,7 @@ void Spi::ConfigBaudRatePrescaler(BaudRate baud_rate)
 /// @param commMode 
 void Spi::ConfigCommMode(CommMode commMode)
 {
-	base->CFG2 = (base->CFG2 & ~(SPI_CFG2_COMM_Msk)) | (commMode << SPI_CFG2_COMM_Pos);
+    base->CFG2 = (base->CFG2 & ~(SPI_CFG2_COMM_Msk)) | (commMode << SPI_CFG2_COMM_Pos);
 }
 
 
@@ -125,7 +125,7 @@ void Spi::ConfigCommMode(CommMode commMode)
 /// @param isEnableCrc 
 void Spi::ConfigCrc(bool isEnableCrc)
 {
-	base->CFG1 = (base->CFG1 & ~(SPI_CFG1_CRCEN_Msk)) | (isEnableCrc << SPI_CFG1_CRCEN_Pos);
+    base->CFG1 = (base->CFG1 & ~(SPI_CFG1_CRCEN_Msk)) | (isEnableCrc << SPI_CFG1_CRCEN_Pos);
 }
 
 
@@ -133,7 +133,7 @@ void Spi::ConfigCrc(bool isEnableCrc)
 /// @param frf 
 void Spi::ConfigFrameFormat(FrameFormat frf)
 {
-	base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SP_Msk)) | (frf << SPI_CFG2_SP_Pos);
+    base->CFG2 = (base->CFG2 & ~(SPI_CFG2_SP_Msk)) | (frf << SPI_CFG2_SP_Pos);
 }
 
 
@@ -141,7 +141,7 @@ void Spi::ConfigFrameFormat(FrameFormat frf)
 /// @param SpiRxThresthreshold 
 void Spi::ConfigFifoRecThreshold(RxFifoThres SpiRxThresthreshold)
 {
-	base->CFG1 = (base->CFG1 & ~(SPI_CFG1_FTHLV_Msk)) | (SpiRxThresthreshold << SPI_CFG1_FTHLV_Pos);
+    base->CFG1 = (base->CFG1 & ~(SPI_CFG1_FTHLV_Msk)) | (SpiRxThresthreshold << SPI_CFG1_FTHLV_Pos);
 }
 
 
@@ -150,8 +150,8 @@ void Spi::ConfigFifoRecThreshold(RxFifoThres SpiRxThresthreshold)
 /// @param isEnableRxDma 
 void Spi::ConfigDma(bool isEnableTxDma, bool isEnableRxDma)
 {
-	base->CFG1 = (base->CFG1 & (~SPI_CFG1_TXDMAEN)) | (isEnableTxDma << SPI_CFG1_TXDMAEN_Pos);
-	base->CFG1 = (base->CFG1 & (~SPI_CFG1_RXDMAEN)) | (isEnableRxDma << SPI_CFG1_RXDMAEN_Pos);
+    base->CFG1 = (base->CFG1 & (~SPI_CFG1_TXDMAEN)) | (isEnableTxDma << SPI_CFG1_TXDMAEN_Pos);
+    base->CFG1 = (base->CFG1 & (~SPI_CFG1_RXDMAEN)) | (isEnableRxDma << SPI_CFG1_RXDMAEN_Pos);
 }
 
 
@@ -159,14 +159,14 @@ void Spi::ConfigDma(bool isEnableTxDma, bool isEnableRxDma)
 /// @return 
 inline bool Spi::WaitForTxEmpty()
 {
-	volatile uint32_t counter = 0;
+    volatile uint32_t counter = 0;
 
-	while ((base->SR & SPI_SR_TXP) != SPI_SR_TXP)
-	{
-		if (++counter >= timeout_cnt) return false;
-	}
+    while ((base->SR & SPI_SR_TXP) != SPI_SR_TXP)
+    {
+        if (++counter >= timeout_cnt) return false;
+    }
 
-	return true;
+    return true;
 }
 
 
@@ -174,14 +174,14 @@ inline bool Spi::WaitForTxEmpty()
 /// @return 
 inline bool Spi::WaitForRxNotEmpty()
 {
-	volatile uint32_t counter = 0;
+    volatile uint32_t counter = 0;
 
-	while (!(base->SR & (SPI_SR_RXWNE | SPI_SR_RXPLVL)))
-	{
-		if (++counter >= timeout_cnt) return false;
-	}
+    while (!(base->SR & (SPI_SR_RXWNE | SPI_SR_RXPLVL)))
+    {
+        if (++counter >= timeout_cnt) return false;
+    }
 
-	return true;
+    return true;
 }
 
 
@@ -189,14 +189,14 @@ inline bool Spi::WaitForRxNotEmpty()
 /// @return 
 inline bool Spi::WaitForTxCompleted()
 {
-	volatile uint32_t counter = 0;
+    volatile uint32_t counter = 0;
 
-	while ((base->SR & SPI_SR_EOT) != SPI_SR_EOT)
-	{
-		if (++counter >= timeout_cnt) return false;
-	}
+    while ((base->SR & SPI_SR_EOT) != SPI_SR_EOT)
+    {
+        if (++counter >= timeout_cnt) return false;
+    }
 
-	return true;
+    return true;
 }
 
 
@@ -205,23 +205,23 @@ inline bool Spi::WaitForTxCompleted()
 /// @return 
 uint8_t Spi::WriteAndReadOneByte(uint8_t txData)
 {
-	//Start transfer
-	base->CR1 |= SPI_CR1_CSTART;
+    //Start transfer
+    base->CR1 |= SPI_CR1_CSTART;
 
-	//Send one byte
-	if (!WaitForTxEmpty()) return 0xff;
-	WriteOneByte(txData);
+    //Send one byte
+    if (!WaitForTxEmpty()) return 0xff;
+    WriteOneByte(txData);
 
-	//Get one byte
-	if (!WaitForRxNotEmpty()) return 0xff;
-	uint8_t byte = ReadOneByte();
+    //Get one byte
+    if (!WaitForRxNotEmpty()) return 0xff;
+    uint8_t byte = ReadOneByte();
 
-	//Wait for transfer completed
-	if (!WaitForTxCompleted()) return 0xff;
-	base->IFCR |= SPI_IFCR_EOTC;
-	base->IFCR |= SPI_IFCR_TXTFC;
+    //Wait for transfer completed
+    if (!WaitForTxCompleted()) return 0xff;
+    base->IFCR |= SPI_IFCR_EOTC;
+    base->IFCR |= SPI_IFCR_TXTFC;
 
-	return byte;
+    return byte;
 }
 
 
@@ -230,20 +230,20 @@ uint8_t Spi::WriteAndReadOneByte(uint8_t txData)
 /// @return 
 uint16_t Spi::WriteAndReadTwoByte(uint16_t txData)
 {
-	//Start transfer
-	base->CR1 |= SPI_CR1_CSTART;
+    //Start transfer
+    base->CR1 |= SPI_CR1_CSTART;
 
-	//Send one byte
-	if (!WaitForTxEmpty()) return 0xff;
-	WriteTwoByte(txData);
+    //Send one byte
+    if (!WaitForTxEmpty()) return 0xff;
+    WriteTwoByte(txData);
 
-	if (!WaitForRxNotEmpty()) return 0xff;
-	uint16_t word = ReadTwoByte();
+    if (!WaitForRxNotEmpty()) return 0xff;
+    uint16_t word = ReadTwoByte();
 
-	//Wait for transfer completed
-	if (!WaitForTxCompleted()) return 0xff;
-	base->IFCR |= SPI_IFCR_EOTC;
-	base->IFCR |= SPI_IFCR_TXTFC;
+    //Wait for transfer completed
+    if (!WaitForTxCompleted()) return 0xff;
+    base->IFCR |= SPI_IFCR_EOTC;
+    base->IFCR |= SPI_IFCR_TXTFC;
 
-	return word;
+    return word;
 }

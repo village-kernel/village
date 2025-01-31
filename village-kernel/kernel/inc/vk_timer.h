@@ -17,26 +17,26 @@
 class ConcreteTimer : public Timer, public Class
 {
 private:
-	/// @brief Members
-	System*      system;
-	VkList<Job*> jobs;
-	
-	/// @brief Methods
-	void Execute();
+    /// @brief Members
+    System*      system;
+    VkList<Job*> jobs;
+    
+    /// @brief Methods
+    void Execute();
 public:
-	/// @brief Methods
-	ConcreteTimer();
-	~ConcreteTimer();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteTimer();
+    ~ConcreteTimer();
+    void Setup();
+    void Exit();
 
-	/// @brief Create Methods
-	Job* Create(uint32_t ticks, Function func, void* user = NULL, void* args = NULL);
-	Job* Create(uint32_t ticks, Method method, Class* user, void* args = NULL);
+    /// @brief Create Methods
+    Job* Create(uint32_t ticks, Function func, void* user = NULL, void* args = NULL);
+    Job* Create(uint32_t ticks, Method method, Class* user, void* args = NULL);
 
-	/// @brief Feature Methods
-	void Modify(Job* job, uint32_t ticks);
-	bool Delete(Job* job);
+    /// @brief Feature Methods
+    void Modify(Job* job, uint32_t ticks);
+    bool Delete(Job* job);
 };
 
 #endif // !__VK_TIMER_H__

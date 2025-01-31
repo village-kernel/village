@@ -156,10 +156,10 @@ extern "C" int dprintf(int fd, const char* format, ...)
 /// @return Number of characters written
 extern "C" int vprintf(const char* format, va_list ap)
 {
-	char buf[512];
-	int len = vsprintf(buf, format, ap);
-	puts(buf);
-	return len;
+    char buf[512];
+    int len = vsprintf(buf, format, ap);
+    puts(buf);
+    return len;
 }
 
 
@@ -170,7 +170,7 @@ extern "C" int vprintf(const char* format, va_list ap)
 /// @return Number of characters written
 extern "C" int vsprintf(char* buf, const char* format, va_list ap)
 {
-	return vsnprintf(buf, 512, format, ap);
+    return vsnprintf(buf, 512, format, ap);
 }
 
 

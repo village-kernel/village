@@ -14,20 +14,20 @@
 class ConcreteScheduler : public Scheduler, public Class
 {
 private:
-	/// @brief Members
-	bool isStartSchedule;
+    /// @brief Members
+    bool isStartSchedule;
 
-	/// @brief Methods
-	void SysTickHandler();
-	void PendSVHandler();
+    /// @brief Methods
+    void SysTickHandler();
+    void PendSVHandler();
 public:
-	/// @brief Methods
-	ConcreteScheduler();
-	~ConcreteScheduler();
-	void Setup();
-	void Exit();
-	void Start();
-	void Sched();
+    /// @brief Methods
+    ConcreteScheduler();
+    ~ConcreteScheduler();
+    void Setup();
+    void Exit();
+    void Start();
+    void Sched();
 };
 
 #endif // !__VK_SCHEDULER_H__

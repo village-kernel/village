@@ -14,12 +14,12 @@
 class FileSysOpt
 {
 public:
-	//Methods
-	FileSysOpt();
-	~FileSysOpt();
-	bool Move(const char* source, const char* target);
-	bool Copy(const char* source, const char* target);
-	bool Remove(const char* source);
+    //Methods
+    FileSysOpt();
+    ~FileSysOpt();
+    bool Move(const char* source, const char* target);
+    bool Copy(const char* source, const char* target);
+    bool Remove(const char* source);
 };
 
 #endif //!__VK_FILE_SYS_OPT_H__

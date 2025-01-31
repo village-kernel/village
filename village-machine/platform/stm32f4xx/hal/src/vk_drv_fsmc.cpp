@@ -10,19 +10,19 @@
 /// @brief Initialize
 void Fsmc::Initialize()
 {
-	//Enable the peripheral clock for fsmc
-	RCC->AHB3ENR |= RCC_AHB3ENR_FSMCEN_Msk;
+    //Enable the peripheral clock for fsmc
+    RCC->AHB3ENR |= RCC_AHB3ENR_FSMCEN_Msk;
 
-	//Config BCR: Data width 16 bits, memory type SRAM, write enabled
-	FSMC_Bank1->BTCR[6] = FSMC_BCR1_MWID_0 | FSMC_BCR1_WREN | FSMC_BCR1_MBKEN;
+    //Config BCR: Data width 16 bits, memory type SRAM, write enabled
+    FSMC_Bank1->BTCR[6] = FSMC_BCR1_MWID_0 | FSMC_BCR1_WREN | FSMC_BCR1_MBKEN;
 
-	//Config BTR: Timing parameter
-	//ADDSET=7 (Add Setup), DATAST=7 (Data Setup)
-	FSMC_Bank1->BTCR[7] = (7 << 0) | (7 << 8);
+    //Config BTR: Timing parameter
+    //ADDSET=7 (Add Setup), DATAST=7 (Data Setup)
+    FSMC_Bank1->BTCR[7] = (7 << 0) | (7 << 8);
 
-	//Calc cmd and data address
-	cmdAddr = (volatile uint16_t*)0x6C000000;
-	dataAddr = (volatile uint16_t*)(0x6C000000 | (1 << (6 + 1)));
+    //Calc cmd and data address
+    cmdAddr = (volatile uint16_t*)0x6C000000;
+    dataAddr = (volatile uint16_t*)(0x6C000000 | (1 << (6 + 1)));
 }
 
 
@@ -30,7 +30,7 @@ void Fsmc::Initialize()
 /// @param cmd 
 void Fsmc::WriteCmd(uint16_t cmd)
 {
-	*cmdAddr = cmd;
+    *cmdAddr = cmd;
 }
 
 
@@ -38,7 +38,7 @@ void Fsmc::WriteCmd(uint16_t cmd)
 /// @param data 
 void Fsmc::WriteData(uint16_t data)
 {
-	*dataAddr = data;
+    *dataAddr = data;
 }
 
 
@@ -46,5 +46,5 @@ void Fsmc::WriteData(uint16_t data)
 /// @return 
 uint16_t Fsmc::ReadData()
 {
-	return *dataAddr;
+    return *dataAddr;
 }

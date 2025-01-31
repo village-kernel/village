@@ -19,27 +19,27 @@ class Console;
 class Cmd
 {
 protected:
-	//Members
-	Console* console;
+    //Members
+    Console* console;
 public:
-	//Constructor
-	Cmd() {}
-	
-	//Deconstructor
-	virtual ~Cmd() {}
-	
-	/// @brief Setup
-	virtual void Setup(Console* console) 
-	{
-		this->console = console;
-	}
+    //Constructor
+    Cmd() {}
+    
+    //Deconstructor
+    virtual ~Cmd() {}
+    
+    /// @brief Setup
+    virtual void Setup(Console* console) 
+    {
+        this->console = console;
+    }
 
-	/// @brief Exit
-	virtual void Exit() {}
+    /// @brief Exit
+    virtual void Exit() {}
 
-	//Methods
-	virtual void Execute(int argc, char* argv[]) = 0;
-	virtual void Help() = 0;
+    //Methods
+    virtual void Execute(int argc, char* argv[]) = 0;
+    virtual void Help() = 0;
 };
 
 #endif //!__VK_CMD_INTERFACE_H__

@@ -10,10 +10,10 @@
 
 /// @brief Constructor
 DirStream::DirStream(const char* name, int mode)
-	:fd(-1),
-	volume(NULL)
+    :fd(-1),
+    volume(NULL)
 {
-	if (NULL != name) Open(name, mode);
+    if (NULL != name) Open(name, mode);
 }
 
 
@@ -28,14 +28,14 @@ DirStream::~DirStream()
 /// @return 
 bool DirStream::IsExist(const char* name)
 {
-	volume = kernel->filesys.GetVolume(name);
+    volume = kernel->filesys.GetVolume(name);
 
-	if (NULL != volume)
-	{
-		return volume->IsExist(name, FileType::_Diretory);
-	}
-	
-	return false;
+    if (NULL != volume)
+    {
+        return volume->IsExist(name, FileType::_Diretory);
+    }
+    
+    return false;
 }
 
 
@@ -45,14 +45,14 @@ bool DirStream::IsExist(const char* name)
 /// @return 
 bool DirStream::Open(const char* name, int mode)
 {
-	volume = kernel->filesys.GetVolume(name);
+    volume = kernel->filesys.GetVolume(name);
 
-	if (NULL != volume)
-	{
-		fd = volume->OpenDir(name, mode);
-	}
-	
-	return (fd != -1);
+    if (NULL != volume)
+    {
+        fd = volume->OpenDir(name, mode);
+    }
+    
+    return (fd != -1);
 }
 
 
@@ -63,11 +63,11 @@ bool DirStream::Open(const char* name, int mode)
 /// @return 
 int DirStream::Read(FileDir* dirs, int size, int offset)
 {
-	if (NULL != volume)
-	{
-		return volume->ReadDir(fd, dirs, size, offset);
-	}
-	return 0;
+    if (NULL != volume)
+    {
+        return volume->ReadDir(fd, dirs, size, offset);
+    }
+    return 0;
 }
 
 
@@ -75,19 +75,19 @@ int DirStream::Read(FileDir* dirs, int size, int offset)
 /// @return 
 int DirStream::Size()
 {
-	if (NULL != volume)
-	{
-		return volume->SizeDir(fd);
-	}
-	return 0;
+    if (NULL != volume)
+    {
+        return volume->SizeDir(fd);
+    }
+    return 0;
 }
 
 
 /// @brief DirStream close
 void DirStream::Close()
 {
-	if (NULL != volume)
-	{
-		volume->CloseDir(fd);
-	}
+    if (NULL != volume)
+    {
+        volume->CloseDir(fd);
+    }
 }

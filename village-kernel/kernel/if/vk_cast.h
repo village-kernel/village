@@ -20,7 +20,7 @@
 template<typename dst_type, typename src_type>
 dst_type pointer_cast(src_type src)
 {
-	return *static_cast<dst_type*>(static_cast<void*>(&src));
+    return *static_cast<dst_type*>(static_cast<void*>(&src));
 }
 
 
@@ -32,9 +32,9 @@ dst_type pointer_cast(src_type src)
 template<typename dst_type, typename src_type>
 dst_type union_cast(src_type src)
 {
-	union{ src_type s; dst_type d; } u;
-	u.s = src;
-	return u.d;
+    union{ src_type s; dst_type d; } u;
+    u.s = src;
+    return u.d;
 }
 
 #endif //!__VK_CAST_H__

@@ -14,15 +14,15 @@
 class Fsmc
 {
 private:
-	//Members
-	volatile uint16_t* cmdAddr;
-	volatile uint16_t* dataAddr;
+    //Members
+    volatile uint16_t* cmdAddr;
+    volatile uint16_t* dataAddr;
 public:
-	//Methods
-	void Initialize();
-	void WriteCmd(uint16_t cmd);
-	void WriteData(uint16_t data);
-	uint16_t ReadData();
+    //Methods
+    void Initialize();
+    void WriteCmd(uint16_t cmd);
+    void WriteData(uint16_t data);
+    uint16_t ReadData();
 };
 
 #endif //!__VK_DRV_FSMC_H__
