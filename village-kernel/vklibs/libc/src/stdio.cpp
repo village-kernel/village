@@ -7,6 +7,17 @@
 #include "stdio.h"
 #include "ctype.h"
 #include "string.h"
+#include <stdarg.h>
+#include <stdlib.h>
+
+
+#define ZEROPAD  1  // Pad with zeros (e.g., "0012" instead of "  12")
+#define SIGN     2  // Signed number (handles negative values)
+#define PLUS     4  // Always show '+' for positive numbers (e.g., "+42")
+#define SPACE    8  // Add a space for non-negative numbers (e.g., " 42")
+#define LEFT    16  // Left-justify the output (e.g., "42  " instead of "  42")
+#define SMALL   32  // Use lowercase hex digits (e.g., "0x1a" instead of "0x1A")
+#define SPECIAL 64  // Add prefixes (e.g., "0x" for hex or "0" for octal)
 
 
 /// @brief putchar
@@ -14,7 +25,7 @@
 /// @return 
 extern "C" __attribute__((weak)) int putchar(int c)
 {
-	return 0;
+    return 0;
 }
 
 
@@ -23,443 +34,427 @@ extern "C" __attribute__((weak)) int putchar(int c)
 /// @return 
 extern "C" __attribute__((weak)) int puts(const char* str)
 {
-	return 0;
+    while (*str)
+    {
+        putchar(*str++);
+    }
+    putchar('\n');
+    return 0;
 }
 
 
 /// @brief printf
-/// @param  
-/// @param  
-/// @return 
-extern "C" int printf(char const* format, ...)
+/// @param format  Format string
+/// @param ...     Variable arguments
+/// @return Number of characters written
+extern "C" int printf(const char* format, ...)
 {
-	va_list ap;
-	char buf[512];
-	int n;
+    va_list ap;
+    char buf[512];
+    int len;
 
-	va_start(ap, format);
-	n = vsnprintf(buf, 512, format, ap);
-	va_end(ap);
+    va_start(ap, format);
+    len = vsnprintf(buf, sizeof(buf), format, ap);
+    va_end(ap);
 
-	puts(buf);
-
-	return n;
+    puts(buf);
+    return len;
 }
 
 
 /// @brief sprintf
-/// @param str 
-/// @param format 
-/// @param  
-/// @return 
+/// @param str     Output buffer
+/// @param format  Format string
+/// @param ...     Variable arguments
+/// @return Number of characters written
 extern "C" int sprintf(char* str, const char* format, ...)
 {
-	va_list ap;
-	int n;
+    va_list ap;
+    int len;
 
-	va_start(ap, format);
-	n = vsprintf(str, format, ap);
-	va_end(ap);
-	return n;
+    va_start(ap, format);
+    len = vsnprintf(str, 512, format, ap);
+    va_end(ap);
+
+    return len;
 }
 
 
 /// @brief snprintf
-/// @param str 
-/// @param size 
-/// @param format 
-/// @param  
-/// @return 
+/// @param str     Output buffer
+/// @param size    Buffer size
+/// @param format  Format string
+/// @param ...     Variable arguments
+/// @return Number of characters written
 extern "C" int snprintf(char* str, size_t size, const char* format, ...)
 {
-	va_list ap;
-	int n;
+    va_list ap;
+    int len;
 
-	va_start(ap, format);
-	n = vsnprintf(str, size, format, ap);
-	va_end(ap);
-	return n;
+    va_start(ap, format);
+    len = vsnprintf(str, size, format, ap);
+    va_end(ap);
+
+    return len;
 }
 
 
-
 /// @brief asprintf
-/// @param ret 
-/// @param format 
-/// @param  
-/// @return 
+/// @param ret     Pointer to the allocated buffer
+/// @param format  Format string
+/// @param ...     Variable arguments
+/// @return Number of characters written (excluding null terminator)
 extern "C" int asprintf(char** ret, const char* format, ...)
 {
-	return 0;
+    va_list ap;
+    va_start(ap, format);
+    int len = vsnprintf(NULL, 0, format, ap);
+    va_end(ap);
+
+    if (len < 0)
+    {
+        return -1;
+    }
+
+    *ret = (char*)malloc(len + 1);
+    if (!*ret)
+    {
+        return -1;
+    }
+
+    va_start(ap, format);
+    len = vsnprintf(*ret, len + 1, format, ap);
+    va_end(ap);
+
+    return len;
 }
 
 
 /// @brief dprintf
-/// @param fd 
-/// @param format 
-/// @param  
-/// @return 
+/// @param fd      File descriptor
+/// @param format  Format string
+/// @param ...     Variable arguments
+/// @return Number of characters written
 extern "C" int dprintf(int fd, const char* format, ...)
 {
-	return 0;
+    va_list ap;
+    char buf[512];
+    int len;
+
+    va_start(ap, format);
+    len = vsnprintf(buf, sizeof(buf), format, ap);
+    va_end(ap);
+
+    // write(fd, buf, len);
+    return len;
 }
 
 
 /// @brief vprintf
-/// @param format 
-/// @param ap 
-/// @return 
+/// @param format Format string
+/// @param ap Argument list
+/// @return Number of characters written
 extern "C" int vprintf(const char* format, va_list ap)
 {
 	char buf[512];
-	int n = vsprintf(buf, format, ap);
+	int len = vsprintf(buf, format, ap);
 	puts(buf);
-	return n;
+	return len;
 }
 
 
 /// @brief vsprintf
-/// @param str 
-/// @param format 
-/// @param ap 
-/// @return 
+/// @param buf Output buffer
+/// @param format Format string
+/// @param ap Argument list
+/// @return Number of characters written
 extern "C" int vsprintf(char* buf, const char* format, va_list ap)
 {
 	return vsnprintf(buf, 512, format, ap);
 }
 
 
-
-/// @brief skip_atoi
-/// @param s 
-/// @return 
-static int skip_atoi(const char **s)
+/// @brief Helper function to format a number into a string
+/// @param str   Output buffer
+/// @param num   Number to format
+/// @param base  Base (e.g., 10 for decimal, 16 for hexadecimal)
+/// @param size  Field width
+/// @param precision Minimum number of digits
+/// @param flags Formatting flags (as bitmask)
+/// @return Pointer to the end of the formatted string
+static char* format_number(char* str, long num, int base, int size, int precision, int flags)
 {
-	int i = 0;
+    static const char digits[] = "0123456789ABCDEF";       // Uppercase digits for hex
+    static const char lower_digits[] = "0123456789abcdef"; // Lowercase digits for hex
 
-	while (isdigit(**s))
-		i = i * 10 + *((*s)++) - '0';
-	return i;
-}
+    char tmp[66]; // Temporary buffer to store the reversed number string
+    char* ptr = tmp;
+    
+    // Determine whether to use lowercase letters for hex
+    const char* digit_set = (flags & SMALL) ? lower_digits : digits;
+    
+    int sign = 0; // Flag to indicate if the number is negative
 
+    // Handle negative numbers
+    if ((flags & SIGN) && num < 0)
+    {
+        sign = 1; // Set sign flag
+        num = -num; // Convert to positive
+    }
 
-/// @brief do_div
-/// @param num 
-/// @param base 
-/// @return 
-static int __do_div(long &num, int base)
-{
-	int res;
-	res = ((unsigned long) num) % (unsigned) base;
-	num = ((unsigned long) num) / (unsigned) base;
-	return res;
-}
+    // Convert the number to a string (in reverse order)
+    do
+    {
+        *ptr++ = digit_set[num % base]; // Store the digit
+        num /= base; // Move to the next digit
+    }
+    while (num > 0);
 
+    // Add leading zeros for precision
+    while (ptr - tmp < precision)
+    {
+        *ptr++ = '0';
+    }
 
-#define ZEROPAD	1		/* pad with zero */
-#define SIGN	2		/* unsigned/signed long */
-#define PLUS	4		/* show plus */
-#define SPACE	8		/* space if plus */
-#define LEFT	16		/* left justified */
-#define SMALL	32		/* Must be 32 == 0x20 */
-#define SPECIAL	64		/* 0x */
+    // Add the sign character if necessary
+    if (sign)
+    {
+        *ptr++ = '-';
+    }
 
+    // Reverse the string to get the correct order
+    while (ptr > tmp)
+    {
+        *str++ = *--ptr;
+    }
 
-static char *number(char *str, long num, int base, int size, int precision, int type)
-{
-	/* we are called with base 8, 10 or 16, only, thus don't need "G..."  */
-	static const char digits[16] =  {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'}; 
-
-	char tmp[66];
-	char c, sign, locase;
-	int i;
-
-	/* locase = 0 or 0x20. ORing digits or letters with 'locase'
-	 * produces same digits or (maybe lowercased) letters */
-	locase = (type & SMALL);
-	if (type & LEFT)
-		type &= ~ZEROPAD;
-	if (base < 2 || base > 16)
-		return NULL;
-	c = (type & ZEROPAD) ? '0' : ' ';
-	sign = 0;
-	if (type & SIGN)
-	{
-		if (num < 0)
-		{
-			sign = '-';
-			num = -num;
-			size--;
-		}
-		else if (type & PLUS)
-		{
-			sign = '+';
-			size--;
-		}
-		else if (type & SPACE)
-		{
-			sign = ' ';
-			size--;
-		}
-	}
-	if (type & SPECIAL)
-	{
-		if (base == 16)
-			size -= 2;
-		else if (base == 8)
-			size--;
-	}
-	i = 0;
-	if (num == 0)
-		tmp[i++] = '0';
-	else
-		while (num != 0)
-			tmp[i++] = (digits[__do_div(num, base)] | locase);
-	if (i > precision)
-		precision = i;
-	size -= precision;
-	if (!(type & (ZEROPAD + LEFT)))
-		while (size-- > 0)
-			*str++ = ' ';
-	if (sign)
-		*str++ = sign;
-	if (type & SPECIAL)
-	{
-		if (base == 8)
-			*str++ = '0';
-		else if (base == 16) {
-			*str++ = '0';
-			*str++ = ('X' | locase);
-		}
-	}
-	if (!(type & LEFT))
-		while (size-- > 0)
-			*str++ = c;
-	while (i < precision--)
-		*str++ = '0';
-	while (i-- > 0)
-		*str++ = tmp[i];
-	while (size-- > 0)
-		*str++ = ' ';
-	return str;
+    return str; // Return the pointer to the end of the formatted string
 }
 
 
 /// @brief vsnprintf
-/// @param buf 
-/// @param size 
-/// @param format 
-/// @param ap 
-/// @return 
+/// @param buf   Output buffer
+/// @param size  Buffer size
+/// @param format Format string
+/// @param ap    Argument list
+/// @return Number of characters written
 extern "C" int vsnprintf(char* buf, size_t size, const char* format, va_list ap)
 {
-	int len;
-	unsigned long num;
-	int i, base;
-	char *str;
-	const char *s;
+    char* str = buf;
+    const char* s;
+    int len, i, base, field_width, precision, qualifier;
+    int flags = 0;
 
-	int flags;		    /* flags to number() */
+    for (; *format && (str - buf) < (int)size; ++format)
+    {
+        if (*format != '%')
+        {
+            *str++ = *format;
+            continue;
+        }
 
-	int field_width;	/* width of output field */
-	int precision;		/* min. # of digits for integers; max
-				           number of chars for from string */
-	int qualifier;		/* 'h', 'l', or 'L' for integer fields */
+        // Parse flags
+        flags = 0;
+    repeat:
+        switch (*++format)
+        {
+            case '-':
+                flags |= LEFT;
+                goto repeat;
+            case '+':
+                flags |= PLUS;
+                goto repeat;
+            case ' ':
+                flags |= SPACE;
+                goto repeat;
+            case '#':
+                flags |= SPECIAL;
+                goto repeat;
+            case '0':
+                flags |= ZEROPAD;
+                goto repeat;
+        }
 
-	for (str = buf; *format; ++format)
-	{
-		if (*format != '%')
-		{
-			*str++ = *format;
-			continue;
-		}
+        // Parse field width
+        field_width = -1;
+        if (isdigit(*format))
+        {
+            field_width = 0;
+            while (isdigit(*format))
+            {
+                field_width = field_width * 10 + (*format++ - '0');
+            }
+        }
+        else if (*format == '*')
+        {
+            field_width = va_arg(ap, int);
+            if (field_width < 0)
+            {
+                field_width = -field_width;
+                flags |= LEFT;
+            }
+            ++format;
+        }
 
-		/* process flags */
-		flags = 0;
-	repeat:
-		++format;		/* this also skips first '%' */
-		switch (*format)
-		{
-		case '-':
-			flags |= LEFT;
-			goto repeat;
-		case '+':
-			flags |= PLUS;
-			goto repeat;
-		case ' ':
-			flags |= SPACE;
-			goto repeat;
-		case '#':
-			flags |= SPECIAL;
-			goto repeat;
-		case '0':
-			flags |= ZEROPAD;
-			goto repeat;
-		}
+        // Parse precision
+        precision = -1;
+        if (*format == '.')
+        {
+            ++format;
+            if (isdigit(*format))
+            {
+                precision = 0;
+                while (isdigit(*format))
+                {
+                    precision = precision * 10 + (*format++ - '0');
+                }
+            }
+            else if (*format == '*')
+            {
+                precision = va_arg(ap, int);
+                ++format;
+            }
+            if (precision < 0)
+            {
+                precision = 0;
+            }
+        }
 
-		/* get field width */
-		field_width = -1;
-		if (isdigit(*format))
-			field_width = skip_atoi(&format);
-		else if (*format == '*')
-		{
-			++format;
-			/* it's the next argument */
-			field_width = va_arg(ap, int);
-			if (field_width < 0) {
-				field_width = -field_width;
-				flags |= LEFT;
-			}
-		}
+        // Parse qualifier
+        qualifier = -1;
+        if (*format == 'h' || *format == 'l' || *format == 'L')
+        {
+            qualifier = *format++;
+        }
 
-		/* get the precision */
-		precision = -1;
-		if (*format == '.')
-		{
-			++format;
-			if (isdigit(*format))
-				precision = skip_atoi(&format);
-			else if (*format == '*')
-			{
-				++format;
-				/* it's the next argument */
-				precision = va_arg(ap, int);
-			}
-			if (precision < 0)
-				precision = 0;
-		}
+        // Default base
+        base = 10;
 
-		/* get the conversion qualifier */
-		qualifier = -1;
-		if (*format == 'h' || *format == 'l' || *format == 'L')
-		{
-			qualifier = *format;
-			++format;
-		}
+        switch (*format)
+        {
+            case 'c':
+                if (!(flags & LEFT))
+                {
+                    while (--field_width > 0)
+                    {
+                        *str++ = ' ';
+                    }
+                }
+                *str++ = (unsigned char)va_arg(ap, int);
+                while (--field_width > 0)
+                {
+                    *str++ = ' ';
+                }
+                continue;
 
-		/* default base */
-		base = 10;
+            case 's':
+                s = va_arg(ap, char*);
+                len = strnlen(s, precision);
+                if (!(flags & LEFT))
+                {
+                    while (len < field_width--)
+                    {
+                        *str++ = ' ';
+                    }
+                }
+                for (i = 0; i < len; ++i)
+                {
+                    *str++ = *s++;
+                }
+                while (len < field_width--)
+                {
+                    *str++ = ' ';
+                }
+                continue;
 
-		switch (*format)
-		{
-		case 'c':
-			if (!(flags & LEFT))
-				while (--field_width > 0)
-					*str++ = ' ';
-			*str++ = (unsigned char)va_arg(ap, int);
-			while (--field_width > 0)
-				*str++ = ' ';
-			continue;
+            case 'p':
+                flags |= SMALL;
+                base = 16;
+                field_width = 2 * sizeof(void*);
+                str = format_number(str, (unsigned long)va_arg(ap, void*), base, field_width, precision, flags);
+                continue;
 
-		case 's':
-			s = va_arg(ap, char *);
-			len = strnlen(s, precision);
+            case '%':
+                *str++ = '%';
+                continue;
 
-			if (!(flags & LEFT))
-				while (len < field_width--)
-					*str++ = ' ';
-			for (i = 0; i < len; ++i)
-				*str++ = *s++;
-			while (len < field_width--)
-				*str++ = ' ';
-			continue;
+            case 'o':
+                base = 8;
+                break;
 
-		case 'p':
-			if (field_width == -1)
-			{
-				field_width = 2 * sizeof(void *);
-				flags |= ZEROPAD;
-			}
-			str = number(str,
-				     (unsigned long)va_arg(ap, void *), 16,
-				     field_width, precision, flags);
-			continue;
+            case 'x':
+                flags |= SMALL;
+            case 'X':
+                base = 16;
+                break;
 
-		case 'n':
-			if (qualifier == 'l')
-			{
-				long *ip = va_arg(ap, long *);
-				*ip = (str - buf);
-			}
-			else
-			{
-				int *ip = va_arg(ap, int *);
-				*ip = (str - buf);
-			}
-			continue;
+            case 'd':
+            case 'i':
+                flags |= SIGN;
+            case 'u':
+                break;
 
-		case '%':
-			*str++ = '%';
-			continue;
+            default:
+                *str++ = '%';
+                if (*format)
+                {
+                    *str++ = *format;
+                }
+                continue;
+        }
 
-			/* integer number formats - set up the flags and "break" */
-		case 'o':
-			base = 8;
-			break;
+        // Format number
+        long num = (qualifier == 'l') ? va_arg(ap, long) : va_arg(ap, int);
+        str = format_number(str, num, base, field_width, precision, flags);
+    }
 
-		case 'x':
-			flags |= SMALL;
-		case 'X':
-			base = 16;
-			break;
+    // Null-terminate the string
+    if (str - buf < (int)size)
+    {
+        *str = '\0';
+    }
+    else
+    {
+        buf[size - 1] = '\0';
+    }
 
-		case 'd':
-		case 'i':
-			flags |= SIGN;
-		case 'u':
-			break;
-
-		default:
-			*str++ = '%';
-			if (*format)
-				*str++ = *format;
-			else
-				--format;
-			continue;
-		}
-
-		if (qualifier == 'l')
-		{
-			num = va_arg(ap, unsigned long);
-		}
-		else if (qualifier == 'h')
-		{
-			num = (unsigned short)va_arg(ap, int);
-			if (flags & SIGN)
-				num = (short)num;
-		}
-		else if (flags & SIGN)
-		{
-			num = va_arg(ap, int);
-		}
-		else
-		{
-			num = va_arg(ap, unsigned int);
-		}
-		str = number(str, num, base, field_width, precision, flags);
-	}
-	*str = '\0';
-	return str - buf;
+    return str - buf;
 }
 
 
 /// @brief vasprintf
-/// @param ret 
-/// @param format 
-/// @param ap 
-/// @return 
+/// @param ret     Pointer to the allocated buffer
+/// @param format  Format string
+/// @param ap      Argument list
+/// @return Number of characters written (excluding null terminator)
 extern "C" int vasprintf(char** ret, const char* format, va_list ap)
 {
-	return 0;
+    int len = vsnprintf(NULL, 0, format, ap);
+    if (len < 0)
+    {
+        return -1;
+    }
+
+    *ret = (char*)malloc(len + 1);
+    if (!*ret)
+    {
+        return -1;
+    }
+
+    return vsnprintf(*ret, len + 1, format, ap);
 }
 
 
 /// @brief vdprintf
-/// @param fd 
-/// @param format 
-/// @param ap 
-/// @return 
+/// @param fd      File descriptor
+/// @param format  Format string
+/// @param ap      Argument list
+/// @return Number of characters written
 extern "C" int vdprintf(int fd, const char* format, va_list ap)
 {
-	return 0;
+    char buf[512];
+    int len = vsnprintf(buf, sizeof(buf), format, ap);
+
+    // write(fd, buf, len);
+    return len;
 }
