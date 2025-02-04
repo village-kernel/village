@@ -35,11 +35,11 @@ void Stm32UartDev::Config()
         .enableDMA = true,
 
         .txGpio = { Gpio::_ChA, 9,  Gpio::_Altera, 7, 0 },
-        .rxGpio = { Gpio::_ChB, 7,  Gpio::_Altera, 7, 0 },
+        .rxGpio = { Gpio::_ChA, 10, Gpio::_Altera, 7, 0 },
         .deGpio = { 0, 0, 0, 0, 0 },
 
-        .txDma = { Dma::_Group2, Dma::_Stream7, 4, Dma::_MemoryToPeriph, 0 },
-        .rxDma = { Dma::_Group2, Dma::_Stream2, 4, Dma::_PeriphToMemory, 0 },
+        .txDma = { Dma::_Group1, Dma::_Stream2, 42, Dma::_MemoryToPeriph, 0 },
+        .rxDma = { Dma::_Group1, Dma::_Stream3, 41, Dma::_PeriphToMemory, 0 },
     };
     driverData = (void*)&config;
     driverName = (char*)"serial0";
