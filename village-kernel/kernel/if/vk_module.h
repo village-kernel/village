@@ -15,17 +15,17 @@
 class Module : public Base, public Class
 {
 public:
-	//Constructor
-	Module() { }
+    //Constructor
+    Module() { }
 
-	//Destructor
-	virtual ~Module() { }
+    //Destructor
+    virtual ~Module() { }
 
-	//Methods
-	virtual bool  Setup() = 0;
-	virtual void  Exit()  = 0;
-	virtual void  SetData(void* data) { }
-	virtual void* GetData() { return NULL; }
+    //Methods
+    virtual bool  Setup() = 0;
+    virtual void  Exit()  = 0;
+    virtual void  SetData(void* data) { }
+    virtual void* GetData() { return NULL; }
 };
 
 #endif // !__VK_MODULE_INTERFACE_H__

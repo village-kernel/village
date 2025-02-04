@@ -18,35 +18,35 @@
 class Stm32Usb : public CharDriver, public Class
 {
 public:
-	/// @brief Config
-	struct Config
-	{
-		uint32_t irq;
+    /// @brief Config
+    struct Config
+    {
+        uint32_t irq;
 
-		Gpio::Config dmGpio;
-		Gpio::Config dpGpio;
-	};
+        Gpio::Config dmGpio;
+        Gpio::Config dpGpio;
+    };
 private:
-	/// @brief Members
-	Config config;
-	Nvic nvic;
-	Usb usb;
-	bool isUsed;
+    /// @brief Members
+    Config config;
+    Nvic nvic;
+    Usb usb;
+    bool isUsed;
 
-	/// @brief Methods
-	void PinConfig();
-	void UsbHandler();
+    /// @brief Methods
+    void PinConfig();
+    void UsbHandler();
 public:
-	/// @brief Methods
-	Stm32Usb();
-	~Stm32Usb();
+    /// @brief Methods
+    Stm32Usb();
+    ~Stm32Usb();
 
-	/// @brief Plat Methods
-	void SetData(void* data);
+    /// @brief Plat Methods
+    void SetData(void* data);
 
-	/// @brief Fopts Methods
-	bool Open();
-	void Close();
+    /// @brief Fopts Methods
+    bool Open();
+    void Close();
 };
 
 
@@ -54,9 +54,9 @@ public:
 class Stm32UsbDrv : public PlatDriver
 {
 public:
-	/// @brief Methods
-	bool Probe(PlatDevice* device);
-	bool Remove(PlatDevice* device);
+    /// @brief Methods
+    bool Probe(PlatDevice* device);
+    bool Remove(PlatDevice* device);
 };
 
 #endif //!__VK_STM32_USB_H__

@@ -16,22 +16,22 @@
 class ConcreteFeature : public Feature
 {
 private:
-	/// @brief Members
-	bool isRuntime;
-	VkList<Module*> modules;
+    /// @brief Members
+    bool isRuntime;
+    VkList<Module*> modules;
 public:
-	/// @brief Methods
-	ConcreteFeature();
-	~ConcreteFeature();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteFeature();
+    ~ConcreteFeature();
+    void Setup();
+    void Exit();
 
-	/// @brief Register Methods
-	void RegisterModule(Module* module);
-	void UnregisterModule(Module* module);
+    /// @brief Register Methods
+    void RegisterModule(Module* module);
+    void UnregisterModule(Module* module);
 
-	/// @brief Data Methods
-	Module* GetModule(const char* name);
+    /// @brief Data Methods
+    Module* GetModule(const char* name);
 };
 
 #endif // !__VK_FEATURE_H__

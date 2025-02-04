@@ -10,7 +10,7 @@
 
 /// @brief Constructor
 ConcreteScheduler::ConcreteScheduler()
-	:isStartSchedule(false)
+    :isStartSchedule(false)
 {
 }
 
@@ -24,53 +24,53 @@ ConcreteScheduler::~ConcreteScheduler()
 /// @brief Scheduler Setup
 void ConcreteScheduler::Setup()
 {
-	//Replace the PendSV interrupt handler
-	kernel->interrupt.Replace(PendSV_IRQn, (uint32_t)&ConcreteScheduler::PendSVHandler);
+    //Replace the PendSV interrupt handler
+    kernel->interrupt.Replace(PendSV_IRQn, (uint32_t)&ConcreteScheduler::PendSVHandler);
 
-	//Append the systick interrupt handler
-	kernel->interrupt.AppendISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
+    //Append the systick interrupt handler
+    kernel->interrupt.AppendISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 
-	//Output debug info
-	kernel->debug.Info("Scheduler setup done!");
+    //Output debug info
+    kernel->debug.Info("Scheduler setup done!");
 }
 
 
 /// @brief Scheduler Exit
 void ConcreteScheduler::Exit()
 {
-	//Remove the systick interrupt handler
-	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
+    //Remove the systick interrupt handler
+    kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteScheduler::SysTickHandler, this);
 
-	//Clear the PendSV interrupt handler
-	kernel->interrupt.ClearISR(PendSV_IRQn);
+    //Clear the PendSV interrupt handler
+    kernel->interrupt.ClearISR(PendSV_IRQn);
 }
 
 
 /// @brief Start scheduler
 void ConcreteScheduler::Start()
 {
-	//Output debug info
-	kernel->debug.Info("Scheduler start sched!");
+    //Output debug info
+    kernel->debug.Info("Scheduler start sched!");
 
-	//Clear start schedule flag
-	isStartSchedule = false;
+    //Clear start schedule flag
+    isStartSchedule = false;
 
-	//Get frist task psp
-	volatile uint32_t psp = kernel->thread.GetTaskPSP();
+    //Get frist task psp
+    volatile uint32_t psp = kernel->thread.GetTaskPSP();
 
-	//Set frist task psp
-	__asm volatile("msr psp, %0" : "+r"(psp));
+    //Set frist task psp
+    __asm volatile("msr psp, %0" : "+r"(psp));
 
-	//Change to use PSP, set bit[1] SPSEL
-	__asm volatile("mrs r0, control");
-	__asm volatile("orr r0, r0, #2");
-	__asm volatile("msr control, r0");
+    //Change to use PSP, set bit[1] SPSEL
+    __asm volatile("mrs r0, control");
+    __asm volatile("orr r0, r0, #2");
+    __asm volatile("msr control, r0");
 
-	//Set start schedule flag
-	isStartSchedule = true;
+    //Set start schedule flag
+    isStartSchedule = true;
 
-	//Execute thread
-	kernel->thread.IdleTask();
+    //Execute thread
+    kernel->thread.IdleTask();
 }
 
 
@@ -78,56 +78,56 @@ void ConcreteScheduler::Start()
 /// @param access scheduler access
 void ConcreteScheduler::Sched()
 {
-	if (!isStartSchedule) return;
+    if (!isStartSchedule) return;
 
-	//Trigger PendSV directly
-	SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+    //Trigger PendSV directly
+    SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
 }
 
 
 /// @brief Systick handler
 void ConcreteScheduler::SysTickHandler(void)
 {
-	Sched();
+    Sched();
 }
 
 
 /// @brief PendSV Handler
 void __attribute__ ((naked)) ConcreteScheduler::PendSVHandler()
 {
-	static volatile uint32_t psp = 0;
+    static volatile uint32_t psp = 0;
 
-	//Push lr regs to main sp
-	__asm volatile("push {lr}");
+    //Push lr regs to main sp
+    __asm volatile("push {lr}");
 
-	//Get current task psp
-	__asm volatile("mrs r0, psp");
+    //Get current task psp
+    __asm volatile("mrs r0, psp");
 
-	//Store r4-r11 regs
-	__asm volatile("stmdb r0!, {r4-r11}");
+    //Store r4-r11 regs
+    __asm volatile("stmdb r0!, {r4-r11}");
 
-	//Get psp value: psp = r0
-	__asm volatile("mov %0, r0" : "+r"(psp));
+    //Get psp value: psp = r0
+    __asm volatile("mov %0, r0" : "+r"(psp));
 
-	//Store old task psp
-	kernel->thread.SaveTaskPSP(psp);
+    //Store old task psp
+    kernel->thread.SaveTaskPSP(psp);
 
-	//Select next task
-	kernel->thread.SelectNextTask();
+    //Select next task
+    kernel->thread.SelectNextTask();
 
-	//Get new task psp
-	psp = kernel->thread.GetTaskPSP();
+    //Get new task psp
+    psp = kernel->thread.GetTaskPSP();
 
-	//Set r0 value: r0 = psp
-	__asm volatile("mov r0, %0" : "+r"(psp));
+    //Set r0 value: r0 = psp
+    __asm volatile("mov r0, %0" : "+r"(psp));
 
-	//Restore r4-r11 regs
-	__asm volatile("ldmia r0!, {r4-r11}");
+    //Restore r4-r11 regs
+    __asm volatile("ldmia r0!, {r4-r11}");
 
-	//Set new task sp
-	__asm volatile("msr psp, r0");
+    //Set new task sp
+    __asm volatile("msr psp, r0");
 
-	//Exit
-	__asm volatile("pop {lr}");
-	__asm volatile("bx lr");
+    //Exit
+    __asm volatile("pop {lr}");
+    __asm volatile("bx lr");
 }

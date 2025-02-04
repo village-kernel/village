@@ -16,19 +16,19 @@
 class ConcreteProtocol : public Protocol
 {
 private:
-	/// @brief Members
-	bool isRuntime;
-	VkList<Stack*> stacks;
+    /// @brief Members
+    bool isRuntime;
+    VkList<Stack*> stacks;
 public:
-	/// @brief Methods
-	ConcreteProtocol();
-	~ConcreteProtocol();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteProtocol();
+    ~ConcreteProtocol();
+    void Setup();
+    void Exit();
 
-	/// @brief Register Methods
-	void RegisterStack(Stack* stack);
-	void UnregisterStack(Stack* stack);
+    /// @brief Register Methods
+    void RegisterStack(Stack* stack);
+    void UnregisterStack(Stack* stack);
 };
 
 #endif // !__VK_PROTOCOL_H__

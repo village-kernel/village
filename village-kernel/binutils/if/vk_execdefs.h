@@ -14,13 +14,13 @@
 ///Executor register macro
 #define REGISTER_EXECUTOR(exec, name)                             \
 static struct _Exec_##name {                                      \
-	Executor* executor = exec;                                    \
-	_Exec_##name() {                                              \
-		kernel->process.RegisterExecutor(executor);               \
-	}                                                             \
-	~_Exec_##name() {                                             \
-		kernel->process.UnregisterExecutor(executor);             \
-	}                                                             \
+    Executor* executor = exec;                                    \
+    _Exec_##name() {                                              \
+        kernel->process.RegisterExecutor(executor);               \
+    }                                                             \
+    ~_Exec_##name() {                                             \
+        kernel->process.UnregisterExecutor(executor);             \
+    }                                                             \
 } const _exec_##name __attribute__((used,__section__(".executors")))
 
 

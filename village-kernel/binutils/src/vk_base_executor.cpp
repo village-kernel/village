@@ -10,10 +10,10 @@
 
 /// @brief Constructor
 BaseExecutor::BaseExecutor()
-	:path(NULL),
-	argc(0),
-	argv(NULL),
-	tid(0)
+    :path(NULL),
+    argc(0),
+    argv(NULL),
+    tid(0)
 {
 }
 
@@ -31,18 +31,18 @@ BaseExecutor::~BaseExecutor()
 /// @return tid
 int BaseExecutor::Run(const char* path, int argc, char* argv[])
 {
-	//Set argc and argv
-	this->path = (char*)path;
-	this->argc = argc;
-	this->argv = argv;
-	
-	//Load, parser file and create task
-	this->tid = Initiate();
+    //Set argc and argv
+    this->path = (char*)path;
+    this->argc = argc;
+    this->argv = argv;
+    
+    //Load, parser file and create task
+    this->tid = Initiate();
 
-	//Start task
-	kernel->thread.StartTask(tid);
+    //Start task
+    kernel->thread.StartTask(tid);
 
-	return tid;
+    return tid;
 }
 
 
@@ -50,7 +50,7 @@ int BaseExecutor::Run(const char* path, int argc, char* argv[])
 /// @return result
 bool BaseExecutor::Wait()
 {
-	return kernel->thread.WaitForTask(tid);
+    return kernel->thread.WaitForTask(tid);
 }
 
 
@@ -58,5 +58,5 @@ bool BaseExecutor::Wait()
 /// @return result
 bool BaseExecutor::Kill()
 {
-	return (kernel->thread.StopTask(tid) && Release());
+    return (kernel->thread.StopTask(tid) && Release());
 }

@@ -13,20 +13,20 @@
 class CmdSleep : public Cmd
 {
 public:
-	/// @brief Cmd sleep execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		kernel->Sleep();
-	}
+    /// @brief Cmd sleep execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        kernel->Sleep();
+    }
 
 
-	/// @brief Cmd sleep help
-	void Help()
-	{
-		console->Println("cmd sleep: enter sleep mode");
-	}
+    /// @brief Cmd sleep help
+    void Help()
+    {
+        console->Println("cmd sleep: enter sleep mode");
+    }
 };
 
 
@@ -34,20 +34,20 @@ public:
 class CmdStandby : public Cmd
 {
 public:
-	/// @brief Cmd standby execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		kernel->Standby();
-	}
+    /// @brief Cmd standby execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        kernel->Standby();
+    }
 
 
-	/// @brief Cmd standby help
-	void Help()
-	{
-		console->Println("cmd standby: enter standby mode");
-	}
+    /// @brief Cmd standby help
+    void Help()
+    {
+        console->Println("cmd standby: enter standby mode");
+    }
 };
 
 
@@ -55,20 +55,20 @@ public:
 class CmdShutdown : public Cmd
 {
 public:
-	/// @brief Cmd shutdown execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		kernel->Shutdown();
-	}
+    /// @brief Cmd shutdown execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        kernel->Shutdown();
+    }
 
 
-	/// @brief Cmd shutdown help
-	void Help()
-	{
-		console->Println("cmd shutdown: shutdown device");
-	}
+    /// @brief Cmd shutdown help
+    void Help()
+    {
+        console->Println("cmd shutdown: shutdown device");
+    }
 };
 
 
@@ -76,20 +76,20 @@ public:
 class CmdReboot : public Cmd
 {
 public:
-	/// @brief Cmd reboot execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		kernel->Reboot();
-	}
+    /// @brief Cmd reboot execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        kernel->Reboot();
+    }
 
 
-	/// @brief Cmd reboot help
-	void Help()
-	{
-		console->Println("cmd reboot: reboot device");
-	}
+    /// @brief Cmd reboot help
+    void Help()
+    {
+        console->Println("cmd reboot: reboot device");
+    }
 };
 
 

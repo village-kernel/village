@@ -37,26 +37,26 @@ void ConcreteSignal::Exit()
 /// @param signal 
 void ConcreteSignal::Raising(int signal)
 {
-	kernel->system.DisableIRQ();
+    kernel->system.DisableIRQ();
 
-	if (Signals::_Sleep == signal)
-	{
-		kernel->system.Sleep();
-	}
-	else if (Signals::_Standby == signal)
-	{
-		kernel->system.Standby();
-	}
-	else if (Signals::_Shutdown == signal)
-	{
-		kernel->Exit();
-		kernel->system.Shutdown();
-	}
-	else if (Signals::_Reboot == signal)
-	{
-		kernel->Exit();
-		kernel->system.Reboot();
-	}
+    if (Signals::_Sleep == signal)
+    {
+        kernel->system.Sleep();
+    }
+    else if (Signals::_Standby == signal)
+    {
+        kernel->system.Standby();
+    }
+    else if (Signals::_Shutdown == signal)
+    {
+        kernel->Exit();
+        kernel->system.Shutdown();
+    }
+    else if (Signals::_Reboot == signal)
+    {
+        kernel->Exit();
+        kernel->system.Reboot();
+    }
 
-	kernel->system.EnableIRQ();
+    kernel->system.EnableIRQ();
 }

@@ -16,22 +16,22 @@
 class BaseExecutor
 {
 protected:
-	//Members
-	char*     path;
-	int       argc;
-	char**    argv;
-	int       tid;
+    //Members
+    char*     path;
+    int       argc;
+    char**    argv;
+    int       tid;
 
-	//Methods
-	virtual int Initiate() = 0;
-	virtual bool Release() = 0;
+    //Methods
+    virtual int Initiate() = 0;
+    virtual bool Release() = 0;
 public:
-	//Methods
-	BaseExecutor();
-	virtual ~BaseExecutor();
-	virtual int Run(const char* path, int argc, char* argv[]);
-	virtual bool Wait();
-	virtual bool Kill();
+    //Methods
+    BaseExecutor();
+    virtual ~BaseExecutor();
+    virtual int Run(const char* path, int argc, char* argv[]);
+    virtual bool Wait();
+    virtual bool Kill();
 };
 
 #endif //!__VK_BASE_EXECUTOR_H__

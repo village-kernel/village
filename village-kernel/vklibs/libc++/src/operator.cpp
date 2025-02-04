@@ -14,7 +14,7 @@
 /// @return address
 void *operator new(size_t size)
 {
-	return (void*)kernel->memory.HeapAlloc((uint32_t)size);
+    return (void*)kernel->memory.HeapAlloc((uint32_t)size);
 }
 
 
@@ -23,7 +23,7 @@ void *operator new(size_t size)
 /// @return address
 void *operator new[](size_t size)
 {
-	return (void*)kernel->memory.HeapAlloc((uint32_t)size);
+    return (void*)kernel->memory.HeapAlloc((uint32_t)size);
 }
 
 
@@ -31,7 +31,7 @@ void *operator new[](size_t size)
 /// @param ptr address
 void operator delete(void *ptr)
 {
-	kernel->memory.Free((uint32_t)ptr);
+    kernel->memory.Free((uint32_t)ptr);
 }
 
 
@@ -39,7 +39,7 @@ void operator delete(void *ptr)
 /// @param ptr address
 void operator delete[](void *ptr)
 {
-	kernel->memory.Free((uint32_t)ptr);
+    kernel->memory.Free((uint32_t)ptr);
 }
 
 
@@ -48,7 +48,7 @@ void operator delete[](void *ptr)
 /// @param size byte size
 void operator delete(void *ptr, size_t size)
 {
-	kernel->memory.Free((uint32_t)ptr, size);
+    kernel->memory.Free((uint32_t)ptr, size);
 }
 
 
@@ -57,5 +57,5 @@ void operator delete(void *ptr, size_t size)
 /// @param size byte size
 void operator delete[](void *ptr, size_t size)
 {
-	kernel->memory.Free((uint32_t)ptr, size);
+    kernel->memory.Free((uint32_t)ptr, size);
 }

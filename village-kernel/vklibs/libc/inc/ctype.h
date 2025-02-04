@@ -15,18 +15,18 @@ extern "C" {
 
 static inline int isdigit(int ch)
 {
-	return (ch >= '0') && (ch <= '9');
+    return (ch >= '0') && (ch <= '9');
 }
 
 static inline int isxdigit(int ch)
 {
-	if (isdigit(ch))
-		return true;
+    if (isdigit(ch))
+        return true;
 
-	if ((ch >= 'a') && (ch <= 'f'))
-		return true;
+    if ((ch >= 'a') && (ch <= 'f'))
+        return true;
 
-	return (ch >= 'A') && (ch <= 'F');
+    return (ch >= 'A') && (ch <= 'F');
 }
 
 #ifdef __cplusplus

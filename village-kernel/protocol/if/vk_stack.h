@@ -16,15 +16,15 @@
 class Stack : public Base, public Class
 {
 public:
-	//Constructor
-	Stack() { }
+    //Constructor
+    Stack() { }
 
-	//Destructor
-	virtual ~Stack() { }
+    //Destructor
+    virtual ~Stack() { }
 
-	//Methods
-	virtual void Setup() = 0;
-	virtual void Exit()  = 0;
+    //Methods
+    virtual void Setup() = 0;
+    virtual void Exit()  = 0;
 };
 
 #endif // !__VK_STACK_INTERFACE_H__

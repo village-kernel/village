@@ -17,13 +17,13 @@
 class HexExecutor : public BaseExecutor, public Class
 {
 private:
-	//Members
-	HexLoader hex;
+    //Members
+    HexLoader hex;
 private:
-	//Methods
-	int Initiate();
-	void Sandbox();
-	bool Release();
+    //Methods
+    int Initiate();
+    void Sandbox();
+    bool Release();
 };
 
 
@@ -31,8 +31,8 @@ private:
 class HexExecutorFty : public Executor
 {
 public:
-	VkList<char*> GetSuffixes();
-	BaseExecutor* Create();
+    VkList<char*> GetSuffixes();
+    BaseExecutor* Create();
 };
  
 #endif //!__VK_HEX_EXECUTOR_H__

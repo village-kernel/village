@@ -10,7 +10,7 @@
 
 /// @brief Constructor
 Stm32Usb::Stm32Usb()
-	:isUsed(false)
+    :isUsed(false)
 {
 }
 
@@ -25,64 +25,64 @@ Stm32Usb::~Stm32Usb()
 /// @param data 
 void Stm32Usb::SetData(void* data)
 {
-	config = *((Config*)data);
+    config = *((Config*)data);
 }
 
 
 /// @brief Pin config
 void Stm32Usb::PinConfig()
 {
-	Gpio gpio;
+    Gpio gpio;
 
-	gpio.Initialize(config.dmGpio);
-	gpio.Initialize(config.dpGpio);
+    gpio.Initialize(config.dmGpio);
+    gpio.Initialize(config.dpGpio);
 }
 
 
 /// @brief UsbHandler
 void Stm32Usb::UsbHandler()
 {
-	usb.IRQHandler();
+    usb.IRQHandler();
 }
 
 
 /// @brief Open
 bool Stm32Usb::Open()
 {
-	//Return when is used
-	if (isUsed) return true;
-	
-	//Pin config
-	PinConfig();
+    //Return when is used
+    if (isUsed) return true;
+    
+    //Pin config
+    PinConfig();
 
-	//Configure usb
-	usb.Initialize();
-	usb.ConfigRxFifo(0x80);
-	usb.ConfigTxFifo(0, 0x40);
-	usb.ConfigTxFifo(1, 0x80);
-	usb.Start();
+    //Configure usb
+    usb.Initialize();
+    usb.ConfigRxFifo(0x80);
+    usb.ConfigTxFifo(0, 0x40);
+    usb.ConfigTxFifo(1, 0x80);
+    usb.Start();
 
-	//Configure nvic
-	nvic.Initialize((IRQn_Type)config.irq);
-	nvic.SetPriority(0, 0);
-	nvic.EnableInterrupt();
+    //Configure nvic
+    nvic.Initialize((IRQn_Type)config.irq);
+    nvic.SetPriority(0, 0);
+    nvic.EnableInterrupt();
 
-	//Set interrupt serivces
-	kernel->interrupt.SetISR(config.irq, (Method)(&Stm32Usb::UsbHandler), this);
-	
-	//Set isUsed flag
-	isUsed = true;
+    //Set interrupt serivces
+    kernel->interrupt.SetISR(config.irq, (Method)(&Stm32Usb::UsbHandler), this);
+    
+    //Set isUsed flag
+    isUsed = true;
 
-	return true;
+    return true;
 }
 
 
 /// @brief Close
 void Stm32Usb::Close()
 {
-	kernel->interrupt.RemoveISR(config.irq, (Method)(&Stm32Usb::UsbHandler), this);
+    kernel->interrupt.RemoveISR(config.irq, (Method)(&Stm32Usb::UsbHandler), this);
 
-	isUsed = false;
+    isUsed = false;
 }
 
 
@@ -91,13 +91,13 @@ void Stm32Usb::Close()
 /// @return 
 bool Stm32UsbDrv::Probe(PlatDevice* device)
 {
-	Stm32Usb* stm32Usb = new Stm32Usb(); 
-	stm32Usb->SetID(DriverID::_character);
-	stm32Usb->SetName(device->GetDriverName());
-	stm32Usb->SetData(device->GetDriverData());
-	device->SetDriver(stm32Usb);
-	kernel->device.RegisterCharDevice((CharDriver*)device->GetDriver());
-	return true;
+    Stm32Usb* stm32Usb = new Stm32Usb(); 
+    stm32Usb->SetID(DriverID::_character);
+    stm32Usb->SetName(device->GetDriverName());
+    stm32Usb->SetData(device->GetDriverData());
+    device->SetDriver(stm32Usb);
+    kernel->device.RegisterCharDevice((CharDriver*)device->GetDriver());
+    return true;
 }
 
 
@@ -106,10 +106,10 @@ bool Stm32UsbDrv::Probe(PlatDevice* device)
 /// @return 
 bool Stm32UsbDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterCharDevice((CharDriver*)device->GetDriver());
-	delete (Stm32Usb*)device->GetDriver();
-	device->SetDriver(NULL);
-	return true;
+    kernel->device.UnregisterCharDevice((CharDriver*)device->GetDriver());
+    delete (Stm32Usb*)device->GetDriver();
+    device->SetDriver(NULL);
+    return true;
 }
 
 

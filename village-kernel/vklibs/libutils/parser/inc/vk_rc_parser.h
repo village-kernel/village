@@ -15,25 +15,25 @@
 class RcParser
 {
 private:
-	//Enumerations
-	enum ParserStatus
-	{
-		_NotRecord = 0,
-		_RecordCmd,
-		_SaveCmd,
-	};
+    //Enumerations
+    enum ParserStatus
+    {
+        _NotRecord = 0,
+        _RecordCmd,
+        _SaveCmd,
+    };
 
-	//Members
-	VkList<char*> runcmds;
+    //Members
+    VkList<char*> runcmds;
 
-	//Methods
-	void Decode(const char* rcString, int size);
+    //Methods
+    void Decode(const char* rcString, int size);
 public:
-	//Methods
-	RcParser(const char* filename = NULL);
-	bool Load(const char* filename);
-	VkList<char*>& GetRunCmds();
-	void Release();
+    //Methods
+    RcParser(const char* filename = NULL);
+    bool Load(const char* filename);
+    VkList<char*>& GetRunCmds();
+    void Release();
 };
 
 #endif //!__VK_RC_PARSER_H__

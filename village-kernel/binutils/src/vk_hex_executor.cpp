@@ -12,19 +12,19 @@
 /// @return tid
 int HexExecutor::Initiate()
 {
-	//Load, parser and execute hex file
-	if (!hex.Load(path)) return -1;
+    //Load, parser and execute hex file
+    if (!hex.Load(path)) return -1;
 
-	//Create a sandboxed thread to run the app
-	return kernel->thread.CreateTask(path, (Method)&HexExecutor::Sandbox, this);
+    //Create a sandboxed thread to run the app
+    return kernel->thread.CreateTask(path, (Method)&HexExecutor::Sandbox, this);
 }
 
 
 /// @brief HexExecutor execute app
 void HexExecutor::Sandbox()
 {
-	hex.Execute(argc, argv);
-	hex.Exit();
+    hex.Execute(argc, argv);
+    hex.Exit();
 }
 
 
@@ -32,7 +32,7 @@ void HexExecutor::Sandbox()
 /// @return 
 bool HexExecutor::Release()
 {
-	return hex.Exit();
+    return hex.Exit();
 }
 
 
@@ -40,12 +40,12 @@ bool HexExecutor::Release()
 /// @return 
 VkList<char*> HexExecutorFty::GetSuffixes()
 {
-	VkList<char*> suffixes;
-	suffixes.Add((char*)".hex");
+    VkList<char*> suffixes;
+    suffixes.Add((char*)".hex");
 #ifdef ASSOCIATED_EXEC_HEX
-	suffixes.Add((char*)".exec");
+    suffixes.Add((char*)".exec");
 #endif
-	return suffixes;
+    return suffixes;
 }
 
 
@@ -53,7 +53,7 @@ VkList<char*> HexExecutorFty::GetSuffixes()
 /// @return 
 BaseExecutor* HexExecutorFty::Create()
 {
-	return new HexExecutor();
+    return new HexExecutor();
 }
 
 

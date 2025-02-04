@@ -22,25 +22,25 @@ ConcreteProtocol::~ConcreteProtocol()
 /// @brief Setup
 void ConcreteProtocol::Setup()
 {
-	isRuntime = false;
-		
-	for (stacks.Begin(); !stacks.IsEnd(); stacks.Next())
-	{
-		stacks.Item()->Setup();
-	}
+    isRuntime = false;
+        
+    for (stacks.Begin(); !stacks.IsEnd(); stacks.Next())
+    {
+        stacks.Item()->Setup();
+    }
 
-	isRuntime = true;
+    isRuntime = true;
 
-	//Output debug info
-	kernel->debug.Info("Protocol setup done!");
+    //Output debug info
+    kernel->debug.Info("Protocol setup done!");
 }
 
 
 /// @brief Exit
 void ConcreteProtocol::Exit()
 {
-	isRuntime = false;
-	stacks.Release();
+    isRuntime = false;
+    stacks.Release();
 }
 
 
@@ -48,8 +48,8 @@ void ConcreteProtocol::Exit()
 /// @param stack 
 void ConcreteProtocol::RegisterStack(Stack* stack)
 {
-	stacks.Add(stack, stack->GetName());
-	if (isRuntime) stack->Setup();
+    stacks.Add(stack, stack->GetName());
+    if (isRuntime) stack->Setup();
 }
 
 
@@ -57,6 +57,6 @@ void ConcreteProtocol::RegisterStack(Stack* stack)
 /// @param stack 
 void ConcreteProtocol::UnregisterStack(Stack* stack)
 {
-	if (isRuntime) stack->Exit();
-	stacks.Remove(stack);
+    if (isRuntime) stack->Exit();
+    stacks.Remove(stack);
 }

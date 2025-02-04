@@ -14,8 +14,8 @@
 class Fsmc
 {
 public:
-	//Methods
-	void Initialize();
+    //Methods
+    void Initialize();
 };
 
 #endif //!__VK_DRV_FSMC_H__

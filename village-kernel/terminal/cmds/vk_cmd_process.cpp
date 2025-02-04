@@ -13,28 +13,28 @@
 class CmdProcess : public Cmd
 {
 public:
-	/// @brief Cmd ps execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		VkList<Process::Data*> data = kernel->process.GetData();
+    /// @brief Cmd ps execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        VkList<Process::Data*> data = kernel->process.GetData();
 
-		for (data.Begin(); !data.IsEnd(); data.Next())
-		{
-			console->Println("pid %d, tid %d, name %s", 
-							data.Item()->pid,
-							data.Item()->tid,
-							data.Item()->name);
-		}
-	}
+        for (data.Begin(); !data.IsEnd(); data.Next())
+        {
+            console->Println("pid %d, tid %d, name %s", 
+                            data.Item()->pid,
+                            data.Item()->tid,
+                            data.Item()->name);
+        }
+    }
 
 
-	/// @brief Cmd ps help
-	void Help()
-	{
-		console->Println("cmd ps: list process data");
-	}
+    /// @brief Cmd ps help
+    void Help()
+    {
+        console->Println("cmd ps: list process data");
+    }
 };
 
 

@@ -16,13 +16,13 @@
 class UsbDevice : public Stack
 {
 private:
-	DevStream usb;
+    DevStream usb;
 public:
-	/// @brief Methods
-	UsbDevice();
-	~UsbDevice();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    UsbDevice();
+    ~UsbDevice();
+    void Setup();
+    void Exit();
 };
 
 #endif // !__VK_USB_DEVICE_H__

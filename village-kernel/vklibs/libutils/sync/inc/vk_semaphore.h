@@ -14,16 +14,16 @@
 class Semaphore
 {
 private:
-	//Members
-	volatile int limit;
-	volatile int counter;
-	volatile int ticks;
+    //Members
+    volatile int limit;
+    volatile int counter;
+    volatile int ticks;
 public:
-	//Methods
-	Semaphore(int limit = 1, int ticks = 1);
-	~Semaphore();
-	void Up();
-	void Down();
+    //Methods
+    Semaphore(int limit = 1, int ticks = 1);
+    ~Semaphore();
+    void Up();
+    void Down();
 };
 
 #endif //!__VK_SEMAPHORE_H__

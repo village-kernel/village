@@ -11,7 +11,7 @@
 
 /// @brief Constructor
 ConcreteSystem::ConcreteSystem()
-	:sysTicks(0)
+    :sysTicks(0)
 {
 }
 
@@ -25,46 +25,46 @@ ConcreteSystem::~ConcreteSystem()
 /// @brief System Setup
 void ConcreteSystem::Setup()
 {
-	//Set interrupt handler
-	kernel->interrupt.SetISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
+    //Set interrupt handler
+    kernel->interrupt.SetISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
 
-	//Configure clock
-	ConfigureClock();
+    //Configure clock
+    ConfigureClock();
 }
 
 
 /// @brief System Exit
 void ConcreteSystem::Exit()
 {
-	kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
+    kernel->interrupt.RemoveISR(SysTick_IRQn, (Method)&ConcreteSystem::SysTickHandler, this);
 }
 
 
 /// @brief Configure clock
 void ConcreteSystem::ConfigureClock()
 {
-	//Reset systicks
-	sysTicks = 0;
+    //Reset systicks
+    sysTicks = 0;
 
-	//Get the PIT value: hardware clock at 1193182 Hz
-	uint32_t freq = 1000; //1000hz, 1ms
-	uint32_t divider = 1193182 / freq;
-	uint8_t low  = low_8(divider);
-	uint8_t high = high_8(divider);
+    //Get the PIT value: hardware clock at 1193182 Hz
+    uint32_t freq = 1000; //1000hz, 1ms
+    uint32_t divider = 1193182 / freq;
+    uint8_t low  = low_8(divider);
+    uint8_t high = high_8(divider);
 
-	//Send the command
-	PortByteOut(TIMER_CMD, 0x36); //Command port
-	PortByteOut(TIMER_CH0, low);
-	PortByteOut(TIMER_CH0, high);
+    //Send the command
+    PortByteOut(TIMER_CMD, 0x36); //Command port
+    PortByteOut(TIMER_CH0, low);
+    PortByteOut(TIMER_CH0, high);
 }
 
 
 /// @brief Delays for a specified number of milliseconds.
 void ConcreteSystem::DelayMs(uint32_t millis)
 {
-	uint32_t delayStart = sysTicks;
-	uint32_t delayCycles = millis;
-	while ((sysTicks - delayStart) < delayCycles);
+    uint32_t delayStart = sysTicks;
+    uint32_t delayCycles = millis;
+    while ((sysTicks - delayStart) < delayCycles);
 }
 
 
@@ -92,12 +92,12 @@ void ConcreteSystem::Shutdown()
 /// @brief Reset x86 core
 void ConcreteSystem::Reboot()
 {
-	uint64_t null_idtr = 0;
-	__asm volatile ("lidt %0; int3" :: "m" (null_idtr));
+    uint64_t null_idtr = 0;
+    __asm volatile ("lidt %0; int3" :: "m" (null_idtr));
 
-	//Loop with interrupt off if it doesn't work
-	__asm volatile ("cli");
-	while (1) { __asm volatile ("hlt"); }
+    //Loop with interrupt off if it doesn't work
+    __asm volatile ("cli");
+    while (1) { __asm volatile ("hlt"); }
 }
 
 

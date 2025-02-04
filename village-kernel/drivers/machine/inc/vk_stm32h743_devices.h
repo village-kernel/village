@@ -15,11 +15,11 @@
 class SdioSdCardDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	SdioSdCard::Config config;
+    /// @brief Members
+    SdioSdCard::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 
@@ -27,11 +27,11 @@ public:
 class Stm32UartDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	Stm32Uart::Config config;
+    /// @brief Members
+    Stm32Uart::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 #endif //!__VK_STM32H743_DEVICES_H__

@@ -13,28 +13,28 @@
 class CmdDevice : public Cmd
 {
 public:
-	/// @brief Cmd device execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		for (int id = 0; id <= DriverID::_miscellaneous; id++)
-		{
-			VkList<Base*> list = kernel->device.GetDevices((DriverID)id);
+    /// @brief Cmd device execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        for (int id = 0; id <= DriverID::_miscellaneous; id++)
+        {
+            VkList<Base*> list = kernel->device.GetDevices((DriverID)id);
 
-			for (list.Begin(); !list.IsEnd(); list.Next())
-			{
-				console->Println("%s ", list.GetName());
-			}
-		}
-	}
+            for (list.Begin(); !list.IsEnd(); list.Next())
+            {
+                console->Println("%s ", list.GetName());
+            }
+        }
+    }
 
 
-	/// @brief Cmd device help
-	void Help()
-	{
-		console->Println("cmd device: display device list");
-	}
+    /// @brief Cmd device help
+    void Help()
+    {
+        console->Println("cmd device: display device list");
+    }
 };
 
 

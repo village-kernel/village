@@ -273,7 +273,7 @@ typedef struct
   FunctionalState  CRCCheckingRxPackets;        /*!< Enable or disables the CRC Checking for Received Packets. */
 
   uint32_t         GiantPacketSizeLimit;        /*!< Specifies the packet size that the MAC will declare it as Giant, If it's size is
-	                                                  greater than the value programmed in this field in units of bytes
+                                                      greater than the value programmed in this field in units of bytes
                                                           This parameter must be a number between Min_Data = 0x618 (1518 byte) and Max_Data = 0x3FFF (32 Kbyte)*/
 
   FunctionalState  ExtendedInterPacketGap;      /*!< Enable or disables the extended inter packet gap. */
@@ -752,7 +752,7 @@ typedef struct{
   DMA Rx Normal Descriptor write back format
   ---------------------------------------------------------------------------------------------------------------------
   RDES0 |                 Inner VLAN Tag[31:16]                 |                 Outer VLAN Tag[15:0]                |
-	---------------------------------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------------------------
   RDES1 |       OAM code, or MAC Control Opcode [31:16]         |               Extended Status                       |
   ---------------------------------------------------------------------------------------------------------------------
   RDES2 |      MAC Filter Status[31:16]        | VF(15) | Reserved [14:12] | ARP Status [11:10] | Header Length [9:0] |
@@ -843,7 +843,7 @@ typedef struct{
   DMA Rx context Descriptor
   ---------------------------------------------------------------------------------------------------------------------
   RDES0 |                                     Timestamp Low[31:0]                                                     |
-	---------------------------------------------------------------------------------------------------------------------
+    ---------------------------------------------------------------------------------------------------------------------
   RDES1 |                                     Timestamp High[31:0]                                                    |
   ---------------------------------------------------------------------------------------------------------------------
   RDES2 |                                          Reserved                                                           |

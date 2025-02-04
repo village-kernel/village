@@ -14,14 +14,14 @@
 /// @param filename 
 BinLoader::BinLoader(const char* filename)
 {
-	if (NULL != filename) Load(filename);
+    if (NULL != filename) Load(filename);
 }
 
 
 /// @brief Destructor
 BinLoader::~BinLoader()
 {
-	Exit();
+    Exit();
 }
 
 
@@ -30,18 +30,18 @@ BinLoader::~BinLoader()
 /// @return result
 bool BinLoader::Load(const char* filename)
 {
-	//Save filename in local
-	this->filename = new char[strlen(filename) + 1]();
-	strcpy(this->filename, filename);
+    //Save filename in local
+    this->filename = new char[strlen(filename) + 1]();
+    strcpy(this->filename, filename);
 
-	//Load and mapping
-	if (!LoadBin())     return false;
-	if (!PostParser())  return false;
-	if (!RelEntries())  return false;
+    //Load and mapping
+    if (!LoadBin())     return false;
+    if (!PostParser())  return false;
+    if (!RelEntries())  return false;
 
-	//Output debug info
-	kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", bin.base, filename);
-	return true;
+    //Output debug info
+    kernel->debug.Output(Debug::_Lv2, "load at 0x%08x, %s load done", bin.base, filename);
+    return true;
 }
 
 
@@ -49,25 +49,25 @@ bool BinLoader::Load(const char* filename)
 /// @return 
 bool BinLoader::LoadBin()
 {
-	FileStream file;
+    FileStream file;
 
-	if (file.Open(filename, FileMode::_Read))
-	{
-		int size = file.Size();
-		bin.load = (uint32_t)new char[size]();
+    if (file.Open(filename, FileMode::_Read))
+    {
+        int size = file.Size();
+        bin.load = (uint32_t)new char[size]();
 
-		if (bin.load && (file.Read((char*)bin.load, size) == size))
-		{
-			kernel->debug.Output(Debug::_Lv1, "%s bin file load successful", filename);
-			file.Close();
-			return true;
-		}
+        if (bin.load && (file.Read((char*)bin.load, size) == size))
+        {
+            kernel->debug.Output(Debug::_Lv1, "%s bin file load successful", filename);
+            file.Close();
+            return true;
+        }
 
-		file.Close();
-	}
+        file.Close();
+    }
 
-	kernel->debug.Error("%s bin file load failed", filename);
-	return false;
+    kernel->debug.Error("%s bin file load failed", filename);
+    return false;
 }
 
 
@@ -75,12 +75,12 @@ bool BinLoader::LoadBin()
 /// @return 
 bool BinLoader::PostParser()
 {
-	bin.offset  = *(((uint32_t*)bin.load) + 0);
-	bin.dynamic = *(((uint32_t*)bin.load) + 1);
-	bin.entry   = *(((uint32_t*)bin.load) + 2);
-	bin.base    = bin.load - bin.offset;
-	bin.exec    = bin.base + bin.entry;
-	return true;
+    bin.offset  = *(((uint32_t*)bin.load) + 0);
+    bin.dynamic = *(((uint32_t*)bin.load) + 1);
+    bin.entry   = *(((uint32_t*)bin.load) + 2);
+    bin.base    = bin.load - bin.offset;
+    bin.exec    = bin.base + bin.entry;
+    return true;
 }
 
 
@@ -88,42 +88,42 @@ bool BinLoader::PostParser()
 /// @return
 bool BinLoader::RelEntries()
 {
-	uint32_t   relcount = 0;
-	uint32_t*  relAddr = NULL;
-	DynamicHeader* dynamic = NULL;
-	RelocationEntry* relocate = NULL;
+    uint32_t   relcount = 0;
+    uint32_t*  relAddr = NULL;
+    DynamicHeader* dynamic = NULL;
+    RelocationEntry* relocate = NULL;
 
-	//Calc the dynamic address
-	dynamic = (DynamicHeader*)(bin.base + bin.dynamic);
+    //Calc the dynamic address
+    dynamic = (DynamicHeader*)(bin.base + bin.dynamic);
 
-	//Gets the relocate section address and the relcount
-	for (int i = 0; dynamic[i].tag != _DT_NULL; i++)
-	{
-		if (_DT_REL == dynamic[i].tag)
-		{
-			relocate = (RelocationEntry*)(bin.base + dynamic[i].ptr);
-		}
-		else if (_DT_RELCOUNT == dynamic[i].tag)
-		{
-			relcount = dynamic[i].val;
-		}
-	}
+    //Gets the relocate section address and the relcount
+    for (int i = 0; dynamic[i].tag != _DT_NULL; i++)
+    {
+        if (_DT_REL == dynamic[i].tag)
+        {
+            relocate = (RelocationEntry*)(bin.base + dynamic[i].ptr);
+        }
+        else if (_DT_RELCOUNT == dynamic[i].tag)
+        {
+            relcount = dynamic[i].val;
+        }
+    }
 
-	//Check if relocation is needed
+    //Check if relocation is needed
     if (!relocate && relcount == 0) return true;
-	if (!relocate || relcount == 0) return false;
+    if (!relocate || relcount == 0) return false;
 
-	//Relocate the value of relative type
-	for (uint32_t i = 0; i < relcount; i++)
-	{
-		if (_R_TYPE_RELATIVE == relocate[i].type)
-		{
-			relAddr  = (uint32_t*)(bin.base + relocate[i].offset);
-			*relAddr = bin.base + *relAddr;
-		}
-	}
+    //Relocate the value of relative type
+    for (uint32_t i = 0; i < relcount; i++)
+    {
+        if (_R_TYPE_RELATIVE == relocate[i].type)
+        {
+            relAddr  = (uint32_t*)(bin.base + relocate[i].offset);
+            *relAddr = bin.base + *relAddr;
+        }
+    }
 
-	return true;
+    return true;
 }
 
 
@@ -133,14 +133,14 @@ bool BinLoader::RelEntries()
 /// @return 
 bool BinLoader::Execute(int argc, char* argv[])
 {
-	if (0 != bin.exec)
-	{
-		((StartEntry)bin.exec)(kernel, argc, argv);
-		kernel->debug.Output(Debug::_Lv2, "%s exit", filename);
-		return true;
-	}
-	kernel->debug.Error("%s execute failed!", filename);
-	return false;
+    if (0 != bin.exec)
+    {
+        ((StartEntry)bin.exec)(kernel, argc, argv);
+        kernel->debug.Output(Debug::_Lv2, "%s exit", filename);
+        return true;
+    }
+    kernel->debug.Error("%s execute failed!", filename);
+    return false;
 }
 
 
@@ -148,7 +148,7 @@ bool BinLoader::Execute(int argc, char* argv[])
 /// @return result
 bool BinLoader::Exit()
 {
-	delete[] filename;
-	delete[] (char*)bin.load;
-	return true;
+    delete[] filename;
+    delete[] (char*)bin.load;
+    return true;
 }

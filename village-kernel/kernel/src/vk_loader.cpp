@@ -22,25 +22,25 @@ ConcreteLoader::~ConcreteLoader()
 /// @brief Loader setup
 void ConcreteLoader::Setup()
 {
-	//Loading libraries
-	Load(Loader::_Lib, "/libraries/_load_.rc");
+    //Loading libraries
+    Load(Loader::_Lib, "/libraries/_load_.rc");
 
-	//Loading modules
-	Load(Loader::_Mod, "/modules/_load_.rc");
+    //Loading modules
+    Load(Loader::_Mod, "/modules/_load_.rc");
 
-	//Output debug info
-	kernel->debug.Info("Loader setup done!");
+    //Output debug info
+    kernel->debug.Info("Loader setup done!");
 }
 
 
 /// @brief Loader Exit
 void ConcreteLoader::Exit()
 {
-	//Unloading modules
-	Unload(Loader::_Mod, "/modules/_load_.rc");
+    //Unloading modules
+    Unload(Loader::_Mod, "/modules/_load_.rc");
 
-	//Unloading libraries
-	Unload(Loader::_Lib, "/libraries/_load_.rc");
+    //Unloading libraries
+    Unload(Loader::_Lib, "/libraries/_load_.rc");
 }
 
 
@@ -48,17 +48,17 @@ void ConcreteLoader::Exit()
 /// @param filename rc file path
 void ConcreteLoader::Load(int type, const char* filename)
 {
-	RcParser* parser = new RcParser(filename);
+    RcParser* parser = new RcParser(filename);
 
-	VkList<char*>& runcmds = parser->GetRunCmds();
+    VkList<char*>& runcmds = parser->GetRunCmds();
 
-	for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
-	{
-		if (!Install(type, runcmds.Item())) break;
-	}
+    for (runcmds.End(); !runcmds.IsBegin(); runcmds.Prev())
+    {
+        if (!Install(type, runcmds.Item())) break;
+    }
 
-	parser->Release();
-	delete parser;
+    parser->Release();
+    delete parser;
 }
 
 
@@ -66,17 +66,17 @@ void ConcreteLoader::Load(int type, const char* filename)
 /// @param filename rc file path
 void ConcreteLoader::Unload(int type, const char* filename)
 {
-	RcParser* parser = new RcParser(filename);
+    RcParser* parser = new RcParser(filename);
 
-	VkList<char*>& runcmds = parser->GetRunCmds();
+    VkList<char*>& runcmds = parser->GetRunCmds();
 
-	for (runcmds.Begin(); !runcmds.IsEnd(); runcmds.Next())
-	{
-		if (!Uninstall(type, runcmds.Item())) break;
-	}
+    for (runcmds.Begin(); !runcmds.IsEnd(); runcmds.Next())
+    {
+        if (!Uninstall(type, runcmds.Item())) break;
+    }
 
-	parser->Release();
-	delete parser;
+    parser->Release();
+    delete parser;
 }
 
 
@@ -85,15 +85,15 @@ void ConcreteLoader::Unload(int type, const char* filename)
 /// @param filename 
 bool ConcreteLoader::Install(int type, const char* filename)
 {
-	if (Loader::_Lib == type)
-	{
-		return libraryTool.Install(filename);
-	}
-	else if (Loader::_Mod == type)
-	{
-		return moduleTool.Install(filename);
-	}
-	return false;
+    if (Loader::_Lib == type)
+    {
+        return libraryTool.Install(filename);
+    }
+    else if (Loader::_Mod == type)
+    {
+        return moduleTool.Install(filename);
+    }
+    return false;
 }
 
 
@@ -102,15 +102,15 @@ bool ConcreteLoader::Install(int type, const char* filename)
 /// @param filename 
 bool ConcreteLoader::Uninstall(int type, const char* filename)
 {
-	if (Loader::_Lib == type)
-	{
-		return libraryTool.Uninstall(filename);
-	}
-	else if (Loader::_Mod == type)
-	{
-		return moduleTool.Uninstall(filename);
-	}
-	return false;
+    if (Loader::_Lib == type)
+    {
+        return libraryTool.Uninstall(filename);
+    }
+    else if (Loader::_Mod == type)
+    {
+        return moduleTool.Uninstall(filename);
+    }
+    return false;
 }
 
 
@@ -118,7 +118,7 @@ bool ConcreteLoader::Uninstall(int type, const char* filename)
 /// @return libraries
 VkList<ElfLoader*>* ConcreteLoader::GetLibraries()
 {
-	return &libraries;
+    return &libraries;
 }
 
 
@@ -126,5 +126,5 @@ VkList<ElfLoader*>* ConcreteLoader::GetLibraries()
 /// @return modules
 VkList<ElfLoader*>* ConcreteLoader::GetModules()
 {
-	return &modules;
+    return &modules;
 }

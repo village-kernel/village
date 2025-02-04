@@ -16,13 +16,13 @@
 class LibraryTool
 {
 public:
-	//Methods
-	LibraryTool();
-	~LibraryTool();
-	VkList<ElfLoader*>* GetLibraries();
-	bool Install(const char* filename);
-	bool Uninstall(const char* filename);
-	uint32_t SearchSymbol(const char* symbol);
+    //Methods
+    LibraryTool();
+    ~LibraryTool();
+    VkList<ElfLoader*>* GetLibraries();
+    bool Install(const char* filename);
+    bool Uninstall(const char* filename);
+    uint32_t SearchSymbol(const char* symbol);
 };
 
 #endif //!__VK_LIBRARY_TOOL_H__

@@ -23,33 +23,33 @@ SpiW25qxx::~SpiW25qxx()
 /// @brief Init config
 void SpiW25qxx::SetData(void* data)
 {
-	config = *((Config*)data);
-	flashError = false;
+    config = *((Config*)data);
+    flashError = false;
 }
 
 
 /// @brief Pin config
 inline void SpiW25qxx::PinConfig()
 {
-	Gpio gpio;
+    Gpio gpio;
 
-	gpio.Initialize(config.sckGpio);
-	gpio.ConfigOutputType(Gpio::_PushPull);
-	gpio.ConfigInputType(Gpio::_PullUp);
-	gpio.ConfigSpeed(Gpio::_HighSpeed);
+    gpio.Initialize(config.sckGpio);
+    gpio.ConfigOutputType(Gpio::_PushPull);
+    gpio.ConfigInputType(Gpio::_PullUp);
+    gpio.ConfigSpeed(Gpio::_HighSpeed);
 
-	gpio.Initialize(config.mosiGpio);
-	gpio.ConfigOutputType(Gpio::_PushPull);
-	gpio.ConfigInputType(Gpio::_PullUp);
-	gpio.ConfigSpeed(Gpio::_HighSpeed);
+    gpio.Initialize(config.mosiGpio);
+    gpio.ConfigOutputType(Gpio::_PushPull);
+    gpio.ConfigInputType(Gpio::_PullUp);
+    gpio.ConfigSpeed(Gpio::_HighSpeed);
 
-	gpio.Initialize(config.misoGpio);
-	gpio.ConfigOutputType(Gpio::_PushPull);
-	gpio.ConfigInputType(Gpio::_PullUp);
-	gpio.ConfigSpeed(Gpio::_HighSpeed);
+    gpio.Initialize(config.misoGpio);
+    gpio.ConfigOutputType(Gpio::_PushPull);
+    gpio.ConfigInputType(Gpio::_PullUp);
+    gpio.ConfigSpeed(Gpio::_HighSpeed);
 
-	csGpio.Initialize(config.csGpio);
-	wpGpio.Initialize(config.wpGpio);
+    csGpio.Initialize(config.csGpio);
+    wpGpio.Initialize(config.wpGpio);
 }
 
 
@@ -57,9 +57,9 @@ inline void SpiW25qxx::PinConfig()
 /// @param addr 
 inline void SpiW25qxx::WriteAddr(uint32_t addr)
 {
-	spi.WriteAndReadOneByte(addr >> 16);
-	spi.WriteAndReadOneByte(addr >> 8);
-	spi.WriteAndReadOneByte(addr);
+    spi.WriteAndReadOneByte(addr >> 16);
+    spi.WriteAndReadOneByte(addr >> 8);
+    spi.WriteAndReadOneByte(addr);
 }
 
 
@@ -67,7 +67,7 @@ inline void SpiW25qxx::WriteAddr(uint32_t addr)
 /// @param cmd 
 inline void SpiW25qxx::WriteCmd(uint8_t cmd)
 {
-	spi.WriteAndReadOneByte(cmd);
+    spi.WriteAndReadOneByte(cmd);
 }
 
 
@@ -75,7 +75,7 @@ inline void SpiW25qxx::WriteCmd(uint8_t cmd)
 /// @param data 
 inline void SpiW25qxx::WriteOneByte(uint8_t data)
 {
-	spi.WriteAndReadOneByte(data);
+    spi.WriteAndReadOneByte(data);
 }
 
 
@@ -83,35 +83,35 @@ inline void SpiW25qxx::WriteOneByte(uint8_t data)
 /// @return 
 inline uint8_t SpiW25qxx::ReadOneByte()
 {
-	return spi.WriteAndReadOneByte(0x00);
+    return spi.WriteAndReadOneByte(0x00);
 }
 
 
 /// @brief Spi flash Select chip
 inline void SpiW25qxx::SelectChip()
 {
-	csGpio.Clear();
+    csGpio.Clear();
 }
 
 
 /// @brief Spi flash Unselect chip
 inline void SpiW25qxx::UnselectChip()
 {
-	csGpio.Set();
+    csGpio.Set();
 }
 
 
 /// @brief Enable write protection
 inline void SpiW25qxx::EnableWP()
 {
-	wpGpio.Clear();
+    wpGpio.Clear();
 }
 
 
 /// @brief Disable write protection
 inline void SpiW25qxx::DisableWP()
 {
-	wpGpio.Set();
+    wpGpio.Set();
 }
 
 
@@ -119,7 +119,7 @@ inline void SpiW25qxx::DisableWP()
 /// @return 
 inline bool SpiW25qxx::IsFlashError()
 {
-	return flashError;
+    return flashError;
 }
 
 
@@ -127,64 +127,64 @@ inline bool SpiW25qxx::IsFlashError()
 /// @return 
 uint16_t SpiW25qxx::GetDeviceID()
 {
-	SelectChip();
+    SelectChip();
 
-	WriteCmd(_ReadManufacturerDeviceID);
-	WriteAddr(0);
+    WriteCmd(_ReadManufacturerDeviceID);
+    WriteAddr(0);
 
-	//manufacturer id and device id
-	uint16_t id = (uint16_t)ReadOneByte() << 8 | (uint16_t)ReadOneByte();
+    //manufacturer id and device id
+    uint16_t id = (uint16_t)ReadOneByte() << 8 | (uint16_t)ReadOneByte();
 
-	UnselectChip();
-	return id;
+    UnselectChip();
+    return id;
 }
 
 
 /// @brief Spi flash chip enable
 void SpiW25qxx::WriteEnable()
 {
-	SelectChip();
+    SelectChip();
 
-	WriteCmd(_WriteEnable);
+    WriteCmd(_WriteEnable);
 
-	UnselectChip();
+    UnselectChip();
 }
 
 
 /// @brief Spi flash chip disable
 void SpiW25qxx::WriteDisable()
 {
-	SelectChip();
+    SelectChip();
 
-	WriteCmd(_WriteDisable);
+    WriteCmd(_WriteDisable);
 
-	UnselectChip();
+    UnselectChip();
 }
 
 
 /// @brief Spi flash check busy
 void SpiW25qxx::WaitForBusy()
 {
-	SelectChip();
+    SelectChip();
 
-	WriteCmd(_ReadStatusRegister);
+    WriteCmd(_ReadStatusRegister);
 
-	while ((ReadOneByte() & 0x01)) {}
+    while ((ReadOneByte() & 0x01)) {}
 
-	UnselectChip();
+    UnselectChip();
 }
 
 
 /// @brief Spi flash chip erase
 void SpiW25qxx::EraseChip()
 {
-	WriteEnable();
-	SelectChip();
+    WriteEnable();
+    SelectChip();
 
-	WriteCmd(_ChipErase);
+    WriteCmd(_ChipErase);
 
-	UnselectChip();
-	WaitForBusy();
+    UnselectChip();
+    WaitForBusy();
 }
 
 
@@ -192,14 +192,14 @@ void SpiW25qxx::EraseChip()
 /// @param address 
 void SpiW25qxx::EraseSector(uint32_t address)
 {
-	WriteEnable();
-	SelectChip();
+    WriteEnable();
+    SelectChip();
 
-	WriteCmd(_SectorErase);
-	WriteAddr(address);
+    WriteCmd(_SectorErase);
+    WriteAddr(address);
 
-	UnselectChip();
-	WaitForBusy();
+    UnselectChip();
+    WaitForBusy();
 }
 
 
@@ -209,19 +209,19 @@ void SpiW25qxx::EraseSector(uint32_t address)
 /// @param address 
 void SpiW25qxx::PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t address)
 {
-	WriteEnable();
-	SelectChip();
+    WriteEnable();
+    SelectChip();
 
-	WriteCmd(_PageProgram);
-	WriteAddr(address);
+    WriteCmd(_PageProgram);
+    WriteAddr(address);
 
-	for (uint16_t i = 0; i < size; i++)
-	{
-		WriteOneByte(txData[i]);
-	}
+    for (uint16_t i = 0; i < size; i++)
+    {
+        WriteOneByte(txData[i]);
+    }
 
-	UnselectChip();
-	WaitForBusy();
+    UnselectChip();
+    WaitForBusy();
 }
 
 
@@ -231,22 +231,22 @@ void SpiW25qxx::PageWriteBytes(uint8_t* txData, uint16_t size, uint32_t address)
 /// @param address 
 void SpiW25qxx::SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t address)
 {
-	uint16_t bytesRemain = size;
-	uint32_t writeAddr = address;
-	uint8_t* writeData = txData;
+    uint16_t bytesRemain = size;
+    uint32_t writeAddr = address;
+    uint8_t* writeData = txData;
 
-	while (bytesRemain)
-	{
-		//Calculate the size of the write data
-		uint16_t writeSize = OnePageByteSize - (uint8_t)writeAddr;
-		if (bytesRemain < writeSize) writeSize = bytesRemain;
+    while (bytesRemain)
+    {
+        //Calculate the size of the write data
+        uint16_t writeSize = OnePageByteSize - (uint8_t)writeAddr;
+        if (bytesRemain < writeSize) writeSize = bytesRemain;
 
-		//Write bytes
-		PageWriteBytes(writeData, writeSize, writeAddr);
-		bytesRemain -= writeSize;
-		writeAddr += writeSize;
-		writeData += writeSize;
-	}
+        //Write bytes
+        PageWriteBytes(writeData, writeSize, writeAddr);
+        bytesRemain -= writeSize;
+        writeAddr += writeSize;
+        writeData += writeSize;
+    }
 }
 
 
@@ -257,66 +257,66 @@ void SpiW25qxx::SectorWriteBytes(uint8_t* txData, uint16_t size, uint32_t addres
 /// @return 
 int SpiW25qxx::WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t address)
 {
-	//return if there are any problems with the flash;
-	if (flashError) return -1;
+    //return if there are any problems with the flash;
+    if (flashError) return -1;
 
-	uint32_t bytesRemain = size;
-	uint32_t writeAddr = address;
-	uint8_t* writeData = txData;
-	uint8_t  buffer[OneSectorByteSize] = { 0 };
+    uint32_t bytesRemain = size;
+    uint32_t writeAddr = address;
+    uint8_t* writeData = txData;
+    uint8_t  buffer[OneSectorByteSize] = { 0 };
 
-	while (bytesRemain)
-	{
-		//Calculate the size of the write data
-		uint32_t sectorStartAddr = writeAddr >> 12 << 12;
-		uint32_t sectorWriteAddr = writeAddr & (OneSectorByteSize - 1);
-		uint32_t sectorWriteSize = OneSectorByteSize - sectorWriteAddr;
-		if (bytesRemain < sectorWriteSize) sectorWriteSize = bytesRemain;
+    while (bytesRemain)
+    {
+        //Calculate the size of the write data
+        uint32_t sectorStartAddr = writeAddr >> 12 << 12;
+        uint32_t sectorWriteAddr = writeAddr & (OneSectorByteSize - 1);
+        uint32_t sectorWriteSize = OneSectorByteSize - sectorWriteAddr;
+        if (bytesRemain < sectorWriteSize) sectorWriteSize = bytesRemain;
 
-		//Read sector data to buffer
-		Read(buffer, OneSectorByteSize, sectorStartAddr);
-		
-		//Erase sector
-		EraseSector(sectorStartAddr);
+        //Read sector data to buffer
+        Read(buffer, OneSectorByteSize, sectorStartAddr);
+        
+        //Erase sector
+        EraseSector(sectorStartAddr);
 
-		//Integrate data into the buffer
-		for (uint32_t i = 0; i < sectorWriteSize; i++)
-		{
-			buffer[sectorWriteAddr + i] = writeData[i];
-		}
+        //Integrate data into the buffer
+        for (uint32_t i = 0; i < sectorWriteSize; i++)
+        {
+            buffer[sectorWriteAddr + i] = writeData[i];
+        }
 
-		//Calculate write address offset
-		uint32_t offset = 0;
-		for (uint32_t i = 0; i < OneSectorByteSize; i++)
-		{
-			if (buffer[i] != 0xff)
-			{
-				offset = i;
-				break;
-			}
-		}
+        //Calculate write address offset
+        uint32_t offset = 0;
+        for (uint32_t i = 0; i < OneSectorByteSize; i++)
+        {
+            if (buffer[i] != 0xff)
+            {
+                offset = i;
+                break;
+            }
+        }
 
-		//Calculate the size of the write data
-		uint32_t writeSize = 0;
-		for (uint32_t i = OneSectorByteSize; i > 0; i--)
-		{
-			if (buffer[i - 1] != 0xff)
-			{
-				writeSize = i - offset;
-				break;
-			}
-		}
+        //Calculate the size of the write data
+        uint32_t writeSize = 0;
+        for (uint32_t i = OneSectorByteSize; i > 0; i--)
+        {
+            if (buffer[i - 1] != 0xff)
+            {
+                writeSize = i - offset;
+                break;
+            }
+        }
 
-		//Write data into sector
-		SectorWriteBytes(buffer + offset, writeSize, sectorStartAddr + offset);
+        //Write data into sector
+        SectorWriteBytes(buffer + offset, writeSize, sectorStartAddr + offset);
 
-		//Update bytes reamin, write address and write data
-		bytesRemain -= sectorWriteSize;
-		writeAddr += sectorWriteSize;
-		writeData += sectorWriteSize;
-	}
+        //Update bytes reamin, write address and write data
+        bytesRemain -= sectorWriteSize;
+        writeAddr += sectorWriteSize;
+        writeData += sectorWriteSize;
+    }
 
-	return size;
+    return size;
 }
 
 
@@ -324,20 +324,20 @@ int SpiW25qxx::WriteAnywhere(uint8_t *txData, uint32_t size, uint32_t address)
 /// @return 
 bool SpiW25qxx::Open()
 {
-	//Pin config
-	PinConfig();
+    //Pin config
+    PinConfig();
 
-	//Initialize spi
-	spi.Initialize(config.spiCh);
-	spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol0Cpha0);
-	spi.ConfigBaudRatePrescaler(Spi::_Fpclk16);
-	spi.ConfigFrame(Spi::_MsbFirst, Spi::_8Bit);
-	spi.Enable();
+    //Initialize spi
+    spi.Initialize(config.spiCh);
+    spi.ConfigModeAndPins(Spi::_Master, Spi::_Cpol0Cpha0);
+    spi.ConfigBaudRatePrescaler(Spi::_Fpclk16);
+    spi.ConfigFrame(Spi::_MsbFirst, Spi::_8Bit);
+    spi.Enable();
 
-	//Check if the device id is correct
-	if (GetDeviceID() != config.deviceID) flashError = true;
+    //Check if the device id is correct
+    if (GetDeviceID() != config.deviceID) flashError = true;
 
-	return !flashError;
+    return !flashError;
 }
 
 
@@ -348,34 +348,34 @@ bool SpiW25qxx::Open()
 /// @return 
 int SpiW25qxx::Write(uint8_t *txData, uint32_t blkSize, uint32_t blk)
 {
-	//return if there are any problems with the flash;
-	if (flashError) return 0;
+    //return if there are any problems with the flash;
+    if (flashError) return 0;
 
-	//Adapte fatfs
-	uint32_t bytesRemain = blkSize * sector_size;
-	uint32_t writeAddr = blk * sector_size;
-	uint8_t* writeData = txData;
+    //Adapte fatfs
+    uint32_t bytesRemain = blkSize * sector_size;
+    uint32_t writeAddr = blk * sector_size;
+    uint8_t* writeData = txData;
 
-	while (bytesRemain)
-	{
-		//Erase sector
-		if (0 == (writeAddr % OneSectorByteSize))
-		{
-			EraseSector(writeAddr);
-		}
+    while (bytesRemain)
+    {
+        //Erase sector
+        if (0 == (writeAddr % OneSectorByteSize))
+        {
+            EraseSector(writeAddr);
+        }
 
-		//Calculate the size of the write data
-		uint16_t writeSize = OnePageByteSize - (uint8_t)writeAddr;
-		if (bytesRemain < writeSize) writeSize = bytesRemain;
+        //Calculate the size of the write data
+        uint16_t writeSize = OnePageByteSize - (uint8_t)writeAddr;
+        if (bytesRemain < writeSize) writeSize = bytesRemain;
 
-		//Write bytes
-		PageWriteBytes(writeData, writeSize, writeAddr);
-		bytesRemain -= writeSize;
-		writeAddr += writeSize;
-		writeData += writeSize;
-	}
+        //Write bytes
+        PageWriteBytes(writeData, writeSize, writeAddr);
+        bytesRemain -= writeSize;
+        writeAddr += writeSize;
+        writeData += writeSize;
+    }
 
-	return flashError ? 0 : blkSize;
+    return flashError ? 0 : blkSize;
 }
 
 
@@ -386,26 +386,26 @@ int SpiW25qxx::Write(uint8_t *txData, uint32_t blkSize, uint32_t blk)
 /// @return 
 int SpiW25qxx::Read(uint8_t* rxData, uint32_t blkSize, uint32_t blk)
 {
-	//return if there are any problems with the flash;
-	if (flashError) return 0;
+    //return if there are any problems with the flash;
+    if (flashError) return 0;
 
-	//Adapte fatfs
-	uint32_t readAddr = blk * sector_size;
-	uint32_t readSize = blkSize * sector_size;
+    //Adapte fatfs
+    uint32_t readAddr = blk * sector_size;
+    uint32_t readSize = blkSize * sector_size;
 
-	SelectChip();
+    SelectChip();
 
-	WriteCmd(_ReadData);
-	WriteAddr(readAddr);
+    WriteCmd(_ReadData);
+    WriteAddr(readAddr);
 
-	for (uint32_t i = 0; i < readSize; i++)
-	{
-		rxData[i] = ReadOneByte();
-	}
+    for (uint32_t i = 0; i < readSize; i++)
+    {
+        rxData[i] = ReadOneByte();
+    }
 
-	UnselectChip();
+    UnselectChip();
 
-	return flashError ? 0 : blkSize;
+    return flashError ? 0 : blkSize;
 }
 
 
@@ -415,19 +415,19 @@ int SpiW25qxx::Read(uint8_t* rxData, uint32_t blkSize, uint32_t blk)
 /// @return 
 int SpiW25qxx::IOCtrl(uint8_t cmd, void* data)
 {
-	switch (cmd)
-	{
-		case _GetSectorCount:
-			*(uint32_t*)data = sector_count;
-			break;
-		case _GetSectorSize:
-			*(uint16_t *)data = sector_size;
-			break;
-		case _GetBlockSize:
-			*(uint16_t *)data = block_size;
-		default: break;
-	}
-	return 0;
+    switch (cmd)
+    {
+        case _GetSectorCount:
+            *(uint32_t*)data = sector_count;
+            break;
+        case _GetSectorSize:
+            *(uint16_t *)data = sector_size;
+            break;
+        case _GetBlockSize:
+            *(uint16_t *)data = block_size;
+        default: break;
+    }
+    return 0;
 }
 
 
@@ -443,13 +443,13 @@ void SpiW25qxx::Close()
 /// @return 
 bool SpiW25qxxDrv::Probe(PlatDevice* device)
 {
-	SpiW25qxx* spiW25qxx = new SpiW25qxx(); 
-	spiW25qxx->SetID(DriverID::_framebuffer);
-	spiW25qxx->SetName(device->GetDriverName());
-	spiW25qxx->SetData(device->GetDriverData());
-	device->SetDriver(spiW25qxx);
-	kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
-	return true;
+    SpiW25qxx* spiW25qxx = new SpiW25qxx(); 
+    spiW25qxx->SetID(DriverID::_framebuffer);
+    spiW25qxx->SetName(device->GetDriverName());
+    spiW25qxx->SetData(device->GetDriverData());
+    device->SetDriver(spiW25qxx);
+    kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
+    return true;
 }
 
 
@@ -458,10 +458,10 @@ bool SpiW25qxxDrv::Probe(PlatDevice* device)
 /// @return 
 bool SpiW25qxxDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
-	delete (SpiW25qxx*)device->GetDriver();
-	device->SetDriver(NULL);
-	return true;
+    kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
+    delete (SpiW25qxx*)device->GetDriver();
+    device->SetDriver(NULL);
+    return true;
 }
 
 
