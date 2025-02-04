@@ -80,6 +80,9 @@ endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
 endif
+ifeq ($(CONFIG_GENERATED_ROOTFS), y)
+	$(Q)$(MAKE) rootfs
+endif
 
 
 #######################################
