@@ -28,18 +28,25 @@ public:
 		_SpeedFull = 3,
 	};
 private:
+	struct USB_OTG_PCGCCTLTypedef
+	{
+		uint32_t reg;
+	};
+private:
 	//Static const members
 	static const uint32_t dev_endpoints = 9;
 
 	//Members
 	volatile USB_OTG_GlobalTypeDef* base;
 	volatile USB_OTG_DeviceTypeDef* device;
-	volatile uint32_t* pcgcctl;
+	volatile USB_OTG_PCGCCTLTypedef* pcgcctl;
 
 	//Methods
 	Mode GetMode();
 	USB_OTG_INEndpointTypeDef* InEndPoint(uint8_t index);
 	USB_OTG_OUTEndpointTypeDef* OutEndPoint(uint8_t index);
+	void WriteDataFifo(uint8_t index, uint32_t data);
+	uint32_t ReadDataFifo(uint8_t index);
 public:
 	//Methods
 	Usb();
@@ -60,6 +67,17 @@ public:
 	void DisableInterrupt();
 	void Enable();
 	void Start();
+
+	uint32_t GetInterruptState();
+	bool CheckInterruptFlag(uint32_t flag);
+	void MaskInterrupt(uint32_t interrupt);
+	void UnmaskInterrupt(uint32_t interrupt);
+	void WritePacket(uint8_t* data, uint8_t epnum, uint16_t len);
+	void* ReadPacket(uint8_t* data, uint16_t len);
+
+	void HandleRxQLevelRequest();
+	void HandleOutEndpointRequest();
+	void HandleInEndpointRequest();
 	void IRQHandler();
 };
 

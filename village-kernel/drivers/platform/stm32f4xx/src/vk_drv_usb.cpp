@@ -32,7 +32,7 @@ void Usb::Initialize()
 	device = (USB_OTG_DeviceTypeDef *)((uint32_t)base + USB_OTG_DEVICE_BASE);
 
 	//Set usb pcgcctl
-	pcgcctl = (volatile uint32_t *)((uint32_t)base + USB_OTG_PCGCCTL_BASE);
+	pcgcctl = (USB_OTG_PCGCCTLTypedef *)((uint32_t)base + USB_OTG_PCGCCTL_BASE);
 	
 	//Disable interrupt
 	DisableInterrupt();
@@ -146,7 +146,7 @@ void Usb::InitUsbDevice()
     base->GCCFG &= ~USB_OTG_GCCFG_VBUSASEN;
 
 	//Restart the Phy Clock
-	*pcgcctl = 0U;
+	pcgcctl->reg = 0U;
 
 	//Device mode configuration
 	device->DCFG |= DCFG_FRAME_INTERVAL_80;
@@ -320,7 +320,7 @@ void Usb::FlushRxFifo()
 void Usb::ConnectDevice()
 {
 	//In case phy is stopped, ensure to ungate and restore the phy CLK
-	*pcgcctl &= ~(USB_OTG_PCGCCTL_STOPCLK | USB_OTG_PCGCCTL_GATECLK);
+	pcgcctl->reg &= ~(USB_OTG_PCGCCTL_STOPCLK | USB_OTG_PCGCCTL_GATECLK);
 
 	device->DCTL &= ~USB_OTG_DCTL_SDIS;
 }
@@ -330,7 +330,7 @@ void Usb::ConnectDevice()
 void Usb::DisconnectDevice()
 {
 	//In case phy is stopped, ensure to ungate and restore the phy CLK
-	*pcgcctl &= ~(USB_OTG_PCGCCTL_STOPCLK | USB_OTG_PCGCCTL_GATECLK);
+	pcgcctl->reg &= ~(USB_OTG_PCGCCTL_STOPCLK | USB_OTG_PCGCCTL_GATECLK);
 
 	device->DCTL |= USB_OTG_DCTL_SDIS;
 }
@@ -368,11 +368,158 @@ void Usb::Start()
 }
 
 
+/// @brief Get interrupt state
+/// @return 
+uint32_t Usb::GetInterruptState()
+{
+	uint32_t reg = 0;
+	reg = base->GINTSTS;
+  	reg &= base->GINTMSK;
+	return reg;
+}
+
+
+/// @brief Check interrupt flag
+/// @param flag 
+/// @return 
+bool Usb::CheckInterruptFlag(uint32_t flag)
+{
+	return (GetInterruptState() & flag) == flag;
+}
+
+
+/// @brief Mask interrupt
+/// @param interrupt 
+void Usb::MaskInterrupt(uint32_t interrupt)
+{
+	base->GINTMSK &= ~interrupt;
+}
+
+
+/// @brief Unmask interrupt
+/// @param interrupt 
+void Usb::UnmaskInterrupt(uint32_t interrupt)
+{
+	base->GINTMSK |= interrupt;
+}
+
+
+/// @brief Write data fifo
+/// @param index 
+/// @param data 
+void Usb::WriteDataFifo(uint8_t index, uint32_t data)
+{
+	*(volatile uint32_t *)((uint32_t)base + USB_OTG_FIFO_BASE + ((index) * USB_OTG_FIFO_SIZE)) = data;
+}
+
+
+/// @brief Read data fifo
+/// @param index 
+/// @return 
+uint32_t Usb::ReadDataFifo(uint8_t index)
+{
+	return *(volatile uint32_t *)((uint32_t)base + USB_OTG_FIFO_BASE + ((index) * USB_OTG_FIFO_SIZE));
+}
+
+
+/// @brief Write packet
+/// @param data 
+/// @param len 
+/// @return 
+void Usb::WritePacket(uint8_t* data, uint8_t epnum, uint16_t len)
+{
+	uint8_t *pSrc = data;
+
+	uint32_t count32b = ((uint32_t)len + 3U) / 4U;
+	
+	for (uint32_t i = 0U; i < count32b; i++)
+	{
+		WriteDataFifo(epnum, __UNALIGNED_UINT32_READ(pSrc));
+		pSrc++;
+		pSrc++;
+		pSrc++;
+		pSrc++;
+	}
+}
+
+
+/// @brief Read packet
+/// @param data 
+/// @param len 
+/// @return 
+void* Usb::ReadPacket(uint8_t* data, uint16_t len)
+{
+	uint8_t *pDest = data;
+	uint32_t pData;
+	uint32_t i;
+	uint32_t count32b = (uint32_t)len >> 2U;
+	uint16_t remainingBytes = len % 4U;
+
+	for (i = 0U; i < count32b; i++)
+	{
+		__UNALIGNED_UINT32_WRITE(pDest, ReadDataFifo(0U));
+		pDest++;
+		pDest++;
+		pDest++;
+		pDest++;
+	}
+
+	//When Number of data is not word aligned, read the remaining byte
+	if (remainingBytes != 0U)
+	{
+		i = 0U;
+		__UNALIGNED_UINT32_WRITE(&pData, ReadDataFifo(0U));
+
+		do
+		{
+			*(uint8_t *)pDest = (uint8_t)(pData >> (8U * (uint8_t)(i)));
+			i++;
+			pDest++;
+			remainingBytes--;
+		} while (remainingBytes != 0U);
+	}
+
+	return ((void *)pDest);
+}
+
+
+/// @brief 
+void Usb::HandleRxQLevelRequest()
+{
+	if (CheckInterruptFlag(USB_OTG_GINTSTS_RXFLVL))
+	{
+		MaskInterrupt(USB_OTG_GINTSTS_RXFLVL);
+
+		UnmaskInterrupt(USB_OTG_GINTSTS_RXFLVL);
+	}
+}
+
+
+/// @brief 
+void Usb::HandleOutEndpointRequest()
+{
+
+}
+
+
+/// @brief 
+void Usb::HandleInEndpointRequest()
+{
+
+}
+
+
 /// @brief IRQ handler
 void Usb::IRQHandler()
 {
 	if (Usb::_DeviceMode == GetMode())
 	{
-		
+		if (0 == GetInterruptState()) return;
+
+		HandleRxQLevelRequest();
+
+		HandleOutEndpointRequest();
+
+		HandleInEndpointRequest();
 	}
 }
