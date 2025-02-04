@@ -58,7 +58,7 @@ BochsVBE::~BochsVBE()
 /// @param data 
 void BochsVBE::SetData(void* data)
 {
-	config = *((Config*)data);
+    config = *((Config*)data);
 }
 
 
@@ -67,7 +67,7 @@ void BochsVBE::SetData(void* data)
 /// @param value 
 inline void BochsVBE::WriteData(uint32_t reg, uint16_t value)
 {
-	config.vmap[reg] = value;
+    config.vmap[reg] = value;
 }
 
 
@@ -76,7 +76,7 @@ inline void BochsVBE::WriteData(uint32_t reg, uint16_t value)
 /// @return 
 inline uint16_t BochsVBE::ReadData(uint32_t reg)
 {
-	return config.vmap[reg];
+    return config.vmap[reg];
 }
 
 
@@ -85,8 +85,8 @@ inline uint16_t BochsVBE::ReadData(uint32_t reg)
 /// @param value 
 inline void BochsVBE::WriteReg(uint16_t reg, uint16_t value)
 {
-	PortWordOut(VBE_DISPI_IOPORT_INDEX, reg);
-	PortWordOut(VBE_DISPI_IOPORT_DATA, value);
+    PortWordOut(VBE_DISPI_IOPORT_INDEX, reg);
+    PortWordOut(VBE_DISPI_IOPORT_DATA, value);
 }
 
 
@@ -95,8 +95,8 @@ inline void BochsVBE::WriteReg(uint16_t reg, uint16_t value)
 /// @return 
 inline uint16_t BochsVBE::ReadReg(uint16_t reg)
 {
-	PortWordOut(VBE_DISPI_IOPORT_INDEX, reg);
-	return PortWordIn(VBE_DISPI_IOPORT_DATA);
+    PortWordOut(VBE_DISPI_IOPORT_INDEX, reg);
+    return PortWordIn(VBE_DISPI_IOPORT_DATA);
 }
 
 
@@ -104,7 +104,7 @@ inline uint16_t BochsVBE::ReadReg(uint16_t reg)
 /// @return 
 bool BochsVBE::IsBochsVBEAvailable()
 {
-	return (ReadReg(VBE_DISPI_INDEX_ID) >= VBE_DISPI_ID4);
+    return (ReadReg(VBE_DISPI_INDEX_ID) >= VBE_DISPI_ID4);
 }
 
 
@@ -116,13 +116,13 @@ bool BochsVBE::IsBochsVBEAvailable()
 /// @param isClearVideoMemory 
 void BochsVBE::SetVideoMode(uint16_t width, uint16_t height, uint16_t bitdepth, bool isUseLinearFrameBuffer, bool isClearVideoMemory)
 {
-	WriteReg(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
-	WriteReg(VBE_DISPI_INDEX_XRES, width);
-	WriteReg(VBE_DISPI_INDEX_YRES, height);
-	WriteReg(VBE_DISPI_INDEX_BPP,  bitdepth);
-	WriteReg(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED |
-			(isUseLinearFrameBuffer ? VBE_DISPI_LFB_ENABLED : 0) |
-			(isClearVideoMemory ? 0 : VBE_DISPI_NOCLEARMEM));
+    WriteReg(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
+    WriteReg(VBE_DISPI_INDEX_XRES, width);
+    WriteReg(VBE_DISPI_INDEX_YRES, height);
+    WriteReg(VBE_DISPI_INDEX_BPP,  bitdepth);
+    WriteReg(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED |
+            (isUseLinearFrameBuffer ? VBE_DISPI_LFB_ENABLED : 0) |
+            (isClearVideoMemory ? 0 : VBE_DISPI_NOCLEARMEM));
 }
 
 
@@ -130,29 +130,29 @@ void BochsVBE::SetVideoMode(uint16_t width, uint16_t height, uint16_t bitdepth, 
 /// @param bankNumber 
 void BochsVBE::SetBank(uint16_t bankNumber)
 {
-	WriteReg(VBE_DISPI_INDEX_BANK, bankNumber);
+    WriteReg(VBE_DISPI_INDEX_BANK, bankNumber);
 }
 
 
 /// @brief BochsVBE setup
 bool BochsVBE::Setup()
 {
-	info.width    = 1024;
-	info.height   = 768;
-	info.bitdepth = 0x10; // 16 bpp
+    info.width    = 1024;
+    info.height   = 768;
+    info.bitdepth = 0x10; // 16 bpp
 
-	if (IsBochsVBEAvailable())
-	{
-		//Set video mode
-		SetVideoMode(info.width, info.height, info.bitdepth, true, true);
-		
-		//Get PCI device 0x1234:0x1111 BAR 0
-		config.vmap = (uint16_t*)pci.ReadBAR(0x1234, 0x1111, 0);
+    if (IsBochsVBEAvailable())
+    {
+        //Set video mode
+        SetVideoMode(info.width, info.height, info.bitdepth, true, true);
+        
+        //Get PCI device 0x1234:0x1111 BAR 0
+        config.vmap = (uint16_t*)pci.ReadBAR(0x1234, 0x1111, 0);
 
-		return true;
-	}
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 
@@ -162,8 +162,8 @@ bool BochsVBE::Setup()
 /// @param color 
 void BochsVBE::DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 {
-	uint32_t reg = x + y * info.width;
-	WriteData(reg, color);
+    uint32_t reg = x + y * info.width;
+    WriteData(reg, color);
 }
 
 
@@ -173,8 +173,8 @@ void BochsVBE::DrawPoint(uint32_t x, uint32_t y, uint32_t color)
 /// @return 
 uint32_t BochsVBE::ReadPoint(uint32_t x, uint32_t y)
 {
-	uint32_t reg = x + y * info.width;
-	return ReadData(reg);
+    uint32_t reg = x + y * info.width;
+    return ReadData(reg);
 }
 
 
@@ -186,13 +186,13 @@ uint32_t BochsVBE::ReadPoint(uint32_t x, uint32_t y)
 /// @param color 
 void BochsVBE::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color)
 {
-	for (uint32_t y = sy; y <= ey; y++)
-	{
-		for (uint32_t x = sx; x <= ex; x++)
-		{
-			DrawPoint(x, y, color);
-		}
-	}
+    for (uint32_t y = sy; y <= ey; y++)
+    {
+        for (uint32_t x = sx; x <= ex; x++)
+        {
+            DrawPoint(x, y, color);
+        }
+    }
 }
 
 
@@ -200,7 +200,7 @@ void BochsVBE::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t
 /// @param color 
 void BochsVBE::Clear(uint32_t color)
 {
-	Fill(0, 0, info.width, info.height, color);
+    Fill(0, 0, info.width, info.height, color);
 }
 
 
@@ -214,7 +214,7 @@ void BochsVBE::Exit()
 /// @brief Open
 bool BochsVBE::Open()
 {
-	return Setup();
+    return Setup();
 }
 
 
@@ -224,18 +224,18 @@ bool BochsVBE::Open()
 /// @return 
 int BochsVBE::IOCtrl(uint8_t cmd, void* data)
 {
-	FBDriver** fbdev = (FBDriver**)data;
+    FBDriver** fbdev = (FBDriver**)data;
 
-	*fbdev = this;
+    *fbdev = this;
 
-	return 0;
+    return 0;
 }
 
 
 /// @brief Close
 void BochsVBE::Close()
 {
-	Exit();
+    Exit();
 }
 
 
@@ -244,13 +244,9 @@ void BochsVBE::Close()
 /// @return 
 bool BochsVBEDrv::Probe(PlatDevice* device)
 {
-	BochsVBE* bochsVBE = new BochsVBE(); 
-	bochsVBE->SetID(DriverID::_framebuffer);
-	bochsVBE->SetName(device->GetDriverName());
-	bochsVBE->SetData(device->GetDriverData());
-	device->SetDriver(bochsVBE);
-	kernel->device.RegisterFBDevice((FBDriver*)device->GetDriver());
-	return true;
+    device->Attach(new BochsVBE());
+    kernel->device.RegisterFBDevice((FBDriver*)device->GetDriver());
+    return true;
 }
 
 
@@ -259,10 +255,10 @@ bool BochsVBEDrv::Probe(PlatDevice* device)
 /// @return 
 bool BochsVBEDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterFBDevice((FBDriver*)device->GetDriver());
-	delete (BochsVBE*)device->GetDriver();
-	device->SetDriver(NULL);
-	return true;
+    kernel->device.UnregisterFBDevice((FBDriver*)device->GetDriver());
+    delete (BochsVBE*)device->GetDriver();
+    device->Detach();
+    return true;
 }
 
 

@@ -16,21 +16,24 @@
 class Base
 {
 private:
-	//Members
-	int   id;
-	char* name;
+    //Members
+    int   id;
+    char* name;
+    void* data;
 public:
-	//Constructor
-	Base(): id(-1), name((char*)"Unknown") {}
+    //Constructor
+    Base(): id(-1), name((char*)"Unknown"), data(NULL) {}
 
-	//Destructor
-	virtual ~Base() {}
+    //Destructor
+    virtual ~Base() {}
 
-	//Methods
-	void SetID(int id)         { this->id = id;     }
-	int  GetID()               { return this->id;   }
-	void SetName(char* name)   { this->name = name; }
-	char* GetName()            { return this->name; }
+    //Methods
+    virtual void SetID(int id)         { this->id = id;     }
+    virtual int  GetID()               { return this->id;   }
+    virtual void SetName(char* name)   { this->name = name; }
+    virtual char* GetName()            { return this->name; }
+    virtual void SetData(void* data)   { this->data = data; }
+    virtual void* GetData()            { return this->data; }
 };
 
 

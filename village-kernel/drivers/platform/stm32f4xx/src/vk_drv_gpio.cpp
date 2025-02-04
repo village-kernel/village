@@ -9,9 +9,9 @@
 
 /// @brief Constructor
 Gpio::Gpio()
-	: baseReg((GPIO_TypeDef *)GPIOA_BASE),
-	bitMask(0),
-	pinNum(0)
+    : baseReg((GPIO_TypeDef *)GPIOA_BASE),
+    bitMask(0),
+    pinNum(0)
 {
 }
 
@@ -21,28 +21,28 @@ Gpio::Gpio()
 /// @param config
 void Gpio::Initialize(Config config)
 {
-	baseReg = (GPIO_TypeDef *)( GPIOA_BASE + (config.ch * baseRegOffset) );
-	pinNum = config.pin;
-	bitMask = 0x1 << pinNum;
+    baseReg = (GPIO_TypeDef *)( GPIOA_BASE + (config.ch * baseRegOffset) );
+    pinNum = config.pin;
+    bitMask = 0x1 << pinNum;
 
-	//Enable the peripheral clock for the corresponding port
-	uint32_t clkEnaMask = RCC_AHB1ENR_GPIOAEN_Msk << config.ch;
-	RCC->AHB1ENR |= clkEnaMask;
+    //Enable the peripheral clock for the corresponding port
+    uint32_t clkEnaMask = RCC_AHB1ENR_GPIOAEN_Msk << config.ch;
+    RCC->AHB1ENR |= clkEnaMask;
 
-	//Set the correct mode
-	ConfigMode((GpioMode)config.mode);
+    //Set the correct mode
+    ConfigMode((GpioMode)config.mode);
 
-	//Set the correct type
-	if (_Output == config.mode)
-		ConfigOutputType(_PushPull);
-	else if (_Input == config.mode)
-		ConfigInputType(_PullUp);
+    //Set the correct type
+    if (_Output == config.mode)
+        ConfigOutputType(_PushPull);
+    else if (_Input == config.mode)
+        ConfigInputType(_PullUp);
 
-	//Set the correct value
-	if (_Altera == config.mode)
-		ConfigAltFunc(config.altfun);
-	else if (_Output == config.mode)
-		Write((GpioState)config.value);
+    //Set the correct value
+    if (_Altera == config.mode)
+        ConfigAltFunc(config.altfun);
+    else if (_Output == config.mode)
+        Write((GpioState)config.value);
 }
 
 
@@ -50,7 +50,7 @@ void Gpio::Initialize(Config config)
 /// @param mode 
 void Gpio::ConfigMode(GpioMode mode)
 {
-	baseReg->MODER = (baseReg->MODER & ~( DoubleBitMask() ) ) | (mode << (pinNum * 2) );
+    baseReg->MODER = (baseReg->MODER & ~( DoubleBitMask() ) ) | (mode << (pinNum * 2) );
 }
 
 
@@ -58,7 +58,7 @@ void Gpio::ConfigMode(GpioMode mode)
 /// @param inputType 
 void Gpio::ConfigInputType(GpioInputType inputType)
 {
-	baseReg->PUPDR = (baseReg->PUPDR & ~(DoubleBitMask())) | (inputType << (pinNum * 2));
+    baseReg->PUPDR = (baseReg->PUPDR & ~(DoubleBitMask())) | (inputType << (pinNum * 2));
 }
 
 
@@ -66,7 +66,7 @@ void Gpio::ConfigInputType(GpioInputType inputType)
 /// @param outputType 
 void Gpio::ConfigOutputType(GpioOutType outputType)
 {
-	baseReg->OTYPER = (baseReg->OTYPER & ~(BitMask())) | (outputType << pinNum);
+    baseReg->OTYPER = (baseReg->OTYPER & ~(BitMask())) | (outputType << pinNum);
 }
 
 
@@ -74,7 +74,7 @@ void Gpio::ConfigOutputType(GpioOutType outputType)
 /// @param speed 
 void Gpio::ConfigSpeed(GpioSpeed speed)
 {
-	baseReg->OSPEEDR = (baseReg->OSPEEDR & ~(DoubleBitMask())) | (speed << (pinNum * 2));
+    baseReg->OSPEEDR = (baseReg->OSPEEDR & ~(DoubleBitMask())) | (speed << (pinNum * 2));
 }
 
 
@@ -83,16 +83,16 @@ void Gpio::ConfigSpeed(GpioSpeed speed)
 /// @param altMode 
 void Gpio::ConfigAltFunc(uint8_t altMode)
 {
-	if (pinNum < maxFourBitPin)
-	{
-		uint32_t shift = pinNum * 4;
-		uint32_t mask = ~(0xF << shift);
-		baseReg->AFR[0] = (baseReg->AFR[0] & mask) | altMode << shift;
-	}
-	else
-	{
-		uint32_t shift = (pinNum - maxFourBitPin) * 4;
-		uint32_t mask = ~(0xF << shift);
-		baseReg->AFR[1] = (baseReg->AFR[1] & mask) | altMode << shift;
-	}
+    if (pinNum < maxFourBitPin)
+    {
+        uint32_t shift = pinNum * 4;
+        uint32_t mask = ~(0xF << shift);
+        baseReg->AFR[0] = (baseReg->AFR[0] & mask) | altMode << shift;
+    }
+    else
+    {
+        uint32_t shift = (pinNum - maxFourBitPin) * 4;
+        uint32_t mask = ~(0xF << shift);
+        baseReg->AFR[1] = (baseReg->AFR[1] & mask) | altMode << shift;
+    }
 }

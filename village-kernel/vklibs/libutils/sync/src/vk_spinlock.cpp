@@ -9,7 +9,7 @@
 
 /// @brief SpinLock constructor
 SpinLock::SpinLock()
-	:lock(false)
+    :lock(false)
 {
 }
 
@@ -23,13 +23,13 @@ SpinLock::~SpinLock()
 /// @brief SpinLock lock
 void SpinLock::Lock()
 {
-	while (true == lock) {}
-	lock = !lock;
+    while (true == lock) {}
+    lock = !lock;
 }
 
 
 /// @brief SpinLock unlock
 void SpinLock::Unlock()
 {
-	lock = !lock;
+    lock = !lock;
 }

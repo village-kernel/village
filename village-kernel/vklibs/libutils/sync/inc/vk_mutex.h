@@ -14,15 +14,15 @@
 class Mutex
 {
 private:
-	//Members
-	volatile bool lock;
-	volatile int  ticks;
+    //Members
+    volatile bool lock;
+    volatile int  ticks;
 public:
-	//Methods
-	Mutex(int ticks = 1);
-	~Mutex();
-	void Lock();
-	void Unlock();
+    //Methods
+    Mutex(int ticks = 1);
+    ~Mutex();
+    void Lock();
+    void Unlock();
 };
 
 #endif //!__VK_MUTEX_H__

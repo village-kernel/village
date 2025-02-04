@@ -15,11 +15,11 @@
 class UsbHost : public Stack
 {
 public:
-	/// @brief Methods
-	UsbHost();
-	~UsbHost();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    UsbHost();
+    ~UsbHost();
+    void Setup();
+    void Exit();
 };
 
 #endif // !__VK_USB_HOST_H__

@@ -39,36 +39,36 @@ Console::~Console()
 /// @brief Console setup
 void Console::Setup(const char* driver)
 {
-	//Set default user
-	strcpy(user, "root");
+    //Set default user
+    strcpy(user, "root");
 
-	//Set default machine
-	strcpy(mach, "village");
+    //Set default machine
+    strcpy(mach, "village");
 
-	//Set default path
-	strcpy(path, "/");
+    //Set default path
+    strcpy(path, "/");
 
-	//Setup msg mgr
-	msgMgr.Setup(driver);
+    //Setup msg mgr
+    msgMgr.Setup(driver);
 
-	//Output welcome message
-	ShowWelcomeMsg();
+    //Output welcome message
+    ShowWelcomeMsg();
 
-	//Output console symbol
-	ShowUserAndPath();
+    //Output console symbol
+    ShowUserAndPath();
 }
 
 
 /// @brief Console execute
 void Console::Execute()
 {
-	while (1)
-	{
-		if (msgMgr.Execute())
-		{
-			ExecuteCmd(msgMgr.Read());
-		}
-	}
+    while (1)
+    {
+        if (msgMgr.Execute())
+        {
+            ExecuteCmd(msgMgr.Read());
+        }
+    }
 }
 
 
@@ -76,63 +76,63 @@ void Console::Execute()
 /// @param msg recevice message data
 void Console::ExecuteCmd(CmdMsg msg)
 {
-	msgMgr.Write((uint8_t*)"\r\n");
+    msgMgr.Write((uint8_t*)"\r\n");
 
-	//Gets all terminal commands
-	VkList<Cmd*> cmds = kernel->terminal.GetCmds();
+    //Gets all terminal commands
+    VkList<Cmd*> cmds = kernel->terminal.GetCmds();
 
-	//Find the command and execute it 
-	for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
-	{
-		if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
-		{
-			regex.Split((const char*)msg.args);
-			cmd->Setup(this);
-			cmd->Execute(regex.Size(), regex.ToArray());
-			cmd->Exit();
-			regex.Clear();
-			ShowUserAndPath();
-			return;
-		}
-	}
+    //Find the command and execute it 
+    for (Cmd* cmd = cmds.Begin(); !cmds.IsEnd(); cmd = cmds.Next())
+    {
+        if (0 == strcmp(cmds.GetName(), (const char*)msg.cmd))
+        {
+            regex.Split((const char*)msg.args);
+            cmd->Setup(this);
+            cmd->Execute(regex.Size(), regex.ToArray());
+            cmd->Exit();
+            regex.Clear();
+            ShowUserAndPath();
+            return;
+        }
+    }
 
-	//Command not found
-	msgMgr.Write((uint8_t*)msg.cmd);
-	msgMgr.Write((uint8_t*)": command not found\r\n");
-	ShowUserAndPath();
+    //Command not found
+    msgMgr.Write((uint8_t*)msg.cmd);
+    msgMgr.Write((uint8_t*)": command not found\r\n");
+    ShowUserAndPath();
 }
 
 
 /// @brief Exit
 void Console::Exit()
 {
-	msgMgr.Exit();
+    msgMgr.Exit();
 }
 
 
 /// @brief Console show welcome msg
 void Console::ShowWelcomeMsg()
 {
-	//Disable irq
-	kernel->system.DisableIRQ();
+    //Disable irq
+    kernel->system.DisableIRQ();
 
-	//Output welcome message
-	uint8_t sizeofstr = sizeof(vk_welcome) / sizeof(char*);
-	for (uint8_t i = 0; i < sizeofstr; i++)
-	{
-		msgMgr.Write((uint8_t*)vk_welcome[i]);
-		msgMgr.Write((uint8_t*)"\r\n");
-	}
+    //Output welcome message
+    uint8_t sizeofstr = sizeof(vk_welcome) / sizeof(char*);
+    for (uint8_t i = 0; i < sizeofstr; i++)
+    {
+        msgMgr.Write((uint8_t*)vk_welcome[i]);
+        msgMgr.Write((uint8_t*)"\r\n");
+    }
 
-	//Enable irq
-	kernel->system.EnableIRQ();
+    //Enable irq
+    kernel->system.EnableIRQ();
 }
 
 
 /// @brief Console show user and path
 void Console::ShowUserAndPath()
 {
-	Print("%s@%s %s # ", user, mach, path);
+    Print("%s@%s %s # ", user, mach, path);
 }
 
 
@@ -141,15 +141,15 @@ void Console::ShowUserAndPath()
 /// @param  
 void Console::Log(const char* format, ...)
 {
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)"Log: ");
-	msgMgr.Write((uint8_t*)data);
-	msgMgr.Write((uint8_t*)"\r\n");
-	mutex.Unlock();
+    mutex.Lock();
+    va_list arg;
+    va_start(arg, format);
+    vsnprintf(data, buf_size, format, arg);
+    va_end(arg);
+    msgMgr.Write((uint8_t*)"Log: ");
+    msgMgr.Write((uint8_t*)data);
+    msgMgr.Write((uint8_t*)"\r\n");
+    mutex.Unlock();
 }
 
 
@@ -158,15 +158,15 @@ void Console::Log(const char* format, ...)
 /// @param  
 void Console::Info(const char* format, ...)
 {
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)"\033[36mInfo: ");
-	msgMgr.Write((uint8_t*)data);
-	msgMgr.Write((uint8_t*)"\r\n\033[39m");
-	mutex.Unlock();
+    mutex.Lock();
+    va_list arg;
+    va_start(arg, format);
+    vsnprintf(data, buf_size, format, arg);
+    va_end(arg);
+    msgMgr.Write((uint8_t*)"\033[36mInfo: ");
+    msgMgr.Write((uint8_t*)data);
+    msgMgr.Write((uint8_t*)"\r\n\033[39m");
+    mutex.Unlock();
 }
 
 
@@ -175,15 +175,15 @@ void Console::Info(const char* format, ...)
 /// @param  
 void Console::Error(const char* format, ...)
 {
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)"\033[31mError: ");
-	msgMgr.Write((uint8_t*)data);
-	msgMgr.Write((uint8_t*)"\r\n\033[39m");
-	mutex.Unlock();
+    mutex.Lock();
+    va_list arg;
+    va_start(arg, format);
+    vsnprintf(data, buf_size, format, arg);
+    va_end(arg);
+    msgMgr.Write((uint8_t*)"\033[31mError: ");
+    msgMgr.Write((uint8_t*)data);
+    msgMgr.Write((uint8_t*)"\r\n\033[39m");
+    mutex.Unlock();
 }
 
 
@@ -192,15 +192,15 @@ void Console::Error(const char* format, ...)
 /// @param  
 void Console::Warn(const char* format, ...)
 {
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)"\033[33mWarning: ");
-	msgMgr.Write((uint8_t*)data);
-	msgMgr.Write((uint8_t*)"\r\n\033[39m");
-	mutex.Unlock();
+    mutex.Lock();
+    va_list arg;
+    va_start(arg, format);
+    vsnprintf(data, buf_size, format, arg);
+    va_end(arg);
+    msgMgr.Write((uint8_t*)"\033[33mWarning: ");
+    msgMgr.Write((uint8_t*)data);
+    msgMgr.Write((uint8_t*)"\r\n\033[39m");
+    mutex.Unlock();
 }
 
 
@@ -209,13 +209,13 @@ void Console::Warn(const char* format, ...)
 /// @param  
 void Console::Print(const char* format, ...)
 {
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)data);
-	mutex.Unlock();
+    mutex.Lock();
+    va_list arg;
+    va_start(arg, format);
+    vsnprintf(data, buf_size, format, arg);
+    va_end(arg);
+    msgMgr.Write((uint8_t*)data);
+    mutex.Unlock();
 }
 
 
@@ -224,14 +224,14 @@ void Console::Print(const char* format, ...)
 /// @param  
 void Console::Println(const char* format, ...)
 {
-	mutex.Lock();
-	va_list arg;
-	va_start(arg, format);
-	vsnprintf(data, buf_size, format, arg);
-	va_end(arg);
-	msgMgr.Write((uint8_t*)data);
-	msgMgr.Write((uint8_t*)"\r\n");
-	mutex.Unlock();
+    mutex.Lock();
+    va_list arg;
+    va_start(arg, format);
+    vsnprintf(data, buf_size, format, arg);
+    va_end(arg);
+    msgMgr.Write((uint8_t*)data);
+    msgMgr.Write((uint8_t*)"\r\n");
+    mutex.Unlock();
 }
 
 
@@ -240,9 +240,9 @@ void Console::Println(const char* format, ...)
 /// @param size 
 void Console::Output(const char* data, int size)
 {
-	mutex.Lock();
-	msgMgr.Write((uint8_t*)data, size);
-	mutex.Unlock();
+    mutex.Lock();
+    msgMgr.Write((uint8_t*)data, size);
+    mutex.Unlock();
 }
 
 
@@ -250,14 +250,14 @@ void Console::Output(const char* data, int size)
 /// @param path 
 void Console::SetPath(const char* path)
 {
-	if (path_size > strlen(path))
-	{
-		strcpy(this->path, path);
-	}
-	else
-	{
-		Error("The path length exceeds the limit, the maximum length is %d.", path_size);
-	}
+    if (path_size > strlen(path))
+    {
+        strcpy(this->path, path);
+    }
+    else
+    {
+        Error("The path length exceeds the limit, the maximum length is %d.", path_size);
+    }
 }
 
 
@@ -265,7 +265,7 @@ void Console::SetPath(const char* path)
 /// @return path
 const char* Console::GetPath()
 {
-	return path;
+    return path;
 }
 
 
@@ -274,20 +274,20 @@ const char* Console::GetPath()
 /// @return 
 const char* Console::AbsolutePath(const char* path)
 {
-	char* res = NULL;
+    char* res = NULL;
 
-	if ('/' != path[0])
-	{
-		res = new char[strlen(this->path) + strlen(path) + 2]();
-		strcat(res, this->path);
-		if ('/' != res[strlen(this->path) - 1]) strcat(res, "/");
-		strcat(res, path);
-	}
-	else
-	{
-		res = new char[strlen(path) + 1]();
-		strcat(res, path);
-	}
+    if ('/' != path[0])
+    {
+        res = new char[strlen(this->path) + strlen(path) + 2]();
+        strcat(res, this->path);
+        if ('/' != res[strlen(this->path) - 1]) strcat(res, "/");
+        strcat(res, path);
+    }
+    else
+    {
+        res = new char[strlen(path) + 1]();
+        strcat(res, path);
+    }
 
-	return res;
+    return res;
 }

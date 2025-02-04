@@ -16,12 +16,12 @@
 class ModuleTool
 {
 public:
-	//Methods
-	ModuleTool();
-	~ModuleTool();
-	VkList<ElfLoader*>* GetModules();
-	bool Install(const char* filename);
-	bool Uninstall(const char* filename);
+    //Methods
+    ModuleTool();
+    ~ModuleTool();
+    VkList<ElfLoader*>* GetModules();
+    bool Install(const char* filename);
+    bool Uninstall(const char* filename);
 };
 
 #endif //!__VK_MODULE_TOOL_H__

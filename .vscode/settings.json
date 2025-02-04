@@ -1,17 +1,17 @@
 {
     "files.associations": {
-		"cwchar": "cpp",
-		"compare": "cpp",
-		"typeinfo": "cpp",
-		"array": "cpp",
-		"string_view": "cpp",
-		"initializer_list": "cpp",
-		"string": "cpp",
-		"*.tcc": "cpp",
-		"*.rules": "makefile",
-		"math.h": "c"
-	},
+        "cwchar": "cpp",
+        "compare": "cpp",
+        "typeinfo": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "string": "cpp",
+        "*.tcc": "cpp",
+        "*.rules": "makefile",
+        "math.h": "c"
+    },
     "C_Cpp.errorSquiggles": "disabled",
     "cortex-debug.variableUseNaturalFormat": false,
-	"terminal.integrated.cursorBlinking": true
+    "terminal.integrated.cursorBlinking": true
 }

@@ -10,8 +10,8 @@
 
 /// @brief Mutex constructor
 Mutex::Mutex(int ticks)
-	:lock(false),
-	ticks(ticks)
+    :lock(false),
+    ticks(ticks)
 {
 }
 
@@ -25,13 +25,13 @@ Mutex::~Mutex()
 /// @brief Mutex lock
 void Mutex::Lock()
 {
-	while (true == lock) { kernel->thread.Sleep(ticks); }
-	lock = !lock;
+    while (true == lock) { kernel->thread.Sleep(ticks); }
+    lock = !lock;
 }
 
 
 /// @brief Mutex unlock
 void Mutex::Unlock()
 {
-	lock = !lock;
+    lock = !lock;
 }

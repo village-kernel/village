@@ -15,36 +15,36 @@
 class CmdKill : public Cmd
 {
 public:
-	/// @brief Cmd kill execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		if (argc >= 2)
-		{
-			if (0 == strcmp("-p", argv[1]))
-			{
-				kernel->process.Kill(atoi(argv[2]));
-			}
-			else if (0 == strcmp("-t", argv[1]))
-			{
-				kernel->thread.DeleteTask(atoi(argv[2]));
-			}
-		}
-		else
-		{
-			console->Println("Usage: ");
-			console->Println("kill -p <pid>");
-			console->Println("kill -t <tid>");
-		}
-	}
+    /// @brief Cmd kill execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        if (argc >= 2)
+        {
+            if (0 == strcmp("-p", argv[1]))
+            {
+                kernel->process.Kill(atoi(argv[2]));
+            }
+            else if (0 == strcmp("-t", argv[1]))
+            {
+                kernel->thread.DeleteTask(atoi(argv[2]));
+            }
+        }
+        else
+        {
+            console->Println("Usage: ");
+            console->Println("kill -p <pid>");
+            console->Println("kill -t <tid>");
+        }
+    }
 
 
-	/// @brief Cmd kill help
-	void Help()
-	{
-		console->Println("cmd kill: kill process");
-	}
+    /// @brief Cmd kill help
+    void Help()
+    {
+        console->Println("cmd kill: kill process");
+    }
 };
 
 

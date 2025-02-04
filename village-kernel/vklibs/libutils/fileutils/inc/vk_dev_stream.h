@@ -15,17 +15,17 @@
 class DevStream
 {
 private:
-	//Members
-	Fopts* fopts;
+    //Members
+    Fopts* fopts;
 public:
-	//Methods
-	DevStream(const char* name = NULL, int mode = 0);
-	~DevStream();
-	bool Open(const char* name, int mode = 0);
-	int Write(char* data, int size, int offset = 0);
-	int Read(char* data, int size, int offset = 0);
-	int IOCtrl(uint8_t cmd, void* data);
-	void Close();
+    //Methods
+    DevStream(const char* name = NULL, int mode = 0);
+    ~DevStream();
+    bool Open(const char* name, int mode = 0);
+    int Write(char* data, int size, int offset = 0);
+    int Read(char* data, int size, int offset = 0);
+    int IOCtrl(uint8_t cmd, void* data);
+    void Close();
 };
 
 #endif //!__VK_DEV_STREAM_H__

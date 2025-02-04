@@ -16,35 +16,35 @@
 class ConcreteDebug : public Debug
 {
 private:
-	/// @brief Static constants
-	static const uint16_t buf_size = 256;
+    /// @brief Static constants
+    static const uint16_t buf_size = 256;
 
-	/// @brief Members
-	DevStream transceiver;
-	Mutex     mutex;
-	bool      isReady;
-	uint8_t   debugLevel;
-	uint16_t  txBufPos;
-	char      data[buf_size] = { 0 };
-	char      txBuffer[buf_size] = { 0 };
+    /// @brief Members
+    DevStream transceiver;
+    Mutex     mutex;
+    bool      isReady;
+    uint8_t   debugLevel;
+    uint16_t  txBufPos;
+    char      data[buf_size] = { 0 };
+    char      txBuffer[buf_size] = { 0 };
 
-	/// @brief Methods
-	void Write(const char* data);
-	void Sending();
+    /// @brief Methods
+    void Write(const char* data);
+    void Sending();
 public:
-	/// @brief Methods
-	ConcreteDebug();
-	~ConcreteDebug();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteDebug();
+    ~ConcreteDebug();
+    void Setup();
+    void Exit();
 
-	/// @brief Methods
-	void Log(const char* format, ...);
-	void Info(const char* format, ...);
-	void Error(const char* format, ...);
-	void Warn(const char* format, ...);
-	void Output(int level, const char* format, ...);
-	void SetDebugLevel(int level);
+    /// @brief Methods
+    void Log(const char* format, ...);
+    void Info(const char* format, ...);
+    void Error(const char* format, ...);
+    void Warn(const char* format, ...);
+    void Output(int level, const char* format, ...);
+    void SetDebugLevel(int level);
 };
 
 #endif //!__DEBUG_H__

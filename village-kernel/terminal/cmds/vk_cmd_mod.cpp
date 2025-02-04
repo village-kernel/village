@@ -14,33 +14,33 @@
 class CmdListMod : public Cmd
 {
 public:
-	/// @brief Cmd lsmod execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		if (argc < 1)
-		{
-			console->Println("Usage: lsmod");
-			return;
-		}
+    /// @brief Cmd lsmod execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        if (argc < 1)
+        {
+            console->Println("Usage: lsmod");
+            return;
+        }
 
-		VkList<ElfLoader*>* mods = kernel->loader.GetModules();
-		if (NULL != mods)
-		{
-			for (mods->Begin(); !mods->IsEnd(); mods->Next())
-			{
-				console->Println("name %s", mods->GetName());
-			}
-		}
-	}
+        VkList<ElfLoader*>* mods = kernel->loader.GetModules();
+        if (NULL != mods)
+        {
+            for (mods->Begin(); !mods->IsEnd(); mods->Next())
+            {
+                console->Println("name %s", mods->GetName());
+            }
+        }
+    }
 
 
-	/// @brief Cmd lsmod help
-	void Help()
-	{
-		console->Println("cmd lsmod: list installed module information");
-	}
+    /// @brief Cmd lsmod help
+    void Help()
+    {
+        console->Println("cmd lsmod: list installed module information");
+    }
 };
 
 
@@ -48,28 +48,28 @@ public:
 class CmdInsMod : public Cmd
 {
 public:
-	/// @brief Cmd insmod execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		if (argc < 2)
-		{
-			console->Println("Usage: insmod [module]");
-			return;
-		}
-		if (!kernel->loader.Install(Loader::_Mod, argv[1]))
-		{
-			console->Error("Install module %s failed", argv[1]);
-		}
-	}
+    /// @brief Cmd insmod execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        if (argc < 2)
+        {
+            console->Println("Usage: insmod [module]");
+            return;
+        }
+        if (!kernel->loader.Install(Loader::_Mod, argv[1]))
+        {
+            console->Error("Install module %s failed", argv[1]);
+        }
+    }
 
 
-	/// @brief Cmd insmod help
-	void Help()
-	{
-		console->Println("cmd insmod: install module");
-	}
+    /// @brief Cmd insmod help
+    void Help()
+    {
+        console->Println("cmd insmod: install module");
+    }
 };
 
 
@@ -77,28 +77,28 @@ public:
 class CmdRmMod : public Cmd
 {
 public:
-	/// @brief Cmd rmmod execute
-	/// @param argc 
-	/// @param argv 
-	void Execute(int argc, char* argv[])
-	{
-		if (argc < 2)
-		{
-			console->Println("Usage: rmmod [module]");
-			return;
-		}
-		if (!kernel->loader.Uninstall(Loader::_Mod, argv[1]))
-		{
-			console->Error("Uninstall module %s failed", argv[1]);
-		}
-	}
+    /// @brief Cmd rmmod execute
+    /// @param argc 
+    /// @param argv 
+    void Execute(int argc, char* argv[])
+    {
+        if (argc < 2)
+        {
+            console->Println("Usage: rmmod [module]");
+            return;
+        }
+        if (!kernel->loader.Uninstall(Loader::_Mod, argv[1]))
+        {
+            console->Error("Uninstall module %s failed", argv[1]);
+        }
+    }
 
 
-	/// @brief Cmd rmmod help
-	void Help()
-	{
-		console->Println("cmd rmmod: remove module");
-	}
+    /// @brief Cmd rmmod help
+    void Help()
+    {
+        console->Println("cmd rmmod: remove module");
+    }
 };
 
 

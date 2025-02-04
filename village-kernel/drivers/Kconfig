@@ -60,6 +60,12 @@ config STM32F4XX_DRV_EXTI
 	bool "Enable EXTI drv class"
 	default n
 
+config STM32F4XX_DRV_USB
+	select STM32F4XX_DRV_GPIO
+	select STM32F4XX_DRV_NVIC
+	bool "Enable USB drv class"
+	default n
+
 endif
 
 # STM32H7xx hal drv
@@ -116,6 +122,8 @@ endif
 
 endmenu
 
+menu "peripheral"
+
 menu "block"
 
 config ATALBADISK
@@ -138,11 +146,11 @@ endmenu
 
 menu "display"
 
-config BOCHSVBE
+config BOCHS_VBE
 	tristate "Enable Bochs VBE support"
 	default n
 
-config ILI9488
+config LCD_ILI9488
 	tristate "Enable ILI9488 support"
 	default n
 
@@ -194,8 +202,10 @@ endmenu
 
 menu "usb"
 
-config STM32USBDFS
-	tristate "Enable stm32 usbd fs support"
+config STM32USB
+	tristate "Enable stm32 usb support"
 	default n
+
+endmenu
 
 endmenu

@@ -39,6 +39,7 @@ objs-$(CONFIG_STM32F4XX_DRV_I2C)      += vk_drv_i2c.o
 objs-$(CONFIG_STM32F4XX_DRV_DMA)      += vk_drv_dma.o
 objs-$(CONFIG_STM32F4XX_DRV_FSMC)     += vk_drv_fsmc.o
 objs-$(CONFIG_STM32F4XX_DRV_EXTI)     += vk_drv_exti.o
+objs-$(CONFIG_STM32F4XX_DRV_USB)      += vk_drv_usb.o
 
 else ifeq ($(CONFIG_STM32H7xx), y)
 inc-y                                 += village-kernel/drivers/platform/stm32h7xx/inc
@@ -75,8 +76,8 @@ objs-$(CONFIG_SPIW25QXX)              += vk_spi_w25qxx.o
 inc-y                                 += village-kernel/drivers/peripheral/display/inc
 src-y                                 += village-kernel/drivers/peripheral/display/src
 
-objs-$(CONFIG_BOCHSVBE)               += vk_bochs_vbe.o
-objs-$(CONFIG_ILI9488)                += vk_ili9488.o
+objs-$(CONFIG_BOCHS_VBE)              += vk_bochs_vbe.o
+objs-$(CONFIG_LCD_ILI9488)            += vk_lcd_ili9488.o
 
 
 ######################################
@@ -131,4 +132,4 @@ objs-$(CONFIG_PIT32TIMER)             += vk_pit32_timer.o
 inc-y                                 += village-kernel/drivers/peripheral/usb/inc
 src-y                                 += village-kernel/drivers/peripheral/usb/src
 
-objs-$(CONFIG_STM32USBDFS)            += vk_stm32_usbd_fs.o
+objs-$(CONFIG_STM32USB)               += vk_stm32_usb.o

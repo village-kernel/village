@@ -17,13 +17,13 @@
 class ElfExecutor : public BaseExecutor, public Class
 {
 private:
-	//Members
-	ElfLoader elf;
+    //Members
+    ElfLoader elf;
 private:
-	//Methods
-	int Initiate();
-	void Sandbox();
-	bool Release();
+    //Methods
+    int Initiate();
+    void Sandbox();
+    bool Release();
 };
 
 
@@ -31,8 +31,8 @@ private:
 class ElfExecutorFty : public Executor
 {
 public:
-	VkList<char*> GetSuffixes();
-	BaseExecutor* Create();
+    VkList<char*> GetSuffixes();
+    BaseExecutor* Create();
 };
 
 #endif //!__VK_ELF_EXECUTOR_H__

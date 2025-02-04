@@ -19,11 +19,11 @@
 class AtaLbaDiskDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	AtaLbaDisk::Config config;
+    /// @brief Members
+    AtaLbaDisk::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 
@@ -31,11 +31,11 @@ public:
 class BochsVBEDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	BochsVBE::Config config;
+    /// @brief Members
+    BochsVBE::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 
@@ -43,11 +43,11 @@ public:
 class PS2KeyBoardDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	PS2KeyBoard::Config config;
+    /// @brief Members
+    PS2KeyBoard::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 
@@ -55,11 +55,11 @@ public:
 class PS2MouseDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	PS2Mouse::Config config;
+    /// @brief Members
+    PS2Mouse::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 
@@ -67,11 +67,11 @@ public:
 class Pic32UartDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	Pic32Uart::Config config;
+    /// @brief Members
+    Pic32Uart::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 
@@ -79,11 +79,11 @@ public:
 class Pit32TimerDev : public PlatDevice
 {
 private:
-	/// @brief Members
-	Pit32Timer::Config config;
+    /// @brief Members
+    Pit32Timer::Config config;
 public:
-	/// @brief Methods
-	void Config();
+    /// @brief Methods
+    void Config();
 };
 
 #endif //!__VK_IA32LEGACY_DEVICE_H__

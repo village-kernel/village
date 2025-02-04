@@ -17,13 +17,13 @@
 class BinExecutor : public BaseExecutor, public Class
 {
 private:
-	//Members
-	BinLoader bin;
+    //Members
+    BinLoader bin;
 private:
-	//Methods
-	int Initiate();
-	void Sandbox();
-	bool Release();
+    //Methods
+    int Initiate();
+    void Sandbox();
+    bool Release();
 };
 
 
@@ -31,8 +31,8 @@ private:
 class BinExecutorFty : public Executor
 {
 public:
-	VkList<char*> GetSuffixes();
-	BaseExecutor* Create();
+    VkList<char*> GetSuffixes();
+    BaseExecutor* Create();
 };
  
 #endif //!__VK_BIN_EXECUTOR_H__

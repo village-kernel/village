@@ -15,14 +15,14 @@
 class ConcreteSignal : public Signal
 {
 public:
-	/// @brief Methods
-	ConcreteSignal();
-	~ConcreteSignal();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteSignal();
+    ~ConcreteSignal();
+    void Setup();
+    void Exit();
 
-	/// @brief Feature Methods
-	void Raising(int signal);
+    /// @brief Feature Methods
+    void Raising(int signal);
 };
 
 #endif // !__VK_SIGNAL_H__

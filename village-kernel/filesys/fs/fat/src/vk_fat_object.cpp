@@ -9,9 +9,9 @@
 
 /// @brief FatEntryLoc constructor
 FatEntryLoc::FatEntryLoc()
-	:index(0),
-	clust(0),
-	sector(0)
+    :index(0),
+    clust(0),
+    sector(0)
 {
 }
 
@@ -25,23 +25,23 @@ FatLongEntry::FatLongEntry()
 /// @brief LongEntry fill
 void FatLongEntry::Fill()
 {
-	memset((void*)name1, 0xff, 10);
-	memset((void*)name2, 0xff, 12);
-	memset((void*)name3, 0xff, 4);
+    memset((void*)name1, 0xff, 10);
+    memset((void*)name2, 0xff, 12);
+    memset((void*)name3, 0xff, 4);
 }
 
 
 /// @brief ShortEntry constructor
 FatShortEntry::FatShortEntry()
 {
-	memset((void*)this, 0, 32);
+    memset((void*)this, 0, 32);
 }
 
 
 /// @brief UnionEntry constructor
 FatEntry::FatEntry()
 {
-	memset((void*)this, 0, 32);
+    memset((void*)this, 0, 32);
 }
 
 
@@ -49,18 +49,18 @@ FatEntry::FatEntry()
 /// @return 
 bool FatEntry::IsValid()
 {
-	if (lfe.ord != dir_free_flag && lfe.ord >= dir_valid_flag)
-	{
-		if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
-			return true;
-		else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
-			return true;
-		else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
-			return true;
-		else if ((sfe.attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName)
-			return true;
-	}
-	return false;
+    if (lfe.ord != dir_free_flag && lfe.ord >= dir_valid_flag)
+    {
+        if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
+            return true;
+        else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
+            return true;
+        else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
+            return true;
+        else if ((sfe.attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName)
+            return true;
+    }
+    return false;
 }
 
 
@@ -68,7 +68,7 @@ bool FatEntry::IsValid()
 /// @param size 
 void FatEntry::SetStoreSize(uint8_t size)
 {
-	if (size > 1) lfe.ord = dir_seq_flag + size - 1;
+    if (size > 1) lfe.ord = dir_seq_flag + size - 1;
 }
 
 
@@ -76,53 +76,53 @@ void FatEntry::SetStoreSize(uint8_t size)
 /// @return 
 uint8_t FatEntry::GetStoreSize()
 {
-	if ((lfe.attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName)
-		return (lfe.ord - dir_seq_flag + 1);
-	else
-		return 1;
+    if ((lfe.attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName)
+        return (lfe.ord - dir_seq_flag + 1);
+    else
+        return 1;
 }
 
 
 /// @brief FatObject Constructor
 FatObject::FatObject()
-	:mode(0),
-	folder(NULL),
-	lfe(NULL),
-	sfe(NULL),
-	ufe(NULL)
+    :mode(0),
+    folder(NULL),
+    lfe(NULL),
+    sfe(NULL),
+    ufe(NULL)
 {
 }
 
 
 /// @brief FatObject Constructor
 FatObject::FatObject(const char* name)
-	:FatObject()
+    :FatObject()
 {
-	if (NULL != ufe) Setup(name);
+    if (NULL != ufe) Setup(name);
 }
 
 
 /// @brief FatObject Constructor
 /// @param fatObj 
 FatObject::FatObject(FatObject* fatObj)
-	:FatObject()
+    :FatObject()
 {
-	if (NULL != fatObj) Setup(fatObj);
+    if (NULL != fatObj) Setup(fatObj);
 }
 
 
 /// @brief FatObject Constructor
 FatObject::FatObject(FatEntry* ufe)
-	:FatObject()
+    :FatObject()
 {
-	if (NULL != ufe) Setup(ufe);
+    if (NULL != ufe) Setup(ufe);
 }
 
 
 /// @brief Destructor
 FatObject::~FatObject()
 {
-	delete[] this->ufe;
+    delete[] this->ufe;
 }
 
 
@@ -130,30 +130,30 @@ FatObject::~FatObject()
 /// @param name 
 void FatObject::Setup(const char* name)
 {
-	//Cal the size of ufe
-	uint8_t namelen = strlen(name);
-	uint8_t dotpos = namelen;
-	while ('.' != name[--dotpos] && dotpos);
-	uint8_t extlen  = dotpos ? (namelen - dotpos - 1) : 0;
-	uint8_t bodylen = dotpos ? dotpos : namelen;
-	bool    isNameLoss = (bodylen > 8 || extlen > 3);
-	uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
+    //Cal the size of ufe
+    uint8_t namelen = strlen(name);
+    uint8_t dotpos = namelen;
+    while ('.' != name[--dotpos] && dotpos);
+    uint8_t extlen  = dotpos ? (namelen - dotpos - 1) : 0;
+    uint8_t bodylen = dotpos ? dotpos : namelen;
+    bool    isNameLoss = (bodylen > 8 || extlen > 3);
+    uint8_t mod = (namelen % (long_name_size - 1)) ? 1 : 0;
 
-	//Alloc entires space
-	uint8_t   size = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
-	FatEntry* ufe  = new FatEntry[size]();
+    //Alloc entires space
+    uint8_t   size = isNameLoss ? ((namelen / (long_name_size - 1)) + mod + 1) : 1;
+    FatEntry* ufe  = new FatEntry[size]();
 
-	//Setup short name
-	Setup(ufe);
-	SetShortName(name);
-	SetStoreSize(size);
+    //Setup short name
+    Setup(ufe);
+    SetShortName(name);
+    SetStoreSize(size);
 
-	//Set long name
-	if (isNameLoss)
-	{
-		sfe->NTRes |= FatDefs::_NsLoss;
-		SetLongName(name);
-	}
+    //Set long name
+    if (isNameLoss)
+    {
+        sfe->NTRes |= FatDefs::_NsLoss;
+        SetLongName(name);
+    }
 }
 
 
@@ -161,19 +161,19 @@ void FatObject::Setup(const char* name)
 /// @param fatObj 
 void FatObject::Setup(FatObject* fatObj)
 {
-	uint8_t size = fatObj->GetStoreSize();
-	FatEntry* raw = fatObj->GetEntries();
+    uint8_t size = fatObj->GetStoreSize();
+    FatEntry* raw = fatObj->GetEntries();
 
-	ufe = new FatEntry[size];
+    ufe = new FatEntry[size];
 
-	for (uint8_t i = 0; i < size; i++)
-	{
-		ufe[i] = raw[i];
-	}
+    for (uint8_t i = 0; i < size; i++)
+    {
+        ufe[i] = raw[i];
+    }
 
-	Setup(ufe);
+    Setup(ufe);
 
-	entloc = fatObj->GetFatEntryLoc();
+    entloc = fatObj->GetFatEntryLoc();
 }
 
 
@@ -181,16 +181,16 @@ void FatObject::Setup(FatObject* fatObj)
 /// @param ufe
 void FatObject::Setup(FatEntry* ufe)
 {
-	this->lfe = (FatLongEntry*)ufe;
-	this->sfe = (FatShortEntry*)ufe;
-	this->ufe = (FatEntry*)ufe;
+    this->lfe = (FatLongEntry*)ufe;
+    this->sfe = (FatShortEntry*)ufe;
+    this->ufe = (FatEntry*)ufe;
 
-	if (ufe->IsValid() && IsLongName())
-	{
-		uint8_t n = lfe->ord - dir_seq_flag;
-		lfe = (FatLongEntry*)ufe;
-		sfe = (FatShortEntry*)ufe + n;
-	}
+    if (ufe->IsValid() && IsLongName())
+    {
+        uint8_t n = lfe->ord - dir_seq_flag;
+        lfe = (FatLongEntry*)ufe;
+        sfe = (FatShortEntry*)ufe + n;
+    }
 }
 
 
@@ -198,10 +198,10 @@ void FatObject::Setup(FatEntry* ufe)
 /// @param fatObj 
 void FatObject::SetupDot(FatObject* fatObj)
 {
-	Setup(new FatEntry());
-	SetRawName(".");
-	SetFirstCluster(fatObj->GetFirstCluster());
-	SetAttribute(FatDefs::_AttrDirectory);
+    Setup(new FatEntry());
+    SetRawName(".");
+    SetFirstCluster(fatObj->GetFirstCluster());
+    SetAttribute(FatDefs::_AttrDirectory);
 }
 
 
@@ -209,27 +209,27 @@ void FatObject::SetupDot(FatObject* fatObj)
 /// @param fatObj 
 void FatObject::SetupDotDot(FatObject* fatObj)
 {
-	Setup(new FatEntry());
-	SetRawName("..");
-	SetFirstCluster(fatObj->GetFirstCluster());
-	SetAttribute(FatDefs::_AttrDirectory);
+    Setup(new FatEntry());
+    SetRawName("..");
+    SetFirstCluster(fatObj->GetFirstCluster());
+    SetAttribute(FatDefs::_AttrDirectory);
 }
 
 
 /// @brief FatObject set entry free flag
 void FatObject::SetOjectFree()
 {
-	sfe->name[0] = dir_free_flag;
+    sfe->name[0] = dir_free_flag;
 
-	if (true == IsLongName())
-	{
-		uint8_t n = lfe->ord - dir_seq_flag;
+    if (true == IsLongName())
+    {
+        uint8_t n = lfe->ord - dir_seq_flag;
 
-		for (uint8_t i = 0; i < n; i++)
-		{
-			lfe[i].ord = dir_free_flag;
-		}
-	}
+        for (uint8_t i = 0; i < n; i++)
+        {
+            lfe[i].ord = dir_free_flag;
+        }
+    }
 }
 
 
@@ -237,7 +237,7 @@ void FatObject::SetOjectFree()
 /// @return 
 bool FatObject::IsLongName()
 {
-	return ((lfe->attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName);
+    return ((lfe->attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName);
 }
 
 
@@ -245,7 +245,7 @@ bool FatObject::IsLongName()
 /// @return 
 char* FatObject::GetObjectName()
 {
-	return IsLongName() ? GetLongName() : GetShortName();
+    return IsLongName() ? GetLongName() : GetShortName();
 }
 
 
@@ -253,14 +253,14 @@ char* FatObject::GetObjectName()
 /// @return type
 FileType FatObject::GetObjectType()
 {
-	if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
-		return FileType::_File;
-	else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
-		return FileType::_Diretory;
-	else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
-		return FileType::_Volume;
-	else
-		return FileType::_Unknown;
+    if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
+        return FileType::_File;
+    else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
+        return FileType::_Diretory;
+    else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
+        return FileType::_Volume;
+    else
+        return FileType::_Unknown;
 }
 
 
@@ -268,10 +268,10 @@ FileType FatObject::GetObjectType()
 /// @return attr
 FileAttr FatObject::GetObjectAttr()
 {
-	if ((sfe->attr & FatDefs::_AttrHidden) == FatDefs::_AttrHidden)
-		return FileAttr::_Hidden;
-	else
-		return FileAttr::_Visible;
+    if ((sfe->attr & FatDefs::_AttrHidden) == FatDefs::_AttrHidden)
+        return FileAttr::_Hidden;
+    else
+        return FileAttr::_Visible;
 }
 
 
@@ -279,7 +279,7 @@ FileAttr FatObject::GetObjectAttr()
 /// @return 
 FatEntry* FatObject::GetEntries()
 {
-	return ufe;
+    return ufe;
 }
 
 
@@ -287,7 +287,7 @@ FatEntry* FatObject::GetEntries()
 /// @param size 
 void FatObject::SetStoreSize(uint8_t size)
 {
-	ufe->SetStoreSize(size);
+    ufe->SetStoreSize(size);
 }
 
 
@@ -295,7 +295,7 @@ void FatObject::SetStoreSize(uint8_t size)
 /// @return 
 uint8_t FatObject::GetStoreSize()
 {
-	return ufe->GetStoreSize();
+    return ufe->GetStoreSize();
 }
 
 
@@ -304,14 +304,14 @@ uint8_t FatObject::GetStoreSize()
 /// @return 
 uint8_t FatObject::ChkSum(const char* name)
 {
-	uint8_t sum = 0;
+    uint8_t sum = 0;
 
-	for (int16_t namelen = 11; namelen != 0; namelen--)
-	{
-		sum = ((sum & 1) ? 0x80 : 0) + (sum >> 1) + *name++;
-	}
+    for (int16_t namelen = 11; namelen != 0; namelen--)
+    {
+        sum = ((sum & 1) ? 0x80 : 0) + (sum >> 1) + *name++;
+    }
 
-	return sum;
+    return sum;
 }
 
 
@@ -319,27 +319,27 @@ uint8_t FatObject::ChkSum(const char* name)
 /// @param num 
 void FatObject::GenNumName(int num)
 {
-	char numstr[8];
-	
-	uint8_t i = 7;
-	do
-	{
-		char ch = (num % 10) + '0';
-		numstr[i--] = ch;
-		num /= 10;
-	}
-	while(num);
-	numstr[i] = '~';
+    char numstr[8];
+    
+    uint8_t i = 7;
+    do
+    {
+        char ch = (num % 10) + '0';
+        numstr[i--] = ch;
+        num /= 10;
+    }
+    while(num);
+    numstr[i] = '~';
 
-	uint8_t pos = 8;
-	while (' ' == sfe->name[--pos] && pos);
-	if (pos) pos = pos - (7 - i);
+    uint8_t pos = 8;
+    while (' ' == sfe->name[--pos] && pos);
+    if (pos) pos = pos - (7 - i);
 
-	uint8_t size = 8 - i;
-	for (uint8_t j = 0; j < size; j++)
-	{
-		sfe->name[j + pos] = numstr[i++];
-	}
+    uint8_t size = 8 - i;
+    for (uint8_t j = 0; j < size; j++)
+    {
+        sfe->name[j + pos] = numstr[i++];
+    }
 }
 
 
@@ -347,23 +347,23 @@ void FatObject::GenNumName(int num)
 /// @param name 
 void FatObject::SetRawName(const char* name)
 {
-	uint8_t namelen = strlen(name);
+    uint8_t namelen = strlen(name);
 
-	//Check label length
-	if (namelen > short_name_size) return;
+    //Check label length
+    if (namelen > short_name_size) return;
 
-	//Copy label name
-	for (uint8_t i = 0; i < short_name_size; i++)
-	{
-		if (i < namelen)
-		{
-			if (name[i] >= 'a' && name[i] <= 'z')
-				sfe->name[i] = name[i] - 0x20;
-			else
-				sfe->name[i] = name[i];
-		}
-		else sfe->name[i] = ' ';
-	}
+    //Copy label name
+    for (uint8_t i = 0; i < short_name_size; i++)
+    {
+        if (i < namelen)
+        {
+            if (name[i] >= 'a' && name[i] <= 'z')
+                sfe->name[i] = name[i] - 0x20;
+            else
+                sfe->name[i] = name[i];
+        }
+        else sfe->name[i] = ' ';
+    }
 }
 
 
@@ -371,29 +371,29 @@ void FatObject::SetRawName(const char* name)
 /// @return 
 char* FatObject::GetRawName()
 {
-	uint8_t pos   = 0;
-	char*   name = new char[short_name_size + 1]();
+    uint8_t pos   = 0;
+    char*   name = new char[short_name_size + 1]();
 
-	//Copy label name
-	for (uint8_t i = 0; i < short_name_size; i++)
-	{
-		name[pos++] = sfe->name[i];
-	}
-	
-	//String EOC
-	name[pos] = '\0';
+    //Copy label name
+    for (uint8_t i = 0; i < short_name_size; i++)
+    {
+        name[pos++] = sfe->name[i];
+    }
+    
+    //String EOC
+    name[pos] = '\0';
 
-	//Remove space
-	while (pos--)
-	{
-		if (name[pos] == ' ')
-		{
-			name[pos] = '\0';
-		}
-		else break;
-	}
+    //Remove space
+    while (pos--)
+    {
+        if (name[pos] == ' ')
+        {
+            name[pos] = '\0';
+        }
+        else break;
+    }
 
-	return name;
+    return name;
 }
 
 
@@ -401,53 +401,53 @@ char* FatObject::GetRawName()
 /// @param name 
 void FatObject::SetShortName(const char* name)
 {
-	uint8_t pos = 0;
-	char*   sfn = sfe->name;
-	bool    isBodyLowedCase = true;
-	bool    isExtLowedCase  = true;
+    uint8_t pos = 0;
+    char*   sfn = sfe->name;
+    bool    isBodyLowedCase = true;
+    bool    isExtLowedCase  = true;
 
-	//8.3 dot pos
-	uint8_t namelen = strlen(name);
-	uint8_t dotpos = namelen;
-	while ('.' != name[--dotpos] && dotpos);
-	uint8_t bodylen = dotpos ? dotpos : namelen;
-	
-	//8.3 name body
-	for (uint8_t i = 0; i < 8; i++)
-	{
-		char ch = ' ';
-		if (pos < bodylen) do { ch = name[pos++]; } while ('.' == ch);
+    //8.3 dot pos
+    uint8_t namelen = strlen(name);
+    uint8_t dotpos = namelen;
+    while ('.' != name[--dotpos] && dotpos);
+    uint8_t bodylen = dotpos ? dotpos : namelen;
+    
+    //8.3 name body
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        char ch = ' ';
+        if (pos < bodylen) do { ch = name[pos++]; } while ('.' == ch);
 
-		if (ch >= 'a' && ch <= 'z')
-			sfn[i] = ch - 0x20;
-		else
-			sfn[i] = ch;
+        if (ch >= 'a' && ch <= 'z')
+            sfn[i] = ch - 0x20;
+        else
+            sfn[i] = ch;
 
-		if (isBodyLowedCase && (ch >= 'A' && ch <= 'Z'))
-			isBodyLowedCase = false;
-	}
+        if (isBodyLowedCase && (ch >= 'A' && ch <= 'Z'))
+            isBodyLowedCase = false;
+    }
 
-	//8.3 name dot
-	pos = bodylen;
+    //8.3 name dot
+    pos = bodylen;
 
-	//8.3 name ext
-	for (uint8_t i = 8; i < 11; i++)
-	{
-		char ch = ' ';
-		if (pos < namelen) do { ch = name[pos++]; } while ('.' == ch);
+    //8.3 name ext
+    for (uint8_t i = 8; i < 11; i++)
+    {
+        char ch = ' ';
+        if (pos < namelen) do { ch = name[pos++]; } while ('.' == ch);
 
-		if (ch >= 'a' && ch <= 'z')
-			sfn[i] = ch - 0x20;
-		else
-			sfn[i] = ch;
+        if (ch >= 'a' && ch <= 'z')
+            sfn[i] = ch - 0x20;
+        else
+            sfn[i] = ch;
 
-		if (isExtLowedCase && (ch >= 'A' && ch <= 'Z'))
-			isExtLowedCase = false;
-	}
+        if (isExtLowedCase && (ch >= 'A' && ch <= 'Z'))
+            isExtLowedCase = false;
+    }
 
-	//Set NTRes
-	if (isBodyLowedCase) sfe->NTRes |= FatDefs::_NsBody;
-	if (isExtLowedCase)  sfe->NTRes |= FatDefs::_NsExt;
+    //Set NTRes
+    if (isBodyLowedCase) sfe->NTRes |= FatDefs::_NsBody;
+    if (isExtLowedCase)  sfe->NTRes |= FatDefs::_NsExt;
 }
 
 
@@ -455,45 +455,45 @@ void FatObject::SetShortName(const char* name)
 /// @return 
 char* FatObject::GetShortName()
 {
-	uint8_t pos = 0;
-	char*   name = sfe->name;
-	char*   sfn = new char[short_name_size + 2]();
-	bool    isBodyLowedCase = (sfe->NTRes & FatDefs::_NsBody) == FatDefs::_NsBody;
-	bool    isExtLowedCase  = (sfe->NTRes & FatDefs::_NsExt ) == FatDefs::_NsExt;
-	
-	//8.3 name body
-	for (uint8_t i = 0; i < 8; i++)
-	{
-		if (' ' !=  name[i])
-		{
-			if (isBodyLowedCase && (name[i] >= 'A' && name[i] <= 'Z'))
-				sfn[pos++] = name[i] + 0x20;
-			else
-				sfn[pos++] = name[i];
-		} 
-		else break;
-	}
+    uint8_t pos = 0;
+    char*   name = sfe->name;
+    char*   sfn = new char[short_name_size + 2]();
+    bool    isBodyLowedCase = (sfe->NTRes & FatDefs::_NsBody) == FatDefs::_NsBody;
+    bool    isExtLowedCase  = (sfe->NTRes & FatDefs::_NsExt ) == FatDefs::_NsExt;
+    
+    //8.3 name body
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        if (' ' !=  name[i])
+        {
+            if (isBodyLowedCase && (name[i] >= 'A' && name[i] <= 'Z'))
+                sfn[pos++] = name[i] + 0x20;
+            else
+                sfn[pos++] = name[i];
+        } 
+        else break;
+    }
 
-	//8.3 name dot
-	if (' ' != name[8]) sfn[pos++] = '.';
+    //8.3 name dot
+    if (' ' != name[8]) sfn[pos++] = '.';
 
-	//8.3 name ext
-	for (uint8_t i = 8; i < 11; i++)
-	{
-		if (' ' != name[i])
-		{
-			if (isExtLowedCase && (name[i] >= 'A' && name[i] <= 'Z'))
-				sfn[pos++] = name[i] + 0x20;
-			else
-				sfn[pos++] = name[i]; 
-		}
-		else break;
-	}
+    //8.3 name ext
+    for (uint8_t i = 8; i < 11; i++)
+    {
+        if (' ' != name[i])
+        {
+            if (isExtLowedCase && (name[i] >= 'A' && name[i] <= 'Z'))
+                sfn[pos++] = name[i] + 0x20;
+            else
+                sfn[pos++] = name[i]; 
+        }
+        else break;
+    }
 
-	//String EOC
-	sfn[pos] = '\0';
+    //String EOC
+    sfn[pos] = '\0';
 
-	return sfn;
+    return sfn;
 }
 
 
@@ -501,61 +501,61 @@ char* FatObject::GetShortName()
 /// @param name 
 void FatObject::SetLongName(const char* name)
 {
-	uint8_t pos = 0;
-	uint8_t size = lfe[0].ord - dir_seq_flag;
-	uint8_t n = size;
-	uint8_t chksum = ChkSum(sfe->name);
+    uint8_t pos = 0;
+    uint8_t size = lfe[0].ord - dir_seq_flag;
+    uint8_t n = size;
+    uint8_t chksum = ChkSum(sfe->name);
 
-	//Loop for sequence of long directory ufe
-	while (n--)
-	{
-		if (n) lfe[n].ord = size - n;
-		lfe[n].attr = FatDefs::_AttrLongName;
-		lfe[n].chksum = chksum;
-		lfe[n].Fill();
+    //Loop for sequence of long directory ufe
+    while (n--)
+    {
+        if (n) lfe[n].ord = size - n;
+        lfe[n].attr = FatDefs::_AttrLongName;
+        lfe[n].chksum = chksum;
+        lfe[n].Fill();
 
-		//Part 1 of long name 
-		for (uint8_t i = 0; i < 5; i++)
-		{
-			if ('\0' != name[pos])
-			{
-				lfe[n].name1[i] = name[pos++];
-			}
-			else
-			{
-				lfe[n].name1[i] = 0;
-				return;
-			}
-		}
+        //Part 1 of long name 
+        for (uint8_t i = 0; i < 5; i++)
+        {
+            if ('\0' != name[pos])
+            {
+                lfe[n].name1[i] = name[pos++];
+            }
+            else
+            {
+                lfe[n].name1[i] = 0;
+                return;
+            }
+        }
 
-		//Part 2 of long name 
-		for (uint8_t i = 0; i < 6; i++)
-		{
-			if ('\0' != name[pos])
-			{
-				lfe[n].name2[i] = name[pos++];
-			}
-			else
-			{
-				lfe[n].name2[i] = 0;
-				return;
-			}
-		}
+        //Part 2 of long name 
+        for (uint8_t i = 0; i < 6; i++)
+        {
+            if ('\0' != name[pos])
+            {
+                lfe[n].name2[i] = name[pos++];
+            }
+            else
+            {
+                lfe[n].name2[i] = 0;
+                return;
+            }
+        }
 
-		//Part 3 of long name 
-		for (uint8_t i = 0; i < 2; i++)
-		{
-			if ('\0' != name[pos])
-			{
-				lfe[n].name3[i] = name[pos++];
-			}
-			else
-			{
-				lfe[n].name3[i] = 0;
-				return;
-			}
-		}
-	}
+        //Part 3 of long name 
+        for (uint8_t i = 0; i < 2; i++)
+        {
+            if ('\0' != name[pos])
+            {
+                lfe[n].name3[i] = name[pos++];
+            }
+            else
+            {
+                lfe[n].name3[i] = 0;
+                return;
+            }
+        }
+    }
 }
 
 
@@ -563,53 +563,53 @@ void FatObject::SetLongName(const char* name)
 /// @return 
 char* FatObject::GetLongName()
 {
-	uint8_t pos = 0;
-	uint8_t n = lfe[0].ord - dir_seq_flag;
-	uint8_t chksum = ChkSum(sfe->name);
-	char*   lfn = new char[long_name_size * n + 1]();
-	
-	//Loop for sequence of long directory ufe
-	while (n--)
-	{
-		//Chksum
-		if (lfe[n].chksum != chksum)
-		{
-			delete[] lfn;
-			return NULL;
-		}
+    uint8_t pos = 0;
+    uint8_t n = lfe[0].ord - dir_seq_flag;
+    uint8_t chksum = ChkSum(sfe->name);
+    char*   lfn = new char[long_name_size * n + 1]();
+    
+    //Loop for sequence of long directory ufe
+    while (n--)
+    {
+        //Chksum
+        if (lfe[n].chksum != chksum)
+        {
+            delete[] lfn;
+            return NULL;
+        }
 
-		//Part 1 of long name 
-		for (uint8_t i = 0; i < 5; i++)
-		{
-			if (0xffff != lfe[n].name1[i])
-			{
-				lfn[pos++] = (char)lfe[n].name1[i];
-			}
-			else break;
-		}
+        //Part 1 of long name 
+        for (uint8_t i = 0; i < 5; i++)
+        {
+            if (0xffff != lfe[n].name1[i])
+            {
+                lfn[pos++] = (char)lfe[n].name1[i];
+            }
+            else break;
+        }
 
-		//Part 2 of long name 
-		for (uint8_t i = 0; i < 6; i++)
-		{
-			if (0xffff != lfe[n].name2[i])
-			{
-				lfn[pos++] = (char)lfe[n].name2[i];
-			}
-			else return lfn;
-		}
+        //Part 2 of long name 
+        for (uint8_t i = 0; i < 6; i++)
+        {
+            if (0xffff != lfe[n].name2[i])
+            {
+                lfn[pos++] = (char)lfe[n].name2[i];
+            }
+            else return lfn;
+        }
 
-		//Part 3 of long name
-		for (uint8_t i = 0; i < 2; i++)
-		{
-			if (0xffff != lfe[n].name3[i])
-			{
-				lfn[pos++] = (char)lfe[n].name3[i];
-			}
-			else return lfn;
-		}
-	}
+        //Part 3 of long name
+        for (uint8_t i = 0; i < 2; i++)
+        {
+            if (0xffff != lfe[n].name3[i])
+            {
+                lfn[pos++] = (char)lfe[n].name3[i];
+            }
+            else return lfn;
+        }
+    }
 
-	return lfn;
+    return lfn;
 }
 
 
@@ -617,7 +617,7 @@ char* FatObject::GetLongName()
 /// @param attr 
 void FatObject::SetAttribute(uint8_t attr)
 {
-	sfe->attr = attr;
+    sfe->attr = attr;
 }
 
 
@@ -625,7 +625,7 @@ void FatObject::SetAttribute(uint8_t attr)
 /// @return 
 uint8_t FatObject::GetAttribute()
 {
-	return sfe->attr;
+    return sfe->attr;
 }
 
 
@@ -633,7 +633,7 @@ uint8_t FatObject::GetAttribute()
 /// @param NTRes 
 void FatObject::SetNTRes(uint8_t NTRes)
 {
-	sfe->NTRes = NTRes;
+    sfe->NTRes = NTRes;
 }
 
 
@@ -641,7 +641,7 @@ void FatObject::SetNTRes(uint8_t NTRes)
 /// @return 
 uint8_t FatObject::GetNTRes()
 {
-	return sfe->NTRes;
+    return sfe->NTRes;
 }
 
 
@@ -649,7 +649,7 @@ uint8_t FatObject::GetNTRes()
 /// @param tenth 
 void FatObject::SetCreateTenth(uint16_t tenth)
 {
-	sfe->crtTimeTenth = tenth;
+    sfe->crtTimeTenth = tenth;
 }
 
 
@@ -657,7 +657,7 @@ void FatObject::SetCreateTenth(uint16_t tenth)
 /// @return 
 uint16_t FatObject::GetCreateTenth()
 {
-	return sfe->crtTimeTenth;
+    return sfe->crtTimeTenth;
 }
 
 
@@ -665,7 +665,7 @@ uint16_t FatObject::GetCreateTenth()
 /// @param time 
 void FatObject::SetCreateTime(uint16_t time)
 {
-	sfe->crtTime = time;
+    sfe->crtTime = time;
 }
 
 
@@ -673,7 +673,7 @@ void FatObject::SetCreateTime(uint16_t time)
 /// @return 
 uint16_t FatObject::GetCreateTime()
 {
-	return sfe->crtTime;
+    return sfe->crtTime;
 }
 
 
@@ -681,7 +681,7 @@ uint16_t FatObject::GetCreateTime()
 /// @param date 
 void FatObject::SetCreateDate(uint16_t date)
 {
-	sfe->crtDate = date;
+    sfe->crtDate = date;
 }
 
 
@@ -689,7 +689,7 @@ void FatObject::SetCreateDate(uint16_t date)
 /// @return 
 uint16_t FatObject::GetCreateDate()
 {
-	return sfe->crtDate;
+    return sfe->crtDate;
 }
 
 
@@ -697,7 +697,7 @@ uint16_t FatObject::GetCreateDate()
 /// @param date 
 void FatObject::SetLastAccDate(uint16_t date)
 {
-	sfe->lstAccDate = date;
+    sfe->lstAccDate = date;
 }
 
 
@@ -705,7 +705,7 @@ void FatObject::SetLastAccDate(uint16_t date)
 /// @return 
 uint16_t FatObject::GetLastAccDate()
 {
-	return sfe->lstAccDate;
+    return sfe->lstAccDate;
 }
 
 
@@ -713,7 +713,7 @@ uint16_t FatObject::GetLastAccDate()
 /// @param time 
 void FatObject::SetWriteTime(uint16_t time)
 {
-	sfe->wrtTime = time;
+    sfe->wrtTime = time;
 }
 
 
@@ -721,7 +721,7 @@ void FatObject::SetWriteTime(uint16_t time)
 /// @return 
 uint16_t FatObject::GetWriteTime()
 {
-	return sfe->wrtTime;
+    return sfe->wrtTime;
 }
 
 
@@ -729,7 +729,7 @@ uint16_t FatObject::GetWriteTime()
 /// @param date 
 void FatObject::SetWriteDate(uint16_t date)
 {
-	sfe->wrtDate = date;
+    sfe->wrtDate = date;
 }
 
 
@@ -737,7 +737,7 @@ void FatObject::SetWriteDate(uint16_t date)
 /// @return 
 uint16_t FatObject::GetWriteDate()
 {
-	return sfe->wrtDate;
+    return sfe->wrtDate;
 }
 
 
@@ -745,8 +745,8 @@ uint16_t FatObject::GetWriteDate()
 /// @param clust 
 void FatObject::SetFirstCluster(uint32_t clust)
 {
-	sfe->fstClustHI = (clust >> 16) & 0xffff;
-	sfe->fstClustLO = (clust >> 0)  & 0xffff;
+    sfe->fstClustHI = (clust >> 16) & 0xffff;
+    sfe->fstClustLO = (clust >> 0)  & 0xffff;
 }
 
 
@@ -754,7 +754,7 @@ void FatObject::SetFirstCluster(uint32_t clust)
 /// @return 
 uint32_t FatObject::GetFirstCluster()
 {
-	return (uint32_t)(sfe->fstClustHI << 16) | sfe->fstClustLO;
+    return (uint32_t)(sfe->fstClustHI << 16) | sfe->fstClustLO;
 }
 
 
@@ -762,7 +762,7 @@ uint32_t FatObject::GetFirstCluster()
 /// @param Size 
 void FatObject::SetFileSize(uint32_t size)
 {
-	sfe->fileSize = size;
+    sfe->fileSize = size;
 }
 
 
@@ -770,7 +770,7 @@ void FatObject::SetFileSize(uint32_t size)
 /// @return 
 uint32_t FatObject::GetFileSize()
 {
-	return sfe->fileSize;
+    return sfe->fileSize;
 }
 
 
@@ -778,7 +778,7 @@ uint32_t FatObject::GetFileSize()
 /// @param loc 
 void FatObject::SetFatEntryLoc(FatEntryLoc loc)
 {
-	entloc = loc;
+    entloc = loc;
 }
 
 
@@ -786,5 +786,5 @@ void FatObject::SetFatEntryLoc(FatEntryLoc loc)
 /// @return 
 FatEntryLoc FatObject::GetFatEntryLoc()
 {
-	return entloc;
+    return entloc;
 }

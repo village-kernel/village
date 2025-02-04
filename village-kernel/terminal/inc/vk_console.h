@@ -19,48 +19,48 @@
 class Console
 {
 private:
-	//Static constants
-	static const uint16_t buf_size = 256;
-	static const uint16_t user_size = 50;
-	static const uint16_t mach_size = 50;
-	static const uint16_t path_size = 100;
+    //Static constants
+    static const uint16_t buf_size = 256;
+    static const uint16_t user_size = 50;
+    static const uint16_t mach_size = 50;
+    static const uint16_t path_size = 100;
 
-	//Members
-	Mutex      mutex;
-	Regex      regex;
-	CmdMsgMgr  msgMgr;
-	char       data[buf_size];
-	char       user[user_size];
-	char       mach[mach_size];
-	char       path[path_size];
-	
-	//Methods
-	void ShowWelcomeMsg();
-	void ShowUserAndPath();
-	void ExecuteCmd(CmdMsg msg);
+    //Members
+    Mutex      mutex;
+    Regex      regex;
+    CmdMsgMgr  msgMgr;
+    char       data[buf_size];
+    char       user[user_size];
+    char       mach[mach_size];
+    char       path[path_size];
+    
+    //Methods
+    void ShowWelcomeMsg();
+    void ShowUserAndPath();
+    void ExecuteCmd(CmdMsg msg);
 public:
-	//Methods
-	Console();
-	~Console();
+    //Methods
+    Console();
+    ~Console();
 
-	//Class Methods
-	void Setup(const char* driver);
-	void Execute();
-	void Exit();
+    //Class Methods
+    void Setup(const char* driver);
+    void Execute();
+    void Exit();
 
-	//Output Methods
-	void Log(const char* format, ...);
-	void Info(const char* format, ...);
-	void Error(const char* format, ...);
-	void Warn(const char* format, ...);
-	void Print(const char* format, ...);
-	void Println(const char* format, ...);
-	void Output(const char* data, int size);
-	
-	//Path Methods
-	void SetPath(const char* path);
-	const char* GetPath();
-	const char* AbsolutePath(const char* path);
+    //Output Methods
+    void Log(const char* format, ...);
+    void Info(const char* format, ...);
+    void Error(const char* format, ...);
+    void Warn(const char* format, ...);
+    void Print(const char* format, ...);
+    void Println(const char* format, ...);
+    void Output(const char* data, int size);
+    
+    //Path Methods
+    void SetPath(const char* path);
+    const char* GetPath();
+    const char* AbsolutePath(const char* path);
 };
 
 #endif // !__VK_CONSOLE_H__

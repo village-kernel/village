@@ -15,12 +15,12 @@
 class Fopts
 {
 public:
-	//Opts methods
-	virtual bool Open() = 0;
-	virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
-	virtual int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0)  { return 0; }
-	virtual int IOCtrl(uint8_t cmd, void* data) { return 0; }
-	virtual void Close() = 0;
+    //Opts methods
+    virtual bool Open() = 0;
+    virtual int Write(uint8_t* data, uint32_t size = 0, uint32_t offset = 0) { return 0; }
+    virtual int Read(uint8_t* data, uint32_t size = 0, uint32_t offset = 0)  { return 0; }
+    virtual int IOCtrl(uint8_t cmd, void* data) { return 0; }
+    virtual void Close() = 0;
 };
 
 
@@ -28,11 +28,11 @@ public:
 class BlockDriver : public Base, public Fopts
 {
 public:
-	//Constructor
-	BlockDriver() {}
+    //Constructor
+    BlockDriver() { SetID(DriverID::_block); }
 
-	//Destructor
-	virtual ~BlockDriver() {}
+    //Destructor
+    virtual ~BlockDriver() {}
 };
 
 
@@ -40,11 +40,11 @@ public:
 class CharDriver : public Base, public Fopts
 {
 public:
-	//Constructor
-	CharDriver() {}
+    //Constructor
+    CharDriver() { SetID(DriverID::_character); }
 
-	//Destructor
-	virtual ~CharDriver() {}
+    //Destructor
+    virtual ~CharDriver() {}
 };
 
 
@@ -52,30 +52,30 @@ public:
 class FBDriver : public Base, public Fopts
 {
 public:
-	//Structures
-	struct FBInfo
-	{
-		uint32_t  width;
-		uint32_t  height;
-		uint32_t  bitdepth;
-	};
+    //Structures
+    struct FBInfo
+    {
+        uint32_t  width;
+        uint32_t  height;
+        uint32_t  bitdepth;
+    };
 
-	//Members
-	FBInfo info;
+    //Members
+    FBInfo info;
 public:
-	//Constructor
-	FBDriver()  {}
+    //Constructor
+    FBDriver()  { SetID(DriverID::_framebuffer); }
 
-	//Destructor
-	virtual ~FBDriver() {}
+    //Destructor
+    virtual ~FBDriver() {}
 
-	//Methods
-	virtual bool Setup() = 0;
-	virtual void DrawPoint(uint32_t x, uint32_t y, uint32_t color) = 0;
-	virtual uint32_t ReadPoint(uint32_t x, uint32_t y) = 0;
-	virtual void Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color) = 0;
-	virtual void Clear(uint32_t color) = 0;
-	virtual void Exit() = 0;
+    //Methods
+    virtual bool Setup() = 0;
+    virtual void DrawPoint(uint32_t x, uint32_t y, uint32_t color) = 0;
+    virtual uint32_t ReadPoint(uint32_t x, uint32_t y) = 0;
+    virtual void Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color) = 0;
+    virtual void Clear(uint32_t color) = 0;
+    virtual void Exit() = 0;
 };
 
 
@@ -83,11 +83,11 @@ public:
 class InputDriver : public Base, public Fopts
 {
 public:
-	//Constructor
-	InputDriver() {}
+    //Constructor
+    InputDriver() { SetID(DriverID::_input); }
 
-	//Destructor
-	virtual ~InputDriver() {}
+    //Destructor
+    virtual ~InputDriver() {}
 };
 
 
@@ -95,11 +95,11 @@ public:
 class NetworkDriver : public Base
 {
 public:
-	//Constructor
-	NetworkDriver() {}
+    //Constructor
+    NetworkDriver() { SetID(DriverID::_network); }
 
-	//Destructor
-	virtual ~NetworkDriver() {}
+    //Destructor
+    virtual ~NetworkDriver() {}
 };
 
 
@@ -107,11 +107,11 @@ public:
 class MiscDriver : public Base, public Fopts
 {
 public:
-	//Constructor
-	MiscDriver() {}
+    //Constructor
+    MiscDriver() { SetID(DriverID::_miscellaneous); }
 
-	//Destructor
-	virtual ~MiscDriver() {}
+    //Destructor
+    virtual ~MiscDriver() {}
 };
 
 
@@ -119,26 +119,42 @@ public:
 class PlatDevice : public Base
 {
 protected:
-	//Members
-	void* driver;
-	void* driverData;
-	char* driverName;
+    //Members
+    void* driver;
+    void* driverData;
+    char* driverName;
 public:
-	//Driver Methods, platform driver using
-	void  SetDriver(void* driver)  { this->driver = driver; }
-	void* GetDriver()              { return this->driver;   }
-	void* GetDriverData()          { return this->driverData; }
-	char* GetDriverName()          { return this->driverName; }
+    /// @brief Attach
+    /// @param driver 
+    void Attach(void* driver)
+    {
+        this->driver = driver;
+        ((Base*)driver)->SetName(driverName);
+        ((Base*)driver)->SetData(driverData);
+    }
+
+    /// @brief Detach
+    void Detach()
+    {
+        driver = NULL;
+    }
+
+    /// @brief GetDriver
+    /// @return 
+    void* GetDriver()
+    {
+        return driver;
+    }
 public:
-	//Constructor
-	PlatDevice() :driver(NULL), driverData(NULL), driverName(NULL) {}
+    //Constructor
+    PlatDevice() :driver(NULL), driverData(NULL), driverName(NULL) {}
 
-	//Destructor
-	virtual ~PlatDevice() {}
+    //Destructor
+    virtual ~PlatDevice() {}
 
-	//Methods
-	virtual void Config()  {}
-	virtual void Release() {}
+    //Methods
+    virtual void Config()  {}
+    virtual void Release() {}
 };
 
 
@@ -146,15 +162,15 @@ public:
 class PlatDriver : public Base
 {
 public:
-	//Constructor
-	PlatDriver() {}
+    //Constructor
+    PlatDriver() {}
 
-	//Destructor
-	virtual ~PlatDriver() {}
+    //Destructor
+    virtual ~PlatDriver() {}
 
-	//Methods
-	virtual bool Probe(PlatDevice* device) = 0;
-	virtual bool Remove(PlatDevice* device) = 0;
+    //Methods
+    virtual bool Probe(PlatDevice* device) = 0;
+    virtual bool Remove(PlatDevice* device) = 0;
 };
 
 

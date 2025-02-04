@@ -356,6 +356,10 @@ if KERNEL
 		bool "Add debug system cmd to terminal support list"
 		default y
 
+	config CMD_DEVICE
+		bool "Add device system cmd to terminal support list"
+		default y
+
 	config CMD_ECHO
 		bool "Add echo system cmd to terminal support list"
 		default y

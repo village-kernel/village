@@ -13,7 +13,7 @@
 /// @return 
 extern "C" HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 {
-	return HAL_OK;
+    return HAL_OK;
 }
 
 
@@ -21,7 +21,7 @@ extern "C" HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
 /// @param Delay 
 extern "C" void HAL_Delay(uint32_t Delay)
 {
-	kernel->system.DelayMs(Delay);
+    kernel->system.DelayMs(Delay);
 }
 
 

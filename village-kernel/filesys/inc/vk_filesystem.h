@@ -17,140 +17,140 @@
 class ConcreteFileSystem : public FileSystem
 {
 private:
-	/// @brief BootIndicator
-	enum BootIndicator
-	{
-		_NotBootable = 0x00,
-		_Bootable    = 0x80,
-	};
+    /// @brief BootIndicator
+    enum BootIndicator
+    {
+        _NotBootable = 0x00,
+        _Bootable    = 0x80,
+    };
 
 
-	/// @brief PartitionTableType
-	enum PartitionType
-	{
-		_None = 0,
-		_MBR,
-		_GPT,
-	};
+    /// @brief PartitionTableType
+    enum PartitionType
+    {
+        _None = 0,
+        _MBR,
+        _GPT,
+    };
 
 
-	/// @brief MBR partition record
-	struct MBRPartition
-	{
-		uint8_t  bootIndicator;
-		uint8_t  startingHead;
-		uint16_t startingSector : 6;
-		uint16_t startingCylinder: 10;
-		uint8_t  OSIndicator;
-		uint8_t  endingHead;
-		uint16_t endingSector : 6;
-		uint16_t endingCylinder : 10;
-		uint32_t startingLBA;
-		uint32_t sizeInLBA;
-	} __attribute__((packed));
+    /// @brief MBR partition record
+    struct MBRPartition
+    {
+        uint8_t  bootIndicator;
+        uint8_t  startingHead;
+        uint16_t startingSector : 6;
+        uint16_t startingCylinder: 10;
+        uint8_t  OSIndicator;
+        uint8_t  endingHead;
+        uint16_t endingSector : 6;
+        uint16_t endingCylinder : 10;
+        uint32_t startingLBA;
+        uint32_t sizeInLBA;
+    } __attribute__((packed));
 
 
-	/// @brief MBR partition table
-	struct MBR
-	{
-		uint8_t      boot[446];
-		MBRPartition partition[4];
-		uint16_t     magic;
-	} __attribute__((packed));
+    /// @brief MBR partition table
+    struct MBR
+    {
+        uint8_t      boot[446];
+        MBRPartition partition[4];
+        uint16_t     magic;
+    } __attribute__((packed));
 
-	
-	/// @brief GPT partition record
-	struct GPTPartition
-	{
-		char     partitionTypeGUID[16];
-		char     uniquePartitionGUID[16];
-		uint64_t startingLBA;
-		uint64_t endingLBA;
-		uint64_t attributes;
-		char     partitionName[72];
-		char     reserved[384];
-	};
-
-
-	/// @brief GPT partition table
-	struct GPT
-	{
-		char     signature[8];
-		uint32_t revision;
-		uint32_t headerSize;
-		uint32_t headerCRC32;
-		uint32_t reserved0;
-		uint64_t myLBA;
-		uint64_t alternateLBA;
-		uint64_t firstUsableLBA;
-		uint64_t lastUsableLBA;
-		char     diskGUID[16];
-		uint64_t partitionEntryLBA;
-		uint32_t numberOfPartitionEntries;
-		uint32_t sizeOfPartitionEntry;
-		uint32_t partitionEntryArrayCRC32;
-		char     reserved1[420];
-	};
+    
+    /// @brief GPT partition record
+    struct GPTPartition
+    {
+        char     partitionTypeGUID[16];
+        char     uniquePartitionGUID[16];
+        uint64_t startingLBA;
+        uint64_t endingLBA;
+        uint64_t attributes;
+        char     partitionName[72];
+        char     reserved[384];
+    };
 
 
-	/// @brief MountNode
-	struct MountNode
-	{
-		char*    target;
-		char*    source;
-		uint16_t access;
+    /// @brief GPT partition table
+    struct GPT
+    {
+        char     signature[8];
+        uint32_t revision;
+        uint32_t headerSize;
+        uint32_t headerCRC32;
+        uint32_t reserved0;
+        uint64_t myLBA;
+        uint64_t alternateLBA;
+        uint64_t firstUsableLBA;
+        uint64_t lastUsableLBA;
+        char     diskGUID[16];
+        uint64_t partitionEntryLBA;
+        uint32_t numberOfPartitionEntries;
+        uint32_t sizeOfPartitionEntry;
+        uint32_t partitionEntryArrayCRC32;
+        char     reserved1[420];
+    };
 
-		MountNode(char* target, char* source, uint16_t access)
-			:target(target),
-			source(source),
-			access(access)
-		{}
-	};
+
+    /// @brief MountNode
+    struct MountNode
+    {
+        char*    target;
+        char*    source;
+        uint16_t access;
+
+        MountNode(char* target, char* source, uint16_t access)
+            :target(target),
+            source(source),
+            access(access)
+        {}
+    };
 
 
-	/// @brief DiskMedia
-	struct DiskMedia
-	{
-		int              type;
-		char*            name;
-		DevStream*       dev;
-		VkList<FileVol*> vols;
+    /// @brief DiskMedia
+    struct DiskMedia
+    {
+        int              type;
+        char*            name;
+        DevStream*       dev;
+        VkList<FileVol*> vols;
 
-		DiskMedia(char* name, DevStream* dev)
-			:type(_None),
-			name(name),
-			dev(dev)
-		{}
-	};
+        DiskMedia(char* name, DevStream* dev)
+            :type(_None),
+            name(name),
+            dev(dev)
+        {}
+    };
 private:
-	/// @brief Members
-	VkList<FileSys*>    filesyses;
-	VkList<DiskMedia*>  medias;
-	VkList<MountNode*>  mounts;
+    /// @brief Members
+    VkList<FileSys*>    filesyses;
+    VkList<DiskMedia*>  medias;
+    VkList<MountNode*>  mounts;
 
-	/// @brief Methods
-	bool CheckPartiionTable(MBRPartition partition);
-	int  SetupVolume(DiskMedia* media, uint32_t startingLBA);
-	bool MountSystemNode(VkList<FileVol*> volumes, MountNode* mount);
-	bool MountRootNode();
+    /// @brief Methods
+    bool CheckPartiionTable(MBRPartition partition);
+    int  SetupVolume(DiskMedia* media, uint32_t startingLBA);
+    bool MountSystemNode(VkList<FileVol*> volumes, MountNode* mount);
+    bool MountRootNode();
 public:
-	/// @brief Methods
-	ConcreteFileSystem();
-	~ConcreteFileSystem();
-	void Setup();
-	void Exit();
+    /// @brief Methods
+    ConcreteFileSystem();
+    ~ConcreteFileSystem();
+    void Setup();
+    void Exit();
 
-	/// @brief Register Methods
-	void RegisterFS(FileSys* fs, const char* name);
-	void UnregisterFS(FileSys* fs, const char* name);
+    /// @brief Register Methods
+    void RegisterFS(FileSys* fs, const char* name);
+    void UnregisterFS(FileSys* fs, const char* name);
 
-	/// @brief Hard Drive Methods
-	bool MountHardDrive(const char* disk);
-	bool UnmountHardDrive(const char* disk);
-	
-	/// @brief Volume Methods
-	FileVol* GetVolume(const char* name);
-	FileVol* GetVolume(const char* name, MountNode* mount);
+    /// @brief Hard Drive Methods
+    bool MountHardDrive(const char* disk);
+    bool UnmountHardDrive(const char* disk);
+    
+    /// @brief Volume Methods
+    FileVol* GetVolume(const char* name);
+    FileVol* GetVolume(const char* name, MountNode* mount);
 };
 
 #endif //!__VK_FILE_SYSTEM_H__

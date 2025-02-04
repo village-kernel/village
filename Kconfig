@@ -76,9 +76,14 @@ config GENERATED_IMG
 	bool "generated os image"
 	default n
 
+config GENERATED_ROOTFS
+	bool "generated rootfs image"
+	default n
+
 config ROOTFS
+	depends on GENERATED_ROOTFS
 	string "rootfs path"
-	default "/Volumes/SD"
+	default "/Volumes/VILLAGE OS"
 
 endmenu
 

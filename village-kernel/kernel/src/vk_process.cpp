@@ -23,52 +23,52 @@ ConcreteProcess::~ConcreteProcess()
 /// @brief Process Setup
 void ConcreteProcess::Setup()
 {
-	//Create a running taichi application task
-	kernel->thread.CreateTask("Process::Taichi", (Method)&ConcreteProcess::Taichi, this);
+    //Create a running taichi application task
+    kernel->thread.CreateTask("Process::Taichi", (Method)&ConcreteProcess::Taichi, this);
 
-	//Create a listening thread alive task
-	kernel->thread.CreateTask("Process::Listen", (Method)&ConcreteProcess::Listen, this);
+    //Create a listening thread alive task
+    kernel->thread.CreateTask("Process::Listen", (Method)&ConcreteProcess::Listen, this);
 
-	//Output debug info
-	kernel->debug.Info("Process setup done!");
+    //Output debug info
+    kernel->debug.Info("Process setup done!");
 }
 
 
 /// @brief Process Taichi
 void ConcreteProcess::Taichi()
 {
-	const char* taichi = "/services/taichi.exec";
-	
-	if (0 > Run(Process::_Background, taichi))
-	{
-		kernel->debug.Error("%s execute failed", taichi);
-	}
+    const char* taichi = "/services/taichi.exec";
+    
+    if (0 > Run(Process::_Background, taichi))
+    {
+        kernel->debug.Error("%s execute failed", taichi);
+    }
 }
 
 
 /// @brief Process Listen
 void ConcreteProcess::Listen()
 {
-	while (1)
-	{
-		for (Data* data = datum.Begin(); !datum.IsEnd(); data = datum.Next())
-		{
-			if (false == kernel->thread.IsTaskAlive(data->tid))
-			{
-				kernel->thread.DeleteTask(data->tid);
-				datum.Remove(data);
-			}
-		}
-		kernel->thread.Sleep(1);
-	}
+    while (1)
+    {
+        for (Data* data = datum.Begin(); !datum.IsEnd(); data = datum.Next())
+        {
+            if (false == kernel->thread.IsTaskAlive(data->tid))
+            {
+                kernel->thread.DeleteTask(data->tid);
+                datum.Remove(data);
+            }
+        }
+        kernel->thread.Sleep(1);
+    }
 }
 
 
 /// @brief Process Exit
 void ConcreteProcess::Exit()
 {
-	datum.Release();
-	executors.Release();
+    datum.Release();
+    executors.Release();
 }
 
 
@@ -76,7 +76,7 @@ void ConcreteProcess::Exit()
 /// @param executor executor pointer
 void ConcreteProcess::RegisterExecutor(Executor* executor)
 {
-	executors.Add(executor);
+    executors.Add(executor);
 }
 
 
@@ -84,7 +84,7 @@ void ConcreteProcess::RegisterExecutor(Executor* executor)
 /// @param executor executor pointer
 void ConcreteProcess::UnregisterExecutor(Executor* executor)
 {
-	executors.Remove(executor);
+    executors.Remove(executor);
 }
 
 
@@ -93,23 +93,23 @@ void ConcreteProcess::UnregisterExecutor(Executor* executor)
 /// @return 
 BaseExecutor* ConcreteProcess::CreateExecutor(const char* path)
 {
-	char* suffix = strrchr(path, '.');
+    char* suffix = strrchr(path, '.');
 
-	for (executors.Begin(); !executors.IsEnd(); executors.Next())
-	{
-		VkList<char*> suffixes = executors.Item()->GetSuffixes();
+    for (executors.Begin(); !executors.IsEnd(); executors.Next())
+    {
+        VkList<char*> suffixes = executors.Item()->GetSuffixes();
 
-		for (suffixes.Begin(); !suffixes.IsEnd(); suffixes.Next())
-		{
-			if (0 == strcmp(suffix, suffixes.Item()))
-			{
-				return executors.Item()->Create();
-			}
-		}
-	}
-	
-	kernel->debug.Error("No associated executor found");
-	return NULL;
+        for (suffixes.Begin(); !suffixes.IsEnd(); suffixes.Next())
+        {
+            if (0 == strcmp(suffix, suffixes.Item()))
+            {
+                return executors.Item()->Create();
+            }
+        }
+    }
+    
+    kernel->debug.Error("No associated executor found");
+    return NULL;
 }
 
  
@@ -119,15 +119,15 @@ BaseExecutor* ConcreteProcess::CreateExecutor(const char* path)
 /// @return 
 int ConcreteProcess::Run(Behavior behavior, const char* args)
 {
-	//Split args
-	regex.Split(args);
+    //Split args
+    regex.Split(args);
 
-	//Set argc and argv
-	int    argc = regex.Size();
-	char** argv = regex.ToArray();
+    //Set argc and argv
+    int    argc = regex.Size();
+    char** argv = regex.ToArray();
 
-	//Run with argc and argv
-	return Run(behavior, argv[0], argc, argv);
+    //Run with argc and argv
+    return Run(behavior, argv[0], argc, argv);
 }
 
 
@@ -139,37 +139,37 @@ int ConcreteProcess::Run(Behavior behavior, const char* args)
 /// @return 
 int ConcreteProcess::Run(Behavior behavior, const char* path, int argc, char* argv[])
 {
-	//New data object
-	Data* data = new Data((char*)path); 
+    //New data object
+    Data* data = new Data((char*)path); 
 
-	//Create executor
-	if ((data->exec = CreateExecutor(path)) == NULL) 
-	{
-		delete data;
-		return -1;
-	}
+    //Create executor
+    if ((data->exec = CreateExecutor(path)) == NULL) 
+    {
+        delete data;
+        return -1;
+    }
 
-	//Run executor with args
-	if ((data->tid = data->exec->Run(path, argc, argv)) < 0)
-	{
-		delete data;
-		return -1;
-	}
+    //Run executor with args
+    if ((data->tid = data->exec->Run(path, argc, argv)) < 0)
+    {
+        delete data;
+        return -1;
+    }
 
-	//Add to datum list
-	if ((data->pid = datum.Add(data, (char*)path)) < 0)
-	{
-		delete data;
-		return -1;
-	}
+    //Add to datum list
+    if ((data->pid = datum.Add(data, (char*)path)) < 0)
+    {
+        delete data;
+        return -1;
+    }
 
-	//Wait for task done
-	if (behavior == _Foreground)
-	{
-		data->exec->Wait();
-	}
+    //Wait for task done
+    if (behavior == _Foreground)
+    {
+        data->exec->Wait();
+    }
 
-	return data->pid;
+    return data->pid;
 }
 
 
@@ -178,7 +178,7 @@ int ConcreteProcess::Run(Behavior behavior, const char* path, int argc, char* ar
 /// @return 
 bool ConcreteProcess::Kill(const char* path)
 {
-	return datum.GetItem(path)->exec->Kill();
+    return datum.GetItem(path)->exec->Kill();
 }
 
 
@@ -187,7 +187,7 @@ bool ConcreteProcess::Kill(const char* path)
 /// @return 
 bool ConcreteProcess::Kill(int pid)
 {
-	return datum.GetItem(pid)->exec->Kill();
+    return datum.GetItem(pid)->exec->Kill();
 }
 
 
@@ -196,7 +196,7 @@ bool ConcreteProcess::Kill(int pid)
 /// @return 
 bool ConcreteProcess::IsExist(const char* path)
 {
-	return (NULL != datum.GetItem(path));
+    return (NULL != datum.GetItem(path));
 }
 
 
@@ -204,5 +204,5 @@ bool ConcreteProcess::IsExist(const char* path)
 /// @return 
 VkList<ConcreteProcess::Data*> ConcreteProcess::GetData()
 {
-	return datum;
+    return datum;
 }

@@ -14,22 +14,22 @@
 class Dma
 {
 public:
-	//Enumerations
-	enum DmaGroup
-	{
-		_Group1 = 1,
-		_Group2,
-	};
+    //Enumerations
+    enum DmaGroup
+    {
+        _Group1 = 1,
+        _Group2,
+    };
 
-	enum DmaStream
-	{
-		_Stream0 = 0,
-		_Stream1,
-		_Stream2,
-		_Stream3,
-		_Stream4,
-		_Stream5,
-		_Stream6,
+    enum DmaStream
+    {
+        _Stream0 = 0,
+        _Stream1,
+        _Stream2,
+        _Stream3,
+        _Stream4,
+        _Stream5,
+    	_Stream6,
 		_Stream7,
 	};
 

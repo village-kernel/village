@@ -14,29 +14,29 @@
 class Regex
 {
 public:
-	//Structrues
-	struct String
-	{
-		const char* str;
-		String* next;
+    //Structrues
+    struct String
+    {
+        const char* str;
+        String* next;
 
-		String(const char* str = NULL) :
-			str(str),
-			next(NULL)
-		{}
-	};
+        String(const char* str = NULL) :
+            str(str),
+            next(NULL)
+        {}
+    };
 private:
-	//Members
-	String* strings;
-	char**  array;
+    //Members
+    String* strings;
+    char**  array;
 public:
-	//Methods
-	Regex();
-	~Regex();
-	String* Split(const char* s, const char r = ' ');
-	int Size();
-	char** ToArray();
-	void Clear();
+    //Methods
+    Regex();
+    ~Regex();
+    String* Split(const char* s, const char r = ' ');
+    int Size();
+    char** ToArray();
+    void Clear();
 };
 
 #endif //!__REGEX_H__

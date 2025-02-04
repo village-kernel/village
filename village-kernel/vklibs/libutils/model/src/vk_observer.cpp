@@ -16,7 +16,7 @@ ObserverModel::ObserverModel()
 /// @brief Desturctor
 ObserverModel::~ObserverModel()
 {
-	observers.Release();
+    observers.Release();
 }
 
 
@@ -25,7 +25,7 @@ ObserverModel::~ObserverModel()
 /// @param user 
 void ObserverModel::Attach(Method method, Class* user)
 {
-	Attach(union_cast<Function>(method), (void*)user);
+    Attach(union_cast<Function>(method), (void*)user);
 }
 
 
@@ -34,7 +34,7 @@ void ObserverModel::Attach(Method method, Class* user)
 /// @param user 
 void ObserverModel::Attach(Function func, void* user)
 {
-	observers.Add(new Observer(func, user));
+    observers.Add(new Observer(func, user));
 }
 
 
@@ -43,7 +43,7 @@ void ObserverModel::Attach(Function func, void* user)
 /// @param user 
 void ObserverModel::Detach(Method method, Class* user)
 {
-	Detach(union_cast<Function>(method), (void*)user);
+    Detach(union_cast<Function>(method), (void*)user);
 }
 
 
@@ -52,16 +52,16 @@ void ObserverModel::Detach(Method method, Class* user)
 /// @param user 
 void ObserverModel::Detach(Function func, void* user)
 {
-	for (observers.Begin(); !observers.IsEnd(); observers.Next())
-	{
-		Observer* observer = observers.Item();
+    for (observers.Begin(); !observers.IsEnd(); observers.Next())
+    {
+        Observer* observer = observers.Item();
 
-		if ((func == observer->func) &&
-			(user == observer->user))
-		{
-			observers.Remove(observer, observers.GetNid());
-		}
-	}
+        if ((func == observer->func) &&
+            (user == observer->user))
+        {
+            observers.Remove(observer, observers.GetNid());
+        }
+    }
 }
 
 
@@ -69,16 +69,16 @@ void ObserverModel::Detach(Function func, void* user)
 /// @param argv 
 void ObserverModel::Notify(void* argv)
 {
-	for (observers.Begin(); !observers.IsEnd(); observers.Next())
-	{
-		Observer* observer = observers.Item();
-		(observer->func)(observer->user, argv);
-	}
+    for (observers.Begin(); !observers.IsEnd(); observers.Next())
+    {
+        Observer* observer = observers.Item();
+        (observer->func)(observer->user, argv);
+    }
 }
 
 
 /// @brief Release
 void ObserverModel::Release()
 {
-	observers.Release();
+    observers.Release();
 }

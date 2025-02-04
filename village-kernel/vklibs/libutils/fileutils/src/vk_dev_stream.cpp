@@ -10,9 +10,9 @@
 
 /// @brief Constructor
 DevStream::DevStream(const char* name, int mode)
-	:fopts(NULL)
+    :fopts(NULL)
 {
-	if (NULL != name) Open(name, mode);
+    if (NULL != name) Open(name, mode);
 }
 
 
@@ -28,12 +28,12 @@ DevStream::~DevStream()
 /// @return 
 bool DevStream::Open(const char* name, int mode)
 {
-	if (NULL == fopts)
-	{
-		fopts = kernel->device.GetDeviceFopts(name);
-		if (NULL != fopts) return fopts->Open();
-	}
-	return false;
+    if (NULL == fopts)
+    {
+        fopts = kernel->device.GetDeviceFopts(name);
+        if (NULL != fopts) return fopts->Open();
+    }
+    return false;
 }
 
 
@@ -44,11 +44,11 @@ bool DevStream::Open(const char* name, int mode)
 /// @return 
 int DevStream::Write(char* data, int size, int offset)
 {
-	if (NULL != fopts)
-	{
-		return fopts->Write((uint8_t*)data, size, offset);
-	}
-	return 0;
+    if (NULL != fopts)
+    {
+        return fopts->Write((uint8_t*)data, size, offset);
+    }
+    return 0;
 }
 
 
@@ -59,11 +59,11 @@ int DevStream::Write(char* data, int size, int offset)
 /// @return 
 int DevStream::Read(char* data, int size, int offset)
 {
-	if (NULL != fopts)
-	{
-		return fopts->Read((uint8_t*)data, size, offset);
-	}
-	return 0;
+    if (NULL != fopts)
+    {
+        return fopts->Read((uint8_t*)data, size, offset);
+    }
+    return 0;
 }
 
 
@@ -73,19 +73,19 @@ int DevStream::Read(char* data, int size, int offset)
 /// @return 
 int DevStream::IOCtrl(uint8_t cmd, void* data)
 {
-	if (NULL != fopts)
-	{
-		return fopts->IOCtrl(cmd, data);
-	}
-	return 0;
+    if (NULL != fopts)
+    {
+        return fopts->IOCtrl(cmd, data);
+    }
+    return 0;
 }
 
 
 /// @brief DevStream close
 void DevStream::Close()
 {
-	if (NULL != fopts)
-	{
-		fopts->Close();
-	}
+    if (NULL != fopts)
+    {
+        fopts->Close();
+    }
 }

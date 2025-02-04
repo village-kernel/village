@@ -23,7 +23,7 @@ SdioSdCard::~SdioSdCard()
 /// @brief SetData
 void SdioSdCard::SetData(void* data)
 {
-	config = *((Config*)data);
+    config = *((Config*)data);
 }
 
 
@@ -31,13 +31,13 @@ void SdioSdCard::SetData(void* data)
 /// @param config 
 void SdioSdCard::PinConfig()
 {
-	Gpio pin;
-	pin.Initialize(config.d0Gpio);
-	pin.Initialize(config.d1Gpio);
-	pin.Initialize(config.d2Gpio);
-	pin.Initialize(config.d3Gpio);
-	pin.Initialize(config.ckGpio);
-	pin.Initialize(config.cmdGpio);
+    Gpio pin;
+    pin.Initialize(config.d0Gpio);
+    pin.Initialize(config.d1Gpio);
+    pin.Initialize(config.d2Gpio);
+    pin.Initialize(config.d3Gpio);
+    pin.Initialize(config.ckGpio);
+    pin.Initialize(config.cmdGpio);
 }
 
 
@@ -45,7 +45,7 @@ void SdioSdCard::PinConfig()
 /// @return 
 uint32_t SdioSdCard::GetTicks()
 {
-	return kernel->system.GetSysClkCounts();
+    return kernel->system.GetSysClkCounts();
 }
 
 
@@ -53,7 +53,7 @@ uint32_t SdioSdCard::GetTicks()
 /// @return 
 bool SdioSdCard::CheckStatus()
 {
-	return (sdio.GetCardState() == Sdio::MSD_OK);
+    return (sdio.GetCardState() == Sdio::MSD_OK);
 }
 
 
@@ -62,34 +62,34 @@ bool SdioSdCard::CheckStatus()
 /// @return 
 bool SdioSdCard::CheckStatusWithTimeout(uint32_t timeout)
 {
-	uint32_t timer = GetTicks();
+    uint32_t timer = GetTicks();
 
-	//block until SDIO IP is ready again or a timeout occur
-	while (GetTicks() - timer < timeout)
-	{
-		if (sdio.GetCardState() == Sdio::SD_TRANSFER_OK)
-		{
-			return true;
-		}
-	}
+    //block until SDIO IP is ready again or a timeout occur
+    while (GetTicks() - timer < timeout)
+    {
+        if (sdio.GetCardState() == Sdio::SD_TRANSFER_OK)
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }
 
 
 /// @brief open
 bool SdioSdCard::Open()
 {
-	//Pin config
-	PinConfig();
+    //Pin config
+    PinConfig();
 
-	//Initialize sdio
-	if (Sdio::MSD_OK == sdio.Initialize())
-	{
-		return CheckStatus();
-	}
+    //Initialize sdio
+    if (Sdio::MSD_OK == sdio.Initialize())
+    {
+        return CheckStatus();
+    }
 
-	return false;
+    return false;
 }
 
 
@@ -100,45 +100,45 @@ bool SdioSdCard::Open()
 /// @return 
 int SdioSdCard::Write(uint8_t* data, uint32_t blkSize, uint32_t blk)
 {
-	uint32_t sector  = blk;
-	uint32_t count   = 0;
-	uint32_t timeout = 0;
+    uint32_t sector  = blk;
+    uint32_t count   = 0;
+    uint32_t timeout = 0;
 
-	sdio.ClearWriteStatus();
+    sdio.ClearWriteStatus();
 
-	if (CheckStatusWithTimeout(sd_timeout) == false)
-	{
-		return count;
-	}
+    if (CheckStatusWithTimeout(sd_timeout) == false)
+    {
+        return count;
+    }
 
-	if (sdio.WriteBlocksDMA(data, blkSize, sector) == Sdio::MSD_OK)
-	{
-		//Wait that writing process is completed or a timeout occurs
-		timeout = GetTicks();
-		while ((sdio.GetWriteStatus() == false) && ((GetTicks() - timeout) < sd_timeout)) {}
+    if (sdio.WriteBlocksDMA(data, blkSize, sector) == Sdio::MSD_OK)
+    {
+        //Wait that writing process is completed or a timeout occurs
+        timeout = GetTicks();
+        while ((sdio.GetWriteStatus() == false) && ((GetTicks() - timeout) < sd_timeout)) {}
 
-		//in case of a timeout return error
-		if (sdio.GetWriteStatus() == false)
-		{
-			count = 0;
-		}
-		else
-		{
-			sdio.ClearWriteStatus();
-			timeout = GetTicks();
+        //in case of a timeout return error
+        if (sdio.GetWriteStatus() == false)
+        {
+            count = 0;
+        }
+        else
+        {
+            sdio.ClearWriteStatus();
+            timeout = GetTicks();
 
-			while ((GetTicks() - timeout) < sd_timeout)
-			{
-				if (sdio.GetCardState() == Sdio::SD_TRANSFER_OK)
-				{
-					count = blkSize;
-					break;
-				}
-			}
-		}
-	}
+            while ((GetTicks() - timeout) < sd_timeout)
+            {
+                if (sdio.GetCardState() == Sdio::SD_TRANSFER_OK)
+                {
+                    count = blkSize;
+                    break;
+                }
+            }
+        }
+    }
 
-	return count;
+    return count;
 }
 
 
@@ -149,46 +149,46 @@ int SdioSdCard::Write(uint8_t* data, uint32_t blkSize, uint32_t blk)
 /// @return 
 int SdioSdCard::Read(uint8_t* data, uint32_t blkSize, uint32_t blk)
 {
-	uint32_t sector  = blk;
-	uint32_t count   = 0;
-	uint32_t timeout = 0;
+    uint32_t sector  = blk;
+    uint32_t count   = 0;
+    uint32_t timeout = 0;
 
-	//ensure the SDCard is ready for a new operation
-	if (CheckStatusWithTimeout(sd_timeout) == false)
-	{
-		return count;
-	}
+    //ensure the SDCard is ready for a new operation
+    if (CheckStatusWithTimeout(sd_timeout) == false)
+    {
+        return count;
+    }
 
-	if (sdio.ReadBlocksDMA(data, blkSize, sector) == Sdio::MSD_OK)
-	{
-		sdio.ClearReadStatus();
-		
-		//Wait that the reading process is completed or a timeout occurs
-		timeout = GetTicks();
-		while((sdio.GetReadStatus() == false) && ((GetTicks() - timeout) < sd_timeout)) {}
-		
-		//in case of a timeout return error
-		if (sdio.GetReadStatus() == false)
-		{
-			count = 0;
-		}
-		else
-		{
-			sdio.ClearReadStatus();
-			timeout = GetTicks();
+    if (sdio.ReadBlocksDMA(data, blkSize, sector) == Sdio::MSD_OK)
+    {
+        sdio.ClearReadStatus();
+        
+        //Wait that the reading process is completed or a timeout occurs
+        timeout = GetTicks();
+        while((sdio.GetReadStatus() == false) && ((GetTicks() - timeout) < sd_timeout)) {}
+        
+        //in case of a timeout return error
+        if (sdio.GetReadStatus() == false)
+        {
+            count = 0;
+        }
+        else
+        {
+            sdio.ClearReadStatus();
+            timeout = GetTicks();
 
-			while ((GetTicks() - timeout) < sd_timeout)
-			{
-				if (sdio.GetCardState() == Sdio::SD_TRANSFER_OK)
-				{
-					count = blkSize;
-					break;
-				}
-			}
-		}
-	}
+            while ((GetTicks() - timeout) < sd_timeout)
+            {
+                if (sdio.GetCardState() == Sdio::SD_TRANSFER_OK)
+                {
+                    count = blkSize;
+                    break;
+                }
+            }
+        }
+    }
 
-	return count;
+    return count;
 }
 
 
@@ -198,42 +198,42 @@ int SdioSdCard::Read(uint8_t* data, uint32_t blkSize, uint32_t blk)
 /// @return 
 int SdioSdCard::IOCtrl(uint8_t cmd, void *data)
 {
-	Sdio::SDCardInfo cardInfo;
+    Sdio::SDCardInfo cardInfo;
 
-	switch (cmd)
-	{
-		//Make sure that no pending write process
-		case _CtrlSync :
-			break;
+    switch (cmd)
+    {
+        //Make sure that no pending write process
+        case _CtrlSync :
+            break;
 
-		//Get number of sectors on the disk (uint32_t)
-		case _GetSectorCount :
-			sdio.GetCardInfo(&cardInfo);
-			*(uint32_t*)data = cardInfo.LogBlockNbr;
-			break;
+        //Get number of sectors on the disk (uint32_t)
+        case _GetSectorCount :
+            sdio.GetCardInfo(&cardInfo);
+            *(uint32_t*)data = cardInfo.LogBlockNbr;
+            break;
 
-		//Get R/W sector size (uint32_t)
-		case _GetSectorSize :
-			sdio.GetCardInfo(&cardInfo);
-			*(uint32_t*)data = cardInfo.LogBlockSize;
-			break;
+        //Get R/W sector size (uint32_t)
+        case _GetSectorSize :
+            sdio.GetCardInfo(&cardInfo);
+            *(uint32_t*)data = cardInfo.LogBlockSize;
+            break;
 
-		//Get erase block size in unit of sector (uint32_t)
-		case _GetBlockSzie :
-			sdio.GetCardInfo(&cardInfo);
-			*(uint32_t*)data = cardInfo.LogBlockSize / sd_block_size;
-			break;
+        //Get erase block size in unit of sector (uint32_t)
+        case _GetBlockSzie :
+            sdio.GetCardInfo(&cardInfo);
+            *(uint32_t*)data = cardInfo.LogBlockSize / sd_block_size;
+            break;
 
-		default: break;
-	}
-	return 0;
+        default: break;
+    }
+    return 0;
 }
 
 
 /// @brief close
 void SdioSdCard::Close()
 {
-	sdio.Uninitialize();
+    sdio.Uninitialize();
 }
 
 
@@ -242,13 +242,9 @@ void SdioSdCard::Close()
 /// @return 
 bool SdioSdCardDrv::Probe(PlatDevice* device)
 {
-	SdioSdCard* sdioSdCard = new SdioSdCard(); 
-	sdioSdCard->SetID(DriverID::_block);
-	sdioSdCard->SetName(device->GetDriverName());
-	sdioSdCard->SetData(device->GetDriverData());
-	device->SetDriver(sdioSdCard);
-	kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
-	return true;
+    device->Attach(new SdioSdCard());
+    kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
+    return true;
 }
 
 
@@ -257,10 +253,10 @@ bool SdioSdCardDrv::Probe(PlatDevice* device)
 /// @return 
 bool SdioSdCardDrv::Remove(PlatDevice* device)
 {
-	kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
-	delete (SdioSdCard*)device->GetDriver();
-	device->SetDriver(NULL);
-	return true;
+    kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
+    delete (SdioSdCard*)device->GetDriver();
+    device->Detach();
+    return true;
 }
 
 

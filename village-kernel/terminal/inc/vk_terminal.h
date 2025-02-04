@@ -18,30 +18,30 @@
 class ConcreteTerminal : public Terminal, public Class
 {
 private:
-	//Members
-	VkList<Cmd*>     cmds;
-	VkList<Sandbox*> sandboxes;
+    //Members
+    VkList<Cmd*>     cmds;
+    VkList<Sandbox*> sandboxes;
 
-	//Methods
-	void Execute();
-	char* ThreadName(const char* driver);
-	void ConsoleSandbox(Sandbox* sandbox);
+    //Methods
+    void Execute();
+    char* ThreadName(const char* driver);
+    void ConsoleSandbox(Sandbox* sandbox);
 public:
-	//Methods
-	ConcreteTerminal();
-	~ConcreteTerminal();
-	void Setup();
-	void Exit();
+    //Methods
+    ConcreteTerminal();
+    ~ConcreteTerminal();
+    void Setup();
+    void Exit();
 
-	//Cmd Methods
-	void RegisterCmd(Cmd* cmd, char* name);
-	void UnregisterCmd(Cmd* cmd, char* name);
-	VkList<Cmd*> GetCmds();
+    //Cmd Methods
+    void RegisterCmd(Cmd* cmd, char* name);
+    void UnregisterCmd(Cmd* cmd, char* name);
+    VkList<Cmd*> GetCmds();
 
-	//Console Methods
-	int CreateConsole(const char* driver);
-	bool DestroyConsole(const char* driver);
-	VkList<Sandbox*> GetSandboxes();
+    //Console Methods
+    int CreateConsole(const char* driver);
+    bool DestroyConsole(const char* driver);
+    VkList<Sandbox*> GetSandboxes();
 };
 
 #endif // !__VK_TERMINAL_H__

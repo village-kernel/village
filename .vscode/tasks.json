@@ -1,48 +1,45 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"label": "Build",
-			"type": "shell",
-			"command": "make",
-			"args": [
-				"all",
-				"rootfs",
-			],
-			"detail": "Build project"
-		},
-		{
-			"label": "Run I386 QEMU",
-			"type": "shell",
-			"isBackground": true,
-			"dependsOn": ["Build"],
-			//"command": "qemu-system-i386 -hda ${workspaceFolder}/build/village-os.img -hdb ${workspaceFolder}/build/village-fs.img -monitor null -serial stdio -s -S",
-			"command": "qemu-system-i386 -hda ${workspaceFolder}/build/village-os.img -hdb ${workspaceFolder}/build/village-fs.img -monitor null -serial stdio -s -S -nographic",
-			"presentation": {
-				"echo": true,
-				"reveal": "always",
-				"focus": true,
-				"panel": "dedicated",
-				"showReuseMessage": true,
-				"clear": true,
-			},
-			"problemMatcher":
-			{
-				"owner": "external",
-				"pattern": [
-					{
-					  "regexp": ".",
-					  "file": 1,
-					  "location": 2,
-					  "message": 3
-					}
-				],
-				"background": {
-					"activeOnStart": true,
-					"beginsPattern": ".",
-					"endsPattern": "."
-				}
-			}
-		}
-	]
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "make",
+            "args": ["all"],
+            "detail": "Build project"
+        },
+        {
+            "label": "Run I386 QEMU",
+            "type": "shell",
+            "isBackground": true,
+            "dependsOn": ["Build"],
+            //"command": "qemu-system-i386 -hda ${workspaceFolder}/build/village-os.img -hdb ${workspaceFolder}/build/village-fs.img -monitor null -serial stdio -s -S",
+            "command": "qemu-system-i386 -hda ${workspaceFolder}/build/village-os.img -hdb ${workspaceFolder}/build/village-fs.img -monitor null -serial stdio -s -S -nographic",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "showReuseMessage": true,
+                "clear": true,
+            },
+            "problemMatcher":
+            {
+                "owner": "external",
+                "pattern": [
+                    {
+                      "regexp": ".",
+                      "file": 1,
+                      "location": 2,
+                      "message": 3
+                    }
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".",
+                    "endsPattern": "."
+                }
+            }
+        }
+    ]
 }

@@ -9,13 +9,13 @@
 
 /// @brief Constructor
 Dma::Dma()
-	:muxStatusReg(NULL),
-	muxChannelReg(NULL),
-	streamReg(NULL),
-	commonReg(NULL),
-	flagClearReg(NULL),
-	statusReg(NULL),
-	flagOffset(0)
+    :muxStatusReg(NULL),
+    muxChannelReg(NULL),
+    streamReg(NULL),
+    commonReg(NULL),
+    flagClearReg(NULL),
+    statusReg(NULL),
+    flagOffset(0)
 {
 }
 
@@ -25,60 +25,60 @@ Dma::Dma()
 /// @param channel 
 void Dma::Initialize(uint8_t group, uint8_t stream)
 {
-	if (_Group1 == group)
-	{
-		//Enable dma1 clock
-		RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
+    if (_Group1 == group)
+    {
+        //Enable dma1 clock
+        RCC->AHB1ENR |= RCC_AHB1ENR_DMA1EN;
 
-		//Gets the DMA and stream register
-		commonReg = DMA1;
-		streamReg = DMA1_Stream0 + stream;
+        //Gets the DMA and stream register
+        commonReg = DMA1;
+        streamReg = DMA1_Stream0 + stream;
 
-		//Gets the DMAMUX and DMAMUX status register
-		muxStatusReg = DMAMUX1_ChannelStatus;
-		muxChannelReg = DMAMUX1_Channel0 + stream;
-	}
-	else if (_Group2 == group)
-	{
-		//Enable dma2 clock
-		RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN;
-		
-		//Gets the DMA and stream register
-		commonReg = DMA2;
-		streamReg = DMA2_Stream0 + stream;
-		
-		//Gets the DMAMUX and DMAMUX status register
-		muxStatusReg = DMAMUX1_ChannelStatus;
-		muxChannelReg = DMAMUX1_Channel0 + stream + 8;
-	}
+        //Gets the DMAMUX and DMAMUX status register
+        muxStatusReg = DMAMUX1_ChannelStatus;
+        muxChannelReg = DMAMUX1_Channel0 + stream;
+    }
+    else if (_Group2 == group)
+    {
+        //Enable dma2 clock
+        RCC->AHB1ENR |= RCC_AHB1ENR_DMA2EN;
+        
+        //Gets the DMA and stream register
+        commonReg = DMA2;
+        streamReg = DMA2_Stream0 + stream;
+        
+        //Gets the DMAMUX and DMAMUX status register
+        muxStatusReg = DMAMUX1_ChannelStatus;
+        muxChannelReg = DMAMUX1_Channel0 + stream + 8;
+    }
 
-	if (stream <= _Stream3)
-	{
-		//Gets the status and flag clear register
-		statusReg = &(commonReg->LISR);
-		flagClearReg = &(commonReg->LIFCR);
-		
-		//Calaculate the flag offset
-		if (stream == _Stream0 || stream == _Stream1)
-			flagOffset = stream * 6;
-		else
-			flagOffset = stream * 6 + 4;
-	}
-	else if (stream >= _Stream4)
-	{
-		//Gets the status and flag clear register
-		statusReg = &(commonReg->HISR);
-		flagClearReg = &(commonReg->HIFCR);
-		
-		//Calaculate the flag offset
-		if (stream == _Stream4 || stream == _Stream5)
-			flagOffset = (stream - _Stream4) * 6;
-		else
-			flagOffset = (stream - _Stream4) * 6 + 4;
-	}
+    if (stream <= _Stream3)
+    {
+        //Gets the status and flag clear register
+        statusReg = &(commonReg->LISR);
+        flagClearReg = &(commonReg->LIFCR);
+        
+        //Calaculate the flag offset
+        if (stream == _Stream0 || stream == _Stream1)
+            flagOffset = stream * 6;
+        else
+            flagOffset = stream * 6 + 4;
+    }
+    else if (stream >= _Stream4)
+    {
+        //Gets the status and flag clear register
+        statusReg = &(commonReg->HISR);
+        flagClearReg = &(commonReg->HIFCR);
+        
+        //Calaculate the flag offset
+        if (stream == _Stream4 || stream == _Stream5)
+            flagOffset = (stream - _Stream4) * 6;
+        else
+            flagOffset = (stream - _Stream4) * 6 + 4;
+    }
 
-	//Disable dma
-	streamReg->CR &= ~DMA_SxCR_EN;
+    //Disable dma
+    streamReg->CR &= ~DMA_SxCR_EN;
 }
 
 
@@ -86,8 +86,8 @@ void Dma::Initialize(uint8_t group, uint8_t stream)
 /// @param transfer 
 void Dma::ConfigBurstTransfer(DmaMemBurstTrans transfer)
 {
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_MBURST_Msk) | (transfer << DMA_SxCR_MBURST_Pos);
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_PBURST_Msk) | (transfer << DMA_SxCR_PBURST_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_MBURST_Msk) | (transfer << DMA_SxCR_MBURST_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_PBURST_Msk) | (transfer << DMA_SxCR_PBURST_Pos);
 }
 
 
@@ -95,7 +95,7 @@ void Dma::ConfigBurstTransfer(DmaMemBurstTrans transfer)
 /// @param dmaChPriority 
 void Dma::ConfigPriority(DmaChPriority dmaChPriority)
 {
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_PL_Msk) | (dmaChPriority << DMA_SxCR_PL_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_PL_Msk) | (dmaChPriority << DMA_SxCR_PL_Pos);
 }
 
 
@@ -104,10 +104,10 @@ void Dma::ConfigPriority(DmaChPriority dmaChPriority)
 /// @param dmaDataSize 
 void Dma::ConfigDirAndDataWidth(DmaDatDir dmaDataDir, DmaDataSize dmaDataSize)
 {
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_DIR_Msk) | (dmaDataDir << DMA_SxCR_DIR_Pos);
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_MSIZE_Msk) | (dmaDataSize << DMA_SxCR_MSIZE_Pos);
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_PSIZE_Msk) | (dmaDataSize << DMA_SxCR_PSIZE_Pos);
-	streamReg->FCR = (streamReg->FCR & ~DMA_SxFCR_FTH_Msk);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_DIR_Msk) | (dmaDataDir << DMA_SxCR_DIR_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_MSIZE_Msk) | (dmaDataSize << DMA_SxCR_MSIZE_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_PSIZE_Msk) | (dmaDataSize << DMA_SxCR_PSIZE_Pos);
+    streamReg->FCR = (streamReg->FCR & ~DMA_SxFCR_FTH_Msk);
 }
 
 
@@ -116,8 +116,8 @@ void Dma::ConfigDirAndDataWidth(DmaDatDir dmaDataDir, DmaDataSize dmaDataSize)
 /// @param enaPeriphInc 
 void Dma::ConfigIncMode(bool enaMemInc, bool enaPeriphInc)
 {
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_MINC_Msk) | (enaMemInc << DMA_SxCR_MINC_Pos);
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_PINC_Msk) | (enaPeriphInc << DMA_SxCR_PINC_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_MINC_Msk) | (enaMemInc << DMA_SxCR_MINC_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_PINC_Msk) | (enaPeriphInc << DMA_SxCR_PINC_Pos);
 }
 
 
@@ -125,7 +125,7 @@ void Dma::ConfigIncMode(bool enaMemInc, bool enaPeriphInc)
 /// @param isEnableCircularMode 
 void Dma::ConfigCircularMode(bool isEnableCircularMode)
 {
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_CIRC_Msk) | (isEnableCircularMode << DMA_SxCR_CIRC_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_CIRC_Msk) | (isEnableCircularMode << DMA_SxCR_CIRC_Pos);
 }
 
 
@@ -136,9 +136,9 @@ void Dma::ConfigCircularMode(bool isEnableCircularMode)
 /// @param enaFullXfer 
 void Dma::ConfigInterrupts(bool enaXferErr, bool enaHalfXfer, bool enaFullXfer)
 {
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_TEIE_Msk) | (enaXferErr << DMA_SxCR_TEIE_Pos);
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_HTIE_Msk) | (enaHalfXfer << DMA_SxCR_HTIE_Pos);
-	streamReg->CR = (streamReg->CR & ~DMA_SxCR_TCIE_Msk) | (enaFullXfer << DMA_SxCR_TCIE_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_TEIE_Msk) | (enaXferErr << DMA_SxCR_TEIE_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_HTIE_Msk) | (enaHalfXfer << DMA_SxCR_HTIE_Pos);
+    streamReg->CR = (streamReg->CR & ~DMA_SxCR_TCIE_Msk) | (enaFullXfer << DMA_SxCR_TCIE_Pos);
 }
 
 
@@ -146,7 +146,7 @@ void Dma::ConfigInterrupts(bool enaXferErr, bool enaHalfXfer, bool enaFullXfer)
 /// @param request 
 void Dma::ConfigRequest(uint8_t request)
 {
-	muxChannelReg->CCR = (muxChannelReg->CCR & ~DMAMUX_CxCR_DMAREQ_ID_Msk) | (request << DMAMUX_CxCR_DMAREQ_ID_Pos);
+    muxChannelReg->CCR = (muxChannelReg->CCR & ~DMAMUX_CxCR_DMAREQ_ID_Msk) | (request << DMAMUX_CxCR_DMAREQ_ID_Pos);
 }
 
 
@@ -154,11 +154,11 @@ void Dma::ConfigRequest(uint8_t request)
 /// @return 
 bool Dma::IsReady()
 {
-	if (IsEnable() && !GetTransferCompleteFlag())
-	{
-		return false;
-	}
-	return true;
+    if (IsEnable() && !GetTransferCompleteFlag())
+    {
+        return false;
+    }
+    return true;
 }
 
 
@@ -168,12 +168,12 @@ bool Dma::IsReady()
 /// @return 
 bool Dma::StartTransfer()
 {
-	if (IsReady())
-	{
-		Disable();
-		ClearTransferCompleteFlag();
-		Enable();
-		return true;
-	}
-	return false;
+    if (IsReady())
+    {
+        Disable();
+        ClearTransferCompleteFlag();
+        Enable();
+        return true;
+    }
+    return false;
 }
