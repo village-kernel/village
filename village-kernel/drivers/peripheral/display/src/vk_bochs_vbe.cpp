@@ -244,11 +244,7 @@ void BochsVBE::Close()
 /// @return 
 bool BochsVBEDrv::Probe(PlatDevice* device)
 {
-    BochsVBE* bochsVBE = new BochsVBE(); 
-    bochsVBE->SetID(DriverID::_framebuffer);
-    bochsVBE->SetName(device->GetDriverName());
-    bochsVBE->SetData(device->GetDriverData());
-    device->SetDriver(bochsVBE);
+    device->Attach(new BochsVBE());
     kernel->device.RegisterFBDevice((FBDriver*)device->GetDriver());
     return true;
 }
@@ -261,7 +257,7 @@ bool BochsVBEDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterFBDevice((FBDriver*)device->GetDriver());
     delete (BochsVBE*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 

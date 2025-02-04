@@ -574,11 +574,7 @@ void SpiSdCard::Close()
 /// @return 
 bool SpiSdCardDrv::Probe(PlatDevice* device)
 {
-    SpiSdCard* spiSdCard = new SpiSdCard(); 
-    spiSdCard->SetID(DriverID::_framebuffer);
-    spiSdCard->SetName(device->GetDriverName());
-    spiSdCard->SetData(device->GetDriverData());
-    device->SetDriver(spiSdCard);
+    device->Attach(new SpiSdCard());
     kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
     return true;
 }
@@ -591,7 +587,7 @@ bool SpiSdCardDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
     delete (SpiSdCard*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 

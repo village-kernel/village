@@ -443,11 +443,7 @@ void SpiW25qxx::Close()
 /// @return 
 bool SpiW25qxxDrv::Probe(PlatDevice* device)
 {
-    SpiW25qxx* spiW25qxx = new SpiW25qxx(); 
-    spiW25qxx->SetID(DriverID::_framebuffer);
-    spiW25qxx->SetName(device->GetDriverName());
-    spiW25qxx->SetData(device->GetDriverData());
-    device->SetDriver(spiW25qxx);
+    device->Attach(new SpiW25qxx());
     kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
     return true;
 }
@@ -460,7 +456,7 @@ bool SpiW25qxxDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
     delete (SpiW25qxx*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 

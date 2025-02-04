@@ -29,7 +29,7 @@ class BlockDriver : public Base, public Fopts
 {
 public:
     //Constructor
-    BlockDriver() {}
+    BlockDriver() { SetID(DriverID::_block); }
 
     //Destructor
     virtual ~BlockDriver() {}
@@ -41,7 +41,7 @@ class CharDriver : public Base, public Fopts
 {
 public:
     //Constructor
-    CharDriver() {}
+    CharDriver() { SetID(DriverID::_character); }
 
     //Destructor
     virtual ~CharDriver() {}
@@ -64,7 +64,7 @@ public:
     FBInfo info;
 public:
     //Constructor
-    FBDriver()  {}
+    FBDriver()  { SetID(DriverID::_framebuffer); }
 
     //Destructor
     virtual ~FBDriver() {}
@@ -84,7 +84,7 @@ class InputDriver : public Base, public Fopts
 {
 public:
     //Constructor
-    InputDriver() {}
+    InputDriver() { SetID(DriverID::_input); }
 
     //Destructor
     virtual ~InputDriver() {}
@@ -96,7 +96,7 @@ class NetworkDriver : public Base
 {
 public:
     //Constructor
-    NetworkDriver() {}
+    NetworkDriver() { SetID(DriverID::_network); }
 
     //Destructor
     virtual ~NetworkDriver() {}
@@ -108,7 +108,7 @@ class MiscDriver : public Base, public Fopts
 {
 public:
     //Constructor
-    MiscDriver() {}
+    MiscDriver() { SetID(DriverID::_miscellaneous); }
 
     //Destructor
     virtual ~MiscDriver() {}
@@ -124,11 +124,27 @@ protected:
     void* driverData;
     char* driverName;
 public:
-    //Driver Methods, platform driver using
-    void  SetDriver(void* driver)  { this->driver = driver; }
-    void* GetDriver()              { return this->driver;   }
-    void* GetDriverData()          { return this->driverData; }
-    char* GetDriverName()          { return this->driverName; }
+    /// @brief Attach
+    /// @param driver 
+    void Attach(void* driver)
+    {
+        this->driver = driver;
+        ((Base*)driver)->SetName(driverName);
+        ((Base*)driver)->SetData(driverData);
+    }
+
+    /// @brief Detach
+    void Detach()
+    {
+        driver = NULL;
+    }
+
+    /// @brief GetDriver
+    /// @return 
+    void* GetDriver()
+    {
+        return driver;
+    }
 public:
     //Constructor
     PlatDevice() :driver(NULL), driverData(NULL), driverName(NULL) {}

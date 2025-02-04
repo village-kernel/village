@@ -142,11 +142,7 @@ void AtaLbaDisk::Close()
 /// @return 
 bool AtaLbaDiskDrv::Probe(PlatDevice* device)
 {
-    AtaLbaDisk* ataLbaDisk = new AtaLbaDisk(); 
-    ataLbaDisk->SetID(DriverID::_block);
-    ataLbaDisk->SetName(device->GetDriverName());
-    ataLbaDisk->SetData(device->GetDriverData());
-    device->SetDriver(ataLbaDisk);
+    device->Attach(new AtaLbaDisk());
     kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
     return true;
 }
@@ -159,7 +155,7 @@ bool AtaLbaDiskDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
     delete (AtaLbaDisk*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 

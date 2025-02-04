@@ -91,11 +91,7 @@ void Stm32Usb::Close()
 /// @return 
 bool Stm32UsbDrv::Probe(PlatDevice* device)
 {
-    Stm32Usb* stm32Usb = new Stm32Usb(); 
-    stm32Usb->SetID(DriverID::_character);
-    stm32Usb->SetName(device->GetDriverName());
-    stm32Usb->SetData(device->GetDriverData());
-    device->SetDriver(stm32Usb);
+    device->Attach(new Stm32Usb());
     kernel->device.RegisterCharDevice((CharDriver*)device->GetDriver());
     return true;
 }
@@ -108,7 +104,7 @@ bool Stm32UsbDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterCharDevice((CharDriver*)device->GetDriver());
     delete (Stm32Usb*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 

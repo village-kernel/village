@@ -140,11 +140,7 @@ void Stm32Uart::Close()
 /// @return 
 bool Stm32UartDrv::Probe(PlatDevice* device)
 {
-    Stm32Uart* serial = new Stm32Uart(); 
-    serial->SetID(DriverID::_character);
-    serial->SetName(device->GetDriverName());
-    serial->SetData(device->GetDriverData());
-    device->SetDriver(serial);
+    device->Attach(new Stm32Uart());
     kernel->device.RegisterCharDevice((CharDriver*)device->GetDriver());
     return true;
 }
@@ -157,7 +153,7 @@ bool Stm32UartDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterCharDevice((CharDriver*)device->GetDriver());
     delete (Stm32Uart*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 

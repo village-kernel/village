@@ -126,11 +126,7 @@ void Pic32Uart::Close()
 /// @return 
 bool Pic32UartDrv::Probe(PlatDevice* device)
 {
-    Pic32Uart* serial = new Pic32Uart(); 
-    serial->SetID(DriverID::_character);
-    serial->SetName(device->GetDriverName());
-    serial->SetData(device->GetDriverData());
-    device->SetDriver(serial);
+    device->Attach(new Pic32Uart());
     kernel->device.RegisterCharDevice((CharDriver*)device->GetDriver());
     return true;
 }
@@ -143,7 +139,7 @@ bool Pic32UartDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterCharDevice((CharDriver*)device->GetDriver());
     delete (Pic32Uart*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 

@@ -242,11 +242,7 @@ void SdioSdCard::Close()
 /// @return 
 bool SdioSdCardDrv::Probe(PlatDevice* device)
 {
-    SdioSdCard* sdioSdCard = new SdioSdCard(); 
-    sdioSdCard->SetID(DriverID::_block);
-    sdioSdCard->SetName(device->GetDriverName());
-    sdioSdCard->SetData(device->GetDriverData());
-    device->SetDriver(sdioSdCard);
+    device->Attach(new SdioSdCard());
     kernel->device.RegisterBlockDevice((BlockDriver*)device->GetDriver());
     return true;
 }
@@ -259,7 +255,7 @@ bool SdioSdCardDrv::Remove(PlatDevice* device)
 {
     kernel->device.UnregisterBlockDevice((BlockDriver*)device->GetDriver());
     delete (SdioSdCard*)device->GetDriver();
-    device->SetDriver(NULL);
+    device->Detach();
     return true;
 }
 
