@@ -13,11 +13,11 @@ void SpiSdCardDev::Config()
 {
     config = {
         .spiCh    = Spi::_Spi3,
-        .sckGpio  = { Gpio::_ChC, 10, Gpio::_Altera, 6, 0 },
-        .misoGpio = { Gpio::_ChC, 11, Gpio::_Altera, 6, 0 },
-        .mosiGpio = { Gpio::_ChC, 12, Gpio::_Altera, 6, 0 },
-        .csGpio   = { Gpio::_ChB, 5,  Gpio::_Output, 0, 1 },
-        .dtGpio   = { Gpio::_ChB, 6,  Gpio::_Output, 0, 0 },
+        .sckGpio  = { Gpio::_ChC, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF6, Gpio::_Low  },
+        .misoGpio = { Gpio::_ChC, Gpio::_Pin11, Gpio::_Altera, Gpio::_AF6, Gpio::_Low  },
+        .mosiGpio = { Gpio::_ChC, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF6, Gpio::_Low  },
+        .csGpio   = { Gpio::_ChB, Gpio::_Pin5,  Gpio::_Output, Gpio::_AF0, Gpio::_High },
+        .dtGpio   = { Gpio::_ChB, Gpio::_Pin6,  Gpio::_Output, Gpio::_AF0, Gpio::_Low  },
     };
     driverData = (void*)&config;
     driverName = (char*)"disk0";
@@ -30,11 +30,11 @@ void SpiW25Q64Dev::Config()
 {
     config = {
         .spiCh    = Spi::_Spi2,
-        .sckGpio  = { Gpio::_ChB, 13,  Gpio::_Altera, 5,  0 },
-        .misoGpio = { Gpio::_ChB, 14,  Gpio::_Altera, 5,  0 },
-        .mosiGpio = { Gpio::_ChB, 15,  Gpio::_Altera, 5,  0 },
-        .csGpio   = { Gpio::_ChB, 12,  Gpio::_Output, 0,  1 },
-        .wpGpio   = { Gpio::_ChF, 15,  Gpio::_Output, 0,  1 },
+        .sckGpio  = { Gpio::_ChB, Gpio::_Pin13, Gpio::_Altera, Gpio::_AF5, Gpio::_Low  },
+        .misoGpio = { Gpio::_ChB, Gpio::_Pin14, Gpio::_Altera, Gpio::_AF5, Gpio::_Low  },
+        .mosiGpio = { Gpio::_ChB, Gpio::_Pin15, Gpio::_Altera, Gpio::_AF5, Gpio::_Low  },
+        .csGpio   = { Gpio::_ChB, Gpio::_Pin12, Gpio::_Output, Gpio::_AF0, Gpio::_High },
+        .wpGpio   = { Gpio::_ChF, Gpio::_Pin15, Gpio::_Output, Gpio::_AF0, Gpio::_High },
         .deviceID = 0xEF16,
     };
     driverData = (void*)&config;
@@ -47,27 +47,27 @@ REGISTER_PLAT_DEVICE(new SpiW25Q64Dev(), spiW25qxx, spiW25Q64Dev);
 void ILI9488Dev::Config()
 {
     config = {
-        .blGpio   = { Gpio::_ChG, 8,  Gpio::_Output,  0, 0 },
-        .csGpio   = { Gpio::_ChG, 12, Gpio::_Altera, 12, 0 },
-        .rsGpio   = { Gpio::_ChF, 12, Gpio::_Altera, 12, 0 },
-        .wrGpio   = { Gpio::_ChD, 5,  Gpio::_Altera, 12, 0 },
-        .rdGpio   = { Gpio::_ChD, 4,  Gpio::_Altera, 12, 0 },
-        .db0Gpio  = { Gpio::_ChD, 14, Gpio::_Altera, 12, 0 },
-        .db1Gpio  = { Gpio::_ChD, 15, Gpio::_Altera, 12, 0 },
-        .db2Gpio  = { Gpio::_ChD, 0,  Gpio::_Altera, 12, 0 },
-        .db3Gpio  = { Gpio::_ChD, 1,  Gpio::_Altera, 12, 0 },
-        .db4Gpio  = { Gpio::_ChE, 7,  Gpio::_Altera, 12, 0 },
-        .db5Gpio  = { Gpio::_ChE, 8,  Gpio::_Altera, 12, 0 },
-        .db6Gpio  = { Gpio::_ChE, 9,  Gpio::_Altera, 12, 0 },
-        .db7Gpio  = { Gpio::_ChE, 10, Gpio::_Altera, 12, 0 },
-        .db8Gpio  = { Gpio::_ChE, 11, Gpio::_Altera, 12, 0 },
-        .db9Gpio  = { Gpio::_ChE, 12, Gpio::_Altera, 12, 0 },
-        .db10Gpio = { Gpio::_ChE, 13, Gpio::_Altera, 12, 0 },
-        .db11Gpio = { Gpio::_ChE, 14, Gpio::_Altera, 12, 0 },
-        .db12Gpio = { Gpio::_ChE, 15, Gpio::_Altera, 12, 0 },
-        .db13Gpio = { Gpio::_ChD, 8,  Gpio::_Altera, 12, 0 },
-        .db14Gpio = { Gpio::_ChD, 9,  Gpio::_Altera, 12, 0 },
-        .db15Gpio = { Gpio::_ChD, 10, Gpio::_Altera, 12, 0 },
+        .blGpio   = { Gpio::_ChG, Gpio::_Pin8,  Gpio::_Output, Gpio::_AF0,  Gpio::_Low },
+        .csGpio   = { Gpio::_ChG, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .rsGpio   = { Gpio::_ChF, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .wrGpio   = { Gpio::_ChD, Gpio::_Pin5,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .rdGpio   = { Gpio::_ChD, Gpio::_Pin4,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db0Gpio  = { Gpio::_ChD, Gpio::_Pin14, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db1Gpio  = { Gpio::_ChD, Gpio::_Pin15, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db2Gpio  = { Gpio::_ChD, Gpio::_Pin0,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db3Gpio  = { Gpio::_ChD, Gpio::_Pin1,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db4Gpio  = { Gpio::_ChE, Gpio::_Pin7,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db5Gpio  = { Gpio::_ChE, Gpio::_Pin8,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db6Gpio  = { Gpio::_ChE, Gpio::_Pin9,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db7Gpio  = { Gpio::_ChE, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db8Gpio  = { Gpio::_ChE, Gpio::_Pin11, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db9Gpio  = { Gpio::_ChE, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db10Gpio = { Gpio::_ChE, Gpio::_Pin13, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db11Gpio = { Gpio::_ChE, Gpio::_Pin14, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db12Gpio = { Gpio::_ChE, Gpio::_Pin15, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db13Gpio = { Gpio::_ChD, Gpio::_Pin8,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db14Gpio = { Gpio::_ChD, Gpio::_Pin9,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .db15Gpio = { Gpio::_ChD, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
     };
     driverData = (void*)&config;
     driverName = (char*)"display0";
@@ -84,8 +84,8 @@ void Stm32UartDev::Config()
         .enableRTS = false,
         .enableDMA = true,
 
-        .txGpio = { Gpio::_ChA, 9,  Gpio::_Altera, 7, 0 },
-        .rxGpio = { Gpio::_ChB, 7,  Gpio::_Altera, 7, 0 },
+        .txGpio = { Gpio::_ChA, Gpio::_Pin9, Gpio::_Altera, Gpio::_AF7, Gpio::_Low },
+        .rxGpio = { Gpio::_ChB, Gpio::_Pin7, Gpio::_Altera, Gpio::_AF7, Gpio::_Low },
         .deGpio = { 0, 0, 0, 0, 0 },
 
         .txDma = { Dma::_Group2, Dma::_Stream7, 4, Dma::_MemoryToPeriph, 0 },
@@ -103,8 +103,8 @@ void Stm32UsbDev::Config()
     config = {
         .irq = OTG_FS_IRQn,
         
-        .dmGpio = { Gpio::_ChA, 11,  Gpio::_Altera, 10, 0 },
-        .dpGpio = { Gpio::_ChA, 12,  Gpio::_Altera, 10, 0 },
+        .dmGpio = { Gpio::_ChA, Gpio::_Pin11, Gpio::_Altera, Gpio::_AF10, Gpio::_Low },
+        .dpGpio = { Gpio::_ChA, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF10, Gpio::_Low },
     };
     driverData = (void*)&config;
     driverName = (char*)"usb0";
