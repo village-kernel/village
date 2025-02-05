@@ -7,21 +7,21 @@
 #ifndef __VK_DRV_SPI_H__
 #define __VK_DRV_SPI_H__
 
-#include "stm32f4xx.h"
-#include "vk_drv_gpio.h"
-
+#include "stm32f4xx_ll_spi.h"
+#include "stm32f4xx_ll_bus.h"
+#include "stm32f4xx_ll_gpio.h"
 
 /// @brief Spi
 class Spi
 {
 public:
-	//Enumerations
-	enum Channel
-	{
-		_Spi1 = 0,
-		_Spi2 = 1,
-		_Spi3 = 2,
-	};
+    //Enumerations
+    enum Channel
+    {
+        _Spi1 = 0,
+        _Spi2 = 1,
+        _Spi3 = 2,
+    };
 
 	enum Mode
 	{
@@ -31,96 +31,73 @@ public:
 		_Cpol1Cpha1 = 0b11,
 	};
 
-	enum BaudRate
-	{
-		_Fpclk2   = 0b000,  //SPI clock = Fpclk / 2
-		_Fpclk4   = 0b001,  //SPI clock = Fpclk / 4
-		_Fpclk8   = 0b010,  //SPI clock = Fpclk / 8
-		_Fpclk16  = 0b011,  //SPI clock = Fpclk / 16
-		_Fpclk32  = 0b100,  //SPI clock = Fpclk / 32
-		_Fpclk64  = 0b101,  //SPI clock = Fpclk / 64
-		_Fpclk128 = 0b110,  //SPI clock = Fpclk / 128
-		_Fpclk256 = 0b111,  //SPI clock = Fpclk / 256
-	};
+    enum BaudRate
+    {
+        _Fpclk2   = LL_SPI_BAUDRATEPRESCALER_DIV2,
+        _Fpclk4   = LL_SPI_BAUDRATEPRESCALER_DIV4,
+        _Fpclk8   = LL_SPI_BAUDRATEPRESCALER_DIV8,
+        _Fpclk16  = LL_SPI_BAUDRATEPRESCALER_DIV16,
+        _Fpclk32  = LL_SPI_BAUDRATEPRESCALER_DIV32,
+        _Fpclk64  = LL_SPI_BAUDRATEPRESCALER_DIV64,
+        _Fpclk128 = LL_SPI_BAUDRATEPRESCALER_DIV128,
+        _Fpclk256 = LL_SPI_BAUDRATEPRESCALER_DIV256,
+    };
 
-	enum MasterSel
-	{
-		_Slave  = 0,
-		_Master = 1,
-	};
+    enum MasterSel
+    {
+        _Slave  = LL_SPI_MODE_SLAVE,
+        _Master = LL_SPI_MODE_MASTER,
+    };
 
-	enum SpiBitMode
-	{
-		_TwoLine = 0,
-		_OneLine = 1,
-	};
+    enum DataSize
+    {
+        _8Bit  = LL_SPI_DATAWIDTH_8BIT,
+        _16Bit = LL_SPI_DATAWIDTH_16BIT,
+    };
 
-	enum DataSize
-	{
-		_8Bit  = 0,
-		_16Bit = 1,
-	};
-
-	enum RxFifoThres
-	{
-		_2Byte = 0,
-		_1Byte = 1,
-	};
-
-	enum LsbFirst
-	{
-		_MsbFirst = 0,
-		_LsbFirst = 1,
-	};
-
-	enum FrameFormat
-	{
-		_MotorolaMode = 0,
-		_TiMode       = 1,
-	};
+    enum LsbFirst
+    {
+        _MsbFirst = SPI_FIRSTBIT_MSB,
+        _LsbFirst = SPI_FIRSTBIT_LSB,
+    };
 private:
-	//Static constant
-	static const uint32_t timeout_cnt = 500000;
+    //Static constant
+    static const uint32_t timeout_cnt = 500000;
 
-	//Members
-	volatile SPI_TypeDef *base;
+    //Members
+    SPI_TypeDef *SPIx;
 
-	//Methods
-	bool WaitForTxEmpty();
-	bool WaitForRxNotEmpty();
-	bool WaitForTxCompleted();
+    //Methods
+    bool WaitForTxEmpty();
+    bool WaitForRxNotEmpty();
+    bool WaitForTxCompleted();
 public:
-	//Methods
-	Spi();
-	void Initialize(Channel channel);
-	void ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode);
-	void ConfigFrame(LsbFirst lsbfirst, DataSize datasize);
-	void ConfigBaudRatePrescaler(BaudRate baud_rate);
-	void ConfigBitMode(SpiBitMode bidmode);
-	void ConfigCrc(bool isEnableCrc);
-	void ConfigFrameFormat(FrameFormat frf);
-	void ConfigFifoRecThreshold(RxFifoThres status);
-	void ConfigDma(bool isEnableTxDma, bool isEnableRxDma);
-	uint8_t WriteAndReadOneByte(uint8_t txData);
-	uint16_t WriteAndReadTwoByte(uint16_t txData);
+    //Methods
+    Spi();
+    void Initialize(Channel channel);
+    void ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode);
+    void ConfigFrame(LsbFirst lsbfirst, DataSize datasize);
+    void ConfigBaudRatePrescaler(BaudRate baud_rate);
+    uint8_t WriteAndReadOneByte(uint8_t txData);
+    uint16_t WriteAndReadTwoByte(uint16_t txData);
 
-	///Enable spi
-	inline void Enable() { base->CR1 |= SPI_CR1_SPE; }
-	
-	///Disable spi
-	inline void Disable() { base->CR1 &= ~SPI_CR1_SPE; }
+    ///Enable spi
+    inline void Enable() { LL_SPI_Enable(SPIx); }
+    
+    ///Disable spi
+    inline void Disable() { LL_SPI_Disable(SPIx); }
 
-	///Write one byte data
-	inline void WriteOneByte(uint8_t txData) { base->DR = (uint8_t)txData; }
-	
-	///Read one byte data
-	inline uint8_t ReadOneByte() { return (uint8_t)base->DR; }
+    ///Write one byte data
+    inline void WriteOneByte(uint8_t txData) { LL_SPI_TransmitData8(SPIx, txData); }
+    
+    ///Read one byte data
+    inline uint8_t ReadOneByte() { return LL_SPI_ReceiveData8(SPIx); }
 
-	///Write two byte data
-	inline void WriteTwoByte(uint16_t txData) { base->DR = txData; }
+    ///Write two byte data
+    inline void WriteTwoByte(uint16_t txData) { LL_SPI_TransmitData16(SPIx, txData); }
 
-	///Read two byte data
-	inline uint16_t ReadTwoByte() { return base->DR; }
+    ///Read two byte data
+    inline uint16_t ReadTwoByte() { return LL_SPI_ReceiveData16(SPIx); }
 };
 
 #endif // !__VK_DRV_SPI_H__

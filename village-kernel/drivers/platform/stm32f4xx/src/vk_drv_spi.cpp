@@ -1,5 +1,5 @@
 //###########################################################################
-// vk_drv_spi.h
+// vk_drv_spi.cpp
 // Hardware Layer class that manages a single SPI module
 //
 // $Copyright: Copyright (C) village
@@ -9,7 +9,7 @@
 
 /// @brief Constructor
 Spi::Spi()
-    : base(NULL)
+    : SPIx(NULL)
 {
 }
 
@@ -22,18 +22,18 @@ void Spi::Initialize(Channel channel)
     //Enable clock
     if (_Spi1 == channel)
     {
-        RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
-        base = SPI1;
+        LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_SPI1);
+        SPIx = SPI1;
     }
     else if(_Spi2 == channel)
     {
-        RCC->APB1ENR |= RCC_APB1ENR_SPI2EN;
-        base = SPI2;
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI2);
+        SPIx = SPI2;
     }
     else if (_Spi3 == channel)
     {
-        RCC->APB1ENR |= RCC_APB1ENR_SPI3EN;
-        base = SPI3;
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_SPI3);
+        SPIx = SPI3;
     }
 }
 
@@ -43,32 +43,21 @@ void Spi::Initialize(Channel channel)
 ///        Configures GPIO pins for SPI use
 /// @param MasterSelection 
 /// @param cpolCphaMode 
-/// @param pinConfig 
 void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode)
 {
-    if (_Master == MasterSelection)
+    // Set master/slave mode
+    LL_SPI_SetMode(SPIx, MasterSelection);
+
+    // Set CPOL and CPHA
+    LL_SPI_SetClockPolarity(SPIx, (cpolCphaMode & 0x02) ? LL_SPI_POLARITY_HIGH : LL_SPI_POLARITY_LOW);
+    LL_SPI_SetClockPhase(SPIx, (cpolCphaMode & 0x01) ? LL_SPI_PHASE_2EDGE : LL_SPI_PHASE_1EDGE);
+
+    // Enable software slave management for master mode
+    if (MasterSelection == _Master)
     {
-        //Enable software slave management
-        base->CR1 = (base->CR1 & ~(SPI_CR1_SSM_Msk)) | SPI_CR1_SSM;
-
-        //SET SSI bit
-        base->CR1 = (base->CR1 & ~(SPI_CR1_SSI_Msk)) | SPI_CR1_SSI;
+        LL_SPI_SetNSSMode(SPIx, LL_SPI_NSS_SOFT);
+        //LL_SPI_SetInternalSSLevel(SPIx, LL_SPI_SS_ACTIVE_LOW);
     }
-    else
-    {
-        //Disable software slave management
-        base->CR1 = base->CR1 & ~(SPI_CR1_SSM_Msk);
-    }
-
-    //Set spi mode
-    if (MasterSelection == MasterSel::_Master)
-        base->CR1 |= SPI_MODE_MASTER;
-    else
-        base->CR1 &= ~SPI_MODE_MASTER;
-
-    //Set cpol Cpha mode
-    const uint32_t cpol_cpha_msk = SPI_CR1_CPOL | SPI_CR1_CPHA;
-    base->CR1 = (base->CR1 & ~cpol_cpha_msk) | (cpolCphaMode << SPI_CR1_CPHA_Pos);
 }
 
 
@@ -77,64 +66,16 @@ void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode)
 /// @param datasize 
 void Spi::ConfigFrame(LsbFirst lsbfirst, DataSize datasize)
 {
-    if (LsbFirst::_LsbFirst == lsbfirst)
-        base->CR1 |= SPI_CR1_LSBFIRST;
-    else
-        base->CR1 &= ~SPI_CR1_LSBFIRST;
-
-    base->CR1 = (base->CR1 & ~SPI_CR1_DFF_Msk) | (datasize << SPI_CR1_DFF_Pos);
+    LL_SPI_SetDataWidth(SPIx, datasize);
+    LL_SPI_SetTransferBitOrder(SPIx, lsbfirst);
 }
 
 
 /// @brief Sets the baud rate of sclk during master mode
-///        The baud rate of SPI2 SPI3 is based on APP1
-///        The baud rate of SPI1 SPI4 is based on APP2
 /// @param baud_rate 
 void Spi::ConfigBaudRatePrescaler(BaudRate baud_rate)
 {
-    base->CR1 = (base->CR1 & ~SPI_CR1_BR_Msk) | (baud_rate << SPI_CR1_BR_Pos);
-}
-
-
-/// @brief Config 1-line or 2-line unidirectional data mode selected
-/// @param bitmode 
-void Spi::ConfigBitMode(SpiBitMode bitmode)
-{
-    base->CR1 = (base->CR1 & ~(SPI_CR1_BIDIMODE_Msk)) | (bitmode << SPI_CR1_BIDIMODE_Pos);
-}
-
-
-/// @brief Enable or disable hardware CRC calculation
-/// @param isEnableCrc 
-void Spi::ConfigCrc(bool isEnableCrc)
-{
-    base->CR1 = (base->CR1 & ~(SPI_CR1_CRCEN_Msk)) | (isEnableCrc << SPI_CR1_CRCEN_Pos);
-}
-
-
-/// @brief Configure the frame format to Motorola or TI mode
-/// @param frf 
-void Spi::ConfigFrameFormat(FrameFormat frf)
-{
-    base->CR2 = (base->CR2 & ~(SPI_CR2_FRF_Msk)) | (frf << SPI_CR2_FRF_Pos);
-}
-
-
-/// @brief Configures the threshold of the RXFIFO that triggers an RXNE event
-/// @param SpiRxThresthreshold 
-void Spi::ConfigFifoRecThreshold(RxFifoThres SpiRxThresthreshold)
-{
-    //STM32F4xx not support this function
-}
-
-
-/// @brief Enable or disable the DMA function for SPI
-/// @param isEnableTxDma 
-/// @param isEnableRxDma 
-void Spi::ConfigDma(bool isEnableTxDma, bool isEnableRxDma)
-{
-    base->CR2 = (base->CR2 & (~SPI_CR2_TXDMAEN)) | (isEnableTxDma << SPI_CR2_TXDMAEN_Pos);
-    base->CR2 = (base->CR2 & (~SPI_CR2_RXDMAEN)) | (isEnableRxDma << SPI_CR2_RXDMAEN_Pos);
+    LL_SPI_SetBaudRatePrescaler(SPIx, baud_rate);
 }
 
 
@@ -144,7 +85,7 @@ inline bool Spi::WaitForTxEmpty()
 {
     volatile uint32_t counter = 0;
 
-    while ((base->SR & SPI_SR_TXE) != SPI_SR_TXE)
+    while (!LL_SPI_IsActiveFlag_TXE(SPIx))
     {
         if (++counter >= timeout_cnt) return false;
     }
@@ -159,7 +100,7 @@ inline bool Spi::WaitForRxNotEmpty()
 {
     volatile uint32_t counter = 0;
 
-    while ((base->SR & SPI_SR_RXNE) != SPI_SR_RXNE)
+    while (!LL_SPI_IsActiveFlag_RXNE(SPIx))
     {
         if (++counter >= timeout_cnt) return false;
     }
@@ -174,7 +115,7 @@ inline bool Spi::WaitForTxCompleted()
 {
     volatile uint32_t counter = 0;
 
-    while (base->SR & SPI_SR_BSY)
+    while (LL_SPI_IsActiveFlag_BSY(SPIx))
     {
         if (++counter >= timeout_cnt) return false;
     }
@@ -189,7 +130,7 @@ inline bool Spi::WaitForTxCompleted()
 uint8_t Spi::WriteAndReadOneByte(uint8_t txData)
 {
     //Start transfer
-    base->CR1 |= SPI_CR1_MSTR;
+    LL_SPI_SetMode(SPIx, LL_SPI_MODE_MASTER);
 
     //Send one byte
     if (!WaitForTxEmpty()) return 0xff;
@@ -212,7 +153,7 @@ uint8_t Spi::WriteAndReadOneByte(uint8_t txData)
 uint16_t Spi::WriteAndReadTwoByte(uint16_t txData)
 {
     //Start transfer
-    base->CR1 |= SPI_CR1_MSTR;
+    LL_SPI_SetMode(SPIx, LL_SPI_MODE_MASTER);
 
     //Send one byte
     if (!WaitForTxEmpty()) return 0xff;
