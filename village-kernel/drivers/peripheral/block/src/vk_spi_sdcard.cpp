@@ -32,22 +32,9 @@ void SpiSdCard::SetData(void* data)
 void SpiSdCard::PinConfig()
 {
     Gpio gpio;
-
     gpio.Initialize(config.sckGpio);
-    gpio.ConfigOutputType(Gpio::_PushPull);
-    gpio.ConfigInputType(Gpio::_PullUp);
-    gpio.ConfigSpeed(Gpio::_HighSpeed);
-
     gpio.Initialize(config.mosiGpio);
-    gpio.ConfigOutputType(Gpio::_PushPull);
-    gpio.ConfigInputType(Gpio::_PullUp);
-    gpio.ConfigSpeed(Gpio::_HighSpeed);
-
     gpio.Initialize(config.misoGpio);
-    gpio.ConfigOutputType(Gpio::_PushPull);
-    gpio.ConfigInputType(Gpio::_PullUp);
-    gpio.ConfigSpeed(Gpio::_HighSpeed);
-    
     csGpio.Initialize(config.csGpio);
     dtGpio.Initialize(config.dtGpio);
 }
