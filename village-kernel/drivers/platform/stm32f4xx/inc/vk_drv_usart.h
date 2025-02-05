@@ -1,5 +1,5 @@
 //###########################################################################
-// vk_drv_ssart.h
+// vk_drv_usart.h
 // Hardware layer class that manages a USART/Serial module
 //
 // $Copyright: Copyright (C) village
@@ -7,13 +7,12 @@
 #ifndef __VK_DRV_USART_H__
 #define __VK_DRV_USART_H__
 
-#include "stm32f4xx.h"
-#include "vk_drv_gpio.h"
-
+#include "stm32f4xx_ll_usart.h"
+#include "stm32f4xx_ll_bus.h"
 
 /// @brief Usart
 class Usart
-{    
+{
 public:
     //Enumerations
     enum Channel
@@ -23,38 +22,29 @@ public:
         _Usart3 = 3,
     };
 
-    //Enumerations
     enum DataBits
     {
-        _8Bits = 0,
-        _9Bits = 1,
+        _8Bits = LL_USART_DATAWIDTH_8B,
+        _9Bits = LL_USART_DATAWIDTH_9B,
     };
 
     enum Parity
     {
-        _NoParity = 0,
-        _Parity = 1,
+        _NoParity = LL_USART_PARITY_NONE,
+        _Parity = LL_USART_PARITY_EVEN,
     };
 
     enum StopBits
     {
-        _1Stop = 0b00,
-        _HalfStop = 0b01,
-        _2Stop = 0b10,
-        _1AndHalfStop = 0b11,
+        _1Stop = LL_USART_STOPBITS_1,
+        _HalfStop = LL_USART_STOPBITS_0_5,
+        _2Stop = LL_USART_STOPBITS_2,
+        _1AndHalfStop = LL_USART_STOPBITS_1_5,
     };
-
-    //Structures
-    struct PinConfig
-    {
-        Gpio::GpioChannel ch;
-        uint16_t pin;
-        uint16_t alt;
-    };    
 private:
     //Members
-    volatile USART_TypeDef* base;
-    volatile Channel channel;
+    USART_TypeDef* UARTx;
+    Channel channel;
 public:
     //Methods
     Usart();
@@ -69,31 +59,31 @@ public:
     int Read(uint8_t* data, uint32_t size, uint32_t offset);
 
     ///Enables operation of the USART peripheral
-    inline void Enable() { base->CR1 |= USART_CR1_UE; }
+    inline void Enable() { LL_USART_Enable(UARTx); }
 
     ///Disables operation of the USART peripheral
-    inline void Disable() { base->CR1 &= ~USART_CR1_UE; }
+    inline void Disable() { LL_USART_Disable(UARTx); }
 
     ///Gets the address of the transmit data register
-    inline uint32_t* GetTxAddr() { return (uint32_t*)&(base->DR); }
+    inline uint32_t* GetTxAddr() { return (uint32_t*)&(UARTx->DR); }
 
     ///Gets the address of the receive data register
-    inline uint32_t* GetRxAddr() { return (uint32_t*)&(base->DR); }
+    inline uint32_t* GetRxAddr() { return (uint32_t*)&(UARTx->DR); }
 
     ///Checks for Framing Errors
-    inline bool CheckFramingError() { return (base->SR & USART_SR_FE_Msk); }
+    inline bool CheckFramingError() { return LL_USART_IsActiveFlag_FE(UARTx); }
 
     ///Clears the Framing Error flag
-    inline void ClearFramingError() { base->SR |= USART_SR_FE_Msk; }
+    inline void ClearFramingError() { LL_USART_ClearFlag_FE(UARTx); }
 
     ///Clears the receiver timeout flag, not support
-    inline void ClearReceiverTimeoutFlag() {  }
+    inline void ClearReceiverTimeoutFlag() { }
 
     ///Check if the send register is empty
-    inline bool IsTxRegisterEmpty() { return bool(base->SR & USART_SR_TXE_Msk); }
+    inline bool IsTxRegisterEmpty() { return LL_USART_IsActiveFlag_TXE(UARTx); }
 
     ///Check if the read date register not empty
-    inline bool IsReadDataRegNotEmpty() { return bool(base->SR & USART_SR_RXNE_Msk); }
+    inline bool IsReadDataRegNotEmpty() { return LL_USART_IsActiveFlag_RXNE(UARTx); }
 
     ///Check if receiver timeout, not support
     inline bool IsReceiverTimeout() { return false; }

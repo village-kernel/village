@@ -9,7 +9,7 @@
 
 /// @brief Constructor
 Usart::Usart()
-    : base(__null),
+    : UARTx(NULL),
     channel(_Usart1)
 {
 }
@@ -22,35 +22,26 @@ void Usart::Initialize(Channel channel)
     //Get uart channel
     this->channel = channel;
 
-    //assign the base pointer and enable the peripheral clock
-    //also configure clock source to SYSCLK
+    //Assign the UARTx pointer and enable the peripheral clock
     if (_Usart1 == channel)
     {
-        RCC->APB2RSTR |= RCC_APB2RSTR_USART1RST;
-        RCC->APB2RSTR &= ~RCC_APB2RSTR_USART1RST;
-
-        RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
-        base = USART1;
+        LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_USART1);
+        UARTx = USART1;
     }
     else if (_Usart2 == channel)
     {
-        RCC->APB1RSTR |= RCC_APB1RSTR_USART2RST;
-        RCC->APB1RSTR &= ~RCC_APB1RSTR_USART2RST;
-
-        RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
-        base = USART2;
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
+        UARTx = USART2;
     }
     else if (_Usart3 == channel)
     {
-        RCC->APB1RSTR |= RCC_APB1RSTR_USART3RST;
-        RCC->APB1RSTR &= ~RCC_APB1RSTR_USART3RST;
-        
-        RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
-        base = USART3;
+        LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART3);
+        UARTx = USART3;
     }
 
     //Enable Receiver and Transmitter
-    base->CR1 |= USART_CR1_RE_Msk | USART_CR1_TE_Msk;
+    LL_USART_SetTransferDirection(UARTx, LL_USART_DIRECTION_TX_RX);
+    LL_USART_Enable(UARTx);
 }
 
 
@@ -61,29 +52,17 @@ void Usart::Initialize(Channel channel)
 void Usart::ConfigPortSettings(DataBits dataBits, Parity parity, StopBits stopBits)
 {
     //Configure word size
-    if (_9Bits == dataBits)
-    {
-        base->CR1 |= USART_CR1_M;
-    }
-    else if (_8Bits == dataBits)
-    {
-        base->CR1 &= ~USART_CR1_M;
-    }
+    LL_USART_SetDataWidth(UARTx, dataBits);
 
     //Configure parity
-    if (_Parity == parity)
-        base->CR1 |= USART_CR1_PCE;
-    else
-        base->CR1 &= ~USART_CR1_PCE;
+    LL_USART_SetParity(UARTx, parity);
 
     //Configure stop bits
-    base->CR2 = (base->CR2 & ~USART_CR2_STOP_Msk) | (stopBits << USART_CR2_STOP_Pos);
+    LL_USART_SetStopBitsLength(UARTx, stopBits);
 }
 
 
 /// @brief Sets the baud rate of the serial bus
-///        baudRate indicates the desired baudRate
-///        over8 indicates the whether oversampling by 8 will be used (otherwise oversampling of 16)
 /// @param baudRate 
 /// @param over8 
 void Usart::SetBaudRate(uint32_t baudRate, bool over8)
@@ -91,28 +70,25 @@ void Usart::SetBaudRate(uint32_t baudRate, bool over8)
     //Calculate the pclk1 frequency
     uint32_t PCLKFreq = 0;
 
-    if (1 == channel || 6 == channel)
+    if (_Usart1 == channel || 6 == channel)
     {
-        uint32_t tmp = APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE2) >> RCC_CFGR_PPRE2_Pos];
-        PCLKFreq = SystemCoreClock >> tmp;
+        PCLKFreq = SystemCoreClock >> (APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE2) >> RCC_CFGR_PPRE2_Pos]);
     }
     else
     {
-        uint32_t tmp = APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE1) >> RCC_CFGR_PPRE1_Pos];
-        PCLKFreq = SystemCoreClock >> tmp;
+        PCLKFreq = SystemCoreClock >> (APBPrescTable[(RCC->CFGR & RCC_CFGR_PPRE1) >> RCC_CFGR_PPRE1_Pos]);
     }
 
-    //Calculate the baudrate of 8x Oversampling
+    //Set baud rate
     if (over8)
     {
-        base->CR1 |= USART_CR1_OVER8;
-        base->BRR = (PCLKFreq * 2 + baudRate / 2) / baudRate;
+        LL_USART_SetOverSampling(UARTx, LL_USART_OVERSAMPLING_8);
+        UARTx->BRR = (PCLKFreq * 2 + baudRate / 2) / baudRate;
     }
-    //Calculate the baudrate of 16x Oversampling 
     else
     {
-        base->CR1 &= ~USART_CR1_OVER8;
-        base->BRR = (PCLKFreq + baudRate / 2) / baudRate;
+        LL_USART_SetOverSampling(UARTx, LL_USART_OVERSAMPLING_16);
+        UARTx->BRR = (PCLKFreq + baudRate / 2) / baudRate;
     }
 }
 
@@ -122,7 +98,7 @@ void Usart::SetBaudRate(uint32_t baudRate, bool over8)
 /// @param polarity 
 void Usart::ConfigDriverEnableMode(bool usingDEM, bool polarity)
 {
-    //unsupport
+    //Unsupported
 }
 
 
@@ -132,7 +108,7 @@ void Usart::ConfigDriverEnableMode(bool usingDEM, bool polarity)
 /// @param blen 
 void Usart::ConfigReceiverTimeout(bool enable, uint32_t rto, uint8_t blen)
 {
-    //unsupport
+    //Unsupported
 }
 
 
@@ -141,11 +117,15 @@ void Usart::ConfigReceiverTimeout(bool enable, uint32_t rto, uint8_t blen)
 /// @param dmaRxEnable 
 void Usart::ConfigDma(bool dmaTxEnable, bool dmaRxEnable)
 {
-    if (dmaTxEnable) base->CR3 |= USART_CR3_DMAT;
-    else base->CR3 &= ~USART_CR3_DMAT;
+    if (dmaTxEnable)
+        LL_USART_EnableDMAReq_TX(UARTx);
+    else
+        LL_USART_DisableDMAReq_TX(UARTx);
 
-    if (dmaRxEnable) base->CR3 |= USART_CR3_DMAR;
-    else base->CR3 &= ~USART_CR3_DMAR;
+    if (dmaRxEnable)
+        LL_USART_EnableDMAReq_RX(UARTx);
+    else
+        LL_USART_DisableDMAReq_RX(UARTx);
 }
 
 
@@ -164,7 +144,7 @@ int Usart::Write(uint8_t* data, uint32_t size, uint32_t offset)
     {
         if (IsTxRegisterEmpty())
         {
-            base->DR = *data++;
+            LL_USART_TransmitData8(UARTx, *data++);
             loop--;
         }
     }
@@ -186,7 +166,7 @@ int Usart::Read(uint8_t* data, uint32_t size, uint32_t offset)
 
     while (IsReadDataRegNotEmpty())
     {
-        *data++ = base->DR;
+        *data++ = LL_USART_ReceiveData8(UARTx);
         if (++length >= size) break;
     }
 
@@ -197,8 +177,12 @@ int Usart::Read(uint8_t* data, uint32_t size, uint32_t offset)
 /// @brief Check error
 void Usart::CheckError()
 {
-    if (base->SR & (USART_SR_PE | USART_SR_FE | USART_SR_NE | USART_SR_ORE))
+    if (LL_USART_IsActiveFlag_PE(UARTx) || LL_USART_IsActiveFlag_FE(UARTx) ||
+        LL_USART_IsActiveFlag_NE(UARTx) || LL_USART_IsActiveFlag_ORE(UARTx))
     {
-        base->SR = (USART_SR_PE | USART_SR_FE | USART_SR_NE | USART_SR_ORE);
+        LL_USART_ClearFlag_PE(UARTx);
+        LL_USART_ClearFlag_FE(UARTx);
+        LL_USART_ClearFlag_NE(UARTx);
+        LL_USART_ClearFlag_ORE(UARTx);
     }
 }
