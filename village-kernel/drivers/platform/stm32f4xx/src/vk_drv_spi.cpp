@@ -56,7 +56,6 @@ void Spi::ConfigModeAndPins(MasterSel MasterSelection, Mode cpolCphaMode)
     if (MasterSelection == _Master)
     {
         LL_SPI_SetNSSMode(SPIx, LL_SPI_NSS_SOFT);
-        //LL_SPI_SetInternalSSLevel(SPIx, LL_SPI_SS_ACTIVE_LOW);
     }
 }
 
