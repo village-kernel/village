@@ -32,22 +32,9 @@ void SpiW25qxx::SetData(void* data)
 inline void SpiW25qxx::PinConfig()
 {
     Gpio gpio;
-
     gpio.Initialize(config.sckGpio);
-    gpio.ConfigOutputType(Gpio::_PushPull);
-    gpio.ConfigInputType(Gpio::_PullUp);
-    gpio.ConfigSpeed(Gpio::_HighSpeed);
-
     gpio.Initialize(config.mosiGpio);
-    gpio.ConfigOutputType(Gpio::_PushPull);
-    gpio.ConfigInputType(Gpio::_PullUp);
-    gpio.ConfigSpeed(Gpio::_HighSpeed);
-
     gpio.Initialize(config.misoGpio);
-    gpio.ConfigOutputType(Gpio::_PushPull);
-    gpio.ConfigInputType(Gpio::_PullUp);
-    gpio.ConfigSpeed(Gpio::_HighSpeed);
-
     csGpio.Initialize(config.csGpio);
     wpGpio.Initialize(config.wpGpio);
 }
