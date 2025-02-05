@@ -12,12 +12,12 @@
 void SdioSdCardDev::Config()
 {
     config = {
-        .d0Gpio  = { Gpio::_ChC, 8,  Gpio::_Altera, 12, 0 },
-        .d1Gpio  = { Gpio::_ChC, 9,  Gpio::_Altera, 12, 0 },
-        .d2Gpio  = { Gpio::_ChC, 10, Gpio::_Altera, 12, 0 },
-        .d3Gpio  = { Gpio::_ChC, 11, Gpio::_Altera, 12, 0 },
-        .ckGpio  = { Gpio::_ChC, 12, Gpio::_Altera, 12, 0 },
-        .cmdGpio = { Gpio::_ChD, 2,  Gpio::_Altera, 12, 0 },
+        .d0Gpio  = { Gpio::_ChC, Gpio::_Pin8,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .d1Gpio  = { Gpio::_ChC, Gpio::_Pin9,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .d2Gpio  = { Gpio::_ChC, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .d3Gpio  = { Gpio::_ChC, Gpio::_Pin11, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .ckGpio  = { Gpio::_ChC, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+        .cmdGpio = { Gpio::_ChD, Gpio::_Pin2,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
     };
     driverData = (void*)&config;
     driverName = (char*)"disk0";
@@ -34,8 +34,8 @@ void Stm32UartDev::Config()
         .enableRTS = false,
         .enableDMA = true,
 
-        .txGpio = { Gpio::_ChA, 9,  Gpio::_Altera, 7, 0 },
-        .rxGpio = { Gpio::_ChA, 10, Gpio::_Altera, 7, 0 },
+        .txGpio = { Gpio::_ChA, Gpio::_Pin9,  Gpio::_Altera, Gpio::_AF7, Gpio::_Low },
+        .rxGpio = { Gpio::_ChA, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF7, Gpio::_Low },
         .deGpio = { 0, 0, 0, 0, 0 },
 
         .txDma = { Dma::_Group1, Dma::_Stream2, 42, Dma::_MemoryToPeriph, 0 },
