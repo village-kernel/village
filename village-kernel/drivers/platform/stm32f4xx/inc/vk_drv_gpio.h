@@ -2,26 +2,21 @@
 // vk_drv_gpio.h
 // Hardware Layer class that manages a single GPIO pin
 //
-// $Copyright: Copyright (C) villlage
+// $Copyright: Copyright (C) village
 //###########################################################################
 #ifndef __VK_DRV_GPIO_H__
 #define __VK_DRV_GPIO_H__
 
-#include "stm32f4xx.h"
-
+#include "stm32f4xx_ll_gpio.h"
+#include "stm32f4xx_ll_bus.h"
 
 /// @brief Gpio
 class Gpio
 {
 protected:
-    //Static Constants
-    static const uint32_t baseRegOffset = 0x400;
-    static const uint16_t maxFourBitPin = 8;
-
     //Members
-    volatile GPIO_TypeDef* baseReg;
-    uint32_t bitMask;
-    uint16_t pinNum;
+    GPIO_TypeDef* GPIOx;
+    uint32_t GPIO_PIN_x;
 public:
     //Enumerations
     enum GpioChannel
@@ -35,38 +30,78 @@ public:
         _ChG = 6,
     };
 
-    enum GpioMode
-    {
-        _Input  = 0b00,
-        _Output = 0b01,
-        _Altera = 0b10,
-        _Analog = 0b11,
+    enum GpioPin
+    { 
+        _Pin0  = GPIO_BSRR_BS_0,
+        _Pin1  = GPIO_BSRR_BS_1,
+        _Pin2  = GPIO_BSRR_BS_2,
+        _Pin3  = GPIO_BSRR_BS_3,
+        _Pin4  = GPIO_BSRR_BS_4,
+        _Pin5  = GPIO_BSRR_BS_5,
+        _Pin6  = GPIO_BSRR_BS_6,
+        _Pin7  = GPIO_BSRR_BS_7,
+        _Pin8  = GPIO_BSRR_BS_8,
+        _Pin9  = GPIO_BSRR_BS_9,
+        _Pin10 = GPIO_BSRR_BS_10,
+        _Pin11 = GPIO_BSRR_BS_11,
+        _Pin12 = GPIO_BSRR_BS_12,
+        _Pin13 = GPIO_BSRR_BS_13,
+        _Pin14 = GPIO_BSRR_BS_14,
+        _Pin15 = GPIO_BSRR_BS_15,
     };
 
     enum GpioState
     {
-        _Low = 0,
-        _High = 1,
+        _Low = GPIO_PIN_RESET,
+        _High = GPIO_PIN_SET,
+    };
+
+    enum GpioMode
+    {
+        _Input  = LL_GPIO_MODE_INPUT,
+        _Output = LL_GPIO_MODE_OUTPUT,
+        _Altera = LL_GPIO_MODE_ALTERNATE,
+        _Analog = LL_GPIO_MODE_ANALOG,
     };
 
     enum GpioOutType
     {
-        _PushPull = 0,
-        _OpenDrain = 1,
+        _PushPull = LL_GPIO_OUTPUT_PUSHPULL,
+        _OpenDrain = LL_GPIO_OUTPUT_OPENDRAIN,
     };
 
-    enum GpioInputType
+    enum GpioPullType
     {
-        _NoPull   = 0b00,
-        _PullUp   = 0b01,
-        _PullDown = 0b10,
+        _NoPull   = LL_GPIO_PULL_NO,
+        _PullUp   = LL_GPIO_PULL_UP,
+        _PullDown = LL_GPIO_PULL_DOWN,
+    };
+
+    enum GpioAlternate
+    {
+        _AF0   = 0,
+        _AF1   = 1,
+        _AF2   = 2,
+        _AF3   = 3,
+        _AF4   = 4,
+        _AF5   = 5,
+        _AF6   = 6,
+        _AF7   = 7,
+        _AF8   = 8,
+        _AF9   = 9,
+        _AF10  = 10,
+        _AF11  = 11,
+        _AF12  = 12,
+        _AF13  = 13,
+        _AF14  = 14,
+        _AF15  = 15,
     };
 
     enum GpioSpeed
     {
-        _LowSpeed  = 0b00,
-        _MedSpeed  = 0b01,
-        _HighSpeed = 0b11,
+        _LowSpeed  = LL_GPIO_SPEED_FREQ_LOW,
+        _MedSpeed  = LL_GPIO_SPEED_FREQ_MEDIUM,
+        _HighSpeed = LL_GPIO_SPEED_FREQ_HIGH,
     };
 
     struct Config
@@ -77,45 +112,36 @@ public:
         uint16_t altfun;
         uint16_t value;
     };
-private:
-    ///Returns the mask used for register manipulation
-    inline uint32_t BitMask() { return bitMask; }
-
-    ///Returns the mask used for double bit register manipulation
-    inline uint32_t DoubleBitMask() { return 0b11 << (pinNum * 2); }
 public:
     //Methods
     Gpio();
     void Initialize(Config config);
     void ConfigMode(GpioMode mode);
-    void ConfigInputType(GpioInputType inputType);
+    void ConfigPullType(GpioPullType pullType);
     void ConfigOutputType(GpioOutType outputType);
-    void ConfigAltFunc(uint8_t altMode);
+    void ConfigAltFunc(GpioAlternate altMode);
     void ConfigSpeed(GpioSpeed speed);
 
-    ///Reads the value of the pin
-    inline uint32_t Read() { return (baseReg->IDR >> pinNum) & 0x1; }
-
-    ///Slightly more efficient than Read() but a logic high read may be any non-zero value
-    inline uint32_t ReadRaw() { return baseReg->IDR & bitMask; }
-
     ///Drives the pin high
-    inline void Set() { baseReg->BSRR = bitMask; }
+    inline void Set() { LL_GPIO_SetOutputPin(GPIOx, GPIO_PIN_x); }
 
     ///Drives the pin low
-    inline void Clear() { baseReg->BSRR = (bitMask << 16); }
+    inline void Clear() { LL_GPIO_ResetOutputPin(GPIOx, GPIO_PIN_x); }
 
     ///Toggles the pin value
-    inline void Toggle() { if (_Low == GetOutputState()) Set(); else Clear(); }
+    inline void Toggle() { LL_GPIO_TogglePin(GPIOx, GPIO_PIN_x); }
 
     ///Writes a specified state into the pin
-    inline void Write(GpioState state) { if (_Low == state) Clear(); else Set(); }
+    inline void Write(GpioState state) { (state == _High) ? Set() : Clear(); }
+
+    ///Reads the value of the pin
+    inline uint32_t Read() { return LL_GPIO_IsInputPinSet(GPIOx, GPIO_PIN_x); }
 
     ///Gets the current input state
-    inline GpioState GetInputState() { return (GpioState)((baseReg->IDR >> pinNum) & 0x1); }
+    inline GpioState GetInputState() { return (GpioState)LL_GPIO_IsInputPinSet(GPIOx, GPIO_PIN_x); }
 
     ///Gets the current output state
-    inline GpioState GetOutputState() { return (GpioState)((baseReg->ODR >> pinNum) & 0x1); }
+    inline GpioState GetOutputState() { return (GpioState)LL_GPIO_IsOutputPinSet(GPIOx, GPIO_PIN_x); }
 };
 
 #endif //!__VK_DRV_GPIO_H__
