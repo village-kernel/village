@@ -30,5 +30,14 @@ extern "C" void HAL_Delay(uint32_t Delay)
 /// @return 
 extern "C" uint32_t HAL_GetTick(void)
 {
-  return kernel->system.GetSysClkCounts();;
+    return kernel->system.GetSysClkCounts();;
+}
+
+
+/// @brief Override Error_Handler()
+/// @param  
+extern "C" void Error_Handler(void) 
+{
+    kernel->debug.Error("HAL Error!");
+	while(1) {}
 }
