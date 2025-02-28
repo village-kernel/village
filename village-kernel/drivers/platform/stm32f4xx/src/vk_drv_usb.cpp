@@ -484,28 +484,68 @@ void* Usb::ReadPacket(uint8_t* data, uint16_t len)
 
 
 /// @brief 
-void Usb::HandleRxQLevelRequest()
+/// @param buffer 
+/// @param len 
+/// @return 
+uint16_t Usb::ReceiveData(uint8_t *buffer, uint16_t len)
 {
-    if (CheckInterruptFlag(USB_OTG_GINTSTS_RXFLVL))
-    {
-        MaskInterrupt(USB_OTG_GINTSTS_RXFLVL);
+    uint32_t rxstatus = USB_OTG_FS->GRXSTSP;
+    uint8_t  endpoint = (rxstatus & USB_OTG_GRXSTSP_EPNUM_Msk) >> USB_OTG_GRXSTSP_EPNUM_Pos;
+    uint16_t pktlen   = (rxstatus & USB_OTG_GRXSTSP_BCNT_Msk) >> USB_OTG_GRXSTSP_BCNT_Pos;
+    uint16_t receivedLen = (pktlen <= len) ? pktlen : len;
 
-        UnmaskInterrupt(USB_OTG_GINTSTS_RXFLVL);
+    ReadPacket(buffer, receivedLen);
+
+    return receivedLen;
+}
+
+
+/// @brief 
+/// @param data 
+/// @param len 
+void Usb::ProcessData(uint8_t* data, uint32_t len)
+{
+
+}
+
+
+/// @brief 
+void Usb::RxQLevelHandler()
+{
+    if (USB_OTG_FS->GINTSTS & USB_OTG_GINTSTS_RXFLVL) {
+       
+        uint8_t data[64] = { 0 };
+        uint16_t len = ReceiveData(data, 64);
+        if (len > 0)
+        {
+            ProcessData(data, len);
+        }
+        USB_OTG_FS->GINTSTS = USB_OTG_GINTSTS_RXFLVL;
     }
 }
 
 
 /// @brief 
-void Usb::HandleOutEndpointRequest()
+void Usb::OutEndpointHandler()
 {
 
 }
 
 
 /// @brief 
-void Usb::HandleInEndpointRequest()
+void Usb::InEndpointHandler()
 {
 
+}
+
+
+/// @brief 
+void Usb::ResetHandler()
+{
+    if (USB_OTG_FS->GINTSTS & USB_OTG_GINTSTS_USBRST)
+    {
+        USB_OTG_FS->GINTSTS = USB_OTG_GINTSTS_USBRST;
+    }
 }
 
 
@@ -516,10 +556,12 @@ void Usb::IRQHandler()
     {
         if (0 == GetInterruptState()) return;
 
-        HandleRxQLevelRequest();
+        RxQLevelHandler();
 
-        HandleOutEndpointRequest();
+        OutEndpointHandler();
 
-        HandleInEndpointRequest();
+        InEndpointHandler();
+
+        ResetHandler();
     }
 }

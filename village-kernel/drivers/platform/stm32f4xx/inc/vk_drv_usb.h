@@ -75,9 +75,13 @@ public:
     void WritePacket(uint8_t* data, uint8_t epnum, uint16_t len);
     void* ReadPacket(uint8_t* data, uint16_t len);
 
-    void HandleRxQLevelRequest();
-    void HandleOutEndpointRequest();
-    void HandleInEndpointRequest();
+    uint16_t ReceiveData(uint8_t *buffer, uint16_t len);
+    void ProcessData(uint8_t* data, uint32_t len);
+
+    void RxQLevelHandler();
+    void OutEndpointHandler();
+    void InEndpointHandler();
+    void ResetHandler();
     void IRQHandler();
 };
 
