@@ -24,6 +24,9 @@ ConcreteScheduler::~ConcreteScheduler()
 /// @brief Scheduler Setup
 void ConcreteScheduler::Setup()
 {
+    //Replace the SVC interrupt handler
+    kernel->interrupt.Replace(SVCall_IRQn, (uint32_t)&ConcreteScheduler::SVCHandler);
+
     //Replace the PendSV interrupt handler
     kernel->interrupt.Replace(PendSV_IRQn, (uint32_t)&ConcreteScheduler::PendSVHandler);
 
@@ -66,6 +69,11 @@ void ConcreteScheduler::Start()
     __asm volatile("orr r0, r0, #2");
     __asm volatile("msr control, r0");
 
+	//Move to Unprivileged level, Set bit[0] nPRIV
+    __asm volatile("mrs r0, control");
+    __asm volatile("orr r0, r0, #1");
+    __asm volatile("msr control, r0");
+
     //Set start schedule flag
     isStartSchedule = true;
 
@@ -75,8 +83,17 @@ void ConcreteScheduler::Start()
 
 
 /// @brief Rescheduler task
-/// @param access scheduler access
 void ConcreteScheduler::Sched()
+{
+    if (!isStartSchedule) return;
+
+    //Call Supervisor exception to get Privileged access
+    __asm volatile("SVC #255");
+}
+
+
+/// @brief Systick handler
+void ConcreteScheduler::SysTickHandler(void)
 {
     if (!isStartSchedule) return;
 
@@ -85,10 +102,36 @@ void ConcreteScheduler::Sched()
 }
 
 
-/// @brief Systick handler
-void ConcreteScheduler::SysTickHandler(void)
+/// @brief Execute task requests
+/// @param sp stack pointer
+void ConcreteScheduler::TaskOperator(uint32_t* sp)
 {
-    Sched();
+    //Get the address of the instruction saved in PC
+    uint8_t *pInstruction = (uint8_t*)(sp[6]);
+
+    //Go back 2 bytes (16-bit opcode)
+    pInstruction -= 2;
+
+    //Get the opcode, in little endian
+    uint8_t svcNumber = *pInstruction;
+
+    //It is in exception interrupted state
+    if (0xff == svcNumber)
+    {
+        //Trigger PendSV
+        SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
+    }
+}
+
+
+/// @brief SVC Handler
+void __attribute__ ((naked)) ConcreteScheduler::SVCHandler()
+{
+    __asm volatile("tst lr, 4");        // check LR to know which stack is used
+    __asm volatile("ite eq");           // 2 next instructions are conditional
+    __asm volatile("mrseq r0, msp");    // save MSP if bit 2 is 0
+    __asm volatile("mrsne r0, psp");    // save PSP if bit 2 is 1
+    __asm volatile("b _ZN17ConcreteScheduler12TaskOperatorEPm");   // pass R0 as the argument
 }
 
 

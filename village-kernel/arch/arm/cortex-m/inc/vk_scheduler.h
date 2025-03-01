@@ -21,6 +21,8 @@ private:
     void SysTickHandler();
 
     /// @brief Static Methods
+    static void TaskOperator(uint32_t* sp);
+    static void SVCHandler();
     static void PendSVHandler();
 public:
     /// @brief Methods
