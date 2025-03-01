@@ -59,10 +59,12 @@ void Gpio::Initialize(Config config)
     // Set the correct mode
     ConfigMode((GpioMode)config.mode);
 
-    // Set the correct type
+    // Set the output type
     if (_Output == config.mode || _Altera == config.mode)
         ConfigOutputType(_PushPull);
-    else if (_Input == config.mode || _Altera == config.mode)
+    
+    // Set the pull type
+    if (_Input == config.mode || _Altera == config.mode)
         ConfigPullType(_PullUp);
 
     // Set the correct value
