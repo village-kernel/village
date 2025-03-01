@@ -30,6 +30,7 @@ SVCS_DIR      := $(BUILD_DIR)/output/services
 include $(WORKSPACE)/Makefile.rules
 include $(WORKSPACE)/village-boot/Makefile
 include $(WORKSPACE)/village-kernel/Makefile
+include $(WORKSPACE)/village-machine/Makefile
 include $(WORKSPACE)/village-demo/Makefile
 
 

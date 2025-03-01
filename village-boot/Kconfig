@@ -1,3 +1,5 @@
+comment "This is using to configure boot"
+
 # bootloader
 config BOOTLOADER
 	bool "Enable bootloader function"

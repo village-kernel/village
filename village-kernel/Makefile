@@ -196,25 +196,3 @@ endif
 ifdef CONFIG_TASK_STACK
 CFLAGS    += -DTASK_STACK=$(CONFIG_TASK_STACK)
 endif
-
-
-######################################
-# includes
-######################################
-# drivers
-include village-kernel/drivers/Makefile
-
-## stm32f4xx
-ifeq ($(CONFIG_STM32F4xx), y)
-include village-kernel/vklibs/libhw/stm32f4xx/Makefile
-endif
-
-## stm32h7xx
-ifeq ($(CONFIG_STM32H7xx), y)
-include village-kernel/vklibs/libhw/stm32h7xx/Makefile
-endif
-
-## ia32legacy
-ifeq ($(CONFIG_IA32LEGACY), y)
-include village-kernel/vklibs/libhw/ia32legacy/Makefile
-endif

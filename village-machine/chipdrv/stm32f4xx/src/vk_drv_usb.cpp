@@ -490,7 +490,7 @@ void* Usb::ReadPacket(uint8_t* data, uint16_t len)
 uint16_t Usb::ReceiveData(uint8_t *buffer, uint16_t len)
 {
     uint32_t rxstatus = USB_OTG_FS->GRXSTSP;
-    uint8_t  endpoint = (rxstatus & USB_OTG_GRXSTSP_EPNUM_Msk) >> USB_OTG_GRXSTSP_EPNUM_Pos;
+    //uint8_t  endpoint = (rxstatus & USB_OTG_GRXSTSP_EPNUM_Msk) >> USB_OTG_GRXSTSP_EPNUM_Pos;
     uint16_t pktlen   = (rxstatus & USB_OTG_GRXSTSP_BCNT_Msk) >> USB_OTG_GRXSTSP_BCNT_Pos;
     uint16_t receivedLen = (pktlen <= len) ? pktlen : len;
 

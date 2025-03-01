@@ -18,9 +18,9 @@ MCU       := -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard
 DEFS      := -DARCH_ARM -DUSE_HAL_DRIVER -DSTM32F407xx -D'HSE_VALUE=((uint32_t)8000000)'
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG)            := -T village-kernel/vklibs/libhw/stm32f4xx/lds/STM32F405RG_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE)            := -T village-kernel/vklibs/libhw/stm32f4xx/lds/STM32F407ZE_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG)            := -T village-kernel/vklibs/libhw/stm32f4xx/lds/STM32F407ZG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F405RG)            := -T village-machine/vendor/stm32f4xx/lds/STM32F405RG_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZE)            := -T village-machine/vendor/stm32f4xx/lds/STM32F407ZE_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32F407ZG)            := -T village-machine/vendor/stm32f4xx/lds/STM32F407ZG_flash.ld
 
 
 #######################################
@@ -46,11 +46,11 @@ LDFLAGS-KERNEL                                   += -Wl,-static -pie
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/stm32f4xx/cmsis
-inc-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/stm32f4xx/core/inc
+inc-$(CONFIG_STM32F4xx)                          += village-machine/vendor/stm32f4xx/cmsis
+inc-$(CONFIG_STM32F4xx)                          += village-machine/vendor/stm32f4xx/core/inc
 
-src-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/stm32f4xx/core/src
-src-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/stm32f4xx/crt0
+src-$(CONFIG_STM32F4xx)                          += village-machine/vendor/stm32f4xx/core/src
+src-$(CONFIG_STM32F4xx)                          += village-machine/vendor/stm32f4xx/crt0
 
 
 ######################################
@@ -91,9 +91,9 @@ libs-y                                           += hw
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/stm32f4xx/hal/inc
-inc-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/stm32f4xx/hal/inc/Legacy
-src-$(CONFIG_STM32F4xx)                          += village-kernel/vklibs/libhw/stm32f4xx/hal/src
+inc-$(CONFIG_STM32F4xx)                          += village-machine/vendor/stm32f4xx/hal/inc
+inc-$(CONFIG_STM32F4xx)                          += village-machine/vendor/stm32f4xx/hal/inc/Legacy
+src-$(CONFIG_STM32F4xx)                          += village-machine/vendor/stm32f4xx/hal/src
 
 
 ######################################

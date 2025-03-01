@@ -23,8 +23,8 @@ DEFS      += -DSTM32H750xx
 endif
 
 # link script
-LDSCRIPT-KERNEL-$(CONFIG_STM32H743II)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H743II_flash.ld
-LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-kernel/vklibs/libhw/stm32h7xx/lds/STM32H750VB_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H743II)            := -T village-machine/vendor/stm32h7xx/lds/STM32H743II_flash.ld
+LDSCRIPT-KERNEL-$(CONFIG_STM32H750VB)            := -T village-machine/vendor/stm32h7xx/lds/STM32H750VB_flash.ld
 
 
 #######################################
@@ -50,11 +50,11 @@ LDFLAGS-KERNEL                                   += -Wl,-static -pie
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/cmsis
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/core/inc
+inc-$(CONFIG_STM32H7xx)                          += village-machine/vendor/stm32h7xx/cmsis
+inc-$(CONFIG_STM32H7xx)                          += village-machine/vendor/stm32h7xx/core/inc
 
-src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/core/src
-src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/crt0
+src-$(CONFIG_STM32H7xx)                          += village-machine/vendor/stm32h7xx/core/src
+src-$(CONFIG_STM32H7xx)                          += village-machine/vendor/stm32h7xx/crt0
 
 
 ######################################
@@ -94,9 +94,9 @@ libs-y                                           += hw
 ######################################
 # paths
 ######################################
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/hal/inc
-inc-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/hal/inc/Legacy
-src-$(CONFIG_STM32H7xx)                          += village-kernel/vklibs/libhw/stm32h7xx/hal/src
+inc-$(CONFIG_STM32H7xx)                          += village-machine/vendor/stm32h7xx/hal/inc
+inc-$(CONFIG_STM32H7xx)                          += village-machine/vendor/stm32h7xx/hal/inc/Legacy
+src-$(CONFIG_STM32H7xx)                          += village-machine/vendor/stm32h7xx/hal/src
 
 
 ######################################
