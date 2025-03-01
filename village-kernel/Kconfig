@@ -108,6 +108,101 @@ if KERNEL
 
 	endmenu
 
+	menu "misc"
+
+		menu "lock"
+
+		comment "This is using to configure sync"
+
+		config LOCK
+			bool "Enable synchronizes function"
+			default y
+
+		config MUTEX
+			depends on LOCK
+			bool "Enable mutex lock support"
+			default y
+
+		config SPINLOCK
+			depends on LOCK
+			bool "Enable spin lock support"
+			default y
+
+		config SEMAPHORE
+			depends on LOCK
+			bool "Enable semaphore support"
+			default y
+
+		endmenu
+
+		menu "model"
+
+		comment "This is using to configure model"
+
+		config MODEL
+			bool "Enable design mode function"
+			default y
+
+		endmenu
+
+		menu "parser"
+
+		comment "This is using to configure parser"
+
+		config PARSER
+			bool "Enable parser support"
+			default y
+
+		config INIPARSER
+			depends on PARSER
+			select FILESTREAM
+			bool "Enable ini file parser function"
+			default n
+
+		config RCPARSER
+			depends on PARSER
+			select FILESTREAM
+			bool "Enable resource script parser function"
+			default y
+
+		config REGEX
+			depends on PARSER
+			bool "Enable regex function"
+			default y
+
+		endmenu
+
+		menu "stream"
+
+		comment "This is using to configure stream"
+
+		config STREAM
+			bool "Enable file utils support"
+			default y
+
+		config DEVSTREAM
+			depends on STREAM
+			bool "Enable devstream function"
+			default y
+
+		config DIRSTREAM
+			depends on STREAM
+			bool "Enable dirstream function"
+			default y
+
+		config FILESTREAM
+			depends on STREAM
+			bool "Enable filestream function"
+			default y
+
+		config FILESYSOPT
+			depends on STREAM
+			bool "Enable filesysopt function"
+			default y
+
+		endmenu
+
+	endmenu
 
 	# config protocol stack
 
@@ -139,19 +234,19 @@ if KERNEL
 		default y
 
 	config CMD_CAT
-		bool "Add cat system cmd to terminal support list"
+		bool "Add cat cmd to terminal support list"
 		default y
 
 	config CMD_DEBUG
-		bool "Add debug system cmd to terminal support list"
+		bool "Add debug cmd to terminal support list"
 		default y
 
 	config CMD_DEVICE
-		bool "Add device system cmd to terminal support list"
+		bool "Add device cmd to terminal support list"
 		default y
 
 	config CMD_ECHO
-		bool "Add echo system cmd to terminal support list"
+		bool "Add echo cmd to terminal support list"
 		default y
 
 	config CMD_FILESYS
@@ -229,102 +324,6 @@ if KERNEL
 		config VKLIBM
 			bool "using vklibm"
 			default y
-
-		endmenu
-
-		menu "libutils"
-
-			menu "fileutils"
-
-			comment "This is using to configure fileutils"
-
-			config FILEUTILS
-				bool "Enable file utils support"
-				default n
-
-			config DEVSTREAM
-				depends on FILEUTILS
-				bool "Enable devstream function"
-				default n
-
-			config DIRSTREAM
-				depends on FILEUTILS
-				bool "Enable dirstream function"
-				default n
-
-			config FILESTREAM
-				depends on FILEUTILS
-				bool "Enable filestream function"
-				default n
-
-			config FILESYSOPT
-				depends on FILEUTILS
-				bool "Enable filesysopt function"
-				default n
-
-			endmenu
-
-			menu "parser"
-
-			comment "This is using to configure parser"
-
-			config PARSER
-				bool "Enable parser support"
-				default n
-
-			config INIPARSER
-				depends on PARSER
-				select FILESTREAM
-				bool "Enable ini file parser function"
-				default n
-
-			config RCPARSER
-				depends on PARSER
-				select FILESTREAM
-				bool "Enable resource script parser function"
-				default n
-
-			config REGEX
-				depends on PARSER
-				bool "Enable regex function"
-				default n
-
-			endmenu
-
-			menu "model"
-
-			comment "This is using to configure model"
-
-			config MODEL
-				bool "Enable design mode function"
-				default y
-
-			endmenu
-
-			menu "sync"
-
-			comment "This is using to configure sync"
-
-			config SYNC
-				bool "Enable synchronizes function"
-				default y
-
-			config MUTEX
-				depends on SYNC
-				bool "Enable mutex lock support"
-				default y
-
-			config SPINLOCK
-				depends on SYNC
-				bool "Enable spin lock support"
-				default y
-
-			config SEMAPHORE
-				depends on SYNC
-				bool "Enable semaphore support"
-				default y
-
-			endmenu
 
 		endmenu
 
