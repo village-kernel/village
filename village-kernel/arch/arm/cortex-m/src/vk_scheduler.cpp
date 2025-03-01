@@ -46,6 +46,9 @@ void ConcreteScheduler::Exit()
 
     //Clear the PendSV interrupt handler
     kernel->interrupt.ClearISR(PendSV_IRQn);
+
+    //Clear the SVC interrupt handler
+    kernel->interrupt.ClearISR(SVCall_IRQn);
 }
 
 
