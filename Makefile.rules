@@ -43,7 +43,7 @@ LIBRARIES     := -L$(LIBS_DIR) $(addprefix -l, $(LIBS))
 ######################################
 # include config
 ######################################
-include $(WORKSPACE)/.config
+-include $(WORKSPACE)/.config
 
 
 ######################################
@@ -102,8 +102,10 @@ endif
 #######################################
 # build version flags
 #######################################
-GIT_SHA = $(shell git rev-parse HEAD)
-ifneq ($(GIT_SHA), )
+HAS_GIT  := $(shell git rev-parse --is-inside-work-tree 2>/dev/null)
+
+ifeq ($(HAS_GIT), true)
+GIT_SHA  := $(shell git rev-parse HEAD)
 CFLAGS   += -DGIT_COMMIT='"$(GIT_SHA)"'
 else
 CFLAGS   += -DGIT_COMMIT='"unknown"'
