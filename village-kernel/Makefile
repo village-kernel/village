@@ -107,35 +107,35 @@ objs-$(CONFIG_CMD_TASKER)           += vk_cmd_tasker.o
 
 
 ######################################
-# libutils
+# misc
 ######################################
-libs-y                              += utils
+libs-y                              += misc
 
-inc-y                               += village-kernel/vklibs/libutils/template
-inc-$(CONFIG_FILEUTILS)             += village-kernel/vklibs/libutils/fileutils/inc
-inc-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/inc
-inc-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/inc
-inc-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/inc
+inc-y                               += village-kernel/misc/template
+inc-$(CONFIG_LOCK)                  += village-kernel/misc/lock/inc
+inc-$(CONFIG_MODEL)                 += village-kernel/misc/model/inc
+inc-$(CONFIG_PARSER)                += village-kernel/misc/parser/inc
+inc-$(CONFIG_STREAM)                += village-kernel/misc/stream/inc
 
-src-$(CONFIG_FILEUTILS)             += village-kernel/vklibs/libutils/fileutils/src
-src-$(CONFIG_PARSER)                += village-kernel/vklibs/libutils/parser/src
-src-$(CONFIG_MODEL)                 += village-kernel/vklibs/libutils/model/src
-src-$(CONFIG_SYNC)                  += village-kernel/vklibs/libutils/sync/src
+src-$(CONFIG_LOCK)                  += village-kernel/misc/lock/src
+src-$(CONFIG_MODEL)                 += village-kernel/misc/model/src
+src-$(CONFIG_PARSER)                += village-kernel/misc/parser/src
+src-$(CONFIG_STREAM)                += village-kernel/misc/stream/src
 
-objs-utils-$(CONFIG_DEVSTREAM)      += vk_dev_stream.o
-objs-utils-$(CONFIG_DIRSTREAM)      += vk_dir_stream.o
-objs-utils-$(CONFIG_FILESTREAM)     += vk_file_stream.o
-objs-utils-$(CONFIG_FILESYSOPT)     += vk_filesys_opt.o
+objs-misc-$(CONFIG_SPINLOCK)        += vk_spinlock.o
+objs-misc-$(CONFIG_MUTEX)           += vk_mutex.o
+objs-misc-$(CONFIG_SEMAPHORE)       += vk_semaphore.o
 
-objs-utils-$(CONFIG_SPINLOCK)       += vk_spinlock.o
-objs-utils-$(CONFIG_MUTEX)          += vk_mutex.o
-objs-utils-$(CONFIG_SEMAPHORE)      += vk_semaphore.o
+objs-misc-$(CONFIG_MODEL)           += vk_observer.o
 
-objs-utils-$(CONFIG_INIPARSER)      += vk_ini_parser.o
-objs-utils-$(CONFIG_RCPARSER)       += vk_rc_parser.o
-objs-utils-$(CONFIG_REGEX)          += vk_regex.o
+objs-misc-$(CONFIG_INIPARSER)       += vk_ini_parser.o
+objs-misc-$(CONFIG_RCPARSER)        += vk_rc_parser.o
+objs-misc-$(CONFIG_REGEX)           += vk_regex.o
 
-objs-utils-$(CONFIG_MODEL)          += vk_observer.o
+objs-misc-$(CONFIG_DEVSTREAM)       += vk_dev_stream.o
+objs-misc-$(CONFIG_DIRSTREAM)       += vk_dir_stream.o
+objs-misc-$(CONFIG_FILESTREAM)      += vk_file_stream.o
+objs-misc-$(CONFIG_FILESYSOPT)      += vk_filesys_opt.o
 
 
 ######################################
@@ -195,26 +195,4 @@ endif
 
 ifdef CONFIG_TASK_STACK
 CFLAGS    += -DTASK_STACK=$(CONFIG_TASK_STACK)
-endif
-
-
-######################################
-# includes
-######################################
-# drivers
-include village-kernel/drivers/Makefile
-
-## stm32f4xx
-ifeq ($(CONFIG_STM32F4xx), y)
-include village-kernel/vklibs/libhw/stm32f4xx/Makefile
-endif
-
-## stm32h7xx
-ifeq ($(CONFIG_STM32H7xx), y)
-include village-kernel/vklibs/libhw/stm32h7xx/Makefile
-endif
-
-## ia32legacy
-ifeq ($(CONFIG_IA32LEGACY), y)
-include village-kernel/vklibs/libhw/ia32legacy/Makefile
 endif

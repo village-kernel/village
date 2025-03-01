@@ -95,6 +95,10 @@ menu "village-kernel"
 	source ./village-kernel/Kconfig
 endmenu
 
+menu "village-machine"
+	source ./village-machine/Kconfig
+endmenu
+
 menu "village-demo"
 	source ./village-demo/Kconfig
 endmenu

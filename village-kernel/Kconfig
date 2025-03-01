@@ -5,216 +5,6 @@ config KERNEL
 	default y
 
 if KERNEL
-	# config arch
-
-	menu "arch"
-
-	comment "Select CPU Architecture"
-
-	choice
-		prompt "Architecture"
-		default ARM
-
-		config ARM
-			bool "arm"
-
-		config IA32
-			bool "ia32"
-	endchoice
-
-	choice
-		prompt "ARM Series"
-		depends on ARM
-		default CORTEX_M
-
-		config CORTEX_A
-			bool "cortex-A"
-
-		config CORTEX_R
-			bool "cortex-R"
-
-		config CORTEX_M
-			bool "cortex-M"
-	endchoice
-
-	choice
-		prompt "MCU Manufacturer"
-		depends on CORTEX_M
-		default ST
-
-		config ST
-			bool "ST"
-	endchoice
-
-	choice
-		prompt "MCU Series"
-		depends on ST
-		default STM32F4xx
-
-		config STM32F4xx
-			bool "STM32F4xx"
-
-		config STM32H7xx
-			bool "STM32H7xx"
-	endchoice
-
-	choice
-		prompt "MCU Type"
-		depends on STM32F4xx
-		default STM32F407xx
-
-		config STM32F401xc
-			bool "STM32F401xc"
-
-		config STM32F401xe
-			bool "STM32F401xe"
-
-		config STM32F405xx
-			bool "STM32F405xx"
-
-		config STM32F407xx
-			bool "STM32F407xx"
-	endchoice
-
-	choice
-		prompt "MCU Model"
-		depends on STM32F407xx
-		default STM32F407ZE
-
-		config STM32F407IE
-			bool "STM32F407IE"
-
-		config STM32F407IG
-			bool "STM32F407IG"
-
-		config STM32F407VE
-			bool "STM32F407VE"
-
-		config STM32F407VG
-			bool "STM32F407VG"
-
-		config STM32F407ZE
-			bool "STM32F407ZE"
-
-		config STM32F407ZG
-			bool "STM32F407ZG"
-	endchoice
-
-	choice
-		prompt "MCU Model"
-		depends on STM32F405xx
-		default STM32F405RG
-
-		config STM32F405OE
-			bool "STM32F405OE"
-
-		config STM32F405OG
-			bool "STM32F405OG"
-
-		config STM32F405RG
-			bool "STM32F405RG"
-
-		config STM32F405VG
-			bool "STM32F405VG"
-
-		config STM32F405ZG
-			bool "STM32F405ZG"
-	endchoice
-
-	choice
-		prompt "MCU Type"
-		depends on STM32H7xx
-		default STM32H743xx
-
-		config STM32H743xx
-			bool "STM32H743xx"
-
-		config STM32H750xx
-			bool "STM32H750xx"
-	endchoice
-
-	choice
-		prompt "MCU Model"
-		depends on STM32H743xx
-		default STM32H743II
-
-		config STM32H743VI
-			bool "STM32H743VI"
-
-		config STM32H743ZI
-			bool "STM32H743ZI"
-
-		config STM32H743AI
-			bool "STM32H743AI"
-
-		config STM32H743II
-			bool "STM32H743II"
-
-		config STM32H743BI
-			bool "STM32H743BI"
-
-		config STM32H743XI
-			bool "STM32H743XI"
-
-		config STM32H743VG
-			bool "STM32H743VG"
-
-		config STM32H743ZG
-			bool "STM32H743ZG"
-
-		config STM32H743AG
-			bool "STM32H743AG"
-
-		config STM32H743IG
-			bool "STM32H743IG"
-
-		config STM32H743BG
-			bool "STM32H743BG"
-
-		config STM32H743XG
-			bool "STM32H743XG"
-	endchoice
-
-	choice
-		prompt "MCU Model"
-		depends on STM32H750xx
-		default STM32H750IB
-
-		config STM32H750IB
-			bool "STM32H750IB"
-
-		config STM32H750VB
-			bool "STM32H750VB"
-
-		config STM32H750XB
-			bool "STM32H750XB"
-
-		config STM32H750ZB
-			bool "STM32H750ZB"
-	endchoice
-
-	choice
-		prompt "Boot Mode"
-		depends on IA32
-		default IA32LEGACY
-
-		config IA32LEGACY
-			bool "legacy"
-
-		config IA32UEFI
-			bool "uefi"
-	endchoice
-
-	endmenu
-
-	# config drivers menu
-
-	menu "driver"
-
-	source ./village-kernel/drivers/Kconfig
-
-	endmenu
-
 	# config binutils menu
 
 	menu "binutils"
@@ -318,6 +108,101 @@ if KERNEL
 
 	endmenu
 
+	menu "misc"
+
+		menu "lock"
+
+		comment "This is using to configure sync"
+
+		config LOCK
+			bool "Enable synchronizes function"
+			default y
+
+		config MUTEX
+			depends on LOCK
+			bool "Enable mutex lock support"
+			default y
+
+		config SPINLOCK
+			depends on LOCK
+			bool "Enable spin lock support"
+			default y
+
+		config SEMAPHORE
+			depends on LOCK
+			bool "Enable semaphore support"
+			default y
+
+		endmenu
+
+		menu "model"
+
+		comment "This is using to configure model"
+
+		config MODEL
+			bool "Enable design mode function"
+			default y
+
+		endmenu
+
+		menu "parser"
+
+		comment "This is using to configure parser"
+
+		config PARSER
+			bool "Enable parser support"
+			default y
+
+		config INIPARSER
+			depends on PARSER
+			select FILESTREAM
+			bool "Enable ini file parser function"
+			default n
+
+		config RCPARSER
+			depends on PARSER
+			select FILESTREAM
+			bool "Enable resource script parser function"
+			default y
+
+		config REGEX
+			depends on PARSER
+			bool "Enable regex function"
+			default y
+
+		endmenu
+
+		menu "stream"
+
+		comment "This is using to configure stream"
+
+		config STREAM
+			bool "Enable file utils support"
+			default y
+
+		config DEVSTREAM
+			depends on STREAM
+			bool "Enable devstream function"
+			default y
+
+		config DIRSTREAM
+			depends on STREAM
+			bool "Enable dirstream function"
+			default y
+
+		config FILESTREAM
+			depends on STREAM
+			bool "Enable filestream function"
+			default y
+
+		config FILESYSOPT
+			depends on STREAM
+			bool "Enable filesysopt function"
+			default y
+
+		endmenu
+
+	endmenu
 
 	# config protocol stack
 
@@ -349,19 +234,19 @@ if KERNEL
 		default y
 
 	config CMD_CAT
-		bool "Add cat system cmd to terminal support list"
+		bool "Add cat cmd to terminal support list"
 		default y
 
 	config CMD_DEBUG
-		bool "Add debug system cmd to terminal support list"
+		bool "Add debug cmd to terminal support list"
 		default y
 
 	config CMD_DEVICE
-		bool "Add device system cmd to terminal support list"
+		bool "Add device cmd to terminal support list"
 		default y
 
 	config CMD_ECHO
-		bool "Add echo system cmd to terminal support list"
+		bool "Add echo cmd to terminal support list"
 		default y
 
 	config CMD_FILESYS
@@ -439,118 +324,6 @@ if KERNEL
 		config VKLIBM
 			bool "using vklibm"
 			default y
-
-		endmenu
-
-		menu "libhw"
-			
-			if IA32LEGACY
-				source ./village-kernel/vklibs/libhw/ia32legacy/Kconfig
-			endif
-
-			if STM32F4xx
-				source ./village-kernel/vklibs/libhw/stm32f4xx/Kconfig
-			endif
-
-			if STM32H7xx
-				source ./village-kernel/vklibs/libhw/stm32h7xx/Kconfig
-			endif
-
-		endmenu
-
-		menu "libutils"
-
-			menu "fileutils"
-
-			comment "This is using to configure fileutils"
-
-			config FILEUTILS
-				bool "Enable file utils support"
-				default n
-
-			config DEVSTREAM
-				depends on FILEUTILS
-				bool "Enable devstream function"
-				default n
-
-			config DIRSTREAM
-				depends on FILEUTILS
-				bool "Enable dirstream function"
-				default n
-
-			config FILESTREAM
-				depends on FILEUTILS
-				bool "Enable filestream function"
-				default n
-
-			config FILESYSOPT
-				depends on FILEUTILS
-				bool "Enable filesysopt function"
-				default n
-
-			endmenu
-
-			menu "parser"
-
-			comment "This is using to configure parser"
-
-			config PARSER
-				bool "Enable parser support"
-				default n
-
-			config INIPARSER
-				depends on PARSER
-				select FILESTREAM
-				bool "Enable ini file parser function"
-				default n
-
-			config RCPARSER
-				depends on PARSER
-				select FILESTREAM
-				bool "Enable resource script parser function"
-				default n
-
-			config REGEX
-				depends on PARSER
-				bool "Enable regex function"
-				default n
-
-			endmenu
-
-			menu "model"
-
-			comment "This is using to configure model"
-
-			config MODEL
-				bool "Enable design mode function"
-				default y
-
-			endmenu
-
-			menu "sync"
-
-			comment "This is using to configure sync"
-
-			config SYNC
-				bool "Enable synchronizes function"
-				default y
-
-			config MUTEX
-				depends on SYNC
-				bool "Enable mutex lock support"
-				default y
-
-			config SPINLOCK
-				depends on SYNC
-				bool "Enable spin lock support"
-				default y
-
-			config SEMAPHORE
-				depends on SYNC
-				bool "Enable semaphore support"
-				default y
-
-			endmenu
 
 		endmenu
 

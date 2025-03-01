@@ -15,10 +15,11 @@
 
 ---
 # 目录：
+- ## village-docs:    相关文档
 - ## village-boot:    引导工程
 - ## village-demo:    示范工程
-- ## village-docs:    相关文档
 - ## village-kernel:  内核工程
+- ## village-machine: 设备工程
 - ## village-scripts: 工具脚本
 
 ---
