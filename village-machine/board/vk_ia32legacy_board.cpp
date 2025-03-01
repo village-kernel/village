@@ -41,7 +41,7 @@ private:
     BochsVBE::Config config;
 public:
     /// @brief Methods
-    void BochsVBEDev::Config()
+    void Config()
     {
         config = {
             .vmap = (uint16_t*)0xA00000,
