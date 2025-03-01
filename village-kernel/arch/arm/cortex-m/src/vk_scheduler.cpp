@@ -124,7 +124,7 @@ void ConcreteScheduler::TaskOperator(uint32_t* sp)
     //Handle svc request
     if (0 == svcNumber)
     {
-        //Move to Unprivileged level, clear bit[0] nPRIV
+        //Move to privileged level, clear bit[0] nPRIV
         __asm volatile("mrs r0, control");
         __asm volatile("bic r0, r0, #1");
         __asm volatile("msr control, r0");
