@@ -49,6 +49,9 @@ void ConcreteScheduler::Exit()
 
     //Clear the SVC interrupt handler
     kernel->interrupt.ClearISR(SVCall_IRQn);
+    
+    //Call Supervisor exception to get Privileged access
+    __asm volatile("SVC #0");
 }
 
 
@@ -90,7 +93,7 @@ void ConcreteScheduler::Sched()
 {
     if (!isStartSchedule) return;
 
-    //Call Supervisor exception to get Privileged access
+    //Call Supervisor exception to trigger PendSV
     __asm volatile("SVC #255");
 }
 
@@ -118,8 +121,15 @@ void ConcreteScheduler::TaskOperator(uint32_t* sp)
     //Get the opcode, in little endian
     uint8_t svcNumber = *pInstruction;
 
-    //It is in exception interrupted state
-    if (0xff == svcNumber)
+    //Handle svc request
+    if (0 == svcNumber)
+    {
+        //Move to Unprivileged level, clear bit[0] nPRIV
+        __asm volatile("mrs r0, control");
+        __asm volatile("bic r0, r0, #1");
+        __asm volatile("msr control, r0");
+    }
+    else if (255 == svcNumber)
     {
         //Trigger PendSV
         SCB->ICSR |= SCB_ICSR_PENDSVSET_Msk;
