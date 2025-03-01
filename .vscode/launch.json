@@ -17,7 +17,7 @@
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
             "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
-            "preLaunchTask": "Build"
+            "preLaunchTask": "Run ARM Terminal"
         },
         {
             "name": "Cortex Debug-stlink STM32F407",
@@ -35,7 +35,7 @@
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
             "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
-            "preLaunchTask": "Build"
+            "preLaunchTask": "Run ARM Terminal"
         },
         {
             "name": "Cortex Debug-jlink STM32H743",
@@ -49,7 +49,7 @@
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
             "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
-            "preLaunchTask": "Build"
+            "preLaunchTask": "Run ARM Terminal"
         },
         {
             "name": "Cortex Debug-stlink STM32H743",
@@ -67,7 +67,7 @@
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
             "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
-            "preLaunchTask": "Build"
+            "preLaunchTask": "Run ARM Terminal"
         },
         {
             "name": "QEMU Debug x86 bios boot",
