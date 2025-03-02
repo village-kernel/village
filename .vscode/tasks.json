@@ -1,18 +1,19 @@
 {
     "version": "2.0.0",
     "tasks": [
+        //Build
         {
             "label": "Build",
             "type": "shell",
             "command": "make",
             "args": ["all"],
-            "detail": "Build project"
         },
+
+        //Run Minicom
         {
-            "label": "Run ARM Terminal",
+            "label": "Minicom",
             "type": "shell",
             "isBackground": true,
-            "dependsOn": ["Build"],
             "command": "minicom -c on",
             "presentation": {
                 "echo": true,
@@ -40,11 +41,38 @@
                 }
             }
         },
+
+        //Kill Minicom
         {
-            "label": "Run I386 QEMU",
+            "label": "Kill Minicom",
+            "type": "shell",
+            "command": "pkill -f minicom || echo 'No minicom to kill'", // Linux/macOS
+            //"command": "taskkill /IM minicom.exe /F || echo No minicom to kill", // Windows
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "never"
+            }
+        },
+
+        //Cortex Debug Setup
+        {
+            "label": "Cortex Debug Setup",
+            "dependsOrder": "sequence",
+            "dependsOn": ["Build", "Minicom"], 
+        },
+
+        //Cortex Debug Exit
+        {
+            "label": "Cortex Debug Exit",
+            "dependsOrder": "sequence",
+            "dependsOn": ["Kill Minicom"], 
+        },
+
+        //Run QEMU I386       
+        {
+            "label": "QEMU I386",
             "type": "shell",
             "isBackground": true,
-            "dependsOn": ["Build"],
             //"command": "qemu-system-i386 -hda ${workspaceFolder}/build/village-os.img -hdb ${workspaceFolder}/build/village-fs.img -monitor null -serial stdio -s -S",
             "command": "qemu-system-i386 -hda ${workspaceFolder}/build/village-os.img -hdb ${workspaceFolder}/build/village-fs.img -monitor null -serial stdio -s -S -nographic",
             "presentation": {
@@ -72,6 +100,13 @@
                     "endsPattern": "."
                 }
             }
+        },
+
+        //QEMU Debug Setup
+        {
+            "label": "QEMU Debug Setup",
+            "dependsOrder": "sequence",
+            "dependsOn": ["Build", "QEMU I386"], 
         }
     ]
 }

@@ -16,8 +16,9 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
-            "preLaunchTask": "Run ARM Terminal"
+            "svdFile": "${workspaceRoot}/village-machine/vendor/stm32f4xx/svd/STM32F407.svd",
+            "preLaunchTask": "Cortex Debug Setup",
+            "postDebugTask": "Cortex Debug Exit"
         },
         {
             "name": "Cortex Debug-stlink STM32F407",
@@ -34,8 +35,9 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32f4xx/svd/STM32F407.svd",
-            "preLaunchTask": "Run ARM Terminal"
+            "svdFile": "${workspaceRoot}/village-machine/vendor/stm32f4xx/svd/STM32F407.svd",
+            "preLaunchTask": "Cortex Debug Setup",
+            "postDebugTask": "Cortex Debug Exit"
         },
         {
             "name": "Cortex Debug-jlink STM32H743",
@@ -48,8 +50,9 @@
             "interface": "swd",
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
-            "preLaunchTask": "Run ARM Terminal"
+            "svdFile": "${workspaceRoot}/village-machine/vendor/stm32h7xx/svd/STM32H743.svd",
+            "preLaunchTask": "Cortex Debug Setup",
+            "postDebugTask": "Cortex Debug Exit"
         },
         {
             "name": "Cortex Debug-stlink STM32H743",
@@ -66,8 +69,9 @@
             ],
             "runToEntryPoint": "main",
             "showDevDebugTimestamps": true,
-            "svdFile": "${workspaceRoot}/village-kernel/vklibs/libhw/stm32h7xx/svd/STM32H743.svd",
-            "preLaunchTask": "Run ARM Terminal"
+            "svdFile": "${workspaceRoot}/village-machine/vendor/stm32h7xx/svd/STM32H743.svd",
+            "preLaunchTask": "Cortex Debug Setup",
+            "postDebugTask": "Cortex Debug Exit"
         },
         {
             "name": "QEMU Debug x86 bios boot",
@@ -78,7 +82,7 @@
             "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
-            "preLaunchTask": "Run I386 QEMU"
+            "preLaunchTask": "QEMU Debug Setup"
         },
         {
             "name": "QEMU Debug x86 bios kernel",
@@ -89,7 +93,7 @@
             "miDebuggerPath": "i386-elf-gdb",
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
-            "preLaunchTask": "Run I386 QEMU"
+            "preLaunchTask": "QEMU Debug Setup"
         }
     ]
 }
