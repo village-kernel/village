@@ -52,7 +52,7 @@ LDFLAGS-BOOT       += --warn-common --no-undefined --fatal-warnings --build-id=s
 LDFLAGS-BOOT       += -melf_i386
 LDFLAGS-BOOT       += $(LDSCRIPT-BOOT)
 
-# copy flags
-COPYFLAGS-BOOT     += -j .text -j .sdata -j .data -j .dynamic -j .rodata -j .rel
-COPYFLAGS-BOOT     += -j .rela -j .rel.* -j .rela.* -j .rel* -j .rela*
-COPYFLAGS-BOOT     += -j .areloc -j .reloc --target efi-app-ia32
+# efi flags
+EFIFLAGS-BOOT      += -j .text -j .sdata -j .data -j .dynamic -j .rodata -j .rel
+EFIFLAGS-BOOT      += -j .rela -j .rel.* -j .rela.* -j .rel* -j .rela*
+EFIFLAGS-BOOT      += -j .areloc -j .reloc --target efi-app-ia32

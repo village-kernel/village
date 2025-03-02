@@ -12,10 +12,10 @@ if KERNEL
 		comment "This is using to configure binutils"
 
 		config EXECUTOR
-				select BINUTILS
-				select FILESTREAM
-				bool "Enable executor function"
-				default n
+			select BINUTILS
+			select FILESTREAM
+			bool "Enable executor function"
+			default n
 
 		config BINEXECUTOR
 			depends on EXECUTOR
@@ -78,7 +78,7 @@ if KERNEL
 		default 1024
 
 	config KERNEL_RSVD_STACK
-		int "The size of kernel reserved heap"
+		int "The size of kernel reserved stack"
 		default 1024
 
 	config TASK_STACK
@@ -89,12 +89,6 @@ if KERNEL
 		bool "Enable loadable module support"
 		select FATFS
 		select ELFPARSER
-		select ENVIRONMENT
-
-	config ENVIRONMENT
-		depends on MODULE
-		bool "Build the environment of Loadable module"
-		default y
 
 	endmenu
 

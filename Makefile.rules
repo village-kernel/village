@@ -20,7 +20,7 @@
 # CFLAGS      : c    flags
 # CXXFLAGS    : cxx  flags
 # LDFLAGS     : ld   flags
-# COPYFLAGS   : copy flags
+# EFIFLAGS    : efi  flags
 # EMULATION   : emulation
 
 
@@ -29,7 +29,8 @@
 #######################################
 WORKSPACE     ?= .
 BUILD_DIR     ?= $(WORKSPACE)/build
-LIBS_DIR      ?= $(BUILD_DIR)/output/libraries
+INSTALL_DIR   ?= $(BUILD_DIR)/output
+LIBS_DIR      ?= $(INSTALL_DIR)/libraries
  
 
 #######################################
@@ -50,13 +51,18 @@ LIBRARIES     := -L$(LIBS_DIR) $(addprefix -l, $(LIBS))
 # building variables
 ######################################
 # optimization
-OPT ?= $(CONFIG_OPT:"%"=%)
+OPT     ?= $(CONFIG_OPT:"%"=%)
+CFLAGS  += $(OPT)
 
-# debug build?
+# debug build
 ifeq ($(CONFIG_DEBUG), y)
   DEBUG ?= 1
 else
   DEBUG ?= 0
+endif
+
+ifeq ($(CONFIG_DEBUG), 1)
+CFLAGS  += -g -gdwarf-2 -DDEBUG
 endif
 
 # silence build
@@ -64,20 +70,6 @@ ifeq ($(CONFIG_VERBOSE_MODE), y)
   Q = 
 else
   Q = @
-endif
-
-
-#######################################
-# compiler flags
-#######################################
-CFLAGS    += $(OPT)
-
-ifeq ($(DEBUG), 1)
-CFLAGS    += -g -gdwarf-2 -DDEBUG
-endif
-
-ifneq ($(CONFIG_ENVIRONMENT), y)
-CFLAGS    += -DKBUILD_NO_ENVIRONNEMNT
 endif
 
 
@@ -184,7 +176,7 @@ BIN = $(CP) -O binary -S
 	$(Q)echo output $(@:.efi=.elf)
 	$(Q)$(LD) $(LDFLAGS) $(^:%FORCE=%) -o $(@:.efi=.elf) $(LIBRARIES)
 	$(Q)echo output $@
-	$(Q)$(CP) $(COPYFLAGS) $(@:.efi=.elf) $@
+	$(Q)$(CP) $(EFIFLAGS) $(@:.efi=.elf) $@
 
 %.hex: FORCE
 	$(Q)echo output $@

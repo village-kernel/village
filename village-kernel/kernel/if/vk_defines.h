@@ -172,34 +172,29 @@ static struct _Mod_##name {                                       \
 } const _mod_##name __attribute__((used,__section__(".modules")))
 
 
-///Environment marco
-#ifdef KBUILD_NO_ENVIRONNEMNT
-    ///Export symbol marco
-    #define EXPORT_SYMBOL_ALIAS(symbol, name)  /*export symbol alias*/
-
-    ///Export symbol marco
-    #define EXPORT_SYMBOL(symbol)              /*export symbol*/
-#else
-    ///Get method address
+///Get method address marco
 #if defined(ARCH_X86)
     #define marco_cast(src, addr)  __asm volatile("movl $"#src", %0" : "=r"(addr))
 #elif defined(ARCH_ARM)
     #define marco_cast(src, addr)  __asm volatile("ldr %0, ="#src : "=r"(addr))
 #endif
-    ///Export symbol marco
-    #define EXPORT_SYMBOL_ALIAS(sym, name)                           \
-    static struct _Sym_##name {                                      \
-        _Sym_##name() {                                              \
-            uint32_t symAddr = 0; marco_cast(sym, symAddr);          \
-            kernel->symbol.Export(symAddr, #name);                   \
-        }                                                            \
-        ~_Sym_##name() {                                             \
-            kernel->symbol.Unexport(#name);                          \
-        }                                                            \
-    } const _sym_##name __attribute__((used,__section__(".symbols")))
 
-    ///Export symbol marco
-    #define EXPORT_SYMBOL(symbol)          EXPORT_SYMBOL_ALIAS(symbol, symbol) 
-#endif
+
+///Export symbol marco
+#define EXPORT_SYMBOL_ALIAS(sym, name)                           \
+static struct _Sym_##name {                                      \
+    _Sym_##name() {                                              \
+        uint32_t symAddr = 0; marco_cast(sym, symAddr);          \
+        kernel->symbol.Export(symAddr, #name);                   \
+    }                                                            \
+    ~_Sym_##name() {                                             \
+        kernel->symbol.Unexport(#name);                          \
+    }                                                            \
+} const _sym_##name __attribute__((used,__section__(".symbols")))
+
+
+///Export symbol marco
+#define EXPORT_SYMBOL(symbol)  EXPORT_SYMBOL_ALIAS(symbol, symbol) 
+
 
 #endif //!__VK_DEFINES_H__

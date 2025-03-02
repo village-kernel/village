@@ -18,10 +18,11 @@ TARGET        := village
 #######################################
 WORKSPACE     := .
 BUILD_DIR     := $(WORKSPACE)/build
-MODS_DIR      := $(BUILD_DIR)/output/modules
-LIBS_DIR      := $(BUILD_DIR)/output/libraries
-APPS_DIR      := $(BUILD_DIR)/output/programs
-SVCS_DIR      := $(BUILD_DIR)/output/services
+INSTALL_DIR   := $(BUILD_DIR)/output
+MODS_DIR      := $(INSTALL_DIR)/modules
+LIBS_DIR      := $(INSTALL_DIR)/libraries
+APPS_DIR      := $(INSTALL_DIR)/programs
+SVCS_DIR      := $(INSTALL_DIR)/services
 
 
 #######################################
