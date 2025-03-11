@@ -61,7 +61,7 @@ else
   DEBUG ?= 0
 endif
 
-ifeq ($(CONFIG_DEBUG), 1)
+ifeq ($(CONFIG_DEBUG), y)
 CFLAGS  += -g -gdwarf-2 -DDEBUG
 endif
 
