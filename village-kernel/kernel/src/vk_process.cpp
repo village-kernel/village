@@ -178,7 +178,9 @@ int ConcreteProcess::Run(Behavior behavior, const char* path, int argc, char* ar
 /// @return 
 bool ConcreteProcess::Kill(const char* path)
 {
-    return datum.GetItem(path)->exec->Kill();
+    Data* data = datum.GetItem(path);
+
+    return ((NULL != data) && data->exec->Kill());
 }
 
 
@@ -187,7 +189,9 @@ bool ConcreteProcess::Kill(const char* path)
 /// @return 
 bool ConcreteProcess::Kill(int pid)
 {
-    return datum.GetItem(pid)->exec->Kill();
+    Data* data = datum.GetItem(pid);
+
+    return ((NULL != data) && data->exec->Kill());
 }
 
 
@@ -197,6 +201,15 @@ bool ConcreteProcess::Kill(int pid)
 bool ConcreteProcess::IsExist(const char* path)
 {
     return (NULL != datum.GetItem(path));
+}
+
+
+/// @brief Process is exist
+/// @param pid 
+/// @return 
+bool ConcreteProcess::IsExist(int pid)
+{
+    return (NULL != datum.GetItem(pid));
 }
 
 

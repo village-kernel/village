@@ -477,6 +477,7 @@ public:
     
     /// @brief Check Methods
     virtual bool IsExist(const char* path) = 0;
+    virtual bool IsExist(int pid) = 0;
 
     /// @brief Data Methods
     virtual VkList<Data*> GetData() = 0;

@@ -47,6 +47,7 @@ public:
 
     /// @brief Check Methods
     bool IsExist(const char* path);
+    bool IsExist(int pid);
 
     /// @brief Data Methods
     VkList<Data*> GetData();
