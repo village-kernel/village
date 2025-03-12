@@ -1,0 +1,9 @@
+# demo menu
+
+menu "demo"
+
+config DEMO_MOD
+	tristate "Build demo module"
+	default y
+
+endmenu

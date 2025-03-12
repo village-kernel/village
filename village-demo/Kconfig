@@ -10,6 +10,11 @@ if VKDEMO
 		comment "This is using to configure libraries"
 	endmenu
 
+	menu "modules"
+		comment "This is using to configure modules"
+		source ./village-demo/modules/demo/Kconfig
+	endmenu
+
 	menu "programs"
 		comment "This is using to configure programs"
 		source ./village-demo/programs/demo/Kconfig

@@ -165,11 +165,11 @@ modules:
 	$(Q)echo "#prepare modules" > $(MODS_DIR)/_load_.rc;
 	$(Q)$(foreach object, $(objs-m),                              \
 		$(MAKE) $(object)                                         \
-				INCS="$(inc-y)"                                   \
-				SRCS="$(src-y)";                                  \
+				INCS="$(inc-y) $(inc-m)"                          \
+				SRCS="$(src-y) $(src-m)";                         \
 		$(MAKE) $(MODS_DIR)/$(object:.o=.mo)                      \
-				INCS="$(inc-y)"                                   \
-				SRCS="$(src-y)"                                   \
+				INCS="$(inc-y) $(inc-m)"                          \
+				SRCS="$(src-y) $(src-m)"                          \
 				OBJS="$(object)";                                 \
 		echo /modules/$(object:.o=.mo) >> $(MODS_DIR)/_load_.rc;  \
 	)
