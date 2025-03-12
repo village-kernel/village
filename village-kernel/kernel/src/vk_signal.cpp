@@ -22,7 +22,8 @@ ConcreteSignal::~ConcreteSignal()
 /// @brief Signal setup
 void ConcreteSignal::Setup()
 {
-
+    //Output debug info
+    kernel->debug.Info("Signal setup done!");
 }
 
 
