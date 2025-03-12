@@ -240,9 +240,19 @@ Village& Village::Instance()
 }
 
 
-/// @brief Definition and export kernel
-Kernel* kernel = &Village::Instance();
-EXPORT_SYMBOL(kernel);
+/// @brief Definition kernel
+Kernel* kernel = NULL;
+
+
+/// @brief Export kernel symbol, call by crt0 _start function
+extern "C" void KernelSymbol()
+{
+    if (NULL == kernel)
+    {
+        kernel = &Village::Instance();
+        kernel->symbol.Export((uint32_t)&kernel, "kernel");
+    }
+}
 
 
 /// @brief Main entry function

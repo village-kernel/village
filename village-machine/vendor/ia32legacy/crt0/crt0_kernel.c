@@ -5,6 +5,11 @@
 // $Copyright: Copyright (C) village
 //###########################################################################
 
+
+/// @brief KernelSymbol
+void KernelSymbol();
+
+
 /// @brief program entry main
 /// @param argc 
 /// @param argv 
@@ -662,6 +667,8 @@ void __fini_array(void)
 void _start(int argc, char* argv[])
 {
 	__init_data_bss();
+
+    KernelSymbol();
 
 	__preinit_arrary();
 

@@ -11,6 +11,10 @@
 extern void *_estack;
 
 
+/// @brief KernelSymbol
+void KernelSymbol();
+
+
 /// @brief SystemInit
 void SystemInit();
 
@@ -288,6 +292,8 @@ void __fini_array(void)
 void Reset_Handler(int argc, char* argv[])
 {
 	__init_data_bss();
+
+    KernelSymbol();
 
 	SystemInit();
 
