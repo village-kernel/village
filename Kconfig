@@ -48,12 +48,12 @@ config GENERATED_MOD
 	select MODULE
 	default n
 
-config GENERATED_VKOS
-	bool "generated vkos"
+config GENERATED_DEMO
+	bool "generated demo"
 	default y
 
 config GENERATED_STATIC_PROG
-	depends on GENERATED_VKOS
+	depends on GENERATED_DEMO
 	bool "build with static"
 	default n
 
@@ -68,12 +68,12 @@ config CREATE_PROG_BIN_FILE
 	default n
 
 config ASSOCIATED_EXEC
-	depends on GENERATED_VKOS
+	depends on GENERATED_DEMO
 	string "Associated with .exec"
 	default ".elf"
 
 config GENERATED_IMG
-	bool "generated os image"
+	bool "generated kernel image"
 	default n
 
 config GENERATED_ROOTFS

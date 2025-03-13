@@ -76,8 +76,8 @@ endif
 ifeq ($(CONFIG_GENERATED_MOD), y)
 	$(Q)$(MAKE) modules
 endif
-ifeq ($(CONFIG_GENERATED_VKOS), y)
-	$(Q)$(MAKE) vkos
+ifeq ($(CONFIG_GENERATED_DEMO), y)
+	$(Q)$(MAKE) demo
 endif
 ifeq ($(CONFIG_GENERATED_IMG), y)
 	$(Q)$(MAKE) osImage
@@ -176,19 +176,19 @@ modules:
 
 
 #######################################
-# build the vkos
+# build the demo
 #######################################
-vkos: oslibs ossvcs osapps 
+demo: demolibs demosvcs demoapps 
 
 
 #######################################
-# build the vkos oslibs
+# build the demo demolibs
 #######################################
-oslibs:
+demolibs:
 	$(Q)$(MAKE) $(C_RUNTIME_ZERO)                                 \
 				INCS="$(inc-y)"                                   \
 				SRCS="$(src-y)";
-	$(Q)$(foreach name, $(oslibs-y),                              \
+	$(Q)$(foreach name, $(demolibs-y),                            \
 		$(MAKE) $(objs-$(name)-y)                                 \
 				INCS="$(inc-y)"                                   \
 				SRCS="$(src-y)";                                  \
@@ -204,9 +204,9 @@ oslibs:
 
 
 #######################################
-# build the vkos svcs
+# build the demo svcs
 #######################################
-ossvcs:
+demosvcs:
 	$(Q)mkdir -p $(SVCS_DIR)
 	$(Q)echo "#prepare services" > $(SVCS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(svcs-y),                                \
@@ -233,9 +233,9 @@ ossvcs:
 
 
 #######################################
-# build the vkos apps
+# build the demo apps
 #######################################
-osapps:
+demoapps:
 	$(Q)mkdir -p $(APPS_DIR) 
 	$(Q)echo "#prepare programs" > $(APPS_DIR)/_load_.rc;
 	$(Q)$(foreach name, $(apps-y),                                \
@@ -324,7 +324,7 @@ ifneq ($(M), )
 	$(Q)rm -rf $(BUILD_DIR)/$(M)
 endif
 
-clean-vkos:
+clean-demo:
 	$(Q)rm -rf $(APPS_DIR)
 	$(Q)rm -rf $(SVCS_DIR)
 	$(Q)rm -rf $(BUILD_DIR)/village_demo
@@ -342,7 +342,7 @@ distclean: clean
 PHONY += FORCE
 FORCE:
 
-PHONY += all boot libs kernel modules vkos oslibs osapps ossvcs osImage rootfs
-PHONY += clean clean-boot clean-libs clean-mods clean-vkos distclean
+PHONY += all boot libs kernel modules demo demolibs demoapps demosvcs osImage rootfs
+PHONY += clean clean-boot clean-libs clean-mods clean-demo distclean
 PHONY += menuconfig silentoldconfig
 .PHONY: $(PHONY)
