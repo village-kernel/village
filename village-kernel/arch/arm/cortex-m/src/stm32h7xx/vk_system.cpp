@@ -30,7 +30,7 @@ void ConcreteSystem::Setup()
 
     //Config clock
     ConfigCoreDebug();
-    ConfigureMPU();
+    //ConfigureMPU();
     ConfigurePower();
     ConfigSysTick();
     ConfigureFor25MhzXtal();
