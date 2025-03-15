@@ -30,7 +30,8 @@ public:
             behavior = Process::_Background;
         }
 
-        kernel->process.Run(behavior, argv[1], argc - 1, argv + 1);
+        const char* path = console->AbsolutePath(argv[1]);
+        kernel->process.Run(behavior, path, argc - 1, argv + 1);
     }
 
 
