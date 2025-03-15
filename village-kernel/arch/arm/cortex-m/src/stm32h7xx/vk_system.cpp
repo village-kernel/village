@@ -88,8 +88,11 @@ void ConcreteSystem::ConfigureMPU()
     //Disable the MPU and clear the control register
     MPU->CTRL = 0;
 
+    //Select region 0
+    MPU->RNR = 0;
+
     //Config Address: SRAM = 0x24000000
-    MPU->RBAR = 0x24000000;
+    MPU->RBAR = 0x24000000 | (1 << 4);
     
     //region: Instruction fetches enabled, full access, shareable, 512K size.
     //        Outer and inner write-through, No write allocate.
@@ -115,7 +118,7 @@ void ConcreteSystem::ConfigureMPU()
     __ISB();
 
     //Enable data cache
-    SCB_EnableDCache();
+    //SCB_EnableDCache();
 
     //Enable instruction cache
     //SCB_EnableICache();
