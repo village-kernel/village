@@ -50,7 +50,7 @@ public:
     /// @param argv 
     void Execute(int argc, char* argv[])
     {
-        if (argc < 1)
+        if (argc < 2)
         {
             console->Println("Usage: cd <directory>");
             return;
@@ -122,8 +122,11 @@ public:
             console->Println("Usage: ls [directory]");
             return;
         }
-        const char* path = console->AbsolutePath(argv[1]);
-        ListDirectory((argc == 1) ? console->GetPath() : path);
+
+        if (argc == 1)
+            ListDirectory(console->GetPath());
+        else
+            ListDirectory(console->AbsolutePath(argv[1]));
     }
 
 
@@ -165,7 +168,7 @@ public:
     /// @param argv 
     void Execute(int argc, char* argv[])
     {
-        if (argc < 1)
+        if (argc < 2)
         {
             console->Println("Usage: touch <filename>");
             return;
@@ -215,7 +218,7 @@ public:
     /// @param argv 
     void Execute(int argc, char* argv[])
     {
-        if (argc < 1)
+        if (argc < 2)
         {
             console->Println("Usage: mkdir <dirname>");
             return;
