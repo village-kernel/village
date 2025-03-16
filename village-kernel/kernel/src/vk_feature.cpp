@@ -25,7 +25,7 @@ void ConcreteFeature::Setup()
 {
     isRuntime = false;
     
-    for (int id = 0; id < _dirverIdSize; id++)
+    for (int id = 0; id < ModuleID::_moduleIdSize; id++)
     {
         for (modules.Begin(); !modules.IsEnd(); modules.Next())
         {
@@ -47,7 +47,7 @@ void ConcreteFeature::Exit()
 {
     isRuntime = false;
 
-    for (int id = _dirverIdSize - 1; id >= 0; id--)
+    for (int id = ModuleID::_moduleIdSize - 1; id >= 0; id--)
     {
         for (modules.End(); !modules.IsBegin(); modules.Prev())
         {
