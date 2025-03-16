@@ -345,9 +345,9 @@ Fopts* ConcreteDevice::GetDeviceFopts(const char* name)
 /// @return 
 VkList<Base*> ConcreteDevice::GetDevices(DriverID id)
 {
-    if (id >= DriverID::_block && id < DriverID::_dirverIdSize)
+    if (id >= DriverID::_block && id < DriverID::_driverIdSize)
     {
-        VkList<Base*> lists[DriverID::_dirverIdSize] = {
+        VkList<Base*> lists[DriverID::_driverIdSize] = {
             (VkList<Base*>&)blockDevs,
             (VkList<Base*>&)charDevs,
             (VkList<Base*>&)fbDevs,

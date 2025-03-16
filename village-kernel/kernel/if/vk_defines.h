@@ -23,7 +23,7 @@ enum DriverID
     _miscellaneous,
     _platformDevice,
     _platformDriver,
-    _dirverIdSize,
+    _driverIdSize,
 };
 
 
