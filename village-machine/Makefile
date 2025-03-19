@@ -54,6 +54,7 @@ objs-$(CONFIG_STM32H7XX_DRV_SDIO)     += vk_drv_sdio.o
 objs-$(CONFIG_STM32H7XX_DRV_SPI)      += vk_drv_spi.o
 objs-$(CONFIG_STM32H7XX_DRV_I2C)      += vk_drv_i2c.o
 objs-$(CONFIG_STM32H7XX_DRV_DMA)      += vk_drv_dma.o
+objs-$(CONFIG_STM32H7XX_DRV_DMA2D)    += vk_drv_dma2d.o
 objs-$(CONFIG_STM32H7XX_DRV_SDRAM)    += vk_drv_sdram.o
 endif
 
@@ -82,6 +83,7 @@ src-y                                 += village-machine/platdrv/display/src
 
 objs-$(CONFIG_BOCHS_VBE)              += vk_bochs_vbe.o
 objs-$(CONFIG_LCD_ILI9488)            += vk_lcd_ili9488.o
+objs-$(CONFIG_LCD_LTDC)               += vk_lcd_ltdc.o
 
 
 ######################################

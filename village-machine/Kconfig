@@ -355,7 +355,12 @@ if MACHINE
 		bool "Enable DMA drv class"
 		default n
 
+	config STM32H7XX_DRV_DMA2D
+		bool "Enable DMA2D drv class"
+		default n
+
 	config STM32H7XX_DRV_SDRAM
+		select STM32H7XX_DRV_GPIO
 		bool "Enable sdram drv class"
 		default n
 
@@ -393,6 +398,10 @@ if MACHINE
 
 	config LCD_ILI9488
 		tristate "Enable ILI9488 support"
+		default n
+
+	config LCD_LTDC
+		tristate "Enable LTDC LCD support"
 		default n
 
 	endmenu

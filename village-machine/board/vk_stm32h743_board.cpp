@@ -8,6 +8,7 @@
 #include "vk_sdram_w9825g6.h"
 #include "vk_sdio_sdcard.h"
 #include "vk_stm32_uart.h"
+#include "vk_lcd_ltdc.h"
 
 
 /// @brief W9825G6Dev
@@ -124,3 +125,49 @@ public:
     }
 };
 REGISTER_PLAT_DEVICE(new Stm32UartDev(), stm32uart, stm32uartDev);
+
+
+/// @brief LtdcLcdDev
+class LtdcLcdDev : public PlatDevice
+{
+private:
+    /// @brief Members
+    LtdcLcd::Config config;
+public:
+    /// @brief Methods
+    void Config()
+    {
+        config = {
+            .blGpio  = { Gpio::_ChB, Gpio::_Pin5,  Gpio::_Output, Gpio::_AF0,  Gpio::_Low },
+            .deGpio  = { Gpio::_ChF, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .vsGpio  = { Gpio::_ChI, Gpio::_Pin9,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .hsGpio  = { Gpio::_ChI, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .clkGpio = { Gpio::_ChG, Gpio::_Pin7,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+
+            .r3Gpio  = { Gpio::_ChH, Gpio::_Pin9,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .r4Gpio  = { Gpio::_ChH, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .r5Gpio  = { Gpio::_ChH, Gpio::_Pin11, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .r6Gpio  = { Gpio::_ChH, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .r7Gpio  = { Gpio::_ChG, Gpio::_Pin6,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+
+            .g2Gpio  = { Gpio::_ChH, Gpio::_Pin13, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .g3Gpio  = { Gpio::_ChH, Gpio::_Pin14, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .g4Gpio  = { Gpio::_ChH, Gpio::_Pin15, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .g5Gpio  = { Gpio::_ChI, Gpio::_Pin0,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .g6Gpio  = { Gpio::_ChI, Gpio::_Pin1,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .g7Gpio  = { Gpio::_ChI, Gpio::_Pin2,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+
+            .b3Gpio  = { Gpio::_ChG, Gpio::_Pin11, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .b4Gpio  = { Gpio::_ChG, Gpio::_Pin12, Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .b5Gpio  = { Gpio::_ChI, Gpio::_Pin5,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .b6Gpio  = { Gpio::_ChI, Gpio::_Pin6,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+            .b7Gpio  = { Gpio::_ChI, Gpio::_Pin7,  Gpio::_Altera, Gpio::_AF14, Gpio::_Low },
+
+            .fbaddr  = 0xC0000000,
+            .pixelFormat = LTDC_PIXEL_FORMAT_RGB565,
+        };
+        driverData = (void*)&config;
+        driverName = (char*)"display0";
+    }
+};
+REGISTER_PLAT_DEVICE(new LtdcLcdDev(), ltdcLcd, ltdcLcdDev);
