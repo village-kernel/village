@@ -196,6 +196,27 @@ void BochsVBE::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t
 }
 
 
+/// @brief BochsVBE fill area
+/// @param sx 
+/// @param sy 
+/// @param ex 
+/// @param ey 
+/// @param pxmap 
+void BochsVBE::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint8_t* pxmap)
+{
+    uint16_t* buf16 = (uint16_t*)pxmap;
+
+    for (uint32_t y = sy; y <= ey; y++)
+    {
+        for (uint32_t x = sx; x <= ex; x++)
+        {
+            DrawPoint(x, y, *buf16);
+            buf16++;
+        }
+    }
+}
+
+
 /// @brief BochsVBE clear
 /// @param color 
 void BochsVBE::Clear(uint32_t color)

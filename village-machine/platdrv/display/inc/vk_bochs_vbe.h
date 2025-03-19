@@ -47,6 +47,7 @@ public:
     void DrawPoint(uint32_t x, uint32_t y, uint32_t color);
     uint32_t ReadPoint(uint32_t x, uint32_t y);
     void Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color);
+    void Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint8_t* pxmap);
     void Clear(uint32_t color = 0);
     void Exit();
 

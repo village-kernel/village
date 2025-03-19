@@ -74,6 +74,7 @@ private:
     /// @brief Methods
     void PinConfig();
     void Fill(uint32_t pointSizes, uint32_t color);
+    void Fill(uint32_t pointSizes, uint8_t* pxmap);
     uint32_t ReadID();
     void WriteCmd(uint16_t cmd);
     void WriteData(uint16_t data);
@@ -105,6 +106,7 @@ public:
     uint32_t ReadPoint();
     uint32_t ReadPoint(uint32_t x, uint32_t y);
     void Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t color);
+    void Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint8_t* pxmap);
     void Clear(uint32_t color = 0);
     void Exit();
 

@@ -71,6 +71,23 @@ inline void ILI9488::Fill(uint32_t pointSizes, uint32_t color)
 }
 
 
+/// @brief ILI9488 fill pxmap
+/// @param pointSizes 
+/// @param color 
+inline void ILI9488::Fill(uint32_t pointSizes, uint8_t* pxmap)
+{
+    uint16_t* buf16 = (uint16_t*)pxmap;
+
+    PrepareWriteRAM();
+
+    for (uint32_t i = 0; i < pointSizes; i++)
+    {
+        WriteRAM(*buf16);
+        buf16++;
+    }
+}
+
+
 /// @brief ILI9488 read id
 inline uint32_t ILI9488::ReadID()
 {
@@ -430,6 +447,16 @@ void ILI9488::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint32_t 
     uint16_t height = labs(sy - ey) + 1;
     OpenWindow(sx, sy, width, height);
     Fill(width * height, color);
+}
+
+
+/// @brief ILI9488 fill pxmap
+void ILI9488::Fill(uint32_t sx, uint32_t sy, uint32_t ex, uint32_t ey, uint8_t* pxmap)
+{
+    uint16_t width = labs(sx - ex) + 1;
+    uint16_t height = labs(sy - ey) + 1;
+    OpenWindow(sx, sy, width, height);
+    Fill(width * height, pxmap);
 }
 
 
