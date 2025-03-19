@@ -90,21 +90,21 @@ inline uint32_t ILI9488::ReadID()
 /// @brief ILI9488 write cmd
 inline void ILI9488::WriteCmd(uint16_t cmd)
 {
-    fsmc.WriteCmd(cmd);
+    lcd8080.WriteCmd(cmd);
 }
 
 
 /// @brief ILI9488 write data
 inline void ILI9488::WriteData(uint16_t data)
 {
-    fsmc.WriteData(data);
+    lcd8080.WriteData(data);
 }
 
 
 /// @brief ILI9488 read data
 inline uint16_t ILI9488::ReadData()
 {
-    return fsmc.ReadData();
+    return lcd8080.ReadData();
 }
 
 
@@ -143,7 +143,7 @@ bool ILI9488::Setup()
 {
     PinConfig();
 
-    fsmc.Initialize();
+    lcd8080.Initialize();
 
     kernel->system.DelayMs(50);
 

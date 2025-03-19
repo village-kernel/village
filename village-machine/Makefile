@@ -37,7 +37,7 @@ objs-$(CONFIG_STM32F4XX_DRV_USART)    += vk_drv_usart.o
 objs-$(CONFIG_STM32F4XX_DRV_SPI)      += vk_drv_spi.o
 objs-$(CONFIG_STM32F4XX_DRV_I2C)      += vk_drv_i2c.o
 objs-$(CONFIG_STM32F4XX_DRV_DMA)      += vk_drv_dma.o
-objs-$(CONFIG_STM32F4XX_DRV_FSMC)     += vk_drv_fsmc.o
+objs-$(CONFIG_STM32F4XX_DRV_LCD_8080) += vk_drv_lcd_8080.o
 objs-$(CONFIG_STM32F4XX_DRV_EXTI)     += vk_drv_exti.o
 objs-$(CONFIG_STM32F4XX_DRV_USB)      += vk_drv_usb.o
 

@@ -1,14 +1,14 @@
 //###########################################################################
-// vk_drv_fsmc.cpp
-// Hardware layer class that manages FSMC module
+// vk_drv_lcd_8080.cpp
+// Hardware layer class that manages lcd 8080 interface
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#include "vk_drv_fsmc.h"
+#include "vk_drv_lcd_8080.h"
 
 
 /// @brief Initialize
-void Fsmc::Initialize()
+void LCD8080::Initialize()
 {
     //Enable the peripheral clock for fsmc
     RCC->AHB3ENR |= RCC_AHB3ENR_FSMCEN_Msk;
@@ -28,7 +28,7 @@ void Fsmc::Initialize()
 
 /// @brief 
 /// @param cmd 
-void Fsmc::WriteCmd(uint16_t cmd)
+void LCD8080::WriteCmd(uint16_t cmd)
 {
     *cmdAddr = cmd;
 }
@@ -36,7 +36,7 @@ void Fsmc::WriteCmd(uint16_t cmd)
 
 /// @brief 
 /// @param data 
-void Fsmc::WriteData(uint16_t data)
+void LCD8080::WriteData(uint16_t data)
 {
     *dataAddr = data;
 }
@@ -44,7 +44,7 @@ void Fsmc::WriteData(uint16_t data)
 
 /// @brief 
 /// @return 
-uint16_t Fsmc::ReadData()
+uint16_t LCD8080::ReadData()
 {
     return *dataAddr;
 }

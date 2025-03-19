@@ -1,17 +1,17 @@
 //###########################################################################
-// vk_drv_fsmc.h
-// Hardware layer class that manages FSMC module
+// vk_drv_lcd_8080.h
+// Hardware layer class that manages lcd 8080 interface
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
-#ifndef __VK_DRV_FSMC_H__
-#define __VK_DRV_FSMC_H__
+#ifndef __VK_DRV_LCD_8080_H__
+#define __VK_DRV_LCD_8080_H__
 
-#include "vk_drv_gpio.h"
+#include "vk_hardware.h"
 
 
-/// @brief FSMC
-class Fsmc
+/// @brief LCD8080
+class LCD8080
 {
 private:
     //Members
@@ -25,4 +25,4 @@ public:
     uint16_t ReadData();
 };
 
-#endif //!__VK_DRV_FSMC_H__
+#endif //!__VK_DRV_LCD_8080_H__

@@ -10,7 +10,7 @@
 #include "vk_hardware.h"
 #include "vk_driver.h"
 #include "vk_drv_gpio.h"
-#include "vk_drv_fsmc.h"
+#include "vk_drv_lcd_8080.h"
 
 
 /// @brief ILI9488
@@ -66,9 +66,9 @@ public:
     };
 private:
     //Members
-    Fsmc   fsmc;
-    Gpio   blGpio;
-    Config config;
+    LCD8080    lcd8080;
+    Gpio       blGpio;
+    Config     config;
     DriverInfo lcd;
 
     /// @brief Methods

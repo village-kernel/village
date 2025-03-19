@@ -292,9 +292,8 @@ if MACHINE
 		bool "Enable dma drv class"
 		default n
 
-	config STM32F4XX_DRV_FSMC
-		select STM32F4XX_DRV_GPIO
-		bool "Enable FSMC drv class"
+	config STM32F4XX_DRV_LCD_8080
+		bool "Enable lcd 8080 interface drv class"
 		default n
 
 	config STM32F4XX_DRV_EXTI
