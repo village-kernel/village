@@ -86,17 +86,6 @@ bool W9825G6::Open()
     sdram.InitSequece();
     sdram.ConfigRefreshRate(839);
 
-    uint8_t writebuff[100] = { 0 };
-    uint8_t readbuff[100] = { 0 };
-
-    for (int i = 0; i < 100; i++)
-    {
-        writebuff[i] = i;
-    }
-
-    sdram.Write(writebuff, 100, 0);
-    sdram.Read(readbuff, 100, 0);
-
     return true;
 }
 
