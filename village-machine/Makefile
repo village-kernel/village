@@ -54,7 +54,7 @@ objs-$(CONFIG_STM32H7XX_DRV_SDIO)     += vk_drv_sdio.o
 objs-$(CONFIG_STM32H7XX_DRV_SPI)      += vk_drv_spi.o
 objs-$(CONFIG_STM32H7XX_DRV_I2C)      += vk_drv_i2c.o
 objs-$(CONFIG_STM32H7XX_DRV_DMA)      += vk_drv_dma.o
-objs-$(CONFIG_STM32H7XX_DRV_FSMC)     += vk_drv_fsmc.o
+objs-$(CONFIG_STM32H7XX_DRV_SDRAM)    += vk_drv_sdram.o
 endif
 
 
@@ -109,6 +109,15 @@ inc-y                                 += village-machine/platdrv/mouse/inc
 src-y                                 += village-machine/platdrv/mouse/src
 
 objs-$(CONFIG_PS2MOUSE)               += vk_ps2_mouse.o
+
+
+######################################
+# sdram
+######################################
+inc-y                                 += village-machine/platdrv/sdram/inc
+src-y                                 += village-machine/platdrv/sdram/src
+
+objs-$(CONFIG_SDRAM_W9825G6)          += vk_sdram_w9825g6.o
 
 
 ######################################

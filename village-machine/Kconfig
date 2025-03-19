@@ -355,9 +355,8 @@ if MACHINE
 		bool "Enable DMA drv class"
 		default n
 
-	config STM32H7XX_DRV_FSMC
-		select STM32H7XX_DRV_GPIO
-		bool "Enable FSMC drv class"
+	config STM32H7XX_DRV_SDRAM
+		bool "Enable sdram drv class"
 		default n
 
 	endif
@@ -418,6 +417,14 @@ if MACHINE
 
 	config PS2MOUSE
 		tristate "Enable ps2 mouse input support"
+		default n
+
+	endmenu
+
+	menu "sdram"
+
+	config SDRAM_W9825G6
+		tristate "Enable w9825g6 sdram support"
 		default n
 
 	endmenu
