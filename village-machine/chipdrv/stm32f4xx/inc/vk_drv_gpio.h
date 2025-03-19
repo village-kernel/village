@@ -28,6 +28,8 @@ public:
         _ChE = 4,
         _ChF = 5,
         _ChG = 6,
+        _ChH = 7,
+        _ChI = 8,
     };
 
     enum GpioPin
