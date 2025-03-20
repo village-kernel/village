@@ -464,6 +464,14 @@ if MACHINE
 
 	endmenu
 
+	menu "touch"
+
+	config I2CGT9XXX
+		tristate "Enable i2c gt9xxx touch ic support"
+		default n
+
+	endmenu
+
 	menu "usb"
 
 	config STM32USB

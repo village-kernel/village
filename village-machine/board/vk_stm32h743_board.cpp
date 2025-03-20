@@ -9,6 +9,7 @@
 #include "vk_sdio_sdcard.h"
 #include "vk_stm32_uart.h"
 #include "vk_lcd_ltdc.h"
+#include "vk_i2c_gt9xxx.h"
 
 
 /// @brief W9825G6Dev
@@ -171,3 +172,31 @@ public:
     }
 };
 REGISTER_PLAT_DEVICE(new LtdcLcdDev(), ltdcLcd, ltdcLcdDev);
+
+
+/// @brief Gt9xxxDev
+class Gt9xxxDev : public PlatDevice
+{
+private:
+    /// @brief Members
+    GT9xxx::Config config;
+public:
+    /// @brief Methods
+    void Config()
+    {
+        config = {
+            .i2cCfg = {
+                .sclGpio = { Gpio::_ChH, Gpio::_Pin6,  Gpio::_Output, Gpio::_AF0, Gpio::_Low },
+                .sdaGpio = { Gpio::_ChI, Gpio::_Pin3,  Gpio::_Output, Gpio::_AF0, Gpio::_Low },
+            },
+            .rstGpio = { Gpio::_ChI, Gpio::_Pin8,  Gpio::_Output, Gpio::_AF0, Gpio::_High },
+            .intGpio = { Gpio::_ChH, Gpio::_Pin7,  Gpio::_Input,  Gpio::_AF0, Gpio::_Low },
+
+            .intirq = EXTI9_5_IRQn,
+            .gt9xxxid = "9157",
+        };
+        driverData = (void*)&config;
+        driverName = (char*)"touch0";
+    }
+};
+REGISTER_PLAT_DEVICE(new Gt9xxxDev(), gt9xxx, gt9xxxDev);

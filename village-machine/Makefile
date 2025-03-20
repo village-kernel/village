@@ -143,6 +143,15 @@ objs-$(CONFIG_PIT32TIMER)             += vk_pit32_timer.o
 
 
 ######################################
+# touch
+######################################
+inc-y                                 += village-machine/platdrv/touch/inc
+src-y                                 += village-machine/platdrv/touch/src
+
+objs-$(CONFIG_I2CGT9XXX)              += vk_i2c_gt9xxx.o
+
+
+######################################
 # usb
 ######################################
 inc-y                                 += village-machine/platdrv/usb/inc
