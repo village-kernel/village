@@ -1,6 +1,7 @@
 //###########################################################################
 // vk_event_codes.h
 // Declarations of the interface
+// https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h
 //
 // $Copyright: Copyright (C) village
 //###########################################################################
