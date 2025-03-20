@@ -12,10 +12,10 @@
 void I2c::Initialize(PinConfig pins)
 {
     //Config scl pin as General purpose output mode with pull up
-    sclPin.Initialize(pins.sclCh, pins.sclPin, Gpio::_High);
+    sclPin.Initialize(pins.sclGpio);
     
     //Config sda as Output open-drain mode with pull up
-    sdaPin.Initialize(pins.sdaCh, pins.sdaPin, Gpio::_High);
+    sdaPin.Initialize(pins.sdaGpio);
     sdaPin.ConfigOutputType(Gpio::_OpenDrain);
 }
 

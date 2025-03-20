@@ -25,10 +25,8 @@ public:
     //Structures
     struct PinConfig
     {
-        Gpio::GpioChannel sclCh;
-        Gpio::GpioChannel sdaCh;
-        uint16_t sclPin;
-        uint16_t sdaPin;
+        Gpio::Config sclGpio;
+        Gpio::Config sdaGpio;
     };
 private:
     //Members
