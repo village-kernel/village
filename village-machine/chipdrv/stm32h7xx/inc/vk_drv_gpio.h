@@ -36,22 +36,22 @@ public:
 	
      enum GpioPin
     { 
-        _Pin0  = GPIO_BSRR_BS0,
-        _Pin1  = GPIO_BSRR_BS1,
-        _Pin2  = GPIO_BSRR_BS2,
-        _Pin3  = GPIO_BSRR_BS3,
-        _Pin4  = GPIO_BSRR_BS4,
-        _Pin5  = GPIO_BSRR_BS5,
-        _Pin6  = GPIO_BSRR_BS6,
-        _Pin7  = GPIO_BSRR_BS7,
-        _Pin8  = GPIO_BSRR_BS8,
-        _Pin9  = GPIO_BSRR_BS9,
-        _Pin10 = GPIO_BSRR_BS10,
-        _Pin11 = GPIO_BSRR_BS11,
-        _Pin12 = GPIO_BSRR_BS12,
-        _Pin13 = GPIO_BSRR_BS13,
-        _Pin14 = GPIO_BSRR_BS14,
-        _Pin15 = GPIO_BSRR_BS15,
+        _Pin0  = 0,
+        _Pin1  = 1,
+        _Pin2  = 2,
+        _Pin3  = 3,
+        _Pin4  = 4,
+        _Pin5  = 5,
+        _Pin6  = 6,
+        _Pin7  = 7,
+        _Pin8  = 8,
+        _Pin9  = 9,
+        _Pin10 = 10,
+        _Pin11 = 11,
+        _Pin12 = 12,
+        _Pin13 = 13,
+        _Pin14 = 14,
+        _Pin15 = 15,
     };
 
 	enum GpioState

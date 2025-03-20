@@ -38,7 +38,7 @@ void Gpio::Initialize(Config config)
     }
 
     // Set GPIO_PIN_x based on config
-    GPIO_PIN_x = config.pin;
+    GPIO_PIN_x = (0x1u << config.pin);
 
     // Enable the peripheral clock for the corresponding port
     switch (config.ch)
