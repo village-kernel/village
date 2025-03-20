@@ -45,7 +45,7 @@ public:
     void SoftInt();
 
     ///Checks whether an external interrupt event has occured
-    inline bool Check() { return (bool)*pendingReg & bitMask; };
+    inline bool Check() { return ((*pendingReg & bitMask) == bitMask); };
 
     ///Clears the external interrupt event flag
     inline void Clear() { *pendingReg |= bitMask; };
