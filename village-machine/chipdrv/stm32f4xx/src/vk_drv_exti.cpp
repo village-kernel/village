@@ -8,7 +8,7 @@
 #include "vk_drv_nvic.h"
 
 
-///Constructor
+/// @brief Constructor
 Exti::Exti()
     :extiLine(0),
     bitMask(0),
@@ -49,15 +49,15 @@ void Exti::ConfigMode(ExtiMode mode)
 
 
 /// @brief Selects external interrupt trigger edge
-/// @param trigger 
-void Exti::ConfigTriggerEdge(ExtiEdge trigger)
+/// @param edge 
+void Exti::ConfigTriggerEdge(ExtiEdge edge)
 {
-    if (_Rising == trigger)
+    if (_Rising == edge)
     {
         EXTI->RTSR |= bitMask;
         EXTI->FTSR &= ~bitMask;
     }
-    else if (_Falling == trigger)
+    else if (_Falling == edge)
     {
         EXTI->RTSR &= ~bitMask;
         EXTI->FTSR |= bitMask;
@@ -82,57 +82,53 @@ void Exti::SoftInt()
 /// @brief Configures the Gpi pin that triggers the interrupt
 /// @param ch 
 /// @param pin 
-void Exti::ConfigExtPin(Gpio::GpioChannel ch, uint8_t pin)
+void Exti::ConfigExtPin(Gpio::Config pinCfg)
 {
     int nTemp = 0;
     int nGroup = 0;
+    uint32_t pinCh = pinCfg.ch;
+    uint32_t pinNum = pinCfg.pin;
 
-    if (3 >= pin)
+    if (3 >= pinNum)
     {
-        nTemp = pin;
+        nTemp = pinNum;
         nGroup = 0;
     }
-    else if (7 >= pin)
+    else if (7 >= pinNum)
     {
-        nTemp = pin - 4;
+        nTemp = pinNum - 4;
         nGroup = 1;
     }
-    else if (11 >= pin)
+    else if (11 >= pinNum)
     {
-        nTemp = pin - 8;
+        nTemp = pinNum - 8;
         nGroup = 2;
     }
     else
     {
-        nTemp = pin - 12;
+        nTemp = pinNum - 12;
         nGroup = 3;
     }
 
-    SYSCFG->EXTICR[nGroup] = (SYSCFG->EXTICR[nGroup] & ~(0xf << (nTemp * 4))) | (ch << (nTemp * 4));
+    SYSCFG->EXTICR[nGroup] = (SYSCFG->EXTICR[nGroup] & ~(0xf << (nTemp * 4))) | (pinCh << (nTemp * 4));
 }
 
 
 /// @brief Enable ext interrupt
 /// @param enable 
-void Exti::EnableInterrupt(bool enable)
+void Exti::EnableExtInterrupt(uint16_t irq)
 {
-    Nvic nvic;
-    if (0 == extiLine)
-        nvic.Initialize(EXTI0_IRQn);
-    else if (1 == extiLine)
-        nvic.Initialize(EXTI1_IRQn);
-    else if (2 == extiLine)
-        nvic.Initialize(EXTI2_IRQn);
-    else if (3 == extiLine)
-        nvic.Initialize(EXTI3_IRQn);
-    else if (4 == extiLine)
-        nvic.Initialize(EXTI4_IRQn);
-    else if (extiLine >= 5 && extiLine <= 9)
-        nvic.Initialize(EXTI9_5_IRQn);
-    else if (extiLine >= 10 && extiLine <= 15)
-        nvic.Initialize(EXTI15_10_IRQn);
-    nvic.ConfigPriorityGroupSetting(Nvic::_PriorityGroup3);
-    nvic.SetPriority(0, 0);
-    if (enable) nvic.EnableInterrupt();
-    else nvic.DisableInterrupt();
+	Nvic nvic;
+    nvic.Initialize((IRQn_Type)irq);
+	nvic.EnableInterrupt();
+}
+
+
+/// @brief Disable ext interrupt
+/// @param enable 
+void Exti::DisableExtInterrupt(uint16_t irq)
+{
+	Nvic nvic;
+    nvic.Initialize((IRQn_Type)irq);
+	nvic.DisbleInterrupt();
 }

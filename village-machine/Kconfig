@@ -364,6 +364,12 @@ if MACHINE
 		bool "Enable sdram drv class"
 		default n
 
+	config STM32H7XX_DRV_EXTI
+		select STM32H7XX_DRV_GPIO
+		select STM32H7XX_DRV_NVIC
+		bool "Enable EXTI drv class"
+		default n
+
 	endif
 
 	endmenu

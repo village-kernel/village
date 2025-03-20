@@ -7,7 +7,7 @@
 #ifndef __VK_DRV_EXTI_H__
 #define __VK_DRV_EXTI_H__
 
-#include "stm32f4xx.h"
+#include "vk_hardware.h"
 #include "vk_drv_gpio.h"
 
 
@@ -28,7 +28,6 @@ public:
         _Falling = 1,
         _BothEdge = 2,
     };
-
 private:
     //Members
     volatile uint32_t  extiLine;
@@ -39,9 +38,10 @@ public:
     Exti();
     void Initialize(uint8_t line);
     void ConfigMode(ExtiMode mode);
-    void ConfigTriggerEdge(ExtiEdge trigger);
-    void ConfigExtPin(Gpio::GpioChannel ch, uint8_t pin);
-    void EnableInterrupt(bool enable = true);
+    void ConfigTriggerEdge(ExtiEdge edge);
+    void ConfigExtPin(Gpio::Config pinCfg);
+    void EnableExtInterrupt(uint16_t irq);
+    void DisableExtInterrupt(uint16_t irq);
     void SoftInt();
 
     ///Checks whether an external interrupt event has occured
