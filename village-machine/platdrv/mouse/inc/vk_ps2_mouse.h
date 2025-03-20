@@ -71,7 +71,7 @@ private:
     uint8_t MouseReadData();
     bool ConfigureMouse();
     void InputHandler();
-    void  ReportHandler();
+    void ReportHandler();
 public:
     /// @brief Methods
     PS2Mouse();

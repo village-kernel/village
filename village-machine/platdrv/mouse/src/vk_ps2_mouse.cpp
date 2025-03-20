@@ -196,7 +196,6 @@ void PS2Mouse::ReportHandler()
 /// @brief Mouse open
 bool PS2Mouse::Open()
 {
-
     //Create work
     work = kernel->workQueue.Create((Method)&PS2Mouse::ReportHandler, this);
 
