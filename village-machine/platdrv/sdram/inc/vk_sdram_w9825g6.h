@@ -63,6 +63,9 @@ public:
         Gpio::Config db13Gpio;
         Gpio::Config db14Gpio;
         Gpio::Config db15Gpio;
+
+        uint32_t refreshRate;
+        uint32_t bankAddress;
     };
 private:
     //Members

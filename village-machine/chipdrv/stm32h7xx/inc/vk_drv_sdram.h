@@ -26,6 +26,7 @@ public:
 	void Initialize();
     void InitSequece();
     void ConfigRefreshRate(uint32_t rate);
+    void ConfigBankAddress(uint32_t address);
     void Write(uint8_t* data, uint32_t size, uint32_t addr);
     void Read(uint8_t* data, uint32_t size, uint32_t addr);
 };

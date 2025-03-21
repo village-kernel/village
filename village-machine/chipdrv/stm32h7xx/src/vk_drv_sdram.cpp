@@ -47,8 +47,6 @@ void SDRAM::Initialize()
     Timing.RPDelay = 2;
     Timing.RCDDelay = 2;
     HAL_SDRAM_Init(&hsdram, &Timing);
-
-    bankAddr = 0xC0000000;
 }
 
 
@@ -88,6 +86,14 @@ void SDRAM::InitSequece()
 void SDRAM::ConfigRefreshRate(uint32_t rate)
 {
     HAL_SDRAM_ProgramRefreshRate(&hsdram, rate); 
+}
+
+
+/// @brief Config address
+/// @param address 
+void SDRAM::ConfigBankAddress(uint32_t address)
+{
+    bankAddr = address;
 }
 
 

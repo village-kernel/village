@@ -65,6 +65,9 @@ public:
             .db13Gpio = { Gpio::_ChD, Gpio::_Pin8,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
             .db14Gpio = { Gpio::_ChD, Gpio::_Pin9,  Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
             .db15Gpio = { Gpio::_ChD, Gpio::_Pin10, Gpio::_Altera, Gpio::_AF12, Gpio::_Low },
+
+            .refreshRate = 839,
+            .bankAddress = 0xC0000000,
         };
         driverData = (void*)&config;
         driverName = (char*)"sdram0";

@@ -84,7 +84,8 @@ bool W9825G6::Open()
 
     sdram.Initialize();
     sdram.InitSequece();
-    sdram.ConfigRefreshRate(839);
+    sdram.ConfigRefreshRate(config.refreshRate);
+    sdram.ConfigBankAddress(config.bankAddress);
 
     return true;
 }
