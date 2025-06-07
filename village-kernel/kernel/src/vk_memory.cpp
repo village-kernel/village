@@ -89,31 +89,31 @@ uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
     MapNode* newNode  = NULL;
     MapNode* currNode = curr;
     MapNode* nextNode = curr->next;
-    uint32_t nextMapSize = 0;
-    uint32_t nextMapAddr = 0;
-    uint32_t nextEndAddr = 0;
+    uint32_t newMapSize = 0;
+    uint32_t newMapAddr = 0;
+    uint32_t newEndAddr = 0;
     uint32_t allocAddr = 0;
 
     //Find free space
     while (NULL != nextNode)
     {
         //Calculate the next map size
-        nextMapSize = size_of_node + size;
+        newMapSize = size_of_node + size;
 
         //Calculate the next map
-        nextMapAddr = currNode->map.addr + currNode->map.size;
+        newMapAddr = currNode->map.addr + currNode->map.size;
 
         //Align memory by aligning allocation sizes
-        if (nextMapSize % align) nextMapSize += (align - (nextMapSize % align));
+        if (newMapSize % align) newMapSize += (align - (newMapSize % align));
         
         //Align memory by aligning allocation addr
-        if (nextMapAddr % align) nextMapAddr += (align - (nextMapAddr % align));
+        if (newMapAddr % align) newMapAddr += (align - (newMapAddr % align));
 
         //Calculate the end addr
-        nextEndAddr = nextMapAddr + nextMapSize;
+        newEndAddr = newMapAddr + newMapSize;
 
         //There is free space between the current node and the next node
-        if (nextEndAddr <= nextNode->map.addr)
+        if (newEndAddr <= nextNode->map.addr)
         {
             //Output debug info
             if (isMemReady)
@@ -122,18 +122,18 @@ uint32_t ConcreteMemory::HeapAlloc(uint32_t size)
                 (
                     Debug::_Lv0, 
                     "heap alloc: addr = 0x%08lx, size = %ld",
-                    nextMapAddr,
-                    nextMapSize
+                    newMapAddr,
+                    newMapSize
                 );
             }
 
             //Update the used size of sram
-            sram_used += nextMapSize;
+            sram_used += newMapSize;
 
             //Add map node into list
-            newNode           = (MapNode*)(nextMapAddr);
-            newNode->map.addr = nextMapAddr;
-            newNode->map.size = nextMapSize;
+            newNode           = (MapNode*)(newMapAddr);
+            newNode->map.addr = newMapAddr;
+            newNode->map.size = newMapSize;
             newNode->prev     = currNode;
             newNode->next     = nextNode;
             currNode->next    = newNode;
@@ -172,31 +172,31 @@ uint32_t ConcreteMemory::StackAlloc(uint32_t size)
     MapNode* newNode  = new MapNode();
     MapNode* prevNode = tail->prev;
     MapNode* currNode = tail;
-    uint32_t prevMapSize = 0;
-    uint32_t prevMapAddr = 0;
-    uint32_t prevEndAddr = 0;
+    uint32_t newMapSize = 0;
+    uint32_t newMapAddr = 0;
+    uint32_t newEndAddr = 0;
     uint32_t allocAddr = 0;
 
     //Find free space
     while (NULL != prevNode)
     {
-        //Calculate the prev map size
-        prevMapSize = size;
+        //Calculate the new map size
+        newMapSize = size;
 
-        //Calculate the prev map
-        prevMapAddr = currNode->map.addr - currNode->map.size;
+        //Calculate the new map
+        newMapAddr = currNode->map.addr - currNode->map.size;
 
         //Align memory by aligning allocation sizes
-        if (prevMapSize % align) prevMapSize += (align - (prevMapSize % align));
+        if (newMapSize % align) newMapSize += (align - (newMapSize % align));
 
         //Align memory by aligning allocation addr
-        if (prevMapAddr % align) prevMapAddr += (align - (prevMapAddr % align));
+        if (newMapAddr % align) newMapAddr += (align - (newMapAddr % align));
 
         //Calculate the end addr
-        prevEndAddr = prevMapAddr - prevMapSize;
+        newEndAddr = newMapAddr - newMapSize;
 
         //There is free space between the current node and the prev node
-        if (prevEndAddr >= prevNode->map.addr)
+        if (newEndAddr >= prevNode->map.addr)
         {
             //Output debug info
             if (isMemReady)
@@ -205,17 +205,17 @@ uint32_t ConcreteMemory::StackAlloc(uint32_t size)
                 (
                     Debug::_Lv0,
                     "stack alloc: addr = 0x%08lx, size = %ld",
-                    prevMapAddr,
-                    prevMapSize
+                    newMapAddr,
+                    newMapSize
                 );
             }
 
             //Update the used size of sram
-            sram_used += prevMapSize;
+            sram_used += newMapSize;
 
             //Add map node into list
-            newNode->map.addr = prevMapAddr;
-            newNode->map.size = prevMapSize;
+            newNode->map.addr = newMapAddr;
+            newNode->map.size = newMapSize;
             newNode->prev     = prevNode;
             newNode->next     = currNode;
             currNode->prev    = newNode;
