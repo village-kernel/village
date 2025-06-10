@@ -121,11 +121,11 @@ public:
     /// @brief Enumerations
     enum TaskState 
     {
-        _Pending = 0,
+        _New = 0,
+        _Ready,
         _Running,
-        _Suspend,
         _Blocked,
-        _Exited,
+        _Terminated,
     };
 
     /// @brief Structures
@@ -144,7 +144,7 @@ public:
             psp(0),
             ticks(0),
             stack(stack),
-            state(TaskState::_Pending)
+            state(TaskState::_New)
         {}
     };
 public:
@@ -272,7 +272,7 @@ public:
     /// @brief Enumerations
     enum State
     {
-        _Suspend = 0,
+        _Ready = 0,
         _Waked,
         _Running,
         _Finish,
@@ -292,7 +292,7 @@ public:
             user(user),
             args(args),
             ticks(ticks),
-            state(_Suspend)
+            state(_Ready)
         {}
     };
 public:

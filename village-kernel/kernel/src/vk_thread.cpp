@@ -153,7 +153,7 @@ bool ConcreteThread::StopTask(int tid)
     //Check task is valid
     if (NULL != task)
     {
-        task->state = TaskState::_Exited;
+        task->state = TaskState::_Terminated;
         return true;
     }
     return false;
@@ -172,7 +172,7 @@ bool ConcreteThread::WaitForTask(int tid)
     if (NULL != task)
     {
         //Blocking wait
-        while(task->state != TaskState::_Exited) {}
+        while(task->state != TaskState::_Terminated) {}
         return true;
     }
     return false;
@@ -227,7 +227,7 @@ bool ConcreteThread::IsTaskAlive(int tid)
     Task* task = tasks.GetItem(tid);
 
     //Returns true when the task is not null and the status is not exited
-    return ((NULL != task) && (task->state != TaskState::_Exited));
+    return ((NULL != task) && (task->state != TaskState::_Terminated));
 }
 
 
@@ -257,10 +257,10 @@ void ConcreteThread::Sleep(uint32_t ticks)
 {
     if(tasks.GetNid() > 0)
     {
-        tasks.Item()->state = TaskState::_Suspend;
+        tasks.Item()->state = TaskState::_Ready;
         tasks.Item()->ticks = system->GetSysClkCounts() + ticks;
         scheduler->Sched();
-        while (TaskState::_Suspend == tasks.Item()->state) {}
+        while (TaskState::_Ready == tasks.Item()->state) {}
     }
 }
 
@@ -282,7 +282,7 @@ void ConcreteThread::TaskExit()
 {
     if(tasks.GetNid() > 0)
     {
-        tasks.Item()->state = TaskState::_Exited;
+        tasks.Item()->state = TaskState::_Terminated;
         DeleteTask(tasks.GetNid());
         scheduler->Sched();
     }
@@ -317,7 +317,7 @@ void ConcreteThread::SelectNextTask()
         Task* task = tasks.Item();
 
         //Check current task state
-        if (TaskState::_Suspend == task->state)
+        if (TaskState::_Ready == task->state)
         {
             if(system->GetSysClkCounts() >= task->ticks)
             {
