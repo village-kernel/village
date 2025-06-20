@@ -23,7 +23,7 @@ private:
     //Dirent Members
     EntryIndex        entidx;
     FatEntry*         buffer;
-    FatObject*        parent;
+    FatObject*        myself;
 
     //FatObject Members
     VkList<FatObject*> fatObjs;

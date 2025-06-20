@@ -68,10 +68,9 @@ objs-y                              += vk_exception.o
 
 objs-y                              += vk_filesystem.o
 objs-$(CONFIG_FATFS)                += vk_fat_diskio.o
+objs-$(CONFIG_FATFS)                += vk_fat_filedir.o
 objs-$(CONFIG_FATFS)                += vk_fat_folder.o
 objs-$(CONFIG_FATFS)                += vk_fat_object.o
-objs-$(CONFIG_FATFS)                += vk_fat_dir.o
-objs-$(CONFIG_FATFS)                += vk_fat_file.o
 objs-$(CONFIG_FATFS)                += vk_fat_system.o
 
 objs-$(CONFIG_EXECUTOR)             += vk_base_executor.o

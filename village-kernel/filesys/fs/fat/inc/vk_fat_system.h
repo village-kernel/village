@@ -8,8 +8,7 @@
 #define __VK_FAT_FILE_SYSTEM_H__
 
 #include "vk_fat_diskio.h"
-#include "vk_fat_dir.h"
-#include "vk_fat_file.h"
+#include "vk_fat_filedir.h"
 #include "vk_filesys.h"
 #include "vk_list.h"
 

@@ -12,7 +12,7 @@ FatFolder::FatFolder(FatDiskio& diskio, FatObject* fatObj)
     :diskio(diskio),
     fatInfo(diskio.GetInfo()),
     buffer(NULL),
-    parent(NULL)
+    myself(NULL)
 {
     Open(fatObj);
 }
@@ -30,9 +30,9 @@ FatFolder::~FatFolder()
 /// @param sector 
 void FatFolder::CalcFirstSector()
 {
-    if (NULL != parent)
+    if (NULL != myself)
     {
-        if (parent->GetFirstCluster() < 2)
+        if (myself->GetFirstCluster() < 2)
         {
             if (FatDiskio::_FAT16 == fatInfo.fatType)
             {
@@ -47,7 +47,7 @@ void FatFolder::CalcFirstSector()
         }
         else
         {
-            entidx.clust  = parent->GetFirstCluster();
+            entidx.clust  = myself->GetFirstCluster();
             entidx.sector = diskio.ClusterToSector(entidx.clust);
         }
     }
@@ -231,13 +231,13 @@ uint32_t FatFolder::Push(FatEntry* entries, uint32_t size)
 /// @param fatObj 
 void FatFolder::Open(FatObject* selfObj)
 {
-    this->parent = selfObj;
+    this->myself = selfObj;
 
     buffer = (FatEntry*)new char[fatInfo.bytesPerSec]();
 
-    if (NULL != parent)
+    if (NULL != myself)
     {
-        if (FileType::_Diretory == parent->GetObjectType())
+        if (FileType::_Diretory == myself->GetObjectType())
         {
             for (ReadBegin(); !IsReadEnd(); ReadNext())
             {
@@ -411,7 +411,7 @@ FatObject* FatFolder::Create(const char* name, int attr)
         {
             FatObject objs[2];
             objs[0].SetupDot(newObj);
-            objs[1].SetupDotDot(parent);
+            objs[1].SetupDotDot(myself);
             FatFolder(diskio, newObj).Write(objs, 2);
         }
         return newObj;
