@@ -47,8 +47,8 @@ public:
 };
 
 
-/// @brief FatEntryLoc
-struct FatEntryLoc
+/// @brief EntryIndex
+struct EntryIndex
 {
     //Members
     uint32_t index;
@@ -56,7 +56,7 @@ struct FatEntryLoc
     uint32_t sector;
 
     //Methods
-    FatEntryLoc();
+    EntryIndex();
 };
 
 
@@ -121,10 +121,6 @@ union FatEntry
 } __attribute__((packed));
 
 
-/// @brief FatFolder
-class FatFolder;
-
-
 /// @brief FatObject
 class FatObject
 {
@@ -137,8 +133,7 @@ private:
 
     //Members
     int             mode;
-    FatEntryLoc     entloc;
-    FatFolder*      folder;
+    EntryIndex      index;
 
     //Members
     FatLongEntry*   lfe;
@@ -200,8 +195,8 @@ public:
     uint32_t GetFirstCluster();
     void SetFileSize(uint32_t size);
     uint32_t GetFileSize();
-    void SetFatEntryLoc(FatEntryLoc loc);
-    FatEntryLoc GetFatEntryLoc();
+    void SetEntryIndex(EntryIndex loc);
+    EntryIndex GetEntryIndex();
 };
 
 #endif //!__VK_FAT_OBJECT_H__

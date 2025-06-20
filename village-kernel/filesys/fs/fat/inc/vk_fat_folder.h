@@ -17,11 +17,11 @@ class FatFolder
 {
 private:
     //Members
-    FatDiskio&        fatDisk;
+    FatDiskio&        diskio;
     FatDiskio::Info&  fatInfo;
 
     //Dirent Members
-    FatEntryLoc       entloc;
+    EntryIndex        entidx;
     FatEntry*         buffer;
     FatObject*        parent;
 
@@ -42,7 +42,7 @@ private:
     FatEntry& Item();
     
     //IO Methods
-    bool Find(uint32_t size);
+    bool Alloc(uint32_t size);
     uint32_t Pop(FatEntry* pop, uint32_t size);
     uint32_t Push(FatEntry* push, uint32_t size);
 
@@ -50,7 +50,7 @@ private:
     bool CheckDirName(FatObject* fatObj);
 public:
     //Methods
-    FatFolder(FatDiskio& fatDisk, FatObject* fatObj = NULL);
+    FatFolder(FatDiskio& diskio, FatObject* fatObj = NULL);
     ~FatFolder();
 
     void Open(FatObject* fatObj);

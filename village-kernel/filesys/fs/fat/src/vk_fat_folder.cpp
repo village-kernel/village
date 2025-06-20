@@ -8,9 +8,9 @@
 
 
 /// @brief Constructor
-FatFolder::FatFolder(FatDiskio& fatDisk, FatObject* fatObj)
-    :fatDisk(fatDisk),
-    fatInfo(fatDisk.GetInfo()),
+FatFolder::FatFolder(FatDiskio& diskio, FatObject* fatObj)
+    :diskio(diskio),
+    fatInfo(diskio.GetInfo()),
     buffer(NULL),
     parent(NULL)
 {
@@ -36,19 +36,19 @@ void FatFolder::CalcFirstSector()
         {
             if (FatDiskio::_FAT16 == fatInfo.fatType)
             {
-                entloc.clust  = 0;
-                entloc.sector = fatInfo.firstRootSector;
+                entidx.clust  = 0;
+                entidx.sector = fatInfo.firstRootSector;
             }
             else if (FatDiskio::_FAT32 == fatInfo.fatType)
             {
-                entloc.clust  = fatInfo.rootClust;
-                entloc.sector = fatDisk.ClusterToSector(entloc.clust);
+                entidx.clust  = fatInfo.rootClust;
+                entidx.sector = diskio.ClusterToSector(entidx.clust);
             }
         }
         else
         {
-            entloc.clust  = parent->GetFirstCluster();
-            entloc.sector = fatDisk.ClusterToSector(entloc.clust);
+            entidx.clust  = parent->GetFirstCluster();
+            entidx.sector = diskio.ClusterToSector(entidx.clust);
         }
     }
 }
@@ -60,18 +60,18 @@ void FatFolder::CalcFirstSector()
 void FatFolder::CalcNextSector()
 {
     //FAT16 root dir
-    if (entloc.clust < 2)
+    if (entidx.clust < 2)
     {
         uint32_t dirEndedSec = fatInfo.firstRootSector + fatInfo.countOfRootSecs;
-        entloc.sector = (++entloc.sector < dirEndedSec) ? entloc.sector : 0;
+        entidx.sector = (++entidx.sector < dirEndedSec) ? entidx.sector : 0;
     }
     //FAT data dir
     else
     { 
-        if ((++entloc.sector - fatDisk.ClusterToSector(entloc.clust)) >= fatInfo.secPerClust)
+        if ((++entidx.sector - diskio.ClusterToSector(entidx.clust)) >= fatInfo.secPerClust)
         {
-            entloc.clust = fatDisk.GetNextCluster(entloc.clust);
-            entloc.sector = (0 != entloc.clust) ? fatDisk.ClusterToSector(entloc.clust) : 0;
+            entidx.clust = diskio.GetNextCluster(entidx.clust);
+            entidx.sector = (0 != entidx.clust) ? diskio.ClusterToSector(entidx.clust) : 0;
         }
     }
 }
@@ -80,21 +80,21 @@ void FatFolder::CalcNextSector()
 /// @brief Read union entries
 void FatFolder::ReadEntries()
 {
-    fatDisk.ReadSector((char*)buffer, entloc.sector);
+    diskio.ReadSector((char*)buffer, entidx.sector);
 }
 
 
 /// @brief Write union entries
 void FatFolder::WriteEntries()
 {
-    fatDisk.WriteSector((char*)buffer, entloc.sector);
+    diskio.WriteSector((char*)buffer, entidx.sector);
 }
 
 
 /// @brief Iterator begin
 bool FatFolder::ReadBegin()
 {
-    entloc = FatEntryLoc();
+    entidx = EntryIndex();
 
     CalcFirstSector();
     ReadEntries();
@@ -106,13 +106,13 @@ bool FatFolder::ReadBegin()
 /// @brief Iterator next
 bool FatFolder::ReadNext()
 {
-    if (++entloc.index >= fatInfo.entriesPerSec)
+    if (++entidx.index >= fatInfo.entriesPerSec)
     {
         CalcNextSector();
-        if (0 != entloc.sector)
+        if (0 != entidx.sector)
         {
             ReadEntries();
-            entloc.index = 0;
+            entidx.index = 0;
         }
         else return false;
     }
@@ -123,15 +123,15 @@ bool FatFolder::ReadNext()
 /// @brief Iterator next
 bool FatFolder::WriteNext()
 {
-    if (++entloc.index >= fatInfo.entriesPerSec)
+    if (++entidx.index >= fatInfo.entriesPerSec)
     {
         WriteEntries();
 
         CalcNextSector();
-        if (0 != entloc.sector)
+        if (0 != entidx.sector)
         {
             ReadEntries();
-            entloc.index = 0;
+            entidx.index = 0;
         }
         else return false;
     }
@@ -143,7 +143,7 @@ bool FatFolder::WriteNext()
 /// @return res
 bool FatFolder::IsReadEnd()
 {
-    return 0 == entloc.sector;
+    return 0 == entidx.sector;
 }
 
 
@@ -151,18 +151,18 @@ bool FatFolder::IsReadEnd()
 /// @return 
 FatEntry& FatFolder::Item()
 {
-    return buffer[entloc.index];
+    return buffer[entidx.index];
 }
 
 
-/// @brief Find free space
+/// @brief Alloc space
 /// @param size 
 /// @return res
-bool FatFolder::Find(uint32_t size)
+bool FatFolder::Alloc(uint32_t size)
 {
     bool        isStart = true;
     uint32_t    freeCnt = 0;
-    FatEntryLoc backup;
+    EntryIndex  backup;
 
     for (ReadBegin(); !IsReadEnd(); ReadNext())
     {
@@ -171,11 +171,11 @@ bool FatFolder::Find(uint32_t size)
             if (true == isStart)
             {
                 isStart = false;
-                backup = entloc;
+                backup = entidx;
             }
             if (++freeCnt >= size)
             {
-                entloc = backup;
+                entidx = backup;
                 return true;
             }
         }
@@ -198,7 +198,7 @@ uint32_t FatFolder::Pop(FatEntry* pop, uint32_t size)
 {
     for (uint32_t i = 0; i < size; i++)
     {
-        pop[i] = buffer[entloc.index];
+        pop[i] = buffer[entidx.index];
     
         if ((i < size - 1) && !ReadNext()) return i;
     }
@@ -216,7 +216,7 @@ uint32_t FatFolder::Push(FatEntry* push, uint32_t size)
 
     for (uint32_t i = 0; i < size; i++)
     {
-        buffer[entloc.index] = push[i];
+        buffer[entidx.index] = push[i];
 
         if ((i < size - 1) && !WriteNext()) return i;
     }
@@ -259,7 +259,7 @@ void FatFolder::Open(FatObject* fatObj)
                     uint8_t size = Item().GetStoreSize();
                     FatEntry* entries = new FatEntry[size]();
                     FatObject* fatObj = new FatObject(entries);
-                    fatObj->SetFatEntryLoc(entloc);
+                    fatObj->SetEntryIndex(entidx);
 
                     if (Pop(entries, size) == size)
                     {
@@ -303,7 +303,7 @@ FatObject* FatFolder::Create(const char* name, int attr)
     //Set short name, attr and clust
     child->Setup(name);
     child->SetAttribute(attr);
-    child->SetFirstCluster(fatDisk.AllocCluster());
+    child->SetFirstCluster(diskio.AllocCluster());
 
     //Generate number name
     if (child->IsLongName())
@@ -323,7 +323,7 @@ FatObject* FatFolder::Create(const char* name, int attr)
             FatObject objs[2];
             objs[0].SetupDot(child);
             objs[1].SetupDotDot(parent);
-            FatFolder(fatDisk, child).Write(objs, 2);
+            FatFolder(diskio, child).Write(objs, 2);
         }
         return child;
     }
@@ -342,9 +342,9 @@ int FatFolder::Write(FatObject* objs, int size)
     {
         uint32_t storeSize = objs[i].GetStoreSize();
 
-        if (Find(storeSize))
+        if (Alloc(storeSize))
         {
-            objs[i].SetFatEntryLoc(entloc);
+            objs[i].SetEntryIndex(entidx);
 
             if (storeSize == Push(objs[i].GetEntries(), storeSize))
             {
@@ -382,7 +382,7 @@ void FatFolder::Remove(FatObject* fatObj)
     if (NULL != fatObj)
     {
         fatObj->SetOjectFree();
-        entloc = fatObj->GetFatEntryLoc();
+        entidx = fatObj->GetEntryIndex();
         Push(fatObj->GetEntries(), fatObj->GetStoreSize());
     }
 }
@@ -393,7 +393,7 @@ void FatFolder::Update(FatObject* fatObj)
 {
     if (NULL != fatObj)
     {
-        entloc = fatObj->GetFatEntryLoc();
+        entidx = fatObj->GetEntryIndex();
         Push(fatObj->GetEntries(), fatObj->GetStoreSize());
     }
 }

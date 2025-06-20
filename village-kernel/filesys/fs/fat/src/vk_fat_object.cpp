@@ -7,8 +7,8 @@
 #include "vk_fat_object.h"
 
 
-/// @brief FatEntryLoc constructor
-FatEntryLoc::FatEntryLoc()
+/// @brief EntryIndex constructor
+EntryIndex::EntryIndex()
     :index(0),
     clust(0),
     sector(0)
@@ -86,7 +86,6 @@ uint8_t FatEntry::GetStoreSize()
 /// @brief FatObject Constructor
 FatObject::FatObject()
     :mode(0),
-    folder(NULL),
     lfe(NULL),
     sfe(NULL),
     ufe(NULL)
@@ -173,7 +172,7 @@ void FatObject::Setup(FatObject* fatObj)
 
     Setup(ufe);
 
-    entloc = fatObj->GetFatEntryLoc();
+    index = fatObj->GetEntryIndex();
 }
 
 
@@ -775,16 +774,16 @@ uint32_t FatObject::GetFileSize()
 
 
 /// @brief Set entry location info
-/// @param loc 
-void FatObject::SetFatEntryLoc(FatEntryLoc loc)
+/// @param idx 
+void FatObject::SetEntryIndex(EntryIndex idx)
 {
-    entloc = loc;
+    index = idx;
 }
 
 
 /// @brief Get entry location info
 /// @return 
-FatEntryLoc FatObject::GetFatEntryLoc()
+EntryIndex FatObject::GetEntryIndex()
 {
-    return entloc;
+    return index;
 }
