@@ -191,14 +191,14 @@ bool FatFolder::Alloc(uint32_t size)
 
 
 /// @brief Pop entry
-/// @param pop 
+/// @param entries 
 /// @param size 
 /// @return size
-uint32_t FatFolder::Pop(FatEntry* pop, uint32_t size)
+uint32_t FatFolder::Pop(FatEntry* entries, uint32_t size)
 {
     for (uint32_t i = 0; i < size; i++)
     {
-        pop[i] = buffer[entidx.index];
+        entries[i] = buffer[entidx.index];
     
         if ((i < size - 1) && !ReadNext()) return i;
     }
@@ -207,16 +207,16 @@ uint32_t FatFolder::Pop(FatEntry* pop, uint32_t size)
 
 
 /// @brief Push entry
-/// @param push 
+/// @param entries 
 /// @param size 
 /// @return size
-uint32_t FatFolder::Push(FatEntry* push, uint32_t size)
+uint32_t FatFolder::Push(FatEntry* entries, uint32_t size)
 {
     ReadEntries();
 
     for (uint32_t i = 0; i < size; i++)
     {
-        buffer[entidx.index] = push[i];
+        buffer[entidx.index] = entries[i];
 
         if ((i < size - 1) && !WriteNext()) return i;
     }
@@ -227,24 +227,11 @@ uint32_t FatFolder::Push(FatEntry* push, uint32_t size)
 }
 
 
-/// @brief Check dir name
-/// @param fatObj 
-/// @return 
-bool FatFolder::CheckDirName(FatObject* fatObj)
-{
-    for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
-    {
-        if (0 == strncmp(fatObjs.Item()->GetShortName(), fatObj->GetShortName(), 11)) return false;
-    }
-    return true;
-}
-
-
 /// @brief Open
 /// @param fatObj 
-void FatFolder::Open(FatObject* fatObj)
+void FatFolder::Open(FatObject* selfObj)
 {
-    this->parent = fatObj;
+    this->parent = selfObj;
 
     buffer = (FatEntry*)new char[fatInfo.bytesPerSec]();
 
@@ -259,7 +246,7 @@ void FatFolder::Open(FatObject* fatObj)
                     uint8_t size = Item().GetStoreSize();
                     FatEntry* entries = new FatEntry[size]();
                     FatObject* fatObj = new FatObject(entries);
-                    fatObj->SetEntryIndex(entidx);
+                    fatObj->SetIndex(entidx);
 
                     if (Pop(entries, size) == size)
                     {
@@ -274,81 +261,23 @@ void FatFolder::Open(FatObject* fatObj)
 }
 
 
-/// @brief Search
-/// @param name 
-/// @return 
-FatObject* FatFolder::Search(const char* name)
-{
-    for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
-    {
-        char* dirname = fatObjs.Item()->GetObjectName();
-
-        if (0 == strcmp(dirname, name))
-        {
-            return fatObjs.Item();
-        }
-    }
-    return NULL;
-}
-
-
-/// @brief Create
-/// @param name 
-/// @param attr 
-/// @return 
-FatObject* FatFolder::Create(const char* name, int attr)
-{
-    FatObject* child = new FatObject();
-    
-    //Set short name, attr and clust
-    child->Setup(name);
-    child->SetAttribute(attr);
-    child->SetFirstCluster(diskio.AllocCluster());
-
-    //Generate number name
-    if (child->IsLongName())
-    {
-        for (uint8_t i = 1; i < 100; i++)
-        {
-            child->GenNumName(i);
-            if (CheckDirName(child)) break;
-        }
-    }
-
-    //Stored child object
-    if (1 == Write(child, 1))
-    {
-        if (FatDefs::_AttrDirectory == attr)
-        {
-            FatObject objs[2];
-            objs[0].SetupDot(child);
-            objs[1].SetupDotDot(parent);
-            FatFolder(diskio, child).Write(objs, 2);
-        }
-        return child;
-    }
-
-    return NULL;
-}
-
-
 /// @brief Write
 /// @param objs 
 /// @param size 
 /// @return 
-int FatFolder::Write(FatObject* objs, int size)
+int FatFolder::Write(FatObject* subObjs, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        uint32_t storeSize = objs[i].GetStoreSize();
+        uint32_t storeSize = subObjs[i].GetStoreSize();
 
         if (Alloc(storeSize))
         {
-            objs[i].SetEntryIndex(entidx);
+            subObjs[i].SetIndex(entidx);
 
-            if (storeSize == Push(objs[i].GetEntries(), storeSize))
+            if (storeSize == Push(subObjs[i].GetEntries(), storeSize))
             {
-                fatObjs.Add(&objs[i]);
+                fatObjs.Add(&subObjs[i]);
             }
         }
         else return i;
@@ -361,7 +290,7 @@ int FatFolder::Write(FatObject* objs, int size)
 /// @param objs 
 /// @param size 
 /// @return 
-int FatFolder::Read(FatObject* objs, int size)
+int FatFolder::Read(FatObject* subObjs, int size)
 {
     int objSize = fatObjs.GetSize();
 
@@ -369,7 +298,7 @@ int FatFolder::Read(FatObject* objs, int size)
 
     for (int i = 0; i < size; i++)
     {
-        objs[i] = *fatObjs.GetItem(i);
+        subObjs[i] = *fatObjs.GetItem(i);
     }
     
     return size;
@@ -377,24 +306,24 @@ int FatFolder::Read(FatObject* objs, int size)
 
 
 /// @brief Remove
-void FatFolder::Remove(FatObject* fatObj)
+void FatFolder::Remove(FatObject* selfObj)
 {
-    if (NULL != fatObj)
+    if (NULL != selfObj)
     {
-        fatObj->SetOjectFree();
-        entidx = fatObj->GetEntryIndex();
-        Push(fatObj->GetEntries(), fatObj->GetStoreSize());
+        selfObj->SetOjectFree();
+        entidx = selfObj->GetIndex();
+        Push(selfObj->GetEntries(), selfObj->GetStoreSize());
     }
 }
 
 
 /// @brief Update
-void FatFolder::Update(FatObject* fatObj)
+void FatFolder::Update(FatObject* selfObj)
 {
-    if (NULL != fatObj)
+    if (NULL != selfObj)
     {
-        entidx = fatObj->GetEntryIndex();
-        Push(fatObj->GetEntries(), fatObj->GetStoreSize());
+        entidx = selfObj->GetIndex();
+        Push(selfObj->GetEntries(), selfObj->GetStoreSize());
     }
 }
 
@@ -418,4 +347,75 @@ void FatFolder::Close()
     }
 
     fatObjs.Release();
+}
+
+
+/// @brief Search
+/// @param name 
+/// @return 
+FatObject* FatFolder::Search(const char* name)
+{
+    for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
+    {
+        char* dirname = fatObjs.Item()->GetObjectName();
+
+        if (0 == strcmp(dirname, name))
+        {
+            return fatObjs.Item();
+        }
+    }
+    return NULL;
+}
+
+
+/// @brief Check dir name
+/// @param fatObj 
+/// @return 
+bool FatFolder::CheckDirName(FatObject* fatObj)
+{
+    for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
+    {
+        if (0 == strncmp(fatObjs.Item()->GetShortName(), fatObj->GetShortName(), 11)) return false;
+    }
+    return true;
+}
+
+
+/// @brief Create
+/// @param name 
+/// @param attr 
+/// @return 
+FatObject* FatFolder::Create(const char* name, int attr)
+{
+    FatObject* newObj = new FatObject();
+    
+    //Set short name, attr and clust
+    newObj->Setup(name);
+    newObj->SetAttribute(attr);
+    newObj->SetFirstCluster(diskio.AllocCluster());
+
+    //Generate number name
+    if (newObj->IsLongName())
+    {
+        for (uint8_t i = 1; i < 100; i++)
+        {
+            newObj->GenNumName(i);
+            if (CheckDirName(newObj)) break;
+        }
+    }
+
+    //Stored newObj object
+    if (1 == Write(newObj, 1))
+    {
+        if (FatDefs::_AttrDirectory == attr)
+        {
+            FatObject objs[2];
+            objs[0].SetupDot(newObj);
+            objs[1].SetupDotDot(parent);
+            FatFolder(diskio, newObj).Write(objs, 2);
+        }
+        return newObj;
+    }
+
+    return NULL;
 }

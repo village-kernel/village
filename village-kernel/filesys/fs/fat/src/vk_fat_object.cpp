@@ -102,15 +102,6 @@ FatObject::FatObject(const char* name)
 
 
 /// @brief FatObject Constructor
-/// @param fatObj 
-FatObject::FatObject(FatObject* fatObj)
-    :FatObject()
-{
-    if (NULL != fatObj) Setup(fatObj);
-}
-
-
-/// @brief FatObject Constructor
 FatObject::FatObject(FatEntry* ufe)
     :FatObject()
 {
@@ -153,26 +144,6 @@ void FatObject::Setup(const char* name)
         sfe->NTRes |= FatDefs::_NsLoss;
         SetLongName(name);
     }
-}
-
-
-/// @brief FatObject clone
-/// @param fatObj 
-void FatObject::Setup(FatObject* fatObj)
-{
-    uint8_t size = fatObj->GetStoreSize();
-    FatEntry* raw = fatObj->GetEntries();
-
-    ufe = new FatEntry[size];
-
-    for (uint8_t i = 0; i < size; i++)
-    {
-        ufe[i] = raw[i];
-    }
-
-    Setup(ufe);
-
-    index = fatObj->GetEntryIndex();
 }
 
 
@@ -775,7 +746,7 @@ uint32_t FatObject::GetFileSize()
 
 /// @brief Set entry location info
 /// @param idx 
-void FatObject::SetEntryIndex(EntryIndex idx)
+void FatObject::SetIndex(EntryIndex idx)
 {
     index = idx;
 }
@@ -783,7 +754,7 @@ void FatObject::SetEntryIndex(EntryIndex idx)
 
 /// @brief Get entry location info
 /// @return 
-EntryIndex FatObject::GetEntryIndex()
+EntryIndex FatObject::GetIndex()
 {
     return index;
 }

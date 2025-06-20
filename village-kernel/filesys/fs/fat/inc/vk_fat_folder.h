@@ -43,8 +43,8 @@ private:
     
     //IO Methods
     bool Alloc(uint32_t size);
-    uint32_t Pop(FatEntry* pop, uint32_t size);
-    uint32_t Push(FatEntry* push, uint32_t size);
+    uint32_t Pop(FatEntry* entires, uint32_t size);
+    uint32_t Push(FatEntry* entires, uint32_t size);
 
     //Methods
     bool CheckDirName(FatObject* fatObj);
@@ -53,15 +53,16 @@ public:
     FatFolder(FatDiskio& diskio, FatObject* fatObj = NULL);
     ~FatFolder();
 
-    void Open(FatObject* fatObj);
-    FatObject* Search(const char* name);
-    FatObject* Create(const char* name, int attr);
-    int  Write(FatObject* fatObjs, int size);
-    int  Read(FatObject* fatObjs, int size);
-    void Remove(FatObject* fatObj);
-    void Update(FatObject* fatObj);
+    void Open(FatObject* selfObj);
+    int  Write(FatObject* subObjs, int size);
+    int  Read(FatObject* subObjs, int size);
+    void Remove(FatObject* selfObj);
+    void Update(FatObject* selfObj);
     int  Size();
     void Close();
+
+    FatObject* Search(const char* name);
+    FatObject* Create(const char* name, int attr);
 };
 
 #endif //!__VK_FAT_FOLDER_H__

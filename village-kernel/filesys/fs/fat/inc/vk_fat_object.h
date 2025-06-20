@@ -146,12 +146,10 @@ public:
     //Methods
     FatObject();
     FatObject(const char* name);
-    FatObject(FatObject* fatObj);
     FatObject(FatEntry* ufe);
     ~FatObject();
 
     void Setup(const char* name);
-    void Setup(FatObject* fatObj);
     void Setup(FatEntry* ufe);
 
     void SetupDot(FatObject* fatObj);
@@ -195,8 +193,8 @@ public:
     uint32_t GetFirstCluster();
     void SetFileSize(uint32_t size);
     uint32_t GetFileSize();
-    void SetEntryIndex(EntryIndex loc);
-    EntryIndex GetEntryIndex();
+    void SetIndex(EntryIndex loc);
+    EntryIndex GetIndex();
 };
 
 #endif //!__VK_FAT_OBJECT_H__

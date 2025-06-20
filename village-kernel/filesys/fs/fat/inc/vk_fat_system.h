@@ -8,45 +8,19 @@
 #define __VK_FAT_FILE_SYSTEM_H__
 
 #include "vk_fat_diskio.h"
-#include "vk_fat_object.h"
+#include "vk_fat_dir.h"
+#include "vk_fat_file.h"
 #include "vk_filesys.h"
 #include "vk_list.h"
-
 
 /// @brief FatVolume
 class FatVolume : public FileVol
 {
 private:
-    //FatDir
-    struct FatDir
-    {
-        FatObject* object;
-        int        mode;
-        int        subSize;
-        FatObject* subObjs;
-    };
-
-    //FatFile
-    struct FatFile
-    {
-        FatObject* object;
-        int        mode;
-        int        size;
-        uint32_t   fstClust;
-        uint32_t   sectorSize;
-        uint32_t   clustSize;
-        int        buflen;
-        char*      buffer;
-    };
-
     //Members
     FatDiskio        diskio;
     VkList<FatDir*>  fatDirs;
     VkList<FatFile*> fatFiles;
-
-    //Members
-    uint32_t bytesPerSec;
-    uint32_t secPerClust;
 
     //Directory Methods
     char* BaseName(const char* path);
@@ -80,7 +54,6 @@ public:
     void CloseDir(int fd);
 
     //Opt methods
-    FileType GetFileType(const char* name);
     bool IsExist(const char* name, FileType type);
     bool Remove(const char* name);
 };
