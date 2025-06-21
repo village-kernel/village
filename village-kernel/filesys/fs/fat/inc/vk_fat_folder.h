@@ -56,10 +56,11 @@ public:
     void Open(FatObject* selfObj);
     int  Write(FatObject* subObjs, int size);
     int  Read(FatObject* subObjs, int size);
-    void Remove(FatObject* selfObj);
-    void Update(FatObject* selfObj);
     int  Size();
     void Close();
+
+    void Remove(FatObject* selfObj);
+    void Update(FatObject* selfObj);
 
     FatObject* Search(const char* name);
     FatObject* Create(const char* name, int attr);

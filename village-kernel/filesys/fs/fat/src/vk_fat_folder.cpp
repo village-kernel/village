@@ -305,6 +305,28 @@ int FatFolder::Read(FatObject* subObjs, int size)
 }
 
 
+/// @brief Size
+/// @return 
+int FatFolder::Size()
+{
+    return fatObjs.GetSize();
+}
+
+
+/// @brief Close
+void FatFolder::Close()
+{
+    if (NULL != buffer) delete[] buffer;
+
+    for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
+    {
+        delete fatObjs.Item();
+    }
+
+    fatObjs.Release();
+}
+
+
 /// @brief Remove
 void FatFolder::Remove(FatObject* selfObj)
 {
@@ -325,28 +347,6 @@ void FatFolder::Update(FatObject* selfObj)
         entidx = selfObj->GetIndex();
         Push(selfObj->GetEntries(), selfObj->GetStoreSize());
     }
-}
-
-
-/// @brief Size
-/// @return 
-int FatFolder::Size()
-{
-    return fatObjs.GetSize();
-}
-
-
-/// @brief Close
-void FatFolder::Close()
-{
-    if (NULL != buffer) delete[] buffer;
-
-    for (fatObjs.Begin(); !fatObjs.IsEnd(); fatObjs.Next())
-    {
-        delete fatObjs.Item();
-    }
-
-    fatObjs.Release();
 }
 
 
