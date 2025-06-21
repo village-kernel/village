@@ -15,8 +15,8 @@ class FatFile
 {
 private:
     //Members
-    FatDiskio& diskio;
-    FatDiskio::Info& fatInfo;
+    FatDiskio&       diskio;
+    FatDiskio::Info& diskinf;
 
     //File Members
     FatObject* object;

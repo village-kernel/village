@@ -121,6 +121,23 @@ public:
         uint32_t bytesPerSec;
         uint32_t secPerClust;
     };
+
+    /// @brief Index
+    struct Index
+    {
+        //Members
+        uint32_t index;
+        uint32_t clust;
+        uint32_t sector;
+
+        //Methods
+        Index() 
+            :index(0),
+            clust(0),
+            sector(0)
+        {
+        }
+    };
 private:
     //Static constants
     static const uint16_t magic = 0xaa55;
@@ -136,19 +153,20 @@ private:
 
     //Methods
     bool CheckFileSystem();
+    uint32_t ClusterToSector(uint32_t clust);
+    uint32_t GetNextCluster(uint32_t clust);
+    uint32_t SetNextCluster(uint32_t clust);
+    uint32_t ClearPrevCluster(uint32_t clust);
 public:
     //Method
     bool Setup(DevStream* device, uint32_t startingLBA);
     void Exit();
 
+    FatDiskio::Index GetFristIndex(uint32_t fstClust);
+    FatDiskio::Index GetNextIndex(FatDiskio::Index index);
+
     uint32_t WriteSector(char* data, uint32_t sector, uint32_t secSize = 1);
     uint32_t ReadSector(char* data, uint32_t sector, uint32_t secSize = 1);
-
-    uint32_t ClusterToSector(uint32_t clust);
-    
-    uint32_t GetNextCluster(uint32_t clust);
-    uint32_t SetNextCluster(uint32_t clust);
-    uint32_t ClearPrevCluster(uint32_t clust);
 
     uint32_t ReadCluster(char* data, uint32_t clust, uint32_t clustSize);
     uint32_t WriteCluster(char* data, uint32_t clust, uint32_t clustSize);

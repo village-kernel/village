@@ -12,7 +12,7 @@
 /// @param diskio 
 FatFile::FatFile(FatDiskio& diskio)
     :diskio(diskio),
-    fatInfo(diskio.GetInfo()),
+    diskinf(diskio.GetInfo()),
     object(NULL),
     filemode(0),
     fileSize(0),
@@ -36,9 +36,9 @@ void FatFile::Open(FatObject* fatObj, int mode)
     if (fileSize)
     {
         fstClust   = fatObj->GetFirstCluster();
-        sectorSize = (fileSize + (fatInfo.bytesPerSec - 1)) / fatInfo.bytesPerSec;
-        clustSize  = (sectorSize + (fatInfo.secPerClust - 1)) / fatInfo.secPerClust;
-        buflen     =  clustSize * fatInfo.secPerClust * fatInfo.bytesPerSec;
+        sectorSize = (fileSize + (diskinf.bytesPerSec - 1)) / diskinf.bytesPerSec;
+        clustSize  = (sectorSize + (diskinf.secPerClust - 1)) / diskinf.secPerClust;
+        buflen     =  clustSize * diskinf.secPerClust * diskinf.bytesPerSec;
         buffer     = (char*)new char[buflen]();
         clustSize  = diskio.ReadCluster(buffer, fstClust, clustSize);
     }
@@ -63,9 +63,9 @@ int FatFile::Write(char* data, int size, int offset)
 
     if (fileSize > buflen)
     {
-        sectorSize = (fileSize + (fatInfo.bytesPerSec - 1)) / fatInfo.bytesPerSec;
-        clustSize  = (sectorSize + (fatInfo.secPerClust - 1)) / fatInfo.secPerClust;
-        int   newBuflen = (clustSize * fatInfo.secPerClust * fatInfo.bytesPerSec);
+        sectorSize = (fileSize + (diskinf.bytesPerSec - 1)) / diskinf.bytesPerSec;
+        clustSize  = (sectorSize + (diskinf.secPerClust - 1)) / diskinf.secPerClust;
+        int   newBuflen = (clustSize * diskinf.secPerClust * diskinf.bytesPerSec);
         char* newBuffer = (char*)new char[newBuflen]();
 
         if (buffOffset) memcpy((void*)newBuffer, (const void*)buffer, buflen);

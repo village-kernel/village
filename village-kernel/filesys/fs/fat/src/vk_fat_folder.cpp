@@ -10,7 +10,7 @@
 /// @brief Constructor
 FatFolder::FatFolder(FatDiskio& diskio, FatObject* fatObj)
     :diskio(diskio),
-    fatInfo(diskio.GetInfo()),
+    diskinf(diskio.GetInfo()),
     buffer(NULL),
     myself(NULL)
 {
@@ -25,79 +25,14 @@ FatFolder::~FatFolder()
 }
 
 
-/// @brief Calc first sector
-/// @param clust 
-/// @param sector 
-void FatFolder::CalcFirstSector()
-{
-    if (NULL != myself)
-    {
-        if (myself->GetFirstCluster() < 2)
-        {
-            if (FatDiskio::_FAT16 == fatInfo.fatType)
-            {
-                entidx.clust  = 0;
-                entidx.sector = fatInfo.firstRootSector;
-            }
-            else if (FatDiskio::_FAT32 == fatInfo.fatType)
-            {
-                entidx.clust  = fatInfo.rootClust;
-                entidx.sector = diskio.ClusterToSector(entidx.clust);
-            }
-        }
-        else
-        {
-            entidx.clust  = myself->GetFirstCluster();
-            entidx.sector = diskio.ClusterToSector(entidx.clust);
-        }
-    }
-}
-
-
-/// @brief Calc next sector
-/// @param clust 
-/// @param sector 
-void FatFolder::CalcNextSector()
-{
-    //FAT16 root dir
-    if (entidx.clust < 2)
-    {
-        uint32_t dirEndedSec = fatInfo.firstRootSector + fatInfo.countOfRootSecs;
-        entidx.sector = (++entidx.sector < dirEndedSec) ? entidx.sector : 0;
-    }
-    //FAT data dir
-    else
-    { 
-        if ((++entidx.sector - diskio.ClusterToSector(entidx.clust)) >= fatInfo.secPerClust)
-        {
-            entidx.clust = diskio.GetNextCluster(entidx.clust);
-            entidx.sector = (0 != entidx.clust) ? diskio.ClusterToSector(entidx.clust) : 0;
-        }
-    }
-}
-
-
-/// @brief Read union entries
-void FatFolder::ReadEntries()
-{
-    diskio.ReadSector((char*)buffer, entidx.sector);
-}
-
-
-/// @brief Write union entries
-void FatFolder::WriteEntries()
-{
-    diskio.WriteSector((char*)buffer, entidx.sector);
-}
-
-
 /// @brief Iterator begin
 bool FatFolder::ReadBegin()
 {
-    entidx = EntryIndex();
+    uint32_t fstClust = (NULL != myself) ? myself->GetFirstCluster() : 0;
 
-    CalcFirstSector();
-    ReadEntries();
+    entidx = diskio.GetFristIndex(fstClust);
+
+    diskio.ReadSector((char*)buffer, entidx.sector);
 
     return true;
 }
@@ -106,12 +41,12 @@ bool FatFolder::ReadBegin()
 /// @brief Iterator next
 bool FatFolder::ReadNext()
 {
-    if (++entidx.index >= fatInfo.entriesPerSec)
+    if (++entidx.index >= diskinf.entriesPerSec)
     {
-        CalcNextSector();
+        entidx = diskio.GetNextIndex(entidx);
         if (0 != entidx.sector)
         {
-            ReadEntries();
+            diskio.ReadSector((char*)buffer, entidx.sector);
             entidx.index = 0;
         }
         else return false;
@@ -123,14 +58,14 @@ bool FatFolder::ReadNext()
 /// @brief Iterator next
 bool FatFolder::WriteNext()
 {
-    if (++entidx.index >= fatInfo.entriesPerSec)
+    if (++entidx.index >= diskinf.entriesPerSec)
     {
-        WriteEntries();
+        diskio.WriteSector((char*)buffer, entidx.sector);
 
-        CalcNextSector();
+        entidx = diskio.GetNextIndex(entidx);
         if (0 != entidx.sector)
         {
-            ReadEntries();
+            diskio.ReadSector((char*)buffer, entidx.sector);
             entidx.index = 0;
         }
         else return false;
@@ -160,9 +95,9 @@ FatEntry& FatFolder::Item()
 /// @return res
 bool FatFolder::Alloc(uint32_t size)
 {
-    bool        isStart = true;
-    uint32_t    freeCnt = 0;
-    EntryIndex  backup;
+    bool             isStart = true;
+    uint32_t         freeCnt = 0;
+    FatDiskio::Index backup;
 
     for (ReadBegin(); !IsReadEnd(); ReadNext())
     {
@@ -212,7 +147,7 @@ uint32_t FatFolder::Pop(FatEntry* entries, uint32_t size)
 /// @return size
 uint32_t FatFolder::Push(FatEntry* entries, uint32_t size)
 {
-    ReadEntries();
+    diskio.ReadSector((char*)buffer, entidx.sector);
 
     for (uint32_t i = 0; i < size; i++)
     {
@@ -221,7 +156,7 @@ uint32_t FatFolder::Push(FatEntry* entries, uint32_t size)
         if ((i < size - 1) && !WriteNext()) return i;
     }
 
-    WriteEntries();
+    diskio.WriteSector((char*)buffer, entidx.sector);
 
     return size;
 }
@@ -233,7 +168,7 @@ void FatFolder::Open(FatObject* selfObj)
 {
     this->myself = selfObj;
 
-    buffer = (FatEntry*)new char[fatInfo.bytesPerSec]();
+    buffer = (FatEntry*)new char[diskinf.bytesPerSec]();
 
     if (NULL != myself)
     {

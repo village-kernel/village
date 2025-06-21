@@ -102,36 +102,6 @@ bool FatDiskio::CheckFileSystem()
 }
 
 
-/// @brief Read Sector
-/// @param data 
-/// @param sector 
-/// @param secSize 
-/// @return read sector size
-uint32_t FatDiskio::ReadSector(char* data, uint32_t sector, uint32_t secSize)
-{
-    if (NULL != device)
-    {
-        return device->Read(data, secSize, sector + startingLBA);
-    }
-    return 0;
-}
-
-
-/// @brief Write sector
-/// @param data 
-/// @param sector 
-/// @param secSize 
-/// @return 
-uint32_t FatDiskio::WriteSector(char* data, uint32_t sector, uint32_t secSize)
-{
-    if (NULL != device)
-    {
-        return device->Write(data, secSize, sector + startingLBA);
-    }
-    return 0;
-}
-
-
 /// @brief Cluster to sector number
 /// @param clust 
 /// @return sector number
@@ -407,6 +377,91 @@ uint32_t FatDiskio::ClearPrevCluster(uint32_t clust)
     delete[] secBuff;
 
     return fatClust;
+}
+
+
+/// @brief Calc First sector
+/// @param fstClust 
+/// @return 
+FatDiskio::Index FatDiskio::GetFristIndex(uint32_t fstClust)
+{
+    FatDiskio::Index index;
+
+    if (fstClust < 2)
+    {
+        if (FatDiskio::_FAT16 == info.fatType)
+        {
+            index.clust  = 0;
+            index.sector = info.firstRootSector;
+        }
+        else if (FatDiskio::_FAT32 == info.fatType)
+        {
+            index.clust  = info.rootClust;
+            index.sector = ClusterToSector(index.clust);
+        }
+    }
+    else
+    {
+        index.clust  = fstClust;
+        index.sector = ClusterToSector(index.clust);
+    }
+
+    return index;
+}
+
+
+/// @brief Calc next sector
+/// @param index 
+/// @return 
+FatDiskio::Index FatDiskio::GetNextIndex(Index index)
+{
+    //FAT16 root dir
+    if (index.clust < 2)
+    {
+        uint32_t dirEndedSec = info.firstRootSector + info.countOfRootSecs;
+        index.sector = (++index.sector < dirEndedSec) ? index.sector : 0;
+    }
+    //FAT data dir
+    else
+    { 
+        if ((++index.sector - ClusterToSector(index.clust)) >= info.secPerClust)
+        {
+            index.clust = GetNextCluster(index.clust);
+            index.sector = (0 != index.clust) ? ClusterToSector(index.clust) : 0;
+        }
+    }
+
+    return index;
+}
+
+
+/// @brief Read Sector
+/// @param data 
+/// @param sector 
+/// @param secSize 
+/// @return read sector size
+uint32_t FatDiskio::ReadSector(char* data, uint32_t sector, uint32_t secSize)
+{
+    if (NULL != device)
+    {
+        return device->Read(data, secSize, sector + startingLBA);
+    }
+    return 0;
+}
+
+
+/// @brief Write sector
+/// @param data 
+/// @param sector 
+/// @param secSize 
+/// @return 
+uint32_t FatDiskio::WriteSector(char* data, uint32_t sector, uint32_t secSize)
+{
+    if (NULL != device)
+    {
+        return device->Write(data, secSize, sector + startingLBA);
+    }
+    return 0;
 }
 
 

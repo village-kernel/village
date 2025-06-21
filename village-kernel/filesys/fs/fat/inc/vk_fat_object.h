@@ -10,6 +10,7 @@
 #include "stdint.h"
 #include "string.h"
 #include "vk_filedefs.h"
+#include "vk_fat_diskio.h"
 
 
 /// @brief FatDefs
@@ -44,19 +45,6 @@ public:
         _NsNolfn        = 0x40,   /* Do not find LFN */
         _NsNoname       = 0x80,   /* Not followed */
     };
-};
-
-
-/// @brief EntryIndex
-struct EntryIndex
-{
-    //Members
-    uint32_t index;
-    uint32_t clust;
-    uint32_t sector;
-
-    //Methods
-    EntryIndex();
 };
 
 
@@ -132,8 +120,8 @@ private:
     static const uint8_t dir_free_flag = 0xe5;
 
     //Members
-    int             mode;
-    EntryIndex      index;
+    int              mode;
+    FatDiskio::Index index;
 
     //Members
     FatLongEntry*   lfe;
@@ -193,8 +181,8 @@ public:
     uint32_t GetFirstCluster();
     void SetFileSize(uint32_t size);
     uint32_t GetFileSize();
-    void SetIndex(EntryIndex loc);
-    EntryIndex GetIndex();
+    void SetIndex(FatDiskio::Index idx);
+    FatDiskio::Index GetIndex();
 };
 
 #endif //!__VK_FAT_OBJECT_H__

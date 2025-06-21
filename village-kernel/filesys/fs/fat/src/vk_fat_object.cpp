@@ -6,16 +6,6 @@
 //###########################################################################
 #include "vk_fat_object.h"
 
-
-/// @brief EntryIndex constructor
-EntryIndex::EntryIndex()
-    :index(0),
-    clust(0),
-    sector(0)
-{
-}
-
-
 /// @brief LongEntry constructor
 FatLongEntry::FatLongEntry()
 {
@@ -746,7 +736,7 @@ uint32_t FatObject::GetFileSize()
 
 /// @brief Set entry location info
 /// @param idx 
-void FatObject::SetIndex(EntryIndex idx)
+void FatObject::SetIndex(FatDiskio::Index idx)
 {
     index = idx;
 }
@@ -754,7 +744,7 @@ void FatObject::SetIndex(EntryIndex idx)
 
 /// @brief Get entry location info
 /// @return 
-EntryIndex FatObject::GetIndex()
+FatDiskio::Index FatObject::GetIndex()
 {
     return index;
 }

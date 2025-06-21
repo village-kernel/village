@@ -18,21 +18,15 @@ class FatFolder
 private:
     //Members
     FatDiskio&        diskio;
-    FatDiskio::Info&  fatInfo;
+    FatDiskio::Info&  diskinf;
 
     //Dirent Members
-    EntryIndex        entidx;
+    FatDiskio::Index  entidx;
     FatEntry*         buffer;
     FatObject*        myself;
 
     //FatObject Members
     VkList<FatObject*> fatObjs;
-
-    //Disk Methods
-    void CalcFirstSector();
-    void CalcNextSector();
-    void ReadEntries();
-    void WriteEntries();
 
     //Iterator Methods
     bool ReadBegin();
