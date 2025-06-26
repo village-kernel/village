@@ -95,7 +95,7 @@ union FatEntry
     //static constants
     static const uint8_t dir_seq_flag = 0x40;
     static const uint8_t dir_free_flag = 0xe5;
-    static const uint8_t dir_valid_flag = 0x20;
+    static const uint8_t dir_valid_flag = 0x00;
 
     //Members
     FatLongEntry  lfe;
@@ -120,7 +120,6 @@ private:
     static const uint8_t dir_free_flag = 0xe5;
 
     //Members
-    int              mode;
     FatDiskio::Index index;
 
     //Members
@@ -140,8 +139,8 @@ public:
     void Setup(const char* name);
     void Setup(FatEntry* ufe);
 
-    void SetupDot(FatObject* fatObj);
-    void SetupDotDot(FatObject* fatObj);
+    void SetupDot(uint32_t fstCluster);
+    void SetupDotDot(uint32_t fstCluster);
 
     void SetOjectFree();
 
@@ -155,12 +154,11 @@ public:
 
     bool IsLongName();
     void GenNumName(int num);
-    void SetRawName(const char* label);
-    char* GetRawName();
     void SetShortName(const char* name);
     char* GetShortName();
     void SetLongName(const char* name);
     char* GetLongName();
+
     void SetAttribute(uint8_t attr);
     uint8_t GetAttribute();
     void SetNTRes(uint8_t NTRes);
@@ -181,6 +179,7 @@ public:
     uint32_t GetFirstCluster();
     void SetFileSize(uint32_t size);
     uint32_t GetFileSize();
+
     void SetIndex(FatDiskio::Index idx);
     FatDiskio::Index GetIndex();
 };

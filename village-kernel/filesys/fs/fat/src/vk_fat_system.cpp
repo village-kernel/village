@@ -93,21 +93,9 @@ FatObject* FatVolume::CreatePath(const char* path, int attr)
 {
     FatObject* fatObj = SearchPath(path, 1);
 
-    if (NULL != fatObj)
-    {
-        if (FileType::_Diretory == fatObj->GetObjectType())
-        {
-            FatObject* resObj = FatFolder(diskio, fatObj).Create(BaseName(path), attr);
-
-            if (NULL != resObj)
-            {
-                *fatObj = *resObj;
-                return fatObj;
-            }
-        }
-    }
-
-    return NULL;
+    if (NULL == fatObj || FileType::_Diretory != fatObj->GetObjectType()) return NULL;
+    
+    return FatFolder(diskio, fatObj).Create(BaseName(path), attr);
 }
 
 
@@ -124,7 +112,7 @@ bool FatVolume::SetName(const char* name)
     {
         if (FileType::_Volume == fatObj.GetObjectType())
         {
-            fatObj.SetRawName(name);
+            fatObj.SetShortName(name);
 
             folder.Update(&fatObj);
         }
@@ -148,7 +136,7 @@ char* FatVolume::GetName()
     {
         if (FileType::_Volume == fatObj.GetObjectType())
         {
-            name = fatObj.GetRawName();
+            name = fatObj.GetShortName();
         }
     }
 

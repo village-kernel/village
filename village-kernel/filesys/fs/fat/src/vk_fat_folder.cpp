@@ -26,7 +26,7 @@ FatFolder::~FatFolder()
 
 
 /// @brief Iterator begin
-bool FatFolder::ReadBegin()
+bool FatFolder::Begin()
 {
     uint32_t fstClust = (NULL != myself) ? myself->GetFirstCluster() : 0;
 
@@ -39,29 +39,15 @@ bool FatFolder::ReadBegin()
 
 
 /// @brief Iterator next
-bool FatFolder::ReadNext()
+bool FatFolder::Next(bool wrtmode)
 {
     if (++entidx.index >= diskinf.entriesPerSec)
     {
-        entidx = diskio.GetNextIndex(entidx);
-        if (0 != entidx.sector)
+        if (wrtmode)
         {
-            diskio.ReadSector((char*)buffer, entidx.sector);
-            entidx.index = 0;
+            diskio.WriteSector((char*)buffer, entidx.sector);
         }
-        else return false;
-    }
-    return true;
-}
-
-
-/// @brief Iterator next
-bool FatFolder::WriteNext()
-{
-    if (++entidx.index >= diskinf.entriesPerSec)
-    {
-        diskio.WriteSector((char*)buffer, entidx.sector);
-
+        
         entidx = diskio.GetNextIndex(entidx);
         if (0 != entidx.sector)
         {
@@ -76,7 +62,7 @@ bool FatFolder::WriteNext()
 
 /// @brief Iterator is ended
 /// @return res
-bool FatFolder::IsReadEnd()
+bool FatFolder::IsEnd()
 {
     return 0 == entidx.sector;
 }
@@ -90,16 +76,16 @@ FatEntry& FatFolder::Item()
 }
 
 
-/// @brief Alloc space
+/// @brief Find space
 /// @param size 
 /// @return res
-bool FatFolder::Alloc(uint32_t size)
+bool FatFolder::Find(uint32_t size)
 {
     bool             isStart = true;
     uint32_t         freeCnt = 0;
     FatDiskio::Index backup;
 
-    for (ReadBegin(); !IsReadEnd(); ReadNext())
+    for (Begin(); !IsEnd(); Next())
     {
         if (!Item().IsValid())
         {
@@ -129,13 +115,13 @@ bool FatFolder::Alloc(uint32_t size)
 /// @param entries 
 /// @param size 
 /// @return size
-uint32_t FatFolder::Pop(FatEntry* entries, uint32_t size)
+uint32_t FatFolder::ReadEntries(FatEntry* entries, uint32_t size)
 {
     for (uint32_t i = 0; i < size; i++)
     {
         entries[i] = buffer[entidx.index];
     
-        if ((i < size - 1) && !ReadNext()) return i;
+        if ((i < size - 1) && !Next()) return i;
     }
     return size;
 }
@@ -145,7 +131,7 @@ uint32_t FatFolder::Pop(FatEntry* entries, uint32_t size)
 /// @param entries 
 /// @param size 
 /// @return size
-uint32_t FatFolder::Push(FatEntry* entries, uint32_t size)
+uint32_t FatFolder::WriteEntries(FatEntry* entries, uint32_t size)
 {
     diskio.ReadSector((char*)buffer, entidx.sector);
 
@@ -153,7 +139,7 @@ uint32_t FatFolder::Push(FatEntry* entries, uint32_t size)
     {
         buffer[entidx.index] = entries[i];
 
-        if ((i < size - 1) && !WriteNext()) return i;
+        if ((i < size - 1) && !Next(true)) return i;
     }
 
     diskio.WriteSector((char*)buffer, entidx.sector);
@@ -168,29 +154,25 @@ void FatFolder::Open(FatObject* selfObj)
 {
     this->myself = selfObj;
 
-    buffer = (FatEntry*)new char[diskinf.bytesPerSec]();
+    if (NULL == buffer) buffer = (FatEntry*)new char[diskinf.bytesPerSec]();
+    
+    if (NULL == myself || FileType::_Diretory != myself->GetObjectType()) return;
 
-    if (NULL != myself)
+    for (Begin(); !IsEnd(); Next())
     {
-        if (FileType::_Diretory == myself->GetObjectType())
+        if (Item().IsValid())
         {
-            for (ReadBegin(); !IsReadEnd(); ReadNext())
-            {
-                if (Item().IsValid())
-                {
-                    uint8_t size = Item().GetStoreSize();
-                    FatEntry* entries = new FatEntry[size]();
-                    FatObject* fatObj = new FatObject(entries);
-                    fatObj->SetIndex(entidx);
+            uint8_t size = Item().GetStoreSize();
+            FatEntry* entries = new FatEntry[size]();
+            FatObject* fatObj = new FatObject(entries);
+            fatObj->SetIndex(entidx);
 
-                    if (Pop(entries, size) == size)
-                    {
-                        fatObj->Setup(entries);
-                        fatObjs.Add(fatObj);
-                    }
-                    else delete fatObj;
-                }
+            if (ReadEntries(entries, size) == size)
+            {
+                fatObj->Setup(entries);
+                fatObjs.Add(fatObj);
             }
+            else delete fatObj;
         }
     }
 }
@@ -206,11 +188,11 @@ int FatFolder::Write(FatObject* subObjs, int size)
     {
         uint32_t storeSize = subObjs[i].GetStoreSize();
 
-        if (Alloc(storeSize))
+        if (Find(storeSize))
         {
             subObjs[i].SetIndex(entidx);
 
-            if (storeSize == Push(subObjs[i].GetEntries(), storeSize))
+            if (storeSize == WriteEntries(subObjs[i].GetEntries(), storeSize))
             {
                 fatObjs.Add(&subObjs[i]);
             }
@@ -269,7 +251,7 @@ void FatFolder::Remove(FatObject* selfObj)
     {
         selfObj->SetOjectFree();
         entidx = selfObj->GetIndex();
-        Push(selfObj->GetEntries(), selfObj->GetStoreSize());
+        WriteEntries(selfObj->GetEntries(), selfObj->GetStoreSize());
     }
 }
 
@@ -280,7 +262,7 @@ void FatFolder::Update(FatObject* selfObj)
     if (NULL != selfObj)
     {
         entidx = selfObj->GetIndex();
-        Push(selfObj->GetEntries(), selfObj->GetStoreSize());
+        WriteEntries(selfObj->GetEntries(), selfObj->GetStoreSize());
     }
 }
 
@@ -345,8 +327,8 @@ FatObject* FatFolder::Create(const char* name, int attr)
         if (FatDefs::_AttrDirectory == attr)
         {
             FatObject objs[2];
-            objs[0].SetupDot(newObj);
-            objs[1].SetupDotDot(myself);
+            objs[0].SetupDot(newObj->GetFirstCluster());
+            objs[1].SetupDotDot(myself->GetFirstCluster());
             FatFolder(diskio, newObj).Write(objs, 2);
         }
         return newObj;

@@ -29,16 +29,15 @@ private:
     VkList<FatObject*> fatObjs;
 
     //Iterator Methods
-    bool ReadBegin();
-    bool ReadNext();
-    bool WriteNext();
-    bool IsReadEnd();
+    bool Begin();
+    bool Next(bool wrtmode = false);
+    bool IsEnd();
     FatEntry& Item();
     
     //IO Methods
-    bool Alloc(uint32_t size);
-    uint32_t Pop(FatEntry* entires, uint32_t size);
-    uint32_t Push(FatEntry* entires, uint32_t size);
+    bool Find(uint32_t size);
+    uint32_t ReadEntries(FatEntry* entires, uint32_t size);
+    uint32_t WriteEntries(FatEntry* entires, uint32_t size);
 
     //Methods
     bool CheckDirName(FatObject* fatObj);

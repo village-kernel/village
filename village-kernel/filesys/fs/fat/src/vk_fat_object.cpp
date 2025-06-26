@@ -39,16 +39,20 @@ FatEntry::FatEntry()
 /// @return 
 bool FatEntry::IsValid()
 {
-    if (lfe.ord != dir_free_flag && lfe.ord >= dir_valid_flag)
+    if (lfe.ord != dir_free_flag && lfe.ord > dir_valid_flag)
     {
-        if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
+        uint8_t attr = sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID);
+
+        if ((attr == FatDefs::_AttrFile) || 
+            (attr == FatDefs::_AttrDirectory) || 
+            (attr == FatDefs::_AttrVolumeID))
+        {
             return true;
-        else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
-            return true;
-        else if ((sfe.attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
-            return true;
+        }
         else if ((sfe.attr & FatDefs::_AttrLongNameMask) == FatDefs::_AttrLongName)
+        {
             return true;
+        }
     }
     return false;
 }
@@ -75,8 +79,7 @@ uint8_t FatEntry::GetStoreSize()
 
 /// @brief FatObject Constructor
 FatObject::FatObject()
-    :mode(0),
-    lfe(NULL),
+    :lfe(NULL),
     sfe(NULL),
     ufe(NULL)
 {
@@ -156,23 +159,21 @@ void FatObject::Setup(FatEntry* ufe)
 
 /// @brief Setup dot entry
 /// @param fatObj 
-void FatObject::SetupDot(FatObject* fatObj)
+void FatObject::SetupDot(uint32_t fstCluster)
 {
-    Setup(new FatEntry());
-    SetRawName(".");
-    SetFirstCluster(fatObj->GetFirstCluster());
-    SetAttribute(FatDefs::_AttrDirectory);
+    Setup(".");
+    SetFirstCluster(fstCluster);
+    SetAttribute(FatDefs::_AttrDirectory | FatDefs::_AttrHidden);
 }
 
 
 /// @brief Setup dot dot entry
 /// @param fatObj 
-void FatObject::SetupDotDot(FatObject* fatObj)
+void FatObject::SetupDotDot(uint32_t fstCluster)
 {
-    Setup(new FatEntry());
-    SetRawName("..");
-    SetFirstCluster(fatObj->GetFirstCluster());
-    SetAttribute(FatDefs::_AttrDirectory);
+    Setup("..");
+    SetFirstCluster(fstCluster);
+    SetAttribute(FatDefs::_AttrDirectory | FatDefs::_AttrHidden);
 }
 
 
@@ -213,11 +214,13 @@ char* FatObject::GetObjectName()
 /// @return type
 FileType FatObject::GetObjectType()
 {
-    if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrFile)
-        return FileType::_File;
-    else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrDirectory)
+    uint8_t attr = sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID);
+
+    if (attr == FatDefs::_AttrFile)
+        return FileType::_File; 
+    else if(attr == FatDefs::_AttrDirectory)
         return FileType::_Diretory;
-    else if ((sfe->attr & (FatDefs::_AttrDirectory | FatDefs::_AttrVolumeID)) == FatDefs::_AttrVolumeID)
+    else if(attr == FatDefs::_AttrVolumeID)
         return FileType::_Volume;
     else
         return FileType::_Unknown;
@@ -266,7 +269,7 @@ uint8_t FatObject::ChkSum(const char* name)
 {
     uint8_t sum = 0;
 
-    for (int16_t namelen = 11; namelen != 0; namelen--)
+    for (int16_t i = 0; i < 11; i++)
     {
         sum = ((sum & 1) ? 0x80 : 0) + (sum >> 1) + *name++;
     }
@@ -303,60 +306,6 @@ void FatObject::GenNumName(int num)
 }
 
 
-/// @brief FatObject set raw name
-/// @param name 
-void FatObject::SetRawName(const char* name)
-{
-    uint8_t namelen = strlen(name);
-
-    //Check label length
-    if (namelen > short_name_size) return;
-
-    //Copy label name
-    for (uint8_t i = 0; i < short_name_size; i++)
-    {
-        if (i < namelen)
-        {
-            if (name[i] >= 'a' && name[i] <= 'z')
-                sfe->name[i] = name[i] - 0x20;
-            else
-                sfe->name[i] = name[i];
-        }
-        else sfe->name[i] = ' ';
-    }
-}
-
-
-/// @brief FatObject get raw name
-/// @return 
-char* FatObject::GetRawName()
-{
-    uint8_t pos   = 0;
-    char*   name = new char[short_name_size + 1]();
-
-    //Copy label name
-    for (uint8_t i = 0; i < short_name_size; i++)
-    {
-        name[pos++] = sfe->name[i];
-    }
-    
-    //String EOC
-    name[pos] = '\0';
-
-    //Remove space
-    while (pos--)
-    {
-        if (name[pos] == ' ')
-        {
-            name[pos] = '\0';
-        }
-        else break;
-    }
-
-    return name;
-}
-
-
 /// @brief FatObject set short name
 /// @param name 
 void FatObject::SetShortName(const char* name)
@@ -365,6 +314,18 @@ void FatObject::SetShortName(const char* name)
     char*   sfn = sfe->name;
     bool    isBodyLowedCase = true;
     bool    isExtLowedCase  = true;
+
+    // Special cases for "." and ".."
+    if (strcmp(name, ".") == 0) {
+        memcpy(sfn, ".       ", 8);
+        memset(sfn+8, ' ', 3);
+        return;
+    }
+    if (strcmp(name, "..") == 0) {
+        memcpy(sfn, "..      ", 8);
+        memset(sfn+8, ' ', 3);
+        return;
+    }
 
     //8.3 dot pos
     uint8_t namelen = strlen(name);
@@ -435,7 +396,12 @@ char* FatObject::GetShortName()
     }
 
     //8.3 name dot
-    if (' ' != name[8]) sfn[pos++] = '.';
+    if (' ' != name[8]) {
+        if (FileType::_Volume == GetObjectType())
+            sfn[pos++] = ' ';
+        else
+            sfn[pos++] = '.';
+    } 
 
     //8.3 name ext
     for (uint8_t i = 8; i < 11; i++)
@@ -445,7 +411,7 @@ char* FatObject::GetShortName()
             if (isExtLowedCase && (name[i] >= 'A' && name[i] <= 'Z'))
                 sfn[pos++] = name[i] + 0x20;
             else
-                sfn[pos++] = name[i]; 
+                sfn[pos++] = name[i];
         }
         else break;
     }
